@@ -57,42 +57,93 @@ def _guard_enum(name: str, value: str, values: List[str], optional: bool):
         raise ValueError(f'{name}: want one of {values}, got {value}')
 
 
-class Breadcrumb:
-    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+_TextSize = ['xl', 'l', 'm', 's', 'xs']
+
+
+class TextSize:
+    XL = 'xl'
+    L = 'l'
+    M = 'm'
+    S = 's'
+    XS = 'xs'
+
+
+class Text:
+    """Create text content.
     """
     def __init__(
             self,
-            name: str,
-            label: str,
+            content: str,
+            size: Optional[str] = None,
+            width: Optional[str] = None,
+            visible: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        _guard_scalar('Breadcrumb.name', name, (str,), True, False, False)
-        _guard_scalar('Breadcrumb.label', label, (str,), False, False, False)
+        _guard_scalar('Text.content', content, (str,), False, False, False)
+        _guard_enum('Text.size', size, _TextSize, True)
+        _guard_scalar('Text.width', width, (str,), False, True, False)
+        _guard_scalar('Text.visible', visible, (bool,), False, True, False)
+        _guard_scalar('Text.tooltip', tooltip, (str,), False, True, False)
+        _guard_scalar('Text.name', name, (str,), False, True, False)
+        self.content = content
+        """The text content."""
+        self.size = size
+        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
+        self.tooltip = tooltip
+        """Tooltip message."""
         self.name = name
-        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
-        self.label = label
-        """The label to display."""
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Breadcrumb.name', self.name, (str,), True, False, False)
-        _guard_scalar('Breadcrumb.label', self.label, (str,), False, False, False)
+        _guard_scalar('Text.content', self.content, (str,), False, False, False)
+        _guard_enum('Text.size', self.size, _TextSize, True)
+        _guard_scalar('Text.width', self.width, (str,), False, True, False)
+        _guard_scalar('Text.visible', self.visible, (bool,), False, True, False)
+        _guard_scalar('Text.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_scalar('Text.name', self.name, (str,), False, True, False)
         return _dump(
+            content=self.content,
+            size=self.size,
+            width=self.width,
+            visible=self.visible,
+            tooltip=self.tooltip,
             name=self.name,
-            label=self.label,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Breadcrumb':
+    def load(__d: Dict) -> 'Text':
         """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        _guard_scalar('Text.content', __d_content, (str,), False, False, False)
+        __d_size: Any = __d.get('size')
+        _guard_enum('Text.size', __d_size, _TextSize, True)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Text.width', __d_width, (str,), False, True, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('Text.visible', __d_visible, (bool,), False, True, False)
+        __d_tooltip: Any = __d.get('tooltip')
+        _guard_scalar('Text.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
-        _guard_scalar('Breadcrumb.name', __d_name, (str,), True, False, False)
-        __d_label: Any = __d.get('label')
-        _guard_scalar('Breadcrumb.label', __d_label, (str,), False, False, False)
-        name: str = __d_name
-        label: str = __d_label
-        return Breadcrumb(
+        _guard_scalar('Text.name', __d_name, (str,), False, True, False)
+        content: str = __d_content
+        size: Optional[str] = __d_size
+        width: Optional[str] = __d_width
+        visible: Optional[bool] = __d_visible
+        tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
+        return Text(
+            content,
+            size,
+            width,
+            visible,
+            tooltip,
             name,
-            label,
         )
 
 
@@ -184,562 +235,6 @@ class Command:
             items,
             value,
             data,
-        )
-
-
-class BreadcrumbsCard:
-    """Create a card containing breadcrumbs.
-    Breadcrumbs should be used as a navigational aid in your app or site.
-    They indicate the current page’s location within a hierarchy and help
-    the user understand where they are in relation to the rest of that hierarchy.
-    They also afford one-click access to higher levels of that hierarchy.
-    Breadcrumbs are typically placed, in horizontal form, under the masthead
-    or navigation of an experience, above the primary content area.
-    """
-    def __init__(
-            self,
-            box: str,
-            items: List[Breadcrumb],
-            commands: Optional[List[Command]] = None,
-    ):
-        _guard_scalar('BreadcrumbsCard.box', box, (str,), False, False, False)
-        _guard_vector('BreadcrumbsCard.items', items, (Breadcrumb,), False, False, False)
-        _guard_vector('BreadcrumbsCard.commands', commands, (Command,), False, True, False)
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.items = items
-        """A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`"""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('BreadcrumbsCard.box', self.box, (str,), False, False, False)
-        _guard_vector('BreadcrumbsCard.items', self.items, (Breadcrumb,), False, False, False)
-        _guard_vector('BreadcrumbsCard.commands', self.commands, (Command,), False, True, False)
-        return _dump(
-            view='breadcrumbs',
-            box=self.box,
-            items=[__e.dump() for __e in self.items],
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'BreadcrumbsCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        _guard_scalar('BreadcrumbsCard.box', __d_box, (str,), False, False, False)
-        __d_items: Any = __d.get('items')
-        _guard_vector('BreadcrumbsCard.items', __d_items, (dict,), False, False, False)
-        __d_commands: Any = __d.get('commands')
-        _guard_vector('BreadcrumbsCard.commands', __d_commands, (dict,), False, True, False)
-        box: str = __d_box
-        items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return BreadcrumbsCard(
-            box,
-            items,
-            commands,
-        )
-
-
-class CanvasCard:
-    """WARNING: Experimental and subject to change.
-    Do not use in production sites!
-
-    Create a card that displays a drawing canvas (whiteboard).
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            width: int,
-            height: int,
-            data: PackedRecord,
-            commands: Optional[List[Command]] = None,
-    ):
-        _guard_scalar('CanvasCard.box', box, (str,), False, False, False)
-        _guard_scalar('CanvasCard.title', title, (str,), False, False, False)
-        _guard_scalar('CanvasCard.width', width, (int,), False, False, False)
-        _guard_scalar('CanvasCard.height', height, (int,), False, False, False)
-        _guard_vector('CanvasCard.commands', commands, (Command,), False, True, False)
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.title = title
-        """The title for this card."""
-        self.width = width
-        """Canvas width, in pixels."""
-        self.height = height
-        """Canvas height, in pixels."""
-        self.data = data
-        """The data for this card."""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('CanvasCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('CanvasCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('CanvasCard.width', self.width, (int,), False, False, False)
-        _guard_scalar('CanvasCard.height', self.height, (int,), False, False, False)
-        _guard_vector('CanvasCard.commands', self.commands, (Command,), False, True, False)
-        return _dump(
-            view='canvas',
-            box=self.box,
-            title=self.title,
-            width=self.width,
-            height=self.height,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'CanvasCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        _guard_scalar('CanvasCard.box', __d_box, (str,), False, False, False)
-        __d_title: Any = __d.get('title')
-        _guard_scalar('CanvasCard.title', __d_title, (str,), False, False, False)
-        __d_width: Any = __d.get('width')
-        _guard_scalar('CanvasCard.width', __d_width, (int,), False, False, False)
-        __d_height: Any = __d.get('height')
-        _guard_scalar('CanvasCard.height', __d_height, (int,), False, False, False)
-        __d_data: Any = __d.get('data')
-        __d_commands: Any = __d.get('commands')
-        _guard_vector('CanvasCard.commands', __d_commands, (dict,), False, True, False)
-        box: str = __d_box
-        title: str = __d_title
-        width: int = __d_width
-        height: int = __d_height
-        data: PackedRecord = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return CanvasCard(
-            box,
-            title,
-            width,
-            height,
-            data,
-            commands,
-        )
-
-
-class ChatCard:
-    """WARNING: Experimental and subject to change.
-    Do not use in production sites!
-
-    Create a card that displays a chat room.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            data: PackedRecord,
-            capacity: Optional[int] = None,
-            commands: Optional[List[Command]] = None,
-    ):
-        _guard_scalar('ChatCard.box', box, (str,), False, False, False)
-        _guard_scalar('ChatCard.title', title, (str,), False, False, False)
-        _guard_scalar('ChatCard.capacity', capacity, (int,), False, True, False)
-        _guard_vector('ChatCard.commands', commands, (Command,), False, True, False)
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.title = title
-        """The title for this card."""
-        self.data = data
-        """The data for this card."""
-        self.capacity = capacity
-        """The maximum number of messages contained in this card. Defaults to 50 messages."""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('ChatCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('ChatCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('ChatCard.capacity', self.capacity, (int,), False, True, False)
-        _guard_vector('ChatCard.commands', self.commands, (Command,), False, True, False)
-        return _dump(
-            view='chat',
-            box=self.box,
-            title=self.title,
-            data=self.data,
-            capacity=self.capacity,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'ChatCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        _guard_scalar('ChatCard.box', __d_box, (str,), False, False, False)
-        __d_title: Any = __d.get('title')
-        _guard_scalar('ChatCard.title', __d_title, (str,), False, False, False)
-        __d_data: Any = __d.get('data')
-        __d_capacity: Any = __d.get('capacity')
-        _guard_scalar('ChatCard.capacity', __d_capacity, (int,), False, True, False)
-        __d_commands: Any = __d.get('commands')
-        _guard_vector('ChatCard.commands', __d_commands, (dict,), False, True, False)
-        box: str = __d_box
-        title: str = __d_title
-        data: PackedRecord = __d_data
-        capacity: Optional[int] = __d_capacity
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return ChatCard(
-            box,
-            title,
-            data,
-            capacity,
-            commands,
-        )
-
-
-_EditorCardMode = ['public', 'private']
-
-
-class EditorCardMode:
-    PUBLIC = 'public'
-    PRIVATE = 'private'
-
-
-class EditorCard:
-    """WARNING: Experimental and subject to change.
-    Do not use in production sites!
-
-    Create a card that enables WYSIWYG editing on a page.
-    Adding this card to a page makes the page editable by end-users.
-    """
-    def __init__(
-            self,
-            box: str,
-            mode: str,
-            commands: Optional[List[Command]] = None,
-    ):
-        _guard_scalar('EditorCard.box', box, (str,), False, False, False)
-        _guard_enum('EditorCard.mode', mode, _EditorCardMode, False)
-        _guard_vector('EditorCard.commands', commands, (Command,), False, True, False)
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.mode = mode
-        """The editing mode. Defaults to `public`. One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode."""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('EditorCard.box', self.box, (str,), False, False, False)
-        _guard_enum('EditorCard.mode', self.mode, _EditorCardMode, False)
-        _guard_vector('EditorCard.commands', self.commands, (Command,), False, True, False)
-        return _dump(
-            view='editor',
-            box=self.box,
-            mode=self.mode,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'EditorCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        _guard_scalar('EditorCard.box', __d_box, (str,), False, False, False)
-        __d_mode: Any = __d.get('mode')
-        _guard_enum('EditorCard.mode', __d_mode, _EditorCardMode, False)
-        __d_commands: Any = __d.get('commands')
-        _guard_vector('EditorCard.commands', __d_commands, (dict,), False, True, False)
-        box: str = __d_box
-        mode: str = __d_mode
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return EditorCard(
-            box,
-            mode,
-            commands,
-        )
-
-
-_FlexCardDirection = ['horizontal', 'vertical']
-
-
-class FlexCardDirection:
-    HORIZONTAL = 'horizontal'
-    VERTICAL = 'vertical'
-
-
-_FlexCardJustify = ['start', 'end', 'center', 'between', 'around']
-
-
-class FlexCardJustify:
-    START = 'start'
-    END = 'end'
-    CENTER = 'center'
-    BETWEEN = 'between'
-    AROUND = 'around'
-
-
-_FlexCardAlign = ['start', 'end', 'center', 'baseline', 'stretch']
-
-
-class FlexCardAlign:
-    START = 'start'
-    END = 'end'
-    CENTER = 'center'
-    BASELINE = 'baseline'
-    STRETCH = 'stretch'
-
-
-_FlexCardWrap = ['start', 'end', 'center', 'between', 'around', 'stretch']
-
-
-class FlexCardWrap:
-    START = 'start'
-    END = 'end'
-    CENTER = 'center'
-    BETWEEN = 'between'
-    AROUND = 'around'
-    STRETCH = 'stretch'
-
-
-class FlexCard:
-    """EXPERIMENTAL. DO NOT USE.
-    Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
-    """
-    def __init__(
-            self,
-            box: str,
-            item_view: str,
-            item_props: PackedRecord,
-            data: PackedData,
-            direction: Optional[str] = None,
-            justify: Optional[str] = None,
-            align: Optional[str] = None,
-            wrap: Optional[str] = None,
-            commands: Optional[List[Command]] = None,
-    ):
-        _guard_scalar('FlexCard.box', box, (str,), False, False, False)
-        _guard_scalar('FlexCard.item_view', item_view, (str,), False, False, False)
-        _guard_enum('FlexCard.direction', direction, _FlexCardDirection, True)
-        _guard_enum('FlexCard.justify', justify, _FlexCardJustify, True)
-        _guard_enum('FlexCard.align', align, _FlexCardAlign, True)
-        _guard_enum('FlexCard.wrap', wrap, _FlexCardWrap, True)
-        _guard_vector('FlexCard.commands', commands, (Command,), False, True, False)
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.item_view = item_view
-        """The child card type."""
-        self.item_props = item_props
-        """The child card properties."""
-        self.data = data
-        """Data for this card."""
-        self.direction = direction
-        """Layout direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection."""
-        self.justify = justify
-        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify."""
-        self.align = align
-        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign."""
-        self.wrap = wrap
-        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap."""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('FlexCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('FlexCard.item_view', self.item_view, (str,), False, False, False)
-        _guard_enum('FlexCard.direction', self.direction, _FlexCardDirection, True)
-        _guard_enum('FlexCard.justify', self.justify, _FlexCardJustify, True)
-        _guard_enum('FlexCard.align', self.align, _FlexCardAlign, True)
-        _guard_enum('FlexCard.wrap', self.wrap, _FlexCardWrap, True)
-        _guard_vector('FlexCard.commands', self.commands, (Command,), False, True, False)
-        return _dump(
-            view='flex',
-            box=self.box,
-            item_view=self.item_view,
-            item_props=self.item_props,
-            data=self.data,
-            direction=self.direction,
-            justify=self.justify,
-            align=self.align,
-            wrap=self.wrap,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'FlexCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        _guard_scalar('FlexCard.box', __d_box, (str,), False, False, False)
-        __d_item_view: Any = __d.get('item_view')
-        _guard_scalar('FlexCard.item_view', __d_item_view, (str,), False, False, False)
-        __d_item_props: Any = __d.get('item_props')
-        __d_data: Any = __d.get('data')
-        __d_direction: Any = __d.get('direction')
-        _guard_enum('FlexCard.direction', __d_direction, _FlexCardDirection, True)
-        __d_justify: Any = __d.get('justify')
-        _guard_enum('FlexCard.justify', __d_justify, _FlexCardJustify, True)
-        __d_align: Any = __d.get('align')
-        _guard_enum('FlexCard.align', __d_align, _FlexCardAlign, True)
-        __d_wrap: Any = __d.get('wrap')
-        _guard_enum('FlexCard.wrap', __d_wrap, _FlexCardWrap, True)
-        __d_commands: Any = __d.get('commands')
-        _guard_vector('FlexCard.commands', __d_commands, (dict,), False, True, False)
-        box: str = __d_box
-        item_view: str = __d_item_view
-        item_props: PackedRecord = __d_item_props
-        data: PackedData = __d_data
-        direction: Optional[str] = __d_direction
-        justify: Optional[str] = __d_justify
-        align: Optional[str] = __d_align
-        wrap: Optional[str] = __d_wrap
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return FlexCard(
-            box,
-            item_view,
-            item_props,
-            data,
-            direction,
-            justify,
-            align,
-            wrap,
-            commands,
-        )
-
-
-class FooterCard:
-    """Render a page footer displaying a caption.
-    Footer cards are typically displayed at the bottom of a page.
-    """
-    def __init__(
-            self,
-            box: str,
-            caption: str,
-            commands: Optional[List[Command]] = None,
-    ):
-        _guard_scalar('FooterCard.box', box, (str,), False, False, False)
-        _guard_scalar('FooterCard.caption', caption, (str,), False, False, False)
-        _guard_vector('FooterCard.commands', commands, (Command,), False, True, False)
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.caption = caption
-        """The caption. Supports markdown."""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('FooterCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('FooterCard.caption', self.caption, (str,), False, False, False)
-        _guard_vector('FooterCard.commands', self.commands, (Command,), False, True, False)
-        return _dump(
-            view='footer',
-            box=self.box,
-            caption=self.caption,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'FooterCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        _guard_scalar('FooterCard.box', __d_box, (str,), False, False, False)
-        __d_caption: Any = __d.get('caption')
-        _guard_scalar('FooterCard.caption', __d_caption, (str,), False, False, False)
-        __d_commands: Any = __d.get('commands')
-        _guard_vector('FooterCard.commands', __d_commands, (dict,), False, True, False)
-        box: str = __d_box
-        caption: str = __d_caption
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return FooterCard(
-            box,
-            caption,
-            commands,
-        )
-
-
-_TextSize = ['xl', 'l', 'm', 's', 'xs']
-
-
-class TextSize:
-    XL = 'xl'
-    L = 'l'
-    M = 'm'
-    S = 's'
-    XS = 'xs'
-
-
-class Text:
-    """Create text content.
-    """
-    def __init__(
-            self,
-            content: str,
-            size: Optional[str] = None,
-            width: Optional[str] = None,
-            visible: Optional[bool] = None,
-            tooltip: Optional[str] = None,
-            name: Optional[str] = None,
-    ):
-        _guard_scalar('Text.content', content, (str,), False, False, False)
-        _guard_enum('Text.size', size, _TextSize, True)
-        _guard_scalar('Text.width', width, (str,), False, True, False)
-        _guard_scalar('Text.visible', visible, (bool,), False, True, False)
-        _guard_scalar('Text.tooltip', tooltip, (str,), False, True, False)
-        _guard_scalar('Text.name', name, (str,), False, True, False)
-        self.content = content
-        """The text content."""
-        self.size = size
-        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize."""
-        self.width = width
-        """The width of the text , e.g. '100px'."""
-        self.visible = visible
-        """True if the component should be visible. Defaults to true."""
-        self.tooltip = tooltip
-        """Tooltip message."""
-        self.name = name
-        """An identifying name for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('Text.content', self.content, (str,), False, False, False)
-        _guard_enum('Text.size', self.size, _TextSize, True)
-        _guard_scalar('Text.width', self.width, (str,), False, True, False)
-        _guard_scalar('Text.visible', self.visible, (bool,), False, True, False)
-        _guard_scalar('Text.tooltip', self.tooltip, (str,), False, True, False)
-        _guard_scalar('Text.name', self.name, (str,), False, True, False)
-        return _dump(
-            content=self.content,
-            size=self.size,
-            width=self.width,
-            visible=self.visible,
-            tooltip=self.tooltip,
-            name=self.name,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Text':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_content: Any = __d.get('content')
-        _guard_scalar('Text.content', __d_content, (str,), False, False, False)
-        __d_size: Any = __d.get('size')
-        _guard_enum('Text.size', __d_size, _TextSize, True)
-        __d_width: Any = __d.get('width')
-        _guard_scalar('Text.width', __d_width, (str,), False, True, False)
-        __d_visible: Any = __d.get('visible')
-        _guard_scalar('Text.visible', __d_visible, (bool,), False, True, False)
-        __d_tooltip: Any = __d.get('tooltip')
-        _guard_scalar('Text.tooltip', __d_tooltip, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Text.name', __d_name, (str,), False, True, False)
-        content: str = __d_content
-        size: Optional[str] = __d_size
-        width: Optional[str] = __d_width
-        visible: Optional[bool] = __d_visible
-        tooltip: Optional[str] = __d_tooltip
-        name: Optional[str] = __d_name
-        return Text(
-            content,
-            size,
-            width,
-            visible,
-            tooltip,
-            name,
         )
 
 
@@ -3152,7 +2647,7 @@ class Buttons:
         _guard_scalar('Buttons.width', width, (str,), False, True, False)
         _guard_scalar('Buttons.visible', visible, (bool,), False, True, False)
         self.items = items
-        """The button in this set."""
+        """The buttons in this set."""
         self.justify = justify
         """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify."""
         self.name = name
@@ -3200,6 +2695,94 @@ class Buttons:
             justify,
             name,
             width,
+            visible,
+        )
+
+
+class MiniButton:
+    """Create a mini button - same as regular button, but smaller in size.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            icon: Optional[str] = None,
+    ):
+        _guard_scalar('MiniButton.name', name, (str,), True, False, False)
+        _guard_scalar('MiniButton.label', label, (str,), False, False, False)
+        _guard_scalar('MiniButton.icon', icon, (str,), False, True, False)
+        self.name = name
+        """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
+        self.label = label
+        """The text displayed on the button."""
+        self.icon = icon
+        """An optional icon to display next to the button label."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('MiniButton.name', self.name, (str,), True, False, False)
+        _guard_scalar('MiniButton.label', self.label, (str,), False, False, False)
+        _guard_scalar('MiniButton.icon', self.icon, (str,), False, True, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            icon=self.icon,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'MiniButton':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('MiniButton.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('MiniButton.label', __d_label, (str,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('MiniButton.icon', __d_icon, (str,), False, True, False)
+        name: str = __d_name
+        label: str = __d_label
+        icon: Optional[str] = __d_icon
+        return MiniButton(
+            name,
+            label,
+            icon,
+        )
+
+
+class MiniButtons:
+    """Create a set of mini buttons laid out horizontally.
+    """
+    def __init__(
+            self,
+            items: List['Component'],
+            visible: Optional[bool] = None,
+    ):
+        _guard_vector('MiniButtons.items', items, (Component,), False, False, False)
+        _guard_scalar('MiniButtons.visible', visible, (bool,), False, True, False)
+        self.items = items
+        """The buttons in this set."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('MiniButtons.items', self.items, (Component,), False, False, False)
+        _guard_scalar('MiniButtons.visible', self.visible, (bool,), False, True, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            visible=self.visible,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'MiniButtons':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('MiniButtons.items', __d_items, (dict,), False, False, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('MiniButtons.visible', __d_visible, (bool,), False, True, False)
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        visible: Optional[bool] = __d_visible
+        return MiniButtons(
+            items,
             visible,
         )
 
@@ -6143,6 +5726,8 @@ class Component:
             color_picker: Optional[ColorPicker] = None,
             button: Optional[Button] = None,
             buttons: Optional[Buttons] = None,
+            mini_button: Optional[MiniButton] = None,
+            mini_buttons: Optional[MiniButtons] = None,
             file_upload: Optional[FileUpload] = None,
             table: Optional[Table] = None,
             link: Optional[Link] = None,
@@ -6185,6 +5770,8 @@ class Component:
         _guard_scalar('Component.color_picker', color_picker, (ColorPicker,), False, True, False)
         _guard_scalar('Component.button', button, (Button,), False, True, False)
         _guard_scalar('Component.buttons', buttons, (Buttons,), False, True, False)
+        _guard_scalar('Component.mini_button', mini_button, (MiniButton,), False, True, False)
+        _guard_scalar('Component.mini_buttons', mini_buttons, (MiniButtons,), False, True, False)
         _guard_scalar('Component.file_upload', file_upload, (FileUpload,), False, True, False)
         _guard_scalar('Component.table', table, (Table,), False, True, False)
         _guard_scalar('Component.link', link, (Link,), False, True, False)
@@ -6249,6 +5836,10 @@ class Component:
         """Button."""
         self.buttons = buttons
         """Button set."""
+        self.mini_button = mini_button
+        """Mini button."""
+        self.mini_buttons = mini_buttons
+        """Mini button set."""
         self.file_upload = file_upload
         """File upload."""
         self.table = table
@@ -6311,6 +5902,8 @@ class Component:
         _guard_scalar('Component.color_picker', self.color_picker, (ColorPicker,), False, True, False)
         _guard_scalar('Component.button', self.button, (Button,), False, True, False)
         _guard_scalar('Component.buttons', self.buttons, (Buttons,), False, True, False)
+        _guard_scalar('Component.mini_button', self.mini_button, (MiniButton,), False, True, False)
+        _guard_scalar('Component.mini_buttons', self.mini_buttons, (MiniButtons,), False, True, False)
         _guard_scalar('Component.file_upload', self.file_upload, (FileUpload,), False, True, False)
         _guard_scalar('Component.table', self.table, (Table,), False, True, False)
         _guard_scalar('Component.link', self.link, (Link,), False, True, False)
@@ -6353,6 +5946,8 @@ class Component:
             color_picker=None if self.color_picker is None else self.color_picker.dump(),
             button=None if self.button is None else self.button.dump(),
             buttons=None if self.buttons is None else self.buttons.dump(),
+            mini_button=None if self.mini_button is None else self.mini_button.dump(),
+            mini_buttons=None if self.mini_buttons is None else self.mini_buttons.dump(),
             file_upload=None if self.file_upload is None else self.file_upload.dump(),
             table=None if self.table is None else self.table.dump(),
             link=None if self.link is None else self.link.dump(),
@@ -6422,6 +6017,10 @@ class Component:
         _guard_scalar('Component.button', __d_button, (dict,), False, True, False)
         __d_buttons: Any = __d.get('buttons')
         _guard_scalar('Component.buttons', __d_buttons, (dict,), False, True, False)
+        __d_mini_button: Any = __d.get('mini_button')
+        _guard_scalar('Component.mini_button', __d_mini_button, (dict,), False, True, False)
+        __d_mini_buttons: Any = __d.get('mini_buttons')
+        _guard_scalar('Component.mini_buttons', __d_mini_buttons, (dict,), False, True, False)
         __d_file_upload: Any = __d.get('file_upload')
         _guard_scalar('Component.file_upload', __d_file_upload, (dict,), False, True, False)
         __d_table: Any = __d.get('table')
@@ -6481,6 +6080,8 @@ class Component:
         color_picker: Optional[ColorPicker] = None if __d_color_picker is None else ColorPicker.load(__d_color_picker)
         button: Optional[Button] = None if __d_button is None else Button.load(__d_button)
         buttons: Optional[Buttons] = None if __d_buttons is None else Buttons.load(__d_buttons)
+        mini_button: Optional[MiniButton] = None if __d_mini_button is None else MiniButton.load(__d_mini_button)
+        mini_buttons: Optional[MiniButtons] = None if __d_mini_buttons is None else MiniButtons.load(__d_mini_buttons)
         file_upload: Optional[FileUpload] = None if __d_file_upload is None else FileUpload.load(__d_file_upload)
         table: Optional[Table] = None if __d_table is None else Table.load(__d_table)
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
@@ -6523,6 +6124,8 @@ class Component:
             color_picker,
             button,
             buttons,
+            mini_button,
+            mini_buttons,
             file_upload,
             table,
             link,
@@ -6541,6 +6144,581 @@ class Component:
             image,
             persona,
             text_annotator,
+        )
+
+
+class ArticleCard:
+    """Create an article card for longer texts.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            content: Optional[str] = None,
+            items: Optional[List[Component]] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('ArticleCard.box', box, (str,), False, False, False)
+        _guard_scalar('ArticleCard.title', title, (str,), False, False, False)
+        _guard_scalar('ArticleCard.content', content, (str,), False, True, False)
+        _guard_vector('ArticleCard.items', items, (Component,), False, True, False)
+        _guard_vector('ArticleCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card’s title, displayed at the top."""
+        self.content = content
+        """Markdown text."""
+        self.items = items
+        """Collection of small buttons rendered under the title."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ArticleCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('ArticleCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('ArticleCard.content', self.content, (str,), False, True, False)
+        _guard_vector('ArticleCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('ArticleCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='article',
+            box=self.box,
+            title=self.title,
+            content=self.content,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ArticleCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('ArticleCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('ArticleCard.title', __d_title, (str,), False, False, False)
+        __d_content: Any = __d.get('content')
+        _guard_scalar('ArticleCard.content', __d_content, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('ArticleCard.items', __d_items, (dict,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('ArticleCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        content: Optional[str] = __d_content
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return ArticleCard(
+            box,
+            title,
+            content,
+            items,
+            commands,
+        )
+
+
+class Breadcrumb:
+    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        _guard_scalar('Breadcrumb.name', name, (str,), True, False, False)
+        _guard_scalar('Breadcrumb.label', label, (str,), False, False, False)
+        self.name = name
+        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
+        self.label = label
+        """The label to display."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Breadcrumb.name', self.name, (str,), True, False, False)
+        _guard_scalar('Breadcrumb.label', self.label, (str,), False, False, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Breadcrumb':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Breadcrumb.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Breadcrumb.label', __d_label, (str,), False, False, False)
+        name: str = __d_name
+        label: str = __d_label
+        return Breadcrumb(
+            name,
+            label,
+        )
+
+
+class BreadcrumbsCard:
+    """Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[Breadcrumb],
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('BreadcrumbsCard.box', box, (str,), False, False, False)
+        _guard_vector('BreadcrumbsCard.items', items, (Breadcrumb,), False, False, False)
+        _guard_vector('BreadcrumbsCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.items = items
+        """A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`"""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('BreadcrumbsCard.box', self.box, (str,), False, False, False)
+        _guard_vector('BreadcrumbsCard.items', self.items, (Breadcrumb,), False, False, False)
+        _guard_vector('BreadcrumbsCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='breadcrumbs',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'BreadcrumbsCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('BreadcrumbsCard.box', __d_box, (str,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('BreadcrumbsCard.items', __d_items, (dict,), False, False, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('BreadcrumbsCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return BreadcrumbsCard(
+            box,
+            items,
+            commands,
+        )
+
+
+class CanvasCard:
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card that displays a drawing canvas (whiteboard).
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            width: int,
+            height: int,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('CanvasCard.box', box, (str,), False, False, False)
+        _guard_scalar('CanvasCard.title', title, (str,), False, False, False)
+        _guard_scalar('CanvasCard.width', width, (int,), False, False, False)
+        _guard_scalar('CanvasCard.height', height, (int,), False, False, False)
+        _guard_vector('CanvasCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title for this card."""
+        self.width = width
+        """Canvas width, in pixels."""
+        self.height = height
+        """Canvas height, in pixels."""
+        self.data = data
+        """The data for this card."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('CanvasCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('CanvasCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('CanvasCard.width', self.width, (int,), False, False, False)
+        _guard_scalar('CanvasCard.height', self.height, (int,), False, False, False)
+        _guard_vector('CanvasCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='canvas',
+            box=self.box,
+            title=self.title,
+            width=self.width,
+            height=self.height,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'CanvasCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('CanvasCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('CanvasCard.title', __d_title, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('CanvasCard.width', __d_width, (int,), False, False, False)
+        __d_height: Any = __d.get('height')
+        _guard_scalar('CanvasCard.height', __d_height, (int,), False, False, False)
+        __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('CanvasCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        width: int = __d_width
+        height: int = __d_height
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return CanvasCard(
+            box,
+            title,
+            width,
+            height,
+            data,
+            commands,
+        )
+
+
+class ChatCard:
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card that displays a chat room.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            data: PackedRecord,
+            capacity: Optional[int] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('ChatCard.box', box, (str,), False, False, False)
+        _guard_scalar('ChatCard.title', title, (str,), False, False, False)
+        _guard_scalar('ChatCard.capacity', capacity, (int,), False, True, False)
+        _guard_vector('ChatCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title for this card."""
+        self.data = data
+        """The data for this card."""
+        self.capacity = capacity
+        """The maximum number of messages contained in this card. Defaults to 50 messages."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ChatCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('ChatCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('ChatCard.capacity', self.capacity, (int,), False, True, False)
+        _guard_vector('ChatCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='chat',
+            box=self.box,
+            title=self.title,
+            data=self.data,
+            capacity=self.capacity,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ChatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('ChatCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('ChatCard.title', __d_title, (str,), False, False, False)
+        __d_data: Any = __d.get('data')
+        __d_capacity: Any = __d.get('capacity')
+        _guard_scalar('ChatCard.capacity', __d_capacity, (int,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('ChatCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        data: PackedRecord = __d_data
+        capacity: Optional[int] = __d_capacity
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return ChatCard(
+            box,
+            title,
+            data,
+            capacity,
+            commands,
+        )
+
+
+_EditorCardMode = ['public', 'private']
+
+
+class EditorCardMode:
+    PUBLIC = 'public'
+    PRIVATE = 'private'
+
+
+class EditorCard:
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card that enables WYSIWYG editing on a page.
+    Adding this card to a page makes the page editable by end-users.
+    """
+    def __init__(
+            self,
+            box: str,
+            mode: str,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('EditorCard.box', box, (str,), False, False, False)
+        _guard_enum('EditorCard.mode', mode, _EditorCardMode, False)
+        _guard_vector('EditorCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.mode = mode
+        """The editing mode. Defaults to `public`. One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('EditorCard.box', self.box, (str,), False, False, False)
+        _guard_enum('EditorCard.mode', self.mode, _EditorCardMode, False)
+        _guard_vector('EditorCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='editor',
+            box=self.box,
+            mode=self.mode,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'EditorCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('EditorCard.box', __d_box, (str,), False, False, False)
+        __d_mode: Any = __d.get('mode')
+        _guard_enum('EditorCard.mode', __d_mode, _EditorCardMode, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('EditorCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        mode: str = __d_mode
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return EditorCard(
+            box,
+            mode,
+            commands,
+        )
+
+
+_FlexCardDirection = ['horizontal', 'vertical']
+
+
+class FlexCardDirection:
+    HORIZONTAL = 'horizontal'
+    VERTICAL = 'vertical'
+
+
+_FlexCardJustify = ['start', 'end', 'center', 'between', 'around']
+
+
+class FlexCardJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+_FlexCardAlign = ['start', 'end', 'center', 'baseline', 'stretch']
+
+
+class FlexCardAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BASELINE = 'baseline'
+    STRETCH = 'stretch'
+
+
+_FlexCardWrap = ['start', 'end', 'center', 'between', 'around', 'stretch']
+
+
+class FlexCardWrap:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+    STRETCH = 'stretch'
+
+
+class FlexCard:
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
+    """
+    def __init__(
+            self,
+            box: str,
+            item_view: str,
+            item_props: PackedRecord,
+            data: PackedData,
+            direction: Optional[str] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('FlexCard.box', box, (str,), False, False, False)
+        _guard_scalar('FlexCard.item_view', item_view, (str,), False, False, False)
+        _guard_enum('FlexCard.direction', direction, _FlexCardDirection, True)
+        _guard_enum('FlexCard.justify', justify, _FlexCardJustify, True)
+        _guard_enum('FlexCard.align', align, _FlexCardAlign, True)
+        _guard_enum('FlexCard.wrap', wrap, _FlexCardWrap, True)
+        _guard_vector('FlexCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.item_view = item_view
+        """The child card type."""
+        self.item_props = item_props
+        """The child card properties."""
+        self.data = data
+        """Data for this card."""
+        self.direction = direction
+        """Layout direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection."""
+        self.justify = justify
+        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify."""
+        self.align = align
+        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign."""
+        self.wrap = wrap
+        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('FlexCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('FlexCard.item_view', self.item_view, (str,), False, False, False)
+        _guard_enum('FlexCard.direction', self.direction, _FlexCardDirection, True)
+        _guard_enum('FlexCard.justify', self.justify, _FlexCardJustify, True)
+        _guard_enum('FlexCard.align', self.align, _FlexCardAlign, True)
+        _guard_enum('FlexCard.wrap', self.wrap, _FlexCardWrap, True)
+        _guard_vector('FlexCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='flex',
+            box=self.box,
+            item_view=self.item_view,
+            item_props=self.item_props,
+            data=self.data,
+            direction=self.direction,
+            justify=self.justify,
+            align=self.align,
+            wrap=self.wrap,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FlexCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('FlexCard.box', __d_box, (str,), False, False, False)
+        __d_item_view: Any = __d.get('item_view')
+        _guard_scalar('FlexCard.item_view', __d_item_view, (str,), False, False, False)
+        __d_item_props: Any = __d.get('item_props')
+        __d_data: Any = __d.get('data')
+        __d_direction: Any = __d.get('direction')
+        _guard_enum('FlexCard.direction', __d_direction, _FlexCardDirection, True)
+        __d_justify: Any = __d.get('justify')
+        _guard_enum('FlexCard.justify', __d_justify, _FlexCardJustify, True)
+        __d_align: Any = __d.get('align')
+        _guard_enum('FlexCard.align', __d_align, _FlexCardAlign, True)
+        __d_wrap: Any = __d.get('wrap')
+        _guard_enum('FlexCard.wrap', __d_wrap, _FlexCardWrap, True)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('FlexCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        item_view: str = __d_item_view
+        item_props: PackedRecord = __d_item_props
+        data: PackedData = __d_data
+        direction: Optional[str] = __d_direction
+        justify: Optional[str] = __d_justify
+        align: Optional[str] = __d_align
+        wrap: Optional[str] = __d_wrap
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return FlexCard(
+            box,
+            item_view,
+            item_props,
+            data,
+            direction,
+            justify,
+            align,
+            wrap,
+            commands,
+        )
+
+
+class FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+    """
+    def __init__(
+            self,
+            box: str,
+            caption: str,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('FooterCard.box', box, (str,), False, False, False)
+        _guard_scalar('FooterCard.caption', caption, (str,), False, False, False)
+        _guard_vector('FooterCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.caption = caption
+        """The caption. Supports markdown."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('FooterCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('FooterCard.caption', self.caption, (str,), False, False, False)
+        _guard_vector('FooterCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='footer',
+            box=self.box,
+            caption=self.caption,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FooterCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('FooterCard.box', __d_box, (str,), False, False, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('FooterCard.caption', __d_caption, (str,), False, False, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('FooterCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        caption: str = __d_caption
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return FooterCard(
+            box,
+            caption,
+            commands,
         )
 
 
