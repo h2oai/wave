@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { TextAnnotator, XTextAnnotator } from './annotator'
 import { Button, Buttons, XButtons, XStandAloneButton } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
@@ -33,6 +34,7 @@ import { cards } from './layout'
 import { Link, XLink } from './link'
 import { Markup, XMarkup } from './markup'
 import { MessageBar, XMessageBar } from './message_bar'
+import { Persona, XPersona } from "./persona"
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
@@ -52,7 +54,6 @@ import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
-import { Persona, XPersona } from "./persona"
 
 /** Create a component. */
 export interface Component {
@@ -136,6 +137,8 @@ export interface Component {
   image?: Image
   /** Persona. */
   persona?: Persona
+  /** Annotator. */
+  text_annotator?: TextAnnotator
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -259,6 +262,7 @@ const
     if (m.inline) return <XInline model={m.inline} />
     if (m.image) return <XImage model={m.image} />
     if (m.persona) return <XPersona model={m.persona} />
+    if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

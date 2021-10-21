@@ -5956,6 +5956,165 @@ class Persona:
         )
 
 
+class TextAnnotatorTag:
+    """Create a tag.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            color: str,
+    ):
+        _guard_scalar('TextAnnotatorTag.name', name, (str,), True, False, False)
+        _guard_scalar('TextAnnotatorTag.label', label, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.color', color, (str,), False, False, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.label = label
+        """Text to be displayed for this tag."""
+        self.color = color
+        """HEX or RGB color string used as background for highlighted phrases."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TextAnnotatorTag.name', self.name, (str,), True, False, False)
+        _guard_scalar('TextAnnotatorTag.label', self.label, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.color', self.color, (str,), False, False, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextAnnotatorTag':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TextAnnotatorTag.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('TextAnnotatorTag.label', __d_label, (str,), False, False, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('TextAnnotatorTag.color', __d_color, (str,), False, False, False)
+        name: str = __d_name
+        label: str = __d_label
+        color: str = __d_color
+        return TextAnnotatorTag(
+            name,
+            label,
+            color,
+        )
+
+
+class TextAnnotatorItem:
+    """Create an annotator item with initial selected tags or no tag for plaintext.
+    """
+    def __init__(
+            self,
+            text: str,
+            tag: Optional[str] = None,
+    ):
+        _guard_scalar('TextAnnotatorItem.text', text, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorItem.tag', tag, (str,), False, True, False)
+        self.text = text
+        """Text to be highlighted."""
+        self.tag = tag
+        """Tag connected to the highlighted text."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TextAnnotatorItem.text', self.text, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorItem.tag', self.tag, (str,), False, True, False)
+        return _dump(
+            text=self.text,
+            tag=self.tag,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextAnnotatorItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_text: Any = __d.get('text')
+        _guard_scalar('TextAnnotatorItem.text', __d_text, (str,), False, False, False)
+        __d_tag: Any = __d.get('tag')
+        _guard_scalar('TextAnnotatorItem.tag', __d_tag, (str,), False, True, False)
+        text: str = __d_text
+        tag: Optional[str] = __d_tag
+        return TextAnnotatorItem(
+            text,
+            tag,
+        )
+
+
+class TextAnnotator:
+    """Create an annotator component.
+
+    The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+    """
+    def __init__(
+            self,
+            name: str,
+            title: str,
+            tags: List[TextAnnotatorTag],
+            items: List[TextAnnotatorItem],
+            trigger: Optional[bool] = None,
+    ):
+        _guard_scalar('TextAnnotator.name', name, (str,), True, False, False)
+        _guard_scalar('TextAnnotator.title', title, (str,), False, False, False)
+        _guard_vector('TextAnnotator.tags', tags, (TextAnnotatorTag,), False, False, False)
+        _guard_vector('TextAnnotator.items', items, (TextAnnotatorItem,), False, False, False)
+        _guard_scalar('TextAnnotator.trigger', trigger, (bool,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.title = title
+        """The text annotator's title."""
+        self.tags = tags
+        """List of tags the user can annotate with."""
+        self.items = items
+        """Pretagged parts of text content."""
+        self.trigger = trigger
+        """True if the form should be submitted when the annotator value changes."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TextAnnotator.name', self.name, (str,), True, False, False)
+        _guard_scalar('TextAnnotator.title', self.title, (str,), False, False, False)
+        _guard_vector('TextAnnotator.tags', self.tags, (TextAnnotatorTag,), False, False, False)
+        _guard_vector('TextAnnotator.items', self.items, (TextAnnotatorItem,), False, False, False)
+        _guard_scalar('TextAnnotator.trigger', self.trigger, (bool,), False, True, False)
+        return _dump(
+            name=self.name,
+            title=self.title,
+            tags=[__e.dump() for __e in self.tags],
+            items=[__e.dump() for __e in self.items],
+            trigger=self.trigger,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextAnnotator':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TextAnnotator.name', __d_name, (str,), True, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('TextAnnotator.title', __d_title, (str,), False, False, False)
+        __d_tags: Any = __d.get('tags')
+        _guard_vector('TextAnnotator.tags', __d_tags, (dict,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('TextAnnotator.items', __d_items, (dict,), False, False, False)
+        __d_trigger: Any = __d.get('trigger')
+        _guard_scalar('TextAnnotator.trigger', __d_trigger, (bool,), False, True, False)
+        name: str = __d_name
+        title: str = __d_title
+        tags: List[TextAnnotatorTag] = [TextAnnotatorTag.load(__e) for __e in __d_tags]
+        items: List[TextAnnotatorItem] = [TextAnnotatorItem.load(__e) for __e in __d_items]
+        trigger: Optional[bool] = __d_trigger
+        return TextAnnotator(
+            name,
+            title,
+            tags,
+            items,
+            trigger,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -6001,6 +6160,7 @@ class Component:
             inline: Optional[Inline] = None,
             image: Optional[Image] = None,
             persona: Optional[Persona] = None,
+            text_annotator: Optional[TextAnnotator] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6042,6 +6202,7 @@ class Component:
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', image, (Image,), False, True, False)
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
+        _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6122,6 +6283,8 @@ class Component:
         """Image"""
         self.persona = persona
         """Persona."""
+        self.text_annotator = text_annotator
+        """Annotator."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6165,6 +6328,7 @@ class Component:
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
+        _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6206,6 +6370,7 @@ class Component:
             inline=None if self.inline is None else self.inline.dump(),
             image=None if self.image is None else self.image.dump(),
             persona=None if self.persona is None else self.persona.dump(),
+            text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
         )
 
     @staticmethod
@@ -6291,6 +6456,8 @@ class Component:
         _guard_scalar('Component.image', __d_image, (dict,), False, True, False)
         __d_persona: Any = __d.get('persona')
         _guard_scalar('Component.persona', __d_persona, (dict,), False, True, False)
+        __d_text_annotator: Any = __d.get('text_annotator')
+        _guard_scalar('Component.text_annotator', __d_text_annotator, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6331,6 +6498,7 @@ class Component:
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
+        text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
         return Component(
             text,
             text_xl,
@@ -6372,6 +6540,7 @@ class Component:
             inline,
             image,
             persona,
+            text_annotator,
         )
 
 

@@ -2588,6 +2588,78 @@ ui_persona <- function(
   return(.o)
 }
 
+#' Create a tag.
+#'
+#' @param name An identifying name for this component.
+#' @param label Text to be displayed for this tag.
+#' @param color HEX or RGB color string used as background for highlighted phrases.
+#' @return A TextAnnotatorTag instance.
+#' @export
+ui_text_annotator_tag <- function(
+  name,
+  label,
+  color) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .o <- list(
+    name=name,
+    label=label,
+    color=color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorTag"))
+  return(.o)
+}
+
+#' Create an annotator item with initial selected tags or no tag for plaintext.
+#'
+#' @param text Text to be highlighted.
+#' @param tag Tag connected to the highlighted text.
+#' @return A TextAnnotatorItem instance.
+#' @export
+ui_text_annotator_item <- function(
+  text,
+  tag = NULL) {
+  .guard_scalar("text", "character", text)
+  .guard_scalar("tag", "character", tag)
+  .o <- list(
+    text=text,
+    tag=tag)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorItem"))
+  return(.o)
+}
+
+#' Create an annotator component.
+#' 
+#' The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+#'
+#' @param name An identifying name for this component.
+#' @param title The text annotator's title.
+#' @param tags List of tags the user can annotate with.
+#' @param items Pretagged parts of text content.
+#' @param trigger True if the form should be submitted when the annotator value changes.
+#' @return A TextAnnotator instance.
+#' @export
+ui_text_annotator <- function(
+  name,
+  title,
+  tags,
+  items,
+  trigger = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("title", "character", title)
+  .guard_vector("tags", "WaveTextAnnotatorTag", tags)
+  .guard_vector("items", "WaveTextAnnotatorItem", items)
+  .guard_scalar("trigger", "logical", trigger)
+  .o <- list(text_annotator=list(
+    name=name,
+    title=title,
+    tags=tags,
+    items=items,
+    trigger=trigger))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
