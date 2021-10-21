@@ -19,46 +19,35 @@ import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { cards } from './layout'
 import { border, cssVar } from './theme'
-import { Command, toCommands } from './toolbar'
+import { Command } from './toolbar'
 import { bond } from './ui'
 
-const
-  css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-      $nest: {
-        '+div': {
-          display: 'none' // HACK: Hide page-wide command menu.
-        }
-      }
-    },
-    content: {
-      padding: 24
-    },
-    img: {
-      flexGrow: 1,
-      minHeight: 150,
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center'
-    },
-    persona: {
-      margin: '0 auto',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginBottom: 16
-    },
-    items: {
-      marginTop: 16
-    }
-  }),
-  commandBarPrimarySetStyles: Fluent.IStyle = {
-    justifyContent: 'center',
-    background: `${cssVar('$card')}`,
-    '.ms-Button:not(:hover)': { background: `${cssVar('$card')} !important` }
+const css = stylesheet({
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  content: {
+    padding: 24
+  },
+  img: {
+    flexGrow: 1,
+    minHeight: 150,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center'
+  },
+  persona: {
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 16
+  },
+  items: {
+    marginTop: 16
   }
+})
 
 /** Create a profile card to display information about a user. */
 interface State {
@@ -84,7 +73,7 @@ interface State {
 
 export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {
   const render = () => {
-    const { title, subtitle, image, profile_image, initials, commands, items } = state
+    const { title, subtitle, image, profile_image, initials, items } = state
     return (
       <div data-test={name} className={css.card}>
         {image && <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>}
@@ -106,7 +95,6 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
               }}
             />
           </div>
-          {commands && <Fluent.CommandBar items={toCommands(commands)} styles={{ root: { padding: 0, height: 24 }, primarySet: commandBarPrimarySetStyles }} />}
           {items && <div className={css.items}><XComponents items={items} /></div>}
         </div>
       </div>

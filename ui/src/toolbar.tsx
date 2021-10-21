@@ -41,8 +41,6 @@ export interface Command {
   data?: S
 }
 
-export const toCommands = (commands: Command[]) => commands.map(toCommand)
-
 /** Create a card containing a toolbar. */
 interface State {
   /** Items to render. */
@@ -53,10 +51,10 @@ interface State {
   overflow_items?: Command[]
 }
 
-export const toCommands = (commands: Command[]) => commands.map(toCommand)
 
 const
   overflowProps: IButtonProps = { ariaLabel: 'More' },
+  toCommands = (commands: Command[]) => commands.map(toCommand),
   toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
     wave.args[name] = false
     const onClick = () => {
