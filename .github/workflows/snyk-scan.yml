@@ -1,0 +1,142 @@
+name: Snyk Security Vulnerability Scan
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+  push:
+    tags:
+      - 'v.[0-9]+.[0-100]+.[0-100]+'
+    branches:
+      - 'master'
+
+jobs:
+  snyk_scan_test:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Check changed Deps files
+        uses: tj-actions/changed-files@v10
+        id: changed-files
+        with:
+          files: |
+            go.mod
+            ui/package-lock.json
+            website/package-lock.json
+            py/examples/requirements.txt
+            py/Makefile
+
+      - name: Snyk scan for Go dependancies
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
+        uses: snyk/actions/golang@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=go.mod -d --fail-on=all
+
+      - name: Snyk scan for Node dependancies
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'ui/package-lock.json')
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=ui/package-lock.json -d --fail-on=all
+
+      - name: Snyk scan for Node dependancies
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'website/package-lock.json')
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=website/package-lock.json -d --fail-on=all
+
+      - name: Check python deps files
+        id: changed-py-deps
+        if: |
+          contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile') ||
+          contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/examples/requirements.txt')
+        shell: bash
+        run: echo "::set-output name=any_changed::true"
+
+      - uses: snyk/actions/setup@master
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
+
+      - uses: actions/setup-python@v1
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
+        with:
+          python-version: "3.8"
+
+      - name: pip install
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
+        run: |
+          pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
+          pip install -r py/examples/requirements.txt
+          pip freeze > py/requirements.txt
+          cat py/requirements.txt
+
+      - name: Snyk scan for Python dependancies
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
+        run: snyk test --org=h2oai --remote-repo-url=WAVE --file=py/requirements.txt --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  snyk_scan_monitor:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract github branch/tag name
+        shell: bash
+        run: echo "##[set-output name=ref;]$(echo ${GITHUB_REF##*/})"
+        id: extract_ref
+
+      - uses: actions/checkout@master
+
+      - name: Snyk scan for Go dependancies
+        uses: snyk/actions/golang@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --org=h2oai --remote-repo-url=WAVE --file=go.mod --project-name=WAVE/${{ steps.extract_ref.outputs.ref }} -d --fail-on=all
+
+      - name: Snyk scan for Node dependancies
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --org=h2oai --remote-repo-url=WAVE --file=ui/package-lock.json --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/ui/package-lock.json -d --fail-on=all
+
+      - name: Snyk scan for Node dependancies
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --org=h2oai --remote-repo-url=WAVE --file=website/package-lock.json --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/website/package-lock.json -d --fail-on=all
+
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+
+      - name: Install python depedency packages to scan
+        run: |
+          pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
+          pip install -r py/examples/requirements.txt
+          pip freeze > py/requirements.txt
+          cat py/requirements.txt
+
+      - name: Snyk scan for Python dependancies
+        run: snyk monitor --org=h2oai --remote-repo-url=WAVE --file=py/requirements.txt --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
