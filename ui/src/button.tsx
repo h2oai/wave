@@ -114,7 +114,8 @@ const
 const
   XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width } }: { model: Button }) => {
     const
-      onClick = () => {
+      onClick = (ev: any) => {
+        ev.stopPropagation()
         if (name.startsWith('#')) {
           window.location.hash = name.substr(1)
           return
@@ -125,7 +126,7 @@ const
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
         root: {
-          display: visible ? 'inherit' : 'none',
+          display: visible ? undefined : 'none',
           width: formItemWidth(width),
           minWidth: width ? 'initial' : undefined
         }

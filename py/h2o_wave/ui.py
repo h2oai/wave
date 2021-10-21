@@ -3474,6 +3474,45 @@ def tab_card(
     )
 
 
+def tall_article_preview_card(
+        box: str,
+        title: str,
+        image: str,
+        subtitle: Optional[str] = None,
+        value: Optional[str] = None,
+        content: Optional[str] = None,
+        name: Optional[str] = None,
+        items: Optional[List[Component]] = None,
+        commands: Optional[List[Command]] = None,
+) -> TallArticlePreviewCard:
+    """Create a tall article preview card.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        image: The card’s background image URL, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`)
+        subtitle: The card's subtitle, displayed below the title.
+        value: The value displayed to the right of the title/subtitle.
+        content: Markdown text.
+        name: An identifying name for this card. Makes the card clickable, similar to a button.
+        items: Components displayed in the body of the card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.TallArticlePreviewCard` instance.
+    """
+    return TallArticlePreviewCard(
+        box,
+        title,
+        image,
+        subtitle,
+        value,
+        content,
+        name,
+        items,
+        commands,
+    )
+
+
 def tall_gauge_stat_card(
         box: str,
         title: str,
