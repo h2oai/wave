@@ -133,7 +133,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     },
     // HACK: Unify Safari gradients with real browsers.
     getGradient = () => {
-      const { r, g, b } = Fluent.getColorFromString(cssVarValue('$card'))!
+      const { r, g, b } = Fluent.getColorFromString(cssVarValue('$card')) || { r: 255, g: 255, b: 255 }
       return `linear-gradient(rgba(${r}, ${g}, ${b}, 0) 0%, rgba(${r}, ${g}, ${b}, 0.5) 50%, ${cssVar('$card')} 100%)`
     },
     render = () => (
