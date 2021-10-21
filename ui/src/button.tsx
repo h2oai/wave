@@ -170,7 +170,7 @@ export const
   ),
   XMiniButtons = ({ model }: { model: MiniButtons }) => (
     <Fluent.Stack horizontal verticalAlign='center' styles={{ root: { height: 24 } }}>
-      {model.items.map(i => i.mini_button).map(miniBtn => miniBtn ? <XMiniButton key={miniBtn.name} model={miniBtn} /> : null)}
+      {model.items.map(({ mini_button }) => mini_button ? <XMiniButton key={mini_button.name} model={mini_button} /> : null)}
     </Fluent.Stack>
   ),
   XMiniButton = ({ model }: { model: MiniButton }) => {

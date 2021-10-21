@@ -5837,9 +5837,9 @@ class Component:
         self.buttons = buttons
         """Button set."""
         self.mini_button = mini_button
-        """Button."""
+        """Mini button."""
         self.mini_buttons = mini_buttons
-        """Button set."""
+        """Mini button set."""
         self.file_upload = file_upload
         """File upload."""
         self.table = table

@@ -103,9 +103,9 @@ export interface Component {
   button?: Button
   /** Button set. */
   buttons?: Buttons
-  /** Button. */
+  /** Mini button. */
   mini_button?: MiniButton
-  /** Button set. */
+  /** Mini button set. */
   mini_buttons?: MiniButtons
   /** File upload. */
   file_upload?: FileUpload
