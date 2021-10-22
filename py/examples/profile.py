@@ -9,7 +9,7 @@ image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=c
 page.add('example', ui.profile_card(
     box='1 1 3 5',
     image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260', # noqa
-    persona=ui.persona(title='John Doe', subtitle='Data Scientist', caption='Online', size='xl', image=image),
+    persona=ui.persona(title='John Doe', subtitle='Data Scientist', image=image),
     items=[
         ui.inline(justify='center', items=[
             ui.mini_buttons([
