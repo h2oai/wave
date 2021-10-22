@@ -8919,6 +8919,76 @@ class PlotCard:
         )
 
 
+class ProfileCard:
+    """Create a profile card to display information about a user.
+    """
+    def __init__(
+            self,
+            box: str,
+            persona: Component,
+            image: str,
+            items: Optional[List[Component]] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('ProfileCard.box', box, (str,), False, False, False)
+        _guard_scalar('ProfileCard.persona', persona, (Component,), False, False, False)
+        _guard_scalar('ProfileCard.image', image, (str,), False, False, False)
+        _guard_vector('ProfileCard.items', items, (Component,), False, True, False)
+        _guard_vector('ProfileCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.persona = persona
+        """The persona represented by this card."""
+        self.image = image
+        """The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). ."""
+        self.items = items
+        """Components in this card displayed below toolbar / image."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ProfileCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('ProfileCard.persona', self.persona, (Component,), False, False, False)
+        _guard_scalar('ProfileCard.image', self.image, (str,), False, False, False)
+        _guard_vector('ProfileCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('ProfileCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='profile',
+            box=self.box,
+            persona=self.persona.dump(),
+            image=self.image,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ProfileCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('ProfileCard.box', __d_box, (str,), False, False, False)
+        __d_persona: Any = __d.get('persona')
+        _guard_scalar('ProfileCard.persona', __d_persona, (dict,), False, False, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('ProfileCard.image', __d_image, (str,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('ProfileCard.items', __d_items, (dict,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('ProfileCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        persona: Component = Component.load(__d_persona)
+        image: str = __d_image
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return ProfileCard(
+            box,
+            persona,
+            image,
+            items,
+            commands,
+        )
+
+
 class RepeatCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards.

@@ -3697,6 +3697,38 @@ ui_plot_card <- function(
   return(.o)
 }
 
+#' Create a profile card to display information about a user.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param persona The persona represented by this card.
+#' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
+#'   or a path to an image hosted on the Wave daemon (starting with `/`).
+#'   .
+#' @param items Components in this card displayed below toolbar / image.
+#' @param commands Contextual menu commands for this component.
+#' @return A ProfileCard instance.
+#' @export
+ui_profile_card <- function(
+  box,
+  persona,
+  image,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_scalar("image", "character", image)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    persona=persona,
+    image=image,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
+  return(.o)
+}
+
 #' EXPERIMENTAL. DO NOT USE.
 #' Create a card containing other cards.
 #'
