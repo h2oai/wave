@@ -1278,7 +1278,8 @@ ui_mini_buttons <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Create a file upload component.
+#' A file upload component allows a user to browse, select and upload one or more files.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed in the bottom button. Defaults to "Upload".
@@ -1287,8 +1288,9 @@ ui_mini_buttons <- function(
 #' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
 #' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
 #' @param height The height of the file upload, e.g. '400px', '50%', etc.
-#' @param width No documentation available.
-#' @param visible No documentation available.
+#' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
+#' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
 #' @export
@@ -1301,6 +1303,7 @@ ui_file_upload <- function(
   max_size = NULL,
   height = NULL,
   width = NULL,
+  compact = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1311,6 +1314,7 @@ ui_file_upload <- function(
   .guard_scalar("max_size", "numeric", max_size)
   .guard_scalar("height", "character", height)
   .guard_scalar("width", "character", width)
+  .guard_scalar("compact", "logical", compact)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(file_upload=list(
@@ -1322,6 +1326,7 @@ ui_file_upload <- function(
     max_size=max_size,
     height=height,
     width=width,
+    compact=compact,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))

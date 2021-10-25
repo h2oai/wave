@@ -103,48 +103,43 @@ const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const
   XFileUpload = ({ model }: { model: FileUpload }) => {
     const
+      { name, label, file_extensions, max_file_size, compact, height, max_size, multiple } = model,
       [isDragging, setIsDragging] = React.useState(false),
       [files, setFiles] = React.useState<File[]>([]),
       [fileNames, setFileNames] = React.useState<S>(''),
       [percentComplete, setPercentComplete] = React.useState(0.0),
       [error, setError] = React.useState(''),
       [successMsg, setSuccessMsg] = React.useState(''),
-      maxFileSizeBytes = model.max_file_size ? convertMegabytesToBytes(model.max_file_size) : 0,
-      maxSizeBytes = model.max_size ? convertMegabytesToBytes(model.max_size) : 0,
-      fileExtensions = model.file_extensions ? model.file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
-      upload = async () => {
+      maxFileSizeBytes = max_file_size ? convertMegabytesToBytes(max_file_size) : 0,
+      maxSizeBytes = max_size ? convertMegabytesToBytes(max_size) : 0,
+      fileExtensions = file_extensions ? file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
+      upload = async (uploadFiles = files) => {
         const formData = new FormData()
-        files.forEach((f: File) => formData.append('files', f))
+        uploadFiles.forEach((f: File) => formData.append('files', f))
 
         try {
-          const makeRequest = new Promise<XMLHttpRequest>((resolve, reject) => {
+          const { responseText } = await new Promise<XMLHttpRequest>((resolve, reject) => {
             const xhr = new XMLHttpRequest()
             xhr.open("POST", "/_f")
             xhr.upload.onprogress = e => setPercentComplete(e.loaded / e.total)
             xhr.send(formData)
             xhr.onreadystatechange = () => {
               if (xhr.readyState !== XMLHttpRequest.DONE) return
-              if (xhr.status >= 200 && xhr.status < 300) resolve(xhr)
-              else reject(xhr)
+              xhr.status >= 200 && xhr.status < 300 ? resolve(xhr) : reject(xhr)
             }
           })
-          const { responseText } = await makeRequest
           const { files } = JSON.parse(responseText)
-          wave.args[model.name] = files
+          wave.args[name] = files
 
-          if (!model.compact) wave.push()
+          if (!compact) wave.push()
           setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
         }
         catch ({ responseText }) { setError(responseText || 'There was an error when uploading file.') }
         finally { setFiles([]) }
       },
-      isFileTypeAllowed = (fileName: string) => {
-        return !fileExtensions || fileExtensions.some(ext => fileName.toLowerCase().endsWith(ext.toLowerCase()))
-      },
+      isFileTypeAllowed = (fileName: S) => !fileExtensions || fileExtensions.some(ext => fileName.toLowerCase().endsWith(ext.toLowerCase())),
       validateFiles = (fileArr: File[]) => {
-        if (!model.multiple && fileArr.length > 1) {
-          return 'Cannot upload multiple files. Input is not set to multiple mode.'
-        }
+        if (!multiple && fileArr.length > 1) return 'Cannot upload multiple files. Input is not set to multiple mode.'
 
         const notAllowedFiles = fileArr.filter(({ name }) => !isFileTypeAllowed(name))
         if (notAllowedFiles.length) {
@@ -156,14 +151,14 @@ export const
           const maxSizePerFileExceededFiles = fileArr.filter(({ size }) => size > maxFileSizeBytes)
           if (maxSizePerFileExceededFiles.length) {
             return `Max file size exceeded for files: ${maxSizePerFileExceededFiles.map(({ name }) => name).join(', ')}.
-            Allowed size per file: ${model.max_file_size}Mb.`
+            Allowed size per file: ${max_file_size}Mb.`
           }
         }
 
         if (maxSizeBytes) {
           const totalSize = fileArr.reduce((total, { size }) => total + size, 0)
           if (totalSize > maxSizeBytes) {
-            return `Total max file size exceeded. Allowed size: ${model.max_size}Mb.`
+            return `Total max file size exceeded. Allowed size: ${max_size}Mb.`
           }
         }
       },
@@ -177,12 +172,11 @@ export const
           setError(errMsg)
         }
         else {
-          if (model.compact) {
-            setFiles(fileArr)
-            await upload()
+          setFiles(fileArr)
+          if (compact) {
+            await upload(fileArr)
             setPercentComplete(0)
           }
-          setFiles(fileArr)
           setFileNames(fileArr.map(({ name }) => name).join(', '))
         }
       },
@@ -263,7 +257,7 @@ export const
         )
         else if (files.length) return (
           <>
-            <Fluent.Text variant='xLarge'>{model.multiple ? 'Chosen Files' : 'Chosen File'}</Fluent.Text>
+            <Fluent.Text variant='xLarge'>{multiple ? 'Chosen Files' : 'Chosen File'}</Fluent.Text>
             <Fluent.Stack
               horizontal
               verticalAlign='center'
@@ -286,41 +280,40 @@ export const
           <>
             <Fluent.Icon iconName='CloudUpload' styles={{ root: { fontSize: 50 } }} />
             <input
-              id={model.name}
-              data-test={model.name}
+              id={name}
+              data-test={name}
               className={css.uploadInput}
               onChange={onChange}
               type='file'
               accept={fileExtensions?.join(',')}
-              multiple={model.multiple} />
-            <label htmlFor={model.name} className={css.uploadLabel}>Browse...</label>
-            <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {model.multiple ? 'files' : 'a file'} here.</Fluent.Text>
+              multiple={multiple} />
+            <label htmlFor={name} className={css.uploadLabel}>Browse...</label>
+            <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
       },
       getCompactFileUpload = () => (
         <>
-          {model.label && <Fluent.Label>{model.label}</Fluent.Label>}
+          {label && <Fluent.Label>{label}</Fluent.Label>}
           {
             percentComplete
               ? <Fluent.ProgressIndicator description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`} percentComplete={percentComplete} />
               : (
                 <div className={css.compact}>
-                  <Fluent.TextField data-test={`textfield-${model.name}`} readOnly value={fileNames} errorMessage={error} />
-                  <input id={model.name} data-test={model.name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={model.multiple} />
-                  <label htmlFor={model.name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
+                  <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} />
+                  <input id={name} data-test={name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={multiple} />
+                  <label htmlFor={name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
                 </div>
               )
           }
         </>
       )
 
-    const uploadClasses = isDragging && !error && !successMsg ? clas(css.upload, css.uploadDragging) : css.upload
-    return model.compact ? getCompactFileUpload() : (
+    return compact ? getCompactFileUpload() : (
       <>
         <form
-          className={uploadClasses}
-          style={{ height: model.height || 300 }}
+          className={isDragging && !error && !successMsg ? clas(css.upload, css.uploadDragging) : css.upload}
+          style={{ height: height || 300 }}
           onDragStart={onIsDragging}
           onDragEnter={onIsDragging}
           onDragEnd={onIsNotDragging}
@@ -330,7 +323,7 @@ export const
         >
           {getUploadBodyComponent()}
         </form>
-        <Fluent.PrimaryButton disabled={!!percentComplete || !files.length} text={model.label || 'Upload'} onClick={upload} />
+        <Fluent.PrimaryButton disabled={!!percentComplete || !files.length} text={label || 'Upload'} onClick={() => upload()} />
       </>
     )
   }

@@ -1097,10 +1097,12 @@ def file_upload(
         max_size: Optional[float] = None,
         height: Optional[str] = None,
         width: Optional[str] = None,
+        compact: Optional[bool] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a file upload component.
+    A file upload component allows a user to browse, select and upload one or more files.
 
     Args:
         name: An identifying name for this component.
@@ -1110,8 +1112,9 @@ def file_upload(
         max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
         max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
         height: The height of the file upload, e.g. '400px', '50%', etc.
-        width: No documentation available.
-        visible: No documentation available.
+        width: The width of the file upload, e.g. '100px'. Defaults to '100%'.
+        compact: True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false.
+        visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.FileUpload` instance.
@@ -1125,6 +1128,7 @@ def file_upload(
         max_size,
         height,
         width,
+        compact,
         visible,
         tooltip,
     ))
