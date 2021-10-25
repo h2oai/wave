@@ -61,6 +61,7 @@ type Sub struct {
 // Broker represents a message broker.
 type Broker struct {
 	site        *Site
+	editable    bool
 	clients     map[string]map[*Client]interface{} // route => client-set
 	publish     chan Pub
 	subscribe   chan Sub
@@ -70,9 +71,10 @@ type Broker struct {
 	appsMux     sync.RWMutex    // mutex for tracking apps
 }
 
-func newBroker(site *Site) *Broker {
+func newBroker(site *Site, editable bool) *Broker {
 	return &Broker{
 		site,
+		editable,
 		make(map[string]map[*Client]interface{}),
 		make(chan Pub, 1024),     // TODO tune
 		make(chan Sub, 1024),     // TODO tune
@@ -146,6 +148,15 @@ func parseMsg(s []byte) Msg {
 // patch broadcasts changes to clients and patches site data.
 func (b *Broker) patch(route string, data []byte) {
 	b.publish <- Pub{route, data}
+
+	// Skip writes if the route belongs to an app set to unicast mode, and -editable is not set.
+	if !b.editable {
+		app := b.getApp(route)
+		if app != nil && app.mode == unicastMode {
+			return
+		}
+	}
+
 	// Write AOF entry with patch marker "*" as-is to log file.
 	// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
 	// so reading back in is unreliable.

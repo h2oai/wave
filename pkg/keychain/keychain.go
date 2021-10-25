@@ -134,6 +134,9 @@ func (kc *Keychain) Len() int {
 }
 
 func newLruCache(size int) (*lru.Cache, error) {
+	if size < 8 {
+		size = 8
+	}
 	cache, err := lru.New(size)
 	if err != nil {
 		return nil, fmt.Errorf("failed creating keychain LRU cache: %s", err)
