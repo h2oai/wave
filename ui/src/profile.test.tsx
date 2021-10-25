@@ -24,7 +24,7 @@ describe('Profile.tsx', () => {
   beforeEach(() => {
     profileProps = {
       name,
-      state: { title: name },
+      state: { title: name, persona: {} },
       changed: T.box(false)
     }
   })
