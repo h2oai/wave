@@ -2801,6 +2801,7 @@ class FileUpload:
             max_size: Optional[float] = None,
             height: Optional[str] = None,
             width: Optional[str] = None,
+            compact: Optional[bool] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2812,6 +2813,7 @@ class FileUpload:
         _guard_scalar('FileUpload.max_size', max_size, (float, int,), False, True, False)
         _guard_scalar('FileUpload.height', height, (str,), False, True, False)
         _guard_scalar('FileUpload.width', width, (str,), False, True, False)
+        _guard_scalar('FileUpload.compact', compact, (bool,), False, True, False)
         _guard_scalar('FileUpload.visible', visible, (bool,), False, True, False)
         _guard_scalar('FileUpload.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2830,6 +2832,8 @@ class FileUpload:
         """The height of the file upload, e.g. '400px', '50%', etc."""
         self.width = width
         """The width of the file upload, e.g. '100px'. Defaults to '100%'."""
+        self.compact = compact
+        """True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2845,6 +2849,7 @@ class FileUpload:
         _guard_scalar('FileUpload.max_size', self.max_size, (float, int,), False, True, False)
         _guard_scalar('FileUpload.height', self.height, (str,), False, True, False)
         _guard_scalar('FileUpload.width', self.width, (str,), False, True, False)
+        _guard_scalar('FileUpload.compact', self.compact, (bool,), False, True, False)
         _guard_scalar('FileUpload.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('FileUpload.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2856,6 +2861,7 @@ class FileUpload:
             max_size=self.max_size,
             height=self.height,
             width=self.width,
+            compact=self.compact,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2879,6 +2885,8 @@ class FileUpload:
         _guard_scalar('FileUpload.height', __d_height, (str,), False, True, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('FileUpload.width', __d_width, (str,), False, True, False)
+        __d_compact: Any = __d.get('compact')
+        _guard_scalar('FileUpload.compact', __d_compact, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('FileUpload.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2891,6 +2899,7 @@ class FileUpload:
         max_size: Optional[float] = __d_max_size
         height: Optional[str] = __d_height
         width: Optional[str] = __d_width
+        compact: Optional[bool] = __d_compact
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return FileUpload(
@@ -2902,6 +2911,7 @@ class FileUpload:
             max_size,
             height,
             width,
+            compact,
             visible,
             tooltip,
         )
@@ -8942,7 +8952,7 @@ class ProfileCard:
         self.image = image
         """The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). ."""
         self.items = items
-        """Components in this card displayed below toolbar / image."""
+        """Components in this card displayed below the image."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

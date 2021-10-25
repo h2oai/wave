@@ -1289,6 +1289,7 @@ ui_mini_buttons <- function(
 #' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
 #' @param height The height of the file upload, e.g. '400px', '50%', etc.
 #' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
+#' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
@@ -1302,6 +1303,7 @@ ui_file_upload <- function(
   max_size = NULL,
   height = NULL,
   width = NULL,
+  compact = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1312,6 +1314,7 @@ ui_file_upload <- function(
   .guard_scalar("max_size", "numeric", max_size)
   .guard_scalar("height", "character", height)
   .guard_scalar("width", "character", width)
+  .guard_scalar("compact", "logical", compact)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(file_upload=list(
@@ -1323,6 +1326,7 @@ ui_file_upload <- function(
     max_size=max_size,
     height=height,
     width=width,
+    compact=compact,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -3704,7 +3708,7 @@ ui_plot_card <- function(
 #' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
 #'   or a path to an image hosted on the Wave daemon (starting with `/`).
 #'   .
-#' @param items Components in this card displayed below toolbar / image.
+#' @param items Components in this card displayed below the image.
 #' @param commands Contextual menu commands for this component.
 #' @return A ProfileCard instance.
 #' @export
