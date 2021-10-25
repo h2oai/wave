@@ -132,6 +132,7 @@ type DataTable = {
 }
 
 const
+  // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
     // HACK: Put sorting icon on right (same as filter).
     sortableHeader: {
@@ -160,49 +161,12 @@ const
     }
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
-    headerWrapper: {
-      '.ms-DetailsHeader': {
-        background: cssVar('$neutralLight'),
-        paddingTop: 0,
-        paddingBottom: 0,
-        height: 48,
-        borderBottom: 'none',
-        borderRadius: '4px 4px 0 0',
-      },
-      '.ms-DetailsHeader-cellName': {
-        color: cssVar('$neutralPrimary')
-      },
-      '.ms-DetailsHeader-cell': {
-        height: '100%'
-      },
-      '.ms-DetailsHeader-cellTitle': {
-        height: '100%',
-        alignItems: 'center'
-      }
-    },
     contentWrapper: {
       border: border(2, cssVar('$neutralLight')),
       borderTop: 'none',
-      '.ms-DetailsRow': {
-        border: border(2, 'transparent'),
-        borderTop: border(2, cssVar('$neutralLight')),
-        boxSizing: 'border-box',
-        background: cssVar('$card'),
-        minHeight: 48
-      },
       '.ms-List-page:first-child .ms-List-cell:first-child .ms-DetailsRow': {
         borderTop: border(2, 'transparent'),
       },
-      '.ms-DetailsRow-cell': {
-        fontSize: 14,
-        lineHeight: 20,
-        color: cssVar('$text9')
-      },
-      '.ms-DetailsRow:hover': {
-        background: cssVar('$neutralLight'),
-        border: `${border(2, cssVar('$themePrimary'))} !important`,
-        boxSizing: 'border-box'
-      }
     }
   },
   checkboxVisibilityMap = {
@@ -282,6 +246,7 @@ const
           cellType: c.cell_type,
           dataType: c.data_type,
           isSortable: c.sortable,
+          styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
         }
       })),
@@ -290,10 +255,10 @@ const
         if (!listProps) return null
 
         const filters = col.cellType?.badge
-          ? listProps.items.reduce((_filters, { key, text, data }) => {
-            key.split(',').forEach(k => _filters.push({ key: k, text, data }))
+          ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
+            key.split(',').forEach(key => _filters.set(key, { key, text, data }))
             return _filters
-          }, [] as Fluent.IContextualMenuItem[])
+          }, new Map<S, Fluent.IContextualMenuItem>()).values())
           : listProps.items
         return (
           <div style={{ padding: 10 }}>
@@ -303,8 +268,8 @@ const
                 <Fluent.Checkbox
                   key={key}
                   label={key}
-                  defaultChecked={!!text && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(text)}
-                  onChange={onFilterChange(data || '', text || '')}
+                  defaultChecked={!!text && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(key)}
+                  onChange={onFilterChange(data || '', key || '')}
                   styles={{ root: { marginBottom: 5 } }}
                 />
               )
@@ -329,7 +294,21 @@ const
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
-            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groups ? css.hideCellGroupCollapse : ''} />
+            <Fluent.DetailsHeader
+              {...props}
+              onColumnContextMenu={onColumnContextMenu}
+              styles={{
+                ...props.styles, root: {
+                  padding: 0,
+                  height: 48,
+                  lineHeight: '48px',
+                  background: cssVar('$neutralLight'),
+                  borderBottom: 'none',
+                  borderRadius: '4px 4px 0 0',
+                }
+              }}
+              className={groups ? css.hideCellGroupCollapse : ''}
+            />
           </Fluent.Sticky>
         )
       }, [groups, onColumnContextMenu]),
@@ -361,7 +340,23 @@ const
         )
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
-        ? <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, checkCell: { display: 'flex', alignItems: 'center' }, root: { width: '100%' } }} />
+        ? <Fluent.DetailsRow {...props} styles={{
+          cell: { alignSelf: 'center', fontSize: 14, lineHeight: 20, color: cssVar('$text9') },
+          checkCell: { display: 'flex', alignItems: 'center' },
+          root: {
+            width: '100%',
+            border: border(2, 'transparent'),
+            borderTop: border(2, cssVar('$neutralLight')),
+            boxSizing: 'border-box',
+            background: cssVar('$card'),
+            minHeight: 48,
+            '&:hover': {
+              background: cssVar('$neutralLight'),
+              border: `${border(2, cssVar('$themePrimary'))} !important`,
+              boxSizing: 'border-box'
+            }
+          }
+        }} />
         : null,
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
@@ -454,10 +449,8 @@ export const
         // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
         setFilteredItems(
           selectedFilters
-            ? items.filter(i => Object.keys(selectedFilters)
-              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey]
-                .some(filterVal => i[filterKey] === filterVal)
-              )
+            ? items.filter(item => Object.keys(selectedFilters)
+              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
             )
             : items
         )
@@ -629,7 +622,12 @@ export const
           {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
           {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
         </Fluent.Stack>
-        <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
+        <Fluent.ScrollablePane
+          scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
+          styles={{
+            root: { top: m.groupable || searchableKeys.length ? 80 : 0 },
+            stickyAbove: { height: '48px !important' }
+          }}>
           {
             isMultiple
               ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
