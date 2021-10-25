@@ -44,11 +44,12 @@ columns = [
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
     ui.table_column(name='views', label='Views', sortable=True, data_type='number'),
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
-    ui.table_column(name='badge', label='State', cell_type=ui.badge_table_cell_type(name='badges', badges=[
-        ui.badge(label='RUNNING', color='#D2E3F8'),
-        ui.badge(label='DONE', color='$red'),
-        ui.badge(label='SUCCESS', color='$mint'),
-    ])),
+    ui.table_column(name='badge', label='State', min_width='170px',
+                    cell_type=ui.badge_table_cell_type(name='badges', badges=[
+                        ui.badge(label='RUNNING', color='#D2E3F8'),
+                        ui.badge(label='DONE', color='$red'),
+                        ui.badge(label='SUCCESS', color='$mint'),
+                    ])),
     ui.table_column(name='created', label='Created', sortable=True, data_type='time'),
 ]
 

@@ -324,17 +324,31 @@ const
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
-            <Fluent.Stack horizontal horizontalAlign={isFilterable ? 'space-between' : 'end'} verticalAlign='center'>
+            <Fluent.Stack
+              horizontal
+              horizontalAlign='space-between'
+              verticalAlign='center'
+              styles={{ root: { background: cssVar('$neutralLight'), borderRadius: '0 0 4px 4px', paddingLeft: 12, height: 48 } }}>
               {
-                isFilterable && (
+                (isFilterable || isSearchable) && (
                   <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
                     <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
                   </Fluent.Text>
                 )
               }
-              <div style={{ width: '80%' }}>
-                <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') }, primarySet: { justifyContent: 'flex-end' } }} />
-              </div>
+              {
+                footerItems.length && (
+                  <div style={{ width: '80%' }}>
+                    <Fluent.CommandBar items={footerItems} styles={{
+                      root: {
+                        background: cssVar('$neutralLight'),
+                        '.ms-Button--commandBar': { background: 'transparent' }
+                      },
+                      primarySet: { justifyContent: 'flex-end' }
+                    }} />
+                  </div>
+                )
+              }
             </Fluent.Stack>
           </Fluent.Sticky>
         )
@@ -624,10 +638,7 @@ export const
         </Fluent.Stack>
         <Fluent.ScrollablePane
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
-          styles={{
-            root: { top: m.groupable || searchableKeys.length ? 80 : 0 },
-            stickyAbove: { height: '48px !important' }
-          }}>
+          styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
           {
             isMultiple
               ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
