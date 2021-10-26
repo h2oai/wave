@@ -69,6 +69,8 @@ type Broker struct {
 	logout      chan Pub
 	apps        map[string]*App // route => app
 	appsMux     sync.RWMutex    // mutex for tracking apps
+	unicasts    map[string]bool // "/client_id" => true
+	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
 }
 
 func newBroker(site *Site, editable bool) *Broker {
@@ -81,6 +83,8 @@ func newBroker(site *Site, editable bool) *Broker {
 		make(chan *Client, 1024), // TODO tune
 		make(chan Pub, 1024),     // TODO tune
 		make(map[string]*App),
+		sync.RWMutex{},
+		make(map[string]bool),
 		sync.RWMutex{},
 	}
 }
@@ -145,16 +149,20 @@ func parseMsg(s []byte) Msg {
 	return invalidMsg
 }
 
+func (b *Broker) isUnicast(route string) bool {
+	b.unicastsMux.RLock()
+	defer b.unicastsMux.RUnlock()
+	_, ok := b.unicasts[route]
+	return ok
+}
+
 // patch broadcasts changes to clients and patches site data.
 func (b *Broker) patch(route string, data []byte) {
 	b.publish <- Pub{route, data}
 
-	// Skip writes if the route belongs to an app set to unicast mode, and -editable is not set.
-	if !b.editable {
-		app := b.getApp(route)
-		if app != nil && app.mode == unicastMode {
-			return
-		}
+	// Skip writes if -editable is not set and the route belongs to a client-specific page
+	if !b.editable && b.isUnicast(route) {
+		return
 	}
 
 	// Write AOF entry with patch marker "*" as-is to log file.
@@ -228,6 +236,10 @@ func (b *Broker) addClient(route string, client *Client) {
 	}
 	clients[client] = nil
 
+	b.unicastsMux.Lock()
+	b.unicasts["/"+client.id] = true
+	b.unicastsMux.Unlock()
+
 	echo(Log{"t": "ui_add", "addr": client.addr, "route": route})
 }
 
@@ -251,6 +263,10 @@ func (b *Broker) dropClient(client *Client) {
 
 	// FIXME leak: this is not captured in the AOF logging; page will be recreated on hydration
 	b.site.del(client.id) // delete transient page, if any.
+
+	b.unicastsMux.Lock()
+	delete(b.unicasts, "/"+client.id)
+	b.unicastsMux.Unlock()
 
 	echo(Log{"t": "ui_drop", "addr": client.addr})
 }
