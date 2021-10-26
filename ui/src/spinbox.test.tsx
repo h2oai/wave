@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
-import { wave } from './ui'
+import { debounce, wave } from './ui'
 
 const
   name = 'spinbox',
@@ -161,5 +161,33 @@ describe('Spinbox.tsx', () => {
     simulateClick(decrementBtn)
     expect(spinboxInput.value).toBe('0.0005')
     simulateClick(decrementBtn)
+  })
+
+  it('Correct (parsed) value is sent to server', () => {
+    
+    jest.spyOn({ debounce }, 'debounce').mockImplementation(jest.fn())
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+    
+    fireEvent.change(spinboxInput, { target: { value: 0.00020001 } })
+    expect(wave.args[name]).toBe(0.0002)
+    fireEvent.change(spinboxInput, { target: { value: 0. } })
+    expect(wave.args[name]).toBe(0)
+    fireEvent.change(spinboxInput, { target: { value: 0.010000000 } })
+    expect(wave.args[name]).toBe(0.01)
+  })
+
+  it('Should truncate value if it overflows the step precision', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    fireEvent.change(spinboxInput, { target: { value: '0.' } })
+    expect(screen.getByDisplayValue('0.')).toBeInTheDocument()
+    fireEvent.change(spinboxInput, { target: { value: '0.10' } })
+    expect(screen.getByDisplayValue('0.10')).toBeInTheDocument()
+    fireEvent.change(spinboxInput, { target: { value: '0.0001' } })
+    expect(screen.getByDisplayValue('0.0001')).toBeInTheDocument()
   })
 })

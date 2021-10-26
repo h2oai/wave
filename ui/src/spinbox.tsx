@@ -87,6 +87,13 @@ export const
         return String(newValue)
       },
       handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const isLastCharDotOrTraillingZero = /\.$|\.\d*0+$/
+        if (precision > 0 && isLastCharDotOrTraillingZero.test(e.target.value)) {
+          // We have can't use parseValue because it's parameter is a number which will remove the trailling zeros
+          const [head, tail] = e.target.value.split('.')
+          setVal({ val: `${head}.${tail.slice(0, precision)}` })
+          return
+        }
         const
           value = parseValue(Number(e.target.value)),
           newValue = value > max
