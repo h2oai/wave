@@ -132,7 +132,21 @@ the query handler `serve()` is called.
 :::
 
 
-
 ## App Server API Access Keys
 
 Access to a Wave app is controlled via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617). The basic authentication username/password pair is automatically generated on app launch, and is visible only to the Wave server. You can manually override this behavior by setting the `$WAVE_APP_ACCESS_KEY_ID` / `$WAVE_APP_ACCESS_KEY_SECRET` environment variables (for development/testing only - not recommended in production).
+
+## Additional HTTP Response Headers
+
+You can make the Wave daemon include additional HTTP response headers by using the `-http-headers-file` command line argument to `waved`, pointing to a [MIME-formatted](https://en.wikipedia.org/wiki/MIME#MIME_header_fields) file.
+
+[A sample file](https://github.com/h2oai/wave/blob/master/headers.txt) (make sure there's an empty line at the end):
+
+```txt title="headers.txt"
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+```
+
+
