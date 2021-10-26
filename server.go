@@ -106,7 +106,7 @@ func Run(conf ServerConf) {
 		}))
 	}
 
-	http.Handle("/", newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.WebDir, conf.Header))
 
 	echo(Log{"t": "listen", "address": conf.Listen, "webroot": conf.WebDir})
 

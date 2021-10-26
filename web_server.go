@@ -43,8 +43,9 @@ func newWebServer(
 	keychain *keychain.Keychain,
 	maxRequestSize int64,
 	www string,
+	header http.Header,
 ) *WebServer {
-	fs := handleStatic("/", http.FileServer(http.Dir(www)))
+	fs := handleStatic("/", http.FileServer(http.Dir(www)), header)
 	if auth != nil {
 		fs = auth.wrap(fs)
 	}
@@ -143,7 +144,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleStatic(prefix string, h http.Handler) http.Handler {
+func handleStatic(prefix string, h http.Handler, extraHeader http.Header) http.Handler {
 	// copy of http.StripPrefix
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// if the url has an extension, serve the file
@@ -163,7 +164,15 @@ func handleStatic(prefix string, h http.Handler) http.Handler {
 		header := w.Header()
 		header.Add("Cache-Control", "no-cache, must-revalidate")
 		header.Add("Pragma", "no-cache")
-
+		copyHeaders(extraHeader, header)
 		h.ServeHTTP(w, r2)
 	})
+}
+
+func copyHeaders(src, dst http.Header) {
+	for k, vs := range src {
+		for _, v := range vs {
+			dst.Add(k, v)
+		}
+	}
 }

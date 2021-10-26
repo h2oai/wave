@@ -27,6 +27,8 @@ Usage of ./waved:
         enable debug mode (profiling, inspection, etc.)
   -editable
         allow users to edit web pages
+  -http-headers-file string
+        path to a MIME-formatted file containing additional HTTP headers to add to responses from the server
   -init string
         initialize site content from AOF log
   -list-access-keys
@@ -83,6 +85,7 @@ H2O_WAVE_ACCESS_KEYCHAIN
 H2O_WAVE_DATA_DIR
 H2O_WAVE_DEBUG [1]
 H2O_WAVE_EDITABLE [1]
+H2O_WAVE_HTTP_HEADERS_FILE
 H2O_WAVE_INIT
 H2O_WAVE_LISTEN
 H2O_WAVE_MAX_CACHE_REQUEST_SIZE

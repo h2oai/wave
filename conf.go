@@ -15,6 +15,7 @@
 package wave
 
 import (
+	"net/http"
 	"os"
 	"strings"
 
@@ -46,6 +47,7 @@ type ServerConf struct {
 	Compact              string
 	CertFile             string
 	KeyFile              string
+	Header               http.Header
 	Editable             bool
 	MaxRequestSize       int64
 	MaxCacheRequestSize  int64

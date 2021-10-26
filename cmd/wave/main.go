@@ -15,9 +15,13 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"math"
+	"net/http"
+	"net/textproto"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -65,6 +69,7 @@ func main() {
 		accessKeyID          string
 		accessKeySecret      string
 		accessKeyFile        string
+		httpHeadersFile      string
 		createAccessKey      bool
 		listAccessKeys       bool
 		removeAccessKeyID    string
@@ -87,6 +92,7 @@ func main() {
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	stringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	stringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
+	stringVar(&httpHeadersFile, "http-headers-file", "", "path to a MIME-formatted file containing additional HTTP headers to add to responses from the server")
 	boolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	stringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
 	stringVar(&maxCacheRequestSize, "max-cache-request-size", "5M", "maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB)")
@@ -170,6 +176,14 @@ func main() {
 		kc.Add(accessKeyID, hash)
 	}
 
+	if len(httpHeadersFile) > 0 {
+		headers, err := parseHTTPHeaders(httpHeadersFile)
+		if err != nil {
+			panic(err)
+		}
+		conf.Header = headers
+	}
+
 	if conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize); err != nil {
 		panic(err)
 	}
@@ -250,4 +264,18 @@ func parseReadSize(label, value string) (int64, error) {
 	}
 
 	return int64(n), nil
+}
+
+func parseHTTPHeaders(file string) (http.Header, error) {
+	b, err := os.ReadFile(file)
+	if err != nil {
+		return nil, fmt.Errorf("failed reading HTTP headers file: %v", err)
+	}
+
+	reader := textproto.NewReader(bufio.NewReader(bytes.NewReader(b)))
+	header, err := reader.ReadMIMEHeader()
+	if err != nil {
+		return nil, fmt.Errorf("failed parsing HTTP headers from file: %v", err)
+	}
+	return http.Header(header), nil
 }
