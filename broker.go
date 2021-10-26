@@ -62,6 +62,7 @@ type Sub struct {
 type Broker struct {
 	site        *Site
 	editable    bool
+	noStore     bool
 	clients     map[string]map[*Client]interface{} // route => client-set
 	publish     chan Pub
 	subscribe   chan Sub
@@ -73,10 +74,11 @@ type Broker struct {
 	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
 }
 
-func newBroker(site *Site, editable bool) *Broker {
+func newBroker(site *Site, editable, noStore bool) *Broker {
 	return &Broker{
 		site,
 		editable,
+		noStore,
 		make(map[string]map[*Client]interface{}),
 		make(chan Pub, 1024),     // TODO tune
 		make(chan Sub, 1024),     // TODO tune
@@ -159,6 +161,11 @@ func (b *Broker) isUnicast(route string) bool {
 // patch broadcasts changes to clients and patches site data.
 func (b *Broker) patch(route string, data []byte) {
 	b.publish <- Pub{route, data}
+
+	// Skip write if -no-store is set
+	if b.noStore {
+		return
+	}
 
 	// Skip writes if -editable is not set and the route belongs to a client-specific page
 	if !b.editable && b.isUnicast(route) {

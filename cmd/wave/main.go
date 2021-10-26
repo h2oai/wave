@@ -93,6 +93,7 @@ func main() {
 	boolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
 	stringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	stringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
+	boolVar(&conf.NoStore, "no-store", false, "disable storage (scripts and multicast/broadcast apps will not work)")
 	// TODO enable when IDE is released
 	// boolVar(&conf.IDE, "ide", false, "enable Wave IDE (experimental)")
 	boolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")

@@ -41,6 +41,8 @@ Usage of ./waved:
         maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB) (default "5M")
   -max-request-size string
         maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB) (default "5M")
+  -no-store
+        disable storage (scripts and multicast/broadcast apps will not work)
   -oidc-client-id string
         OIDC client ID
   -oidc-client-secret string
@@ -87,6 +89,7 @@ H2O_WAVE_MAX_CACHE_REQUEST_SIZE
 H2O_WAVE_MAX_PROXY_REQUEST_SIZE
 H2O_WAVE_MAX_PROXY_RESPONSE_SIZE
 H2O_WAVE_MAX_REQUEST_SIZE
+H2O_WAVE_NO_STORE
 H2O_WAVE_OIDC_CLIENT_ID
 H2O_WAVE_OIDC_CLIENT_SECRET
 H2O_WAVE_OIDC_END_SESSION_URL
