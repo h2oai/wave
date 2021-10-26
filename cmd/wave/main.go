@@ -100,6 +100,7 @@ func main() {
 	stringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	stringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
 	boolVar(&conf.NoStore, "no-store", false, "disable storage (scripts and multicast/broadcast apps will not work)")
+	boolVar(&conf.NoLog, "no-log", false, "disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)")
 	// TODO enable when IDE is released
 	// boolVar(&conf.IDE, "ide", false, "enable Wave IDE (experimental)")
 	boolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")

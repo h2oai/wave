@@ -55,6 +55,7 @@ type ServerConf struct {
 	MaxProxyRequestSize  int64
 	MaxProxyResponseSize int64
 	NoStore              bool
+	NoLog                bool
 	IDE                  bool
 	Debug                bool
 	Auth                 *AuthConf

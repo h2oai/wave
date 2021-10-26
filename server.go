@@ -53,7 +53,7 @@ func Run(conf ServerConf) {
 		initSite(site, conf.Init)
 	}
 
-	broker := newBroker(site, conf.Editable, conf.NoStore)
+	broker := newBroker(site, conf.Editable, conf.NoStore, conf.NoLog)
 	go broker.run()
 
 	if conf.Debug {

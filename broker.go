@@ -63,6 +63,7 @@ type Broker struct {
 	site        *Site
 	editable    bool
 	noStore     bool
+	noLog       bool
 	clients     map[string]map[*Client]interface{} // route => client-set
 	publish     chan Pub
 	subscribe   chan Sub
@@ -74,11 +75,12 @@ type Broker struct {
 	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
 }
 
-func newBroker(site *Site, editable, noStore bool) *Broker {
+func newBroker(site *Site, editable, noStore, noLog bool) *Broker {
 	return &Broker{
 		site,
 		editable,
 		noStore,
+		noLog,
 		make(map[string]map[*Client]interface{}),
 		make(chan Pub, 1024),     // TODO tune
 		make(chan Sub, 1024),     // TODO tune
@@ -162,20 +164,18 @@ func (b *Broker) isUnicast(route string) bool {
 func (b *Broker) patch(route string, data []byte) {
 	b.publish <- Pub{route, data}
 
-	// Skip write if -no-store is set
-	if b.noStore {
+	if !b.noLog {
+		// Write AOF entry with patch marker "*" as-is to log file.
+		// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
+		// so reading back in is unreliable.
+		log.Println("*", route, string(data))
+	}
+
+	// Skip writes if storage is disabled or unicast apps without -editable
+	if b.noStore || (!b.editable && b.isUnicast(route)) {
 		return
 	}
 
-	// Skip writes if -editable is not set and the route belongs to a client-specific page
-	if !b.editable && b.isUnicast(route) {
-		return
-	}
-
-	// Write AOF entry with patch marker "*" as-is to log file.
-	// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
-	// so reading back in is unreliable.
-	log.Println("*", route, string(data))
 	if err := b.site.patch(route, data); err != nil {
 		echo(Log{"t": "broker_patch", "error": err.Error()})
 	}
