@@ -232,10 +232,9 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Has correct number of initially checked checkboxes', () => {
-      const { getByText, getAllByRole, getByTestId } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
+      const { getAllByRole, getByTestId } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
 
       fireEvent.click(getByTestId(name))
-      fireEvent.click(getByText('Choice 1'))
 
       expect(getAllByRole('checkbox').filter(c => c.getAttribute('aria-checked') === 'true')).toHaveLength(1)
     })
@@ -244,6 +243,8 @@ describe('Dropdown.tsx', () => {
       const { getByText, getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
 
       fireEvent.click(getByTestId(name))
+      expect(getAllByRole('checkbox').filter(i => i.getAttribute('aria-checked') === 'true')).toHaveLength(0)
+
       fireEvent.click(getAllByRole('checkbox')[2])
       fireEvent.click(getAllByRole('checkbox')[3])
       fireEvent.click(getAllByRole('checkbox')[4])
@@ -270,44 +271,21 @@ describe('Dropdown.tsx', () => {
       const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
 
       fireEvent.click(getByTestId(name))
-      expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
+      expect(getAllByRole('listitem')).toHaveLength(40) // Fluent Detaillist uses virtualization, so only first 40 listitems are rendered.
       fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('listitem')).toHaveLength(1)
     })
 
     it('Filters correctly - reset filter', () => {
       const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
 
       fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(40) // Fluent Detaillist uses virtualization, so only first 40 listitems are rendered.
       fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('listitem')).toHaveLength(1)
 
       fireEvent.change(getByTestId(`${name}-search`), { target: { value: '' } })
-      expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
-    })
-
-    it('Resets filter after cancel', () => {
-      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
-
-      fireEvent.click(getByTestId(name))
-      fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
-      expect(getAllByRole('row')).toHaveLength(1)
-
-      fireEvent.click(getByText('Cancel'))
-      fireEvent.click(getByTestId(name))
-      expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
-    })
-
-    it('Resets filter after submit', () => {
-      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
-
-      fireEvent.click(getByTestId(name))
-      fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
-      expect(getAllByRole('row')).toHaveLength(1)
-
-      fireEvent.click(getByText('Select'))
-      fireEvent.click(getByTestId(name))
-      expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
+      expect(getAllByRole('listitem')).toHaveLength(40) // Fluent Detaillist uses virtualization, so only first 40 listitems are rendered.
     })
   })
 })

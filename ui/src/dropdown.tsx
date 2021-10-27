@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, S } from 'h2o-wave'
+import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
 import { fuzzysearch } from './parts/utils'
@@ -60,25 +60,26 @@ export interface Dropdown {
 }
 
 const
-  BaseDropdown = ({ model: m, isMultivalued }: { model: Dropdown, isMultivalued: B }) => {
+  BaseDropdown = ({ name, label, required, disabled, value, values, choices, trigger, placeholder }: Dropdown) => {
     const
-      selection = React.useMemo(() => isMultivalued ? new Set<S>(m.values) : null, [isMultivalued, m.values]),
+      isMultivalued = !!values,
+      selection = React.useMemo(() => isMultivalued ? new Set<S>(values) : null, [isMultivalued, values]),
       [selectedOptions, setSelectedOptions] = React.useState(Array.from(selection || [])),
-      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
+      options = (choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
-          const name = option.key as S
+          const optionKey = option.key as S
           if (isMultivalued && selection !== null) {
-            option.selected ? selection.add(name) : selection.delete(name)
+            option.selected ? selection.add(optionKey) : selection.delete(optionKey)
 
             const selectedOpts = Array.from(selection)
-            wave.args[m.name] = selectedOpts
+            wave.args[name] = selectedOpts
             setSelectedOptions(selectedOpts)
           } else {
-            wave.args[m.name] = name
+            wave.args[name] = optionKey
           }
         }
-        if (m.trigger) wave.push()
+        if (trigger) wave.push()
       },
       selectAll = () => {
         if (!selection) return
@@ -88,7 +89,7 @@ const
 
         const selectionArr = Array.from(selection)
         setSelectedOptions(selectionArr)
-        wave.args[m.name] = selectionArr
+        wave.args[name] = selectionArr
 
         onChange()
       },
@@ -97,7 +98,7 @@ const
 
         selection.clear()
         setSelectedOptions([])
-        wave.args[m.name] = []
+        wave.args[name] = []
 
         onChange()
       }
@@ -105,14 +106,14 @@ const
     return (
       <>
         <Fluent.Dropdown
-          data-test={m.name}
-          label={m.label}
-          placeholder={m.placeholder}
+          data-test={name}
+          label={label}
+          placeholder={placeholder}
           options={options}
-          required={m.required}
-          disabled={m.disabled}
+          required={required}
+          disabled={disabled}
           multiSelect={isMultivalued || undefined}
-          defaultSelectedKey={!isMultivalued ? m.value : undefined}
+          defaultSelectedKey={!isMultivalued ? value : undefined}
           selectedKeys={isMultivalued ? selectedOptions : undefined}
           onChange={onChange}
         />
@@ -127,96 +128,82 @@ const
       </>
     )
   },
+  ROW_HEIGHT = 30,
+  PAGE_SIZE = 40,
   // See https://github.com/microsoft/fluentui/issues/20209 for selection disappearing on filter.
-  DialogDropdown = ({ model, isMultivalued }: { model: Dropdown, isMultivalued: B }) => {
+  DialogDropdown = ({ name, choices, values, value, disabled, required, trigger, placeholder, label }: Dropdown) => {
     const
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
-      items = React.useMemo(() => model.choices?.map(({ name, label }) => ({ key: name, text: label || name })) || [], [model.choices]),
-      selection = React.useMemo(() => new Fluent.Selection<Fluent.IObjectWithKey & { text?: S }>({
-        items,
-        onSelectionChanged: () => { setSelectionCount(selection.getSelectedCount()) }
-      }), [items]),
-      [selectionCount, setSelectionCount] = React.useState(selection.getSelectedCount()),
-      width = Math.max(items.reduce((width, { text }) => Math.max(width, (text.length * 6) + 180), 0), 500),
-      [initialSelection, setInitialSelection] = React.useState<S[]>([]),
+      initialSelectedMap = React.useMemo(() => {
+        if (values?.length) return new Map(values.map(v => [v, true]))
+        if (value) return new Map([[value, true]])
+        return new Map()
+      }, [value, values]),
+      items = React.useMemo(() => choices?.map(({ name, label }, idx) => ({ name, text: label || name, idx, checked: initialSelectedMap.has(name) })) || [], [initialSelectedMap, choices]),
+      width = React.useMemo(() => Math.max(items.reduce((width, { text }) => Math.max(width, (text.length * 6) + 180), 0), 500), [items]),
       [filteredItems, setFilteredItems] = React.useState(items),
-      [label, setLabel] = React.useState(''),
+      [textValue, setTextValue] = React.useState(() => {
+        if (!values?.length && !value) return
+
+        const itemsMap = new Map<S, S>(items.map(({ name, text }) => [name, text]))
+
+        if (values?.length) return values.map(v => itemsMap.get(v) || '').filter(Boolean).join(', ')
+        if (value) return itemsMap.get(value)
+      }),
       toggleDialog = () => setIsDialogHidden(!isDialogHidden),
       cancelDialog = () => {
-        setIsDialogHidden(true)
-        selection.setAllSelected(false)
-        initialSelection.forEach(k => selection.setKeySelected(k, true, false))
-        setFilteredItems(items)
+        toggleDialog()
+        setFilteredItems(filteredItems.map(i => { i.checked = initialSelectedMap.has(i.name); return i }))
       },
       submit = () => {
-        const result = selection.getSelection().map(({ key }) => key as S)
-        wave.args[model.name] = result.length === 1 ? result[0] : result
+        const result = filteredItems.filter(({ checked }) => checked)
+        wave.args[name] = result.length === 1 ? result[0].name : result.map(({ name }) => name)
 
-        if (model.trigger) wave.push()
-        setLabel(selection.getSelectedCount() ? selection.getSelection().map(({ text }) => text).join(', ') : 'Select ...')
+        if (trigger) wave.push()
+        setTextValue(result.length ? result.map(({ text }) => text).join(', ') : 'Select ...')
+        initialSelectedMap.clear()
+        result.forEach(({ name }) => initialSelectedMap.set(name, true))
         toggleDialog()
-        setInitialSelection([...selection.getSelection().map(({ key }) => key as S)])
-        setFilteredItems(items)
       },
-      selectAll = () => model.choices?.forEach(({ name }) => selection.setKeySelected(name, true, false)),
-      deselectAll = () => model.choices?.forEach(({ name }) => selection.setKeySelected(name, false, false)),
+      selectAll = (checked = true) => () => setFilteredItems(filteredItems.map(i => { i.checked = checked; return i })),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setFilteredItems(newVal ? items.filter(({ text }) => fuzzysearch(text, newVal)) : items),
-      onRenderDetailsHeader = (props?: Fluent.IDetailsHeaderProps, defaultRender?: (props?: Fluent.IDetailsHeaderProps) => JSX.Element | null): JSX.Element | null =>
-        !props || !defaultRender ? null : <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>{defaultRender(props)}</Fluent.Sticky>
+      onChecked = React.useCallback((idx: U) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
+        const items = values ? [...filteredItems] : filteredItems.map(i => { i.checked = false; return i })
+        items[idx].checked = checked
+        setFilteredItems(items)
+      }, [filteredItems, values]),
+      onRenderCell = React.useCallback((item?: { name: S, text: S, idx: U, checked: B }) =>
+        item ? <Fluent.Checkbox label={item?.text} styles={{ root: { minHeight: ROW_HEIGHT } }} onChange={onChecked(item?.idx)} checked={item.checked} /> : null, [onChecked]),
+      getPageSpecification = React.useCallback(() => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE, } as Fluent.IPageSpecification), [])
 
-    React.useEffect(() => {
-      if (!model.values?.length && !model.value) return
-
-      const itemsMap = new Map<S, S>()
-      items.forEach(({ key, text }) => itemsMap.set(key, text))
-
-      if (model.values?.length) {
-        model.values.forEach(v => selection.setKeySelected(v, true, false))
-        setLabel(model.values.map(v => itemsMap.get(v) || '').filter(Boolean).join(', ') || label)
-        initialSelection.push(...model.values)
-      }
-      if (model.value) {
-        selection.setKeySelected(model.value, true, false)
-        setLabel(itemsMap.get(model.value) || label)
-        initialSelection.push(model.value)
-      }
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
     return (
       <>
         <Fluent.TextField
-          data-test={model.name}
+          data-test={name}
           iconProps={{ iconName: 'ChevronDown' }}
           readOnly
           onClick={toggleDialog}
-          label={model.label}
-          disabled={model.disabled}
-          required={model.required}
+          label={label}
+          disabled={disabled}
+          required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: Fluent.getTheme().palette.neutralSecondary } }}
-          value={label} />
-        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: model.label }} styles={{ main: { width: `${width}px !important` } }} maxWidth='90vw'>
+          value={textValue || ''} />
+        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: textValue }} styles={{ main: { width: `${width}px !important` } }} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: 600 }, header: { height: 0 } }}>
-            <Fluent.SearchBox data-test={`${model.name}-search`} onChange={onSearchChange} placeholder={model.placeholder} />
+            <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} placeholder={placeholder} />
             <div style={{ marginTop: 16 }}>
-              <span className='wave-s12 wave-w5'>Selected: {selectionCount}</span>
+              <span className='wave-s12 wave-w5'>Selected: {filteredItems.filter(({ checked }) => checked).length}</span>
               <Fluent.Text variant='small' styles={{ root: { float: 'right' } }} block>
-                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+                <Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link>
               </Fluent.Text>
             </div>
-            <Fluent.ScrollablePane styles={{ root: { top: 75 }, stickyAbove: { display: 'none' } }}>
-              <Fluent.MarqueeSelection selection={selection}>
-                <Fluent.DetailsList
-                  items={filteredItems}
-                  styles={{ headerWrapper: { display: 'none' }, root: { overflowY: 'auto' } }}
-                  columns={[{ key: 'label', name: 'Option', minWidth: 200, fieldName: 'text' }]}
-                  selection={selection}
-                  selectionMode={isMultivalued ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.single}
-                  selectionPreservedOnEmptyClick
-                  checkboxVisibility={Fluent.CheckboxVisibility.always}
-                  onRenderDetailsHeader={onRenderDetailsHeader}
-                />
-              </Fluent.MarqueeSelection>
+            <Fluent.ScrollablePane styles={{ root: { marginTop: 80 } }}>
+              <Fluent.List
+                items={filteredItems}
+                getPageSpecification={getPageSpecification}
+                renderedWindowsAhead={3}
+                onRenderCell={onRenderCell}
+              />
             </Fluent.ScrollablePane>
           </Fluent.DialogContent>
           <Fluent.DialogFooter>
@@ -229,18 +216,8 @@ const
   }
 
 export const XDropdown = ({ model: m }: { model: Dropdown }) => {
-  const isMultivalued = !!m.values
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { wave.args[m.name] = m.values ? (m.values || []) : (m.value || null) }, [])
 
-  React.useEffect(() => {
-    wave.args[m.name] = isMultivalued
-      ? (m.values || [])
-      : (m.value || null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return (
-    (m.choices || []).length > 100
-      ? <DialogDropdown model={m} isMultivalued={isMultivalued} />
-      : <BaseDropdown model={m} isMultivalued={isMultivalued} />
-  )
+  return (m.choices?.length || 0) > 100 ? <DialogDropdown {...m} /> : <BaseDropdown {...m} />
 }
