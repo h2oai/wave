@@ -382,6 +382,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		// Reload all of this user's browser tabs
 		h.broker.resetClients(session.subject)
+		h.broker.notifyAppsAboutLogout(&session)
 		idToken, _ = session.token.Extra("id_token").(string) // raw id_token (required by Okta)
 	}
 

@@ -43,7 +43,9 @@ type Msg struct {
 var (
 	msgSep     = []byte{' '}
 	emptyJSON  = []byte("{}")
+	resetMsg   []byte
 	invalidMsg = Msg{t: badMsgT}
+	logoutMsg  = []byte(`{"":{"@system":{"logout":true}}}`)
 )
 
 // Pub represents a published message
@@ -110,6 +112,16 @@ func (b *Broker) getApp(route string) *App {
 	b.appsMux.RLock()
 	defer b.appsMux.RUnlock()
 	return b.apps[route]
+}
+
+func (b *Broker) getApps() []*App {
+	b.appsMux.RLock()
+	defer b.appsMux.RUnlock()
+	var apps []*App
+	for _, app := range b.apps {
+		apps = append(apps, app)
+	}
+	return apps
 }
 
 func (b *Broker) dropApp(route string) {
@@ -181,10 +193,6 @@ func (b *Broker) patch(route string, data []byte) {
 	}
 }
 
-var (
-	resetMsg []byte
-)
-
 func init() {
 	var err error
 	if resetMsg, err = json.Marshal(OpsD{R: 1}); err != nil {
@@ -195,9 +203,17 @@ func init() {
 func (b *Broker) resetSubscribers(route string) {
 	b.publish <- Pub{route, resetMsg}
 }
-
 func (b *Broker) resetClients(subjectID string) {
 	b.logout <- Pub{subjectID, resetMsg}
+}
+
+func (b *Broker) notifyAppsAboutLogout(session *Session) {
+	apps := b.getApps()
+	for _, app := range apps {
+		go func(app *App) {
+			app.forward("", session, logoutMsg)
+		}(app)
+	}
 }
 
 // run starts i/o between the broker and clients.

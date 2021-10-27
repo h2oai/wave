@@ -46,6 +46,11 @@ var (
 	}
 )
 
+// Boot represents the initial message sent to an app when a client first connects to it
+type Boot struct {
+	Hash string `json:"#,omitempty"` // location hash
+}
+
 // Client represent a websocket (UI) client.
 type Client struct {
 	id       string          // unique id
