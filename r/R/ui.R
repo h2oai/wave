@@ -2503,9 +2503,9 @@ ui_text_annotator_item <- function(
   return(.o)
 }
 
-#' Create an annotator component.
+#' Create a text annotator component.
 #' 
-#' The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+#' The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
 #'
 #' @param name An identifying name for this component.
 #' @param title The text annotator's title.

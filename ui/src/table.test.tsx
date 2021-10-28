@@ -372,7 +372,7 @@ describe('Table.tsx', () => {
     })
   })
 
-  describe('filter - badges', () => {
+  describe('filter - tags', () => {
     beforeEach(() => {
       tableProps = {
         ...tableProps,
@@ -383,55 +383,55 @@ describe('Table.tsx', () => {
             label: 'col2',
             filterable: true,
             cell_type: {
-              badge: {
-                name: 'badges',
-                badges: [
-                  { label: 'BADGE1', color: 'red' },
-                  { label: 'BADGE2', color: 'green' },
-                  { label: 'BADGE3', color: 'blue' },
+              tag: {
+                name: 'tags',
+                tags: [
+                  { label: 'TAG1', color: 'red' },
+                  { label: 'TAG2', color: 'green' },
+                  { label: 'TAG3', color: 'blue' },
                 ]
               }
             }
           },
         ],
         rows: [
-          { name: 'rowname1', cells: [cell11, 'BADGE1'] },
-          { name: 'rowname2', cells: [cell21, 'BADGE2,BADGE3'] },
-          { name: 'rowname3', cells: [cell31, 'BADGE2'] }
+          { name: 'rowname1', cells: [cell11, 'TAG1'] },
+          { name: 'rowname2', cells: [cell21, 'TAG2,TAG3'] },
+          { name: 'rowname3', cells: [cell31, 'TAG2'] }
         ]
       }
     })
 
-    it('Filters correctly - badges - correct badges are selected', () => {
+    it('Filters correctly - tags - correct tags are selected', () => {
       const { getByTestId, container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      fireEvent.click(getAllByText('BADGE3')[1].parentElement!)
+      fireEvent.click(getAllByText('TAG3')[1].parentElement!)
       // Mimic close and reopen filter context menu.
       fireEvent.click(getByTestId(name))
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      const [badge1, badge2, badge3] = getAllByRole('checkbox')
-      expect(badge1).not.toBeChecked()
-      expect(badge2).not.toBeChecked()
-      expect(badge3).toBeChecked()
+      const [tag1, tag2, tag3] = getAllByRole('checkbox')
+      expect(tag1).not.toBeChecked()
+      expect(tag2).not.toBeChecked()
+      expect(tag3).toBeChecked()
     })
 
-    it('Filters correctly - badges - multiple filters', () => {
+    it('Filters correctly - tags - multiple filters', () => {
       const { container, getAllByText, getByText, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      fireEvent.click(getAllByText('BADGE1')[1].parentElement!)
-      fireEvent.click(getByText('BADGE3').parentElement!)
+      fireEvent.click(getAllByText('TAG1')[1].parentElement!)
+      fireEvent.click(getByText('TAG3').parentElement!)
       expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
 
-    it('Filters correctly - badges - single', () => {
+    it('Filters correctly - tags - single', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      fireEvent.click(getAllByText('BADGE1')[1].parentElement!)
+      fireEvent.click(getAllByText('TAG1')[1].parentElement!)
       expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
   })

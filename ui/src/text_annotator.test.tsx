@@ -1,16 +1,16 @@
 import { render, fireEvent } from '@testing-library/react'
 import React from 'react'
-import { TextAnnotator, XTextAnnotator } from './annotator'
+import { TextAnnotator, XTextAnnotator } from './text_annotator'
 import { wave } from './ui'
 
 const
-  name = 'annotator',
+  name = 'textAnnotator',
   items = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }],
   annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
   getSelectionMock = jest.fn(),
   pushMock = jest.fn()
 
-describe('Annotator.tsx', () => {
+describe('TextAnnotator.tsx', () => {
   beforeAll(() => {
     window.getSelection = getSelectionMock
     wave.push = pushMock

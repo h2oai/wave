@@ -24,9 +24,9 @@ interface TextAnnotatorItem {
 }
 
 /**
- * Create an annotator component.
+ * Create a text annotator component.
  * 
- * The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+ * The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
  */
 export interface TextAnnotator {
   /** An identifying name for this component. */

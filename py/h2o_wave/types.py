@@ -5744,9 +5744,9 @@ class TextAnnotatorItem:
 
 
 class TextAnnotator:
-    """Create an annotator component.
+    """Create a text annotator component.
 
-    The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+    The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
     """
     def __init__(
             self,
