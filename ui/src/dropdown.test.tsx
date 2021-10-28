@@ -231,6 +231,35 @@ describe('Dropdown.tsx', () => {
       expect(getByTestId(name)).toHaveValue('Choice 1')
     })
 
+    it('Closes dialog on cancel', () => {
+      const { getByText, getByTestId, getByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(getByText('Cancel'))
+
+      expect(getByTestId(name)).toHaveValue('Choice 1')
+      expect(getByRole('dialog')).not.toBeVisible()
+    })
+
+    it('Closes dialog on submit', () => {
+      const { getByText, getByTestId, getByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(getByText('Select'))
+
+      expect(getByRole('dialog')).not.toBeVisible()
+    })
+
+    it('Submits after selection when single valued', () => {
+      const { getByTestId, getAllByRole, getByRole } = render(<XDropdown model={dialogProps} />)
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(getAllByRole('checkbox')[1])
+
+      expect(wave.args[name]).toBe('1')
+      expect(getByRole('dialog')).not.toBeVisible()
+    })
+
     it('Has correct number of initially checked checkboxes', () => {
       const { getAllByRole, getByTestId } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
 
@@ -274,6 +303,17 @@ describe('Dropdown.tsx', () => {
       expect(getAllByRole('listitem')).toHaveLength(40) // Fluent Detaillist uses virtualization, so only first 40 listitems are rendered.
       fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
       expect(getAllByRole('listitem')).toHaveLength(1)
+    })
+
+    it('Shows correct number of selected items even during filtering', () => {
+      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getByText('Selected: 0')).toBeInTheDocument()
+      fireEvent.click(getAllByRole('checkbox')[2])
+      expect(getByText('Selected: 1')).toBeInTheDocument()
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
+      expect(getByText('Selected: 1')).toBeInTheDocument()
     })
 
     it('Filters correctly - reset filter', () => {

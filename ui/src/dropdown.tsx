@@ -61,6 +61,13 @@ export interface Dropdown {
   tooltip?: S
 }
 
+type DropdownItem = {
+  name: S
+  text: S
+  idx: U
+  checked: B
+}
+
 const
   css = stylesheet({
     dialogCheckedRow: {
@@ -140,19 +147,19 @@ const
       </>
     )
   },
-  ROW_HEIGHT = 30,
+  ROW_HEIGHT = 44,
   PAGE_SIZE = 40,
   // See https://github.com/microsoft/fluentui/issues/20209 for selection disappearing on filter.
   DialogDropdown = ({ name, choices, values, value, disabled, required, trigger, placeholder, label }: Dropdown) => {
     const
+      isMultivalued = !!values,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       initialSelectedMap = React.useMemo(() => {
         if (values?.length) return new Map(values.map(v => [v, true]))
         if (value) return new Map([[value, true]])
         return new Map()
       }, [value, values]),
-      items = React.useMemo(() => choices?.map(({ name, label }, idx) => ({ name, text: label || name, idx, checked: initialSelectedMap.has(name) })) || [], [initialSelectedMap, choices]),
-      width = React.useMemo(() => Math.max(items.reduce((width, { text }) => Math.max(width, (text.length * 6) + 180), 0), 500), [items]),
+      items = React.useMemo<DropdownItem[]>(() => choices?.map(({ name, label }, idx) => ({ name, text: label || name, idx, checked: initialSelectedMap.has(name) })) || [], [initialSelectedMap, choices]),
       [filteredItems, setFilteredItems] = React.useState(items),
       [textValue, setTextValue] = React.useState(() => {
         if (!values?.length && !value) return
@@ -162,33 +169,39 @@ const
         if (values?.length) return values.map(v => itemsMap.get(v) || '').filter(Boolean).join(', ')
         if (value) return itemsMap.get(value)
       }),
-      toggleDialog = () => setIsDialogHidden(!isDialogHidden),
+      toggleDialog = React.useCallback(() => setIsDialogHidden(!isDialogHidden), [isDialogHidden]),
       cancelDialog = () => {
         toggleDialog()
         setFilteredItems(filteredItems.map(i => { i.checked = initialSelectedMap.has(i.name); return i }))
       },
-      submit = () => {
-        const result = filteredItems.filter(({ checked }) => checked)
-        wave.args[name] = result.length === 1 ? result[0].name : result.map(({ name }) => name)
+      submit = React.useCallback(() => {
+        // HACK: Get the most recent filteredItems.
+        setFilteredItems(filteredItems => {
+          const result = filteredItems.filter(({ checked }) => checked)
+          wave.args[name] = result.length === 1 ? result[0].name : result.map(({ name }) => name)
 
-        if (trigger) wave.push()
-        setTextValue(result.length ? result.map(({ text }) => text).join(', ') : 'Select ...')
-        initialSelectedMap.clear()
-        result.forEach(({ name }) => initialSelectedMap.set(name, true))
-        toggleDialog()
-      },
+          if (trigger) wave.push()
+          setTextValue(result.length ? result.map(({ text }) => text).join(', ') : 'Select ...')
+          initialSelectedMap.clear()
+          result.forEach(({ name }) => initialSelectedMap.set(name, true))
+          toggleDialog()
+
+          return filteredItems
+        })
+      }, [initialSelectedMap, name, toggleDialog, trigger]),
       selectAll = (checked = true) => () => setFilteredItems(filteredItems.map(i => { i.checked = checked; return i })),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setFilteredItems(newVal ? items.filter(({ text }) => fuzzysearch(text, newVal)) : items),
       onChecked = React.useCallback((idx: U) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
-        const items = values ? [...filteredItems] : filteredItems.map(i => { i.checked = false; return i })
+        const items = isMultivalued ? [...filteredItems] : filteredItems.map(i => { i.checked = false; return i })
         items[idx].checked = checked
         setFilteredItems(items)
-      }, [filteredItems, values]),
-      onRenderCell = React.useCallback((item?: { name: S, text: S, idx: U, checked: B }) => item
+        if (!isMultivalued) submit()
+      }, [filteredItems, isMultivalued, submit]),
+      onRenderCell = React.useCallback((item?: DropdownItem) => item
         ? <Fluent.Checkbox
-          label={item?.text}
-          styles={{ root: { minHeight: ROW_HEIGHT, alignItems: 'center', boxSizing: 'border-box' }, label: { width: pc(100), padding: 8 } }}
-          onChange={onChecked(item?.idx)}
+          label={item.text}
+          styles={{ root: { minHeight: ROW_HEIGHT, alignItems: 'center' }, label: { width: pc(100), padding: 12, wordBreak: 'break-all' } }}
+          onChange={onChecked(item.idx)}
           className={item.checked ? css.dialogCheckedRow : ''}
           checked={item.checked} />
         : null, [onChecked]),
@@ -206,14 +219,14 @@ const
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: Fluent.getTheme().palette.neutralSecondary } }}
           value={textValue || ''} />
-        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label }} styles={{ main: { width: `${width}px !important` } }} maxWidth='90vw'>
-          <Fluent.DialogContent styles={{ innerContent: { height: 600 }, header: { height: 0 } }}>
+        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label }} minWidth={600} maxWidth='90vw'>
+          <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} placeholder={placeholder} />
             <div className={clas('wave-s14', css.dialogControls)}>
-              <span className='wave-w5'>Selected: {filteredItems.filter(({ checked }) => checked).length}</span>
+              <span className='wave-w5'>Selected: {items.filter(({ checked }) => checked).length}</span>
               <div><Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link></div>
             </div>
-            <Fluent.ScrollablePane styles={{ root: { marginTop: 70 } }}>
+            <Fluent.ScrollablePane styles={{ root: { marginTop: 70, boxShadow: `0px 3px 7px ${cssVar('$text3')}` } }}>
               <Fluent.List
                 items={filteredItems}
                 getPageSpecification={getPageSpecification}
@@ -222,10 +235,14 @@ const
               />
             </Fluent.ScrollablePane>
           </Fluent.DialogContent>
-          <Fluent.DialogFooter>
-            <Fluent.DefaultButton text='Cancel' onClick={cancelDialog} />
-            <Fluent.PrimaryButton text='Select' onClick={submit} />
-          </Fluent.DialogFooter>
+          {
+            isMultivalued && (
+              <Fluent.DialogFooter>
+                <Fluent.DefaultButton text='Cancel' onClick={cancelDialog} />
+                <Fluent.PrimaryButton text='Select' onClick={submit} />
+              </Fluent.DialogFooter>
+            )
+          }
         </Fluent.Dialog>
       </>
     )
