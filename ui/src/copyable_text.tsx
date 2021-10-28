@@ -23,7 +23,7 @@ const css = stylesheet({
   btn: {
     minWidth: 'initial',
     position: 'absolute',
-    top: 31,
+    top: 33,
     right: 4,
     width: 24,
     height: 24
