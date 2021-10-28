@@ -16,8 +16,6 @@ const
     },
     compactContainer: {
       position: 'relative',
-      display: 'flex',
-      alignItems: 'flex-end',
     },
     btnMultiline: {
       opacity: 0,
