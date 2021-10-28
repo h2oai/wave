@@ -22,6 +22,7 @@ describe('Annotator.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XTextAnnotator model={annotatorProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId('tag1')).toBeInTheDocument()
   })
 
   it('Sets initial q.args', () => {

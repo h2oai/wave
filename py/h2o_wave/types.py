@@ -2997,8 +2997,8 @@ class IconTableCellType:
         )
 
 
-class Badge:
-    """Create a badge.
+class Tag:
+    """Create a tag.
     """
     def __init__(
             self,
@@ -3006,21 +3006,21 @@ class Badge:
             color: str,
             label_color: Optional[str] = None,
     ):
-        _guard_scalar('Badge.label', label, (str,), False, False, False)
-        _guard_scalar('Badge.color', color, (str,), False, False, False)
-        _guard_scalar('Badge.label_color', label_color, (str,), False, True, False)
+        _guard_scalar('Tag.label', label, (str,), False, False, False)
+        _guard_scalar('Tag.color', color, (str,), False, False, False)
+        _guard_scalar('Tag.label_color', label_color, (str,), False, True, False)
         self.label = label
-        """The text displayed within the badge."""
+        """The text displayed within the tag."""
         self.color = color
-        """Badge's background color."""
+        """Tag's background color."""
         self.label_color = label_color
-        """Badge's label color. If not specified, black or white will be picked based on correct contrast with background."""
+        """Tag's label color. If not specified, black or white will be picked based on correct contrast with background."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Badge.label', self.label, (str,), False, False, False)
-        _guard_scalar('Badge.color', self.color, (str,), False, False, False)
-        _guard_scalar('Badge.label_color', self.label_color, (str,), False, True, False)
+        _guard_scalar('Tag.label', self.label, (str,), False, False, False)
+        _guard_scalar('Tag.color', self.color, (str,), False, False, False)
+        _guard_scalar('Tag.label_color', self.label_color, (str,), False, True, False)
         return _dump(
             label=self.label,
             color=self.color,
@@ -3028,68 +3028,68 @@ class Badge:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Badge':
+    def load(__d: Dict) -> 'Tag':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        _guard_scalar('Badge.label', __d_label, (str,), False, False, False)
+        _guard_scalar('Tag.label', __d_label, (str,), False, False, False)
         __d_color: Any = __d.get('color')
-        _guard_scalar('Badge.color', __d_color, (str,), False, False, False)
+        _guard_scalar('Tag.color', __d_color, (str,), False, False, False)
         __d_label_color: Any = __d.get('label_color')
-        _guard_scalar('Badge.label_color', __d_label_color, (str,), False, True, False)
+        _guard_scalar('Tag.label_color', __d_label_color, (str,), False, True, False)
         label: str = __d_label
         color: str = __d_color
         label_color: Optional[str] = __d_label_color
-        return Badge(
+        return Tag(
             label,
             color,
             label_color,
         )
 
 
-class BadgeTableCellType:
-    """Creates a collection of badges, usually used for rendering state values.
-    In case of multiple badges per row, make sure the row values are
+class TagTableCellType:
+    """Creates a collection of tags, usually used for rendering state values.
+    In case of multiple tags per row, make sure the row values are
     separated by "," within a single cell string.
-    E.g. ui.table_row(name="...", cells=["cell1", "BADGE1,BADGE2"]).
-    Each value should correspond to a `ui.badge.label` attr.
+    E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
+    Each value should correspond to a `ui.tag.label` attr.
     For the example above: [
-    ui.badge(label="BADGE1", color="red"),
-    ui.badge(label="BADGE2", color="green"),
+    ui.tag(label="TAG1", color="red"),
+    ui.tag(label="TAG2", color="green"),
     ]
     """
     def __init__(
             self,
             name: str,
-            badges: Optional[List[Badge]] = None,
+            tags: Optional[List[Tag]] = None,
     ):
-        _guard_scalar('BadgeTableCellType.name', name, (str,), False, False, False)
-        _guard_vector('BadgeTableCellType.badges', badges, (Badge,), False, True, False)
+        _guard_scalar('TagTableCellType.name', name, (str,), False, False, False)
+        _guard_vector('TagTableCellType.tags', tags, (Tag,), False, True, False)
         self.name = name
         """An identifying name for this component."""
-        self.badges = badges
-        """Badges to be rendered."""
+        self.tags = tags
+        """Tags to be rendered."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('BadgeTableCellType.name', self.name, (str,), False, False, False)
-        _guard_vector('BadgeTableCellType.badges', self.badges, (Badge,), False, True, False)
+        _guard_scalar('TagTableCellType.name', self.name, (str,), False, False, False)
+        _guard_vector('TagTableCellType.tags', self.tags, (Tag,), False, True, False)
         return _dump(
             name=self.name,
-            badges=None if self.badges is None else [__e.dump() for __e in self.badges],
+            tags=None if self.tags is None else [__e.dump() for __e in self.tags],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'BadgeTableCellType':
+    def load(__d: Dict) -> 'TagTableCellType':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('BadgeTableCellType.name', __d_name, (str,), False, False, False)
-        __d_badges: Any = __d.get('badges')
-        _guard_vector('BadgeTableCellType.badges', __d_badges, (dict,), False, True, False)
+        _guard_scalar('TagTableCellType.name', __d_name, (str,), False, False, False)
+        __d_tags: Any = __d.get('tags')
+        _guard_vector('TagTableCellType.tags', __d_tags, (dict,), False, True, False)
         name: str = __d_name
-        badges: Optional[List[Badge]] = None if __d_badges is None else [Badge.load(__e) for __e in __d_badges]
-        return BadgeTableCellType(
+        tags: Optional[List[Tag]] = None if __d_tags is None else [Tag.load(__e) for __e in __d_tags]
+        return TagTableCellType(
             name,
-            badges,
+            tags,
         )
 
 
@@ -3100,27 +3100,27 @@ class TableCellType:
             self,
             progress: Optional[ProgressTableCellType] = None,
             icon: Optional[IconTableCellType] = None,
-            badge: Optional[BadgeTableCellType] = None,
+            tag: Optional[TagTableCellType] = None,
     ):
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
-        _guard_scalar('TableCellType.badge', badge, (BadgeTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.tag', tag, (TagTableCellType,), False, True, False)
         self.progress = progress
         """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
         """Renders an icon."""
-        self.badge = badge
-        """Renders a one or more chips (badges)."""
+        self.tag = tag
+        """Renders one or more tags."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TableCellType.progress', self.progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', self.icon, (IconTableCellType,), False, True, False)
-        _guard_scalar('TableCellType.badge', self.badge, (BadgeTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.tag', self.tag, (TagTableCellType,), False, True, False)
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
             icon=None if self.icon is None else self.icon.dump(),
-            badge=None if self.badge is None else self.badge.dump(),
+            tag=None if self.tag is None else self.tag.dump(),
         )
 
     @staticmethod
@@ -3130,15 +3130,15 @@ class TableCellType:
         _guard_scalar('TableCellType.progress', __d_progress, (dict,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('TableCellType.icon', __d_icon, (dict,), False, True, False)
-        __d_badge: Any = __d.get('badge')
-        _guard_scalar('TableCellType.badge', __d_badge, (dict,), False, True, False)
+        __d_tag: Any = __d.get('tag')
+        _guard_scalar('TableCellType.tag', __d_tag, (dict,), False, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
-        badge: Optional[BadgeTableCellType] = None if __d_badge is None else BadgeTableCellType.load(__d_badge)
+        tag: Optional[TagTableCellType] = None if __d_tag is None else TagTableCellType.load(__d_tag)
         return TableCellType(
             progress,
             icon,
-            badge,
+            tag,
         )
 
 

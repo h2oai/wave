@@ -1172,50 +1172,50 @@ def icon_table_cell_type(
     ))
 
 
-def badge(
+def tag(
         label: str,
         color: str,
         label_color: Optional[str] = None,
-) -> Badge:
-    """Create a badge.
+) -> Tag:
+    """Create a tag.
 
     Args:
-        label: The text displayed within the badge.
-        color: Badge's background color.
-        label_color: Badge's label color. If not specified, black or white will be picked based on correct contrast with background.
+        label: The text displayed within the tag.
+        color: Tag's background color.
+        label_color: Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
     Returns:
-        A `h2o_wave.types.Badge` instance.
+        A `h2o_wave.types.Tag` instance.
     """
-    return Badge(
+    return Tag(
         label,
         color,
         label_color,
     )
 
 
-def badge_table_cell_type(
+def tag_table_cell_type(
         name: str,
-        badges: Optional[List[Badge]] = None,
+        tags: Optional[List[Tag]] = None,
 ) -> TableCellType:
-    """Creates a collection of badges, usually used for rendering state values.
-    In case of multiple badges per row, make sure the row values are
+    """Creates a collection of tags, usually used for rendering state values.
+    In case of multiple tags per row, make sure the row values are
     separated by "," within a single cell string.
-    E.g. ui.table_row(name="...", cells=["cell1", "BADGE1,BADGE2"]).
-    Each value should correspond to a `ui.badge.label` attr.
+    E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
+    Each value should correspond to a `ui.tag.label` attr.
     For the example above: [
-    ui.badge(label="BADGE1", color="red"),
-    ui.badge(label="BADGE2", color="green"),
+    ui.tag(label="TAG1", color="red"),
+    ui.tag(label="TAG2", color="green"),
     ]
 
     Args:
         name: An identifying name for this component.
-        badges: Badges to be rendered.
+        tags: Tags to be rendered.
     Returns:
-        A `h2o_wave.types.BadgeTableCellType` instance.
+        A `h2o_wave.types.TagTableCellType` instance.
     """
-    return TableCellType(badge=BadgeTableCellType(
+    return TableCellType(tag=TagTableCellType(
         name,
-        badges,
+        tags,
     ))
 
 

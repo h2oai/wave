@@ -14,20 +14,20 @@
 
 import { render } from '@testing-library/react'
 import React from 'react'
-import { BadgeTableCellType, XBadgeTableCellType } from "./badge_table_cell_type"
+import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 
 const
-  name = 'badge-cell',
-  badgeCellProps: BadgeTableCellType = {
-    name, badges: [
+  name = 'tag-cell',
+  tagCellProps: TagTableCellType = {
+    name, tags: [
       { label: 'DONE', color: '$red' },
       { label: 'SUCCESS', color: '$green' },
     ]
   }
 
-describe('BadgeTableCellType.tsx', () => {
+describe('TagTableCellType.tsx', () => {
   it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<XBadgeTableCellType model={badgeCellProps} serializedBadges='DONE,SUCCESS' />)
+    const { queryByTestId } = render(<XTagTableCellType model={tagCellProps} serializedTags='DONE,SUCCESS' />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 })

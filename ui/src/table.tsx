@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { BadgeTableCellType, XBadgeTableCellType } from "./badge_table_cell_type"
+import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, rem } from './theme'
 import { wave } from './ui'
 
@@ -28,8 +28,8 @@ interface TableCellType {
   progress?: ProgressTableCellType
   /** Renders an icon. */
   icon?: IconTableCellType
-  /** Renders one or more badges. */
-  badge?: BadgeTableCellType
+  /** Renders one or more tags. */
+  tag?: TagTableCellType
 }
 
 /** Create a table column. */
@@ -254,7 +254,7 @@ const
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         if (!listProps) return null
 
-        const filters = col.cellType?.badge
+        const filters = col.cellType?.tag
           ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
             key.split(',').forEach(key => _filters.set(key, { key, text, data }))
             return _filters
@@ -390,13 +390,13 @@ const
 
         window.URL.revokeObjectURL(url)
       },
-      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: WaveColumn) => {
+      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
-        if (col.cellType?.badge) return <XBadgeTableCellType model={col.cellType.badge} serializedBadges={item[col.key]} />
+        if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
