@@ -132,6 +132,7 @@ type DataTable = {
 }
 
 const
+  MIN_ROWS_TO_DISPLAY_FOOTER = 20,
   // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
     // HACK: Put sorting icon on right (same as filter).
@@ -314,7 +315,7 @@ const
       }, [groups, onColumnContextMenu]),
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
         const isFilterable = m.columns.some(c => c.filterable)
-        if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable)) return null
+        if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable && m.rows.length < MIN_ROWS_TO_DISPLAY_FOOTER)) return null
 
         const
           footerItems: Fluent.ICommandBarItemProps[] = [],
@@ -330,7 +331,7 @@ const
               verticalAlign='center'
               styles={{ root: { background: cssVar('$neutralLight'), borderRadius: '0 0 4px 4px', paddingLeft: 12, height: 48 } }}>
               {
-                (isFilterable || isSearchable) && (
+                (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
                   <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
                     <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
                   </Fluent.Text>
@@ -340,10 +341,7 @@ const
                 footerItems.length && (
                   <div style={{ width: '80%' }}>
                     <Fluent.CommandBar items={footerItems} styles={{
-                      root: {
-                        background: cssVar('$neutralLight'),
-                        '.ms-Button--commandBar': { background: 'transparent' }
-                      },
+                      root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
                       primarySet: { justifyContent: 'flex-end' }
                     }} />
                   </div>
