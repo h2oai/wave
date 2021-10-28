@@ -5708,8 +5708,58 @@ class TextAnnotator:
         )
 
 
+class Facepile:
+    """A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
+    Often this control is used when sharing who has access to a specific view or file.
+    """
+    def __init__(
+            self,
+            items: List['Component'],
+            name: Optional[str] = None,
+            max: Optional[int] = None,
+    ):
+        _guard_vector('Facepile.items', items, (Component,), False, False, False)
+        _guard_scalar('Facepile.name', name, (str,), True, True, False)
+        _guard_scalar('Facepile.max', max, (int,), False, True, False)
+        self.items = items
+        """List of personas to be displayed."""
+        self.name = name
+        """An identifying name for this component. If specified `Add button` will be rendered."""
+        self.max = max
+        """Maximum number of personas to be displayed."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('Facepile.items', self.items, (Component,), False, False, False)
+        _guard_scalar('Facepile.name', self.name, (str,), True, True, False)
+        _guard_scalar('Facepile.max', self.max, (int,), False, True, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            name=self.name,
+            max=self.max,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Facepile':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('Facepile.items', __d_items, (dict,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Facepile.name', __d_name, (str,), True, True, False)
+        __d_max: Any = __d.get('max')
+        _guard_scalar('Facepile.max', __d_max, (int,), False, True, False)
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
+        max: Optional[int] = __d_max
+        return Facepile(
+            items,
+            name,
+            max,
+        )
+
+
 class Component:
-    """No documentation available.
+    """Create a component.
     """
     def __init__(
             self,
@@ -5756,6 +5806,7 @@ class Component:
             image: Optional[Image] = None,
             persona: Optional[Persona] = None,
             text_annotator: Optional[TextAnnotator] = None,
+            facepile: Optional[Facepile] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -5800,6 +5851,7 @@ class Component:
         _guard_scalar('Component.image', image, (Image,), False, True, False)
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
+        _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -5885,7 +5937,9 @@ class Component:
         self.persona = persona
         """Persona."""
         self.text_annotator = text_annotator
-        """No documentation available."""
+        """Annotator."""
+        self.facepile = facepile
+        """Facepile."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5932,6 +5986,7 @@ class Component:
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
+        _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -5976,6 +6031,7 @@ class Component:
             image=None if self.image is None else self.image.dump(),
             persona=None if self.persona is None else self.persona.dump(),
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
+            facepile=None if self.facepile is None else self.facepile.dump(),
         )
 
     @staticmethod
@@ -6067,6 +6123,8 @@ class Component:
         _guard_scalar('Component.persona', __d_persona, (dict,), False, True, False)
         __d_text_annotator: Any = __d.get('text_annotator')
         _guard_scalar('Component.text_annotator', __d_text_annotator, (dict,), False, True, False)
+        __d_facepile: Any = __d.get('facepile')
+        _guard_scalar('Component.facepile', __d_facepile, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6110,6 +6168,7 @@ class Component:
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
+        facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
         return Component(
             text,
             text_xl,
@@ -6154,6 +6213,7 @@ class Component:
             image,
             persona,
             text_annotator,
+            facepile,
         )
 
 

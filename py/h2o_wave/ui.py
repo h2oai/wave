@@ -2124,6 +2124,28 @@ def text_annotator(
     ))
 
 
+def facepile(
+        items: List[Component],
+        name: Optional[str] = None,
+        max: Optional[int] = None,
+) -> Component:
+    """A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
+    Often this control is used when sharing who has access to a specific view or file.
+
+    Args:
+        items: List of personas to be displayed.
+        name: An identifying name for this component. If specified `Add button` will be rendered.
+        max: Maximum number of personas to be displayed.
+    Returns:
+        A `h2o_wave.types.Facepile` instance.
+    """
+    return Component(facepile=Facepile(
+        items,
+        name,
+        max,
+    ))
+
+
 def article_card(
         box: str,
         title: str,
