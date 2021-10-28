@@ -4,41 +4,39 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
-const
-  css = stylesheet({
-    multiContainer: {
-      position: 'relative',
-      $nest: {
-        '&:hover > button': {
-          opacity: 1
-        }
-      }
-    },
-    compactContainer: {
-      position: 'relative',
-    },
-    btnMultiline: {
-      opacity: 0,
-      transition: 'opacity .5s'
-    },
-    btn: {
-      minWidth: 'initial',
-      margin: 0,
-      position: 'absolute',
-      top: 31,
-      right: 4,
-      width: 24,
-      height: 24
-    },
-    copiedBtn: {
-      background: cssVar('$green'),
-      $nest: {
-        '&:hover': {
-          background: cssVar('$green'),
-        }
+const css = stylesheet({
+  multiContainer: {
+    position: 'relative',
+    $nest: {
+      '&:hover > button': {
+        opacity: 1
       }
     }
-  })
+  },
+  compactContainer: {
+    position: 'relative',
+  },
+  btnMultiline: {
+    opacity: 0,
+    transition: 'opacity .5s'
+  },
+  btn: {
+    minWidth: 'initial',
+    position: 'absolute',
+    top: 31,
+    right: 4,
+    width: 24,
+    height: 24
+  },
+  copiedBtn: {
+    background: cssVar('$green'),
+    $nest: {
+      '&:hover': {
+        background: cssVar('$green'),
+      }
+    }
+  }
+})
 
 /**
  * Create a copyable text component.
