@@ -6109,7 +6109,7 @@ class Component:
         self.facepile = facepile
         """Facepile."""
         self.copyable_text = copyable_text
-        """Clipboard."""
+        """Copyable text."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

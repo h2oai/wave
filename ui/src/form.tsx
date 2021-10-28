@@ -147,7 +147,7 @@ export interface Component {
   text_annotator?: TextAnnotator
   /** Facepile. */
   facepile?: Facepile
-  /** Clipboard. */
+  /** Copyable text. */
   copyable_text?: CopyableText
 }
 
