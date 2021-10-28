@@ -28,7 +28,7 @@ export interface Persona {
   name?: Id
 }
 
-const fluentSizes: { [K in 'xs' | 's' | 'm' | 'l' | 'xl']: Fluent.PersonaSize } = {
+const fluentPersonaSizes: { [K in 'xs' | 's' | 'm' | 'l' | 'xl']: Fluent.PersonaSize } = {
   'xs': Fluent.PersonaSize.size48,
   's': Fluent.PersonaSize.size56,
   'm': Fluent.PersonaSize.size72,
@@ -58,7 +58,7 @@ export const XPersona = ({ model }: { model: Persona }) => {
         imageUrl={model.image}
         imageInitials={model.initials}
         initialsColor={cssVar(model.initials_color)}
-        size={model.size ? fluentSizes[model.size] : Fluent.PersonaSize.size72}
+        size={model.size ? fluentPersonaSizes[model.size] : Fluent.PersonaSize.size72}
       />
     </div>
   )

@@ -2487,6 +2487,29 @@ ui_text_annotator <- function(
   return(.o)
 }
 
+#' A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
+#' Often this control is used when sharing who has access to a specific view or file.
+#'
+#' @param items List of personas to be displayed.
+#' @param name An identifying name for this component. If specified `Add button` will be rendered.
+#' @param max Maximum number of personas to be displayed.
+#' @return A Facepile instance.
+#' @export
+ui_facepile <- function(
+  items,
+  name = NULL,
+  max = NULL) {
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("max", "numeric", max)
+  .o <- list(facepile=list(
+    items=items,
+    name=name,
+    max=max))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
