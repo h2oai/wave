@@ -1,8 +1,8 @@
 import * as Fluent from '@fluentui/react'
+import { B, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, bond, box, S, U } from './qd'
-import { clas, cssVar } from './theme'
+import { clas, cssVar, pc } from './theme'
 
 const
   css = stylesheet({
@@ -15,19 +15,22 @@ const
       }
     },
     compactContainer: {
+      position: 'relative',
       display: 'flex',
       alignItems: 'flex-end',
     },
-    btnMultiple: {
-      position: 'absolute',
-      top: 35,
-      right: 10,
+    btnMultiline: {
       opacity: 0,
       transition: 'opacity .5s'
     },
     btn: {
       minWidth: 'initial',
-      margin: 0
+      margin: 0,
+      position: 'absolute',
+      top: 31,
+      right: 4,
+      width: 24,
+      height: 24
     },
     copiedBtn: {
       background: cssVar('$green'),
@@ -54,44 +57,40 @@ export interface CopyableText {
   multiline?: B
 }
 
-export const XCopyableText = bond(({ model }: { model: CopyableText }) => {
-  let timeoutRef: U
+export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
-    ref = React.createRef<Fluent.ITextField>(),
-    copiedB = box(false),
-    onClick = () => {
+    { name, multiline, label, value } = model,
+    ref = React.useRef<Fluent.ITextField>(null),
+    timeoutRef = React.useRef<U>(),
+    [copied, setCopied] = React.useState(false),
+    onClick = async () => {
       const el = ref.current
       if (!el) return
-      el.select()
-
-      document.execCommand('copy')
-      window.getSelection()?.removeAllRanges()
-      copiedB(true)
-
-      timeoutRef = window.setTimeout(() => copiedB(false), 2000)
-    },
-    dispose = () => window.clearTimeout(timeoutRef),
-    render = () => (
-      <div data-test={model.name}>
-        {
-          model.multiline
-            ? (
-              <div className={css.multiContainer}>
-                <Fluent.TextField componentRef={ref} defaultValue={model.value} label={model.label} multiline readOnly />
-                <Fluent.PrimaryButton onClick={onClick} text={copiedB() ? 'Copied!' : 'Copy'} className={clas(css.btn, css.btnMultiple)} />
-              </div>
-            )
-            : (
-              <div className={css.compactContainer}>
-                <Fluent.TextField componentRef={ref} defaultValue={model.value} label={model.label} styles={{ root: { flexGrow: 1 } }} readOnly />
-                <Fluent.TooltipHost content='Copy to clipboard'>
-                  <Fluent.PrimaryButton onClick={onClick} iconProps={{ iconName: copiedB() ? 'CheckMark' : 'Copy' }} className={clas(css.btn, copiedB() ? css.copiedBtn : '')} />
-                </Fluent.TooltipHost>
-              </div>
-            )
+      try {
+        if (document.queryCommandSupported('copy')) {
+          el.select()
+          document.execCommand('copy')
+          window.getSelection()?.removeAllRanges()
         }
-      </div>
-    )
+      } catch (error) {
+        await window.navigator.clipboard.writeText(value)
+      }
 
-  return { render, dispose, copiedB }
-})
+      setCopied(true)
+      timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
+    }
+
+  React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
+
+  return (
+    <div data-test={name} className={multiline ? css.multiContainer : css.compactContainer}>
+      <Fluent.TextField componentRef={ref} defaultValue={value} label={label} multiline={multiline} styles={{ root: { width: pc(100) } }} readOnly />
+      <Fluent.PrimaryButton
+        title='Copy to clipboard'
+        onClick={onClick}
+        iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
+        className={clas(css.btn, copied ? css.copiedBtn : '', multiline ? css.btnMultiline : '')}
+      />
+    </div>
+  )
+}
