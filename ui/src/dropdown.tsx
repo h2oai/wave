@@ -15,8 +15,10 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
 import { fuzzysearch } from './parts/utils'
+import { clas, cssVar, pc } from './theme'
 import { wave } from './ui'
 
 /**
@@ -60,6 +62,16 @@ export interface Dropdown {
 }
 
 const
+  css = stylesheet({
+    dialogCheckedRow: {
+      background: cssVar('$neutralLight')
+    },
+    dialogControls: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginTop: 16
+    }
+  }),
   BaseDropdown = ({ name, label, required, disabled, value, values, choices, trigger, placeholder }: Dropdown) => {
     const
       isMultivalued = !!values,
@@ -172,8 +184,14 @@ const
         items[idx].checked = checked
         setFilteredItems(items)
       }, [filteredItems, values]),
-      onRenderCell = React.useCallback((item?: { name: S, text: S, idx: U, checked: B }) =>
-        item ? <Fluent.Checkbox label={item?.text} styles={{ root: { minHeight: ROW_HEIGHT } }} onChange={onChecked(item?.idx)} checked={item.checked} /> : null, [onChecked]),
+      onRenderCell = React.useCallback((item?: { name: S, text: S, idx: U, checked: B }) => item
+        ? <Fluent.Checkbox
+          label={item?.text}
+          styles={{ root: { minHeight: ROW_HEIGHT, alignItems: 'center', boxSizing: 'border-box' }, label: { width: pc(100), padding: 8 } }}
+          onChange={onChecked(item?.idx)}
+          className={item.checked ? css.dialogCheckedRow : ''}
+          checked={item.checked} />
+        : null, [onChecked]),
       getPageSpecification = React.useCallback(() => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE, } as Fluent.IPageSpecification), [])
 
     return (
@@ -188,16 +206,14 @@ const
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: Fluent.getTheme().palette.neutralSecondary } }}
           value={textValue || ''} />
-        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: textValue }} styles={{ main: { width: `${width}px !important` } }} maxWidth='90vw'>
+        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label }} styles={{ main: { width: `${width}px !important` } }} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: 600 }, header: { height: 0 } }}>
             <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} placeholder={placeholder} />
-            <div style={{ marginTop: 16 }}>
-              <span className='wave-s12 wave-w5'>Selected: {filteredItems.filter(({ checked }) => checked).length}</span>
-              <Fluent.Text variant='small' styles={{ root: { float: 'right' } }} block>
-                <Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link>
-              </Fluent.Text>
+            <div className={clas('wave-s14', css.dialogControls)}>
+              <span className='wave-w5'>Selected: {filteredItems.filter(({ checked }) => checked).length}</span>
+              <div><Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link></div>
             </div>
-            <Fluent.ScrollablePane styles={{ root: { marginTop: 80 } }}>
+            <Fluent.ScrollablePane styles={{ root: { marginTop: 70 } }}>
               <Fluent.List
                 items={filteredItems}
                 getPageSpecification={getPageSpecification}
