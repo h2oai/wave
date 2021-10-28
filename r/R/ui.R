@@ -1371,6 +1371,54 @@ ui_icon_table_cell_type <- function(
   return(.o)
 }
 
+#' Create a tag.
+#'
+#' @param label The text displayed within the tag.
+#' @param color Tag's background color.
+#' @param label_color Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
+#' @return A Tag instance.
+#' @export
+ui_tag <- function(
+  label,
+  color,
+  label_color = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("label_color", "character", label_color)
+  .o <- list(
+    label=label,
+    color=color,
+    label_color=label_color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTag"))
+  return(.o)
+}
+
+#' Creates a collection of tags, usually used for rendering state values.
+#' In case of multiple tags per row, make sure the row values are
+#' separated by "," within a single cell string.
+#' E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
+#' Each value should correspond to a `ui.tag.label` attr.
+#' For the example above: [
+#' ui.tag(label="TAG1", color="red"),
+#' ui.tag(label="TAG2", color="green"),
+#' ]
+#'
+#' @param name An identifying name for this component.
+#' @param tags Tags to be rendered.
+#' @return A TagTableCellType instance.
+#' @export
+ui_tag_table_cell_type <- function(
+  name,
+  tags = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_vector("tags", "WaveTag", tags)
+  .o <- list(tag=list(
+    name=name,
+    tags=tags))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
+  return(.o)
+}
+
 #' Create a table column.
 #'
 #' @param name An identifying name for this column.
@@ -2455,9 +2503,9 @@ ui_text_annotator_item <- function(
   return(.o)
 }
 
-#' Create an annotator component.
+#' Create a text annotator component.
 #' 
-#' The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+#' The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
 #'
 #' @param name An identifying name for this component.
 #' @param title The text annotator's title.

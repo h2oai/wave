@@ -2997,6 +2997,102 @@ class IconTableCellType:
         )
 
 
+class Tag:
+    """Create a tag.
+    """
+    def __init__(
+            self,
+            label: str,
+            color: str,
+            label_color: Optional[str] = None,
+    ):
+        _guard_scalar('Tag.label', label, (str,), False, False, False)
+        _guard_scalar('Tag.color', color, (str,), False, False, False)
+        _guard_scalar('Tag.label_color', label_color, (str,), False, True, False)
+        self.label = label
+        """The text displayed within the tag."""
+        self.color = color
+        """Tag's background color."""
+        self.label_color = label_color
+        """Tag's label color. If not specified, black or white will be picked based on correct contrast with background."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Tag.label', self.label, (str,), False, False, False)
+        _guard_scalar('Tag.color', self.color, (str,), False, False, False)
+        _guard_scalar('Tag.label_color', self.label_color, (str,), False, True, False)
+        return _dump(
+            label=self.label,
+            color=self.color,
+            label_color=self.label_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Tag':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Tag.label', __d_label, (str,), False, False, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('Tag.color', __d_color, (str,), False, False, False)
+        __d_label_color: Any = __d.get('label_color')
+        _guard_scalar('Tag.label_color', __d_label_color, (str,), False, True, False)
+        label: str = __d_label
+        color: str = __d_color
+        label_color: Optional[str] = __d_label_color
+        return Tag(
+            label,
+            color,
+            label_color,
+        )
+
+
+class TagTableCellType:
+    """Creates a collection of tags, usually used for rendering state values.
+    In case of multiple tags per row, make sure the row values are
+    separated by "," within a single cell string.
+    E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
+    Each value should correspond to a `ui.tag.label` attr.
+    For the example above: [
+    ui.tag(label="TAG1", color="red"),
+    ui.tag(label="TAG2", color="green"),
+    ]
+    """
+    def __init__(
+            self,
+            name: str,
+            tags: Optional[List[Tag]] = None,
+    ):
+        _guard_scalar('TagTableCellType.name', name, (str,), False, False, False)
+        _guard_vector('TagTableCellType.tags', tags, (Tag,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.tags = tags
+        """Tags to be rendered."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TagTableCellType.name', self.name, (str,), False, False, False)
+        _guard_vector('TagTableCellType.tags', self.tags, (Tag,), False, True, False)
+        return _dump(
+            name=self.name,
+            tags=None if self.tags is None else [__e.dump() for __e in self.tags],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TagTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TagTableCellType.name', __d_name, (str,), False, False, False)
+        __d_tags: Any = __d.get('tags')
+        _guard_vector('TagTableCellType.tags', __d_tags, (dict,), False, True, False)
+        name: str = __d_name
+        tags: Optional[List[Tag]] = None if __d_tags is None else [Tag.load(__e) for __e in __d_tags]
+        return TagTableCellType(
+            name,
+            tags,
+        )
+
+
 class TableCellType:
     """Defines cell content to be rendered instead of a simple text.
     """
@@ -3004,21 +3100,27 @@ class TableCellType:
             self,
             progress: Optional[ProgressTableCellType] = None,
             icon: Optional[IconTableCellType] = None,
+            tag: Optional[TagTableCellType] = None,
     ):
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.tag', tag, (TagTableCellType,), False, True, False)
         self.progress = progress
         """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
         """Renders an icon."""
+        self.tag = tag
+        """Renders one or more tags."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TableCellType.progress', self.progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', self.icon, (IconTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.tag', self.tag, (TagTableCellType,), False, True, False)
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
             icon=None if self.icon is None else self.icon.dump(),
+            tag=None if self.tag is None else self.tag.dump(),
         )
 
     @staticmethod
@@ -3028,11 +3130,15 @@ class TableCellType:
         _guard_scalar('TableCellType.progress', __d_progress, (dict,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('TableCellType.icon', __d_icon, (dict,), False, True, False)
+        __d_tag: Any = __d.get('tag')
+        _guard_scalar('TableCellType.tag', __d_tag, (dict,), False, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
+        tag: Optional[TagTableCellType] = None if __d_tag is None else TagTableCellType.load(__d_tag)
         return TableCellType(
             progress,
             icon,
+            tag,
         )
 
 
@@ -5638,9 +5744,9 @@ class TextAnnotatorItem:
 
 
 class TextAnnotator:
-    """Create an annotator component.
+    """Create a text annotator component.
 
-    The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+    The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
     """
     def __init__(
             self,

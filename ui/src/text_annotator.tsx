@@ -24,9 +24,9 @@ interface TextAnnotatorItem {
 }
 
 /**
- * Create an annotator component.
+ * Create a text annotator component.
  * 
- * The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+ * The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
  */
 export interface TextAnnotator {
   /** An identifying name for this component. */
@@ -211,11 +211,8 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         }
       })
       return (
-        <div key={name} className={clas(css.tagWrapper, activeTag === name ? style.activeTag : '')}>
-          <div
-            className={clas(css.tag, style.tag, 'wave-s12')}
-            onClick={activateTag(name)}
-          >{label}</div>
+        <div key={name} data-test={name} className={clas(css.tagWrapper, activeTag === name ? style.activeTag : '')}>
+          <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={activateTag(name)}>{label}</div>
         </div>
       )
     })

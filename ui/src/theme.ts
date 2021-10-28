@@ -119,16 +119,6 @@ const
         white: '#ffffff',
       },
     },
-    dark: {
-      palette: {
-        text: '#ffffff',
-        card: '#21252b',
-        page: '#282c34',
-      },
-      fluentPalette: {
-        // TODO: Generate dark fluent color palette.
-      },
-    },
     neon: {
       palette: {
         text: '#ffffff',

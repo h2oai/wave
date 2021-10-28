@@ -1172,6 +1172,53 @@ def icon_table_cell_type(
     ))
 
 
+def tag(
+        label: str,
+        color: str,
+        label_color: Optional[str] = None,
+) -> Tag:
+    """Create a tag.
+
+    Args:
+        label: The text displayed within the tag.
+        color: Tag's background color.
+        label_color: Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
+    Returns:
+        A `h2o_wave.types.Tag` instance.
+    """
+    return Tag(
+        label,
+        color,
+        label_color,
+    )
+
+
+def tag_table_cell_type(
+        name: str,
+        tags: Optional[List[Tag]] = None,
+) -> TableCellType:
+    """Creates a collection of tags, usually used for rendering state values.
+    In case of multiple tags per row, make sure the row values are
+    separated by "," within a single cell string.
+    E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
+    Each value should correspond to a `ui.tag.label` attr.
+    For the example above: [
+    ui.tag(label="TAG1", color="red"),
+    ui.tag(label="TAG2", color="green"),
+    ]
+
+    Args:
+        name: An identifying name for this component.
+        tags: Tags to be rendered.
+    Returns:
+        A `h2o_wave.types.TagTableCellType` instance.
+    """
+    return TableCellType(tag=TagTableCellType(
+        name,
+        tags,
+    ))
+
+
 def table_column(
         name: str,
         label: str,
@@ -2102,9 +2149,9 @@ def text_annotator(
         items: List[TextAnnotatorItem],
         trigger: Optional[bool] = None,
 ) -> Component:
-    """Create an annotator component.
+    """Create a text annotator component.
 
-    The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+    The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
 
     Args:
         name: An identifying name for this component.

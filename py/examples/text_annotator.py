@@ -1,5 +1,5 @@
-# Form / Annotator
-# Use annotator when you need to highlight text phrases.
+# Form / TextAnnotator
+# Use text annotator when you need to highlight text phrases.
 # #form #annotator
 # ---
 from h2o_wave import main, app, Q, ui

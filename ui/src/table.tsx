@@ -18,7 +18,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { cssVar, rem } from './theme'
+import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
+import { border, cssVar, rem } from './theme'
 import { wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
@@ -27,6 +28,8 @@ interface TableCellType {
   progress?: ProgressTableCellType
   /** Renders an icon. */
   icon?: IconTableCellType
+  /** Renders one or more tags. */
+  tag?: TagTableCellType
 }
 
 /** Create a table column. */
@@ -108,7 +111,7 @@ export interface Table {
   tooltip?: S
 }
 
-type QColumn = Fluent.IColumn & {
+type WaveColumn = Fluent.IColumn & {
   dataType?: S
   cellType?: TableCellType
   isSortable?: B
@@ -117,7 +120,7 @@ type QColumn = Fluent.IColumn & {
 type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S) => (e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => void
-  sort: (col: QColumn) => void,
+  sort: (col: WaveColumn) => void,
   reset: () => void
   filteredItems: any[]
   selectedFilters: Dict<S[]> | null
@@ -129,6 +132,8 @@ type DataTable = {
 }
 
 const
+  MIN_ROWS_TO_DISPLAY_FOOTER = 20,
+  // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
     // HACK: Put sorting icon on right (same as filter).
     sortableHeader: {
@@ -151,11 +156,20 @@ const
     hideCellGroupCollapse: {
       $nest: {
         'div[class*="cellIsGroupExpander"]': {
-          display: 'none'
+          visibility: 'hidden'
         }
       }
     }
   }),
+  styles: Partial<Fluent.IDetailsListStyles> = {
+    contentWrapper: {
+      border: border(2, cssVar('$neutralLight')),
+      borderTop: 'none',
+      '.ms-List-page:first-child .ms-List-cell:first-child .ms-DetailsRow': {
+        borderTop: border(2, 'transparent'),
+      },
+    }
+  },
   checkboxVisibilityMap = {
     'always': Fluent.CheckboxVisibility.always,
     'on-hover': Fluent.CheckboxVisibility.onHover,
@@ -167,7 +181,7 @@ const
       return rv
     }, {} as Dict<any>)
   },
-  sortingF = (column: QColumn, sortAsc: B) => (rowA: any, rowB: any) => {
+  sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
     let a = rowA[column.key], b = rowB[column.key]
 
     switch (column.dataType) {
@@ -198,7 +212,7 @@ const
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
-      onColumnClick = (e: React.MouseEvent<HTMLElement>, column: QColumn) => {
+      onColumnClick = (e: React.MouseEvent<HTMLElement>, column: WaveColumn) => {
         const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
 
         if (isMenuClicked) onColumnContextMenu(column, e)
@@ -207,7 +221,7 @@ const
           setColumns(columns.map(col => column.key === col.key ? column : col))
         }
       },
-      [columns, setColumns] = React.useState(m.columns.map((c): QColumn => {
+      [columns, setColumns] = React.useState(m.columns.map((c): WaveColumn => {
         const
           minWidth = c.min_width
             ? c.min_width.endsWith('px')
@@ -233,23 +247,30 @@ const
           cellType: c.cell_type,
           dataType: c.data_type,
           isSortable: c.sortable,
+          styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
-      onRenderMenuList = React.useCallback((listProps?: Fluent.IContextualMenuListProps) => {
+      onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         if (!listProps) return null
 
+        const filters = col.cellType?.tag
+          ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
+            key.split(',').forEach(key => _filters.set(key, { key, text, data }))
+            return _filters
+          }, new Map<S, Fluent.IContextualMenuItem>()).values())
+          : listProps.items
         return (
           <div style={{ padding: 10 }}>
             <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
             {
-              listProps.items.map(({ key, name, data }) => (
+              filters.map(({ key, text, data }) => (
                 <Fluent.Checkbox
                   key={key}
-                  label={name}
-                  defaultChecked={!!name && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(name)}
-                  onChange={onFilterChange(data || '', name || '')}
+                  label={key}
+                  defaultChecked={!!text && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(key)}
+                  onChange={onFilterChange(data || '', key || '')}
                   styles={{ root: { marginBottom: 5 } }}
                 />
               )
@@ -258,14 +279,14 @@ const
           </div>
         )
       }, [onFilterChange]),
-      onColumnContextMenu = React.useCallback((col: Fluent.IColumn, e: React.MouseEvent<HTMLElement>) => {
+      onColumnContextMenu = React.useCallback((col: WaveColumn, e: React.MouseEvent<HTMLElement>) => {
         setColContextMenuList({
-          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, name: option, data: col.fieldName || col.key })),
+          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
           target: e.target as HTMLElement,
           directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
           gapSpace: 10,
           isBeakVisible: true,
-          onRenderMenuList,
+          onRenderMenuList: onRenderMenuList(col),
           onDismiss: () => setColContextMenuList(null),
         })
       }, [items, onRenderMenuList]),
@@ -274,13 +295,27 @@ const
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
-            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groups ? css.hideCellGroupCollapse : ''} />
+            <Fluent.DetailsHeader
+              {...props}
+              onColumnContextMenu={onColumnContextMenu}
+              styles={{
+                ...props.styles, root: {
+                  padding: 0,
+                  height: 48,
+                  lineHeight: '48px',
+                  background: cssVar('$neutralLight'),
+                  borderBottom: 'none',
+                  borderRadius: '4px 4px 0 0',
+                }
+              }}
+              className={groups ? css.hideCellGroupCollapse : ''}
+            />
           </Fluent.Sticky>
         )
       }, [groups, onColumnContextMenu]),
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
         const isFilterable = m.columns.some(c => c.filterable)
-        if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable)) return null
+        if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable && m.rows.length < MIN_ROWS_TO_DISPLAY_FOOTER)) return null
 
         const
           footerItems: Fluent.ICommandBarItemProps[] = [],
@@ -290,23 +325,50 @@ const
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
-            <Fluent.Stack horizontal horizontalAlign={isFilterable ? 'space-between' : 'end'} verticalAlign='center'>
+            <Fluent.Stack
+              horizontal
+              horizontalAlign='space-between'
+              verticalAlign='center'
+              styles={{ root: { background: cssVar('$neutralLight'), borderRadius: '0 0 4px 4px', paddingLeft: 12, height: 48 } }}>
               {
-                isFilterable && (
+                (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
                   <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
                     <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
                   </Fluent.Text>
                 )
               }
-              <div style={{ width: '80%' }}>
-                <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') }, primarySet: { justifyContent: 'flex-end' } }} />
-              </div>
+              {
+                footerItems.length && (
+                  <div style={{ width: '80%' }}>
+                    <Fluent.CommandBar items={footerItems} styles={{
+                      root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
+                      primarySet: { justifyContent: 'flex-end' }
+                    }} />
+                  </div>
+                )
+              }
             </Fluent.Stack>
           </Fluent.Sticky>
         )
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
-        ? <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, checkCell: { display: 'flex', alignItems: 'center' }, root: { width: '100%' } }} />
+        ? <Fluent.DetailsRow {...props} styles={{
+          cell: { alignSelf: 'center', fontSize: 14, lineHeight: 20, color: cssVar('$text9') },
+          checkCell: { display: 'flex', alignItems: 'center' },
+          root: {
+            width: '100%',
+            border: border(2, 'transparent'),
+            borderTop: border(2, cssVar('$neutralLight')),
+            boxSizing: 'border-box',
+            background: cssVar('$card'),
+            minHeight: 48,
+            '&:hover': {
+              background: cssVar('$neutralLight'),
+              border: `${border(2, cssVar('$themePrimary'))} !important`,
+              boxSizing: 'border-box'
+            }
+          }
+        }} />
         : null,
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
@@ -326,12 +388,13 @@ const
 
         window.URL.revokeObjectURL(url)
       },
-      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
+      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
+        if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
@@ -351,6 +414,7 @@ const
     return (
       <>
         <Fluent.DetailsList
+          styles={styles}
           items={filteredItems}
           columns={columns}
           constrainMode={Fluent.ConstrainMode.unconstrained}
@@ -397,10 +461,8 @@ export const
         // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
         setFilteredItems(
           selectedFilters
-            ? items.filter(i => Object.keys(selectedFilters)
-              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey]
-                .some(filterVal => i[filterKey] === filterVal)
-              )
+            ? items.filter(item => Object.keys(selectedFilters)
+              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
             )
             : items
         )
@@ -453,7 +515,7 @@ export const
           return searchString || ''
         })
       }, [searchableKeys]),
-      onSearchChange = React.useCallback((_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
+      onSearchChange = React.useCallback((_e?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
         setSearchStr(searchStr)
 
         if (!searchStr && !selectedFilters) {
@@ -527,7 +589,7 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight
       },
-      sort = React.useCallback((column: QColumn) => {
+      sort = React.useCallback((column: WaveColumn) => {
         const sortAsc = column.iconName === 'SortDown'
         column.iconName = sortAsc ? 'SortUp' : 'SortDown'
 
@@ -568,11 +630,13 @@ export const
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
-        <Fluent.Stack horizontal horizontalAlign='space-between' >
+        <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
           {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-          {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%' } }} />}
+          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
         </Fluent.Stack>
-        <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
+        <Fluent.ScrollablePane
+          scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
+          styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
           {
             isMultiple
               ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
