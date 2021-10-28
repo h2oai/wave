@@ -44,12 +44,12 @@ columns = [
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
     ui.table_column(name='views', label='Views', sortable=True, data_type='number'),
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
-    ui.table_column(name='tag', label='State', min_width='170px',
-                    cell_type=ui.tag_table_cell_type(name='tags', tags=[
-                        ui.tag(label='RUNNING', color='#D2E3F8'),
-                        ui.tag(label='DONE', color='$red'),
-                        ui.tag(label='SUCCESS', color='$mint'),
-                    ])),
+    ui.table_column(name='tag', label='State', min_width='170px', cell_type=ui.tag_table_cell_type(name='tags', tags=[
+                    ui.tag(label='RUNNING', color='#D2E3F8'),
+                    ui.tag(label='DONE', color='$red'),
+                    ui.tag(label='SUCCESS', color='$mint'),
+                    ]
+    )),
     ui.table_column(name='created', label='Created', sortable=True, data_type='time'),
 ]
 
