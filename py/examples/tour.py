@@ -176,18 +176,7 @@ async def setup_page(q: Q):
         ])
     ])
 
-    q.page['header'] = ui.header_card(
-        box='header',
-        title=app_title,
-        subtitle=f'{len(catalog)} Interactive Examples',
-        nav=[
-            ui.nav_group(
-                label='Examples',
-                items=[ui.nav_item(name=f'#{e.name}', label=e.title) for e in catalog.values()]
-            )
-        ],
-    )
-
+    q.page['header'] = ui.header_card(box='header', title=app_title, subtitle=f'{len(catalog)} Interactive Examples')
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.frame_card(box='code', title='', content='')
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', path='/demo')
@@ -199,12 +188,14 @@ def make_blurb(q: Q, example: Example):
     blurb_card = q.page['blurb']
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
-    buttons = []
+    # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
+    items = [ui.dropdown(name=q.args['#'] or 'hello_world', width='300px', value=example.name, trigger=True,
+             choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
     if example.previous_example:
-        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
-        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = buttons
+        items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+    blurb_card.items = items
 
 
 async def show_example(q: Q, example: Example):
@@ -247,12 +238,11 @@ async def serve(q: Q):
         q.client.initialized = True
         await setup_page(q)
 
-    route = q.args['#']
-    if not route:
-        route = 'hello_world'
+    search = q.args[q.args['#']]
+    if search:
+        q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
-    await show_example(q, catalog[route])
-
+    await show_example(q, catalog[search or q.args['#'] or 'hello_world'])
 
 example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
                      not line.strip().startswith('#')]
