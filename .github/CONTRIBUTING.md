@@ -63,19 +63,19 @@ You will need [Go](https://golang.org/) 1.13+, [Node.js](http://nodejs.org) 10+,
 To set up all development dependencies, clone the repo and run:
 
 ``` bash
-$ make all
+make all
 ```
 
 To launch the Wave server, run:
 
 ``` bash
-$ make run
+make run
 ```
 
 Try running the Wave tour to verify if your setup is functional:
 
 ``` bash
-$ cd py && ./venv/bin/wave examples.tour
+cd py && ./venv/bin/wave examples.tour
 ```
 
 You should now see the Wave Tour at http://localhost:10101/tour, and examples running at http://localhost:10101/demo.
@@ -83,7 +83,7 @@ You should now see the Wave Tour at http://localhost:10101/tour, and examples ru
 For front-end development, you'll also need to start the Webpack dev server:
 
 ``` bash
-$ make run-ui
+make run-ui
 ```
 
 You should now see the Wave Tour at http://localhost:3000/tour, and examples running at http://localhost:3000/demo.
@@ -127,12 +127,6 @@ $ make run-cypress-bridge
 
 ### Committing Changes
 
-Commit messages must follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). After commit, we have hooks in place that will:
+Commit messages must follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
-- Lint commit message format.
-- Lint staged files based on their extension. Linting supported for `.ts`, `.tsx`, `.go`, `.py`, `.md` files.
-- Run accompanying unit tests if found.
-
-If any of these checks fails, the commit is aborted and you have to fix the errors first.
-
-Make sure your commit message also ends with an issue number e.g. `fix: Typo #11`. (Tip: If you name your branch name in format `something-#GITHUB_ISSUE_NUM`, the issue number will get appended automatically to your commit message.)
+Make sure your commit message also ends with an issue number e.g. `fix: Typo #11`.
