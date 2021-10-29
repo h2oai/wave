@@ -1,0 +1,92 @@
+Perf testing notes
+
+H2O_WAVE_APP_ACCESS_KEY_ID=foo \
+   H2O_WAVE_APP_ACCESS_KEY_SECRET=bar \
+   wave run --no-reload examples.counter_unicast
+
+----------------------------------------------------------------------------------------------------
+Baseline: 50rps, 30s
+
+$ cat attack.txt | vegeta attack -duration=30s | tee results.bin | vegeta report
+Requests      [total, rate, throughput]  1500, 50.03, 50.03
+Duration      [total, attack, wait]      29.982134872s, 29.980576236s, 1.558636ms
+Latencies     [mean, 50, 95, 99, max]    923.275µs, 890.324µs, 1.248683ms, 1.786492ms, 5.758645ms
+Bytes In      [total, mean]              0, 0.00
+Bytes Out     [total, mean]              28500, 19.00
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:1500
+Error Set:
+
+$ cat attack.txt | vegeta attack -duration=30s | tee results.bin | vegeta report
+Requests      [total, rate, throughput]  1500, 50.03, 50.03
+Duration      [total, attack, wait]      29.980969278s, 29.98021853s, 750.748µs
+Latencies     [mean, 50, 95, 99, max]    971.274µs, 920.005µs, 1.378814ms, 1.718148ms, 6.412542ms
+Bytes In      [total, mean]              0, 0.00
+Bytes Out     [total, mean]              28500, 19.00
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:1500
+Error Set:
+
+$ cat attack.txt | vegeta attack -duration=30s | tee results.bin | vegeta report
+Requests      [total, rate, throughput]  1500, 50.03, 50.03
+Duration      [total, attack, wait]      29.981506648s, 29.980566198s, 940.45µs
+Latencies     [mean, 50, 95, 99, max]    950.011µs, 898.614µs, 1.376998ms, 1.739228ms, 7.575071ms
+Bytes In      [total, mean]              0, 0.00
+Bytes Out     [total, mean]              28500, 19.00
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:1500
+Error Set:
+
+
+----------------------------------------------------------------------------------------------------
+Baseline: 500rps, 30s
+
+$ cat attack.txt | vegeta attack -duration=30s -rate=500 | tee results.bin | vegeta report
+Requests      [total, rate, throughput]  15000, 500.03, 500.01
+Duration      [total, attack, wait]      29.999543772s, 29.998173312s, 1.37046ms
+Latencies     [mean, 50, 95, 99, max]    43.646089ms, 5.01603ms, 270.952433ms, 463.433687ms, 580.247216ms
+Bytes In      [total, mean]              0, 0.00
+Bytes Out     [total, mean]              285000, 19.00
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:15000
+Error Set:
+
+Fulfillment:
+  First request
+    2021/10/25 09:03:45 * /None {"d":[{"k":"example items 0 button label","v":"Count=9"}]}
+  Last request
+    2021/10/25 09:06:16 * /None {"d":[{"k":"example items 0 button label","v":"Count=14930"}]}
+  Elapsed time
+    02:31
+
+----------------------------------------------------------------------------------------------------
+With HTTP Basic Auth disabled
+
+$ cat attack.txt | vegeta attack -duration=30s -rate=500 | tee results.bin | vegeta report
+Requests      [total, rate, throughput]  15000, 500.03, 500.01
+Duration      [total, attack, wait]      29.999317765s, 29.998388779s, 928.986µs
+Latencies     [mean, 50, 95, 99, max]    1.893424ms, 855.601µs, 6.830168ms, 9.922392ms, 34.859879ms
+Bytes In      [total, mean]              0, 0.00
+Bytes Out     [total, mean]              285000, 19.00
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:15000
+Error Set:
+
+Fulfillment:
+  First request
+    2021/10/25 10:30:21 * /None {"d":[{"k":"example items 0 button label","v":"Count=2"}]}
+  Last request
+    2021/10/25 10:30:51 * /None {"d":[{"k":"example items 0 button label","v":"Count=15000"}]}
+  Elapsed time
+    00:30
+
+----------------------------------------------------------------------------------------------------
+cat attack.txt | vegeta attack -duration=120s -rate=500 | tee results.bin | vegeta report
+Requests      [total, rate, throughput]         60000, 500.01, 461.67
+Duration      [total, attack, wait]             2m0s, 2m0s, 173.227ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  25.608µs, 113.477ms, 23.006ms, 261.914ms, 361.195ms, 2.403s, 3.235s
+Bytes In      [total, mean]                     0, 0.00
+Bytes Out     [total, mean]                     1220538, 20.34
+Success       [ratio]                           92.47%
+Status Codes  [code:count]                      0:4521  200:55479 
+

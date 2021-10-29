@@ -23,7 +23,7 @@ with open('README.md', 'r') as readme_markdown:
 
 setuptools.setup(
     name='h2o_wave',
-    version=os.getenv('VERSION', '0.18.0'),
+    version=os.getenv('VERSION', '0.19.0'),
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',

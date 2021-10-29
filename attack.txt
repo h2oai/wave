@@ -1,0 +1,4 @@
+POST http://localhost:8000
+Authorization: Basic Zm9vOmJhcg==
+Content-Type: application/json
+@increment.json
