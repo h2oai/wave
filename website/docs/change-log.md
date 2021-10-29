@@ -12,6 +12,45 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.19.0
+October 29, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.19.0)
+- Added
+  - Make examples in Tour searchable.
+  - New: Copyable text component.
+  - New: Add badges/tags to table rows.
+  - New: Facepile component.
+  - Apps now receive a system-wide `@system.logout` event when a user logs out.
+  - Add custom HTTP response headers using `-http-headers-file`.
+  - Performance: Wave daemon AOF logging is disabled if `-no-log` is set.
+  - Performance: Wave daemon content store is disabled if `-no-store` is set.
+  - Performance: Skip writes to content store for unicast apps.
+  - Performance: Use LRU cache to speed up API authorization.
+  - New: Compact version of file upload component.
+  - New: Profile card for displaying user profiles.
+  - New: Article card for long-form articles.
+  - New: Tall article preview card.
+  - New: Annotator component.
+  - Add min/max date constraints to date picker component.
+  - New: Tall info card.
+  - Improve wide info card design.
+  - New: Wide pie chart.
+  - New: Wide plot card.
+  - User defined themes.
+  - Plots are now theme-able.
+  - New: H2O Dark Theme.
+  - Add more justification options to ui.inline().
+- Changed
+  - Dropdowns now display a dialog with filtering for 100+ choices.
+- Fixed
+  - Respect `H2O_WAVE_APP_ADDRESS` in Wave CLI.
+  - Expand spinbox input to available space when tooltip is specified.
+  - Fix Neon theme disabled state colors.
+  - Adjust selected rect stroke on plots.
+  - Adjust plot text color for upgraded G2.
+  - Adjust Hover color contrast on stat table.
+  - Fix url in graphics example.
+  - Fix plot regressions caused by G2 upgrade.
+
 ## v0.18.0
 September 18, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.18.0)
 - Added
