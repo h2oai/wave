@@ -1,5 +1,5 @@
-# Info / Wide
-# Create a wide information card displaying a title, caption, and either an icon or image.
+# Stat / Pie / Wide
+# Create a wide stat pie card displaying a pie chart.
 # ---
 from h2o_wave import site, ui
 
