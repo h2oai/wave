@@ -19,6 +19,7 @@ example_dir = os.path.dirname(os.path.realpath(__file__))
 
 _app_address = urlparse(os.environ.get(f'H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
 _app_host, _app_port = _app_address.hostname, '10102'
+default_example_name = 'hello_world'
 
 
 class Example:
@@ -189,7 +190,7 @@ def make_blurb(q: Q, example: Example):
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
-    items = [ui.dropdown(name=q.args['#'] or 'hello_world', width='300px', value=example.name, trigger=True,
+    items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
              choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
     if example.previous_example:
         items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
@@ -238,11 +239,11 @@ async def serve(q: Q):
         q.client.initialized = True
         await setup_page(q)
 
-    search = q.args[q.args['#']]
+    search = q.args[q.args['#'] or default_example_name]
     if search:
         q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
-    await show_example(q, catalog[search or q.args['#'] or 'hello_world'])
+    await show_example(q, catalog[search or q.args['#'] or default_example_name])
 
 example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
                      not line.strip().startswith('#')]
