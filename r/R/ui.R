@@ -2558,6 +2558,33 @@ ui_facepile <- function(
   return(.o)
 }
 
+#' Create a copyable text component.
+#' Use this component when you want to enable your users to quickly copy paste sections of text.
+#'
+#' @param value Text to be displayed inside the component. Markdown is supported only when 'multiline' is set.
+#' @param label The text displayed above the textbox.
+#' @param name An identifying name for this component.
+#' @param multiline True if the component should allow multi-line text entry.
+#' @return A CopyableText instance.
+#' @export
+ui_copyable_text <- function(
+  value,
+  label,
+  name = NULL,
+  multiline = NULL) {
+  .guard_scalar("value", "character", value)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("multiline", "logical", multiline)
+  .o <- list(copyable_text=list(
+    value=value,
+    label=label,
+    name=name,
+    multiline=multiline))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
