@@ -17,6 +17,7 @@ import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
+import { Markdown } from './markdown'
 import { centerMixin, clas, cssVar, pc } from './theme'
 import { bond, wave } from './ui'
 
@@ -84,7 +85,7 @@ interface State {
   name: S
   /** The card's title. */
   title: S
-  /** The card's caption, displayed below the subtitle, supports markdown. */
+  /** The card's caption, displayed below the subtitle. Supports markdown. */
   caption: S
   /** Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.. */
   label?: S
@@ -130,7 +131,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
             {subtitle && <div className={clas('wave-s14 wave-w5 wave-t7', css.subtitle)}>{subtitle}</div>}
           </div>
-          {caption && <div className='wave-s14 wave-w4 wave-t7' style={{ marginBottom: label ? 16 : undefined }}>{caption}</div>}
+          {caption && <div className='wave-s14 wave-w4 wave-t7' style={{ marginBottom: label ? 16 : undefined }}><Markdown source={caption} /></div>}
           {label && <Fluent.PrimaryButton data-test={name} onClick={onClick} text={label} styles={{ root: { marginTop: 'auto', alignSelf: 'flex-start' } }} />}
         </div>
       </div>
