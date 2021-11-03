@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, WaveErrorCode, WaveEventType } from 'h2o-wave'
+import { box, S, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -93,7 +93,7 @@ const
 
     return { render }
   }),
-  App = bond(() => {
+  App = bond(({ socketURL }: { socketURL: S }) => {
     const
       onHashChanged = () => wave.push(),
       onMdLinkClick = ({ detail }: any) => {
@@ -101,7 +101,7 @@ const
         wave.push()
       },
       init = () => {
-        listen()
+        listen(socketURL)
         window.addEventListener('hashchange', onHashChanged)
         window.addEventListener('md-link-click', onMdLinkClick)
       },

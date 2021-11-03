@@ -109,8 +109,8 @@ export const
       window.setTimeout(() => { wait = false }, timeout)
     }
   },
-  listen = () => {
-    _wave = connect(e => {
+  listen = (address: S) => {
+    _wave = connect(address, e => {
       switch (e.t) {
         case WaveEventType.Page:
         case WaveEventType.Error:

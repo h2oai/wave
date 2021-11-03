@@ -78,6 +78,7 @@ func main() {
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
 	stringVar(&conf.Listen, "listen", ":10101", "listen on this address")
+	stringVar(&conf.BaseURL, "base-url", "/", "the base URL (path prefix) to be used for resolving relative URLs (e.g. /foo/ or /foo/bar/, without the host)")
 	stringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from, hosted at /")
 	stringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
 	stringsVar(&conf.PublicDirs, "public-dir", "additional directory to serve files from, in the format \"[url-path]@[filesystem-path]\", e.g. \"/public/files/@/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")

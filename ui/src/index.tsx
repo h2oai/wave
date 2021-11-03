@@ -29,7 +29,10 @@ loadTheme({
 // Initialize Fluent icons
 initializeIcons()
 
-ReactDOM.render(<Router />, document.getElementById('root'))
+ReactDOM.render(
+  <Router baseURL={document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/'} />,
+  document.getElementById('root')
+)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
