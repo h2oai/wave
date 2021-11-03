@@ -71,7 +71,11 @@ const
   args: Rec = {},
   clearRec = (a: Rec) => {
     for (const k in a) delete a[k]
-  }
+  },
+  baseURL = document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/',
+  socketURL = baseURL + '_s',
+  uploadURL = baseURL + '_f',
+  authURL = baseURL + '_auth/login'
 
 export const
   contentB = box<WaveEvent | null>(null),
@@ -145,6 +149,10 @@ export const
     argsB(d)
   },
   wave = { // Public API
+    baseURL,
+    socketURL,
+    uploadURL,
+    authURL,
     args,
     debounce,
     throttle,

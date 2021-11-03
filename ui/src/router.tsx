@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { S } from 'h2o-wave'
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import App from './app'
 import Login from './login'
+import { wave } from './ui'
 
 const
-  Router = ({ baseURL }: { baseURL: S }) => {
+  Router = () => {
     const
       routes = [
         {
-          path: baseURL + '_auth/login',
+          path: wave.authURL,
           exact: true,
           render: () => <Login />,
         },
         {
-          path: baseURL,
+          path: wave.baseURL,
           exact: false,
-          render: () => <App socketURL={baseURL + '_s'} />
+          render: () => <App />
         },
       ]
     return (

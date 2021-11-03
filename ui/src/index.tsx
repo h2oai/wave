@@ -30,7 +30,7 @@ loadTheme({
 initializeIcons()
 
 ReactDOM.render(
-  <Router baseURL={document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/'} />,
+  <Router />,
   document.getElementById('root')
 )
 
