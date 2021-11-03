@@ -54,6 +54,9 @@ const css = stylesheet({
   },
   subtitle: {
     marginTop: -5, // nudge up slightly to account for padding
+  },
+  name: {
+    marginTop: -8, // nudge up slightly to account for padding
   }
 })
 
@@ -121,7 +124,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {nav && <div className={css.burger} onClick={showNav}><Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' /></div>}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} />}
             {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />}
-            <div>
+            <div className={css.name}>
               <div className='wave-s24 wave-w5'>{title}</div>
               {subtitle && <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>}
             </div>
