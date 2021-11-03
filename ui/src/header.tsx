@@ -46,7 +46,8 @@ const css = stylesheet({
     width: 56,
     height: 56,
     marginRight: 15,
-    borderRadius: 2
+    borderRadius: 2,
+    cursor: 'pointer'
   },
   icon: {
     fontSize: 36,
@@ -116,13 +117,14 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
   const
     navB = box(false),
     showNav = () => navB(true),
+    onLogoClick = () => window.location.hash = '',
     render = () => {
       const { title, subtitle, icon, icon_color, nav, items, image, secondary_items, color } = state
       return (
         <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))}>
           <div className={css.lhs}>
             {nav && <div className={css.burger} onClick={showNav}><Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' /></div>}
-            {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} />}
+            {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
             {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />}
             <div className={css.name}>
               <div className='wave-s24 wave-w5'>{title}</div>
