@@ -92,7 +92,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
+    "test": "env LC_ALL=en_US.UTF8 node scripts/test.js",
     "test:ci": "CI=true node scripts/test.js",
     "lint-staged:typescript": "tsc --jsx react --esModuleInterop --noEmit",
     "lint-staged:eslint": "eslint",

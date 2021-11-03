@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, Id, S } from 'h2o-wave'
 import React from 'react'
-import { debounce, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a spinbox.
@@ -78,17 +78,22 @@ export const
         const newValue = Math.min(parseValue(Number(v) + step), max)
         wave.args[name] = newValue
         if (trigger) wave.push()
+        setVal({ val: String(newValue) })
         return String(newValue)
       },
       onDecrement = (v: S) => {
         const newValue = Math.max(parseValue(Number(v) - step), min)
         wave.args[name] = newValue
         if (trigger) wave.push()
+        setVal({ val: String(newValue) })
         return String(newValue)
       },
+      onBlur = () => setVal({ ...val }), //HACK: Fluent bug in v7, remove after upgrade.
       handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const
-          value = parseValue(Number(e.target.value)),
+          val = e.target.value,
+          isLastCharDotOrTraillingZero = /\.$|\.\d*0+$/,
+          value = parseValue(Number(val)),
           newValue = value > max
             ? max
             : value < min
@@ -96,9 +101,15 @@ export const
               : value
         wave.args[name] = newValue
         if (trigger) wave.push()
-        setVal({ val: String(newValue) })
+        if (precision > 0 && isLastCharDotOrTraillingZero.test(val)) {
+          // We can't use parseValue because it requires casting to number which will remove the trailling zeros.
+          const [head, tail = ''] = val.split('.')
+          setVal({ val: `${head}.${tail.slice(0, precision)}` })
+        } else {
+          setVal({ val: String(newValue) })
+        }
       },
-      debouncedHandleOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
+      debouncedHandleOnchange = wave.debounce(DEBOUNCE_TIMEOUT, handleOnChange),
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         trigger ? debouncedHandleOnchange(e) : handleOnChange(e)
@@ -118,6 +129,7 @@ export const
         value={val?.val}
         onIncrement={onIncrement}
         onDecrement={onDecrement}
+        onBlur={onBlur}
         disabled={disabled}
       />
     )

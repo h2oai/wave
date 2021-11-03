@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { act, fireEvent, render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
 import { wave } from './ui'
@@ -30,6 +30,7 @@ describe('Spinbox.tsx', () => {
   beforeAll(() => {
     jest.useFakeTimers()
     wave.push = pushMock
+    wave.debounce = jest.fn((_t, f) => (...args: any[]) => f(...args))
   })
   beforeEach(() => {
     wave.args[name] = null
@@ -58,38 +59,38 @@ describe('Spinbox.tsx', () => {
 
   it('Sets args on increment', () => {
     const { container } = render(<XSpinbox model={spinboxProps} />)
-    simulateClick(container.querySelector('.ms-UpButton')!)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
     expect(wave.args[name]).toBe(1)
   })
 
   it('Sets args on increment - not beyond max', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1, max: 1 }} />)
-    simulateClick(container.querySelector('.ms-UpButton')!)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
     expect(wave.args[name]).toBe(1)
   })
 
   it('Calls push on increment if trigger specified', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
-    simulateClick(container.querySelector('.ms-UpButton')!)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
     expect(wave.args[name]).toBe(1)
     expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
   it('Sets args on decrement', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1 }} />)
-    simulateClick(container.querySelector('.ms-DownButton')!)
-    expect(wave.args[name]).toBe(0)
+    simulateClick(container.querySelector('.ms-DownButton') as HTMLButtonElement),
+      expect(wave.args[name]).toBe(0)
   })
 
   it('Sets args on decrement - not beyond min', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1, min: 1 }} />)
-    simulateClick(container.querySelector('.ms-DownButton')!)
-    expect(wave.args[name]).toBe(1)
+    simulateClick(container.querySelector('.ms-DownButton') as HTMLButtonElement),
+      expect(wave.args[name]).toBe(1)
   })
 
   it('Calls push on decrement if trigger specified', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
-    simulateClick(container.querySelector('.ms-DownButton')!)
+    simulateClick(container.querySelector('.ms-DownButton') as HTMLButtonElement)
     expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
@@ -118,15 +119,14 @@ describe('Spinbox.tsx', () => {
     const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
     fireEvent.change(getByTestId(name), { target: { value: 50 } })
 
-    expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
-    act(() => { jest.runOnlyPendingTimers() })
+    expect(wave.debounce).toHaveBeenCalled() // Not called immediately, but after specified timeout.
     expect(pushMock).toHaveBeenCalled()
   })
 
   it('No floating point imprecision in increment', () => {
     const
       { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0, step: 0.0001 }} />),
-      incrementBtn = container.querySelector('.ms-UpButton')!,
+      incrementBtn = container.querySelector('.ms-UpButton') as HTMLButtonElement,
       spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
     expect(spinboxInput.value).toBe('0')
@@ -146,7 +146,7 @@ describe('Spinbox.tsx', () => {
   it('No floating point imprecision in decrement', () => {
     const
       { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
-      decrementBtn = container.querySelector('.ms-DownButton')!,
+      decrementBtn = container.querySelector('.ms-DownButton') as HTMLButtonElement,
       spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
     expect(spinboxInput.value).toBe('0.001')
@@ -161,5 +161,44 @@ describe('Spinbox.tsx', () => {
     simulateClick(decrementBtn)
     expect(spinboxInput.value).toBe('0.0005')
     simulateClick(decrementBtn)
+  })
+
+  it('Correct (parsed) value is sent to server', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    fireEvent.change(spinboxInput, { target: { value: '0.00020001' } })
+    expect(wave.args[name]).toBe(0.0002)
+    fireEvent.change(spinboxInput, { target: { value: '0.' } })
+    expect(wave.args[name]).toBe(0)
+    fireEvent.change(spinboxInput, { target: { value: '0.010000000' } })
+    expect(wave.args[name]).toBe(0.01)
+  })
+
+  it('Should truncate value if it overflows the step precision', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    fireEvent.change(spinboxInput, { target: { value: '0.' } })
+    expect(spinboxInput).toHaveValue('0.')
+    fireEvent.change(spinboxInput, { target: { value: '0.10' } })
+    expect(spinboxInput).toHaveValue('0.10')
+    fireEvent.change(spinboxInput, { target: { value: '0.0001' } })
+    expect(spinboxInput).toHaveValue('0.0001')
+  })
+
+  it('Should increment correctly after typing value when trigger is specified', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.01, step: 0.01, trigger: true }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement,
+      incrementBtn = container.querySelector('.ms-UpButton') as HTMLButtonElement
+
+    fireEvent.change(spinboxInput, { target: { value: '0.10' } })
+    jest.runOnlyPendingTimers()
+    expect(spinboxInput).toHaveValue('0.10')
+    simulateClick(incrementBtn)
+    expect(spinboxInput).toHaveValue('0.11')
   })
 })
