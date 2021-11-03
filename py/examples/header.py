@@ -5,7 +5,6 @@ from h2o_wave import site, ui
 
 persona_image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
 page = site['/demo']
-page['meta'] = ui.meta_card(box='', theme='default')
 page['header1'] = ui.header_card(
     box='1 1 9 1',
     title='Transparent header',
