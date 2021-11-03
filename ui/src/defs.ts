@@ -143,42 +143,6 @@ export const cardDefs: CardDef[] = [
     ]
   },
   {
-    "view": "header",
-    "icon": "Header",
-    "attrs": [
-      {
-        "name": "box",
-        "optional": false,
-        "t": "box",
-        "value": "{\"zone\":\"Body\"}"
-      },
-      {
-        "name": "title",
-        "optional": false,
-        "t": "textbox",
-        "value": "Untitled Page"
-      },
-      {
-        "name": "subtitle",
-        "optional": false,
-        "t": "textbox",
-        "value": "Powered by H2O Wave."
-      },
-      {
-        "name": "icon",
-        "optional": true,
-        "t": "textbox",
-        "value": "AppIconDefault"
-      },
-      {
-        "name": "icon_color",
-        "optional": true,
-        "t": "textbox",
-        "value": "yellow"
-      }
-    ]
-  },
-  {
     "view": "markdown",
     "icon": "InsertTextBox",
     "attrs": [

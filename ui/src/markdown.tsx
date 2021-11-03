@@ -34,6 +34,9 @@ const
     },
     markdown: {
       $nest: {
+        '>*:only-child': {
+          margin: 0
+        },
         a: {
           color: cssVar('$themePrimary'),
           $nest: {

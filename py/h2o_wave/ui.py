@@ -2598,41 +2598,17 @@ def nav_group(
     )
 
 
-def header_item(
-        name: str,
-        label: str,
-        path: Optional[str] = None,
-        target: Optional[str] = None,
-        items: Optional[List[HeaderItem]] = None,
-) -> HeaderItem:
-    """No documentation available.
-
-    Args:
-        name: An identifying name for this component.
-        label: The text to be displayed. If blank, the `path` is used as the label.
-        path: The path or URL to link to.
-        target: Where to display the link. Setting this to `'_blank'` opens the link in a new tab or window.
-        items: Nested header items for sub menus.
-    Returns:
-        A `h2o_wave.types.HeaderItem` instance.
-    """
-    return HeaderItem(
-        name,
-        label,
-        path,
-        target,
-        items,
-    )
-
-
 def header_card(
         box: str,
         title: str,
         subtitle: str,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+        image: Optional[str] = None,
         nav: Optional[List[NavGroup]] = None,
-        items: Optional[List[HeaderItem]] = None,
+        items: Optional[List[Component]] = None,
+        secondary_items: Optional[List[Component]] = None,
+        color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
     """Render a page header displaying a title, subtitle and an optional navigation menu.
@@ -2640,12 +2616,15 @@ def header_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        title: The title.
-        subtitle: The subtitle, displayed below the title.
-        icon: The icon, displayed to the left.
-        icon_color: The icon's color.
-        nav: The navigation menu to display when the header's icon is clicked.
+        title: The title. *
+        subtitle: The subtitle, displayed below the title. *
+        icon: The icon, displayed to the left. *
+        icon_color: The icon's color. *
+        image: The logo displayed to the left. Mutually exclusive with icon. *
+        nav: The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *
         items: Items that should be displayed on the right side of the header.
+        secondary_items: Items that should be displayed in the center of the header.
+        color: Header background color. Defaults to 'primary'. One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -2656,8 +2635,11 @@ def header_card(
         subtitle,
         icon,
         icon_color,
+        image,
         nav,
         items,
+        secondary_items,
+        color,
         commands,
     )
 

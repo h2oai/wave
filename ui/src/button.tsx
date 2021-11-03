@@ -129,6 +129,9 @@ const
           display: visible ? undefined : 'none',
           width: formItemWidth(width),
           minWidth: width ? 'initial' : undefined
+        },
+        icon: {
+          fontSize: 20
         }
       }
 

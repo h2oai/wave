@@ -16,137 +16,70 @@ import * as Fluent from '@fluentui/react'
 import { B, Box, box, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { CardEffect, cards } from './layout'
+import { Component, XInline } from './form'
+import { CardEffect, cards, getEffectClass } from './layout'
 import { NavGroup, XNav } from './nav'
 import { clas, cssVar, padding } from './theme'
 import { bond } from './ui'
-import { View as Toolbar } from './toolbar'
 
-const
-  iconSize = 24,
-  css = stylesheet({
-    card: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: padding(8, 15),
-    },
-    rhs: {
-      flexGrow: 1
-    },
-    lhs: {
-      width: iconSize + 15,
-      height: iconSize + 15,
-      display: 'flex',
-      alignItems: 'center',
-      cursor: 'default',
-    },
-    burger: {
-      $nest: {
-        '&:hover': {
-          color: cssVar('page'),
-          cursor: 'pointer',
-        },
-      },
-    },
-    icon: {
-      fontSize: iconSize,
-      height: iconSize,
-      width: iconSize,
-    },
-    subtitle: {
-      position: 'relative',
-      top: -5, // nudge up slightly to account for padding
-    },
-    toolbar: {
-      color: cssVar('$card'),
-      $nest: {
-        '&:hover': {
-          backgroundColor: cssVar('$card'),
-          color: cssVar('$text'),
-        }
+const css = stylesheet({
+  card: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: padding(8, 15),
+    $nest: {
+      '.ms-layer': {
+        display: 'none', // HACK: Opening Fluent side panel adds a span element to header (for some reason), disrupting the layout.
       }
-    },
-    toolbarMenu: {
-      backgroundColor: cssVar('$themePriary'),
-      $nest: {
-        '.ms-ContextualMenu-item:hover': {
-          color: cssVar('$themePrimary'),
-          background: cssVar('$card')
-        },
-        '.ms-ContextualMenu-itemText': {
-          color: cssVar('$card'),
-          $nest: {
-            '&:hover': {
-              color: cssVar('$tehmePrimary')
-            }
-          }
-        },
-        '.ms-ContextualMenu-link:hover,.ms-ContextualMenu-link.is-expanded': {
-          backgroundColor: cssVar('$card'),
-          $nest: {
-            '.ms-ContextualMenu-itemText,.ms-ContextualMenu-submenuIcon': {
-              color: `${cssVar('$text')} !important`
-            }
-          }
-        },
-        '.ms-ContextualMenu-submenuIcon': {
-          color: cssVar('$card'),
-        }
-      }
-    },
-    calloutContainer: {
-      boxShadow: `0px 3px 7px ${cssVar('$card')}`,
     }
-  })
+  },
+  lhs: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'default',
+  },
+  burger: {
+    cursor: 'pointer',
+  },
+  logo: {
+    width: 56,
+    height: 56,
+    marginRight: 15,
+    borderRadius: 2
+  },
+  icon: {
+    fontSize: 36,
+    marginRight: 15,
+  },
+  subtitle: {
+    marginTop: -5, // nudge up slightly to account for padding
+  }
+})
 
-interface HeaderItem {
-  /** An identifying name for this component. */
-  name: S
-  /** The text to be displayed. If blank, the `path` is used as the label. */
-  label: S
-  /** The path or URL to link to. */
-  path?: S
-  /** Where to display the link. Setting this to `'_blank'` opens the link in a new tab or window. */
-  target?: S
-  /** Nested header items for sub menus. */
-  items?: HeaderItem[]
-}
 /**
  * Render a page header displaying a title, subtitle and an optional navigation menu.
  * Header cards are typically used for top-level navigation.
- * :icon "Header"
  */
 interface State {
-  /**
-   * The title.
-   * :t "textbox"
-   * :value "Untitled Page"
-   **/
+  /** The title. **/
   title: S
-  /**
-   * The subtitle, displayed below the title.
-   * :t "textbox"
-   * :value "Powered by H2O Wave."
-   **/
+  /** The subtitle, displayed below the title. **/
   subtitle: S
-  /**
-   * The icon, displayed to the left.
-   * :t "textbox"
-   * :value "AppIconDefault"
-   **/
+  /** The icon, displayed to the left. **/
   icon?: S
-  /**
-   * The icon's color.
-   * :t "textbox"
-   * :value "yellow"
-   **/
+  /** The icon's color. **/
   icon_color?: S
-  /**
-   * The navigation menu to display when the header's icon is clicked.
-   **/
+  /** The logo displayed to the left. Mutually exclusive with icon. **/
+  image?: S
+  /** The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. **/
   nav?: NavGroup[]
   /** Items that should be displayed on the right side of the header. */
-  items?: HeaderItem[]
+  items?: Component[]
+  /** Items that should be displayed in the center of the header. */
+  secondary_items?: Component[]
+  /** Header background color. Defaults to 'primary'. */
+  color?: 'card' | 'transparent' | 'primary'
 }
 
 const
@@ -165,41 +98,41 @@ const
         </Fluent.Panel>
       )
     return { render, isOpenB }
-  })
+  }),
+  toCardEffect = (color?: 'card' | 'transparent' | 'primary') => {
+    switch (color) {
+      case 'card': return CardEffect.Normal
+      case 'transparent': return CardEffect.Transparent
+      case 'primary': return CardEffect.Primary
+      default: return CardEffect.Primary
+    }
+  }
 
 
-export const
-  View = bond(({ name, state, changed }: Model<State>) => {
-    const
-      navB = box(false),
-      showNav = () => navB(true),
-      render = () => {
-        const
-          { title, subtitle, icon, icon_color, nav, items } = state,
-          burger = nav
-            ? (
-              <div className={clas(css.burger, css.lhs)} onClick={showNav}>
-                <Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' />
-              </div>
-            ) : (
-              <Fluent.Stack horizontal verticalAlign='center' className={css.lhs}>
-                <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
-              </Fluent.Stack>
-            )
+export const View = bond(({ name, state, changed }: Model<State>) => {
+  const
+    navB = box(false),
+    showNav = () => navB(true),
+    render = () => {
+      const { title, subtitle, icon, icon_color, nav, items, image, secondary_items, color } = state
+      return (
+        <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))}>
+          <div className={css.lhs}>
+            {nav && <div className={css.burger} onClick={showNav}><Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' /></div>}
+            {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} />}
+            {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />}
+            <div>
+              <div className='wave-s24 wave-w5'>{title}</div>
+              {subtitle && <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>}
+            </div>
+          </div>
+          { secondary_items && <XInline model={{ items: secondary_items }} />}
+          { items && <XInline model={{ items }} />}
+          { nav && <Navigation items={nav} isOpenB={navB} />}
+        </div>
+      )
+    }
+  return { render, changed }
+})
 
-        return (
-          <Fluent.Stack data-test={name} className={css.card} >
-            {burger}
-            <Fluent.StackItem grow={1}>
-              <div className='wave-s24 wave-w3'>{title}</div>
-              <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>
-            </Fluent.StackItem>
-            { nav && <Navigation items={nav} isOpenB={navB} />}
-            { items && <Toolbar name={`${name}-toolbar`} state={{ items }} changed={changed} />}
-          </Fluent.Stack >
-        )
-      }
-    return { render, changed }
-  })
-
-cards.register('header', View, { effect: CardEffect.Raised })
+cards.register('header', View, { effect: CardEffect.Transparent })

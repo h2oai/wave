@@ -3,23 +3,31 @@
 # ---
 from h2o_wave import site, ui
 
+persona_image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
 page = site['/demo']
+page['meta'] = ui.meta_card(box='', theme='default')
 page['header1'] = ui.header_card(
-    box='1 1 7 1',
-    title='The Amazing Gonkulator',
+    box='1 1 9 1',
+    title='Transparent header',
     subtitle='And now for something completely different!',
+    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
     items=[
-        ui.header_item(name='menu1', label='Menu 1', items=[
-            ui.header_item(name='#submenu1', label='SubMenu 1'),
-            ui.header_item(name='#submenu2', label='SubMenu 2'),
-            ui.header_item(name='#submenu3', label='SubMenu 3', items=[
-                ui.header_item(name='#subsubmenu1', label='SubSubMenu 1'),
-                ui.header_item(name='#subsubmenu2', label='H2O this window', path='https://www.h2o.ai/'),
-                ui.header_item(name='#h2o_new', label='H2O new window', path='https://www.h2o.ai/', target='_blank'),
-            ]),
-        ]),
-        ui.header_item(name='#submenu2', label='Menu 2'),
-        ui.header_item(name='#submenu3', label='Menu 3'),
+        ui.button(name='btn1', label='Button 1'),
+        ui.button(name='btn2', label='Button 2'),
+        ui.button(name='btn3', label='Button 3'),
+    ],
+    secondary_items=[ui.textbox(name='search', icon='Search', width='300px', placeholder='Search...')],
+    color='transparent'
+)
+page['header2'] = ui.header_card(
+    box='1 2 9 1',
+    title='Card color header',
+    subtitle='And now for something completely different!',
+    items=[ui.persona(title='John Doe', subtitle='Data Scientist', caption='Online', size='xs', image=persona_image)],
+    secondary_items=[
+        ui.button(name='btn1', label='Link 1', link=True),
+        ui.button(name='btn2', label='Link 2', link=True),
+        ui.button(name='btn3', label='Link 3', link=True),
     ],
     nav=[
         ui.nav_group('Menu', items=[
@@ -32,25 +40,21 @@ page['header1'] = ui.header_card(
             ui.nav_item(name='#support', label='Support'),
         ])
     ],
-)
-page['header2'] = ui.header_card(
-    box='1 2 3 1',
-    title='The Amazing Gonkulator',
-    subtitle='And now for something completely different!',
-    icon='Design',
+    color='card'
 )
 page['header3'] = ui.header_card(
-    box='1 3 3 1',
-    title='The Amazing Gonkulator',
+    box='1 3 9 1',
+    title='Primary color header',
     subtitle='And now for something completely different!',
     icon='Cycling',
     icon_color='$violet',
-)
-page['header4'] = ui.header_card(
-    box='1 4 3 1',
-    title='The Amazing Gonkulator',
-    subtitle='And now for something completely different!',
-    icon='ExploreData',
-    icon_color='$red',
+    items=[ui.text_m('Welcome back, John!')],
+    secondary_items=[
+        ui.tabs(name='menu', value='email', items=[
+            ui.tab(name='email', label='Mail', icon='Mail'),
+            ui.tab(name='events', label='Events', icon='Calendar'),
+            ui.tab(name='spam', label='Spam'),
+        ]),
+    ]
 )
 page.save()

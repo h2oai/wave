@@ -34,6 +34,7 @@ export const
   clas = (...names: S[]) => names.join(' '),
   border = (thickness: U, color: S) => `${thickness}px solid ${color}`,
   dashed = (thickness: U, color: S) => `${thickness}px dashed ${color}`,
+  important = (val: S) => `${val} !important`,
   padding = (...t: I[]) => t.map(px).join(' '),
   margin = padding,
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),

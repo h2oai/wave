@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import { B, box, Card, Dict, Disposable, on, Page, parseU, S, U } from 'h2o-wave'
-import { default as React } from 'react'
+import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
-import { CardEffect, CardView, getCardStyle, GridLayout } from './layout'
+import { CardView, getCardEffectClass, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
-import { alignments, clas, cssVar, justifications, margin, wrappings } from './theme'
+import { alignments, justifications, wrappings } from './theme'
 import { bond } from './ui'
 
 
@@ -121,49 +121,7 @@ const
       position: 'relative',
       display: 'flex',
     },
-    slot: {
-      boxSizing: 'border-box',
-      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
-      display: 'flex',
-      flexDirection: 'column',
-      margin: margin(7), // Approx 15px gutter between cards.
-      overflow: 'auto',
-      $nest: {
-        '>*': {
-          boxSizing: 'border-box',
-          flexGrow: 1, // Expand vertically
-        }
-      }
-    },
-    normal: {
-      backgroundColor: cssVar('$card'),
-      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
-      $nest: {
-        '&:hover': {
-          boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
-        }
-      },
-    },
-    raised: {
-      color: cssVar('$card'),
-      backgroundColor: cssVar('$themePrimary'),
-      boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
-      margin: 0,
-    },
-    flat: {
-      backgroundColor: cssVar('$card'),
-      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
-    },
   }),
-  getCardEffectClass = (c: Card) => {
-    const { effect } = getCardStyle(c)
-    return clas(css.slot, effect === CardEffect.Normal
-      ? css.normal
-      : effect === CardEffect.Raised
-        ? css.raised
-        : effect == CardEffect.Flat
-          ? css.flat : '')
-  },
   toSectionStyle = (zone: Zone, direction?: S): React.CSSProperties => {
     const
       style: React.CSSProperties = {
@@ -252,11 +210,7 @@ const
           })
           : null
 
-    return (
-      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>
-        {children}
-      </div>
-    )
+    return <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>{children}</div>
   },
   FlexLayout = ({ name, cards }: { name: S, cards: Card[] }) => {
     const layoutIndex = layoutB()

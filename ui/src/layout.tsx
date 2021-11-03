@@ -17,7 +17,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
-import { clas, cssVar, margin } from './theme'
+import { clas, cssVar, important, margin } from './theme'
 
 type Slot = {
   left: U
@@ -28,8 +28,13 @@ type Slot = {
   bottom?: U
 }
 
-
-export enum CardEffect { Transparent, Normal, Raised, Flat }
+export enum CardEffect {
+  Transparent = 'transparent',
+  Normal = 'normal',
+  Raised = 'raised',
+  Flat = 'flat',
+  Primary = 'primary'
+}
 
 export type CardStyle = {
   effect: CardEffect
@@ -147,60 +152,134 @@ const
     }
   }
 
-export const
-  grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
+export const grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
 
-const
-  css = stylesheet({
-    grid: {
-      position: 'relative',
-      boxSizing: 'border-box',
-      width: grid.innerWidth,
-      margin: margin(grid.gap),
-    },
-    slot: {
-      boxSizing: 'border-box',
-      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
-      overflow: 'auto',
-      display: 'flex',
-      flexDirection: 'column',
-      $nest: {
-        '>*:first-child': {
-          boxSizing: 'border-box',
-          flexGrow: 1, // Expand vertically
-        }
+const css = stylesheet({
+  grid: {
+    position: 'relative',
+    boxSizing: 'border-box',
+    width: grid.innerWidth,
+    margin: margin(grid.gap),
+  },
+  slot: {
+    boxSizing: 'border-box',
+    transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
+    display: 'flex',
+    flexDirection: 'column',
+    margin: margin(7), // Approx 15px gutter between cards.
+    overflow: 'auto',
+    $nest: {
+      '>*': {
+        boxSizing: 'border-box',
+        flexGrow: 1, // Expand vertically
+      }
+    }
+  },
+  normal: {
+    backgroundColor: cssVar('$card'),
+    boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
+    $nest: {
+      '&:hover': {
+        boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
       }
     },
-    normal: {
-      backgroundColor: cssVar('$card'),
-      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
-      $nest: {
-        '&:hover': {
-          boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
+  },
+  raised: {
+    color: cssVar('$card'),
+    backgroundColor: cssVar('$themePrimary'),
+    boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
+    margin: 0,
+  },
+  flat: {
+    backgroundColor: cssVar('$card'),
+    boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
+  },
+  primary: {
+    background: cssVar('$themePrimary'),
+    color: cssVar('$card'),
+    $nest: {
+      '.ms-Link': {
+        color: cssVar('$card'),
+      },
+      '.ms-Persona': {
+        $nest: {
+          '&-primaryText': {
+            color: cssVar('$card'),
+          },
+          '&-secondaryText': {
+            color: cssVar('$card'),
+          },
+          '&-tertiaryText': {
+            color: cssVar('$card'),
+          },
         }
       },
-    },
-    raised: {
-      color: cssVar('$card'),
-      backgroundColor: cssVar('$themePrimary'),
-      boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
-    },
-    flat: {
-      backgroundColor: cssVar('$card'),
-      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
-    },
-  }),
-  getCardEffectClass = (c: Card) => {
-    const { effect } = getCardStyle(c)
-    return clas(css.slot, effect === CardEffect.Normal
-      ? css.normal
-      : effect === CardEffect.Raised
-        ? css.raised
-        : effect == CardEffect.Flat
-          ? css.flat : '')
+      '.ms-Pivot-link': {
+        backgroundColor: cssVar('$themePrimary'),
+        color: cssVar('$card')
+      },
+      '.ms-Pivot-link.is-selected': {
+        backgroundColor: cssVar('$card'),
+        color: cssVar('$text')
+      },
+      '.ms-Checkbox': {
+        $nest: {
+          '&-text': {
+            color: important(cssVar('$card')),
+          },
+          '&-checkbox': {
+            borderColor: important(cssVar('$card')),
+          },
+          '&-checkmark': {
+            color: cssVar('$themePrimary'),
+          },
+          '&-label:hover .ms-Checkbox-checkmark': {
+            color: cssVar('$card'),
+          },
+          '&.is-checked .ms-Checkbox-checkbox': {
+            background: important(cssVar('$card')),
+          },
+          '&.is-checked .ms-Checkbox-label:hover .ms-Checkbox-checkmark': {
+            color: cssVar('$themePrimary')
+          },
+        }
+      },
+      '.ms-Toggle': {
+        $nest: {
+          '&-label': {
+            color: cssVar('$card')
+          },
+          '&-stateText': {
+            color: cssVar('$card')
+          },
+          '&-background': {
+            borderColor: cssVar('$card'),
+            background: cssVar('$themePrimary')
+          },
+          '&-thumb': {
+            background: important(cssVar('$card'))
+          },
+          '&.is-checked .ms-Toggle-background': {
+            background: cssVar('$card')
+          },
+          '&.is-checked .ms-Toggle-thumb': {
+            background: important(cssVar('$text'))
+          },
+        }
+      }
+    }
+  },
+  transparent: {
+    backgroundColor: 'transparent'
   }
+})
 
 export const
+  getCardEffectClass = (c: Card) => {
+    const { effect } = getCardStyle(c)
+    return clas(css.slot, getEffectClass(effect))
+  },
+  getEffectClass = (effect: CardEffect) => css[effect],
   getCardStyle = (c: Card): CardStyle => cards.lookup(c.state.view).style,
   GridLayout = ({ name, cards: cs }: { name: S, cards: Card[] }) => {
     const
@@ -212,15 +291,11 @@ export const
           display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
-          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
+          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex, margin: 0 }}>
             <CardView card={c} />
             <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
           </div>
         )
       })
-    return (
-      <div data-test={name} className={css.grid}>
-        {children}
-      </div>
-    )
+    return <div data-test={name} className={css.grid}>{children}</div>
   }
