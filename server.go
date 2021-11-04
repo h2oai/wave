@@ -89,17 +89,16 @@ func Run(conf ServerConf) {
 	handle("_s", newSocketServer(broker, auth, conf.Editable, conf.BaseURL)) // XXX terminate sockets when logged out
 
 	fileDir := filepath.Join(conf.DataDir, "f")
-	handle("_f", newFileStore(fileDir, conf.Keychain, auth))
-	handle("_f/", newFileServer(fileDir, conf.Keychain, auth))
+	handle("_f/", newFileServer(fileDir, conf.Keychain, auth, conf.BaseURL+"_f"))
 	for _, dir := range conf.PrivateDirs {
 		prefix, src := splitDirMapping(dir)
 		echo(Log{"t": "private_dir", "source": src, "address": prefix})
-		handle(prefix, http.StripPrefix(prefix, newDirServer(src, conf.Keychain, auth)))
+		handle(prefix, http.StripPrefix(prefix, newDirServer(src, conf.Keychain, auth))) // XXX strip with baseURL
 	}
 	for _, dir := range conf.PublicDirs {
 		prefix, src := splitDirMapping(dir)
 		echo(Log{"t": "public_dir", "source": src, "address": prefix})
-		handle(prefix, http.StripPrefix(prefix, http.FileServer(http.Dir(src))))
+		handle(prefix, http.StripPrefix(prefix, http.FileServer(http.Dir(src)))) // XXX strip with baseURL
 	}
 
 	handle("_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))            // XXX fix arg1 handling
