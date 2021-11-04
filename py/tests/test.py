@@ -415,3 +415,15 @@ def test_public_dir():
     svg = _read_file(p)
     os.remove(p)
     assert svg.index('<svg') == 0
+
+
+def test_cache():
+    d1 = dict(foo='bar', qux=42)
+    site.cache.set('test', 'data', d1)
+    keys = site.cache.keys('test')
+    assert len(keys) == 1
+    assert keys[0] == 'data'
+    d2 = site.cache.get('test', 'data')
+    assert isinstance(d2, dict)
+    assert d2['foo'] == d1['foo']
+    assert d2['qux'] == d1['qux']

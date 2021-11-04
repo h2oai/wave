@@ -406,16 +406,13 @@ class _ServerCacheBase:
 
 
 class _AsyncServerCache(_ServerCacheBase):
-    def __init__(self):
-        self._http = httpx.AsyncClient(
-            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-            verify=False,
-        )
+    def __init__(self, http: httpx.AsyncClient):
+        self._http = http
 
     async def get(self, shard: str, key: str, default=None) -> Any:
         res = await self._http.get(f'{_config.hub_address}_c/{shard}/{key}')
         if res.status_code == 200:
-            return json.loads(res.text)
+            return unmarshal(res.text)
         return default
 
     async def keys(self, shard: str) -> List[str]:
@@ -423,23 +420,20 @@ class _AsyncServerCache(_ServerCacheBase):
         return self._keys(res.text) if res.status_code == 200 else []
 
     async def set(self, shard: str, key: str, value: Any):
-        content = json.dumps(value)
+        content = marshal(value)
         res = await self._http.put(f'{_config.hub_address}_c/{shard}/{key}', content=content)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
 
 class _ServerCache(_ServerCacheBase):
-    def __init__(self):
-        self._http = httpx.Client(
-            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-            verify=False,
-        )
+    def __init__(self, http: httpx.Client):
+        self._http = http
 
     def get(self, shard: str, key: str, default=None):
         res = self._http.get(f'{_config.hub_address}_c/{shard}/{key}')
         if res.status_code == 200:
-            return json.loads(res.text)
+            return unmarshal(res.text)
         return default
 
     def keys(self, shard: str) -> List[str]:
@@ -447,7 +441,7 @@ class _ServerCache(_ServerCacheBase):
         return self._keys(res.text) if res.status_code == 200 else []
 
     def set(self, shard: str, key: str, value: Any):
-        content = json.dumps(value)
+        content = marshal(value)
         res = self._http.put(f'{_config.hub_address}_c/{shard}/{key}', content=content)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
@@ -622,6 +616,7 @@ class Site:
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
         )
+        self.cache = _ServerCache(self._http)
 
     def __getitem__(self, url) -> Page:
         return Page(self, url)
@@ -757,6 +752,7 @@ class AsyncSite:
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
         )
+        self.cache = _AsyncServerCache(self._http)
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)
