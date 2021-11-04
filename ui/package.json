@@ -91,8 +91,8 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "env LC_ALL=en_US.UTF8 node scripts/test.js",
+    "build": "node --max-old-space-size=4096 scripts/build.js",
+    "test": "LC_ALL=en_US.UTF8 node scripts/test.js",
     "test:ci": "CI=true node scripts/test.js",
     "lint-staged:typescript": "tsc --jsx react --esModuleInterop --noEmit",
     "lint-staged:eslint": "eslint",
