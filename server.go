@@ -93,12 +93,12 @@ func Run(conf ServerConf) {
 	for _, dir := range conf.PrivateDirs {
 		prefix, src := splitDirMapping(dir)
 		echo(Log{"t": "private_dir", "source": src, "address": prefix})
-		handle(prefix, http.StripPrefix(prefix, newDirServer(src, conf.Keychain, auth))) // XXX strip with baseURL
+		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, newDirServer(src, conf.Keychain, auth)))
 	}
 	for _, dir := range conf.PublicDirs {
 		prefix, src := splitDirMapping(dir)
 		echo(Log{"t": "public_dir", "source": src, "address": prefix})
-		handle(prefix, http.StripPrefix(prefix, http.FileServer(http.Dir(src)))) // XXX strip with baseURL
+		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, http.FileServer(http.Dir(src))))
 	}
 
 	handle("_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))            // XXX fix arg1 handling
@@ -143,7 +143,7 @@ func splitDirMapping(m string) (string, string) {
 	if len(xs) < 2 {
 		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
 	}
-	return xs[0], xs[1]
+	return strings.TrimLeft(xs[0], "/"), xs[1]
 }
 
 func readRequestWithLimit(w http.ResponseWriter, r io.ReadCloser, n int64) ([]byte, error) {

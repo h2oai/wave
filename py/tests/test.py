@@ -11,10 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import os
 import sys
 import difflib
 import json
+
+import httpx
+
 from h2o_wave import site, Page, data, Expando
 
 
@@ -385,3 +388,30 @@ def test_proxy():
         result = Expando(response.result)
         assert result.code == 400
         assert len(result.headers) > 0
+
+
+def _read_file(path: str):
+    with open(path, 'r') as f:
+        return f.read()
+
+
+def test_file_server():
+    f1 = 'temp_file1.txt'
+    with open(f1, 'w') as f:
+        f.writelines([f'line {i + 1}' for i in range(10)])
+    paths = site.upload([f1])
+    f2 = 'temp_file2.txt'
+    f2 = site.download(paths[0], f2)
+    s1 = _read_file(f1)
+    s2 = _read_file(f2)
+    os.remove(f1)
+    os.remove(f2)
+    assert s1 == s2
+
+
+def test_public_dir():
+    base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
+    p = site.download(f'{base_url}assets/brand/h2o.svg', 'h2o.svg')
+    svg = _read_file(p)
+    os.remove(p)
+    assert svg.index('<svg') == 0
