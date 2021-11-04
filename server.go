@@ -101,7 +101,7 @@ func Run(conf ServerConf) {
 		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, http.FileServer(http.Dir(src))))
 	}
 
-	handle("_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))            // XXX fix arg1 handling
+	handle("_c/", newCache(conf.BaseURL+"_c/", conf.Keychain, conf.MaxCacheRequestSize))
 	handle("_m/", newMultipartServer("/_m/", conf.Keychain, auth, conf.MaxRequestSize)) // XXX fix arg1 handling
 
 	if conf.Proxy {
