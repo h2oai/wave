@@ -114,6 +114,10 @@ def _guard_key(key: str):
             raise KeyError('invalid key type: want str or int')
 
 
+def _rebase(host: str, path: str):
+    return f"{host}{path.lstrip('/')}"
+
+
 class ServiceError(Exception):
     pass
 
@@ -408,18 +412,18 @@ class _AsyncServerCache(_ServerCacheBase):
         )
 
     async def get(self, shard: str, key: str, default=None) -> Any:
-        res = await self._http.get(f'{_config.hub_address}/_c/{shard}/{key}')
+        res = await self._http.get(f'{_config.hub_address}_c/{shard}/{key}')
         if res.status_code == 200:
             return json.loads(res.text)
         return default
 
     async def keys(self, shard: str) -> List[str]:
-        res = await self._http.get(f'{_config.hub_address}/_c/{shard}')
+        res = await self._http.get(f'{_config.hub_address}_c/{shard}')
         return self._keys(res.text) if res.status_code == 200 else []
 
     async def set(self, shard: str, key: str, value: Any):
         content = json.dumps(value)
-        res = await self._http.put(f'{_config.hub_address}/_c/{shard}/{key}', content=content)
+        res = await self._http.put(f'{_config.hub_address}_c/{shard}/{key}', content=content)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -432,18 +436,18 @@ class _ServerCache(_ServerCacheBase):
         )
 
     def get(self, shard: str, key: str, default=None):
-        res = self._http.get(f'{_config.hub_address}/_c/{shard}/{key}')
+        res = self._http.get(f'{_config.hub_address}_c/{shard}/{key}')
         if res.status_code == 200:
             return json.loads(res.text)
         return default
 
     def keys(self, shard: str) -> List[str]:
-        res = self._http.get(f'{_config.hub_address}/_c/{shard}')
+        res = self._http.get(f'{_config.hub_address}_c/{shard}')
         return self._keys(res.text) if res.status_code == 200 else []
 
     def set(self, shard: str, key: str, value: Any):
         content = json.dumps(value)
-        res = self._http.put(f'{_config.hub_address}/_c/{shard}/{key}', content=content)
+        res = self._http.put(f'{_config.hub_address}_c/{shard}/{key}', content=content)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -626,7 +630,7 @@ class Site:
         page.drop()
 
     def _save(self, url: str, patch: str):
-        res = self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        res = self._http.patch(_rebase(_config.hub_address, url), content=patch)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -640,7 +644,7 @@ class Site:
         Returns:
             The serialized page.
         """
-        res = self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        res = self._http.get(_rebase(_config.hub_address, url), headers=_content_type_json)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
@@ -655,8 +659,8 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        upload_url = f'{_config.hub_address}/_f'
-        res = self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        res = self._http.post(f'{_config.hub_address}_f/',
+                              files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
@@ -676,7 +680,7 @@ class Site:
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
-        with open(filepath, 'wb') as f:
+        with open(filepath, 'wb') as f:  # BUG url already contains base url
             with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
                 for chunk in r.iter_bytes():
                     f.write(chunk)
@@ -690,7 +694,7 @@ class Site:
         Args:
             url: The URL of the file to delete.
         """
-        res = self._http.delete(f'{_config.hub_address}{url}')
+        res = self._http.delete(f'{_config.hub_address}{url}')  # BUG url already contains base url
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
@@ -712,7 +716,7 @@ class Site:
         Returns:
             The stream endpoint, typically used as an image path.
         """
-        endpoint = f'/_m/{path}'
+        endpoint = f'_m/{path}'
         res = self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
         if res.status_code == 200:
             return endpoint
@@ -725,7 +729,7 @@ class Site:
         Args:
             path: The path of the stream
         """
-        endpoint = f'/_m/{path}'
+        endpoint = f'_m/{path}'
         res = self._http.delete(f'{_config.hub_address}{endpoint}')
         if res.status_code == 200:
             return endpoint
@@ -754,7 +758,7 @@ class AsyncSite:
         page.drop()
 
     async def _save(self, url: str, patch: str):
-        res = await self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        res = await self._http.patch(_rebase(_config.hub_address, url), content=patch)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -768,7 +772,7 @@ class AsyncSite:
         Returns:
             The serialized page.
         """
-        res = await self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        res = await self._http.get(_rebase(_config.hub_address, url), headers=_content_type_json)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
@@ -783,8 +787,8 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        upload_url = f'{_config.hub_address}/_f'
-        res = await self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        res = await self._http.post(f'{_config.hub_address}_f/',
+                                    files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
@@ -803,7 +807,7 @@ class AsyncSite:
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
-        with open(filepath, 'wb') as f:
+        with open(filepath, 'wb') as f:  # BUG url already contains base url
             async with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
                 async for chunk in r.aiter_bytes():
                     f.write(chunk)
@@ -817,7 +821,7 @@ class AsyncSite:
         Args:
             url: The URL of the file to delete.
         """
-        res = await self._http.delete(f'{_config.hub_address}{url}')
+        res = await self._http.delete(f'{_config.hub_address}{url}')  # BUG url already contains base url
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
@@ -839,7 +843,7 @@ class AsyncSite:
         Returns:
             The stream endpoint, typically used as an image path.
         """
-        endpoint = f'/_m/{path}'
+        endpoint = f'_m/{path}'
         res = await self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
         if res.status_code == 200:
             return endpoint
@@ -852,7 +856,7 @@ class AsyncSite:
         Args:
             path: The path of the stream
         """
-        endpoint = f'/_m/{path}'
+        endpoint = f'_m/{path}'
         res = await self._http.delete(f'{_config.hub_address}{endpoint}')
         if res.status_code == 200:
             return endpoint
