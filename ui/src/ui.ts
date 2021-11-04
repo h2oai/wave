@@ -74,7 +74,7 @@ const
   },
   baseURL = document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/',
   socketURL = baseURL + '_s',
-  uploadURL = baseURL + '_f',
+  uploadURL = baseURL + '_f/',
   authURL = baseURL + '_auth/login'
 
 export const

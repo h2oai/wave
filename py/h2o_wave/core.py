@@ -47,7 +47,8 @@ class _Config:
         self.app_address = _get_env('APP_ADDRESS', _get_env('EXTERNAL_ADDRESS', self.internal_address))
         self.app_mode = _get_env('APP_MODE', UNICAST)
         self.hub_base_url = _get_env('BASE_URL', '/')
-        self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:10101') + self.hub_base_url
+        self.hub_host_address = _get_env('ADDRESS', 'http://127.0.0.1:10101')
+        self.hub_address = self.hub_host_address + self.hub_base_url
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
         self.app_access_key_id: str = _get_env('APP_ACCESS_KEY_ID', None) or secrets.token_urlsafe(16)
@@ -680,8 +681,8 @@ class Site:
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
-        with open(filepath, 'wb') as f:  # BUG url already contains base url
-            with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+        with open(filepath, 'wb') as f:
+            with self._http.stream('GET', f'{_config.hub_host_address}{url}') as r:
                 for chunk in r.iter_bytes():
                     f.write(chunk)
 
@@ -694,7 +695,7 @@ class Site:
         Args:
             url: The URL of the file to delete.
         """
-        res = self._http.delete(f'{_config.hub_address}{url}')  # BUG url already contains base url
+        res = self._http.delete(f'{_config.hub_host_address}{url}')
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
@@ -807,8 +808,8 @@ class AsyncSite:
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
-        with open(filepath, 'wb') as f:  # BUG url already contains base url
-            async with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+        with open(filepath, 'wb') as f:
+            async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as r:
                 async for chunk in r.aiter_bytes():
                     f.write(chunk)
 
@@ -821,7 +822,7 @@ class AsyncSite:
         Args:
             url: The URL of the file to delete.
         """
-        res = await self._http.delete(f'{_config.hub_address}{url}')  # BUG url already contains base url
+        res = await self._http.delete(f'{_config.hub_host_address}{url}')
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
