@@ -736,6 +736,13 @@ class Site:
             return endpoint
         raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
 
+    def proxy(self, method: str, url: str, headers: Optional[Dict[str, List[str]]] = None, body: Optional[str] = None):
+        req = dict(method=method, url=url, headers=headers, body=body)
+        res = self._http.post(f'{_config.hub_address}_p/', content=marshal(req))
+        if res.status_code == 200:
+            return res.json()
+        raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
+
 
 site = Site()
 
@@ -862,6 +869,14 @@ class AsyncSite:
         if res.status_code == 200:
             return endpoint
         raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
+
+    async def proxy(self, method: str, url: str, headers: Optional[Dict[str, List[str]]] = None,
+                    body: Optional[str] = None):
+        req = dict(method=method, url=url, headers=headers, body=body)
+        res = await self._http.post(f'{_config.hub_address}_p/', content=marshal(req))
+        if res.status_code == 200:
+            return res.json()
+        raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
 
 
 def _kv(key: str, index: str, value: Any):

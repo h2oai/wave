@@ -15,7 +15,7 @@
 import sys
 import difflib
 import json
-from h2o_wave import site, Page, data
+from h2o_wave import site, Page, data, Expando
 
 
 def make_card(**props):
@@ -106,7 +106,8 @@ def test_new_card_with_cyc_buf():
     page.drop()
     page['card1'] = dict(data=data(fields=sample_fields, size=-3))
     page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[None] * 3, i=0))))
+    assert compare(page.load(),
+                   make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[None] * 3, i=0))))
 
 
 def test_load_card_with_map_buf():
@@ -114,7 +115,8 @@ def test_load_card_with_map_buf():
     page.drop()
     page['card1'] = dict(data=data(fields=sample_fields, rows=dict(foo=[1, 2, 3])))
     page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data=dict(foo=[1, 2, 3])))))
+    assert compare(page.load(),
+                   make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data=dict(foo=[1, 2, 3])))))
 
 
 def test_load_card_with_fix_buf():
@@ -130,7 +132,8 @@ def test_load_card_with_cyc_buf():
     page.drop()
     page['card1'] = dict(data=data(fields=sample_fields, rows=[[1, 2, 3]], size=-10))
     page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[[1, 2, 3]], i=0))))
+    assert compare(page.load(),
+                   make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[[1, 2, 3]], i=0))))
 
 
 def test_prop_set():
@@ -370,3 +373,15 @@ def test_cyc_buf_write():
         data=[[10, 11, 12], [13, 14, 15], [7, [41, 999, 43], 9]],
         i=2,
     ))))
+
+
+def test_proxy():
+    # waved -proxy must be set
+    url = 'https://wave.h2o.ai'
+    response = Expando(site.proxy('get', url))
+    if response.error:
+        assert False
+    else:
+        result = Expando(response.result)
+        assert result.code == 400
+        assert len(result.headers) > 0

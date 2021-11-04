@@ -73,7 +73,7 @@ const
     for (const k in a) delete a[k]
   },
   baseURL = document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/',
-  socketURL = baseURL + '_s',
+  socketURL = baseURL + '_s/',
   uploadURL = baseURL + '_f/',
   authURL = baseURL + '_auth/login'
 

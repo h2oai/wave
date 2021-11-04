@@ -20,7 +20,8 @@ interface ProxyResult {
 }
 
 async function proxy(req: ProxyRequest): Promise<ProxyResult> {
-  const res = await fetch('/_p', { method: 'POST', body: JSON.stringify(req) })
+  // TODO: prefix baseURL
+  const res = await fetch('/_p/', { method: 'POST', body: JSON.stringify(req) })
   return await res.json()
 }
 

@@ -66,10 +66,7 @@ func newProxy(auth *Auth, maxRequestSize, maxResponseSize int64) *Proxy {
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		// Disallow if:
-		// - unauthorized api call
-		// - auth not enabled or auth enabled and unauthorized
-		if p.auth == nil || (p.auth != nil && !p.auth.allow(r)) {
+		if p.auth != nil && !p.auth.allow(r) {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}

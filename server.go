@@ -86,7 +86,7 @@ func Run(conf ServerConf) {
 		handle("_auth/logout", newLogoutHandler(auth, broker))
 	}
 
-	handle("_s", newSocketServer(broker, auth, conf.Editable, conf.BaseURL)) // XXX terminate sockets when logged out
+	handle("_s/", newSocketServer(broker, auth, conf.Editable, conf.BaseURL)) // XXX terminate sockets when logged out
 
 	fileDir := filepath.Join(conf.DataDir, "f")
 	handle("_f/", newFileServer(fileDir, conf.Keychain, auth, conf.BaseURL+"_f"))
@@ -105,7 +105,7 @@ func Run(conf ServerConf) {
 	handle("_m/", newMultipartServer("/_m/", conf.Keychain, auth, conf.MaxRequestSize)) // XXX fix arg1 handling
 
 	if conf.Proxy {
-		handle("_p", newProxy(auth, conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))
+		handle("_p/", newProxy(auth, conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))
 	}
 
 	if conf.IDE {
