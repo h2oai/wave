@@ -39,7 +39,12 @@ page['header2'] = ui.header_card(
             ui.nav_item(name='#support', label='Support'),
         ])
     ],
-    color='card'
+    color='card',
+    commands=[
+        ui.command(name='profile', label='Profile', icon='Contact'),
+        ui.command(name='preferences', label='Preferences', icon='Settings'),
+        ui.command(name='logout', label='Logout', icon='SignOut'),
+    ]
 )
 page['header3'] = ui.header_card(
     box='1 3 9 1',
@@ -49,10 +54,10 @@ page['header3'] = ui.header_card(
     icon_color='$violet',
     items=[ui.text_m('Welcome back, John!')],
     secondary_items=[
-        ui.tabs(name='menu', value='email', items=[
+        ui.tabs(name='menu', value='email', link=True, items=[
             ui.tab(name='email', label='Mail', icon='Mail'),
             ui.tab(name='events', label='Events', icon='Calendar'),
-            ui.tab(name='spam', label='Spam'),
+            ui.tab(name='spam', label='Spam', icon='Heart'),
         ]),
     ]
 )

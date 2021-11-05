@@ -214,13 +214,33 @@ const css = stylesheet({
           },
         }
       },
-      '.ms-Pivot-link': {
-        backgroundColor: cssVar('$themePrimary'),
+      '.ms-Button-menuIcon': {
         color: cssVar('$card')
       },
-      '.ms-Pivot-link.is-selected': {
-        backgroundColor: cssVar('$card'),
-        color: cssVar('$text')
+      '.w-tabs': {
+        $nest: {
+          '.ms-Pivot-link': {
+            backgroundColor: cssVar('$themePrimary'),
+            color: cssVar('$card')
+          },
+          '.ms-Pivot-link.is-selected': {
+            backgroundColor: cssVar('$card'),
+            color: cssVar('$text')
+          },
+        }
+      },
+      '.w-tabs-link': {
+        $nest: {
+          '.ms-Pivot-link': {
+            color: cssVar('$card')
+          },
+          '.ms-Pivot-link:hover .ms-Pivot-linkContent': {
+            color: cssVar('$text')
+          },
+          '.ms-Pivot-link.is-selected:before': {
+            backgroundColor: cssVar('$card'),
+          },
+        }
       },
       '.ms-Checkbox': {
         $nest: {

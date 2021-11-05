@@ -16,11 +16,9 @@ import { fireEvent, render } from '@testing-library/react'
 import { box, Model } from 'h2o-wave'
 import React from 'react'
 import { View } from './header'
-import { wave } from './ui'
 
 const
   name = 'header',
-  hashName = `#${name}`,
   label = 'label'
 
 let headerProps: Model<any>
@@ -29,8 +27,12 @@ describe('Header.tsx', () => {
   beforeEach(() => {
     headerProps = {
       name,
-      state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
-      changed: box(false)
+      state: {
+        nav: [{ label: 'group1', items: [{ name, label }] }],
+        commands: [{ name: 'command', label }],
+        image: 'img'
+      },
+      changed: box(false),
     }
   })
 
@@ -50,45 +52,20 @@ describe('Header.tsx', () => {
     expect(menuItem).not.toBeVisible()
   })
 
-  it('Sets args - init', () => {
-    render(<View {...headerProps} />)
-    expect(wave.args[name]).toBe(false)
+  it('Should show context menu when commands specified', () => {
+    const { container, queryByRole } = render(<View {...headerProps} />)
+
+    fireEvent.click(container.querySelector('.ms-Button-menuIcon') as HTMLSpanElement)
+
+    expect(queryByRole('menu')).toBeInTheDocument()
   })
 
-  it('Sets args and calls sync on click', () => {
-    const syncMock = jest.fn()
-    wave.push = syncMock
+  it('Routes to home page (#) on logo click', () => {
+    const { container } = render(<View {...headerProps} />)
 
-    const { getByText } = render(<View {...headerProps} />)
-    fireEvent.click(getByText(label))
+    window.location.hash = 'about'
+    fireEvent.click(container.querySelector('.ms-Image-image') as HTMLImageElement)
 
-    expect(wave.args[name]).toBe(true)
-    expect(syncMock).toHaveBeenCalled()
     expect(window.location.hash).toBe('')
-  })
-
-  it('Does not set args, calls sync on click, updates browser hash when name starts with hash', () => {
-    const syncMock = jest.fn()
-    wave.push = syncMock
-    headerProps.state.items[0].name = hashName
-
-    const { getByText } = render(<View {...headerProps} />)
-    fireEvent.click(getByText(label))
-
-    expect(wave.args[hashName]).toBe(false)
-    expect(syncMock).toHaveBeenCalledTimes(0)
-    expect(window.location.hash).toBe(hashName)
-  })
-
-  it('should show nested submenus', () => {
-    const subText = 'SubItem'
-    headerProps.state.items[0].items = [{ name: subText, label: subText, items: [{ name: '' }] }]
-
-    const { getByText, getAllByRole } = render(<View {...headerProps} />)
-
-    fireEvent.click(getByText(label))
-    fireEvent.click(getByText(subText))
-
-    expect(getAllByRole('menu')).toHaveLength(2)
   })
 })

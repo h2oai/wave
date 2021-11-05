@@ -19,7 +19,8 @@ import { stylesheet } from 'typestyle'
 import { Component, XInline } from './form'
 import { CardEffect, cards, getEffectClass } from './layout'
 import { NavGroup, XNav } from './nav'
-import { clas, cssVar, padding } from './theme'
+import { border, clas, cssVar, padding } from './theme'
+import { Command, toCommands } from './toolbar'
 import { bond } from './ui'
 
 const css = stylesheet({
@@ -29,12 +30,18 @@ const css = stylesheet({
     justifyContent: 'space-between',
     padding: padding(8, 15),
     $nest: {
+      '~div': {
+        display: 'none', // Hide original context menu.
+      },
       '.ms-layer': {
         display: 'none', // HACK: Opening Fluent side panel adds a span element to header (for some reason), disrupting the layout.
-      }
+      },
+      '.ms-Persona-details': {
+        paddingRight: 0
+      },
     }
   },
-  lhs: {
+  inline: {
     display: 'flex',
     alignItems: 'center',
     cursor: 'default',
@@ -53,11 +60,14 @@ const css = stylesheet({
     fontSize: 36,
     marginRight: 15,
   },
+  title: {
+    color: cssVar('$themePrimary')
+  },
   subtitle: {
-    marginTop: -5, // nudge up slightly to account for padding
+    marginTop: -5, // Nudge up slightly to account for padding.
   },
   name: {
-    marginTop: -8, // nudge up slightly to account for padding
+    marginTop: -8, // Nudge up slightly to account for padding.
   }
 })
 
@@ -113,27 +123,41 @@ const
   }
 
 
-export const View = bond(({ name, state, changed }: Model<State>) => {
+export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {
   const
     navB = box(false),
     showNav = () => navB(true),
     onLogoClick = () => window.location.hash = '',
     render = () => {
-      const { title, subtitle, icon, icon_color, nav, items, image, secondary_items, color } = state
+      const { title, subtitle, icon, icon_color, nav, items, image, secondary_items, color = 'primary', commands } = state
       return (
         <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))}>
-          <div className={css.lhs}>
-            {nav && <div className={css.burger} onClick={showNav}><Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' /></div>}
+          <div className={css.inline}>
+            {nav && <Fluent.FontIcon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
-            {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />}
+            {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon} style={{ color: cssVar(icon_color) }} />}
             <div className={css.name}>
-              <div className='wave-s24 wave-w5'>{title}</div>
+              <div className={clas(color !== 'primary' ? css.title : '', 'wave-s24 wave-w5')}>{title}</div>
               {subtitle && <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>}
             </div>
           </div>
-          { secondary_items && <XInline model={{ items: secondary_items }} />}
-          { items && <XInline model={{ items }} />}
-          { nav && <Navigation items={nav} isOpenB={navB} />}
+          {secondary_items && <XInline model={{ items: secondary_items }} />}
+          <div className={css.inline}>
+            {items && <XInline model={{ items }} />}
+            {commands && (
+              <Fluent.ActionButton
+                menuProps={{
+                  items: toCommands(commands),
+                  isBeakVisible: true,
+                  directionalHint: Fluent.DirectionalHint.bottomRightEdge,
+                  calloutProps: { styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } },
+                  styles: { list: { border: border(1, cssVar('$neutralQuaternaryAlt')) } }
+                }}
+                styles={{ root: { padding: 0, border: 'none' }, menuIcon: { fontSize: 14, marginRight: 0, marginLeft: 8 } }}
+              />
+            )}
+          </div>
+          {nav && <Navigation items={nav} isOpenB={navB} />}
         </div>
       )
     }
