@@ -42,7 +42,7 @@
     "eslint-plugin-wave": "file:eslint",
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",
-    "h2o-wave": "^0.2.0",
+    "h2o-wave": "^1.0.0",
     "handlebars": "^4.7.7",
     "html-webpack-plugin": "4.0.0-beta.11",
     "http-proxy-middleware": "^1.0.3",

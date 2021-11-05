@@ -120,7 +120,7 @@ export const
         try {
           const { responseText } = await new Promise<XMLHttpRequest>((resolve, reject) => {
             const xhr = new XMLHttpRequest()
-            xhr.open("POST", "/_f")
+            xhr.open("POST", wave.uploadURL)
             xhr.upload.onprogress = e => setPercentComplete(e.loaded / e.total)
             xhr.send(formData)
             xhr.onreadystatechange = () => {

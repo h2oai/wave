@@ -101,7 +101,7 @@ const
         wave.push()
       },
       init = () => {
-        listen()
+        listen(wave.socketURL)
         window.addEventListener('hashchange', onHashChanged)
         window.addEventListener('md-link-click', onMdLinkClick)
       },

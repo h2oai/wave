@@ -22,7 +22,6 @@ setup-ts: ## Set up NPM package and symlinks
 	cd ts && npm ci && npm run build
 	cd ts && npm link
 	cd ui && npm link h2o-wave
-	cd u && npm link h2o-wave
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -86,7 +85,7 @@ build-docker:
 		.
 
 run: ## Run server
-	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
+	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy -public-dir /assets/@./assets
 
 run-db: ## Run database server
 	go run cmd/wavedb/main.go

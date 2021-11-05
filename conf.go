@@ -38,6 +38,7 @@ type ServerConf struct {
 	Version              string
 	BuildDate            string
 	Listen               string
+	BaseURL              string
 	WebDir               string
 	DataDir              string
 	PublicDirs           Strings

@@ -62,10 +62,11 @@ type Client struct {
 	routes   []string        // watched routes
 	data     chan []byte     // send data
 	editable bool            // allow editing? // TODO move to user; tie to role
+	baseURL  string
 }
 
-func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool) *Client {
-	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string) *Client {
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL}
 }
 
 func (c *Client) refreshToken() error {
@@ -110,6 +111,7 @@ func (c *Client) listen() {
 		}
 
 		m := parseMsg(msg)
+		m.addr = resolveURL(m.addr, c.baseURL)
 		switch m.t {
 		case patchMsgT:
 			if c.editable { // allow only if editing is enabled
