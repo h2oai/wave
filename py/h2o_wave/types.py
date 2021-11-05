@@ -10627,6 +10627,56 @@ class TallSeriesStatCard:
         )
 
 
+class TallStatsCard:
+    """Create a set of stats laid out vertically.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[Stat],
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('TallStatsCard.box', box, (str,), False, False, False)
+        _guard_vector('TallStatsCard.items', items, (Stat,), False, False, False)
+        _guard_vector('TallStatsCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.items = items
+        """The individual stats to be displayed."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TallStatsCard.box', self.box, (str,), False, False, False)
+        _guard_vector('TallStatsCard.items', self.items, (Stat,), False, False, False)
+        _guard_vector('TallStatsCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='tall_stats',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TallStatsCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('TallStatsCard.box', __d_box, (str,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('TallStatsCard.items', __d_items, (dict,), False, False, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('TallStatsCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        items: List[Stat] = [Stat.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return TallStatsCard(
+            box,
+            items,
+            commands,
+        )
+
+
 class TemplateCard:
     """Render dynamic content using an HTML template.
     """

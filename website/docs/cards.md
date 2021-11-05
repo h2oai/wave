@@ -123,6 +123,7 @@ Use stats cards for a quick and easy way to display live values and graphics (or
 | [ui.large_stat_card()](api/ui.md/#large_stat_card) | Stat card; displays a primary value, an auxiliary value and a caption. |
 | [ui.tall_gauge_stat_card()](api/ui.md/#tall_gauge_stat_card) | Tall stat card; displays a primary value, an auxiliary value and a progress gauge. |
 | [ui.tall_series_stat_card()](api/ui.md/#tall_series_stat_card) | Tall stat card; displays a primary value, an auxiliary value and a series plot. |
+| [ui.tall_stats_card()](api/ui.md/#tall_stats_card) | Tall stats card; displays a vertical label-value pairs collection |
 | [ui.wide_bar_stat_card()](api/ui.md/#wide_bar_stat_card) | Wide stat card; displays a primary value, an auxiliary value and a progress bar. |
 | [ui.wide_gauge_stat_card()](api/ui.md/#wide_gauge_stat_card) | Wide stat card; displays a primary value, an auxiliary value and a progress gauge. |
 | [ui.wide_series_stat_card()](api/ui.md/#wide_series_stat_card) | Wide stat card; displays a primary value, an auxiliary value and a series plot. |
