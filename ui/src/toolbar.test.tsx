@@ -14,116 +14,59 @@
 
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { View } from './toolbar'
+import { View as Toolbar } from './toolbar'
 import { box, Model } from 'h2o-wave'
 import { wave } from './ui'
 
-
 const
   name = 'toolbar',
-  hashName = `#${name}`,
-  label = 'toolbar',
-  commandName = 'toolbar_command',
-  commandNameWithHash = '#toolbar_command',
-  commandValue = 'toolbar_command_value',
+  label = name,
   toolbarProps: Model<any> = {
     name,
-    state: { items: [{ name: commandName, label: commandName }] },
-    changed: box(true)
+    state: { items: [{ name, label }] },
+    changed: box(false)
   },
-  toolbarPropsWithHash: Model<any> = {
-    name,
-    state: { items: [{ name: commandNameWithHash, label: commandNameWithHash }] },
-    changed: box(true),
-  }
+  pushMock = jest.fn()
 
 describe('Toolbar.tsx', () => {
+  beforeAll(() => wave.push = pushMock)
   beforeEach(() => {
-    wave.args[commandName] = null
-    jest.clearAllMocks()
+    wave.args[name] = null
+    pushMock.mockReset()
+    window.location.hash = ''
   })
 
   it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<View {...toolbarProps} />)
+    const { queryByTestId } = render(<Toolbar {...toolbarProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
   it('Sets args and calls sync on click - with value attr', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
+    const value = 'value'
+    const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name, value, label }] } }} />)
+    fireEvent.click(getByText(label))
 
-    const { getByText } = render(<View {...toolbarProps} {...{
-      state: {
-        items: [{
-          name: commandName,
-          value: commandValue,
-          label: commandName
-        }]
-      }
-    }} />)
-
-    fireEvent.click(getByText(commandName))
-
-    expect(pushMock).toBeCalled()
-    expect(wave.args[commandName]).toBe(commandValue)
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(value)
   })
 
   it('Sets args and calls sync on click - without value attr', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getByText } = render(<View {...toolbarProps} />)
-    fireEvent.click(getByText(commandName))
-
-    expect(pushMock).toBeCalled()
-    expect(wave.args[commandName]).toBe(true)
-  })
-
-  it('Does not set args and calls sync on click when command name starts with hash', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getByText } = render(<View {...toolbarPropsWithHash} />)
-
-    fireEvent.click(getByText(commandNameWithHash))
-    expect(wave.args[commandNameWithHash]).toBe(false)
-    expect(pushMock).toHaveBeenCalledTimes(0)
-  })
-
-  it('Sets window location hash when command name starts with hash', () => {
-    const { getByText } = render(<View {...toolbarPropsWithHash} />)
-    fireEvent.click(getByText(commandNameWithHash))
-
-    expect(window.location.hash).toBe(commandNameWithHash)
-  })
-
-  it('Sets args - init', () => {
-    render(<View {...toolbarProps} />)
-    expect(wave.args[name]).toBe(false)
-  })
-
-  it('Sets args and calls sync on click', () => {
-    const syncMock = jest.fn()
-    wave.push = syncMock
-
-    const { getByText } = render(<View {...toolbarProps} />)
+    const { getByText } = render(<Toolbar {...toolbarProps} />)
     fireEvent.click(getByText(label))
 
+    expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(true)
-    expect(syncMock).toHaveBeenCalled()
     expect(window.location.hash).toBe('')
   })
 
-  it('Does not set args, calls sync on click, updates browser hash when name starts with hash', () => {
-    const syncMock = jest.fn()
-    wave.push = syncMock
-    toolbarProps.state.items[0].name = hashName
+  it('Does not set args or calls sync on click when command name starts with hash', () => {
+    const hashName = `#${name}`
+    const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name: hashName, label }] } }} />)
 
-    const { getByText } = render(<View {...toolbarProps} />)
     fireEvent.click(getByText(label))
-
     expect(wave.args[hashName]).toBe(false)
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).not.toHaveBeenCalled()
     expect(window.location.hash).toBe(hashName)
   })
+
 })
