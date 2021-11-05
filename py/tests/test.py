@@ -427,3 +427,9 @@ def test_cache():
     assert isinstance(d2, dict)
     assert d2['foo'] == d1['foo']
     assert d2['qux'] == d1['qux']
+
+
+def test_multipart_server():
+    p = site.uplink('test_stream', 'image/svg+xml', open('../assets/brand/wave.svg', 'r'))
+    site.unlink('test_stream')
+    assert len(p) > 0

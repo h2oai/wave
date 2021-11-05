@@ -102,7 +102,7 @@ func Run(conf ServerConf) {
 	}
 
 	handle("_c/", newCache(conf.BaseURL+"_c/", conf.Keychain, conf.MaxCacheRequestSize))
-	handle("_m/", newMultipartServer("/_m/", conf.Keychain, auth, conf.MaxRequestSize)) // XXX fix arg1 handling
+	handle("_m/", newMultipartServer(conf.BaseURL+"_m/", conf.Keychain, auth, conf.MaxRequestSize))
 
 	if conf.Proxy {
 		handle("_p/", newProxy(auth, conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))

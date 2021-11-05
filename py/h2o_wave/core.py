@@ -715,7 +715,7 @@ class Site:
         endpoint = f'_m/{path}'
         res = self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
         if res.status_code == 200:
-            return endpoint
+            return _config.hub_base_url + endpoint
         raise ServiceError(f'Uplink failed (code={res.status_code}): {res.text}')
 
     def unlink(self, path: str):
@@ -728,7 +728,7 @@ class Site:
         endpoint = f'_m/{path}'
         res = self._http.delete(f'{_config.hub_address}{endpoint}')
         if res.status_code == 200:
-            return endpoint
+            return
         raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
 
     def proxy(self, method: str, url: str, headers: Optional[Dict[str, List[str]]] = None, body: Optional[str] = None):
@@ -850,7 +850,7 @@ class AsyncSite:
         endpoint = f'_m/{path}'
         res = await self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
         if res.status_code == 200:
-            return endpoint
+            return _config.hub_base_url + endpoint
         raise ServiceError(f'Uplink failed (code={res.status_code}): {res.text}')
 
     async def unlink(self, path: str):
@@ -863,7 +863,7 @@ class AsyncSite:
         endpoint = f'_m/{path}'
         res = await self._http.delete(f'{_config.hub_address}{endpoint}')
         if res.status_code == 200:
-            return endpoint
+            return
         raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
 
     async def proxy(self, method: str, url: str, headers: Optional[Dict[str, List[str]]] = None,
