@@ -19,7 +19,7 @@ import { stylesheet } from 'typestyle'
 import { Component, XInline } from './form'
 import { CardEffect, cards, getEffectClass } from './layout'
 import { NavGroup, XNav } from './nav'
-import { clas, cssVar, padding } from './theme'
+import { centerMixin, clas, cssVar, important, padding, px } from './theme'
 import { Command } from './toolbar'
 import { bond } from './ui'
 
@@ -42,6 +42,10 @@ const css = stylesheet({
   },
   burger: {
     cursor: 'pointer',
+    fontSize: important(px(24)),
+    width: 40,
+    height: 40,
+    ...centerMixin()
   },
   logo: {
     width: 56,
@@ -60,9 +64,6 @@ const css = stylesheet({
   subtitle: {
     marginTop: -5, // Nudge up slightly to account for padding.
   },
-  name: {
-    marginTop: -8, // Nudge up slightly to account for padding.
-  }
 })
 
 /**
@@ -111,8 +112,8 @@ const
     switch (color) {
       case 'card': return CardEffect.Normal
       case 'transparent': return CardEffect.Transparent
-      case 'primary': return CardEffect.Primary
-      default: return CardEffect.Primary
+      case 'primary': return CardEffect.Raised
+      default: return CardEffect.Raised
     }
   }
 
@@ -130,7 +131,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
             {nav && <Fluent.FontIcon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
             {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon} style={{ color: cssVar(icon_color) }} />}
-            <div className={css.name}>
+            <div>
               <div className={clas(color !== 'primary' ? css.title : '', 'wave-s24 wave-w5')}>{title}</div>
               {subtitle && <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>}
             </div>
@@ -144,4 +145,4 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
   return { render, changed }
 })
 
-cards.register('header', View, { effect: CardEffect.Transparent })
+cards.register('header', View, { effect: CardEffect.Transparent, marginless: true })

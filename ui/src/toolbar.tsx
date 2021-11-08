@@ -59,14 +59,6 @@ const
       flexDirection: 'column',
       justifyContent: 'center',
     },
-    commandBar: {
-      $nest: {
-        '.ms-Button--commandBar, .ms-Button-icon, .ms-Button-menuIcon, .ms-CommandBar, &:hover': {
-          background: 'inherit',
-          color: 'inherit'
-        }
-      }
-    }
   }),
   toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
     wave.args[name] = false
@@ -109,7 +101,6 @@ export const
               overflowButtonProps={{ ariaLabel: 'More' }}
               farItems={farCommands}
               ariaLabel='Use left and right arrow keys to navigate between commands.'
-              className={css.commandBar}
             />
           </div>
         )

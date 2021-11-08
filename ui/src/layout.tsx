@@ -33,12 +33,12 @@ export enum CardEffect {
   Normal = 'normal',
   Raised = 'raised',
   Flat = 'flat',
-  Primary = 'primary'
 }
 
 export type CardStyle = {
   effect: CardEffect
   overflow?: B
+  marginless?: B
 }
 
 const
@@ -184,19 +184,15 @@ const css = stylesheet({
       }
     },
   },
-  raised: {
-    color: cssVar('$card'),
-    backgroundColor: cssVar('$themePrimary'),
-    boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
-    margin: 0,
-  },
   flat: {
     backgroundColor: cssVar('$card'),
     boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
   },
-  primary: {
+  raised: {
+    margin: 0,
     background: cssVar('$themePrimary'),
     color: cssVar('$card'),
+    boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
     $nest: {
       '.ms-Link': {
         color: cssVar('$card'),
@@ -313,14 +309,17 @@ const css = stylesheet({
     }
   },
   transparent: {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+  },
+  marginless: {
+    margin: 0
   }
 })
 
 export const
   getCardEffectClass = (c: Card) => {
-    const { effect } = getCardStyle(c)
-    return clas(css.slot, getEffectClass(effect))
+    const { effect, marginless } = getCardStyle(c)
+    return clas(css.slot, getEffectClass(effect), marginless ? css.marginless : '')
   },
   getEffectClass = (effect: CardEffect) => css[effect],
   getCardStyle = (c: Card): CardStyle => cards.lookup(c.state.view).style,
