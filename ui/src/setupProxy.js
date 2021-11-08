@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 module.exports = function (app) {
-  app.use(createProxyMiddleware('/_s', { target: 'http://localhost:10101', ws: true }));
-};
+  app.use(createProxyMiddleware('/_s', { target: 'http://localhost:10101/_s/', ws: true }))
+}

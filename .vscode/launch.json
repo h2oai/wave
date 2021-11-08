@@ -55,6 +55,9 @@
         "./ui/build",
         "-debug",
         "-editable",
+        "proxy",
+        "-public-dir",
+        "/assets/@./assets"
       ]
     },
     {
