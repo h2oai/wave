@@ -224,19 +224,19 @@ const css = stylesheet({
       '.w-menu': {
         $nest: {
           'button': {
-            color: cssVar('$card'),
+            color: cssVar('$card')
           },
           'button:hover': {
-            color: cssVar('$text')
+            color: cssVar('$card')
           },
           'button:hover .ms-Button-icon': {
-            color: cssVar('$text')
+            color: cssVar('$card')
           },
           '&:hover': {
-            color: cssVar('$text')
+            color: cssVar('$card')
           },
           '&:hover button': {
-            color: cssVar('$text')
+            color: cssVar('$card')
           },
         }
       },
