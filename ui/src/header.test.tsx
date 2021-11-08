@@ -52,14 +52,6 @@ describe('Header.tsx', () => {
     expect(menuItem).not.toBeVisible()
   })
 
-  it('Should show context menu when commands specified', () => {
-    const { container, queryByRole } = render(<View {...headerProps} />)
-
-    fireEvent.click(container.querySelector('.ms-Button-menuIcon') as HTMLSpanElement)
-
-    expect(queryByRole('menu')).toBeInTheDocument()
-  })
-
   it('Routes to home page (#) on logo click', () => {
     const { container } = render(<View {...headerProps} />)
 
