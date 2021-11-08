@@ -19,7 +19,7 @@ import { stylesheet } from 'typestyle'
 import { Component, XInline } from './form'
 import { CardEffect, cards, getEffectClass } from './layout'
 import { NavGroup, XNav } from './nav'
-import { centerMixin, clas, cssVar, important, padding, px } from './theme'
+import { centerMixin, clas, cssVar, important, px } from './theme'
 import { Command } from './toolbar'
 import { bond } from './ui'
 
@@ -28,7 +28,7 @@ const css = stylesheet({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: padding(8, 15),
+    padding: 10,
     $nest: {
       '.ms-layer': {
         display: 'none', // HACK: Opening Fluent side panel adds a span element to header (for some reason), disrupting the layout.
