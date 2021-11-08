@@ -214,8 +214,31 @@ const css = stylesheet({
           },
         }
       },
-      '.ms-Button-menuIcon': {
-        color: cssVar('$card')
+      '.ms-Button': {
+        $nest: {
+          '&-menuIcon': {
+            color: cssVar('$card')
+          },
+        }
+      },
+      '.w-menu': {
+        $nest: {
+          'button': {
+            color: cssVar('$card'),
+          },
+          'button:hover': {
+            color: cssVar('$text')
+          },
+          'button:hover .ms-Button-icon': {
+            color: cssVar('$text')
+          },
+          '&:hover': {
+            color: cssVar('$text')
+          },
+          '&:hover button': {
+            color: cssVar('$text')
+          },
+        }
       },
       '.w-tabs': {
         $nest: {

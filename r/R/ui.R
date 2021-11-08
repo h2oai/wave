@@ -2585,6 +2585,32 @@ ui_copyable_text <- function(
   return(.o)
 }
 
+#' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
+#'
+#' @param items Commands to render.
+#' @param icon The card's icon. Mutually exclusive with the image.
+#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon.
+#' @param name An identifying name for this component.
+#' @return A Menu instance.
+#' @export
+ui_menu <- function(
+  items,
+  icon = NULL,
+  image = NULL,
+  name = NULL) {
+  .guard_vector("items", "WaveCommand", items)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("name", "character", name)
+  .o <- list(menu=list(
+    items=items,
+    icon=icon,
+    image=image,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -4277,7 +4303,7 @@ ui_tall_gauge_stat_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param title The card's title.
-#' @param caption The card's caption, displayed below the title.
+#' @param caption The card's caption, displayed below the title. Supports markdown.
 #' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
 #' @param icon The card's icon.
 #' @param image The card’s image.
@@ -4565,7 +4591,7 @@ ui_wide_gauge_stat_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param title The card's title.
-#' @param caption The card's caption, displayed below the subtitle, supports markdown.
+#' @param caption The card's caption, displayed below the subtitle. Supports markdown.
 #' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore..
 #' @param subtitle The card's subtitle, displayed below the title.
 #' @param align The card's alignment, determines the position of an image / icon. Defaults to 'left'.

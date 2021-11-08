@@ -5924,6 +5924,65 @@ class CopyableText:
         )
 
 
+class Menu:
+    """Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
+    """
+    def __init__(
+            self,
+            items: List[Command],
+            icon: Optional[str] = None,
+            image: Optional[str] = None,
+            name: Optional[str] = None,
+    ):
+        _guard_vector('Menu.items', items, (Command,), False, False, False)
+        _guard_scalar('Menu.icon', icon, (str,), False, True, False)
+        _guard_scalar('Menu.image', image, (str,), False, True, False)
+        _guard_scalar('Menu.name', name, (str,), True, True, False)
+        self.items = items
+        """Commands to render."""
+        self.icon = icon
+        """The card's icon. Mutually exclusive with the image."""
+        self.image = image
+        """The card’s image, preferably user avatar. Mutually exclusive with the icon."""
+        self.name = name
+        """An identifying name for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('Menu.items', self.items, (Command,), False, False, False)
+        _guard_scalar('Menu.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('Menu.image', self.image, (str,), False, True, False)
+        _guard_scalar('Menu.name', self.name, (str,), True, True, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            icon=self.icon,
+            image=self.image,
+            name=self.name,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Menu':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('Menu.items', __d_items, (dict,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('Menu.icon', __d_icon, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Menu.image', __d_image, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Menu.name', __d_name, (str,), True, True, False)
+        items: List[Command] = [Command.load(__e) for __e in __d_items]
+        icon: Optional[str] = __d_icon
+        image: Optional[str] = __d_image
+        name: Optional[str] = __d_name
+        return Menu(
+            items,
+            icon,
+            image,
+            name,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -5974,6 +6033,7 @@ class Component:
             text_annotator: Optional[TextAnnotator] = None,
             facepile: Optional[Facepile] = None,
             copyable_text: Optional[CopyableText] = None,
+            menu: Optional[Menu] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6020,6 +6080,7 @@ class Component:
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
+        _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6110,6 +6171,8 @@ class Component:
         """Facepile."""
         self.copyable_text = copyable_text
         """Copyable text."""
+        self.menu = menu
+        """Menu."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6158,6 +6221,7 @@ class Component:
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
+        _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6204,6 +6268,7 @@ class Component:
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
             facepile=None if self.facepile is None else self.facepile.dump(),
             copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
+            menu=None if self.menu is None else self.menu.dump(),
         )
 
     @staticmethod
@@ -6299,6 +6364,8 @@ class Component:
         _guard_scalar('Component.facepile', __d_facepile, (dict,), False, True, False)
         __d_copyable_text: Any = __d.get('copyable_text')
         _guard_scalar('Component.copyable_text', __d_copyable_text, (dict,), False, True, False)
+        __d_menu: Any = __d.get('menu')
+        _guard_scalar('Component.menu', __d_menu, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6344,6 +6411,7 @@ class Component:
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
         facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
         copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
+        menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
         return Component(
             text,
             text_xl,
@@ -6390,6 +6458,7 @@ class Component:
             text_annotator,
             facepile,
             copyable_text,
+            menu,
         )
 
 
@@ -10308,7 +10377,7 @@ class TallInfoCard:
         self.title = title
         """The card's title."""
         self.caption = caption
-        """The card's caption, displayed below the title."""
+        """The card's caption, displayed below the title. Supports markdown."""
         self.label = label
         """Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore."""
         self.icon = icon
@@ -10999,7 +11068,7 @@ class WideInfoCard:
         self.title = title
         """The card's title."""
         self.caption = caption
-        """The card's caption, displayed below the subtitle, supports markdown."""
+        """The card's caption, displayed below the subtitle. Supports markdown."""
         self.label = label
         """Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.."""
         self.subtitle = subtitle

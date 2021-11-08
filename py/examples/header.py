@@ -3,7 +3,13 @@
 # ---
 from h2o_wave import site, ui
 
-persona_image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
+image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
+commands = [
+    ui.command(name='profile', label='Profile', icon='Contact'),
+    ui.command(name='preferences', label='Preferences', icon='Settings'),
+    ui.command(name='logout', label='Logout', icon='SignOut'),
+
+]
 page = site['/demo']
 page['header1'] = ui.header_card(
     box='1 1 9 1',
@@ -22,7 +28,7 @@ page['header2'] = ui.header_card(
     box='1 2 9 1',
     title='Card color header',
     subtitle='And now for something completely different!',
-    items=[ui.persona(title='John Doe', subtitle='Data Scientist', caption='Online', size='xs', image=persona_image)],
+    items=[ui.menu(image=image, items=commands)],
     secondary_items=[
         ui.button(name='btn1', label='Link 1', link=True),
         ui.button(name='btn2', label='Link 2', link=True),
@@ -40,11 +46,6 @@ page['header2'] = ui.header_card(
         ])
     ],
     color='card',
-    commands=[
-        ui.command(name='profile', label='Profile', icon='Contact'),
-        ui.command(name='preferences', label='Preferences', icon='Settings'),
-        ui.command(name='logout', label='Logout', icon='SignOut'),
-    ]
 )
 page['header3'] = ui.header_card(
     box='1 3 9 1',
@@ -52,7 +53,7 @@ page['header3'] = ui.header_card(
     subtitle='And now for something completely different!',
     icon='Cycling',
     icon_color='$violet',
-    items=[ui.text_m('Welcome back, John!')],
+    items=[ui.menu(icon='Add', items=commands)],
     secondary_items=[
         ui.tabs(name='menu', value='email', link=True, items=[
             ui.tab(name='email', label='Mail', icon='Mail'),
