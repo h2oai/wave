@@ -49,9 +49,6 @@ const css = stylesheet({
         marginTop: 0
       },
       'h1, h2, h3, h4, h5, h6': {
-        '&:first-child': {
-          marginTop: '0 !important'
-        },
         marginBlock: 0,
         color: cssVar('$neutralPrimary')
       },
