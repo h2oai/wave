@@ -5924,6 +5924,65 @@ class CopyableText:
         )
 
 
+class Menu:
+    """Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
+    """
+    def __init__(
+            self,
+            items: List[Command],
+            icon: Optional[str] = None,
+            image: Optional[str] = None,
+            name: Optional[str] = None,
+    ):
+        _guard_vector('Menu.items', items, (Command,), False, False, False)
+        _guard_scalar('Menu.icon', icon, (str,), False, True, False)
+        _guard_scalar('Menu.image', image, (str,), False, True, False)
+        _guard_scalar('Menu.name', name, (str,), True, True, False)
+        self.items = items
+        """Commands to render."""
+        self.icon = icon
+        """The card's icon. Mutually exclusive with the image."""
+        self.image = image
+        """The card’s image, preferably user avatar. Mutually exclusive with the icon."""
+        self.name = name
+        """An identifying name for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('Menu.items', self.items, (Command,), False, False, False)
+        _guard_scalar('Menu.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('Menu.image', self.image, (str,), False, True, False)
+        _guard_scalar('Menu.name', self.name, (str,), True, True, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            icon=self.icon,
+            image=self.image,
+            name=self.name,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Menu':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('Menu.items', __d_items, (dict,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('Menu.icon', __d_icon, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Menu.image', __d_image, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Menu.name', __d_name, (str,), True, True, False)
+        items: List[Command] = [Command.load(__e) for __e in __d_items]
+        icon: Optional[str] = __d_icon
+        image: Optional[str] = __d_image
+        name: Optional[str] = __d_name
+        return Menu(
+            items,
+            icon,
+            image,
+            name,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -5974,6 +6033,7 @@ class Component:
             text_annotator: Optional[TextAnnotator] = None,
             facepile: Optional[Facepile] = None,
             copyable_text: Optional[CopyableText] = None,
+            menu: Optional[Menu] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6020,6 +6080,7 @@ class Component:
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
+        _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6110,6 +6171,8 @@ class Component:
         """Facepile."""
         self.copyable_text = copyable_text
         """Copyable text."""
+        self.menu = menu
+        """Menu."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6158,6 +6221,7 @@ class Component:
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
+        _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6204,6 +6268,7 @@ class Component:
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
             facepile=None if self.facepile is None else self.facepile.dump(),
             copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
+            menu=None if self.menu is None else self.menu.dump(),
         )
 
     @staticmethod
@@ -6299,6 +6364,8 @@ class Component:
         _guard_scalar('Component.facepile', __d_facepile, (dict,), False, True, False)
         __d_copyable_text: Any = __d.get('copyable_text')
         _guard_scalar('Component.copyable_text', __d_copyable_text, (dict,), False, True, False)
+        __d_menu: Any = __d.get('menu')
+        _guard_scalar('Component.menu', __d_menu, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6344,6 +6411,7 @@ class Component:
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
         facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
         copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
+        menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
         return Component(
             text,
             text_xl,
@@ -6390,6 +6458,7 @@ class Component:
             text_annotator,
             facepile,
             copyable_text,
+            menu,
         )
 
 
@@ -7356,6 +7425,15 @@ class NavGroup:
         )
 
 
+_HeaderCardColor = ['card', 'transparent', 'primary']
+
+
+class HeaderCardColor:
+    CARD = 'card'
+    TRANSPARENT = 'transparent'
+    PRIMARY = 'primary'
+
+
 class HeaderCard:
     """Render a page header displaying a title, subtitle and an optional navigation menu.
     Header cards are typically used for top-level navigation.
@@ -7367,7 +7445,11 @@ class HeaderCard:
             subtitle: str,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
+            image: Optional[str] = None,
             nav: Optional[List[NavGroup]] = None,
+            items: Optional[List[Component]] = None,
+            secondary_items: Optional[List[Component]] = None,
+            color: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('HeaderCard.box', box, (str,), False, False, False)
@@ -7375,20 +7457,32 @@ class HeaderCard:
         _guard_scalar('HeaderCard.subtitle', subtitle, (str,), False, False, False)
         _guard_scalar('HeaderCard.icon', icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', icon_color, (str,), False, True, False)
+        _guard_scalar('HeaderCard.image', image, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', nav, (NavGroup,), False, True, False)
+        _guard_vector('HeaderCard.items', items, (Component,), False, True, False)
+        _guard_vector('HeaderCard.secondary_items', secondary_items, (Component,), False, True, False)
+        _guard_enum('HeaderCard.color', color, _HeaderCardColor, True)
         _guard_vector('HeaderCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
-        """The title."""
+        """The title. *"""
         self.subtitle = subtitle
-        """The subtitle, displayed below the title."""
+        """The subtitle, displayed below the title. *"""
         self.icon = icon
-        """The icon, displayed to the left."""
+        """The icon, displayed to the left. *"""
         self.icon_color = icon_color
-        """The icon's color."""
+        """The icon's color. *"""
+        self.image = image
+        """The logo displayed to the left. Mutually exclusive with icon. *"""
         self.nav = nav
-        """The navigation menu to display when the header's icon is clicked."""
+        """The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *"""
+        self.items = items
+        """Items that should be displayed on the right side of the header."""
+        self.secondary_items = secondary_items
+        """Items that should be displayed in the center of the header."""
+        self.color = color
+        """Header background color. Defaults to 'primary'. One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7399,7 +7493,11 @@ class HeaderCard:
         _guard_scalar('HeaderCard.subtitle', self.subtitle, (str,), False, False, False)
         _guard_scalar('HeaderCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', self.icon_color, (str,), False, True, False)
+        _guard_scalar('HeaderCard.image', self.image, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', self.nav, (NavGroup,), False, True, False)
+        _guard_vector('HeaderCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('HeaderCard.secondary_items', self.secondary_items, (Component,), False, True, False)
+        _guard_enum('HeaderCard.color', self.color, _HeaderCardColor, True)
         _guard_vector('HeaderCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='header',
@@ -7408,7 +7506,11 @@ class HeaderCard:
             subtitle=self.subtitle,
             icon=self.icon,
             icon_color=self.icon_color,
+            image=self.image,
             nav=None if self.nav is None else [__e.dump() for __e in self.nav],
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
+            color=self.color,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7425,8 +7527,16 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', __d_icon, (str,), False, True, False)
         __d_icon_color: Any = __d.get('icon_color')
         _guard_scalar('HeaderCard.icon_color', __d_icon_color, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('HeaderCard.image', __d_image, (str,), False, True, False)
         __d_nav: Any = __d.get('nav')
         _guard_vector('HeaderCard.nav', __d_nav, (dict,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('HeaderCard.items', __d_items, (dict,), False, True, False)
+        __d_secondary_items: Any = __d.get('secondary_items')
+        _guard_vector('HeaderCard.secondary_items', __d_secondary_items, (dict,), False, True, False)
+        __d_color: Any = __d.get('color')
+        _guard_enum('HeaderCard.color', __d_color, _HeaderCardColor, True)
         __d_commands: Any = __d.get('commands')
         _guard_vector('HeaderCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -7434,7 +7544,11 @@ class HeaderCard:
         subtitle: str = __d_subtitle
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
+        image: Optional[str] = __d_image
         nav: Optional[List[NavGroup]] = None if __d_nav is None else [NavGroup.load(__e) for __e in __d_nav]
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        secondary_items: Optional[List[Component]] = None if __d_secondary_items is None else [Component.load(__e) for __e in __d_secondary_items]
+        color: Optional[str] = __d_color
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,
@@ -7442,7 +7556,11 @@ class HeaderCard:
             subtitle,
             icon,
             icon_color,
+            image,
             nav,
+            items,
+            secondary_items,
+            color,
             commands,
         )
 
@@ -10259,7 +10377,7 @@ class TallInfoCard:
         self.title = title
         """The card's title."""
         self.caption = caption
-        """The card's caption, displayed below the title."""
+        """The card's caption, displayed below the title. Supports markdown."""
         self.label = label
         """Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore."""
         self.icon = icon
@@ -10950,7 +11068,7 @@ class WideInfoCard:
         self.title = title
         """The card's title."""
         self.caption = caption
-        """The card's caption, displayed below the subtitle, supports markdown."""
+        """The card's caption, displayed below the subtitle. Supports markdown."""
         self.label = label
         """Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.."""
         self.subtitle = subtitle

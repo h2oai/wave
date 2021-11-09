@@ -2218,6 +2218,30 @@ def copyable_text(
     ))
 
 
+def menu(
+        items: List[Command],
+        icon: Optional[str] = None,
+        image: Optional[str] = None,
+        name: Optional[str] = None,
+) -> Component:
+    """Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
+
+    Args:
+        items: Commands to render.
+        icon: The card's icon. Mutually exclusive with the image.
+        image: The card’s image, preferably user avatar. Mutually exclusive with the icon.
+        name: An identifying name for this component.
+    Returns:
+        A `h2o_wave.types.Menu` instance.
+    """
+    return Component(menu=Menu(
+        items,
+        icon,
+        image,
+        name,
+    ))
+
+
 def article_card(
         box: str,
         title: str,
@@ -2604,7 +2628,11 @@ def header_card(
         subtitle: str,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+        image: Optional[str] = None,
         nav: Optional[List[NavGroup]] = None,
+        items: Optional[List[Component]] = None,
+        secondary_items: Optional[List[Component]] = None,
+        color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
     """Render a page header displaying a title, subtitle and an optional navigation menu.
@@ -2612,11 +2640,15 @@ def header_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        title: The title.
-        subtitle: The subtitle, displayed below the title.
-        icon: The icon, displayed to the left.
-        icon_color: The icon's color.
-        nav: The navigation menu to display when the header's icon is clicked.
+        title: The title. *
+        subtitle: The subtitle, displayed below the title. *
+        icon: The icon, displayed to the left. *
+        icon_color: The icon's color. *
+        image: The logo displayed to the left. Mutually exclusive with icon. *
+        nav: The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *
+        items: Items that should be displayed on the right side of the header.
+        secondary_items: Items that should be displayed in the center of the header.
+        color: Header background color. Defaults to 'primary'. One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -2627,7 +2659,11 @@ def header_card(
         subtitle,
         icon,
         icon_color,
+        image,
         nav,
+        items,
+        secondary_items,
+        color,
         commands,
     )
 
@@ -3691,7 +3727,7 @@ def tall_info_card(
         box: A string indicating how to place this component on the page.
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         title: The card's title.
-        caption: The card's caption, displayed below the title.
+        caption: The card's caption, displayed below the title. Supports markdown.
         label: Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
         icon: The card's icon.
         image: The card’s image.
@@ -3938,7 +3974,7 @@ def wide_info_card(
         box: A string indicating how to place this component on the page.
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         title: The card's title.
-        caption: The card's caption, displayed below the subtitle, supports markdown.
+        caption: The card's caption, displayed below the subtitle. Supports markdown.
         label: Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore..
         subtitle: The card's subtitle, displayed below the title.
         align: The card's alignment, determines the position of an image / icon. Defaults to 'left'. One of 'left', 'right'. See enum h2o_wave.ui.WideInfoCardAlign.

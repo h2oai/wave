@@ -2585,6 +2585,32 @@ ui_copyable_text <- function(
   return(.o)
 }
 
+#' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
+#'
+#' @param items Commands to render.
+#' @param icon The card's icon. Mutually exclusive with the image.
+#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon.
+#' @param name An identifying name for this component.
+#' @return A Menu instance.
+#' @export
+ui_menu <- function(
+  items,
+  icon = NULL,
+  image = NULL,
+  name = NULL) {
+  .guard_vector("items", "WaveCommand", items)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("name", "character", name)
+  .o <- list(menu=list(
+    items=items,
+    icon=icon,
+    image=image,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -3015,11 +3041,16 @@ ui_nav_group <- function(
 #' Header cards are typically used for top-level navigation.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param title The title.
-#' @param subtitle The subtitle, displayed below the title.
-#' @param icon The icon, displayed to the left.
-#' @param icon_color The icon's color.
-#' @param nav The navigation menu to display when the header's icon is clicked.
+#' @param title The title. *
+#' @param subtitle The subtitle, displayed below the title. *
+#' @param icon The icon, displayed to the left. *
+#' @param icon_color The icon's color. *
+#' @param image The logo displayed to the left. Mutually exclusive with icon. *
+#' @param nav The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *
+#' @param items Items that should be displayed on the right side of the header.
+#' @param secondary_items Items that should be displayed in the center of the header.
+#' @param color Header background color. Defaults to 'primary'.
+#'   One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 #' @export
@@ -3029,14 +3060,22 @@ ui_header_card <- function(
   subtitle,
   icon = NULL,
   icon_color = NULL,
+  image = NULL,
   nav = NULL,
+  items = NULL,
+  secondary_items = NULL,
+  color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
+  .guard_scalar("image", "character", image)
   .guard_vector("nav", "WaveNavGroup", nav)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("secondary_items", "WaveComponent", secondary_items)
+  # TODO Validate color
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3044,7 +3083,11 @@ ui_header_card <- function(
     subtitle=subtitle,
     icon=icon,
     icon_color=icon_color,
+    image=image,
     nav=nav,
+    items=items,
+    secondary_items=secondary_items,
+    color=color,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
   return(.o)
@@ -4260,7 +4303,7 @@ ui_tall_gauge_stat_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param title The card's title.
-#' @param caption The card's caption, displayed below the title.
+#' @param caption The card's caption, displayed below the title. Supports markdown.
 #' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
 #' @param icon The card's icon.
 #' @param image The card’s image.
@@ -4548,7 +4591,7 @@ ui_wide_gauge_stat_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param title The card's title.
-#' @param caption The card's caption, displayed below the subtitle, supports markdown.
+#' @param caption The card's caption, displayed below the subtitle. Supports markdown.
 #' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore..
 #' @param subtitle The card's subtitle, displayed below the title.
 #' @param align The card's alignment, determines the position of an image / icon. Defaults to 'left'.

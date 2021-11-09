@@ -85,6 +85,7 @@ export const
       <div className={css.pivot}>
         <Fluent.Pivot
           data-test={m.name}
+          className={m.link ? 'w-tabs-link' : 'w-tabs'} //HACK: Marker classes.
           selectedKey={m.value ?? null}
           linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
           onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>

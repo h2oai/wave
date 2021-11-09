@@ -56,6 +56,7 @@ import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
+import { Menu, XMenu } from './menu'
 
 /** Create a component. */
 export interface Component {
@@ -149,6 +150,8 @@ export interface Component {
   facepile?: Facepile
   /** Copyable text. */
   copyable_text?: CopyableText
+  /** Menu. */
+  menu?: Menu
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -277,6 +280,7 @@ const
     if (m.mini_buttons) return <XMiniButtons model={m.mini_buttons} />
     if (m.facepile) return <XFacepile model={m.facepile} />
     if (m.copyable_text) return <XCopyableText model={m.copyable_text} />
+    if (m.menu) return <XMenu model={m.menu} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

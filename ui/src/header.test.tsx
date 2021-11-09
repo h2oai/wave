@@ -13,20 +13,29 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import { box, Model } from 'h2o-wave'
 import React from 'react'
 import { View } from './header'
 
 const
   name = 'header',
-  label = 'label',
-  headerProps: T.Model<any> = {
-    name,
-    state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
-    changed: T.box(false)
-  }
+  label = 'label'
+
+let headerProps: Model<any>
 
 describe('Header.tsx', () => {
+  beforeEach(() => {
+    headerProps = {
+      name,
+      state: {
+        nav: [{ label: 'group1', items: [{ name, label }] }],
+        commands: [{ name: 'command', label }],
+        image: 'img'
+      },
+      changed: box(false),
+    }
+  })
+
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...headerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
@@ -41,5 +50,14 @@ describe('Header.tsx', () => {
 
     fireEvent.click(menuItem!)
     expect(menuItem).not.toBeVisible()
+  })
+
+  it('Routes to home page (#) on logo click', () => {
+    const { container } = render(<View {...headerProps} />)
+
+    window.location.hash = 'about'
+    fireEvent.click(container.querySelector('.ms-Image-image') as HTMLImageElement)
+
+    expect(window.location.hash).toBe('')
   })
 })
