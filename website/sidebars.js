@@ -1,4 +1,4 @@
-const examples = require('./examples');
+const examples = require('./examples')
 
 module.exports = {
   someSidebar: {
@@ -26,6 +26,7 @@ module.exports = {
       'pages',
       'layout',
       'cards',
+      'color-theming',
       'buffers',
       'components',
       'arguments',
@@ -65,4 +66,4 @@ module.exports = {
       'api/h2o_wave_ml/utils',
     ],
   },
-};
+}
