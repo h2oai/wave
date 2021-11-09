@@ -218,22 +218,11 @@ const css = stylesheet({
         }
       },
       '.w-menu': {
+        color: important(cssVar('$card')),
         $nest: {
-          'button': {
-            color: cssVar('$card')
-          },
-          'button:hover': {
-            color: cssVar('$card')
-          },
-          'button:hover .ms-Button-icon': {
-            color: cssVar('$card')
-          },
-          '&:hover': {
-            color: cssVar('$card')
-          },
-          '&:hover button': {
-            color: cssVar('$card')
-          },
+          '& .ms-Button-icon': {
+            color: important(cssVar('$card')),
+          }
         }
       },
       '.w-tabs': {
