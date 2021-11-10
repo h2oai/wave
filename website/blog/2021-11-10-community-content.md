@@ -1,6 +1,6 @@
 ---
 slug: community-content-ar
-title: H2O Wave - Aggregated Resources
+title: Learning H2O Wave - Community Resources
 author: Michelle Tanco
 author_title: PM of the AI Cloud @ H2O.ai
 author_url: https://github.com/mtanco
@@ -12,81 +12,51 @@ tags: [community-content]
 This blog is intended to help new users learn and become comfortable with the H2O Wave framework. Use the [Overview](#overview) section for an ordered-list of how to get started, learn more, and get hands on with the capabilities of H2O Wave. Move onto the [Examples and Existing Apps](#examples-and-existing-apps) to see what’s possible and being built by other developers. In the [Friends of Wave](#friends-of-wave) section you can learn about companion libraries which help take your Wave projects to the next level.
 
 ## Overview
-### RTFM: Setup and Tutorials
+### Setup and Tutorials
 
 The best way to get started with a product is to read it’s docs and do some examples. It’s not always fun or glamorous, but each link below will take 1 to 10 minutes to read/execute and is the best way to get you up to speed on what is possible, where Wave excels, and to have everything running on your local machine.
 
 Have feedback? Documentation is often written by the product experts. Have an opinion on something that is confusing, could be more clear, or is missing? Add a note in the [Wave Discussions](https://github.com/h2oai/wave/discussions) or feel free to make the changes and open a pull request (PR).
 
 1.  [Learn what Wave does](https://wave.h2o.ai/docs/getting-started)
-    
 2.  [Install the software on your local workstation](https://wave.h2o.ai/docs/installation)
-    
 3.  [Run a pre-built app on your local workstation to have access to over 150 examples](https://wave.h2o.ai/docs/tour)
-    
 4.  Work through the [Hello World](https://wave.h2o.ai/docs/tutorial-hello), [Beer Wall](https://wave.h2o.ai/docs/tutorial-beer), [System Monitor](https://wave.h2o.ai/docs/tutorial-monitor), [Bean Counter](https://wave.h2o.ai/docs/tutorial-counter), and [Todo List](https://wave.h2o.ai/docs/tutorial-todo) tutorials
     
 
-### RTFM: Detailed Guides
+### Detailed Guides
 
 The best way to learn details on the intricacies of a product is to read it’s docs. It’s not always fun or glamorous, but each guide topic will take 3 to 15 minutes to read and make you the expert at various topics in the Wave framework.
 
-Start at the [introduction](https://wave.h2o.ai/docs/guide) and then use the left hand navigation to read through all topics or pick the ones you are most interested in. Topics today are:
+Start at the [introduction](https://wave.h2o.ai/docs/guide) and then use the left hand navigation to read through all topics or pick the ones you are most interested in.
 
 -   Architecture
-    
 -   Wave Scripts
-    
 -   Wave Apps
-    
 -   Pages
-    
 -   Layouts
-    
 -   Cards
-    
 -   Data Buffers
-    
 -   Components
-    
 -   Query Arguments
-    
 -   App State
-    
 -   Routing
-    
 -   Realtime Sync
-    
 -   Background Tasks
-    
 -   Data-binding
-    
 -   Files
-    
 -   Plots
-    
 -   Javascript
-    
 -   Graphics
-    
 -   Security
-    
 -   Logging
-    
 -   Command Line Interface
-    
 -   Development
-    
 -   Browser Testing
-    
 -   Configuration
-    
 -   Deployment
- 
 -   Backup and Recovery
-    
 -   WaveML
-    
 -   WaveDB
     
 
@@ -114,35 +84,19 @@ A great way to learn what is possible with H2O Wave is to look at existing apps!
 
 Here is a list of some apps you may want to use as reference:
 
--   A Tour of Wave - this is 150+ short examples which can be accessed in several different ways
-    
-
-    -   Use the documentation at [wave.h2o.ai](http://wave.h2o.ai/) when you want to search for something and get an example app returned. Look for the Examples title in the search results.
-    
-    -   Explore the examples directly in the [documentation gallery](https://wave.h2o.ai/docs/examples)
-    
-    -   [Run the examples as single app, a Tour of Wave, on your local workstation](https://wave.h2o.ai/docs/tour)
-
-
--   [OSS Example App](https://github.com/h2oai/wave-apps) - these eight apps can be used as a starting point in your app development journey. Have an idea for how to improve them or streamline the source code or make the code more readable? Make some changes and a PR.
-    
-
+-   A Tour of Wave - these are 150+ short examples which can be accessed in several different ways
+	-   Use the documentation at [wave.h2o.ai](http://wave.h2o.ai/) when you want to search for something and get an example app returned. Look for the Examples title in the search results.
+	-   Explore the examples directly in the [documentation gallery](https://wave.h2o.ai/docs/examples)
+	-   [Run the examples as single app, a Tour of Wave, on your local workstation](https://wave.h2o.ai/docs/tour)
+-   [Sample Applications](https://github.com/h2oai/wave-apps) - these eight apps can be used as a starting point in your app development journey. Have an idea for how to improve them or streamline the source code or make the code more readable? Make some changes and a PR.
 	-   [Explainable Hotel Ratings](https://github.com/h2oai/wave-apps/blob/main/explaining-ratings/README.md): This app allows you to filter hotel reviews and compare the most common phrases from the subset to the overall most common phrases.
-    
 	-   [Guess the Number](https://github.com/h2oai/wave-apps/blob/main/guess-the-number/README.md): This a game where the machine "thinks" of a number and the human has to guess, getting told higher or lower. This application has a leader board where different users can compete to see who can guess numbers in the fewest number of turns, on average. This application teaches the developer about different app states and could be fun for new users.
-    
 	-   [Human-in-the-Loop Credit Risk](https://github.com/h2oai/wave-apps/blob/main/credit-risk/README.md): This application allows a business user to review model predictions on whether or not someone will pay off their credit card - a model used to approve or deny credit card applications. Specifically, this app provides a list of predictions the model is not confident about (predictions in the 0.4 to 0.6 range) and allows the end user to mark someone as approved or not.
-    
 	-   [Mitigating Churn Risk](https://github.com/h2oai/wave-apps/blob/main/churn-risk/README.md): This application builds a churn prediction model with H2O-3 and provides the likelihood to churn and actionable recommendations to prevent churn via nicely-presented top shapley values.
-    
 	-   [Online Shopping Recommendations](https://github.com/h2oai/wave-apps/blob/main/shopping-cart-recommendations/README.md): This application allows a marketing analyst to understand how their recommendation engine works. It allows them to add items to their cart and as they do a list of recommended products is updated.
-    
 	-   [Sales Forecasting EDA](https://github.com/h2oai/wave-apps/blob/main/sales-forecasting/README.md): This application provides an easy-to-use interface for exploring historical sales values and looking at future forecasts across store segments.
-    
 	-   [Social Media Sentiment](https://github.com/h2oai/wave-apps/blob/main/twitter-sentiment/README.md): This application pulls tweets and uses the open source VaderSentiment to understand positive and negative tweets.
-    
-
--   [Big Data Visualizer](https://github.com/h2oai/wave-big-data-visualizer) - This application was started [live in a webinar](https://youtu.be/alYWqXv8Sdg) which gives you an idea of both how to build your own apps and also what is possible in an hour once you’re comfortable with the product. You can learn more about the inspiration for this app in [this blog pos](https://wave.h2o.ai/blog/community-content-bdv)t.
+	-   [Big Data Visualizer](https://github.com/h2oai/wave-big-data-visualizer) - This application was started [live in a webinar](https://youtu.be/alYWqXv8Sdg) which gives you an idea of both how to build your own apps and also what is possible in an hour once you’re comfortable with the product. You can learn more about the inspiration for this app in [this blog pos](https://wave.h2o.ai/blog/community-content-bdv)t.
     
 
 ## Friends of Wave
@@ -156,11 +110,8 @@ Get started by first reading the [ReadMe](https://github.com/h2oai/wave-ml) in G
 Information we have already looked at is pertinent for WaveML, too:
 
 -   There is a [guide section on WaveML](https://wave.h2o.ai/docs/wave-ml)
-    
 -   Twelve of the Tour of Wave examples are on WaveML
-    
 -   The [Mitigating Churn Risk](https://github.com/h2oai/wave-apps/blob/main/churn-risk/README.md) and [Human-in-the-Loop Credit Risk](https://github.com/h2oai/wave-apps/blob/main/credit-risk/README.md) OSS example apps use Wave-ML
-    
 -   WaveML API can be found in the [Wave API](https://wave.h2o.ai/docs/wave-ml/) documentation
   
 
@@ -173,13 +124,8 @@ If you are already a fan of SQLite, WaveDB acts as a thin HTTP-server wrapper th
 Information we have already looked at is pertinent for WaveDB, too:
 
 -   There is a [Guide section on WaveDB](https://wave.h2o.ai/docs/wavedb/) which included how to download and install the database
-    
 -   Two of the Tour of Wave examples are on WaveDB
-
 -   WaveDB API can be found in the [Wave API](https://wave.h2o.ai/docs/api/db/) documentation
-    
-
-  
 
 ## Wrapping Up
 
