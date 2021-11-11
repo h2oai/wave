@@ -4,7 +4,6 @@
 from h2o_wave import site, ui
 
 page = site['/demo']
-page['meta'] = ui.meta_card(box='', theme='h2o-dark')
 caption = '''
 ![theme-generator](https://wave.h2o.ai/img/logo.svg)
 
