@@ -14,7 +14,7 @@ page['footer3'] = ui.footer_card(
     box='1 5 -1 3',
     caption=caption,
     items=[
-        ui.inline(justify='end', items=[
+        ui.inline(justify='start', items=[
             ui.links(label='First Column', items=[
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
