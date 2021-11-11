@@ -95,24 +95,6 @@ export const cardDefs: CardDef[] = [
     ]
   },
   {
-    "view": "footer",
-    "icon": "Footer",
-    "attrs": [
-      {
-        "name": "box",
-        "optional": false,
-        "t": "box",
-        "value": "{\"zone\":\"Body\"}"
-      },
-      {
-        "name": "caption",
-        "optional": false,
-        "t": "textbox",
-        "value": "(c) Your Company, Inc."
-      }
-    ]
-  },
-  {
     "view": "frame",
     "icon": "PageAdd",
     "attrs": [

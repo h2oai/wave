@@ -1619,6 +1619,24 @@ ui_link <- function(
   return(.o)
 }
 
+#' Create a collection of links.
+#'
+#' @param label The name of the link group.
+#' @param items The links contained in this group.
+#' @return A Links instance.
+#' @export
+ui_links <- function(
+  label,
+  items) {
+  .guard_scalar("label", "character", label)
+  .guard_vector("items", "WaveComponent", items)
+  .o <- list(links=list(
+    label=label,
+    items=items))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create a tab.
 #'
 #' @param name An identifying name for this component.
@@ -2839,20 +2857,24 @@ ui_flex_card <- function(
 #' Footer cards are typically displayed at the bottom of a page.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param caption The caption. Supports markdown.
+#' @param caption The caption. Supports markdown. *
+#' @param items The components displayed to the right of the caption.
 #' @param commands Contextual menu commands for this component.
 #' @return A FooterCard instance.
 #' @export
 ui_footer_card <- function(
   box,
   caption,
+  items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("caption", "character", caption)
+  .guard_vector("items", "WaveComponent", items)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     caption=caption,
+    items=items,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
   return(.o)
@@ -4412,7 +4434,7 @@ ui_tall_series_stat_card <- function(
   return(.o)
 }
 
-#' Create a set of stats laid out vertically.
+#' Create a vertical label-value pairs collection.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The individual stats to be displayed.

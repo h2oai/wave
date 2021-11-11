@@ -15,50 +15,60 @@
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { Component, XComponents } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
+import { clas } from './theme'
 import { bond } from './ui'
 
 const
   css = stylesheet({
     card: {
       display: 'flex',
-      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 24,
     },
+    center: {
+      margin: '0 auto',
+      $nest: {
+        '.wave-markdown': {
+          textAlign: 'center'
+        }
+      }
+    },
+    caption: {
+      $nest: {
+        '.wave-markdown>*:first-child': {
+          marginTop: 0
+        },
+      }
+    }
   })
-
 
 /**
  * Render a page footer displaying a caption.
  * Footer cards are typically displayed at the bottom of a page.
- * :icon "Footer"
  */
 interface State {
-  /**
-   * The caption. Supports markdown.
-   * :t "textbox"
-   * :value "(c) Your Company, Inc."
-   **/
+  /** The caption. Supports markdown. **/
   caption: S
+  /** The components displayed to the right of the caption. */
+  items?: Component[]
 }
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
-        const
-          { caption } = state
-
+        const { caption, items } = state
         return (
           <div data-test={name} className={css.card}>
-            <div className='wave-s13'><Markdown source={caption} /></div>
-          </div>
-        )
+            <div className={clas('wave-s13', css.caption, items ? '' : css.center)}><Markdown source={caption} /></div>
+            {items && <XComponents items={items} />}
+          </div>)
       }
+
     return { render, changed }
   })
 
 cards.register('footer', View, { effect: CardEffect.Transparent })
-
-
-

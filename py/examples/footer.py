@@ -1,0 +1,37 @@
+# Footer
+# Use a footer card to display a page #footer.
+# ---
+from h2o_wave import site, ui
+
+page = site['/demo']
+page['meta'] = ui.meta_card(box='', theme='h2o-dark')
+caption = '''
+![theme-generator](https://wave.h2o.ai/img/logo.svg)
+
+Made with 💛 by H2O Wave Team.'''
+page['footer1'] = ui.footer_card(box='1 1 -1 1', caption='Made with 💛 by H2O Wave Team.')
+page['footer2'] = ui.footer_card(box='1 2 -1 3', caption=caption)
+page['footer3'] = ui.footer_card(
+    box='1 5 -1 3',
+    caption=caption,
+    items=[
+        ui.inline(justify='end', items=[
+            ui.links(label='First Column', items=[
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+            ]),
+            ui.links(label='Second Column', items=[
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+            ]),
+            ui.links(label='Third Column', items=[
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+                ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
+            ]),
+        ]),
+    ]
+)
+page.save()

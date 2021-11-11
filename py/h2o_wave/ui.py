@@ -1390,6 +1390,24 @@ def link(
     ))
 
 
+def links(
+        label: str,
+        items: List[Component],
+) -> Component:
+    """Create a collection of links.
+
+    Args:
+        label: The name of the link group.
+        items: The links contained in this group.
+    Returns:
+        A `h2o_wave.types.Links` instance.
+    """
+    return Component(links=Links(
+        label,
+        items,
+    ))
+
+
 def tab(
         name: str,
         label: Optional[str] = None,
@@ -2445,6 +2463,7 @@ def flex_card(
 def footer_card(
         box: str,
         caption: str,
+        items: Optional[List[Component]] = None,
         commands: Optional[List[Command]] = None,
 ) -> FooterCard:
     """Render a page footer displaying a caption.
@@ -2452,7 +2471,8 @@ def footer_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        caption: The caption. Supports markdown.
+        caption: The caption. Supports markdown. *
+        items: The components displayed to the right of the caption.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FooterCard` instance.
@@ -2460,6 +2480,7 @@ def footer_card(
     return FooterCard(
         box,
         caption,
+        items,
         commands,
     )
 
@@ -3807,7 +3828,7 @@ def tall_stats_card(
         items: List[Stat],
         commands: Optional[List[Command]] = None,
 ) -> TallStatsCard:
-    """Create a set of stats laid out vertically.
+    """Create a vertical label-value pairs collection.
 
     Args:
         box: A string indicating how to place this component on the page.

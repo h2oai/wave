@@ -3604,6 +3604,45 @@ class Link:
         )
 
 
+class Links:
+    """Create a collection of links.
+    """
+    def __init__(
+            self,
+            label: str,
+            items: List['Component'],
+    ):
+        _guard_scalar('Links.label', label, (str,), False, False, False)
+        _guard_vector('Links.items', items, (Component,), False, False, False)
+        self.label = label
+        """The name of the link group."""
+        self.items = items
+        """The links contained in this group."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Links.label', self.label, (str,), False, False, False)
+        _guard_vector('Links.items', self.items, (Component,), False, False, False)
+        return _dump(
+            label=self.label,
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Links':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Links.label', __d_label, (str,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('Links.items', __d_items, (dict,), False, False, False)
+        label: str = __d_label
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        return Links(
+            label,
+            items,
+        )
+
+
 class Tab:
     """Create a tab.
     """
@@ -6016,6 +6055,7 @@ class Component:
             file_upload: Optional[FileUpload] = None,
             table: Optional[Table] = None,
             link: Optional[Link] = None,
+            links: Optional[Links] = None,
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
@@ -6063,6 +6103,7 @@ class Component:
         _guard_scalar('Component.file_upload', file_upload, (FileUpload,), False, True, False)
         _guard_scalar('Component.table', table, (Table,), False, True, False)
         _guard_scalar('Component.link', link, (Link,), False, True, False)
+        _guard_scalar('Component.links', links, (Links,), False, True, False)
         _guard_scalar('Component.tabs', tabs, (Tabs,), False, True, False)
         _guard_scalar('Component.expander', expander, (Expander,), False, True, False)
         _guard_scalar('Component.frame', frame, (Frame,), False, True, False)
@@ -6137,6 +6178,8 @@ class Component:
         """Table."""
         self.link = link
         """Link."""
+        self.links = links
+        """Link set."""
         self.tabs = tabs
         """Tabs."""
         self.expander = expander
@@ -6204,6 +6247,7 @@ class Component:
         _guard_scalar('Component.file_upload', self.file_upload, (FileUpload,), False, True, False)
         _guard_scalar('Component.table', self.table, (Table,), False, True, False)
         _guard_scalar('Component.link', self.link, (Link,), False, True, False)
+        _guard_scalar('Component.links', self.links, (Links,), False, True, False)
         _guard_scalar('Component.tabs', self.tabs, (Tabs,), False, True, False)
         _guard_scalar('Component.expander', self.expander, (Expander,), False, True, False)
         _guard_scalar('Component.frame', self.frame, (Frame,), False, True, False)
@@ -6251,6 +6295,7 @@ class Component:
             file_upload=None if self.file_upload is None else self.file_upload.dump(),
             table=None if self.table is None else self.table.dump(),
             link=None if self.link is None else self.link.dump(),
+            links=None if self.links is None else self.links.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
@@ -6330,6 +6375,8 @@ class Component:
         _guard_scalar('Component.table', __d_table, (dict,), False, True, False)
         __d_link: Any = __d.get('link')
         _guard_scalar('Component.link', __d_link, (dict,), False, True, False)
+        __d_links: Any = __d.get('links')
+        _guard_scalar('Component.links', __d_links, (dict,), False, True, False)
         __d_tabs: Any = __d.get('tabs')
         _guard_scalar('Component.tabs', __d_tabs, (dict,), False, True, False)
         __d_expander: Any = __d.get('expander')
@@ -6394,6 +6441,7 @@ class Component:
         file_upload: Optional[FileUpload] = None if __d_file_upload is None else FileUpload.load(__d_file_upload)
         table: Optional[Table] = None if __d_table is None else Table.load(__d_table)
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
+        links: Optional[Links] = None if __d_links is None else Links.load(__d_links)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
@@ -6441,6 +6489,7 @@ class Component:
             file_upload,
             table,
             link,
+            links,
             tabs,
             expander,
             frame,
@@ -6994,15 +7043,19 @@ class FooterCard:
             self,
             box: str,
             caption: str,
+            items: Optional[List[Component]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('FooterCard.box', box, (str,), False, False, False)
         _guard_scalar('FooterCard.caption', caption, (str,), False, False, False)
+        _guard_vector('FooterCard.items', items, (Component,), False, True, False)
         _guard_vector('FooterCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.caption = caption
-        """The caption. Supports markdown."""
+        """The caption. Supports markdown. *"""
+        self.items = items
+        """The components displayed to the right of the caption."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7010,11 +7063,13 @@ class FooterCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('FooterCard.box', self.box, (str,), False, False, False)
         _guard_scalar('FooterCard.caption', self.caption, (str,), False, False, False)
+        _guard_vector('FooterCard.items', self.items, (Component,), False, True, False)
         _guard_vector('FooterCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='footer',
             box=self.box,
             caption=self.caption,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7025,14 +7080,18 @@ class FooterCard:
         _guard_scalar('FooterCard.box', __d_box, (str,), False, False, False)
         __d_caption: Any = __d.get('caption')
         _guard_scalar('FooterCard.caption', __d_caption, (str,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('FooterCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FooterCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         caption: str = __d_caption
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FooterCard(
             box,
             caption,
+            items,
             commands,
         )
 
@@ -10628,7 +10687,7 @@ class TallSeriesStatCard:
 
 
 class TallStatsCard:
-    """Create a set of stats laid out vertically.
+    """Create a vertical label-value pairs collection.
     """
     def __init__(
             self,
