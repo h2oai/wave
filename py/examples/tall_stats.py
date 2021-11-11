@@ -5,7 +5,6 @@ from h2o_wave import site, ui
 
 page = site['/demo']
 
-page['meta'] = ui.meta_card(box='', theme='h2o-dark')
 page.add('example', ui.tall_stats_card(
     box='1 1 2 4',
     items=[
