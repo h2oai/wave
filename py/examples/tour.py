@@ -173,14 +173,24 @@ async def setup_page(q: Q):
         ui.layout(breakpoint='xs', zones=[
             ui.zone('header'),
             ui.zone('blurb'),
-            ui.zone('main', size='calc(100vh - 130px)', direction=ui.ZoneDirection.ROW, zones=[
+            ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
                 ui.zone('code'),
                 ui.zone('preview')
             ])
         ])
     ])
 
-    q.page['header'] = ui.header_card(box='header', title=app_title, subtitle=f'{len(catalog)} Interactive Examples')
+    q.page['header'] = ui.header_card(
+        box='header',
+        title=app_title,
+        subtitle=f'{len(catalog)} Interactive Examples',
+        image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+        items=[
+            ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
+            ui.link(label='Hybrid Cloud', path='https://www.h2o.ai/hybrid-cloud/', target='_blank'),
+            ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
+        ]
+    )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.frame_card(box='code', title='', content='')
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', path=f'{_base_url}demo')
