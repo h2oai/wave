@@ -33,34 +33,29 @@ const
       flexDirection: 'column',
       textAlign: 'center',
       padding: 24,
-      justifyContent: 'space-evenly',
+      justifyContent: 'space-around',
     },
     value: {
       color: cssVar('$themePrimary'),
     },
-    label: {
-      color: cssVar('$neutralPrimary'),
-    }
   })
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
-    
-    const
-      render = () => {
-        const stats = state.items.map(({ label, value }, i) => (
-          <div key={`${i}-${label}`}>
-            {value && <div className={clas(css.value, 'wave-s40 wave-w4')}>{value}</div>}
-            <div className={clas(css.label, 'wave-s14 wave-w2')}>{label}</div>
-          </div>)
-        )
-        return (
-          <div data-test={name} className={css.card}>
-            {stats}
-          </div>
-        )
-      }
-      return { render, changed }
+    const render = () => (
+      <div data-test={name} className={css.card}>
+        {
+          state.items.map(({ label, value }, i) => (
+            <div key={`${i}-${label}`}>
+              {value && <div className={clas(css.value, 'wave-s40 wave-w4')}>{value}</div>}
+              <div className='wave-s14 wave-w2'>{label}</div>
+            </div>)
+          )
+        }
+      </div>
+    )
+
+    return { render, changed }
   })
 
 cards.register('tall_stats', View)
