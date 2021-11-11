@@ -187,6 +187,8 @@ async def setup_page(q: Q):
         image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
         items=[
             ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
+            ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
+            ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
             ui.link(label='Hybrid Cloud', path='https://www.h2o.ai/hybrid-cloud/', target='_blank'),
             ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
         ]
