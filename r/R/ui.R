@@ -1621,18 +1621,22 @@ ui_link <- function(
 
 #' Create a collection of links.
 #'
-#' @param label The name of the link group.
 #' @param items The links contained in this group.
+#' @param label The name of the link group.
+#' @param inline Render links horizontally.
 #' @return A Links instance.
 #' @export
 ui_links <- function(
-  label,
-  items) {
-  .guard_scalar("label", "character", label)
+  items,
+  label = NULL,
+  inline = NULL) {
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("inline", "logical", inline)
   .o <- list(links=list(
+    items=items,
     label=label,
-    items=items))
+    inline=inline))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

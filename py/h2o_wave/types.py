@@ -3609,37 +3609,47 @@ class Links:
     """
     def __init__(
             self,
-            label: str,
             items: List['Component'],
+            label: Optional[str] = None,
+            inline: Optional[bool] = None,
     ):
-        _guard_scalar('Links.label', label, (str,), False, False, False)
         _guard_vector('Links.items', items, (Component,), False, False, False)
-        self.label = label
-        """The name of the link group."""
+        _guard_scalar('Links.label', label, (str,), False, True, False)
+        _guard_scalar('Links.inline', inline, (bool,), False, True, False)
         self.items = items
         """The links contained in this group."""
+        self.label = label
+        """The name of the link group."""
+        self.inline = inline
+        """Render links horizontally."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Links.label', self.label, (str,), False, False, False)
         _guard_vector('Links.items', self.items, (Component,), False, False, False)
+        _guard_scalar('Links.label', self.label, (str,), False, True, False)
+        _guard_scalar('Links.inline', self.inline, (bool,), False, True, False)
         return _dump(
-            label=self.label,
             items=[__e.dump() for __e in self.items],
+            label=self.label,
+            inline=self.inline,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Links':
         """Creates an instance of this class using the contents of a dict."""
-        __d_label: Any = __d.get('label')
-        _guard_scalar('Links.label', __d_label, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('Links.items', __d_items, (dict,), False, False, False)
-        label: str = __d_label
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Links.label', __d_label, (str,), False, True, False)
+        __d_inline: Any = __d.get('inline')
+        _guard_scalar('Links.inline', __d_inline, (bool,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        label: Optional[str] = __d_label
+        inline: Optional[bool] = __d_inline
         return Links(
-            label,
             items,
+            label,
+            inline,
         )
 
 

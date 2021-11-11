@@ -51,31 +51,47 @@ export interface Link {
 const
   css = stylesheet({
     linkGroup: {
-      margin: margin(-7, 24, 0, 24),
+      margin: margin(-6, 12, 0, 12),
       $nest: {
-        'a': {
+        a: {
           display: 'block',
           marginTop: 8
+        },
+        'a:first-of-type': {
+          marginTop: 0
         }
       }
     },
     linkGroupLabel: {
-      marginBottom: 2
+      marginBottom: 10
     },
+    inline: {
+      display: 'flex',
+      $nest: {
+        a: {
+          marginRight: 16
+        },
+        'a:last-child': {
+          marginRight: 0
+        },
+      }
+    }
   })
 
 /** Create a collection of links. */
 export interface Links {
-  /** The name of the link group. */
-  label: S
   /** The links contained in this group. */
   items: Component[]
+  /** The name of the link group. */
+  label?: S
+  /** Render links horizontally. Defaults to 'false'. */
+  inline?: B
 }
 
 export const
-  XLinks = ({ model: { label, items } }: { model: Links }) => (
-    <div className={css.linkGroup}>
-      <div className={clas('wave-s20 wave-w6', css.linkGroupLabel)}>{label}</div>
+  XLinks = ({ model: { label, items, inline } }: { model: Links }) => (
+    <div className={inline ? css.inline : css.linkGroup}>
+      {label && <div className={clas('wave-s20 wave-w6', css.linkGroupLabel)}>{label}</div>}
       {items.filter(({ link }) => link).map((link, i) => <XLink key={i} model={link.link!} />)}
     </div>
   ),

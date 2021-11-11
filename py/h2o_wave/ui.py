@@ -1391,20 +1391,23 @@ def link(
 
 
 def links(
-        label: str,
         items: List[Component],
+        label: Optional[str] = None,
+        inline: Optional[bool] = None,
 ) -> Component:
     """Create a collection of links.
 
     Args:
-        label: The name of the link group.
         items: The links contained in this group.
+        label: The name of the link group.
+        inline: Render links horizontally.
     Returns:
         A `h2o_wave.types.Links` instance.
     """
     return Component(links=Links(
-        label,
         items,
+        label,
+        inline,
     ))
 
 
