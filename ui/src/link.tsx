@@ -76,7 +76,7 @@ export const
   XLinks = ({ model: { label, items } }: { model: Links }) => (
     <div className={css.linkGroup}>
       <div className={clas('wave-s20 wave-w6', css.linkGroupLabel)}>{label}</div>
-      {items.filter(({ link }) => !!link).map((link, i) => <XLink key={i} model={link.link!} />)}
+      {items.filter(({ link }) => link).map((link, i) => <XLink key={i} model={link.link!} />)}
     </div>
   ),
   XLink = ({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
