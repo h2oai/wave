@@ -3802,6 +3802,27 @@ def tall_series_stat_card(
     )
 
 
+def tall_stats_card(
+        box: str,
+        items: List[Stat],
+        commands: Optional[List[Command]] = None,
+) -> TallStatsCard:
+    """Create a set of stats laid out vertically.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: The individual stats to be displayed.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.TallStatsCard` instance.
+    """
+    return TallStatsCard(
+        box,
+        items,
+        commands,
+    )
+
+
 def template_card(
         box: str,
         title: str,

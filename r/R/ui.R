@@ -4412,6 +4412,28 @@ ui_tall_series_stat_card <- function(
   return(.o)
 }
 
+#' Create a set of stats laid out vertically.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param items The individual stats to be displayed.
+#' @param commands Contextual menu commands for this component.
+#' @return A TallStatsCard instance.
+#' @export
+ui_tall_stats_card <- function(
+  box,
+  items,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "WaveStat", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallStatsCard"))
+  return(.o)
+}
+
 #' Render dynamic content using an HTML template.
 #'
 #' @param box A string indicating how to place this component on the page.
