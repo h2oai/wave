@@ -5,7 +5,8 @@ author: Michelle Tanco
 author_title: PM of the AI AppStore @ H2O.ai
 author_url: https://github.com/mtanco
 author_image_url: https://avatars3.githubusercontent.com/u/4793561
-image: https://wave.h2o.ai/img/logo.png
+image: /img/wave-type-yellow-1100x400.png
+
 tags: [community-content]
 ---
 

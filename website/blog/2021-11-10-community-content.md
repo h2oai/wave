@@ -5,11 +5,13 @@ author: Michelle Tanco
 author_title: PM of the AI Cloud @ H2O.ai
 author_url: https://github.com/mtanco
 author_image_url: https://avatars3.githubusercontent.com/u/4793561
-image: https://wave.h2o.ai/img/logo.png
+image: /img/wave-type-yellow-1100x400.png
 tags: [community-content]
 ---
 
 This blog is intended to help new users learn and become comfortable with the H2O Wave framework. Use the [Overview](#overview) section for an ordered-list of how to get started, learn more, and get hands on with the capabilities of H2O Wave. Move onto the [Examples and Existing Apps](#examples-and-existing-apps) to see what’s possible and being built by other developers. In the [Friends of Wave](#friends-of-wave) section you can learn about companion libraries which help take your Wave projects to the next level.
+
+<!--truncate-->
 
 ## Overview
 ### Setup and Tutorials
