@@ -17,7 +17,7 @@ async def serve(q: Q):
             ui.button(name='show_nav', label='Back', primary=True),
         ])
     else:
-        q.page['meta'] = ui.meta_card(box='', redirect='#', theme='h2o-dark')
+        q.page['meta'] = ui.meta_card(box='', redirect='#')
         q.page['nav1'] = ui.nav_card(
             box='1 1 2 -1',
             value='#menu/spam',
@@ -64,5 +64,6 @@ async def serve(q: Q):
                 ])
             ],
             secondary_items=[ui.button(name='logout', label='Logout', width='100%')],
+            color='primary'
         )
     await q.page.save()
