@@ -310,6 +310,14 @@ export const
     const { effect, marginless } = getCardStyle(c)
     return clas(css.slot, getEffectClass(effect), marginless ? css.marginless : '')
   },
+  toCardEffect = (color?: 'card' | 'transparent' | 'primary') => {
+    switch (color) {
+      case 'card': return CardEffect.Normal
+      case 'transparent': return CardEffect.Transparent
+      case 'primary': return CardEffect.Raised
+      default: return CardEffect.Raised
+    }
+  },
   getEffectClass = (effect: CardEffect) => css[effect],
   getCardStyle = (c: Card): CardStyle => cards.lookup(c.state.view).style,
   GridLayout = ({ name, cards: cs }: { name: S, cards: Card[] }) => {

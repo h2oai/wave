@@ -3239,7 +3239,15 @@ def meta_card(
 def nav_card(
         box: str,
         items: List[NavGroup],
+        title: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        image: Optional[str] = None,
         value: Optional[str] = None,
+        persona: Optional[Component] = None,
+        secondary_items: Optional[List[Component]] = None,
+        color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> NavCard:
     """Create a card containing a navigation pane.
@@ -3247,7 +3255,15 @@ def nav_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The navigation groups contained in this pane.
+        title: The card's title.
+        subtitle: The card's subtitle.
+        icon: The icon, displayed to the left. *
+        icon_color: The icon's color. *
+        image: The logo displayed at the top. *
         value: The name of the active (highlighted) navigation item.
+        persona: The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *
+        secondary_items: Items that should be displayed at the bottom of the card.
+        color: Card background color. Defaults to 'card'. One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.NavCard` instance.
@@ -3255,7 +3271,15 @@ def nav_card(
     return NavCard(
         box,
         items,
+        title,
+        subtitle,
+        icon,
+        icon_color,
+        image,
         value,
+        persona,
+        secondary_items,
+        color,
         commands,
     )
 
@@ -3807,7 +3831,7 @@ def tall_stats_card(
         items: List[Stat],
         commands: Optional[List[Command]] = None,
 ) -> TallStatsCard:
-    """Create a set of stats laid out vertically.
+    """Create a vertical label-value pairs collection.
 
     Args:
         box: A string indicating how to place this component on the page.

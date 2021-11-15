@@ -17,7 +17,7 @@ import { B, Box, box, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XInline } from './form'
-import { CardEffect, cards, getEffectClass } from './layout'
+import { CardEffect, cards, getEffectClass, toCardEffect } from './layout'
 import { NavGroup, XNav } from './nav'
 import { centerMixin, clas, cssVar, important, padding, px } from './theme'
 import { Command } from './toolbar'
@@ -107,15 +107,7 @@ const
         </Fluent.Panel>
       )
     return { render, isOpenB }
-  }),
-  toCardEffect = (color?: 'card' | 'transparent' | 'primary') => {
-    switch (color) {
-      case 'card': return CardEffect.Normal
-      case 'transparent': return CardEffect.Transparent
-      case 'primary': return CardEffect.Raised
-      default: return CardEffect.Raised
-    }
-  }
+  })
 
 
 export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {
