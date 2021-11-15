@@ -1,6 +1,7 @@
 name: Release Wave Nightly
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
 
