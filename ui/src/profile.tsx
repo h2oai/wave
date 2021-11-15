@@ -76,6 +76,8 @@ interface State {
   image: S
   /** Components in this card displayed below the image. */
   items?: Component[]
+  /** The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views. */
+  height?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
@@ -92,11 +94,11 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       }
     },
     render = () => {
-      const { image, persona, items } = state
+      const { image, persona, items, height } = state
       return (
         <div data-test={name} className={css.card}>
           <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
-          <div className={css.content}>
+          <div className={css.content} style={{ height }}>
             {persona.persona && <div className={css.persona} style={{ marginTop: getTopOffset(persona.persona) }}><XPersona model={persona.persona} /></div>}
             {items && <div className={css.items}><XComponents items={items} /></div>}
           </div>

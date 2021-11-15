@@ -3322,6 +3322,7 @@ def profile_card(
         persona: Component,
         image: str,
         items: Optional[List[Component]] = None,
+        height: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ProfileCard:
     """Create a profile card to display information about a user.
@@ -3331,6 +3332,7 @@ def profile_card(
         persona: The persona represented by this card.
         image: The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
         items: Components in this card displayed below the image.
+        height: The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ProfileCard` instance.
@@ -3340,6 +3342,7 @@ def profile_card(
         persona,
         image,
         items,
+        height,
         commands,
     )
 
@@ -3807,7 +3810,7 @@ def tall_stats_card(
         items: List[Stat],
         commands: Optional[List[Command]] = None,
 ) -> TallStatsCard:
-    """Create a set of stats laid out vertically.
+    """Create a vertical label-value pairs collection.
 
     Args:
         box: A string indicating how to place this component on the page.

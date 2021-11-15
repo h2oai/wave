@@ -3850,6 +3850,7 @@ ui_plot_card <- function(
 #'   or a path to an image hosted on the Wave daemon (starting with `/`).
 #'   .
 #' @param items Components in this card displayed below the image.
+#' @param height The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views.
 #' @param commands Contextual menu commands for this component.
 #' @return A ProfileCard instance.
 #' @export
@@ -3858,17 +3859,20 @@ ui_profile_card <- function(
   persona,
   image,
   items = NULL,
+  height = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("persona", "WaveComponent", persona)
   .guard_scalar("image", "character", image)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("height", "character", height)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     persona=persona,
     image=image,
     items=items,
+    height=height,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
   return(.o)
@@ -4412,7 +4416,7 @@ ui_tall_series_stat_card <- function(
   return(.o)
 }
 
-#' Create a set of stats laid out vertically.
+#' Create a vertical label-value pairs collection.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The individual stats to be displayed.
