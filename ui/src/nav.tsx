@@ -48,6 +48,8 @@ export interface NavGroup {
 export interface State {
   /** The navigation groups contained in this pane. */
   items: NavGroup[]
+  /** The name of the active (highlighted) navigation item. */
+  value?: S
   /** The card's title. */
   title?: S
   /** The card's subtitle. */
@@ -58,22 +60,21 @@ export interface State {
   icon_color?: S
   /** The logo displayed at the top. **/
   image?: S
-  /** The name of the active (highlighted) navigation item. */
-  value?: S
   /** The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. **/
   persona?: Component
-  /** Items that should be displayed at the bottom of the card. */
+  /** Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle. */
   secondary_items?: Component[]
   /** Card background color. Defaults to 'card'. */
   color?: 'card' | 'primary'
 }
 
 const css = stylesheet({
+  card: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
   title: {
     color: cssVar('$themePrimary')
-  },
-  subtitle: {
-    marginTop: -4
   },
   icon: {
     fontSize: 56
@@ -82,8 +83,14 @@ const css = stylesheet({
     padding: padding(24, 24, 0),
     textAlign: 'center'
   },
+  img: {
+    maxHeight: 150
+  },
   brand: {
-    marginBottom: 20
+    marginBottom: 10
+  },
+  secondaryItems: {
+    padding: 24,
   },
   persona: {
     $nest: {
@@ -100,7 +107,6 @@ const css = stylesheet({
         marginTop: 12,
       }
     },
-
   },
 })
 
@@ -114,6 +120,7 @@ export const
         name: label,
         icon,
         disabled,
+        style: disabled ? { opacity: 0.7 } : undefined,
         url: '',
         onClick: () => {
           if (hideNav) hideNav()
@@ -132,20 +139,20 @@ export const
     const render = () => {
       const { title, subtitle, icon, icon_color = '$text', image, persona, secondary_items, color = 'card' } = state
       return (
-        <div data-test={name} className={getEffectClass(toCardEffect(color))}>
+        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)}>
           <div className={css.header}>
             {(image || icon) && (
               <div className={css.brand}>
-                {image && <Fluent.Image src={image} imageFit={Fluent.ImageFit.centerCover} height={150} />}
+                {image && <img src={image} className={css.img} />}
                 {icon && !image && <Fluent.FontIcon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
               </div>
             )}
-            {title && <div className={clas('wave-s24 wave-w6', css.title)}>{title}</div>}
-            {subtitle && <div className={clas('wave-s13', css.subtitle)}>{subtitle}</div>}
+            {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}
+            {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
             {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
           </div>
           <XNav {...state} />
-          {secondary_items && <XComponents items={secondary_items} />}
+          {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
         </div>)
     }
     return { render, changed }

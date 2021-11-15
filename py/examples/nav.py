@@ -4,6 +4,9 @@
 from h2o_wave import main, app, Q, ui
 
 
+persona = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
+
+
 @app('/demo')
 async def serve(q: Q):
     if '#' in q.args and not q.args.show_nav:
@@ -14,7 +17,7 @@ async def serve(q: Q):
             ui.button(name='show_nav', label='Back', primary=True),
         ])
     else:
-        q.page['meta'] = ui.meta_card(box='', redirect='#')
+        q.page['meta'] = ui.meta_card(box='', redirect='#', theme='h2o-dark')
         q.page['nav1'] = ui.nav_card(
             box='1 1 2 -1',
             value='#menu/spam',
@@ -33,12 +36,21 @@ async def serve(q: Q):
                     ui.nav_item(name='#support', label='Support', icon='Help'),
                 ])
             ],
+            secondary_items=[
+                ui.inline(items=[
+                    ui.persona(title='John Doe', subtitle='Software developer', size='s', image=persona),
+                    ui.menu(items=[
+                        ui.command(name='profile', label='Profile', icon='Contact'),
+                        ui.command(name='preferences', label='Preferences', icon='Settings'),
+                        ui.command(name='logout', label='Logout', icon='SignOut'),
+                    ])
+                ]),
+            ],
         )
         q.page['nav2'] = ui.nav_card(
             box='3 1 2 -1',
             value='#menu/ham',
-            persona=ui.persona(title='John Doe', subtitle='Data Scientist', caption='Online', size='xl',
-                               image='https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'), # noqa
+            persona=ui.persona(title='John Doe', subtitle='Data Scientist', caption='Online', size='xl', image=persona),
             items=[
                 ui.nav_group('Menu', items=[
                     ui.nav_item(name='#menu/spam', label='Spam'),
@@ -51,5 +63,6 @@ async def serve(q: Q):
                     ui.nav_item(name='#support', label='Support', icon='Help'),
                 ])
             ],
+            secondary_items=[ui.button(name='logout', label='Logout', width='100%')],
         )
     await q.page.save()

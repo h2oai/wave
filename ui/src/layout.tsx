@@ -217,6 +217,31 @@ const css = stylesheet({
           },
         }
       },
+      '.ms-Nav': {
+        $nest: {
+          '&-chevronButton': {
+            color: cssVar('$card')
+          },
+          '&-link': {
+            color: cssVar('$card')
+          },
+          '&-link .ms-Icon': {
+            color: cssVar('$card')
+          },
+          '.is-selected .ms-Nav-link': {
+            background: cssVar('$themeDark')
+          },
+          '.is-selected .ms-Nav-link:after': {
+            borderColor: cssVar('$card')
+          },
+          '&-compositeLink:hover .ms-Nav-link': {
+            background: cssVar('$text1'),
+          },
+          '&-compositeLink:hover.is-disabled .ms-Nav-link': {
+            background: 'transparent',
+          },
+        }
+      },
       '.w-menu': {
         color: important(cssVar('$card')),
         $nest: {

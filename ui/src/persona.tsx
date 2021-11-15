@@ -51,7 +51,7 @@ export const XPersona = ({ model }: { model: Persona }) => {
   return (
     <div data-test={model.name} onClick={onClick}>
       <Fluent.Persona
-        styles={{ root: { cursor: model.name ? 'pointer' : 'initial' } }}
+        styles={{ root: { cursor: model.name ? 'pointer' : 'initial' }, details: { paddingRight: 0 } }}
         text={model.title}
         secondaryText={model.subtitle}
         tertiaryText={model.caption}

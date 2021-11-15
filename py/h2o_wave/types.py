@@ -9101,12 +9101,12 @@ class NavCard:
             self,
             box: str,
             items: List[NavGroup],
+            value: Optional[str] = None,
             title: Optional[str] = None,
             subtitle: Optional[str] = None,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
             image: Optional[str] = None,
-            value: Optional[str] = None,
             persona: Optional[Component] = None,
             secondary_items: Optional[List[Component]] = None,
             color: Optional[str] = None,
@@ -9114,12 +9114,12 @@ class NavCard:
     ):
         _guard_scalar('NavCard.box', box, (str,), False, False, False)
         _guard_vector('NavCard.items', items, (NavGroup,), False, False, False)
+        _guard_scalar('NavCard.value', value, (str,), False, True, False)
         _guard_scalar('NavCard.title', title, (str,), False, True, False)
         _guard_scalar('NavCard.subtitle', subtitle, (str,), False, True, False)
         _guard_scalar('NavCard.icon', icon, (str,), False, True, False)
         _guard_scalar('NavCard.icon_color', icon_color, (str,), False, True, False)
         _guard_scalar('NavCard.image', image, (str,), False, True, False)
-        _guard_scalar('NavCard.value', value, (str,), False, True, False)
         _guard_scalar('NavCard.persona', persona, (Component,), False, True, False)
         _guard_vector('NavCard.secondary_items', secondary_items, (Component,), False, True, False)
         _guard_enum('NavCard.color', color, _NavCardColor, True)
@@ -9128,6 +9128,8 @@ class NavCard:
         """A string indicating how to place this component on the page."""
         self.items = items
         """The navigation groups contained in this pane."""
+        self.value = value
+        """The name of the active (highlighted) navigation item."""
         self.title = title
         """The card's title."""
         self.subtitle = subtitle
@@ -9138,12 +9140,10 @@ class NavCard:
         """The icon's color. *"""
         self.image = image
         """The logo displayed at the top. *"""
-        self.value = value
-        """The name of the active (highlighted) navigation item."""
         self.persona = persona
         """The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *"""
         self.secondary_items = secondary_items
-        """Items that should be displayed at the bottom of the card."""
+        """Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle."""
         self.color = color
         """Card background color. Defaults to 'card'. One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor."""
         self.commands = commands
@@ -9153,12 +9153,12 @@ class NavCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('NavCard.box', self.box, (str,), False, False, False)
         _guard_vector('NavCard.items', self.items, (NavGroup,), False, False, False)
+        _guard_scalar('NavCard.value', self.value, (str,), False, True, False)
         _guard_scalar('NavCard.title', self.title, (str,), False, True, False)
         _guard_scalar('NavCard.subtitle', self.subtitle, (str,), False, True, False)
         _guard_scalar('NavCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('NavCard.icon_color', self.icon_color, (str,), False, True, False)
         _guard_scalar('NavCard.image', self.image, (str,), False, True, False)
-        _guard_scalar('NavCard.value', self.value, (str,), False, True, False)
         _guard_scalar('NavCard.persona', self.persona, (Component,), False, True, False)
         _guard_vector('NavCard.secondary_items', self.secondary_items, (Component,), False, True, False)
         _guard_enum('NavCard.color', self.color, _NavCardColor, True)
@@ -9167,12 +9167,12 @@ class NavCard:
             view='nav',
             box=self.box,
             items=[__e.dump() for __e in self.items],
+            value=self.value,
             title=self.title,
             subtitle=self.subtitle,
             icon=self.icon,
             icon_color=self.icon_color,
             image=self.image,
-            value=self.value,
             persona=None if self.persona is None else self.persona.dump(),
             secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
             color=self.color,
@@ -9186,6 +9186,8 @@ class NavCard:
         _guard_scalar('NavCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('NavCard.items', __d_items, (dict,), False, False, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('NavCard.value', __d_value, (str,), False, True, False)
         __d_title: Any = __d.get('title')
         _guard_scalar('NavCard.title', __d_title, (str,), False, True, False)
         __d_subtitle: Any = __d.get('subtitle')
@@ -9196,8 +9198,6 @@ class NavCard:
         _guard_scalar('NavCard.icon_color', __d_icon_color, (str,), False, True, False)
         __d_image: Any = __d.get('image')
         _guard_scalar('NavCard.image', __d_image, (str,), False, True, False)
-        __d_value: Any = __d.get('value')
-        _guard_scalar('NavCard.value', __d_value, (str,), False, True, False)
         __d_persona: Any = __d.get('persona')
         _guard_scalar('NavCard.persona', __d_persona, (dict,), False, True, False)
         __d_secondary_items: Any = __d.get('secondary_items')
@@ -9208,12 +9208,12 @@ class NavCard:
         _guard_vector('NavCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
+        value: Optional[str] = __d_value
         title: Optional[str] = __d_title
         subtitle: Optional[str] = __d_subtitle
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         image: Optional[str] = __d_image
-        value: Optional[str] = __d_value
         persona: Optional[Component] = None if __d_persona is None else Component.load(__d_persona)
         secondary_items: Optional[List[Component]] = None if __d_secondary_items is None else [Component.load(__e) for __e in __d_secondary_items]
         color: Optional[str] = __d_color
@@ -9221,12 +9221,12 @@ class NavCard:
         return NavCard(
             box,
             items,
+            value,
             title,
             subtitle,
             icon,
             icon_color,
             image,
-            value,
             persona,
             secondary_items,
             color,

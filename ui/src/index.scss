@@ -70,6 +70,30 @@ body,
   --text8: rgba(50, 49, 48, 0.8);
   --text9: rgba(50, 49, 48, 0.9);
 
+  /* Primary color tones. */
+  --primary0: rgba(50, 49, 48, 0.05);
+  --primary1: rgba(50, 49, 48, 0.1);
+  --primary2: rgba(50, 49, 48, 0.2);
+  --primary3: rgba(50, 49, 48, 0.3);
+  --primary4: rgba(50, 49, 48, 0.4);
+  --primary5: rgba(50, 49, 48, 0.5);
+  --primary6: rgba(50, 49, 48, 0.6);
+  --primary7: rgba(50, 49, 48, 0.7);
+  --primary8: rgba(50, 49, 48, 0.8);
+  --primary9: rgba(50, 49, 48, 0.9);
+
+  /* Card color tones. */
+  --card0: rgba(255, 255, 255, 0.05);
+  --card1: rgba(255, 255, 255, 0.1);
+  --card2: rgba(255, 255, 255, 0.2);
+  --card3: rgba(255, 255, 255, 0.3);
+  --card4: rgba(255, 255, 255, 0.4);
+  --card5: rgba(255, 255, 255, 0.5);
+  --card6: rgba(255, 255, 255, 0.6);
+  --card7: rgba(255, 255, 255, 0.7);
+  --card8: rgba(255, 255, 255, 0.8);
+  --card9: rgba(255, 255, 255, 0.9);
+
   /* Fluent colors. */
   --themePrimary: #000000;
   --themeLighterAlt: #898989;
@@ -132,10 +156,16 @@ $fontTrackings: (
   }
 }
 
-// Generate text color classes.
-@for $text from 0 through 9 {
-  .wave-t#{$text} {
-    color: var(--text#{$text});
+// Generate color classes.
+@for $i from 0 through 9 {
+  .wave-t#{$i} {
+    color: var(--text#{$i});
+  }
+  .wave-c#{$i} {
+    color: var(--card#{$i});
+  }
+  .wave-p#{$i} {
+    color: var(--primary#{$i});
   }
 }
 

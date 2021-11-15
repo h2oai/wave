@@ -3757,14 +3757,14 @@ ui_meta_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
+#' @param value The name of the active (highlighted) navigation item.
 #' @param title The card's title.
 #' @param subtitle The card's subtitle.
 #' @param icon The icon, displayed to the left. *
 #' @param icon_color The icon's color. *
 #' @param image The logo displayed at the top. *
-#' @param value The name of the active (highlighted) navigation item.
 #' @param persona The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *
-#' @param secondary_items Items that should be displayed at the bottom of the card.
+#' @param secondary_items Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle.
 #' @param color Card background color. Defaults to 'card'.
 #'   One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor.
 #' @param commands Contextual menu commands for this component.
@@ -3773,24 +3773,24 @@ ui_meta_card <- function(
 ui_nav_card <- function(
   box,
   items,
+  value = NULL,
   title = NULL,
   subtitle = NULL,
   icon = NULL,
   icon_color = NULL,
   image = NULL,
-  value = NULL,
   persona = NULL,
   secondary_items = NULL,
   color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveNavGroup", items)
+  .guard_scalar("value", "character", value)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .guard_scalar("image", "character", image)
-  .guard_scalar("value", "character", value)
   .guard_scalar("persona", "WaveComponent", persona)
   .guard_vector("secondary_items", "WaveComponent", secondary_items)
   # TODO Validate color
@@ -3798,12 +3798,12 @@ ui_nav_card <- function(
   .o <- list(
     box=box,
     items=items,
+    value=value,
     title=title,
     subtitle=subtitle,
     icon=icon,
     icon_color=icon_color,
     image=image,
-    value=value,
     persona=persona,
     secondary_items=secondary_items,
     color=color,

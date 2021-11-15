@@ -190,21 +190,24 @@ const
   changeTheme = (themeName: S) => {
     const
       theme = themes[themeName] ?? themes[defaultThemeName],
-      { palette, fluentPalette } = theme
+      { palette, fluentPalette } = theme,
+      updateTones = (key: S, color: S) => {
+        const [r, g, b] = rgb(color)
+        let alpha = 0.05
+        for (let i = 0; i < 10; i++) {
+          document.body.style.setProperty(`--${key}${i}`, `rgba(${r},${g},${b},${alpha})`)
+          alpha += i === 0 ? 0.05 : 0.1
+        }
+      }
 
     // TODO: This is polluting the global namespace.
     Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, palette[k as keyof Palette]))
     Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, fluentPalette[k as keyof Fluent.IPalette] || null))
 
-    // Update text tones.
-    if (palette.text) {
-      const [r, g, b] = rgb(palette.text)
-      let alpha = 0.05
-      for (let i = 0; i < 10; i++) {
-        document.body.style.setProperty(`--text${i}`, `rgba(${r},${g},${b},${alpha})`)
-        alpha += i === 0 ? 0.05 : 0.1
-      }
-    }
+    if (palette.text) updateTones('text', palette.text)
+    if (palette.card) updateTones('card', palette.card)
+    if (fluentPalette.themePrimary) updateTones('primary', fluentPalette.themePrimary)
+
     // HACK: Execute as microtask to prevent race condition. Since meta is handled in page.tsx:render,
     // Fluent wants to update all components present (Spinner), but throws warning it cannot update unmounted element (Spinner)
     // because it is replaced by our new component tree in the meanwhile.
