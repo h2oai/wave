@@ -16,7 +16,7 @@ import { B, Model, Rec, S, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
-import { cards, grid } from './layout'
+import { cards } from './layout'
 import { formItemWidth } from './theme'
 import { bond, debounce } from './ui'
 
@@ -25,9 +25,10 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
-      padding: grid.gap,
+      padding: 24
     },
     body: {
+      marginTop: 16,
       flexGrow: 1,
       display: 'flex',
     },

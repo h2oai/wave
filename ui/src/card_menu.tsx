@@ -19,6 +19,7 @@ import { deleteCard, editCard } from './editing'
 import { B, box, Box, S } from 'h2o-wave'
 import { Command } from './toolbar'
 import { bond, wave } from './ui'
+import { cssVar } from './theme'
 
 const
   css = stylesheet({
@@ -27,13 +28,15 @@ const
       top: 0, right: 0,
       $nest: {
         '>div:first-child': {
-          width: 32, height: 32,
-          padding: 8,
+          padding: 24,
+          fontSize: 16,
+          color: cssVar('$text7')
         },
       },
     },
     icon: {
       userSelect: 'none',
+      marginRight: -6,
     },
     target: {
       boxSizing: 'border-box',

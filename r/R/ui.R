@@ -3842,6 +3842,44 @@ ui_plot_card <- function(
   return(.o)
 }
 
+#' Create a postcard displaying a persona, image, caption and optional buttons.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param persona The card's user avatar, 'size' prop is restricted to 'xs'.
+#' @param image The card’s image.
+#' @param aux_value The card's aux_value, displayed on the right hand side of the image.
+#' @param caption The card's caption, displayed below the image.
+#' @param items The card's buttons, displayed at the bottom.
+#' @param commands Contextual menu commands for this component.
+#' @return A PostcardCard instance.
+#' @export
+ui_postcard_card <- function(
+  box,
+  persona,
+  image,
+  aux_value = NULL,
+  caption = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    persona=persona,
+    image=image,
+    aux_value=aux_value,
+    caption=caption,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePostcardCard"))
+  return(.o)
+}
+
 #' Create a profile card to display information about a user.
 #'
 #' @param box A string indicating how to place this component on the page.
