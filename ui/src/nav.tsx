@@ -84,7 +84,7 @@ const css = stylesheet({
     textAlign: 'center'
   },
   img: {
-    maxHeight: 150
+    maxHeight: 100
   },
   brand: {
     marginBottom: 10
