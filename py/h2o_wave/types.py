@@ -3612,26 +3612,32 @@ class Links:
             items: List['Component'],
             label: Optional[str] = None,
             inline: Optional[bool] = None,
+            width: Optional[str] = None,
     ):
         _guard_vector('Links.items', items, (Component,), False, False, False)
         _guard_scalar('Links.label', label, (str,), False, True, False)
         _guard_scalar('Links.inline', inline, (bool,), False, True, False)
+        _guard_scalar('Links.width', width, (str,), False, True, False)
         self.items = items
         """The links contained in this group."""
         self.label = label
         """The name of the link group."""
         self.inline = inline
-        """Render links horizontally."""
+        """Render links horizontally. Defaults to 'false'."""
+        self.width = width
+        """The width of the links, e.g. '100px'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('Links.items', self.items, (Component,), False, False, False)
         _guard_scalar('Links.label', self.label, (str,), False, True, False)
         _guard_scalar('Links.inline', self.inline, (bool,), False, True, False)
+        _guard_scalar('Links.width', self.width, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             label=self.label,
             inline=self.inline,
+            width=self.width,
         )
 
     @staticmethod
@@ -3643,13 +3649,17 @@ class Links:
         _guard_scalar('Links.label', __d_label, (str,), False, True, False)
         __d_inline: Any = __d.get('inline')
         _guard_scalar('Links.inline', __d_inline, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Links.width', __d_width, (str,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         label: Optional[str] = __d_label
         inline: Optional[bool] = __d_inline
+        width: Optional[str] = __d_width
         return Links(
             items,
             label,
             inline,
+            width,
         )
 
 

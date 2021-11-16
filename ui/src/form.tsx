@@ -215,11 +215,13 @@ export const
           // All form items are wrapped by their component name (first and only prop of "m").
           [componentKey] = Object.keys(m),
           { name, visible = true, width = 'auto' } = m[componentKey],
-          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' }
+          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
+          // TODO: Ugly, maybe introduce 'align' prop to ui.inline?
+          alignSelf = componentKey === 'links' ? 'flex-start' : undefined
 
         return (
           // Recreate only if name or position within form items changed, update otherwise.
-          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width }}>
+          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width, alignSelf }}>
             <XComponent model={m} />
           </div>
         )

@@ -86,6 +86,8 @@ export interface Links {
   label?: S
   /** Render links horizontally. Defaults to 'false'. */
   inline?: B
+  /** The width of the links, e.g. '100px'. */
+  width?: S
 }
 
 export const

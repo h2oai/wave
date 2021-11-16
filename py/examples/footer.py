@@ -15,17 +15,17 @@ page['footer3'] = ui.footer_card(
     caption=caption,
     items=[
         ui.inline(justify='end', items=[
-            ui.links(label='First Column', items=[
+            ui.links(label='First Column', width='200px', items=[
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
             ]),
-            ui.links(label='Second Column', items=[
+            ui.links(label='Second Column', width='200px', items=[
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
             ]),
-            ui.links(label='Third Column', items=[
+            ui.links(label='Third Column', width='200px', items=[
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
                 ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
