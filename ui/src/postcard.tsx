@@ -39,7 +39,6 @@ const css = stylesheet({
         fontSize: 16,
         lineHeight: px(22),
         fontWeight: 500,
-        color: cssVar('$neutralPrimary')
       },
       '.ms-Persona-secondaryText': {
         fontSize: 14,
@@ -92,7 +91,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
       <div data-test={name} className={css.card}>
         <div className={css.header}>
           {persona.persona && <XPersona model={persona.persona} />}
-            {aux_value && <div className={clas('wave-s12 wave-t7', css.aux_value)}>{aux_value}</div>}
+          {aux_value && <div className={clas('wave-s12 wave-t7', css.aux_value)}>{aux_value}</div>}
         </div>
         <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
         {(caption || items) && (
