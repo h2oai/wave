@@ -9,9 +9,11 @@ import json
 from typing import Any, List
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from multiprocessing import Pool
 import sys
+import shutil
 
-example_file_path = os.path.join('..', '..', 'py', 'showcase.py')
+example_file_path = os.path.join('..', '..', 'py', 'showcase')
 docs_path = os.path.join('..', '..', 'website')
 
 
@@ -27,31 +29,32 @@ class DocFile:
         self.name = name
 
 
-def get_template_code(code: str):
+def get_template_code(code: str, pool_idx: int):
     return f'''
 from h2o_wave import site, ui
 
-page = site['/']
+page = site['/{pool_idx}']
 page.drop() # Drop any previous pages.
 {code.replace('q.', '')}
 page.save()
     '''
 
 
-def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any, group: str):
+def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any, group: str, pool_idx: int):
     code_str = ''.join(code)
     match = re.findall('(q.page\\[)(\'|\")([\\w-]+)', code_str)
     if not match:
         raise ValueError(f'Could not extract card name for {screenshot_name}.')
     card_name = match[0][2] if match[0][2] != 'meta' else match[1][2]
-    with open(example_file_path, 'w') as f:
-        f.write(get_template_code(code_str))
-    with subprocess.Popen(['venv/bin/python', 'showcase.py'], cwd=os.path.join('..', '..', 'py'), stderr=subprocess.PIPE) as p:  # noqa
+    example_file = f'showcase{pool_idx}.py'
+    with open(os.path.join(example_file_path, example_file), 'w+') as f:
+        f.write(get_template_code(code_str, pool_idx))
+    with subprocess.Popen(['venv/bin/python', f'showcase/{example_file}'], cwd=os.path.join('..', '..', 'py'), stderr=subprocess.PIPE) as p:
         _, err = p.communicate()
         if err:
             raise ValueError(f'Could not generate {group} {screenshot_name}\n{err.decode()}')
         page = browser.new_page()
-        page.goto('http://localhost:10101', wait_until='networkidle' if 'image' in code_str else None)
+        page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle' if 'image' in code_str else None)
         path = os.path.join(docs_path, 'docs', 'showcase', group, 'assets', screenshot_name)
         if group:
             os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -60,23 +63,26 @@ def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any,
         page.close()
 
 
-def generate_screenshots(browser: Any, files: List[DocFile]):
-    for file in files:
-        with open(file.path, 'r') as f:
-            is_code = False
-            code = []
-            file_idx = 0
-            for line in f.readlines():
-                if is_code and not line.startswith('```'):
-                    code.append(line)
-                if line.startswith('```'):
-                    if is_code:
-                        screenshot_name = f"{file.name}-{file_idx}.png"
-                        print(f'Generating screenshot for {screenshot_name}')
-                        make_snippet_screenshot(code, screenshot_name, browser, file.group)
-                        file_idx = file_idx + 1
-                        code = []
-                    is_code = not is_code
+def generate_screenshots(files: List[DocFile], pool_idx: int):
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        for file in files:
+            with open(file.path, 'r') as f:
+                is_code = False
+                code = []
+                file_idx = 0
+                for line in f.readlines():
+                    if is_code and not line.startswith('```'):
+                        code.append(line)
+                    if line.startswith('```'):
+                        if is_code:
+                            screenshot_name = f"{file.name}-{file_idx}.png"
+                            print(f'Generating screenshot for {screenshot_name}')
+                            make_snippet_screenshot(code, screenshot_name, browser, file.group, pool_idx)
+                            file_idx = file_idx + 1
+                            code = []
+                        is_code = not is_code
+        browser.close()
 
 
 def append_images(files: List[DocFile]):
@@ -115,6 +121,7 @@ def map_to_doc_file(p: Path, files: List[DocFile]):
 
 
 def main():
+    start = time.time()
     qd_server = None
     arg_files = sys.argv[1:]
     files = []
@@ -133,24 +140,29 @@ def main():
             map_to_doc_file(p, files)
 
     try:
+        os.makedirs(example_file_path)
         qd_server = subprocess.Popen(
             ['make', 'run'],
             cwd=os.path.join('..', '..'),
             stderr=subprocess.DEVNULL,
             preexec_fn=os.setsid)
         time.sleep(1)  # Wait for server to boot up.
-        with sync_playwright() as playwright:
-            browser = playwright.chromium.launch()
-            generate_screenshots(browser, files)
-            browser.close()
+        chunk_size = 10
+        file_chunks = [files[i:i + chunk_size] for i in range(0, len(files), chunk_size)]
+        with Pool(len(file_chunks)) as pool:
+            pool.starmap(generate_screenshots, [(chunk, idx) for idx, chunk in enumerate(file_chunks)])
+            pool.close()
+            pool.join()
         append_images(files)
         generate_showcase_json()
     except Exception as e:
         print(f'Error: {str(e)}')
     finally:
+        end = time.time()
+        print(f'It took {end - start}')
         # Cleanup.
         if os.path.exists(example_file_path):
-            os.remove(example_file_path)
+            shutil.rmtree(example_file_path, ignore_errors=True)
         if qd_server:
             os.killpg(os.getpgid(qd_server.pid), signal.SIGTERM)
 
