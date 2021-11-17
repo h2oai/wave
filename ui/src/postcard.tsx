@@ -45,7 +45,11 @@ const css = stylesheet({
         lineHeight: px(20),
         color: cssVar('$text7')
       },
-      '.ms-Persona-image, .ms-Persona-imageArea': {
+      '.ms-Persona-image': {
+        height: '40px !important',
+        width: '40px !important',
+      },
+      '.ms-Persona-imageArea': {
         height: '40px !important',
         width: '40px !important',
       }
