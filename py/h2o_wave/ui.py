@@ -3401,6 +3401,42 @@ def postcard_card(
     )
 
 
+def preview_card(
+        box: str,
+        name: str,
+        image: str,
+        title: Optional[str] = None,
+        items: Optional[List[Component]] = None,
+        caption: Optional[str] = None,
+        label: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> PreviewCard:
+    """Create a preview card displaying an image with shadow overlay, title, social icons, caption, and button.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        name: An identifying name for this card. Makes the card clickable if label is not provided, similar to a button.
+        image: The card’s image.
+        title: The card's title
+        items: Mini buttons displayed at the top-right corner
+        caption: The card's caption, displayed bellow the title.
+        label: Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.PreviewCard` instance.
+    """
+    return PreviewCard(
+        box,
+        name,
+        image,
+        title,
+        items,
+        caption,
+        label,
+        commands,
+    )
+
+
 def profile_card(
         box: str,
         persona: Component,

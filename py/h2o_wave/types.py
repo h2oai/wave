@@ -9540,6 +9540,106 @@ class PostcardCard:
         )
 
 
+class PreviewCard:
+    """Create a preview card displaying an image with shadow overlay, title, social icons, caption, and button.
+    """
+    def __init__(
+            self,
+            box: str,
+            name: str,
+            image: str,
+            title: Optional[str] = None,
+            items: Optional[List[Component]] = None,
+            caption: Optional[str] = None,
+            label: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('PreviewCard.box', box, (str,), False, False, False)
+        _guard_scalar('PreviewCard.name', name, (str,), False, False, False)
+        _guard_scalar('PreviewCard.image', image, (str,), False, False, False)
+        _guard_scalar('PreviewCard.title', title, (str,), False, True, False)
+        _guard_vector('PreviewCard.items', items, (Component,), False, True, False)
+        _guard_scalar('PreviewCard.caption', caption, (str,), False, True, False)
+        _guard_scalar('PreviewCard.label', label, (str,), False, True, False)
+        _guard_vector('PreviewCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable if label is not provided, similar to a button."""
+        self.image = image
+        """The card’s image."""
+        self.title = title
+        """The card's title"""
+        self.items = items
+        """Mini buttons displayed at the top-right corner"""
+        self.caption = caption
+        """The card's caption, displayed bellow the title."""
+        self.label = label
+        """Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('PreviewCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('PreviewCard.name', self.name, (str,), False, False, False)
+        _guard_scalar('PreviewCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('PreviewCard.title', self.title, (str,), False, True, False)
+        _guard_vector('PreviewCard.items', self.items, (Component,), False, True, False)
+        _guard_scalar('PreviewCard.caption', self.caption, (str,), False, True, False)
+        _guard_scalar('PreviewCard.label', self.label, (str,), False, True, False)
+        _guard_vector('PreviewCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='preview',
+            box=self.box,
+            name=self.name,
+            image=self.image,
+            title=self.title,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            caption=self.caption,
+            label=self.label,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'PreviewCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('PreviewCard.box', __d_box, (str,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('PreviewCard.name', __d_name, (str,), False, False, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('PreviewCard.image', __d_image, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('PreviewCard.title', __d_title, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('PreviewCard.items', __d_items, (dict,), False, True, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('PreviewCard.caption', __d_caption, (str,), False, True, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('PreviewCard.label', __d_label, (str,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('PreviewCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        name: str = __d_name
+        image: str = __d_image
+        title: Optional[str] = __d_title
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        caption: Optional[str] = __d_caption
+        label: Optional[str] = __d_label
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return PreviewCard(
+            box,
+            name,
+            image,
+            title,
+            items,
+            caption,
+            label,
+            commands,
+        )
+
+
 class ProfileCard:
     """Create a profile card to display information about a user.
     """

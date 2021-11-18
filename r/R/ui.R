@@ -3943,6 +3943,48 @@ ui_postcard_card <- function(
   return(.o)
 }
 
+#' Create a preview card displaying an image with shadow overlay, title, social icons, caption, and button.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param name An identifying name for this card. Makes the card clickable if label is not provided, similar to a button.
+#' @param image The card’s image.
+#' @param title The card's title
+#' @param items Mini buttons displayed at the top-right corner
+#' @param caption The card's caption, displayed bellow the title.
+#' @param label Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore.
+#' @param commands Contextual menu commands for this component.
+#' @return A PreviewCard instance.
+#' @export
+ui_preview_card <- function(
+  box,
+  name,
+  image,
+  title = NULL,
+  items = NULL,
+  caption = NULL,
+  label = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("title", "character", title)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("label", "character", label)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    name=name,
+    image=image,
+    title=title,
+    items=items,
+    caption=caption,
+    label=label,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePreviewCard"))
+  return(.o)
+}
+
 #' Create a profile card to display information about a user.
 #'
 #' @param box A string indicating how to place this component on the page.
