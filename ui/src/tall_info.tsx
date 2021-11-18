@@ -64,7 +64,7 @@ const
   })
 
 /** Create a tall information card displaying a title, caption and either an icon or image. */
-interface State {
+export interface State {
   /** An identifying name for this card. Makes the card clickable, similar to a button. */
   name: S
   /** The card's title. */
@@ -96,9 +96,9 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     },
     render = () => (
       <div
-        data-test={label ? undefined : name}
-        onClick={!name ? undefined : onClick}
-        className={clas(css.card, !name ? '' : css.clickable)}
+        data-test={name}
+        onClick={stateName && !label ? onClick : undefined}
+        className={clas(css.card, stateName && !label ? css.clickable : '')}
       >
         <div className={css.imgContainer}>
           {
@@ -113,7 +113,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {category && <div className={clas('wave-s14 wave-w4 wave-t5', css.category)}>{category}</div>}
           </div>
           {caption && <div className='wave-s14 wave-w4 wave-t7'><Markdown source={caption} /></div>}
-          {label && <Fluent.DefaultButton data-test={name} text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
+          {label && <Fluent.DefaultButton data-test={label} text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
         </div>
       </div >
     )

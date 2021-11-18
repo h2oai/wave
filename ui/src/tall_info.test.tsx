@@ -17,11 +17,12 @@ import { wave } from './ui'
 import React from 'react'
 import { View } from './tall_info'
 import { box, Model } from 'h2o-wave'
+import { State } from './tall_info'
 
 const
   name = 'tall_info',
   pushMock = jest.fn()
-let tallInfoProps: Model<any>
+let tallInfoProps: Model<State>
 
 describe('TallInfo.tsx', () => {
   beforeAll(() => wave.push = pushMock)
@@ -30,7 +31,7 @@ describe('TallInfo.tsx', () => {
     wave.args = [] as any
     tallInfoProps = {
       name,
-      state: { title: name },
+      state: { title: name, caption: '', name },
       changed: box(false)
     }
   })
@@ -51,9 +52,9 @@ describe('TallInfo.tsx', () => {
 
   it('Submits data to server if label specified and name without #', () => {
     tallInfoProps.state.name = name
-    tallInfoProps.state.label = 'label'
+    tallInfoProps.state.label = 'Click me'
     const { getByTestId } = render(<View {...tallInfoProps} />)
-    fireEvent.click(getByTestId(name))
+    fireEvent.click(getByTestId('Click me'))
     expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(name)
   })
@@ -73,4 +74,33 @@ describe('TallInfo.tsx', () => {
     expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(name)
   })
+
+  it('Makes card clickable only if name was specified but label was not', () => {
+    const { getByTestId } = render(<View {...tallInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(name)
+  })
+
+  it('Makes card unclickable if name was not provided', () => {
+    tallInfoProps.state.name = ''
+    const { getByTestId } = render(<View {...tallInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).not.toBe(name)
+  })
+
+  it('Makes only the button (label) clickable if label was provided', () => {
+    tallInfoProps.state.label = 'Click me'
+    const { getByTestId } = render(<View {...tallInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).not.toBe(name)
+
+    fireEvent.click(getByTestId('Click me'))
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(name)
+  })
+
+
 })
