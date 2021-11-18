@@ -5948,7 +5948,7 @@ class CopyableText:
         _guard_scalar('CopyableText.name', name, (str,), False, True, False)
         _guard_scalar('CopyableText.multiline', multiline, (bool,), False, True, False)
         self.value = value
-        """Text to be displayed inside the component. Markdown is supported only when 'multiline' is set."""
+        """Text to be displayed inside the component."""
         self.label = label
         """The text displayed above the textbox."""
         self.name = name

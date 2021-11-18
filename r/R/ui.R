@@ -2590,7 +2590,7 @@ ui_facepile <- function(
 #' Create a copyable text component.
 #' Use this component when you want to enable your users to quickly copy paste sections of text.
 #'
-#' @param value Text to be displayed inside the component. Markdown is supported only when 'multiline' is set.
+#' @param value Text to be displayed inside the component.
 #' @param label The text displayed above the textbox.
 #' @param name An identifying name for this component.
 #' @param multiline True if the component should allow multi-line text entry.
