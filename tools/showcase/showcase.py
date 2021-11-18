@@ -1,4 +1,3 @@
-from json import JSONEncoder
 import subprocess
 import glob
 import time
@@ -6,12 +5,14 @@ import os
 import signal
 import re
 import json
+import math
+import sys
+import shutil
+from json import JSONEncoder
 from typing import Any, List
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 from multiprocessing import Pool
-import sys
-import shutil
 
 example_file_path = os.path.join('..', '..', 'py', 'showcase')
 docs_path = os.path.join('..', '..', 'website')
@@ -40,7 +41,7 @@ page.save()
     '''
 
 
-def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any, group: str, pool_idx: int):
+def make_snippet_screenshot(code: List[str], screenshot_name: str, page: Any, group: str, pool_idx: int):
     code_str = ''.join(code)
     match = re.findall('(q.page\\[)(\'|\")([\\w-]+)', code_str)
     if not match:
@@ -49,23 +50,24 @@ def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any,
     example_file = f'showcase{pool_idx}.py'
     with open(os.path.join(example_file_path, example_file), 'w+') as f:
         f.write(get_template_code(code_str, pool_idx))
-    with subprocess.Popen(['venv/bin/python', f'showcase/{example_file}'], cwd=os.path.join('..', '..', 'py'), stderr=subprocess.PIPE) as p:
+    with subprocess.Popen(['venv/bin/python', f'showcase/{example_file}'], cwd=os.path.join('..', '..', 'py'), stderr=subprocess.PIPE) as p: # noqa
         _, err = p.communicate()
         if err:
             raise ValueError(f'Could not generate {group} {screenshot_name}\n{err.decode()}')
-        page = browser.new_page()
         page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle' if 'image' in code_str else None)
         path = os.path.join(docs_path, 'docs', 'showcase', group, 'assets', screenshot_name)
         if group:
             os.makedirs(os.path.dirname(path), exist_ok=True)
         sub_selector = ' > *' if 'ui.form_card' in code_str else ''
-        page.query_selector(f'[data-test="{card_name}"]{sub_selector}').screenshot(path=path)
-        page.close()
+        selector = f'[data-test="{card_name}"]{sub_selector}'
+        page.wait_for_selector(selector)
+        page.query_selector(selector).screenshot(path=path)
 
 
 def generate_screenshots(files: List[DocFile], pool_idx: int):
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
+        page = browser.new_page()
         for file in files:
             with open(file.path, 'r') as f:
                 is_code = False
@@ -78,7 +80,7 @@ def generate_screenshots(files: List[DocFile], pool_idx: int):
                         if is_code:
                             screenshot_name = f"{file.name}-{file_idx}.png"
                             print(f'Generating screenshot for {screenshot_name}')
-                            make_snippet_screenshot(code, screenshot_name, browser, file.group, pool_idx)
+                            make_snippet_screenshot(code, screenshot_name, page, file.group, pool_idx)
                             file_idx = file_idx + 1
                             code = []
                         is_code = not is_code
@@ -121,7 +123,6 @@ def map_to_doc_file(p: Path, files: List[DocFile]):
 
 
 def main():
-    start = time.time()
     qd_server = None
     arg_files = sys.argv[1:]
     files = []
@@ -147,7 +148,7 @@ def main():
             stderr=subprocess.DEVNULL,
             preexec_fn=os.setsid)
         time.sleep(1)  # Wait for server to boot up.
-        chunk_size = 10
+        chunk_size = math.ceil(len(files) / os.cpu_count())
         file_chunks = [files[i:i + chunk_size] for i in range(0, len(files), chunk_size)]
         with Pool(len(file_chunks)) as pool:
             pool.starmap(generate_screenshots, [(chunk, idx) for idx, chunk in enumerate(file_chunks)])
@@ -158,8 +159,6 @@ def main():
     except Exception as e:
         print(f'Error: {str(e)}')
     finally:
-        end = time.time()
-        print(f'It took {end - start}')
         # Cleanup.
         if os.path.exists(example_file_path):
             shutil.rmtree(example_file_path, ignore_errors=True)
