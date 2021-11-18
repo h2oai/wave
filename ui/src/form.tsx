@@ -32,7 +32,7 @@ import { Frame, XFrame } from './frame'
 import { Image, XImage } from './image'
 import { Label, XLabel } from './label'
 import { cards } from './layout'
-import { Link, XLink } from './link'
+import { Link, XLink, Links, XLinks } from './link'
 import { Markup, XMarkup } from './markup'
 import { MessageBar, XMessageBar } from './message_bar'
 import { Persona, XPersona } from "./persona"
@@ -116,6 +116,8 @@ export interface Component {
   table?: Table;
   /** Link. */
   link?: Link
+  /** Link set. */
+  links?: Links
   /** Tabs. */
   tabs?: Tabs;
   /** Expander. */
@@ -213,11 +215,13 @@ export const
           // All form items are wrapped by their component name (first and only prop of "m").
           [componentKey] = Object.keys(m),
           { name, visible = true, width = 'auto' } = m[componentKey],
-          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' }
+          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
+          // TODO: Ugly, maybe introduce 'align' prop to ui.inline?
+          alignSelf = componentKey === 'links' ? 'flex-start' : undefined
 
         return (
           // Recreate only if name or position within form items changed, update otherwise.
-          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width }}>
+          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width, alignSelf }}>
             <XComponent model={m} />
           </div>
         )
@@ -243,6 +247,7 @@ const
     if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText name={m.text_xs.name} content={m.text_xs.content} size='xs' /></XToolTip>
     if (m.label) return <XToolTip content={m.label.tooltip} expand={false}><XLabel model={m.label} /></XToolTip>
     if (m.link) return <XToolTip content={m.link.tooltip} expand={false}><XLink model={m.link} /></XToolTip>
+    if (m.links) return <XLinks model={m.links} />
     if (m.separator) return <XSeparator model={m.separator} />
     if (m.progress) return <XToolTip content={m.progress.tooltip}><XProgress model={m.progress} /></XToolTip>
     if (m.message_bar) return <XMessageBar model={m.message_bar} />

@@ -15,6 +15,9 @@
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
+import { stylesheet } from 'typestyle'
+import { Component } from './form'
+import { clas, margin } from './theme'
 
 /**
  * Create a hyperlink.
@@ -45,8 +48,55 @@ export interface Link {
   /** An identifying name for this component. */
   name?: S
 }
+const
+  css = stylesheet({
+    linkGroup: {
+      margin: margin(-6, 12, 0, 12),
+      $nest: {
+        a: {
+          display: 'block',
+          marginTop: 8
+        },
+        'a:first-of-type': {
+          marginTop: 0
+        }
+      }
+    },
+    linkGroupLabel: {
+      marginBottom: 10
+    },
+    inline: {
+      display: 'flex',
+      $nest: {
+        a: {
+          marginRight: 16
+        },
+        'a:last-child': {
+          marginRight: 0
+        },
+      }
+    }
+  })
+
+/** Create a collection of links. */
+export interface Links {
+  /** The links contained in this group. */
+  items: Component[]
+  /** The name of the link group. */
+  label?: S
+  /** Render links horizontally. Defaults to 'false'. */
+  inline?: B
+  /** The width of the links, e.g. '100px'. */
+  width?: S
+}
 
 export const
+  XLinks = ({ model: { label, items, inline } }: { model: Links }) => (
+    <div className={inline ? css.inline : css.linkGroup}>
+      {label && <div className={clas('wave-s20 wave-w6', css.linkGroupLabel)}>{label}</div>}
+      {items.filter(({ link }) => link).map((link, i) => <XLink key={i} model={link.link!} />)}
+    </div>
+  ),
   XLink = ({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
     const
       _label = label || path,

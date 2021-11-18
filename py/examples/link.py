@@ -1,5 +1,5 @@
 # Form / Link
-# Use links to allow #navigation to internal and external URLs.
+# Use link to allow #navigation to internal and external URLs.
 # #form #link
 # ---
 from h2o_wave import site, ui
