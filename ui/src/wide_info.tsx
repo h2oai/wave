@@ -115,8 +115,8 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     render = () => (
       <div
         data-test={label ? undefined : name}
-        onClick={label ? undefined : onClick}
-        className={clas(css.card, label ? '' : css.clickable, align === 'right' ? css.right : '')}
+        onClick={!name ? undefined : onClick}
+        className={clas(css.card, !name ? '' : css.clickable, align === 'right' ? css.right : '')}
       >
         <div className={clas(css.lhs, !icon && image ? css.imgSpecified : '')}>
           {
