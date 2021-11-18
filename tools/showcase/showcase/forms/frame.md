@@ -16,7 +16,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 
 The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
 
-Check the API at [ui.frame](/docs/api/ui#frame).
+Check the full API at [ui.frame](/docs/api/ui#frame).
 
 ## Custom HTML
 

@@ -8,7 +8,7 @@ to show the relationship between these two. However, area charts work well only 
 the value differences are larger, otherwise you end up with a single big area covering
 most of the chart.
 
-Check the API at [ui.plot_card](/docs/api/ui#plot_card).
+Check the full API at [ui.plot_card](/docs/api/ui#plot_card).
 
 ```py
 from h2o_wave import data

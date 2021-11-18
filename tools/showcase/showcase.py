@@ -34,8 +34,19 @@ def get_template_code(code: str, pool_idx: int):
     return f'''
 from h2o_wave import site, ui
 
+disable_animations = \'\'\'
+* {{
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -o-animation: none !important;
+    -ms-animation: none !important;
+    animation: none !important
+}}
+\'\'\'
 page = site['/{pool_idx}']
+
 page.drop() # Drop any previous pages.
+page['meta'] = ui.meta_card(box='', stylesheet=ui.inline_stylesheet(disable_animations))
 {code.replace('q.', '')}
 page.save()
     '''

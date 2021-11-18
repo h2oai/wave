@@ -15,7 +15,7 @@ q.page['example'] = ui.form_card(box='1 1 2 7', items=[
 ])
 ```
 
-Check the API at [ui.persona](/docs/api/ui#persona).
+Check the full API at [ui.persona](/docs/api/ui#persona).
 
 ## Sizes
 

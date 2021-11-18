@@ -20,7 +20,7 @@ q.page['example'] = ui.form_card(box='1 1 4 2', items=[
 ])
 ```
 
-Check the API at [ui.stats](/docs/api/ui#stats).
+Check the full API at [ui.stats](/docs/api/ui#stats).
 
 ## Icons
 

@@ -339,12 +339,12 @@ const
               }
               {
                 footerItems.length && (
-                  <div style={{ width: '80%' }}>
+                  <Fluent.StackItem grow={1}>
                     <Fluent.CommandBar items={footerItems} styles={{
                       root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
                       primarySet: { justifyContent: 'flex-end' }
                     }} />
-                  </div>
+                  </Fluent.StackItem>
                 )
               }
             </Fluent.Stack>

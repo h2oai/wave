@@ -23,7 +23,7 @@ const css = stylesheet({
   btn: {
     minWidth: 'initial',
     position: 'absolute',
-    top: 33,
+    top: 31,
     right: 4,
     width: 24,
     height: 24
@@ -43,7 +43,7 @@ const css = stylesheet({
  * Use this component when you want to enable your users to quickly copy paste sections of text.
 */
 export interface CopyableText {
-  /** Text to be displayed inside the component. Markdown is supported only when 'multiline' is set. */
+  /** Text to be displayed inside the component. */
   value: S
   /** The text displayed above the textbox. */
   label: S

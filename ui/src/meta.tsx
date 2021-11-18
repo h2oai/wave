@@ -228,6 +228,7 @@ export const
       delete state.script
       executeScript(script)
     }
+    debugger
     if (stylesheet) {
       const styleEl = document.createElement('style')
       const { content, media } = stylesheet

@@ -18,6 +18,8 @@ const
     }, { groups: new Map(), plainFiles: [] })
 
 const sortedGroups = [...groups.values()].sort((a, b) => a.label.localeCompare(b.label))
+// Move overview to be the first, sort alphabetically the rest.
+plainFiles.sort().unshift(...plainFiles.splice(plainFiles.findIndex(f => f.includes('overview')), 1))
 
 module.exports = {
   someSidebar: {
@@ -70,7 +72,7 @@ module.exports = {
       'wavedb',
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
-    'Components': [...plainFiles.sort(), ...sortedGroups],
+    'Components': [...plainFiles, ...sortedGroups],
     'API': [
       'api/index',
       'api/core',

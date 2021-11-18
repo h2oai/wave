@@ -14,7 +14,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-Check the API at [ui.image](/docs/api/ui#image).
+Check the full API at [ui.image](/docs/api/ui#image).
 
 ## Base64
 

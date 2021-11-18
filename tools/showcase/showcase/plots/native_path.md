@@ -27,7 +27,7 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
-Check the API at [ui.plot_card](/docs/api/ui#plot_card).
+Check the full API at [ui.plot_card](/docs/api/ui#plot_card).
 
 ## Curve
 

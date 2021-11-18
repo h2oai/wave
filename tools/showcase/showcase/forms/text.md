@@ -8,7 +8,7 @@ custom_edit_url: null
 
 Need to display textual content? No worries, we've got you covered.
 
-Check the API at [ui.text](/docs/api/ui#text).
+Check the full API at [ui.text](/docs/api/ui#text).
 
 ## Sizes
 

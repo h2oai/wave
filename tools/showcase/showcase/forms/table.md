@@ -73,7 +73,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 
 ## Preselection
 
-If you want to see some rows preselected, use `values` attribute. Note that if this parameter is set,
+If you want to see some rows preselected, use the `values` attribute. Note that if this parameter is set,
 multiple selections will be allowed (`multiple=True` implicitly).
 
 ```py
@@ -186,7 +186,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 
 ## Sizing
 
-By default the table tries to fit all horizontal available space and use as much vertical space as
+By default, the table tries to fit all horizontal available space and use as much vertical space as
 needed. For tables with > 10 rows, the initial height is `500px`.
 
 In some cases though, it might be desirable to control the dimensions yourself via `width` and `height`
@@ -204,5 +204,32 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
         ui.table_row(name='row2', cells=['Alice', 'Smith']),
         ui.table_row(name='row3', cells=['Bob', 'Adams']),
     ])
+])
+```
+
+## Tags
+
+Use tags to emphasize a specific value, usually an enum value like a certain state for example. For multiple tags in a single row use `,` as a delimiter.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+    ui.table(
+        name='table', 
+        columns=[
+            ui.table_column(name='text', label='Process'),
+            ui.table_column(name='tag', label='Status', cell_type=ui.tag_table_cell_type(
+                name='tags',
+                tags=[
+                    ui.tag(label='FAIL', color='$red'),
+                    ui.tag(label='DONE', color='#D2E3F8', label_color='#053975'),
+                    ui.tag(label='SUCCESS', color='$mint'),
+                ]
+            ))
+        ],
+        rows=[
+            ui.table_row(name='row1', cells=['Process1', 'FAIL']),
+            ui.table_row(name='row2', cells=['Process2', 'SUCCESS,DONE']),
+            ui.table_row(name='row3', cells=['Process3', 'DONE']),
+        ])
 ])
 ```

@@ -26,7 +26,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-Check the API at [ui.visualization](/docs/api/ui#visualization).
+Check the full API at [ui.visualization](/docs/api/ui#visualization).
 
 ## Dimensions
 

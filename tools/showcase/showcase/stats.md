@@ -20,15 +20,15 @@ Use this stat, if you want to display a single value only and nothing else.
 q.page['example'] = ui.small_stat_card(box='1 1 1 1', title='Stat title', value='99.99')
 ```
 
-Check the API at [ui.small_stat_card](/docs/api/ui#small_stat_card).
+Check the full API at [ui.small_stat_card](/docs/api/ui#small_stat_card).
 
 ## Small series stat
 
-If you need more than a textual content and want to display also how is your data trending, use series stat.
+If you need more than textual content and want to display also how is your data trending, use series stat.
 
 Series stats can be either an area with different `plot_curve`s or an interval depending on how you want to visualize the data.
 
-Check the API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
+Check the full API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
 
 ### Small series area linear curve
 
@@ -127,7 +127,7 @@ q.page['step-before'] = ui.small_series_stat_card(
 
 ### Small series area interval
 
-If you need more than a textual content and want to display also how is your data trending.
+If you need more than textual content and want to display also how is your data trending.
 
 ```py
 from h2o_wave import data
@@ -146,7 +146,7 @@ q.page['example'] = ui.small_series_stat_card(
 )
 ```
 
-Check the API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
+Check the full API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
 
 ## Large stat
 
@@ -163,7 +163,7 @@ q.page['example'] = ui.large_stat_card(
 )
 ```
 
-Check the API at [ui.large_stat_card](/docs/api/ui#large_stat_card).
+Check the full API at [ui.large_stat_card](/docs/api/ui#large_stat_card).
 
 ## Large bar stat
 
@@ -184,9 +184,28 @@ q.page['example'] = ui.large_bar_stat_card(
 )
 ```
 
+Check the full API at [ui.large_bar_stat_card](/docs/api/ui#large_bar_stat_card).
+
+## Tall stats
+
+Vertical label-value pairs collection. Generally used when you want to interpret the main findings, e.g. total churn.
+
+```py
+q.page['example'] = ui.tall_stats_card(
+    box='1 1 2 4',
+    items=[
+        ui.stat(label='PARAMETER NAME', value='125%'),
+        ui.stat(label='PARAMETER NAME', value='578 Users'),
+        ui.stat(label='PARAMETER NAME', value='25K')
+    ]
+)
+```
+
+Check the full API at [ui.tall_stats_card](/docs/api/ui#tall_stats_card).
+
 ## Tall gauge stat
 
-Best used for cases when a few numeric values need to be displayed in a vertical way, with the main
+Best used for cases when a few numeric values need to be displayed vertically, with the main
 value one being a percentage.
 
 ```py
@@ -201,14 +220,16 @@ q.page['example'] = ui.tall_gauge_stat_card(
 )
 ```
 
+Check the full API at [ui.tall_gauge_stat_card](/docs/api/ui#tall_gauge_stat_card).
+
 ## Tall series area
 
 Most suitable for cases when you need to fill a vertical space with numerical values together
 with data series.
 
-Check the API at [ui.tall_series_stat_card](/docs/api/ui#tall_series_stat_card).
+Feel free to play around with the `plot_curve` attribute in order to find the curve that suits you the most.
 
-Feel free to play around with `plot_curve` attribute in order to find the curve that suits you the most.
+Check the full API at [ui.tall_series_stat_card](/docs/api/ui#tall_series_stat_card).
 
 ### Tall series area linear curve
 
@@ -315,9 +336,26 @@ q.page['example'] = ui.tall_series_stat_card(
 )
 ```
 
+## Wide pie stat
+
+Need a pie chart? No problem.
+
+```py
+q.page['example'] = ui.wide_pie_stat_card(
+    box='1 1 3 3',
+    title='Wide Pie Stat',
+    pies=[
+        ui.pie(label='Category 1', value='35%', fraction=0.35, color='#2cd0f5', aux_value='$ 35'),
+        ui.pie(label='Category 2', value='65%', fraction=0.65, color='$green', aux_value='$ 65'),
+    ]
+)
+```
+
+Check the full API at [ui.wide_pie_stat_card](/docs/api/ui#wide_pie_stat_card).
+
 ## Wide bar stat
 
-Most suitable for cases when you need to display numerical data together with a progressbar horizontally.
+Most suitable for cases when you need to display numerical data together with a progress bar horizontally.
 
 ```py
 q.page['example'] = ui.wide_bar_stat_card(
@@ -331,7 +369,7 @@ q.page['example'] = ui.wide_bar_stat_card(
 )
 ```
 
-Check the API at [ui.wide_bar_stat_card](/docs/api/ui#wide_bar_stat_card).
+Check the full API at [ui.wide_bar_stat_card](/docs/api/ui#wide_bar_stat_card).
 
 ## Wide gauge stat
 
@@ -347,14 +385,14 @@ q.page['example'] = ui.wide_gauge_stat_card(
 )
 ```
 
-Check the API at [ui.wide_gauge_stat_card](/docs/api/ui#wide_gauge_stat_card).
+Check the full API at [ui.wide_gauge_stat_card](/docs/api/ui#wide_gauge_stat_card).
 
 ## Wide series stat
 
 Most suitable for cases when you need to fill a horizontal space with numerical values together
 with data series.
 
-Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
+Check the full API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
 
 ### Wide series area linear curve
 

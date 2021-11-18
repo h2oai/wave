@@ -26,7 +26,7 @@ q.page['example'] = ui.form_card(
 )
 ```
 
-Check the API at [ui.separator](/docs/api/ui#separator).
+Check the full API at [ui.separator](/docs/api/ui#separator).
 
 ## Inline
 
@@ -45,7 +45,7 @@ q.page['form'] = ui.form_card(
 )
 ```
 
-Check the API at [ui.inline](/docs/api/ui#inline).
+Check the full API at [ui.inline](/docs/api/ui#inline).
 
 ## Expander
 
@@ -67,7 +67,7 @@ q.page['form'] = ui.form_card(
 Use `expanded` attr to toggle between collapsed / expanded state.
 :::
 
-Check the API at [ui.expander](/docs/api/ui#expander).
+Check the full API at [ui.expander](/docs/api/ui#expander).
 
 ```py
 q.page['form'] = ui.form_card(
@@ -106,4 +106,4 @@ That means `Next` button should be disabled until all the required fields are fi
 
 The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
 
-Check the API at [ui.stepper](/docs/api/ui#stepper).
+Check the full API at [ui.stepper](/docs/api/ui#stepper).

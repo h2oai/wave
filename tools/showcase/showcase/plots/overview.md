@@ -139,3 +139,32 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
+## Horizontal
+
+By default, all the plot cards are rendered vertically. However, there might be cases when you also want to provide a plot caption and conserve the space.
+
+```py
+from h2o_wave import data
+
+q.page['example'] = ui.wide_plot_card(
+    box='1 1 5 4',
+    title='Wide Plot Card',
+    caption='''
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia aliquam maxime quos facere
+    necessitatibus tempore eum odio, qui illum. Repellat modi dolor facilis odio ex possimus
+    ''',
+    data=data('product price', 10, rows=[
+        ('P1', 124),
+        ('P2', 580),
+        ('P3', 528),
+        ('P1', 361),
+        ('P2', 228),
+        ('P3', 418),
+        ('P1', 824),
+        ('P2', 539),
+        ('P3', 712),
+        ('P1', 213),
+    ]),
+    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)])
+)
+```

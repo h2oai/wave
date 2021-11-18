@@ -31,7 +31,7 @@ q.page['embedded'] = ui.vega_card(
 )
 ```
 
-Check the API at [ui.vega_card](/docs/api/ui#vega_card).
+Check the full API at [ui.vega_card](/docs/api/ui#vega_card).
 
 ## Separate spec from data
 

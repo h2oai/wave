@@ -25,12 +25,12 @@ You can see the API for [ui.file_upload](/docs/api/ui#file_upload) or check the 
 
 It's common to want to allow your users to only upload files with very specific parameters, for example:
 
-* Decide whether user should upload a single or multiple files.
+* Decide whether the user should upload single or multiple files.
 * A specific file type with extensions like `pdf`, `png` etc.
 * A file that is less than 50MB in size.
-* In case of multiple files, make sure that total size does not exceed a specified limit.
+* In case of multiple files, make sure that the total size does not exceed a specified limit.
 
-Good news is Wave is flexible enough to support all these cases!
+The good news is Wave is flexible enough to support all these cases!
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
@@ -47,12 +47,22 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 
 ## Sizing
 
-In addition to `width` attribute that is present on every form component, file upload provides also
-a way to control height via `height` attribute. It supports all the [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units), however `%` may not always work as you
-could expect so we advise to use static units like `px`, `rem` etc. instead.
+In addition to the `width` attribute that is present on every form component, file upload provides also
+a way to control height via the `height` attribute. It supports all the [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units), however `%` may not always work as you
+could expect so we advise using static units like `px`, `rem` etc. instead.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.file_upload(name='file_upload', label='File Upload', width='200px', height='200px')
+])
+```
+
+## Compact
+
+When you need just a single file to be uploaded and don't have too much space to waste.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
+    ui.file_upload(name='file_upload', label='File Upload', compact=True)
 ])
 ```
