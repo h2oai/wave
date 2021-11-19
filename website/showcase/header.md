@@ -5,7 +5,7 @@ keywords:
 custom_edit_url: null
 ---
 
-The upper part of the web q.page that should provide general information about the app. Ideally, this would include the name of your app, your logo brand and navigation if needed.
+The upper part of the app, providing general information about the app. Ideally, this would include the name of your app, your logo brand and navigation if needed.
 
 Check the full API at [ui.header_card](/docs/api/ui#header_card).
 
@@ -36,7 +36,7 @@ q.page['header'] = ui.header_card(
 For mobile versions of your app, when there is not much space to waste, it can be handy to display a hamburger menu icon which upon clicking expands the side nav with the navigation links. Simply use the `nav` attribute.
 
 :::tip
-When developing for larger screen sizes, avoid the hamburger as your links can be easily visible at all times, improving UX by not requiring extra click when navigating.
+When developing for larger screen sizes, avoid the hamburger as your links can be easily visible at all times, improving UX by not requiring extra click during navigation.
 :::
 
 ```py
@@ -58,9 +58,9 @@ q.page['header'] = ui.header_card(
 )
 ```
 
-## Displaying items on the right hand side
+## Items on the right-hand side
 
-Header also supports including app level actions like links, global search, app theme toggle, currently logged user etc. Simply use the `items` attribute.
+The header also supports including app-level actions like links, global search, app theme toggle, currently logged user, etc. Simply use the `items` attribute.
 
 ```py
 q.page['header'] = ui.header_card(
@@ -115,7 +115,7 @@ q.page['header'] = ui.header_card(
 
 ## Displaying items in the center
 
-Complex apps can have a lot of actions to display in header, but showing them all together on one side can feel a bit cramped. In order to avoid these situations, Wave supports the `secondary_items` attribute that will put the specified items into the center of the header. However, note that this works only if `items` are populated.
+Complex apps can have a lot of actions to display in the header, but showing them all together on one side can feel a bit cramped. To avoid these situations, Wave supports the `secondary_items` attribute that will put the specified items into the center of the header. However, note that this works only if `items` are populated.
 
 ```py
 q.page['header'] = ui.header_card(
@@ -131,7 +131,7 @@ q.page['header'] = ui.header_card(
 )
 ```
 
-## Choosing color
+## Color
 
 By default, the header's background is `primary` color which aims to separate the header from the rest of the app. However, we realize that the contrast can be too loud sometimes, especially when the primary color is too gaudy. For these scenarios, you can use the `color` attribute which supports `card`, `transparent` and `primary` values.
 

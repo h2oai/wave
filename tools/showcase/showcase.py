@@ -16,6 +16,7 @@ from multiprocessing import Pool
 
 example_file_path = os.path.join('..', '..', 'py', 'showcase')
 docs_path = os.path.join('..', '..', 'website')
+showcase_docs_path = os.path.join(docs_path, 'showcase')
 
 
 class CustomEncoder(JSONEncoder):
@@ -84,7 +85,7 @@ def generate_screenshots(files: List[DocFile], pool_idx: int):
         browser = playwright.chromium.launch()
         page = browser.new_page()
         for file in files:
-            with open(file.path, 'r') as f:
+            with open(os.path.join(docs_path, file.path), 'r') as f:
                 is_code = False
                 code = []
                 file_idx = 0
@@ -106,7 +107,7 @@ def append_images(files: List[DocFile]):
     for file in files:
         img_lines = []
         is_code = False
-        with open(file.path, 'r') as f:
+        with open(os.path.join(docs_path, file.path), 'r') as f:
             idx = 0
             for line in f.readlines():
                 if line.startswith('```'):
@@ -124,13 +125,14 @@ def append_images(files: List[DocFile]):
 
 def generate_showcase_json():
     files = []
-    for p in Path('showcase').rglob('*.md'):
+    for p in Path(showcase_docs_path).rglob('*.md'):
         map_to_doc_file(p, files)
     with open(os.path.join(docs_path, 'showcase.js'), 'w') as f:
         f.write(f'module.exports={json.dumps(files, cls=CustomEncoder)}')
 
 
 def map_to_doc_file(p: Path, files: List[DocFile]):
+    p = p.relative_to(docs_path)
     _, *groups, _ = p.parts
     if len(groups) > 1:
         raise ValueError(f'Nested folders not supported - {"/".join(groups)}')
@@ -148,11 +150,11 @@ def main():
         for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', 'assets', '*.png')):
             os.remove(f)
 
-        for p in Path('showcase').rglob('*.md'):
+        for p in Path(showcase_docs_path).rglob('*.md'):
             map_to_doc_file(p, files)
     else:
         for f in arg_files:
-            p = Path(f'showcase/{f}.md')
+            p = Path(os.path.join(showcase_docs_path, f'{f}.md'))
             map_to_doc_file(p, files)
 
     try:
