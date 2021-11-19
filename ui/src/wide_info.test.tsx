@@ -16,12 +16,12 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { wave } from './ui'
-import { View } from './wide_info'
+import { View, State } from './wide_info'
 
 const
   name = 'wide_info',
   pushMock = jest.fn()
-let wideInfoProps: T.Model<any>
+let wideInfoProps: T.Model<State>
 
 describe('WideInfo.tsx', () => {
   beforeAll(() => wave.push = pushMock)
@@ -30,7 +30,7 @@ describe('WideInfo.tsx', () => {
     wave.args = [] as any
     wideInfoProps = {
       name,
-      state: { title: name },
+      state: { title: name, name, caption: '' },
       changed: T.box(false)
     }
   })
@@ -52,8 +52,8 @@ describe('WideInfo.tsx', () => {
   it('Submits data to server if label specified and name without #', () => {
     wideInfoProps.state.name = name
     wideInfoProps.state.label = 'label'
-    const { getByTestId } = render(<View {...wideInfoProps} />)
-    fireEvent.click(getByTestId(name))
+    const { getByText } = render(<View {...wideInfoProps} />)
+    fireEvent.click(getByText('label'))
     expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(name)
   })
@@ -70,6 +70,33 @@ describe('WideInfo.tsx', () => {
     wideInfoProps.state.name = name
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(name)
+  })
+
+  it('Makes card clickable only if name was specified but label was not', () => {
+    const { getByTestId } = render(<View {...wideInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(name)
+  })
+
+  it('Makes card unclickable if name was not provided', () => {
+    wideInfoProps.state.name = ''
+    const { getByTestId } = render(<View {...wideInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).not.toBe(name)
+  })
+
+  it('Makes only the button (label) clickable if label was provided', () => {
+    wideInfoProps.state.label = 'Click me'
+    const { getByText, getByTestId } = render(<View {...wideInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).not.toBe(name)
+
+    fireEvent.click(getByText('Click me'))
     expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(name)
   })

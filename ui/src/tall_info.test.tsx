@@ -53,8 +53,8 @@ describe('TallInfo.tsx', () => {
   it('Submits data to server if label specified and name without #', () => {
     tallInfoProps.state.name = name
     tallInfoProps.state.label = 'Click me'
-    const { getByTestId } = render(<View {...tallInfoProps} />)
-    fireEvent.click(getByTestId('Click me'))
+    const { getByText } = render(<View {...tallInfoProps} />)
+    fireEvent.click(getByText('Click me'))
     expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(name)
   })
@@ -92,15 +92,13 @@ describe('TallInfo.tsx', () => {
 
   it('Makes only the button (label) clickable if label was provided', () => {
     tallInfoProps.state.label = 'Click me'
-    const { getByTestId } = render(<View {...tallInfoProps} />)
+    const { getByText, getByTestId } = render(<View {...tallInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(pushMock).not.toHaveBeenCalled()
     expect(wave.args[name]).not.toBe(name)
 
-    fireEvent.click(getByTestId('Click me'))
+    fireEvent.click(getByText('Click me'))
     expect(pushMock).toHaveBeenCalled()
     expect(wave.args[name]).toBe(name)
   })
-
-
 })

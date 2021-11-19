@@ -113,7 +113,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {category && <div className={clas('wave-s14 wave-w4 wave-t5', css.category)}>{category}</div>}
           </div>
           {caption && <div className='wave-s14 wave-w4 wave-t7'><Markdown source={caption} /></div>}
-          {label && <Fluent.DefaultButton data-test={label} text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
+          {label && <Fluent.DefaultButton text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
         </div>
       </div >
     )
