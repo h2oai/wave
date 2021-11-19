@@ -1,5 +1,4 @@
 const
-  examples = require('./examples'),
   capitalize = str => str.charAt(0).toUpperCase() + str.slice(1),
   { groups, plainFiles } = require('./showcase')
     .sort((a, b) => a.path.localeCompare(b.path))
@@ -71,7 +70,6 @@ module.exports = {
       'wave-ml',
       'wavedb',
     ],
-    'Examples': examples.map(e => `examples/${e.slug}`),
     'Components': [...plainFiles, ...sortedGroups],
     'API': [
       'api/index',
