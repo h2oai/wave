@@ -65,7 +65,11 @@ def make_snippet_screenshot(code: List[str], screenshot_name: str, page: Any, gr
         _, err = p.communicate()
         if err:
             raise ValueError(f'Could not generate {group} {screenshot_name}\n{err.decode()}')
-        page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle' if 'image' in code_str else None)
+        page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle')
+
+        if 'frame_card' in code_str:
+            time.sleep(1)  # Wait for iframe content to be loaded.
+
         path = os.path.join(docs_path, 'docs', 'showcase', group, 'assets', screenshot_name)
         if group:
             os.makedirs(os.path.dirname(path), exist_ok=True)
