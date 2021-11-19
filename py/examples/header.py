@@ -8,7 +8,6 @@ commands = [
     ui.command(name='profile', label='Profile', icon='Contact'),
     ui.command(name='preferences', label='Preferences', icon='Settings'),
     ui.command(name='logout', label='Logout', icon='SignOut'),
-
 ]
 page = site['/demo']
 page['header1'] = ui.header_card(
