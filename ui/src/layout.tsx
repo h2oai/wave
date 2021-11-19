@@ -319,6 +319,13 @@ const css = stylesheet({
             background: important(cssVar('$text'))
           },
         }
+      },
+      '.ms-TextField-fieldGroup': {
+        $nest: {
+          i: {
+            color: cssVar('$text')
+          }
+        }
       }
     }
   },
