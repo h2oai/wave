@@ -11,6 +11,7 @@ The stack is engineered from the ground-up for low-latency, realtime information
 ## Overview
 
 The Wave runtime operates over three tiers:
+
 - **A content server.** The Wave server, a ~10MB static binary executable that runs anywhere[^1].
 - **A language driver.** The [h2o-wave PyPI package](https://pypi.org/project/h2o-wave/) used by Wave scripts and apps.
 - **A browser-based client.** The user interface and components.
@@ -30,11 +31,12 @@ The Wave runtime operates over three tiers:
 ```
 
 The Wave server has three main functions:
-- Store site content
+
+- Store site content.
 - Transmit content changes to browsers.
 - Transmit browser events to apps.
 
-In other words, the Wave server is comparable to a in-memory realtime database, a HTTP web server and a proxy server, all rolled into one, with browsers (*clients*) downstream, and Wave apps (or scripts) upstream.
+In other words, the Wave server is comparable to an in-memory realtime database, an HTTP web server and a proxy server, all rolled into one, with browsers (*clients*) downstream, and Wave apps (or scripts) upstream.
 
 The language driver (the [h2o-wave PyPI package](https://pypi.org/project/h2o-wave/)) provides the ability to manage content on the Wave server. It's similar in function to a database driver, but unlike typical database drivers (which use SQL as a protocol), the Wave driver provides an API closely integrated with the Python language that feels natural and idiomatic in practice.
 
@@ -42,7 +44,7 @@ The browser-based client's job is to render content on the user interface, and t
 
 ## How does it work?
 
-The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](cards.md). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md). 
+The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](/docs/showcase/overview). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md).
 
 When a browser is pointed to a route, it pulls a copy of the page, creates a *replica* locally, and renders the content on the user interface.
 

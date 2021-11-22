@@ -2,7 +2,7 @@
 title: Query Arguments
 ---
 
-When a user interacts with [components](components.md) on a page - like typing in text, making choices, clicking buttons, and so on - that information is available to your app in the form of *query arguments*.
+When a user interacts with [components](/docs/showcase/overview) on a page - like typing in text, making choices, clicking buttons, and so on - that information is available to your app in the form of *query arguments*.
 
 The query arguments can be read from `q.args`, a read-only dictionary-like object passed to your `@app()` handler:
 
@@ -47,7 +47,6 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.textbox()` | The value typed in (a string). |
 | `ui.toggle()` | `True` if checked, `False` if unchecked. |
 
-
 ## Handling interactivity
 
 A common pattern for inspecting query arguments and determining the appropriate response is a simple `if/elif/else` conditional.
@@ -84,7 +83,6 @@ async def serve(q: Q):
 
 If this feels too repetitive, you can use `on` and `handle_on` to remove some of the boilerplate:
 
-
 ```py {3,7,11,15,21}
 from h2o_wave import Q, main, app, on, handle_on
 
@@ -113,7 +111,6 @@ async def serve(q: Q):
 In the above example, the `@on('add_to_cart')` is read as "when `q.arg['add_to_cart']` is `True` (or truthy), then invoke the function the `@on()` is applied to" - in this case, `add_to_cart()`.
 
 If the name of the function is the same as the name of the query argument, then the name can be elided. This simplifies the above example to:
-
 
 ```py {3,7,11,15}
 from h2o_wave import Q, main, app, on, handle_on

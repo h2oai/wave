@@ -49,8 +49,8 @@ module.exports = {
           title: 'Learn',
           items: [
             {
-              label: 'Gallery',
-              to: 'docs/examples',
+              label: 'Components',
+              to: 'docs/showcase/overview',
             },
             {
               label: 'Get Started',
@@ -139,4 +139,4 @@ module.exports = {
       defer: false,
     },
   ],
-};
+}
