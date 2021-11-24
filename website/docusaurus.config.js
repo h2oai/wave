@@ -31,7 +31,7 @@ module.exports = {
         src: 'img/logo.svg',
       },
       items: [
-        { to: 'docs/examples', label: 'Gallery', position: 'left' },
+        { to: 'docs/showcase/overview', label: 'Components', position: 'left' },
         { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
         { to: 'https://h2oai.github.io/h2o-ai-cloud/', label: 'Enterprise', position: 'left', },
