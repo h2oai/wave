@@ -82,7 +82,7 @@ describe('TallInfo.tsx', () => {
     expect(wave.args[name]).toBe(name)
   })
 
-  it('Makes card unclickable if name was not provided', () => {
+  it('Makes card unclickable if name is empty', () => {
     tallInfoProps.state.name = ''
     const { getByTestId } = render(<View {...tallInfoProps} />)
     fireEvent.click(getByTestId(name))
