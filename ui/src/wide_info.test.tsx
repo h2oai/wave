@@ -81,7 +81,7 @@ describe('WideInfo.tsx', () => {
     expect(wave.args[name]).toBe(name)
   })
 
-  it('Makes card unclickable if name was not provided', () => {
+  it('Makes card unclickable if name is empty', () => {
     wideInfoProps.state.name = ''
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
