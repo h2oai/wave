@@ -42,7 +42,7 @@ that if `multiple` is set to `True`, the form is not submitted automatically and
 required to trigger submission.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', multiple=True, columns=[
         ui.table_column(name='name', label='Name'),
         ui.table_column(name='surname', label='Surname'),
@@ -58,7 +58,7 @@ When `multiple` is specified, there is an option to control when should row chec
 By default, they are only visible on hover. Available options are `always`, `on-hover`, `hidden`.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', checkbox_visibility='always',
         multiple=True, columns=[
         ui.table_column(name='name', label='Name'),
@@ -77,7 +77,7 @@ If you want to see some rows preselected, use the `values` attribute. Note that 
 multiple selections will be allowed (`multiple=True` implicitly).
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', values=['row1'], columns=[
         ui.table_column(name='name', label='Name'),
         ui.table_column(name='surname', label='Surname'),
@@ -95,7 +95,7 @@ As stated above, the table provides a built-in search also. Activation consists 
 column as `searchable`. This way one can control which columns should affect searched results.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', columns=[
         ui.table_column(name='name', label='Name', searchable=True),
         ui.table_column(name='surname', label='Surname'),
@@ -135,7 +135,7 @@ Another cool feature of the Wave table is group by. All it takes is to specify a
 on table and a dropdown will render with columns on which a user can group by data.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', groupable=True, columns=[
         ui.table_column(name='name', label='Name'),
         ui.table_column(name='surname', label='Surname'),

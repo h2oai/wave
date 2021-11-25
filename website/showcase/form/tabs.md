@@ -57,7 +57,7 @@ If you prefer textual look over default buttons, use `link` attribute.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.tabs(name='tabs', link=True, items=[
+    ui.tabs(name='tabs', value='tab1', link=True, items=[
         ui.tab(name='tab1', label='Tab 1', icon='Home'),
         ui.tab(name='tab2', label='Tab 2', icon='Heart'),
         ui.tab(name='tab3', label='Tab 3', icon='Cake'),

@@ -22,7 +22,7 @@ Check the full API at [ui.persona](/docs/api/ui#persona).
 Wave supports a lot of text variations. This may come in handy when you want to distinguish certain parts of text from the other. For example title
 should always be more prominent than subtitle which should be less prominent than content.
 
-Default size is `m`.
+The default size is `m`.
 
 ```py
 image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'

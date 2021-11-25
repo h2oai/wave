@@ -85,8 +85,8 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, grp: str, pool
             raise ValueError(f'Could not generate {img_name}\n{err.decode()}')
         page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle')
 
-        if 'frame_card' in code_str:
-            time.sleep(1)  # Wait for iframe content to be loaded.
+        if any(match in code_str for match in ['frame_card', 'ui.script']):
+            time.sleep(1)
 
         path = os.path.join(docs_path, 'docs', 'showcase', grp, 'assets', img_name)
         if is_test:
@@ -156,19 +156,17 @@ def append_images(files: List[DocFile]):
 
 
 def generate_showcase_json():
-    files = []
-    for p in Path(showcase_docs_path).rglob('*.md'):
-        map_to_doc_file(p, files)
+    files = [map_to_doc_file(p) for p in Path(showcase_docs_path).rglob('*.md')]
     with open(os.path.join(docs_path, 'showcase.js'), 'w') as f:
         f.write(f'module.exports={json.dumps(files, cls=CustomEncoder)}')
 
 
-def map_to_doc_file(p: Path, files: List[DocFile]):
+def map_to_doc_file(p: Path) -> DocFile:
     p = p.relative_to(docs_path)
     _, *groups, _ = p.parts
     if len(groups) > 1:
         raise ValueError(f'Nested folders not supported - {"/".join(groups)}')
-    files.append(DocFile(str(p), groups[0] if groups else '', p.stem))
+    return DocFile(str(p), groups[0] if groups else '', p.stem)
 
 
 def main():
@@ -181,17 +179,20 @@ def main():
     args = parser.parse_args()
 
     if not args.file:
-        for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', '*.md')):
-            os.remove(f)
-        for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', 'assets', '*.png')):
-            os.remove(f)
-
+        if args.test:
+            with open('index.html', 'w') as f:
+                f.truncate(0)
+        else:
+            for f in Path(os.path.join(docs_path, 'docs', 'showcase')).rglob('*.md'):
+                os.remove(f)
+            for f in Path(os.path.join(docs_path, 'docs', 'showcase')).rglob('*.png'):
+                os.remove(f)
+            for f in Path(diff_folder_path).rglob('*.png'):
+                os.remove(f)
         for p in Path(showcase_docs_path).rglob('*.md'):
-            map_to_doc_file(p, files)
+            files.append(map_to_doc_file(p))
     else:
-        for f in arg_files:
-            p = Path(os.path.join(showcase_docs_path, f'{f}.md'))
-            map_to_doc_file(p, files)
+        files = [map_to_doc_file(Path(os.path.join(showcase_docs_path, f'{args.file}.md')))]
 
     try:
         os.makedirs(example_file_path)
