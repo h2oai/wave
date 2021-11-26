@@ -3812,7 +3812,7 @@ def tall_info_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        name: An identifying name for this card. Makes the card clickable, similar to a button.
+        name: An identifying name for this card. Makes the card clickable only if name is not empty and label is empty
         title: The card's title.
         caption: The card's caption, displayed below the title. Supports markdown.
         label: Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.

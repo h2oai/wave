@@ -4406,7 +4406,7 @@ ui_tall_gauge_stat_card <- function(
 #' Create a tall information card displaying a title, caption and either an icon or image.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param name An identifying name for this card. Makes the card clickable only if name is not empty and label is empty
 #' @param title The card's title.
 #' @param caption The card's caption, displayed below the title. Supports markdown.
 #' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.

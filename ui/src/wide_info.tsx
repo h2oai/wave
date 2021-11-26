@@ -80,7 +80,7 @@ const
   })
 
 /** Create a wide information card displaying a title, caption, and either an icon or image. */
-interface State {
+export interface State {
   /** An identifying name for this card. Makes the card clickable, similar to a button. */
   name: S
   /** The card's title. */
@@ -114,9 +114,9 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     },
     render = () => (
       <div
-        data-test={label ? undefined : name}
-        onClick={label ? undefined : onClick}
-        className={clas(css.card, label ? '' : css.clickable, align === 'right' ? css.right : '')}
+        data-test={name}
+        onClick={stateName && !label ? onClick : undefined}
+        className={clas(css.card, stateName && !label ? css.clickable : '', align === 'right' ? css.right : '')}
       >
         <div className={clas(css.lhs, !icon && image ? css.imgSpecified : '')}>
           {
@@ -132,7 +132,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {subtitle && <div className={clas('wave-s14 wave-w5 wave-t7', css.subtitle)}>{subtitle}</div>}
           </div>
           {caption && <div className='wave-s14 wave-w4 wave-t7' style={{ marginBottom: label ? 16 : undefined }}><Markdown source={caption} /></div>}
-          {label && <Fluent.PrimaryButton data-test={name} onClick={onClick} text={label} styles={{ root: { marginTop: 'auto', alignSelf: 'flex-start' } }} />}
+          {label && <Fluent.PrimaryButton onClick={onClick} text={label} styles={{ root: { marginTop: 'auto', alignSelf: 'flex-start' } }} />}
         </div>
       </div>
     )
