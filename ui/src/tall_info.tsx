@@ -65,7 +65,7 @@ const
 
 /** Create a tall information card displaying a title, caption and either an icon or image. */
 export interface State {
-  /** An identifying name for this card. Makes the card clickable, similar to a button. */
+  /** An identifying name for this card. Makes the card clickable only if name is not empty and label is empty */
   name: S
   /** The card's title. */
   title: S

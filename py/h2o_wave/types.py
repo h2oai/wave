@@ -10473,7 +10473,7 @@ class TallInfoCard:
         self.box = box
         """A string indicating how to place this component on the page."""
         self.name = name
-        """An identifying name for this card. Makes the card clickable, similar to a button."""
+        """An identifying name for this card. Makes the card clickable only if name is not empty and label is empty"""
         self.title = title
         """The card's title."""
         self.caption = caption
