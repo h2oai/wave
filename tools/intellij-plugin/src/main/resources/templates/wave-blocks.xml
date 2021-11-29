@@ -1,0 +1,125 @@
+<templateSet group="Wave">
+    <template name="w_base_app"
+              value="from h2o_wave import main, app, Q, ui&#10;&#10;&#10;@app('/$URL$')&#10;async def serve(q: Q):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Basic scaffolding for a wave app" toReformat="false" toShortenFQNames="true">
+        <variable name="URL" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_client_initialize"
+              value="if not q.client.initialized:&#10;    $END$&#10;    q.client.initialized = True"
+              description="Client level initialization logic" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_user_initialize"
+              value="if not q.user.initialized:&#10;    $END$&#10;    q.user.initialized = True"
+              description="User level initialization logic" toReformat="true" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_app_initialize" value="if not q.app.initialized:&#10;    $END$&#10;    q.app.initialized = True"
+              description="App level initialization logic" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_base_script"
+              value="from h2o_wave import site, ui&#10;&#10;page = site['/$SITE$']&#10;$END$&#10;page.save()"
+              description="Basic scaffolding for a wave script" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_page" value="q.page['$PAGE$'] = $END$" description="Creates a new page for card"
+              toReformat="false" toShortenFQNames="true">
+        <variable name="PAGE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_page_drop" value="q.page.drop()$END$" description="Delete all cards" toReformat="true"
+              toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_meta" value="q.page['meta']$END$" description="Shorthand for accessing meta card"
+              toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on" value="@on()&#10;async def $NAME$(q: Q):&#10;    $END$" shortcut="TAB"
+              description="Interactivity handler" toReformat="false" toShortenFQNames="true">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on_route"
+              value="@on(arg='#$ROUTE$')&#10;async def handle_$ROUTE$(q: Q):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Route handler" toReformat="false" toShortenFQNames="true">
+        <variable name="ROUTE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on_route_param"
+              value="@on(arg='#$ROUTE$/{$PARAM$}')&#10;async def handle_$ROUTE$(q: Q, $PARAM$: str):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Route handler with url param" toReformat="true" toShortenFQNames="true">
+        <variable name="ROUTE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="PARAM" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_page_delete" value="del q.page['$PAGE$']$END$" description="Delete a specific Wave card" toReformat="true"
+              toShortenFQNames="true">
+        <variable name="PAGE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_simple_tall_app" value="q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout(breakpoint='xs', zones=[&#10;    ui.zone(name='$MAIN$', size='100vh', zones=[&#10;        ui.zone(name='$HEADER$'),&#10;        ui.zone(name='$BODY$', size='1'),&#10;        ui.zone(name='$FOOTER$'),&#10;    ]),&#10;])])&#10;&#10;    q.page['header'] = ui.header_card(box='$HEADER$', title='Header', subtitle='Subtitle')&#10;    q.page['body'] = ui.form_card(box='$BODY$', items=[ui.text(content='I am body!')])&#10;    q.page['footer'] = ui.footer_card(box='$FOOTER$', caption='Footer caption')&#10;    $END$" description="Basic vertical layout" toReformat="true" toShortenFQNames="true">
+        <variable name="MAIN" expression="" defaultValue="&quot;main&quot;" alwaysStopAt="true" />
+        <variable name="HEADER" expression="" defaultValue="&quot;header&quot;" alwaysStopAt="true" />
+        <variable name="BODY" expression="" defaultValue="&quot;body&quot;" alwaysStopAt="true" />
+        <variable name="FOOTER" expression="" defaultValue="&quot;footer&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="WAVE" value="true" />
+        </context>
+    </template>
+    <template name="w_grid_app" value="q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout('xs', zones=[&#10;    ui.zone('$GRID$', direction=ui.ZoneDirection.ROW, wrap='stretch', justify='center')&#10;])])&#10;q.page[f'$CARD$_1'] = ui.form_card(box=ui.box('$GRID$', width='$WIDTH$'), items=[ui.text(content='I am a card!')])&#10;q.page[f'$CARD$_2'] = ui.form_card(box=ui.box('$GRID$', width='$WIDTH$'), items=[ui.text(content='I am a card!')])&#10;q.page[f'$CARD$_3'] = ui.form_card(box=ui.box('$GRID$', width='$WIDTH$'), items=[ui.text(content='I am a card!')])&#10;q.page[f'$CARD$_4'] = ui.form_card(box=ui.box('$GRID$', width='$WIDTH$'), items=[ui.text(content='I am a card!')])&#10;q.page[f'$CARD$_5'] = ui.form_card(box=ui.box('$GRID$', width='$WIDTH$'), items=[ui.text(content='I am a card!')])&#10;" description="Basic responsive grid layout" toReformat="true" toShortenFQNames="true">
+        <variable name="GRID" expression="" defaultValue="&quot;grid&quot;" alwaysStopAt="true" />
+        <variable name="CARD" expression="" defaultValue="&quot;card&quot;" alwaysStopAt="true" />
+        <variable name="WIDTH" expression="" defaultValue="&quot;400px&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="WAVE" value="true" />
+        </context>
+    </template>
+    <template name="w_simple_wide_app" value="q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout(breakpoint='xs', zones=[&#10;    ui.zone(name='$MAIN$', size='100vh', direction=ui.ZoneDirection.ROW, zones=[&#10;        ui.zone(name='$SIDEBAR$', size='$SIDEBAR_WIDTH$'),&#10;        ui.zone(name='$BODY$', size='1'),&#10;    ])&#10;])])&#10;&#10;    q.page['sidebar'] = ui.nav_card(&#10;        box='$SIDEBAR$', title='Header', subtitle='Subtitle', color='primary', image='$LOGO$', items=[&#10;        ui.nav_group('Menu', items=[&#10;            ui.nav_item(name='#menu/spam', label='Spam'),&#10;            ui.nav_item(name='#menu/ham', label='Ham'),&#10;            ui.nav_item(name='#menu/eggs', label='Eggs'),&#10;        ]),&#10;    ])&#10;    q.page['body'] = ui.form_card(box='$BODY$', items=[ui.text(content='I am a body!')])&#10;    $END$" description="Basic horizontal layout" toReformat="true" toShortenFQNames="true">
+        <variable name="MAIN" expression="" defaultValue="&quot;main&quot;" alwaysStopAt="true" />
+        <variable name="SIDEBAR" expression="" defaultValue="&quot;sidebar&quot;" alwaysStopAt="true" />
+        <variable name="SIDEBAR_WIDTH" expression="" defaultValue="&quot;250px&quot;" alwaysStopAt="true" />
+        <variable name="BODY" expression="" defaultValue="&quot;body&quot;" alwaysStopAt="true" />
+        <variable name="LOGO" expression="" defaultValue="&quot;https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="WAVE" value="true" />
+        </context>
+    </template>
+    <template name="w_complex_app" value="q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout(breakpoint='xs', zones=[&#10;    ui.zone(name='$MAIN$', size='100vh', direction=ui.ZoneDirection.ROW, zones=[&#10;        ui.zone(name='$SIDEBAR$', size='$SIDEBAR_WIDTH$'),&#10;        ui.zone(name='body', zones=[&#10;            ui.zone(name='$HEADER$'),&#10;            ui.zone(name='$CONTENT$', size='1'),&#10;        ]),&#10;    ])&#10;])])&#10;&#10;    q.page['sidebar'] = ui.nav_card(&#10;        box='$SIDEBAR$', title='', subtitle='', color='primary', image='$LOGO$', items=[&#10;        ui.nav_group('Menu', items=[&#10;            ui.nav_item(name='#menu/spam', label='Spam'),&#10;            ui.nav_item(name='#menu/ham', label='Ham'),&#10;            ui.nav_item(name='#menu/eggs', label='Eggs'),&#10;        ]),&#10;    ])&#10;    q.page['header'] = ui.header_card(box='$HEADER$', title='', subtitle='', items=[&#10;        ui.textbox(name='search', icon='Search', width='300px', placeholder='Search...'),&#10;    ])&#10;    q.page['body'] = ui.form_card(box='$CONTENT$', items=[ui.text(content='Content')])&#10;    $END$" description="Complex layout with both sidenav and topnav" toReformat="true" toShortenFQNames="true">
+        <variable name="MAIN" expression="" defaultValue="&quot;main&quot;" alwaysStopAt="true" />
+        <variable name="SIDEBAR" expression="" defaultValue="&quot;sidebar&quot;" alwaysStopAt="true" />
+        <variable name="SIDEBAR_WIDTH" expression="" defaultValue="&quot;250px&quot;" alwaysStopAt="true" />
+        <variable name="HEADER" expression="" defaultValue="&quot;header&quot;" alwaysStopAt="true" />
+        <variable name="CONTENT" expression="" defaultValue="&quot;content&quot;" alwaysStopAt="true" />
+        <variable name="LOGO" expression="" defaultValue="&quot;https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="WAVE" value="true" />
+        </context>
+    </template>
+</templateSet>
