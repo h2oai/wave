@@ -2199,6 +2199,7 @@ def facepile(
         items: List[Component],
         name: Optional[str] = None,
         max: Optional[int] = None,
+        value: Optional[str] = None,
 ) -> Component:
     """A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
     Often this control is used when sharing who has access to a specific view or file.
@@ -2207,6 +2208,7 @@ def facepile(
         items: List of personas to be displayed.
         name: An identifying name for this component. If specified `Add button` will be rendered.
         max: Maximum number of personas to be displayed.
+        value: A value to be submitted if the component is clicked. If value is not provided, true will be submitted
     Returns:
         A `h2o_wave.types.Facepile` instance.
     """
@@ -2214,6 +2216,7 @@ def facepile(
         items,
         name,
         max,
+        value,
     ))
 
 

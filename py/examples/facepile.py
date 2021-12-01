@@ -16,7 +16,7 @@ async def serve(q: Q):
     else:
         image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
         q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-            ui.facepile(name='facepile', max=4, items=[
+            ui.facepile(name='facepile', value='submitted value', max=4, items=[
                 ui.persona(title='John Doe', image=image),
                 ui.persona(title='John Doe', image=image),
                 ui.persona(title='John Doe'),
