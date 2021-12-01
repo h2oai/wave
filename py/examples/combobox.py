@@ -14,6 +14,7 @@ async def serve(q: Q):
             ui.text(f'combobox={q.args.combobox}'),
             ui.text(f'combobox_disabled={q.args.combobox_disabled}'),
             ui.text(f'combobox_error={q.args.combobox_error}'),
+            ui.text(f'combobox_trigger={q.args.combobox_trigger}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
@@ -24,6 +25,8 @@ async def serve(q: Q):
                         choices=combobox_choices, disabled=True),
             ui.combobox(name='combobox_error', label='Enter or choose a color', placeholder='Color...', value='Blue',
                         choices=combobox_choices, error='This combobox has an error!'),
+            ui.combobox(name='combobox_trigger', trigger=True, label='Enter or choose a color (trigger on selection)', placeholder='Color...', value=q.args.combobox_trigger,
+                        choices=combobox_choices),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
