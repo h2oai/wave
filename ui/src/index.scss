@@ -13,6 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--text0);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--text2);
+  border-radius: 6px;
+}
+
 body {
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
