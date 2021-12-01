@@ -33,6 +33,7 @@ const
       color: cssVar('$text'),
       display: 'flex',
       justifyContent: 'center',
+      alignItems: 'start',
       overflow: 'auto'
     },
     centerFullHeight: {

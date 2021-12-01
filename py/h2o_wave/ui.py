@@ -1446,7 +1446,7 @@ def tabs(
 
     Args:
         name: An identifying name for this component.
-        value: The name of the tab to select.
+        value: The name of the tab to select initially.
         items: The tabs in this tab bar.
         width: The width of the tabs, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
@@ -3284,7 +3284,7 @@ def nav_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The navigation groups contained in this pane.
-        value: The name of the active (highlighted) navigation item.
+        value: The name of the initially active (highlighted) navigation item.
         title: The card's title.
         subtitle: The card's subtitle.
         icon: The icon, displayed to the left. *

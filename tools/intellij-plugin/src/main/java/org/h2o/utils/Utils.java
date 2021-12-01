@@ -27,7 +27,7 @@ public class Utils {
     public static final Icon icon = IconLoader.getIcon("/icons/pluginIcon.svg");
 
     public static boolean isStateExpr(PsiElement el, String stateType) {
-        return el.getText().startsWith(stateType) && !el.getFirstChild().getText().equals("q");
+        return el.getText().startsWith(stateType) && el.getFirstChild().getText().equals(stateType);
     }
 
     public static boolean isSimpleString(PsiElement el) {
@@ -74,8 +74,11 @@ public class Utils {
     }
 
     public static @NotNull ElementPattern<PsiElement> getExpressionAutocompletePatterns(String expr) {
-        return PlatformPatterns.or(
-                psiElement(PyTokenTypes.IDENTIFIER).withLanguage(PythonLanguage.INSTANCE),
+        return PlatformPatterns.or(psiElement(PyTokenTypes.IDENTIFIER)
+                        .withParent(psiElement(PyReferenceExpression.class)
+                                .withFirstChild(psiElement(PyReferenceExpression.class).withText(expr))
+                        )
+                        .withLanguage(PythonLanguage.INSTANCE),
                 psiElement(PyTokenTypes.SINGLE_QUOTED_STRING)
                         .withParent(psiElement(PyStringLiteralExpression.class)
                                 .withParent(psiElement(PySubscriptionExpression.class)
@@ -84,13 +87,6 @@ public class Utils {
                         )
                         .withLanguage(PythonLanguage.INSTANCE)
         );
-    }
-
-    public static boolean shouldAutocompleteExpr(PsiElement position, String exprText) {
-        PsiElement firstParent = position.getParent();
-        if (firstParent == null) return false;
-        PsiElement secondParent = firstParent.getParent();
-        return secondParent != null && secondParent.getText().startsWith(exprText);
     }
 
     @NotNull

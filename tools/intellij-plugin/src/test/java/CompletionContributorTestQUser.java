@@ -3,6 +3,8 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestCase;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 
 public class CompletionContributorTestQUser extends LightPlatformCodeInsightFixture4TestCase {
 
@@ -82,5 +84,32 @@ public class CompletionContributorTestQUser extends LightPlatformCodeInsightFixt
         LookupElement[] lookupElements = myFixture.completeBasic();
         assert lookupElements.length == 2; // There are 2 suggestions because 1 is from IntelliJ itself.
         assert lookupElements[0].getLookupString().equals("user1");
+    }
+
+    @Test
+    public void autocompleteStop() {
+        myFixture.configureByText("test.py", "q.user.user1");
+        myFixture.type("q.user.user1.");
+        assert myFixture.completeBasic().length == 0;
+    }
+
+    @Test
+    public void autocompleteStopBracketNotation() {
+        // HACK: define multiple names to prevent auto-insertion.
+        myFixture.configureByText("test.py", "q.user.user1\nq.user.user2");
+        myFixture.type("q.user['']['']");
+        myFixture.getEditor().getCaretModel().getCurrentCaret().moveCaretRelatively(-2, 0, false, false);
+        assert myFixture.completeBasic().length == 0;
+    }
+
+    @Test
+    public void correctParsing() {
+        myFixture.configureByText("test.py", "q.user.user1\nq.user.user1.add()");
+        myFixture.type("q.user.");
+
+        LookupElement[] lookupElements = myFixture.completeBasic();
+        assert lookupElements.length == 2; // There are 2 suggestions because 1 is from IntelliJ itself.
+        assert lookupElements[0].getLookupString().equals("user1");
+        assert Arrays.stream(lookupElements).noneMatch(e -> e.getLookupString().equals("add"));
     }
 }

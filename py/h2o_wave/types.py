@@ -3732,7 +3732,7 @@ class Tabs:
         self.name = name
         """An identifying name for this component."""
         self.value = value
-        """The name of the tab to select."""
+        """The name of the tab to select initially."""
         self.items = items
         """The tabs in this tab bar."""
         self.width = width
@@ -9217,7 +9217,7 @@ class NavCard:
         self.items = items
         """The navigation groups contained in this pane."""
         self.value = value
-        """The name of the active (highlighted) navigation item."""
+        """The name of the initially active (highlighted) navigation item."""
         self.title = title
         """The card's title."""
         self.subtitle = subtitle

@@ -1,6 +1,11 @@
 package org.h2o.utils;
 
 public class UtilsResources {
+    public static final String[] THEMES = new String[]{
+            "default",
+            "neon",
+            "h2o-dark"
+    };
     public static final String[] FLUENT_ICONS = new String[]{
             "12PointStar",
             "6PointStar",

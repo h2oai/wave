@@ -30,6 +30,19 @@ public class WaveCompletionContributor extends CompletionContributor {
     public WaveCompletionContributor() {
         extend(
                 CompletionType.BASIC,
+                getParamAutocompletePatterns("theme"),
+                new CompletionProvider<CompletionParameters>() {
+                    @Override
+                    protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
+                        if (findFirstParent(parameters.getPosition(), e -> e.getText().startsWith("ui")) != null) {
+                            Arrays.stream(UtilsResources.THEMES).forEach(i -> addToCompletion(result, i, ""));
+                        }
+                    }
+                }
+        );
+
+        extend(
+                CompletionType.BASIC,
                 getParamAutocompletePatterns("icon"),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
@@ -85,7 +98,6 @@ public class WaveCompletionContributor extends CompletionContributor {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
                         PsiElement position = parameters.getPosition();
-                        if (!shouldAutocompleteExpr(position,"q.events")) return;
                         Function f = (file) -> findChildrenOfType(file, PyKeywordArgument.class)
                                 .stream()
                                 .filter(arg -> isValidKeywordArg(arg, "events", null))
@@ -110,7 +122,6 @@ public class WaveCompletionContributor extends CompletionContributor {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
                         PsiElement position = parameters.getPosition();
-                        if (!shouldAutocompleteExpr(position,"q.args")) return;
                         Function f = (file) -> findChildrenOfType(file, PyStringLiteralExpression.class)
                                 .stream()
                                 .filter(Utils::isValidNameArg)
@@ -126,9 +137,7 @@ public class WaveCompletionContributor extends CompletionContributor {
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-                        PsiElement position = parameters.getPosition();
-                        if (!shouldAutocompleteExpr(position,"q.client")) return;
-                        fillStateCompletions(result, position, "q.client");
+                        fillStateCompletions(result, parameters.getPosition(), "q.client");
                     }
                 }
         );
@@ -139,8 +148,6 @@ public class WaveCompletionContributor extends CompletionContributor {
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-                        PsiElement position = parameters.getPosition();
-                        if (!shouldAutocompleteExpr(position,"q.app")) return;
                         fillStateCompletions(result, parameters.getPosition(), "q.app");
                     }
                 }
@@ -152,8 +159,6 @@ public class WaveCompletionContributor extends CompletionContributor {
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-                        PsiElement position = parameters.getPosition();
-                        if (!shouldAutocompleteExpr(position,"q.user")) return;
                         fillStateCompletions(result, parameters.getPosition(), "q.user");
                     }
                 }
@@ -174,7 +179,7 @@ public class WaveCompletionContributor extends CompletionContributor {
                 .filter(el -> isStateExpr(el, stateType))
                 .forEach(el -> {
                     String name = el.getName();
-                    if (name != null) addToCompletion(result, name, "Expando");
+                    if (name != null && !name.equals("IntellijIdeaRulezzz")) addToCompletion(result, name, "Expando");
                 });
         fillCompletions(position.getContainingFile(), RequirementsSingleton.getRequirementsText(position.getProject()), new HashMap<>(), f);
     }

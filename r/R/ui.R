@@ -1669,7 +1669,7 @@ ui_tab <- function(
 #' Create a tab bar.
 #'
 #' @param name An identifying name for this component.
-#' @param value The name of the tab to select.
+#' @param value The name of the tab to select initially.
 #' @param items The tabs in this tab bar.
 #' @param width The width of the tabs, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
@@ -3790,7 +3790,7 @@ ui_meta_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
-#' @param value The name of the active (highlighted) navigation item.
+#' @param value The name of the initially active (highlighted) navigation item.
 #' @param title The card's title.
 #' @param subtitle The card's subtitle.
 #' @param icon The icon, displayed to the left. *

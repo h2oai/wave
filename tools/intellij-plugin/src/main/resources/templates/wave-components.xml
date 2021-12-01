@@ -1,3 +1,4 @@
+
 <templateSet group="wave-components">
   <template name="w_article_card" value="ui.article_card(box='$box$',title='$title$')$END$" description="Create a minimal Wave ArticleCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>

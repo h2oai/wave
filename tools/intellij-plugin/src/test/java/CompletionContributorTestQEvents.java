@@ -102,4 +102,11 @@ public class CompletionContributorTestQEvents extends LightPlatformCodeInsightFi
 
         assert myFixture.completeBasic()[0].getLookupString().equals("event1");
     }
+
+    @Test
+    public void autocompleteStop() {
+        myFixture.configureByText("test.py", "ui.plot(events=['event1'])");
+        myFixture.type("q.events.events1.");
+        assert myFixture.completeBasic().length == 0;
+    }
 }

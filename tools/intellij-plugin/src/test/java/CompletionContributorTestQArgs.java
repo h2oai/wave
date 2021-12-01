@@ -103,4 +103,11 @@ public class CompletionContributorTestQArgs extends LightPlatformCodeInsightFixt
 
         assert myFixture.completeBasic()[0].getLookupString().equals("btn1");
     }
+
+    @Test
+    public void autocompleteStop() {
+        myFixture.configureByText("test.py", "ui.button(name='btn1')");
+        myFixture.type("q.args.btn1.");
+        assert myFixture.completeBasic().length == 0;
+    }
 }
