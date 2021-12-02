@@ -29,7 +29,7 @@ export const XFacepile = ({ model }: { model: Facepile }) => {
           window.location.hash = name.substr(1)
           return
         }
-        wave.args[name] = value || true
+        wave.args[name] = value === undefined || value
         wave.push()
       }
     },
