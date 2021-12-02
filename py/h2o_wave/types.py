@@ -5882,26 +5882,32 @@ class Facepile:
             items: List['Component'],
             name: Optional[str] = None,
             max: Optional[int] = None,
+            value: Optional[str] = None,
     ):
         _guard_vector('Facepile.items', items, (Component,), False, False, False)
         _guard_scalar('Facepile.name', name, (str,), True, True, False)
         _guard_scalar('Facepile.max', max, (int,), False, True, False)
+        _guard_scalar('Facepile.value', value, (str,), False, True, False)
         self.items = items
         """List of personas to be displayed."""
         self.name = name
         """An identifying name for this component. If specified `Add button` will be rendered."""
         self.max = max
         """Maximum number of personas to be displayed."""
+        self.value = value
+        """A value to be submitted if the component is clicked. If value is not provided, true will be submitted"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('Facepile.items', self.items, (Component,), False, False, False)
         _guard_scalar('Facepile.name', self.name, (str,), True, True, False)
         _guard_scalar('Facepile.max', self.max, (int,), False, True, False)
+        _guard_scalar('Facepile.value', self.value, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             name=self.name,
             max=self.max,
+            value=self.value,
         )
 
     @staticmethod
@@ -5913,13 +5919,17 @@ class Facepile:
         _guard_scalar('Facepile.name', __d_name, (str,), True, True, False)
         __d_max: Any = __d.get('max')
         _guard_scalar('Facepile.max', __d_max, (int,), False, True, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('Facepile.value', __d_value, (str,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         name: Optional[str] = __d_name
         max: Optional[int] = __d_max
+        value: Optional[str] = __d_value
         return Facepile(
             items,
             name,
             max,
+            value,
         )
 
 

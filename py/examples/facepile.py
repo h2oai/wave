@@ -13,10 +13,24 @@ async def serve(q: Q):
             ui.text_m(f'q.args.facepile={q.args.facepile}'),
             ui.button(name='back', label='Back', primary=True),
         ]
+    elif q.args.facepile_value:
+        q.page['example'].items = [
+            ui.text_m(f'q.args.facepile_value={q.args.facepile_value}'),
+            ui.button(name='back', label='Back', primary=True),
+        ]
     else:
         image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
         q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+            ui.text(content='Add button sends true'),
             ui.facepile(name='facepile', max=4, items=[
+                ui.persona(title='John Doe', image=image),
+                ui.persona(title='John Doe', image=image),
+                ui.persona(title='John Doe'),
+                ui.persona(title='John Doe', image=image),
+                ui.persona(title='John Doe', image=image),
+            ]),
+            ui.text(content='Add button sends set value'),
+            ui.facepile(name='facepile_value', value='submitted value', max=4, items=[
                 ui.persona(title='John Doe', image=image),
                 ui.persona(title='John Doe', image=image),
                 ui.persona(title='John Doe'),

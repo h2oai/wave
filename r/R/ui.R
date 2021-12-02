@@ -2567,19 +2567,23 @@ ui_text_annotator <- function(
 #' @param items List of personas to be displayed.
 #' @param name An identifying name for this component. If specified `Add button` will be rendered.
 #' @param max Maximum number of personas to be displayed.
+#' @param value A value to be submitted if the component is clicked. If value is not provided, true will be submitted
 #' @return A Facepile instance.
 #' @export
 ui_facepile <- function(
   items,
   name = NULL,
-  max = NULL) {
+  max = NULL,
+  value = NULL) {
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("name", "character", name)
   .guard_scalar("max", "numeric", max)
+  .guard_scalar("value", "character", value)
   .o <- list(facepile=list(
     items=items,
     name=name,
-    max=max))
+    max=max,
+    value=value))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

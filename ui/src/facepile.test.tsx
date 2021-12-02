@@ -53,4 +53,14 @@ describe('Persona.tsx', () => {
     expect(pushMock).not.toHaveBeenCalled()
     expect(window.location.hash).toBe(hashName)
   })
+
+  it('Submits provided value when add button is clicked', () => {
+    facepileProps.value = 'myvalue'
+    const { container } = render(<XFacepile model={facepileProps} />)
+    
+    fireEvent.click(container.querySelector('.ms-Facepile-addButton')!)
+
+    expect(wave.args[name]).toBe('myvalue')
+    expect(pushMock).toHaveBeenCalled()
+  })
 })

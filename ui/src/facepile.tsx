@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { Id, U } from 'h2o-wave'
+import { Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Component } from './form'
 import { cssVar } from './theme'
@@ -16,18 +16,20 @@ export interface Facepile {
   name?: Id
   /** Maximum number of personas to be displayed. */
   max?: U
+  /** A value to be submitted when the add button is clicked. If value is not provided, true will be submitted*/
+  value?: S
 }
 
 export const XFacepile = ({ model }: { model: Facepile }) => {
   const
-    { name, max, items } = model,
+    { name, max, items, value } = model,
     onClick = () => {
       if (name) {
         if (name.startsWith('#')) {
           window.location.hash = name.substr(1)
           return
         }
-        wave.args[name] = true
+        wave.args[name] = value === undefined || value
         wave.push()
       }
     },
