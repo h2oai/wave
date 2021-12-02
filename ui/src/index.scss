@@ -13,6 +13,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+* {
+  // For Firefox
+  scrollbar-width: thin;
+  scrollbar-color: var(--text2) var(--text0);
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--text2);
+    border-radius: 12px;
+    border: 3px solid var(--card8);
+  }
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--text0);
+  }
+}
+
 body {
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
