@@ -26,7 +26,7 @@ loadTheme({
   palette: defaultTheme.fluentPalette,
 })
 
-initializeIcons('/fonts/icons/')
+initializeIcons('fonts/icons/')
 
 ReactDOM.render(<Router />, document.getElementById('root'))
 
