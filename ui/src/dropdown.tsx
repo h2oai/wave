@@ -59,6 +59,8 @@ export interface Dropdown {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices. */
+  popup?: 'auto' | 'always' | 'never'
 }
 
 type DropdownItem = {
@@ -251,6 +253,12 @@ const
 export const XDropdown = ({ model: m }: { model: Dropdown }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => { wave.args[m.name] = m.values ? (m.values || []) : (m.value || null) }, [])
-
-  return (m.choices?.length || 0) > 100 ? <DialogDropdown {...m} /> : <BaseDropdown {...m} />
+  
+  return m.popup === 'always'
+      ? <DialogDropdown {...m} />
+      : m.popup === 'never'
+          ? <BaseDropdown {...m} />
+          : (m.choices?.length || 0) > 100
+              ? <DialogDropdown {...m} />
+              : <BaseDropdown {...m} />
 }

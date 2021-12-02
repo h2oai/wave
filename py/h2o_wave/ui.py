@@ -667,6 +667,7 @@ def dropdown(
         width: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        popup: Optional[str] = None,
 ) -> Component:
     """Create a dropdown.
 
@@ -693,6 +694,7 @@ def dropdown(
         width: The width of the dropdown, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        popup: Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices. One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
     Returns:
         A `h2o_wave.types.Dropdown` instance.
     """
@@ -709,6 +711,7 @@ def dropdown(
         width,
         visible,
         tooltip,
+        popup,
     ))
 
 

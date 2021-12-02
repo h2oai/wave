@@ -33,6 +33,10 @@ async def serve(q: Q):
                         disabled=True),
             ui.dropdown(name='dropdown_dialog', label='Pick multiple in dialog (>100 choices)', values=['1'],
                         required=True, choices=choices_dialog),
+            ui.dropdown(name='dropdown_dialog_always', label='Always show dialog even when choices < 100', value='A',
+                        required=True, choices=choices, popup='always'),
+            ui.dropdown(name='dropdown_dialog_never', label='Never show dialog even when choices > 100', value='1',
+                        required=True, choices=choices_dialog, popup='never'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
