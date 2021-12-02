@@ -1,13 +1,13 @@
 import subprocess
-import glob
+import argparse
 import time
 import os
 import signal
 import re
-import json
 import math
-import sys
+import json
 import shutil
+from PIL import Image, ImageChops
 from json import JSONEncoder
 from typing import List
 from pathlib import Path
@@ -35,7 +35,6 @@ class DocFile:
 def get_template_code(code: str, pool_idx: int):
     return f'''
 from h2o_wave import site, ui
-
 disable_animations = \'\'\'
 * {{
     -webkit-animation: none !important;
@@ -46,7 +45,6 @@ disable_animations = \'\'\'
 }}
 \'\'\'
 page = site['/{pool_idx}']
-
 page.drop() # Drop any previous pages.
 page['meta'] = ui.meta_card(box='', stylesheet=ui.inline_stylesheet(disable_animations))
 {code.replace('q.', '')}
@@ -97,6 +95,7 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, grp: str, pool
 
         os.makedirs(os.path.dirname(path), exist_ok=True)
         sub_selector = ' > *' if 'ui.form_card' in code_str else ''
+        card_name = match[0][2] if match[0][2] != 'meta' else match[1][2]
         selector = f'[data-test="{card_name}"]{sub_selector}'
         page.wait_for_selector(selector)
         print(f'Generating {img_name}')
@@ -171,8 +170,7 @@ def map_to_doc_file(p: Path) -> DocFile:
 
 
 def main():
-    qd_server = None
-    arg_files = sys.argv[1:]
+    wave_server = None
     files = []
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', type=str, help='an integer for the accumulator', default=None)
@@ -197,16 +195,11 @@ def main():
 
     try:
         os.makedirs(example_file_path)
-        qd_server = subprocess.Popen(
-            ['make', 'run'],
-            cwd=os.path.join('..', '..'),
-            stderr=subprocess.DEVNULL,
-            preexec_fn=os.setsid)
-        time.sleep(1)  # Wait for server to boot up.
+        wave_server = subprocess.Popen(['make', 'run'], cwd=os.path.join('..', '..'), stderr=subprocess.DEVNULL, preexec_fn=os.setsid) # noqa
         chunk_size = math.ceil(len(files) / os.cpu_count())
         file_chunks = [files[i:i + chunk_size] for i in range(0, len(files), chunk_size)]
         with Pool(len(file_chunks)) as pool:
-            pool.starmap(generate_screenshots, [(chunk, idx) for idx, chunk in enumerate(file_chunks)])
+            pool.starmap(generate_screenshots, [(chunk, idx, args.test) for idx, chunk in enumerate(file_chunks)])
             pool.close()
             pool.join()
         if not args.test:
@@ -219,8 +212,8 @@ def main():
     finally:
         if os.path.exists(example_file_path):
             shutil.rmtree(example_file_path, ignore_errors=True)
-        if qd_server:
-            os.killpg(os.getpgid(qd_server.pid), signal.SIGTERM)
+        if wave_server:
+            os.killpg(os.getpgid(wave_server.pid), signal.SIGTERM)
 
 
 if __name__ == '__main__':
