@@ -15,7 +15,7 @@ async def serve(q: Q):
         ]
     elif q.args.facepile_value:
         q.page['example'].items = [
-            ui.text_m(f'q.args.facepile={q.args.facepile_value}'),
+            ui.text_m(f'q.args.facepile_value={q.args.facepile_value}'),
             ui.button(name='back', label='Back', primary=True),
         ]
     else:
