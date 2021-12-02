@@ -1,5 +1,5 @@
 setup:
-	mkdir -p ../../website/docs/showcase
+	mkdir -p ../../website/docs/components
 	mkdir -p test/base test/compare test/diff
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
@@ -12,4 +12,4 @@ generate:
 clean:
 	rm -rf venv
 	rm -rf test
-	rm -rf ../../website/docs/showcase
+	rm -rf ../../website/docs/components

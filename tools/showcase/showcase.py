@@ -16,7 +16,8 @@ from multiprocessing import Pool
 
 example_file_path = os.path.join('..', '..', 'py', 'showcase')
 docs_path = os.path.join('..', '..', 'website')
-showcase_docs_path = os.path.join(docs_path, 'showcase')
+components_docs_path = os.path.join(docs_path, 'components')
+diff_folder_path = Path(os.path.join('test', 'diff'))
 
 
 class CustomEncoder(JSONEncoder):
@@ -88,7 +89,7 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, grp: str, pool
         if any(match in code_str for match in ['frame_card', 'ui.script']):
             time.sleep(1)
 
-        path = os.path.join(docs_path, 'docs', 'showcase', grp, 'assets', img_name)
+        path = os.path.join(docs_path, 'docs', 'components', grp, 'assets', img_name)
         if is_test:
             base_path = os.path.join('test', 'base', browser, grp, img_name)
             is_base = not Path(base_path).exists()
@@ -155,9 +156,9 @@ def append_images(files: List[DocFile]):
             f.writelines(img_lines)
 
 
-def generate_showcase_json():
-    files = [map_to_doc_file(p) for p in Path(showcase_docs_path).rglob('*.md')]
-    with open(os.path.join(docs_path, 'showcase.js'), 'w') as f:
+def generate_json():
+    files = [map_to_doc_file(p) for p in Path(components_docs_path).rglob('*.md')]
+    with open(os.path.join(docs_path, 'components.js'), 'w') as f:
         f.write(f'module.exports={json.dumps(files, cls=CustomEncoder)}')
 
 
@@ -183,16 +184,16 @@ def main():
             with open('index.html', 'w') as f:
                 f.truncate(0)
         else:
-            for f in Path(os.path.join(docs_path, 'docs', 'showcase')).rglob('*.md'):
+            for f in Path(os.path.join(docs_path, 'docs', 'components')).rglob('*.md'):
                 os.remove(f)
-            for f in Path(os.path.join(docs_path, 'docs', 'showcase')).rglob('*.png'):
+            for f in Path(os.path.join(docs_path, 'docs', 'components')).rglob('*.png'):
                 os.remove(f)
             for f in Path(diff_folder_path).rglob('*.png'):
                 os.remove(f)
-        for p in Path(showcase_docs_path).rglob('*.md'):
+        for p in Path(components_docs_path).rglob('*.md'):
             files.append(map_to_doc_file(p))
     else:
-        files = [map_to_doc_file(Path(os.path.join(showcase_docs_path, f'{args.file}.md')))]
+        files = [map_to_doc_file(Path(os.path.join(components_docs_path, f'{args.file}.md')))]
 
     try:
         os.makedirs(example_file_path)
@@ -208,10 +209,13 @@ def main():
             pool.starmap(generate_screenshots, [(chunk, idx) for idx, chunk in enumerate(file_chunks)])
             pool.close()
             pool.join()
-        append_images(files)
-        generate_showcase_json()
-    except Exception as e:
-        print(f'Error: {str(e)}')
+        if not args.test:
+            append_images(files)
+            generate_json()
+        else:
+            generate_diff_view()
+            print('Testing finished, run \033[92mmake test-result\033[0m to see the results.')
+
     finally:
         if os.path.exists(example_file_path):
             shutil.rmtree(example_file_path, ignore_errors=True)

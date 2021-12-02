@@ -23,10 +23,10 @@ yarn-error.log*
 
 # Generated content
 /examples.js
-/showcase.js
+/components.js
 /docs/examples/*.md
 /docs/api/*.md
 /docs/api/h2o_wave_ml/*.md
-/docs/showcase
+/docs/components
 /serve-linux
 /serve-darwin

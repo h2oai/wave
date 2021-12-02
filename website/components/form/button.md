@@ -21,8 +21,8 @@ You can see the API for [ui.button](/docs/api/ui#button) or check the interactiv
 
 ## Primary
 
-Use a primary button to indicate the most critical action in a form in order to let user continue the app flow you prepared.
-Also note that there should always be at most one primary button shown on a page as it indicates higher priority for a click. If there is
+Use a primary button to indicate the most critical action in a form to let the user continue the app flow you prepared.
+Also, note that there should always be at most one primary button shown on a page as it indicates higher priority for a click. If there is
 a need for multiple buttons with the same priority, it's better to make none of them primary and go with regular buttons.
 
 ```py
@@ -33,8 +33,8 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 
 ## Disabled
 
-Use a disabled button for cases when clicking should not be allowed, based on the current app state. A typical example might be a user didn't fill all the form fields yet
-so is not allowed to proceed. Disabled buttons have all interactions disabled (click, hover etc.).
+Use a disabled button for cases when clicking should not be allowed, based on the current app state. A typical example might be a user who didn't fill all the form fields yet
+and is not allowed to proceed. Disabled buttons have all interactions disabled (click, hover etc.).
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 1 1', items=[

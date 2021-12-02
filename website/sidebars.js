@@ -1,6 +1,6 @@
 const
   capitalize = str => str.charAt(0).toUpperCase() + str.slice(1),
-  { groups, plainFiles } = require('./showcase')
+  { groups, plainFiles } = require('./components')
     .sort((a, b) => a.path.localeCompare(b.path))
     .reduce((acc, { group, path }) => {
       path = path.replace('.md', '')

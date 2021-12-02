@@ -27,7 +27,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 If a horizontal version is needed, use the `inline` attribute.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 2', items=[
     ui.links(inline=True, items=[
         ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
         ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
