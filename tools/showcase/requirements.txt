@@ -1,1 +1,2 @@
 playwright==1.10.0
+image

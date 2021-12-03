@@ -128,6 +128,7 @@ const
         root: {
           display: visible ? undefined : 'none',
           width: formItemWidth(width),
+          background: 'red',
           minWidth: width ? 'initial' : undefined
         },
         icon: {

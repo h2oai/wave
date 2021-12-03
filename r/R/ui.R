@@ -2566,7 +2566,7 @@ ui_text_annotator <- function(
 #' @param items List of personas to be displayed.
 #' @param name An identifying name for this component. If specified `Add button` will be rendered.
 #' @param max Maximum number of personas to be displayed.
-#' @param value A value to be submitted if the component is clicked. If value is not provided, true will be submitted
+#' @param value A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
 #' @return A Facepile instance.
 #' @export
 ui_facepile <- function(

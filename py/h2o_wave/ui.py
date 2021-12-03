@@ -2207,7 +2207,7 @@ def facepile(
         items: List of personas to be displayed.
         name: An identifying name for this component. If specified `Add button` will be rendered.
         max: Maximum number of personas to be displayed.
-        value: A value to be submitted if the component is clicked. If value is not provided, true will be submitted
+        value: A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
     Returns:
         A `h2o_wave.types.Facepile` instance.
     """

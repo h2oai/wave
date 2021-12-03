@@ -5894,7 +5894,7 @@ class Facepile:
         self.max = max
         """Maximum number of personas to be displayed."""
         self.value = value
-        """A value to be submitted if the component is clicked. If value is not provided, true will be submitted"""
+        """A value to be submitted when the add button is clicked. If value is not provided, true will be submitted"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
