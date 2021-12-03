@@ -82,7 +82,7 @@ export interface Buttons {
 export interface MiniButtons {
   /** The buttons in this set. */
   items: Component[]
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 

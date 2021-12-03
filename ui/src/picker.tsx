@@ -32,7 +32,7 @@ export interface Picker {
   label?: S
   /** The names of the selected choices. */
   values?: S[]
-  /** Maximum number of selectable choices. Defaults to no limit. */
+  /** Maximum number of selectable choices. */
   max_choices?: U
   /** True if the picker is a required field. */
   required?: B

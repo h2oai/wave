@@ -2760,7 +2760,7 @@ class MiniButtons:
         self.items = items
         """The buttons in this set."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4114,7 +4114,7 @@ class Picker:
         self.values = values
         """The names of the selected choices."""
         self.max_choices = max_choices
-        """Maximum number of selectable choices. Defaults to no limit."""
+        """Maximum number of selectable choices."""
         self.required = required
         """True if the picker is a required field."""
         self.disabled = disabled
@@ -5894,7 +5894,7 @@ class Facepile:
         self.max = max
         """Maximum number of personas to be displayed."""
         self.value = value
-        """A value to be submitted when the add button is clicked. If value is not provided, true will be submitted"""
+        """A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

@@ -128,7 +128,7 @@
   </template>
   <template name="w_editor_card" value="ui.editor_card(box='$box$',mode='$mode$')$END$" description="Create a minimal Wave EditorCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="mode" expression="" defaultValue="&quot;public`&quot;" alwaysStopAt="true"/>
+    <variable name="mode" expression="" defaultValue="&quot;public&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -422,6 +422,14 @@
   <template name="w_postcard_card" value="ui.postcard_card(box='$box$',persona=$persona$,image='$image$')$END$" description="Create a minimal Wave PostcardCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_preview_card" value="ui.preview_card(box='$box$',name='$name$',image='$image$')$END$" description="Create a minimal Wave PreviewCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -905,7 +913,7 @@
     </context>
   </template>
   <template name="w_full_mini_buttons" value="ui.mini_buttons(visible=$visible$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave MiniButtons with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="visible" expression="" defaultValue="&quot;true&quot;" alwaysStopAt="true"/>
+    <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -994,7 +1002,7 @@
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;300px'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;300px&quot;" alwaysStopAt="true"/>
     <variable name="alpha" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="inline" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
@@ -1012,7 +1020,7 @@
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="error" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="choices" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1036,7 +1044,7 @@
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="min" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1047,7 +1055,7 @@
   </template>
   <template name="w_full_dialog" value="ui.dialog(title='$title$',width='$width$',closable=$closable$,blocking=$blocking$,primary=$primary$,name='$name$',items=[&#10;	$items$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave Dialog with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;600px'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;600px&quot;" alwaysStopAt="true"/>
     <variable name="closable" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="blocking" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="primary" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
@@ -1066,7 +1074,7 @@
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="values" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1077,7 +1085,7 @@
   </template>
   <template name="w_full_editor_card" value="ui.editor_card(box='$box$',mode='$mode$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave EditorCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="mode" expression="" defaultValue="&quot;public`&quot;" alwaysStopAt="true"/>
+    <variable name="mode" expression="" defaultValue="&quot;public&quot;" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1087,16 +1095,17 @@
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="expanded" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_facepile" value="ui.facepile(name='$name$',max=$max$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Facepile with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_facepile" value="ui.facepile(name='$name$',max=$max$,value='$value$',items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Facepile with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1104,12 +1113,12 @@
   </template>
   <template name="w_full_file_upload" value="ui.file_upload(name='$name$',label='$label$',multiple=$multiple$,max_file_size=$max_file_size$,max_size=$max_size$,height='$height$',width='$width$',compact=$compact$,visible=$visible$,tooltip='$tooltip$',file_extensions=[&#10;	$file_extensions$	&#10;]),$END$" description="Create Wave FileUpload with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="label" expression="" defaultValue="&quot;Upload&quot;&quot;" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="&quot;Upload&quot;" alwaysStopAt="true"/>
     <variable name="multiple" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="max_file_size" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="max_size" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="&quot;300px&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="compact" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1194,7 +1203,7 @@
     </context>
   </template>
   <template name="w_full_inline" value="ui.inline(justify='$justify$',inset=$inset$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Inline with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="justify" expression="" defaultValue="&quot;start'&quot;" alwaysStopAt="true"/>
+    <variable name="justify" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="inset" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1213,8 +1222,8 @@
   <template name="w_full_frame" value="ui.frame(path='$path$',content='$content$',width='$width$',height='$height$',name='$name$',visible=$visible$),$END$" description="Create Wave Frame with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
-    <variable name="height" expression="" defaultValue="&quot;150px'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="&quot;150px&quot;" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <context>
@@ -1260,7 +1269,7 @@
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="color" expression="" defaultValue="&quot;primary'&quot;" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="&quot;primary&quot;" alwaysStopAt="true"/>
     <variable name="nav" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="secondary_items" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1356,7 +1365,7 @@
   </template>
   <template name="w_full_links" value="ui.links(label='$label$',inline=$inline$,width='$width$',items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Links with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="inline" expression="" defaultValue="&quot;false'&quot;" alwaysStopAt="true"/>
+    <variable name="inline" expression="" defaultValue="&quot;false&quot;" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1427,7 +1436,7 @@
     <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1450,10 +1459,10 @@
   </template>
   <template name="w_full_layout" value="ui.layout(breakpoint='$breakpoint$',width='$width$',min_width='$min_width$',max_width='$max_width$',height='$height$',min_height='$min_height$',max_height='$max_height$',name='$name$',zones=[&#10;	$zones$	&#10;]),$END$" description="Create Wave Layout with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="breakpoint" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%`&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="min_width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="max_width" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="height" expression="" defaultValue="&quot;auto`&quot;" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="&quot;auto&quot;" alwaysStopAt="true"/>
     <variable name="min_height" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="max_height" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1532,7 +1541,7 @@
     <variable name="icon_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="color" expression="" defaultValue="&quot;card'&quot;" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="&quot;card&quot;" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="secondary_items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1544,7 +1553,7 @@
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="subtitle" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="size" expression="" defaultValue="&quot;m'&quot;" alwaysStopAt="true"/>
+    <variable name="size" expression="" defaultValue="&quot;m&quot;" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="initials" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="initials_color" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1556,10 +1565,10 @@
   <template name="w_full_picker" value="ui.picker(name='$name$',label='$label$',max_choices=$max_choices$,required=$required$,disabled=$disabled$,width='$width$',visible=$visible$,trigger=$trigger$,tooltip='$tooltip$',choices=[&#10;	$choices$	&#10;],values=[&#10;	$values$	&#10;]),$END$" description="Create Wave Picker with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="max_choices" expression="" defaultValue="&quot;no limit&quot;" alwaysStopAt="true"/>
+    <variable name="max_choices" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1684,8 +1693,8 @@
   <template name="w_full_visualization" value="ui.visualization(plot=$plot$,data=$data$,width='$width$',height='$height$',name='$name$',visible=$visible$,events=[&#10;	$events$	&#10;]),$END$" description="Create Wave Visualization with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="plot" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
-    <variable name="height" expression="" defaultValue="&quot;300px'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="&quot;300px&quot;" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1716,6 +1725,19 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_full_preview_card" value="ui.preview_card(box='$box$',name='$name$',image='$image$',title='$title$',caption='$caption$',label='$label$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave PreviewCard with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_full_profile_card" value="ui.profile_card(box='$box$',persona=$persona$,image='$image$',height='$height$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ProfileCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1731,7 +1753,7 @@
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1755,7 +1777,7 @@
     <variable name="min_value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="max_value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1804,7 +1826,7 @@
   <template name="w_full_separator" value="ui.separator(label='$label$',name='$name$',width='$width$',visible=$visible$),$END$" description="Create Wave Separator with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1812,7 +1834,7 @@
   </template>
   <template name="w_full_side_panel" value="ui.side_panel(title='$title$',width='$width$',name='$name$',items=[&#10;	$items$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave SidePanel with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;600px'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;600px&quot;" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1829,7 +1851,7 @@
     <variable name="value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1843,9 +1865,9 @@
     <variable name="plot_data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_zero_value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="plot_category" expression="" defaultValue="&quot;x'&quot;" alwaysStopAt="true"/>
-    <variable name="plot_type" expression="" defaultValue="&quot;area`&quot;" alwaysStopAt="true"/>
-    <variable name="plot_curve" expression="" defaultValue="&quot;linear`&quot;" alwaysStopAt="true"/>
+    <variable name="plot_category" expression="" defaultValue="&quot;x&quot;" alwaysStopAt="true"/>
+    <variable name="plot_type" expression="" defaultValue="&quot;area&quot;" alwaysStopAt="true"/>
+    <variable name="plot_curve" expression="" defaultValue="&quot;linear&quot;" alwaysStopAt="true"/>
     <variable name="plot_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1866,12 +1888,12 @@
   <template name="w_full_spinbox" value="ui.spinbox(name='$name$',label='$label$',min=$min$,max=$max$,step=$step$,value=$value$,disabled=$disabled$,width='$width$',visible=$visible$,trigger=$trigger$,tooltip='$tooltip$'),$END$" description="Create Wave Spinbox with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="min" expression="" defaultValue="&quot;0&quot;&quot;" alwaysStopAt="true"/>
-    <variable name="max" expression="" defaultValue="&quot;100&quot;&quot;" alwaysStopAt="true"/>
-    <variable name="step" expression="" defaultValue="&quot;1&quot;&quot;" alwaysStopAt="true"/>
-    <variable name="value" expression="" defaultValue="&quot;0&quot;&quot;" alwaysStopAt="true"/>
+    <variable name="min" expression="" defaultValue="&quot;0&quot;" alwaysStopAt="true"/>
+    <variable name="max" expression="" defaultValue="&quot;100&quot;" alwaysStopAt="true"/>
+    <variable name="step" expression="" defaultValue="&quot;1&quot;" alwaysStopAt="true"/>
+    <variable name="value" expression="" defaultValue="&quot;0&quot;" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1927,7 +1949,7 @@
     </context>
   </template>
   <template name="w_full_stats" value="ui.stats(justify='$justify$',inset=$inset$,width='$width$',visible=$visible$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Stats with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="justify" expression="" defaultValue="&quot;start'&quot;" alwaysStopAt="true"/>
+    <variable name="justify" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="inset" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;true&quot;" alwaysStopAt="true"/>
@@ -1956,7 +1978,7 @@
   </template>
   <template name="w_full_stepper" value="ui.stepper(name='$name$',width='$width$',visible=$visible$,tooltip='$tooltip$',items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Stepper with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1992,7 +2014,7 @@
     <variable name="searchable" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="filterable" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="link" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="data_type" expression="" defaultValue="&quot;string`&quot;" alwaysStopAt="true"/>
+    <variable name="data_type" expression="" defaultValue="&quot;string&quot;" alwaysStopAt="true"/>
     <variable name="cell_type" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -2012,8 +2034,8 @@
     <variable name="downloadable" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="resettable" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
-    <variable name="checkbox_visibility" expression="" defaultValue="&quot;on-hover'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
+    <variable name="checkbox_visibility" expression="" defaultValue="&quot;on-hover&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="columns" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2092,7 +2114,7 @@
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="image_height" expression="" defaultValue="&quot;150px'&quot;" alwaysStopAt="true"/>
+    <variable name="image_height" expression="" defaultValue="&quot;150px&quot;" alwaysStopAt="true"/>
     <variable name="category" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -2107,9 +2129,9 @@
     <variable name="plot_data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_zero_value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="plot_category" expression="" defaultValue="&quot;x'&quot;" alwaysStopAt="true"/>
-    <variable name="plot_type" expression="" defaultValue="&quot;area`&quot;" alwaysStopAt="true"/>
-    <variable name="plot_curve" expression="" defaultValue="&quot;linear`&quot;" alwaysStopAt="true"/>
+    <variable name="plot_category" expression="" defaultValue="&quot;x&quot;" alwaysStopAt="true"/>
+    <variable name="plot_type" expression="" defaultValue="&quot;area&quot;" alwaysStopAt="true"/>
+    <variable name="plot_curve" expression="" defaultValue="&quot;linear&quot;" alwaysStopAt="true"/>
     <variable name="plot_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2250,7 +2272,7 @@
     <variable name="password" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -2302,8 +2324,8 @@
   <template name="w_full_vega_visualization" value="ui.vega_visualization(specification='$specification$',data=$data$,width='$width$',height='$height$',name='$name$',visible=$visible$),$END$" description="Create Wave VegaVisualization with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="specification" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="&quot;100%'&quot;" alwaysStopAt="true"/>
-    <variable name="height" expression="" defaultValue="&quot;300px'&quot;" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="&quot;300px&quot;" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <context>
@@ -2353,7 +2375,7 @@
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="subtitle" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="align" expression="" defaultValue="&quot;left'&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;left&quot;" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="category" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2400,9 +2422,9 @@
     <variable name="plot_data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_zero_value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="plot_category" expression="" defaultValue="&quot;x'&quot;" alwaysStopAt="true"/>
-    <variable name="plot_type" expression="" defaultValue="&quot;area`&quot;" alwaysStopAt="true"/>
-    <variable name="plot_curve" expression="" defaultValue="&quot;linear`&quot;" alwaysStopAt="true"/>
+    <variable name="plot_category" expression="" defaultValue="&quot;x&quot;" alwaysStopAt="true"/>
+    <variable name="plot_type" expression="" defaultValue="&quot;area&quot;" alwaysStopAt="true"/>
+    <variable name="plot_curve" expression="" defaultValue="&quot;linear&quot;" alwaysStopAt="true"/>
     <variable name="plot_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>

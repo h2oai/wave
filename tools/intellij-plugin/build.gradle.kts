@@ -122,7 +122,7 @@ tasks {
 
 fun mergeSnippets() {
     val waveBlocks = File("$rootDir/src/main/resources/templates/wave-blocks.xml").readLines().drop(1).dropLast(1)
-    val waveComponents = File("$rootDir/src/main/resources/templates/wave-components.xml").readLines().drop(1).dropLast(1)
+    val waveComponents = File("$rootDir/src/main/resources/templates/wave-components.xml").readLines().drop(2).dropLast(1)
     val resultFile = File("$rootDir/src/main/resources/templates/wave.xml")
 
     resultFile.writeText("<templateSet group=\"Wave\">\n")

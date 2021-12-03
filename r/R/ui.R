@@ -1262,7 +1262,7 @@ ui_mini_button <- function(
 #' Create a set of mini buttons laid out horizontally.
 #'
 #' @param items The buttons in this set.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A MiniButtons instance.
 #' @export
 ui_mini_buttons <- function(
@@ -1834,7 +1834,7 @@ ui_template <- function(
 #' @param choices The choices to be presented.
 #' @param label Text to be displayed above the component.
 #' @param values The names of the selected choices.
-#' @param max_choices Maximum number of selectable choices. Defaults to no limit.
+#' @param max_choices Maximum number of selectable choices.
 #' @param required True if the picker is a required field.
 #' @param disabled Controls whether the picker should be disabled or not.
 #' @param width The width of the picker, e.g. '100px'. Defaults to '100%'.
@@ -2566,7 +2566,7 @@ ui_text_annotator <- function(
 #' @param items List of personas to be displayed.
 #' @param name An identifying name for this component. If specified `Add button` will be rendered.
 #' @param max Maximum number of personas to be displayed.
-#' @param value A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
+#' @param value A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True.
 #' @return A Facepile instance.
 #' @export
 ui_facepile <- function(

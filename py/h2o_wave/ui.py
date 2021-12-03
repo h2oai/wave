@@ -1077,7 +1077,7 @@ def mini_buttons(
 
     Args:
         items: The buttons in this set.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.MiniButtons` instance.
     """
@@ -1599,7 +1599,7 @@ def picker(
         choices: The choices to be presented.
         label: Text to be displayed above the component.
         values: The names of the selected choices.
-        max_choices: Maximum number of selectable choices. Defaults to no limit.
+        max_choices: Maximum number of selectable choices.
         required: True if the picker is a required field.
         disabled: Controls whether the picker should be disabled or not.
         width: The width of the picker, e.g. '100px'. Defaults to '100%'.
@@ -2207,7 +2207,7 @@ def facepile(
         items: List of personas to be displayed.
         name: An identifying name for this component. If specified `Add button` will be rendered.
         max: Maximum number of personas to be displayed.
-        value: A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
+        value: A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True.
     Returns:
         A `h2o_wave.types.Facepile` instance.
     """

@@ -419,6 +419,13 @@
     ],
     "description": "Create a minimal Wave PostcardCard."
   },
+  "Wave PreviewCard": {
+    "prefix": "w_preview_card",
+    "body": [
+      "ui.preview_card(box='$1', name='$2', image='$3')$0"
+    ],
+    "description": "Create a minimal Wave PreviewCard."
+  },
   "Wave ProfileCard": {
     "prefix": "w_profile_card",
     "body": [
@@ -863,7 +870,7 @@
   "Wave Full MiniButtons": {
     "prefix": "w_full_mini_buttons",
     "body": [
-      "ui.mini_buttons(visible=${1:true}, items=[\n\t\t$2\t\t\n]),$0"
+      "ui.mini_buttons(visible=${1:True}, items=[\n\t\t$2\t\t\n]),$0"
     ],
     "description": "Create a full Wave MiniButtons."
   },
@@ -975,7 +982,7 @@
   "Wave Full Facepile": {
     "prefix": "w_full_facepile",
     "body": [
-      "ui.facepile(name='$1', max=${2:None}, items=[\n\t\t$3\t\t\n]),$0"
+      "ui.facepile(name='$1', max=${2:None}, value='$3', items=[\n\t\t$4\t\t\n]),$0"
     ],
     "description": "Create a full Wave Facepile."
   },
@@ -1234,7 +1241,7 @@
   "Wave Full Picker": {
     "prefix": "w_full_picker",
     "body": [
-      "ui.picker(name='$1', label='$2', max_choices=${3:no limit}, required=${4:False}, disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, tooltip='$9', choices=[\n\t\t$10\t\t\n], values=[\n\t\t$11\t\t\n]),$0"
+      "ui.picker(name='$1', label='$2', max_choices=${3:None}, required=${4:False}, disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, tooltip='$9', choices=[\n\t\t$10\t\t\n], values=[\n\t\t$11\t\t\n]),$0"
     ],
     "description": "Create a full Wave Picker."
   },
@@ -1293,6 +1300,13 @@
       "ui.postcard_card(box='$1', persona=$2, image='$3', aux_value='$4', caption='$5', items=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
     ],
     "description": "Create a full Wave PostcardCard."
+  },
+  "Wave Full PreviewCard": {
+    "prefix": "w_full_preview_card",
+    "body": [
+      "ui.preview_card(box='$1', name='$2', image='$3', title='$4', caption='$5', label='$6', items=[\n\t\t$7\t\t\n], commands=[\n\t\t$8\t\t\n])$0"
+    ],
+    "description": "Create a full Wave PreviewCard."
   },
   "Wave Full ProfileCard": {
     "prefix": "w_full_profile_card",

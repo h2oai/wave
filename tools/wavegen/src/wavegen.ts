@@ -999,7 +999,11 @@ const
 
         defaultValue = m.comments.reduce((defaultVal, cur) => {
           const match = /(.+Defaults to )(.+)(\.)/.exec(cur)
-          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/, '')}` : defaultVal
+          if (match?.length) {
+            console.log();
+
+          }
+          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/g, '')}` : defaultVal
         }, defaultValue)
 
         return {
