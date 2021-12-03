@@ -70,7 +70,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('189px')
+      expect(getByTestId(name).style.height).toBe('194px')
 
     })
 
@@ -83,7 +83,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('293px')
+      expect(getByTestId(name).style.height).toBe('322px')
     })
 
     it('Computes properly for custom progress cell - toptoolbar, header, rows, footer', () => {
@@ -95,7 +95,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('368px')
+      expect(getByTestId(name).style.height).toBe('406px')
     })
 
     it('Computes properly for custom icon cell - toptoolbar, header, rows, footer', () => {
@@ -112,7 +112,7 @@ describe('Table.tsx', () => {
         ]
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('314px')
+      expect(getByTestId(name).style.height).toBe('322px')
     })
 
   })
