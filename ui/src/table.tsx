@@ -586,7 +586,7 @@ export const
           rowHeight = m.columns.some(c => c.cell_type)
             ? m.columns.some(c => c.cell_type?.progress) ? 76 : 48
             : 48,
-          footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 48 : 0,
+          footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 46 : 0,
           bottomBorder = 2
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
