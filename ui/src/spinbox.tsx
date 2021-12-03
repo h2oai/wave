@@ -21,7 +21,6 @@ import { wave } from './ui'
  * Create a spinbox.
  *
  * A spinbox allows the user to incrementally adjust a value in small steps.
- * It is mainly used for numeric values, but other values are supported too.
  */
 export interface Spinbox {
   /** An identifying name for this component. */

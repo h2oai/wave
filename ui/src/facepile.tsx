@@ -16,7 +16,7 @@ export interface Facepile {
   name?: Id
   /** Maximum number of personas to be displayed. */
   max?: U
-  /** A value to be submitted when the add button is clicked. If value is not provided, true will be submitted*/
+  /** A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True. */
   value?: S
 }
 

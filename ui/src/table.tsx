@@ -252,6 +252,8 @@ const
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
+      isFilterable = m.columns.some(c => c.filterable),
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER,
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         if (!listProps) return null
 
@@ -314,8 +316,7 @@ const
         )
       }, [groups, onColumnContextMenu]),
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
-        const isFilterable = m.columns.some(c => c.filterable)
-        if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable && m.rows.length < MIN_ROWS_TO_DISPLAY_FOOTER)) return null
+        if (!props || !shouldShowFooter) return null
 
         const
           footerItems: Fluent.ICommandBarItemProps[] = [],
@@ -339,12 +340,12 @@ const
               }
               {
                 footerItems.length && (
-                  <div style={{ width: '80%' }}>
+                  <Fluent.StackItem grow={1}>
                     <Fluent.CommandBar items={footerItems} styles={{
                       root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
                       primarySet: { justifyContent: 'flex-end' }
                     }} />
-                  </div>
+                  </Fluent.StackItem>
                 )
               }
             </Fluent.Stack>
@@ -580,14 +581,15 @@ export const
         if (items.length > 10) return 500
 
         const
-          topToolbarHeight = searchableKeys.length || m.groupable ? 60 : 0,
-          headerHeight = 60,
+          topToolbarHeight = searchableKeys.length || m.groupable ? 80 : 0,
+          headerHeight = 48,
           rowHeight = m.columns.some(c => c.cell_type)
-            ? m.columns.some(c => c.cell_type?.progress) ? 68 : 50
-            : 43,
-          footerHeight = m.downloadable || m.resettable || searchableKeys.length ? 44 : 0
+            ? m.columns.some(c => c.cell_type?.progress) ? 76 : 48
+            : 48,
+          footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 48 : 0,
+          bottomBorder = 2
 
-        return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight
+        return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
       sort = React.useCallback((column: WaveColumn) => {
         const sortAsc = column.iconName === 'SortDown'

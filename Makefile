@@ -10,12 +10,14 @@ setup: ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
+	cd tools/showcase && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/wavegen && $(MAKE) clean
+	cd tools/showcase && $(MAKE) clean
 	rm -f waved
 
 setup-ts: ## Set up NPM package and symlinks
@@ -102,6 +104,7 @@ generate: ## Generate driver bindings
 .PHONY: pydocs
 pydocs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
+	cd tools/showcase && $(MAKE) generate
 
 release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=linux release-os

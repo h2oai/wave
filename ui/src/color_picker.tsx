@@ -22,7 +22,7 @@ import { wave } from './ui'
 /**
  * Create a color picker.
  *
- * A date picker allows a user to pick a color value.
+ * A color picker allows a user to pick a color value.
  * If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
  */
 export interface ColorPicker {

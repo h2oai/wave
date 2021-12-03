@@ -205,5 +205,4 @@ The default grid is designed to fit HD displays (1920 x 1080 pixels), so if you 
 
 ## See also
 
-[Positioning](examples/layout.md) and [Sizing](examples/layout-size.md) examples.
-
+`layout.py` and `layout-size.py` in Tour app.

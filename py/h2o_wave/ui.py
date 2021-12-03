@@ -838,7 +838,6 @@ def spinbox(
     """Create a spinbox.
 
     A spinbox allows the user to incrementally adjust a value in small steps.
-    It is mainly used for numeric values, but other values are supported too.
 
     Args:
         name: An identifying name for this component.
@@ -931,7 +930,7 @@ def color_picker(
 ) -> Component:
     """Create a color picker.
 
-    A date picker allows a user to pick a color value.
+    A color picker allows a user to pick a color value.
     If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 
     Args:
@@ -2208,7 +2207,7 @@ def facepile(
         items: List of personas to be displayed.
         name: An identifying name for this component. If specified `Add button` will be rendered.
         max: Maximum number of personas to be displayed.
-        value: A value to be submitted if the component is clicked. If value is not provided, true will be submitted
+        value: A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
     Returns:
         A `h2o_wave.types.Facepile` instance.
     """
@@ -2230,7 +2229,7 @@ def copyable_text(
     Use this component when you want to enable your users to quickly copy paste sections of text.
 
     Args:
-        value: Text to be displayed inside the component. Markdown is supported only when 'multiline' is set.
+        value: Text to be displayed inside the component.
         label: The text displayed above the textbox.
         name: An identifying name for this component.
         multiline: True if the component should allow multi-line text entry.

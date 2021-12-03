@@ -2094,7 +2094,6 @@ class Spinbox:
     """Create a spinbox.
 
     A spinbox allows the user to incrementally adjust a value in small steps.
-    It is mainly used for numeric values, but other values are supported too.
     """
     def __init__(
             self,
@@ -2356,7 +2355,7 @@ class DatePicker:
 class ColorPicker:
     """Create a color picker.
 
-    A date picker allows a user to pick a color value.
+    A color picker allows a user to pick a color value.
     If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
     """
     def __init__(
@@ -5895,7 +5894,7 @@ class Facepile:
         self.max = max
         """Maximum number of personas to be displayed."""
         self.value = value
-        """A value to be submitted if the component is clicked. If value is not provided, true will be submitted"""
+        """A value to be submitted when the add button is clicked. If value is not provided, true will be submitted"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5949,7 +5948,7 @@ class CopyableText:
         _guard_scalar('CopyableText.name', name, (str,), False, True, False)
         _guard_scalar('CopyableText.multiline', multiline, (bool,), False, True, False)
         self.value = value
-        """Text to be displayed inside the component. Markdown is supported only when 'multiline' is set."""
+        """Text to be displayed inside the component."""
         self.label = label
         """The text displayed above the textbox."""
         self.name = name

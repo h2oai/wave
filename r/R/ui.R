@@ -975,7 +975,6 @@ ui_slider <- function(
 #' Create a spinbox.
 #' 
 #' A spinbox allows the user to incrementally adjust a value in small steps.
-#' It is mainly used for numeric values, but other values are supported too.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
@@ -1087,7 +1086,7 @@ ui_date_picker <- function(
 
 #' Create a color picker.
 #' 
-#' A date picker allows a user to pick a color value.
+#' A color picker allows a user to pick a color value.
 #' If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 #'
 #' @param name An identifying name for this component.
@@ -2567,7 +2566,7 @@ ui_text_annotator <- function(
 #' @param items List of personas to be displayed.
 #' @param name An identifying name for this component. If specified `Add button` will be rendered.
 #' @param max Maximum number of personas to be displayed.
-#' @param value A value to be submitted if the component is clicked. If value is not provided, true will be submitted
+#' @param value A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
 #' @return A Facepile instance.
 #' @export
 ui_facepile <- function(
@@ -2591,7 +2590,7 @@ ui_facepile <- function(
 #' Create a copyable text component.
 #' Use this component when you want to enable your users to quickly copy paste sections of text.
 #'
-#' @param value Text to be displayed inside the component. Markdown is supported only when 'multiline' is set.
+#' @param value Text to be displayed inside the component.
 #' @param label The text displayed above the textbox.
 #' @param name An identifying name for this component.
 #' @param multiline True if the component should allow multi-line text entry.

@@ -1,4 +1,24 @@
-const examples = require('./examples')
+const
+  capitalize = str => str.charAt(0).toUpperCase() + str.slice(1),
+  { groups, plainFiles } = require('./components')
+    .sort((a, b) => a.path.localeCompare(b.path))
+    .reduce((acc, { group, path }) => {
+      path = path.replace('.md', '')
+      if (group) {
+        if (acc.groups.has(group)) {
+          const items = acc.groups.get(group).items
+          path.includes('overview') ? items.unshift(path) : items.push(path)
+        }
+        else acc.groups.set(group, { type: 'category', label: capitalize(group), items: [path], })
+      }
+      else acc.plainFiles.push(path)
+
+      return acc
+    }, { groups: new Map(), plainFiles: [] })
+
+const sortedGroups = [...groups.values()].sort((a, b) => a.label.localeCompare(b.label))
+// Move overview to be the first, sort alphabetically the rest.
+plainFiles.sort().unshift(...plainFiles.splice(plainFiles.findIndex(f => f.includes('overview')), 1))
 
 module.exports = {
   someSidebar: {
@@ -25,10 +45,8 @@ module.exports = {
       'apps',
       'pages',
       'layout',
-      'cards',
       'color-theming',
       'buffers',
-      'components',
       'arguments',
       'state',
       'routing',
@@ -36,7 +54,6 @@ module.exports = {
       'background',
       'expressions',
       'files',
-      'plotting',
       'javascript',
       'graphics',
       'security',
@@ -50,7 +67,7 @@ module.exports = {
       'wave-ml',
       'wavedb',
     ],
-    'Examples': examples.map(e => `examples/${e.slug}`),
+    'Components': [...plainFiles, ...sortedGroups],
     'API': [
       'api/index',
       'api/core',
