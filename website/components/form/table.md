@@ -117,7 +117,7 @@ you specified it on a column with any arbitrary text column, there would be too 
 checkboxes which would be hard to navigate for your users.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', columns=[
         ui.table_column(name='name', label='Name'),
         ui.table_column(name='status', label='Status', filterable=True),
