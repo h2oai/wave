@@ -1,11 +1,16 @@
-# Plot / Pandas
-# Plot Pandas dataframes.
-# ---
-from h2o_wave import site, data, ui
+---
+title: Pandas
+custom_edit_url: null
+---
+
+This section aims to provide quick code snippets about integrating [Pandas](https://pandas.pydata.org/) with native Wave plots.
+
+Plot two numeric columns by each other and color based on a third, categorical column.
+
+```py
+from h2o_wave import data
 import pandas as pd
 import numpy as np
-
-page = site['/demo']
 
 n = 100
 df = pd.DataFrame(dict(
@@ -14,8 +19,7 @@ df = pd.DataFrame(dict(
     data_type=np.random.choice(a=['Train', 'Test'], size=n, p=[0.8, 0.2])
 ))
 
-# Plot two numeric columns by each other and color based on a third, categorical column
-page['scatter'] = ui.plot_card(
+q.page['scatter'] = ui.plot_card(
     box='1 1 4 5',
     title='Scatter Plot from Dataframe',
     data=data(
@@ -30,10 +34,24 @@ page['scatter'] = ui.plot_card(
         color='=data_type', shape='circle',
     )])
 )
+```
 
-# Aggregate the data in pandas and plot a bar chart of the average value of one column by some other column
+Aggregate the data in pandas and plot a bar chart of the average value of one column by some other column.
+
+```py
+from h2o_wave import data
+import pandas as pd
+import numpy as np
+
+n = 100
+df = pd.DataFrame(dict(
+    length=np.random.rand(n),
+    width=np.random.rand(n),
+    data_type=np.random.choice(a=['Train', 'Test'], size=n, p=[0.8, 0.2])
+))
+
 df_agg = df.groupby(['data_type']).mean().reset_index()
-page['bar'] = ui.plot_card(
+q.page['bar'] = ui.plot_card(
     box='1 6 4 5',
     title='Bar Plot from Aggregated Dataframe',
     data=data(
@@ -47,5 +65,4 @@ page['bar'] = ui.plot_card(
         y='=length', y_title='Length',
     )])
 )
-
-page.save()
+```

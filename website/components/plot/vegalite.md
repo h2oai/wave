@@ -64,3 +64,38 @@ q.page['external'] = ui.vega_card(
     data=data,
 )
 ```
+
+## Use within form
+
+Useful when you want to add some extra interactivity to the plot using native Wave controls like dropdowns, textboxes etc.
+
+```py
+from h2o_wave import data
+
+spec = '''
+{
+  "description": "A simple bar plot with embedded data.",
+  "mark": "bar",
+  "encoding": {
+    "x": {"field": "a", "type": "ordinal"},
+    "y": {"field": "b", "type": "quantitative"}
+  }
+}
+'''
+
+q.page['example'] = ui.form_card(
+    box='1 1 2 10',
+    items=[
+        ui.text_xl('Example 1'),
+        ui.textbox(name='textbox', label='Textbox'),
+        ui.vega_visualization(
+            specification=spec,
+            data=data(fields=["a", "b"], rows= [
+                ["A", 12], ["B", 71], ["C", 34],
+                ["D", 53], ["E", 98], ["F", 12],
+                ["G", 91], ["H", 52], ["I", 17]
+            ], pack=True)
+        )
+    ]
+)
+```

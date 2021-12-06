@@ -20,7 +20,7 @@ example_dir = os.path.dirname(os.path.realpath(__file__))
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get(f'H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
 _app_host, _app_port = _app_address.hostname, '10102'
-default_example_name = 'hello_world'
+default_example_name = 'todo'
 
 
 class Example:
