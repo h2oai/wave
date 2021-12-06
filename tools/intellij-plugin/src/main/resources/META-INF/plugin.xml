@@ -5,8 +5,7 @@
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-    <depends>com.intellij.modules.platform</depends>
-    <depends>PythonCore</depends>
+    <depends>com.intellij.modules.python</depends>
 
     <description><![CDATA[
         <p>Makes <a href="https://wave.h2o.ai/">H2O Wave</a> app development easier by providing</p>

@@ -10,6 +10,9 @@ generate:
 run:
 	./gradlew runIde
 
+verify:
+	./gradlew runPluginVerifier
+
 help:
 	./gradlew -q :tasks --all
 

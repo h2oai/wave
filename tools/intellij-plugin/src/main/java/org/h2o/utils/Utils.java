@@ -8,6 +8,7 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;
+import com.intellij.util.ReflectionUtil;
 import com.jetbrains.python.PyTokenTypes;
 import com.jetbrains.python.PythonLanguage;
 import com.jetbrains.python.psi.*;
@@ -24,7 +25,7 @@ import static com.intellij.psi.util.PsiTreeUtil.*;
 import static com.jetbrains.python.codeInsight.PyPsiIndexUtil.findUsages;
 
 public class Utils {
-    public static final Icon icon = IconLoader.getIcon("/icons/pluginIcon.svg");
+    public static final Icon icon = IconLoader.getIcon("/icons/pluginIcon.svg", Utils.class);
 
     public static boolean isStateExpr(PsiElement el, String stateType) {
         return el.getText().startsWith(stateType) && el.getFirstChild().getText().equals(stateType);
