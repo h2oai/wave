@@ -64,7 +64,6 @@ Since we want each user to have a separate to-do list, it's appropriate to keep 
 
 Here, we attempt to fetch the list from `q.user` and create one if it doesn't exist. We also throw in some sample to-do items for good measure.
 
-
 ```py {1,23-28} title="$HOME/wave-apps/todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
@@ -102,7 +101,7 @@ Next, we turn each incomplete to-do item into a checkbox (using `ui.checkbox()`)
 Also, we want each checkbox to raise an event immediately when checked, so we set its `trigger` attribute to `True`.
 
 :::tip
-Several [components](/docs/showcase/form/overview) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
+Several [components](/docs/components/form/overview) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
 :::
 
 ```py {1,30-37} title="$HOME/wave-apps/todo.py"
@@ -194,7 +193,7 @@ def show_todos(q: Q):
 
 At this point, try running your app.
 
-```shell 
+```shell
 cd $HOME/wave-apps
 source venv/bin/activate
 wave run todo
@@ -208,7 +207,7 @@ You should be able to see your todo list in all its glory. Unfortunately, checki
 
 ## Step 6: Handle checkboxes
 
-Each time a checkbox is checked or unchecked, our `serve()` function is called, which in turn calls `show_todos()`. 
+Each time a checkbox is checked or unchecked, our `serve()` function is called, which in turn calls `show_todos()`.
 
 - If a checkbox is checked, `q.args` will contain a `True` for that checkbox.
 - If a checkbox is unchecked, `q.args` will contain a `False` for that checkbox.
@@ -451,7 +450,7 @@ A little housekeeping goes a long way: add a "Clear" button on the main page to 
 
 Congratulations! You've completed all the tutorials (hopefully). There are three paths you can take from here:
 
-- [Gallery](examples). 150+ examples that cover everything that Wave has to offer.
+- [Components](/docs/components/overview). 150+ examples that cover everything that Wave has to offer.
 - [Guide](guide). An in-depth look at each of Wave's features.
 - [API](api/index). Reference-level documentation for the Python API.
 

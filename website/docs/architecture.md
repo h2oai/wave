@@ -44,7 +44,7 @@ The browser-based client's job is to render content on the user interface, and t
 
 ## How does it work?
 
-The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](/docs/showcase/overview). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md).
+The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](/docs/components/overview). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md).
 
 When a browser is pointed to a route, it pulls a copy of the page, creates a *replica* locally, and renders the content on the user interface.
 
@@ -85,16 +85,16 @@ The language driver (the `h2o-wave` PyPI package) maintains an illusion that ser
     Browser
 ```
 
+The language driver can be used by two kinds of Python programs: *Wave apps* and *Wave scripts*.
 
-The language driver can be used by two kinds of Python programs: *Wave apps* and *Wave scripts*. 
 - [Wave apps](apps.md) are interactive programs that can update content and respond to user actions.
-- [Wave scripts](scripts.md) are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions. 
+- [Wave scripts](scripts.md) are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions.
 
-Wave apps are ASGI servers under the hood. When a Wave app is launched, it announces its existence to the Wave server, and the Wave server establishes a *relay* with the Wave app. When a browser tries to connect to an app, the Wave server acts as a hub, relaying information back and forth between the browser and the app. 
+Wave apps are ASGI servers under the hood. When a Wave app is launched, it announces its existence to the Wave server, and the Wave server establishes a *relay* with the Wave app. When a browser tries to connect to an app, the Wave server acts as a hub, relaying information back and forth between the browser and the app.
 
 ## How is it different?
 
-The Wave server retains content. This is an important concept to understand, and the primary reason why Wave is different from a typical web framework. A Wave script can update content and exit, and the Wave server will happily continue serving that content. In other words, no Python process needs to be around if a new user arrives after you script has exited. 
+The Wave server retains content. This is an important concept to understand, and the primary reason why Wave is different from a typical web framework. A Wave script can update content and exit, and the Wave server will happily continue serving that content. In other words, no Python process needs to be around if a new user arrives after you script has exited.
 
 Different parts of the same page can be updated by different scripts running on different devices. Also, all content is live (or reactive) all the time: browsers always display up-to-date content without the need to reload.
 

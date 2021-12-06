@@ -6,9 +6,9 @@ keywords:
 custom_edit_url: null
 ---
 
-Stats are basically a textual pairs - title + value laid out horizontally. Their purpose is
+Stats are textual pairs - title + value laid out horizontally. Their purpose is
 to display contextually related values that might be of higher importance than the rest of
-the textual contents. They are best used with [visualizations](/docs/showcase/visualization).
+the textual contents. They are best used with [visualizations](/docs/components/form/visualization).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 2', items=[

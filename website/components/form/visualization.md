@@ -6,10 +6,10 @@ keywords:
 custom_edit_url: null
 ---
 
-Visualizations are charts / plots / graphs that help you better understand your data.
+Visualizations are charts/plots/graphs that help you better understand your data.
 Wave uses [Grammar of Graphics](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149) to describe its plots.
 
-For more thorough explanation of how Wave plots work, please see [Plots overview](/docs/showcase/plots/overview).
+For a more thorough explanation of how Wave plots work, please see [Plots overview](/docs/components/plot/overview).
 
 ```py
 from h2o_wave import data
@@ -30,10 +30,10 @@ Check the full API at [ui.visualization](/docs/api/ui#visualization).
 
 ## Dimensions
 
-In addition to `width` attribute that is present on every form component, visualization also provides
-a way to control height via `height` attribute, which defaults to `300px`. It supports all the
+In addition to the `width` attribute that is present on every form component, visualization also provides
+a way to control height via the `height` attribute, which defaults to `300px`. It supports all the
 [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units),
-however, `%` may not always work as you could expect so we advise to use static units like `px`,
+however, `%` may not always work as you could expect so we advise using static units like `px`,
 `rem` etc. instead.
 
 ```py
@@ -54,7 +54,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 
 ## Events
 
-Wave plots provide a way to listen for user clicks on a certain parts of the
+Wave plots provide a way to listen for user clicks on certain parts of the
 visualization. All it takes is to register the event, e.g. `events=['select_marks']` and once
 the action happens, you get the appropriate data in `q.events.<name-attr>.select_marks`.
 

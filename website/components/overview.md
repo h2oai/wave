@@ -14,7 +14,7 @@ a component or attribute that is currently missing and could be helpful for more
 ## More control
 
 For people wanting more flexibility we have [ui.form_card](/docs/api/ui#form_card) with a rich set of alignment and sizing options.
-For more info visit [forms overview](/docs/showcase/forms/overview).
+For more info visit [forms overview](/docs/components/form/overview).
 
 ## Custom components
 

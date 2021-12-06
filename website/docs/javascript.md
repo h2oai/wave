@@ -2,7 +2,7 @@
 title: Javascript
 ---
 
-Wave ships with a growing library of cards and components for assembling user interfaces. For most apps, the built-in components can be adequate. They're designed to work well with each other, with consistent typography, layout and theming; and the library of components keeps expanding with each new release. 
+Wave ships with a growing library of cards and components for assembling user interfaces. For most apps, the built-in components can be adequate. They're designed to work well with each other, with consistent typography, layout and theming; and the library of components keeps expanding with each new release.
 
 However, no matter how comprehensive the Wave library gets over time, there will be situations where an app needs to use external Javascript components to supplement Wave's capabilities, like custom visualizations, UI enhancements, and graphics.
 
@@ -72,6 +72,7 @@ q.page['example'] = ui.markup_card(
 ```
 
 In the above example, we create an empty `div` HTML element on the page, load an animation library (anime.js), add a bit of Javascript to animate the `div` element. To tie things together correctly, we pass two additional arguments to `ui.inline_script()`:
+
 - The `requires` argument ensures that the library we intend to use (in this case, `anime.js`) is downloaded, imported, and ready to use.
 - The `targets` argument ensures that the HTML element the scripts operates on (in this case, the `div` element named `animation`), is available on the page. [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) can also be used to identify target elements.
 
@@ -94,6 +95,7 @@ event_data = q.events.event_source.event_name
 For example, emitting an event using `wave.emit('graph', 'node_clicked', 42)` in Javascript will set `q.events.graph.node_clicked` to `42` in Python.
 
 All three arguments to `wave.emit()` are arbitrary. In the above example, we use:
+
 - `graph` to indicate the source of the event.
 - `node_clicked` to indicate the type of event.
 - the third argument can be a string, number, boolean or any complex structure, like `{ foo: 'bar', qux: 42 }`.
@@ -123,12 +125,4 @@ async def serve(q: Q):
 
 ## Examples
 
-Here are some more complete examples of using Javascript and event handling. You can play with these examples in the [Wave Tour](tour) as well.
-
-- [Executing custom Javascript](examples/meta-inline-script)
-- [Handling events from custom Javascript](examples/meta-inline-script-callback)
-- [Importing and using external Javascript libraries](examples/meta-script)
-- [Handling events from external Javascript libraries](examples/meta-script-callback)
-- [Embed a visualization using Bokeh components](examples/plot-bokeh-script)
-- [Handling events from Bokeh components](examples/plot-bokeh-callbacks)
-
+You can play with more examples in the [Wave Tour](tour) as well.
