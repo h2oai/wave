@@ -1,29 +1,31 @@
-from h2o_wave import main, app, Q, ui
+from h2o_wave import main, app, Q
+
+from .dashboard_red import show_red_dashboard
+from .dashboard_blue import show_blue_dashboard
+from .dashboard_orange import show_orange_dashboard
+from .dashboard_cyan import show_cyan_dashboard
+from .dashboard_grey import show_grey_dashboard
+from .dashboard_mint import show_mint_dashboard
+from .dashboard_purple import show_purple_dashboard
 
 
 @app('/')
 async def serve(q: Q):
-    q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout(breakpoint='xs', zones=[
-        ui.zone(name='main', size='100vh', direction=ui.ZoneDirection.ROW, zones=[
-            ui.zone(name='sidebar', size='250px'),
-            ui.zone(name='body', zones=[
-                ui.zone(name='header'),
-                ui.zone(name='content', size='1'),
-            ]),
-        ])
-    ])])
-
-    q.page['sidebar'] = ui.nav_card(
-        box='sidebar', title='', subtitle='', color='primary',
-        image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg', items=[
-            ui.nav_group('Menu', items=[
-                ui.nav_item(name='#menu/spam', label='Spam'),
-                ui.nav_item(name='#menu/ham', label='Ham'),
-                ui.nav_item(name='#menu/eggs', label='Eggs'),
-            ]),
-        ])
-    q.page['header'] = ui.header_card(box='header', title='', subtitle='', items=[
-        ui.textbox(name='search', icon='Search', width='300px', placeholder='Search...'),
-    ])
-    q.page['body'] = ui.form_card(box='content', items=[ui.text(content='Content')])
-    await q.page.save()
+    route = q.args['#']
+    q.page.drop()
+    if route == 'dashboards/red':
+        await show_red_dashboard(q)
+    elif route == 'dashboards/blue':
+        await show_blue_dashboard(q)
+    elif route == 'dashboards/orange':
+        await show_orange_dashboard(q)
+    elif route == 'dashboards/cyan':
+        await show_cyan_dashboard(q)
+    elif route == 'dashboards/grey':
+        await show_grey_dashboard(q)
+    elif route == 'dashboards/mint':
+        await show_mint_dashboard(q)
+    elif route == 'dashboards/purple':
+        await show_purple_dashboard(q)
+    else:
+        await show_red_dashboard(q)
