@@ -37,6 +37,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import ts from 'typescript'
+// @ts-ignore
+import { toXML } from 'jstoxml'
+import VSCBaseSnippets from './vsc-base-snippets.json'
 
 const licenseLines = `Copyright 2020 H2O.ai, Inc.
 
@@ -55,7 +58,7 @@ limitations under the License.`.split('\n')
 interface Dict<T> { [key: string]: T } // generic object
 const packedT = 'Packed' // name of marker parametric type to indicate if an attributed could be packed.
 type B = boolean
-// type U = number
+type U = number
 // type I = number
 // type F = number
 type S = string
@@ -965,15 +968,184 @@ const
     const api = translateToTypescript(protocol)
     fs.writeFileSync(path.join(outDir, 'defs.ts'), api, 'utf8')
   },
+  splitRepeatedAndSingular = (members: Member[]) => members.reduce((acc, m) => {
+    m.t === MemberT.Repeated ? acc.repeatedMembers.push(m) : acc.singularMembers.push(m)
+    return acc
+  }, { singularMembers: [], repeatedMembers: [] } as { singularMembers: Member[], repeatedMembers: Member[] }),
+  generatePyCharmSnippets = (protocol: Protocol) => {
+    const
+      newline = '&#10;',
+      snippetJSON = {
+        _name: 'templateSet',
+        _attrs: {
+          group: 'wave-components'
+        },
+        _content: []
+      },
+      baseTemplateContent = {
+        context: {
+          _name: 'option',
+          _attrs: { name: 'Python', value: 'true' }
+        }
+      },
+      trailingComma = ({ isRoot }: Type) => isRoot ? '' : ',',
+      getSnippetParams = (sm: Member[], rm: Member[]) => sm.map(mapSnippets).join('') + rm.map(mapSnippets).join(''),
+      mapVariables = (m: Member) => {
+        let defaultValue = m.t === MemberT.Singular && m.typeName === 'B'
+          ? 'False'
+          : m.t === MemberT.Singular && (m.typeName === 'F' || m.typeName === 'U')
+            ? 'None'
+            : ''
+
+        defaultValue = m.comments.reduce((defaultVal, cur) => {
+          const match = /(.+Defaults to )(.+)(\.)/.exec(cur)
+          if (match?.length) {
+            console.log();
+
+          }
+          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/g, '')}` : defaultVal
+        }, defaultValue)
+
+        return {
+          _name: 'variable',
+          _attrs: {
+            name: m.name,
+            expression: '',
+            defaultValue: defaultValue ? `&quot;${defaultValue}&quot;` : '',
+            alwaysStopAt: 'true'
+          }
+        }
+      },
+      mapSnippets = (m: Member) => {
+        let leftSurrounding = '', rightSurrounding = ''
+        if (m.t === MemberT.Enum || m.t === MemberT.Singular && (m.typeName === 'S' || m.typeName === 'Id')) {
+          leftSurrounding = rightSurrounding = "'"
+        }
+        else if (m.t === MemberT.Repeated) {
+          leftSurrounding = `[${newline}\t`
+          rightSurrounding = `\t${newline}]`
+        }
+        return `${m.name}=${leftSurrounding}$${m.name}$${rightSurrounding},`
+      },
+      shortTemplates = protocol.types
+        .filter(t => !t.areAllMembersOptional && !t.file.includes('.test'))
+        .map(t => {
+          const
+            name = snakeCase(t.name),
+            { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members.filter(m => !m.isOptional)),
+            variables = [...singularMembers.map(mapVariables), ...repeatedMembers.map(mapVariables)]
+
+          return {
+            _name: 'template',
+            _attrs: {
+              name: `w_${name}`,
+              value: `ui.${name}(${getSnippetParams(singularMembers, repeatedMembers)})${trailingComma(t)}$END$`.replace(',)', ')'),
+              description: `Create a minimal Wave ${t.name}.`,
+              toReformat: 'true',
+              toShortenFQNames: 'true'
+            },
+            _content: [...variables, baseTemplateContent]
+          }
+        }),
+      longTemplates = protocol.types
+        .filter(t => !t.file.includes('.test'))
+        .map(t => {
+          const
+            name = snakeCase(t.name),
+            { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members),
+            variables = [...singularMembers.map(mapVariables), ...repeatedMembers.map(mapVariables)]
+
+          return {
+            _name: 'template',
+            _attrs: {
+              name: `w_full_${name}`,
+              value: `ui.${name}(${getSnippetParams(singularMembers, repeatedMembers)})${trailingComma(t)}$END$`.replace(',)', ')'),
+              description: `Create Wave ${t.name} with full attributes.`,
+              toReformat: 'true',
+              toShortenFQNames: 'true'
+            },
+            _content: [...variables, baseTemplateContent]
+          }
+        })
+    snippetJSON._content = [...shortTemplates, ...longTemplates] as any
+
+    fs.writeFileSync('../intellij-plugin/src/main/resources/templates/wave-components.xml', toXML(snippetJSON, { indent: '  ' }))
+  },
+  generateVSCSnippets = (protocol: Protocol) => {
+    const
+      trailingComma = ({ isRoot }: Type) => isRoot ? '' : ',',
+      getDefaultVal = (m: Member) => {
+        let defaultValue = m.t === MemberT.Singular && m.typeName === 'B'
+          ? 'False'
+          : m.t === MemberT.Singular && (m.typeName === 'F' || m.typeName === 'U')
+            ? 'None'
+            : ''
+
+        defaultValue = m.comments.reduce((defaultVal, cur) => {
+          const match = /(.+Defaults to )(.+)(\.)/.exec(cur)
+          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/, '')}` : defaultVal
+        }, defaultValue)
+        return defaultValue
+      },
+      mapSnippets = (m: Member, idx: U) => {
+        let leftSurrounding = '', rightSurrounding = ''
+        if (m.t === MemberT.Enum || m.t === MemberT.Singular && (m.typeName === 'S' || m.typeName === 'Id')) {
+          leftSurrounding = rightSurrounding = "'"
+        }
+        else if (m.t === MemberT.Repeated) {
+          leftSurrounding = `[\n\t\t`
+          rightSurrounding = `\t\t\n]`
+        }
+        const defaultVal = getDefaultVal(m)
+        return `${m.name}=${leftSurrounding}$${defaultVal ? `{${idx + 1}:${defaultVal}}` : idx + 1}${rightSurrounding}, `
+      },
+      shortTemplates = protocol.types
+        .filter(t => !t.areAllMembersOptional && !t.file.includes('.test'))
+        .map(t => {
+          const
+            name = snakeCase(t.name),
+            { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members.filter(m => !m.isOptional)),
+            snippetParams = [...singularMembers, ...repeatedMembers].map(mapSnippets).join('')
+
+          return {
+            name: `Wave ${t.name}`,
+            prefix: `w_${name}`,
+            description: `Create a minimal Wave ${t.name}.`,
+            body: [`ui.${name}(${snippetParams})${trailingComma(t)}$0`.replace(', )', ')')],
+          }
+        }),
+      longTemplates = protocol.types
+        .filter(t => !t.file.includes('.test'))
+        .map(t => {
+          const
+            name = snakeCase(t.name),
+            { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members),
+            snippetParams = [...singularMembers, ...repeatedMembers].map(mapSnippets).join('')
+
+          return {
+            name: `Wave Full ${t.name}`,
+            prefix: `w_full_${name}`,
+            description: `Create a full Wave ${t.name}.`,
+            body: [`ui.${name}(${snippetParams})${trailingComma(t)}$0`.replace(', )', ')')],
+          }
+        })
+
+    const resultJSON = [...shortTemplates, ...longTemplates].reduce((acc, { name, prefix, body, description }) => {
+      acc[name] = { prefix, body, description }
+      return acc
+    }, {} as { [key: string]: { prefix: S, body: S[], description: S } })
+    fs.writeFileSync('wave-components.json', JSON.stringify({ ...resultJSON, ...VSCBaseSnippets }, null, 2))
+  },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []
     processDir(files, typescriptSrcDir)
-    // console.log(JSON.stringify(protocol, null, 2))
     const protocol = makeProtocol(files)
 
     generatePy(protocol, pyOutDir)
     generateR(protocol, rOutDir)
     generateTypescript(protocol, typescriptSrcDir)
+    generatePyCharmSnippets(protocol)
+    generateVSCSnippets(protocol)
 
     printStats(protocol)
   }

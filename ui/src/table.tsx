@@ -52,7 +52,7 @@ interface TableColumn {
   link?: B
   /** Defines the data type of this column. Defaults to `string`. */
   data_type?: 'string' | 'number' | 'time'
-  /** Defines how to render each cell in this column. Defaults to plain text. */
+  /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType
 }
 
@@ -105,7 +105,7 @@ export interface Table {
   values?: S[]
   /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. */
   checkbox_visibility?: 'always' | 'on-hover' | 'hidden'
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -330,7 +330,7 @@ const
               horizontal
               horizontalAlign='space-between'
               verticalAlign='center'
-              styles={{ root: { background: cssVar('$neutralLight'), borderRadius: '0 0 4px 4px', paddingLeft: 12, height: 48 } }}>
+              styles={{ root: { background: cssVar('$neutralLight'), borderRadius: '0 0 4px 4px', paddingLeft: 12, height: 46 } }}>
               {
                 (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
                   <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
@@ -586,7 +586,7 @@ export const
           rowHeight = m.columns.some(c => c.cell_type)
             ? m.columns.some(c => c.cell_type?.progress) ? 76 : 48
             : 48,
-          footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 48 : 0,
+          footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 46 : 0,
           bottomBorder = 2
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder

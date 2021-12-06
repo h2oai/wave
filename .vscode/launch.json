@@ -12,22 +12,6 @@
       "webRoot": "${workspaceFolder}/ui"
     },
     {
-      "name": "Debug Wavegen",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceRoot}/tools/wavegen/src/wavegen.ts",
-      "preLaunchTask": "tsc: build - tools/wavegen/tsconfig.json",
-      "cwd": "${workspaceFolder}/tools/wavegen",
-      "args": [
-        "../../ui/src",
-        "../../py/h2o_wave",
-        "../../r/R"
-      ],
-      "outFiles": [
-        "${workspaceRoot}/tools/wavegen/build/**/*.js"
-      ]
-    },
-    {
       "name": "Debug Showcase",
       "type": "python",
       "request": "launch",
@@ -51,6 +35,25 @@
       "protocol": "inspector",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Wavegen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "cwd": "${workspaceFolder}/tools/wavegen",
+      "args": [
+        "../../ui/src",
+        "../../py/h2o_wave",
+        "../../r/R"
+      ],
+      "preLaunchTask": "tsc: build - tools/wavegen/tsconfig.json",
+      "program": "${workspaceFolder}/tools/wavegen/src/wavegen.ts",
+      "outFiles": [
+        "${workspaceFolder}/tools/wavegen/build/**/*.js"
+      ]
     },
     {
       "name": "Debug Wave Server",

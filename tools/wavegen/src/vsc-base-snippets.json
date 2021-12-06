@@ -1,0 +1,156 @@
+{
+  "Wave Full WideSeriesStatCard": {
+    "prefix": "w_full_wide_series_stat_card",
+    "body": [
+      "ui.wide_series_stat_card(box='$1',title='$2',value='$3',aux_value='$4',plot_data=$5,plot_value='$6',plot_zero_value=${7:None},plot_category='${8:x'}',plot_type='${9:area`}',plot_curve='${10:linear`}',plot_color='$11',data=$12,commands=[\n\t$13\t\n])$0"
+    ],
+    "description": "Create a full Wave WideSeriesStatCard."
+  },
+  "Base Wave app": {
+    "prefix": "w_base_app",
+    "body": [
+      "from h2o_wave import main, app, Q, ui",
+      "",
+      "",
+      "@app('/$1')",
+      "async def serve(q: Q):",
+      "    $0",
+      "    await q.page.save()",
+      ""
+    ],
+    "description": "Basic scaffolding for a wave app."
+  },
+  "Wave client initialization": {
+    "prefix": "w_client_init",
+    "body": [
+      "if not q.client.initialized:",
+      "    $0",
+      "    q.client.initialized = True"
+    ],
+    "description": "Client level initialization logic."
+  },
+  "Wave app initialization": {
+    "prefix": "w_app_init",
+    "body": [
+      "if not q.app.initialized:",
+      "    $0",
+      "    q.app.initialized = True"
+    ],
+    "description": "App level initialization logic."
+  },
+  "Wave user initialization": {
+    "prefix": "w_user_init",
+    "body": [
+      "if not q.user.initialized:",
+      "    $0",
+      "    q.user.initialized = True"
+    ],
+    "description": "User level initialization logic."
+  },
+  "Base Wave script": {
+    "prefix": "w_base_script",
+    "body": [
+      "from h2o_wave import site, ui",
+      "",
+      "page = site['/$1']",
+      "$0",
+      "page.save()"
+    ],
+    "description": "Basic scaffolding for a wave script."
+  },
+  "Wave page": {
+    "prefix": "w_page",
+    "body": [
+      "q.page['$1'] = $0"
+    ],
+    "description": "Creates a new page for a card."
+  },
+  "Drop Wave page": {
+    "prefix": "w_page_drop",
+    "body": [
+      "q.page.drop()$0"
+    ],
+    "description": "Deletes all Wave cards."
+  },
+  "Wave meta page": {
+    "prefix": "w_meta",
+    "body": [
+      "q.page['meta']$0"
+    ],
+    "description": "Shorthand for accessing meta card."
+  },
+  "Addvanced Wave app": {
+    "prefix": "w_advanced_app",
+    "body": [
+      "from h2o_wave import main, app, Q, ui",
+      "",
+      "",
+      "def on_startup():",
+      "    $2",
+      "",
+      "",
+      "def on_shutdown():",
+      "    $3",
+      "",
+      "",
+      "@app('/$1', on_startup=on_startup, on_shutdown=on_shutdown)",
+      "async def serve(q: Q):",
+      "    $0",
+      "    await q.page.save()",
+      ""
+    ],
+    "description": "Scaffolding for an advanced Wave app."
+  },
+  "Wave on handler": {
+    "prefix": "w_on",
+    "body": [
+      "@on()",
+      "async def $1(q: Q):",
+      "    $0"
+    ],
+    "description": "Wave interactivity handler."
+  },
+  "Wave on route handler": {
+    "prefix": "w_on_route",
+    "body": [
+      "@on(arg='#$1')",
+      "async def handle_$1(q: Q):",
+      "    $0",
+      "    await q.page.save()",
+      ""
+    ],
+    "description": "Wave route handler."
+  },
+  "Wave on route param handler": {
+    "prefix": "w_on_route_param",
+    "body": [
+      "@on(arg='#$1/{$2}')",
+      "async def handle_$1(q: Q, $2: str):",
+      "    $0",
+      "    await q.page.save()",
+      ""
+    ],
+    "description": "Wave route handler with url param."
+  },
+  "Wave on handler app": {
+    "prefix": "w_on_handler_app",
+    "body": [
+      "from h2o_wave import main, app, Q, ui, on, handle_on",
+      "",
+      "",
+      "@app('/$1')",
+      "async def serve(q: Q):",
+      "    $0",
+      "    await handle_on(q)",
+      "    await q.page.save()"
+    ],
+    "description": "Scaffolding for an app that uses 'on' handlers"
+  },
+  "Wave page delete": {
+    "prefix": "w_page_delete",
+    "body": [
+      "del q.page['$1']$0"
+    ],
+    "description": "Delete a specific Wave card."
+  }
+}

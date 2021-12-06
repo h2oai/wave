@@ -36,11 +36,11 @@ export interface ColorPicker {
   choices?: S[]
   /** The width of the color picker, e.g. '100px'. Defaults to '300px'. */
   width?: S
-  /** True if user should be allowed to pick color transparency. Defaults to 'true'. */
+  /** True if user should be allowed to pick color transparency. Defaults to True. */
   alpha?: B
-  /** True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to 'false'. */
+  /** True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to False. */
   inline?: B
-  /** True if the component should be visible. Defaults to 'true'. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if the form should be submitted when the color picker value changes. */
   trigger?: B

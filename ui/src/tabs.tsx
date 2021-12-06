@@ -36,13 +36,13 @@ export interface Tab {
 export interface Tabs {
   /** An identifying name for this component. */
   name: Id
-  /** The name of the tab to select. */
+  /** The name of the tab to select initially. */
   value?: S
   /** The tabs in this tab bar. */
   items?: Tab[]
   /** The width of the tabs, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if tabs should be rendered as links instead of buttons. */
   link?: B
@@ -86,7 +86,7 @@ export const
         <Fluent.Pivot
           data-test={m.name}
           className={m.link ? 'w-tabs-link' : 'w-tabs'} //HACK: Marker classes.
-          selectedKey={m.value ?? null}
+          defaultSelectedKey={m.value}
           linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
           onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
       </div>

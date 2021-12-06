@@ -139,6 +139,7 @@ const
       } else { // has units; treat as size
         if (direction === 'row') {
           style.width = zone.size
+          style.minWidth = zone.size
         } else {
           style.height = zone.size
           style.minHeight = zone.size // Needed for Safari.
@@ -217,7 +218,7 @@ const
     if (!layoutIndex) return <></>
     const
       { layout, index } = layoutIndex,
-      section = toSection({ name: '__main__', zones: layout.zones }),
+      section = toSection({ name: '__main__', zones: layout.zones, size: '1' }),
       { width, min_width, max_width, height, min_height, max_height } = layout,
       editor = cards.find(c => c.state.view === 'editor')
 
@@ -231,6 +232,8 @@ const
     sortCardsInSection(section)
 
     const style: React.CSSProperties = {
+      display: 'flex',
+      flexDirection: 'column',
       width: width ?? '100%',
       minWidth: min_width,
       maxWidth: max_width,

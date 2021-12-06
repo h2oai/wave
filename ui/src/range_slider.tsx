@@ -46,7 +46,7 @@ export interface RangeSlider {
   width?: S
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

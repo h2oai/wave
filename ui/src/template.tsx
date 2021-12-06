@@ -29,7 +29,7 @@ export interface Template {
   name?: S
   /** The width of the template, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 

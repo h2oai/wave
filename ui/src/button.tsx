@@ -58,7 +58,7 @@ export interface Button {
   icon?: S
   /** The width of the button, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -74,7 +74,7 @@ export interface Buttons {
   name?: S
   /** The width of the buttons, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 
@@ -82,7 +82,7 @@ export interface Buttons {
 export interface MiniButtons {
   /** The buttons in this set. */
   items: Component[]
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 

@@ -25,6 +25,7 @@ import { bond } from './ui'
 
 const css = stylesheet({
   card: {
+    position: 'relative',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -39,6 +40,14 @@ const css = stylesheet({
     display: 'flex',
     alignItems: 'center',
     cursor: 'default',
+  },
+  center: {
+    ...centerMixin(),
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
   },
   burger: {
     cursor: 'pointer',
@@ -128,7 +137,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
               {subtitle && <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>}
             </div>
           </div>
-          {secondary_items && <XInline model={{ items: secondary_items }} />}
+          {secondary_items && <div className={css.center}><XInline model={{ items: secondary_items }} /></div>}
           {items && <XInline model={{ items }} />}
           {nav && <Navigation items={nav} isOpenB={navB} />}
         </div>

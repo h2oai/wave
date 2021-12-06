@@ -57,7 +57,7 @@ export interface VegaVisualization {
   height?: S
   /** An identifying name for this component. */
   name?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 

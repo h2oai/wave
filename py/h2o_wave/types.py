@@ -93,7 +93,7 @@ class Text:
         self.width = width
         """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -261,7 +261,7 @@ class TextXl:
         self.width = width
         """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -340,7 +340,7 @@ class TextL:
         self.width = width
         """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -417,7 +417,7 @@ class TextM:
         self.width = width
         """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -486,7 +486,7 @@ class TextS:
         self.width = width
         """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -555,7 +555,7 @@ class TextXs:
         self.width = width
         """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -638,7 +638,7 @@ class Label:
         self.width = width
         """The width of the label , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -721,7 +721,7 @@ class Separator:
         self.width = width
         """The width of the separator , e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -806,7 +806,7 @@ class Progress:
         self.width = width
         """The width of the separator, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -907,7 +907,7 @@ class MessageBar:
         self.width = width
         """The width of the message bar, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1034,7 +1034,7 @@ class Textbox:
         self.width = width
         """The width of the text box, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1216,7 +1216,7 @@ class Checkbox:
         self.width = width
         """The width of the checkbox, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1328,7 +1328,7 @@ class Toggle:
         self.width = width
         """The width of the toggle, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1489,7 +1489,7 @@ class ChoiceGroup:
         self.width = width
         """The width of the choice group, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1596,11 +1596,11 @@ class Checklist:
         self.trigger = trigger
         """True if the form should be submitted when the checklist value changes."""
         self.inline = inline
-        """True if checklist should be rendered horizontally."""
+        """True if checklist should be rendered horizontally. Defaults to False."""
         self.width = width
         """The width of the checklist, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1731,7 +1731,7 @@ class Dropdown:
         self.width = width
         """The width of the dropdown, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1872,7 +1872,7 @@ class Combobox:
         self.width = width
         """The width of the combobox, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2008,7 +2008,7 @@ class Slider:
         self.width = width
         """The width of the slider, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2137,7 +2137,7 @@ class Spinbox:
         self.width = width
         """The width of the spinbox, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.trigger = trigger
         """True if the form should be submitted when the spinbox value changes."""
         self.tooltip = tooltip
@@ -2266,7 +2266,7 @@ class DatePicker:
         self.width = width
         """The width of the date picker, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.min = min
@@ -2392,11 +2392,11 @@ class ColorPicker:
         self.width = width
         """The width of the color picker, e.g. '100px'. Defaults to '300px'."""
         self.alpha = alpha
-        """True if user should be allowed to pick color transparency. Defaults to 'true'."""
+        """True if user should be allowed to pick color transparency. Defaults to True."""
         self.inline = inline
-        """True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to 'false'."""
+        """True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to False."""
         self.visible = visible
-        """True if the component should be visible. Defaults to 'true'."""
+        """True if the component should be visible. Defaults to True."""
         self.trigger = trigger
         """True if the form should be submitted when the color picker value changes."""
         self.tooltip = tooltip
@@ -2536,7 +2536,7 @@ class Button:
         self.width = width
         """The width of the button, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2654,7 +2654,7 @@ class Buttons:
         self.width = width
         """The width of the buttons, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2760,7 +2760,7 @@ class MiniButtons:
         self.items = items
         """The buttons in this set."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2824,17 +2824,17 @@ class FileUpload:
         self.file_extensions = file_extensions
         """List of allowed file extensions, e.g. `pdf`, `docx`, etc."""
         self.max_file_size = max_file_size
-        """Maximum allowed size (Mb) per file. Defaults to no limit."""
+        """Maximum allowed size (Mb) per file. No limit by default."""
         self.max_size = max_size
-        """Maximum allowed size (Mb) for all files combined. Defaults to no limit."""
+        """Maximum allowed size (Mb) for all files combined. No limit by default."""
         self.height = height
-        """The height of the file upload, e.g. '400px', '50%', etc."""
+        """The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px."""
         self.width = width
         """The width of the file upload, e.g. '100px'. Defaults to '100%'."""
         self.compact = compact
-        """True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false."""
+        """True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -3195,7 +3195,7 @@ class TableColumn:
         self.data_type = data_type
         """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
         self.cell_type = cell_type
-        """Defines how to render each cell in this column. Defaults to plain text."""
+        """Defines how to render each cell in this column. Renders as plain text by default."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3386,7 +3386,7 @@ class Table:
         self.checkbox_visibility = checkbox_visibility
         """Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -3523,7 +3523,7 @@ class Link:
         self.width = width
         """The width of the link, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.target = target
         """Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window."""
         self.tooltip = tooltip
@@ -3732,13 +3732,13 @@ class Tabs:
         self.name = name
         """An identifying name for this component."""
         self.value = value
-        """The name of the tab to select."""
+        """The name of the tab to select initially."""
         self.items = items
         """The tabs in this tab bar."""
         self.width = width
         """The width of the tabs, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.link = link
         """True if tabs should be rendered as links instead of buttons."""
 
@@ -3821,7 +3821,7 @@ class Expander:
         self.width = width
         """The width of the expander, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3900,7 +3900,7 @@ class Frame:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3971,7 +3971,7 @@ class Markup:
         self.width = width
         """The width of the markup, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4033,7 +4033,7 @@ class Template:
         self.width = width
         """The width of the template, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4114,7 +4114,7 @@ class Picker:
         self.values = values
         """The names of the selected choices."""
         self.max_choices = max_choices
-        """Maximum number of selectable choices. Defaults to no limit."""
+        """Maximum number of selectable choices."""
         self.required = required
         """True if the picker is a required field."""
         self.disabled = disabled
@@ -4122,7 +4122,7 @@ class Picker:
         self.width = width
         """The width of the picker, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.trigger = trigger
         """True if the form should be submitted when the picker value changes."""
         self.tooltip = tooltip
@@ -4261,7 +4261,7 @@ class RangeSlider:
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -4422,7 +4422,7 @@ class Stepper:
         self.width = width
         """The width of the stepper, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -5182,7 +5182,7 @@ class Visualization:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.events = events
         """The events to capture on this visualization."""
 
@@ -5266,7 +5266,7 @@ class VegaVisualization:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5894,7 +5894,7 @@ class Facepile:
         self.max = max
         """Maximum number of personas to be displayed."""
         self.value = value
-        """A value to be submitted when the add button is clicked. If value is not provided, true will be submitted"""
+        """A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6810,7 +6810,7 @@ class ChatCard:
         self.data = data
         """The data for this card."""
         self.capacity = capacity
-        """The maximum number of messages contained in this card. Defaults to 50 messages."""
+        """The maximum number of messages contained in this card. Defaults to 50."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8516,13 +8516,13 @@ class Dialog:
         self.items = items
         """The components displayed in this dialog."""
         self.width = width
-        """The width of the dialog, e.g. '400px', defaults to '600px'."""
+        """The width of the dialog, e.g. '400px'. Defaults to '600px'."""
         self.closable = closable
         """True if the dialog should have a closing 'X' button at the top right corner."""
         self.blocking = blocking
-        """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false."""
+        """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False."""
         self.primary = primary
-        """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false."""
+        """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False."""
         self.name = name
         """An identifying name for this component."""
         self.events = events
@@ -9217,7 +9217,7 @@ class NavCard:
         self.items = items
         """The navigation groups contained in this pane."""
         self.value = value
-        """The name of the active (highlighted) navigation item."""
+        """The name of the initially active (highlighted) navigation item."""
         self.title = title
         """The card's title."""
         self.subtitle = subtitle

@@ -35,7 +35,7 @@ def text(
         content: The text content.
         size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
         width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -101,7 +101,7 @@ def text_xl(
     Args:
         content: The text content.
         width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
         name: An identifying name for this component.
@@ -131,7 +131,7 @@ def text_l(
     Args:
         content: The text content.
         width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
         name: An identifying name for this component.
@@ -160,7 +160,7 @@ def text_m(
     Args:
         content: The text content.
         width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -187,7 +187,7 @@ def text_s(
     Args:
         content: The text content.
         width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -214,7 +214,7 @@ def text_xs(
     Args:
         content: The text content.
         width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -251,7 +251,7 @@ def label(
         required: True if the field is required.
         disabled: True if the label should be disabled.
         width: The width of the label , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
     Returns:
@@ -282,7 +282,7 @@ def separator(
         label: The text displayed on the separator.
         name: An identifying name for this component.
         width: The width of the separator , e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Separator` instance.
     """
@@ -328,7 +328,7 @@ def progress(
         caption: The text displayed below the bar.
         value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
         width: The width of the separator, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
     Returns:
@@ -363,7 +363,7 @@ def message_bar(
         text: The text displayed on the message bar.
         name: An identifying name for this component.
         width: The width of the message bar, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.MessageBar` instance.
     """
@@ -421,7 +421,7 @@ def textbox(
         trigger: True if the form should be submitted when the text value changes.
         height: The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
         width: The width of the text box, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Textbox` instance.
@@ -483,7 +483,7 @@ def checkbox(
         disabled: True if the checkbox is disabled.
         trigger: True if the form should be submitted when the checkbox value changes.
         width: The width of the checkbox, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Checkbox` instance.
@@ -527,7 +527,7 @@ def toggle(
         disabled: True if the checkbox is disabled.
         trigger: True if the form should be submitted when the toggle value changes.
         width: The width of the toggle, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Toggle` instance.
@@ -595,7 +595,7 @@ def choice_group(
         required: True if this field is required.
         trigger: True if the form should be submitted when the selection changes.
         width: The width of the choice group, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.ChoiceGroup` instance.
@@ -634,9 +634,9 @@ def checklist(
         values: The names of the selected choices.
         choices: The choices to be presented.
         trigger: True if the form should be submitted when the checklist value changes.
-        inline: True if checklist should be rendered horizontally.
+        inline: True if checklist should be rendered horizontally. Defaults to False.
         width: The width of the checklist, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Checklist` instance.
@@ -691,7 +691,7 @@ def dropdown(
         disabled: True if this field is disabled.
         trigger: True if the form should be submitted when the dropdown value changes.
         width: The width of the dropdown, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Dropdown` instance.
@@ -745,7 +745,7 @@ def combobox(
         error: Text to be displayed as an error below the text box.
         disabled: True if this field is disabled.
         width: The width of the combobox, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Combobox` instance.
@@ -802,7 +802,7 @@ def slider(
         disabled: True if this field is disabled.
         trigger: True if the form should be submitted when the slider value changes.
         width: The width of the slider, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Slider` instance.
@@ -848,7 +848,7 @@ def spinbox(
         value: The current value of the spinbox. Defaults to "0".
         disabled: True if this field is disabled.
         width: The width of the spinbox, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         trigger: True if the form should be submitted when the spinbox value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -894,7 +894,7 @@ def date_picker(
         disabled: True if this field is disabled.
         trigger: True if the form should be submitted when the datepicker value changes.
         width: The width of the date picker, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         min: The minimum allowed date value in YYYY-MM-DD format.
         max: The maximum allowed date value in YYYY-MM-DD format.
@@ -939,9 +939,9 @@ def color_picker(
         value: The selected color (CSS-compatible string).
         choices: A list of colors (CSS-compatible strings) to limit color choices to.
         width: The width of the color picker, e.g. '100px'. Defaults to '300px'.
-        alpha: True if user should be allowed to pick color transparency. Defaults to 'true'.
-        inline: True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to 'false'.
-        visible: True if the component should be visible. Defaults to 'true'.
+        alpha: True if user should be allowed to pick color transparency. Defaults to True.
+        inline: True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to False.
+        visible: True if the component should be visible. Defaults to True.
         trigger: True if the form should be submitted when the color picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -1001,7 +1001,7 @@ def button(
         link: True if the button should be rendered as link text and not a standard button.
         icon: An optional icon to display next to the button label (not applicable for links).
         width: The width of the button, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Button` instance.
@@ -1035,7 +1035,7 @@ def buttons(
         justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
         name: An identifying name for this component.
         width: The width of the buttons, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Buttons` instance.
     """
@@ -1077,7 +1077,7 @@ def mini_buttons(
 
     Args:
         items: The buttons in this set.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.MiniButtons` instance.
     """
@@ -1108,12 +1108,12 @@ def file_upload(
         label: Text to be displayed in the bottom button. Defaults to "Upload".
         multiple: True if the component should allow multiple files to be uploaded.
         file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
-        max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
-        max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
-        height: The height of the file upload, e.g. '400px', '50%', etc.
+        max_file_size: Maximum allowed size (Mb) per file. No limit by default.
+        max_size: Maximum allowed size (Mb) for all files combined. No limit by default.
+        height: The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px.
         width: The width of the file upload, e.g. '100px'. Defaults to '100%'.
-        compact: True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false.
-        visible: True if the component should be visible. Defaults to true.
+        compact: True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.FileUpload` instance.
@@ -1242,7 +1242,7 @@ def table_column(
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
         link: Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table.
         data_type: Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
-        cell_type: Defines how to render each cell in this column. Defaults to plain text.
+        cell_type: Defines how to render each cell in this column. Renders as plain text by default.
     Returns:
         A `h2o_wave.types.TableColumn` instance.
     """
@@ -1321,7 +1321,7 @@ def table(
         width: The width of the table, e.g. '100px'. Defaults to '100%'.
         values: The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
         checkbox_visibility: Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Table` instance.
@@ -1368,7 +1368,7 @@ def link(
         download: True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false.
         button: True if the link should be rendered as a button.
         width: The width of the link, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         target: Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
@@ -1446,10 +1446,10 @@ def tabs(
 
     Args:
         name: An identifying name for this component.
-        value: The name of the tab to select.
+        value: The name of the tab to select initially.
         items: The tabs in this tab bar.
         width: The width of the tabs, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         link: True if tabs should be rendered as links instead of buttons.
     Returns:
         A `h2o_wave.types.Tabs` instance.
@@ -1482,7 +1482,7 @@ def expander(
         expanded: True if expanded, False if collapsed.
         items: List of components to be hideable by the expander.
         width: The width of the expander, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Expander` instance.
     """
@@ -1512,7 +1512,7 @@ def frame(
         width: The width of the frame, e.g. `200px`, `50%`, etc. Defaults to '100%'.
         height: The height of the frame, e.g. `200px`, `50%`, etc. Defaults to '150px'.
         name: An identifying name for this component.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Frame` instance.
     """
@@ -1538,7 +1538,7 @@ def markup(
         content: The HTML content.
         name: An identifying name for this component.
         width: The width of the markup, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Markup` instance.
     """
@@ -1564,7 +1564,7 @@ def template(
         data: Data for the Handlebars template
         name: An identifying name for this component.
         width: The width of the template, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Template` instance.
     """
@@ -1599,11 +1599,11 @@ def picker(
         choices: The choices to be presented.
         label: Text to be displayed above the component.
         values: The names of the selected choices.
-        max_choices: Maximum number of selectable choices. Defaults to no limit.
+        max_choices: Maximum number of selectable choices.
         required: True if the picker is a required field.
         disabled: Controls whether the picker should be disabled or not.
         width: The width of the picker, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         trigger: True if the form should be submitted when the picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -1655,7 +1655,7 @@ def range_slider(
         disabled: True if this field is disabled.
         width: The width of the range slider, e.g. '100px'. Defaults to '100%'.
         trigger: True if the form should be submitted when the slider value changes.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.RangeSlider` instance.
@@ -1711,7 +1711,7 @@ def stepper(
         name: An identifying name for this component.
         items: The sequence of steps to be displayed.
         width: The width of the stepper, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Stepper` instance.
@@ -1938,7 +1938,7 @@ def visualization(
         width: The width of the visualization. Defaults to '100%'.
         height: The hight of the visualization. Defaults to '300px'.
         name: An identifying name for this component.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
         events: The events to capture on this visualization.
     Returns:
         A `h2o_wave.types.Visualization` instance.
@@ -1970,7 +1970,7 @@ def vega_visualization(
         width: The width of the visualization. Defaults to '100%'.
         height: The height of the visualization. Defaults to '300px'.
         name: An identifying name for this component.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.VegaVisualization` instance.
     """
@@ -2207,7 +2207,7 @@ def facepile(
         items: List of personas to be displayed.
         name: An identifying name for this component. If specified `Add button` will be rendered.
         max: Maximum number of personas to be displayed.
-        value: A value to be submitted when the add button is clicked. If value is not provided, true will be submitted
+        value: A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True.
     Returns:
         A `h2o_wave.types.Facepile` instance.
     """
@@ -2389,7 +2389,7 @@ def chat_card(
         box: A string indicating how to place this component on the page.
         title: The title for this card.
         data: The data for this card.
-        capacity: The maximum number of messages contained in this card. Defaults to 50 messages.
+        capacity: The maximum number of messages contained in this card. Defaults to 50.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatCard` instance.
@@ -3017,10 +3017,10 @@ def dialog(
     Args:
         title: The dialog's title.
         items: The components displayed in this dialog.
-        width: The width of the dialog, e.g. '400px', defaults to '600px'.
+        width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         closable: True if the dialog should have a closing 'X' button at the top right corner.
-        blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
-        primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+        blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False.
+        primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
         name: An identifying name for this component.
         events: The events to capture on this dialog.
     Returns:
@@ -3284,7 +3284,7 @@ def nav_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The navigation groups contained in this pane.
-        value: The name of the active (highlighted) navigation item.
+        value: The name of the initially active (highlighted) navigation item.
         title: The card's title.
         subtitle: The card's subtitle.
         icon: The icon, displayed to the left. *

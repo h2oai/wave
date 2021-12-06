@@ -32,17 +32,17 @@ export interface FileUpload {
   multiple?: B
   /** List of allowed file extensions, e.g. `pdf`, `docx`, etc. */
   file_extensions?: S[]
-  /** Maximum allowed size (Mb) per file. Defaults to no limit. */
+  /** Maximum allowed size (Mb) per file. No limit by default. */
   max_file_size?: F
-  /** Maximum allowed size (Mb) for all files combined. Defaults to no limit. */
+  /** Maximum allowed size (Mb) for all files combined. No limit by default. */
   max_size?: F
-  /** The height of the file upload, e.g. '400px', '50%', etc. */
+  /** The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px. */
   height?: S
   /** The width of the file upload, e.g. '100px'. Defaults to '100%'. */
   width?: S
-  /** True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to false. */
+  /** True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False. */
   compact?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

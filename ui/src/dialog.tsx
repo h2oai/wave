@@ -30,13 +30,13 @@ export interface Dialog {
   title: S
   /** The components displayed in this dialog. */
   items: Component[]
-  /** The width of the dialog, e.g. '400px', defaults to '600px'. */
+  /** The width of the dialog, e.g. '400px'. Defaults to '600px'. */
   width?: S
   /** True if the dialog should have a closing 'X' button at the top right corner. */
   closable?: B
-  /** True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false. */
+  /** True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False. */
   blocking?: B
-  /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false. */
+  /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False. */
   primary?: B
   /** An identifying name for this component. */
   name?: Id

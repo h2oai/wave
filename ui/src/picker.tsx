@@ -32,7 +32,7 @@ export interface Picker {
   label?: S
   /** The names of the selected choices. */
   values?: S[]
-  /** Maximum number of selectable choices. Defaults to no limit. */
+  /** Maximum number of selectable choices. */
   max_choices?: U
   /** True if the picker is a required field. */
   required?: B
@@ -40,7 +40,7 @@ export interface Picker {
   disabled?: B
   /** The width of the picker, e.g. '100px'. Defaults to '100%'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if the form should be submitted when the picker value changes. */
   trigger?: B
