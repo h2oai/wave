@@ -84,7 +84,7 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, grp: str, pool
             raise ValueError(f'Could not generate {img_name}\n{err.decode()}')
         page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle')
 
-        if any(match in code_str for match in ['frame_card', 'ui.script', 'image']):
+        if not is_test:
             time.sleep(1)
 
         path = os.path.join(docs_path, 'docs', 'components', grp, 'assets', img_name)
