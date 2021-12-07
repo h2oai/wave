@@ -1069,7 +1069,7 @@ const
         })
     snippetJSON._content = [...shortTemplates, ...longTemplates] as any
 
-    fs.writeFileSync('../intellij-plugin/src/main/resources/templates/wave-components.xml', toXML(snippetJSON, { indent: '  ' }))
+    fs.writeFileSync('../intellij-plugin/src/main/resources/templates/wave-components.xml', toXML(snippetJSON, { indent: '  ' }).replace('\n', ''))
   },
   generateVSCSnippets = (protocol: Protocol) => {
     const
