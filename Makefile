@@ -112,6 +112,11 @@ release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make r
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) website
 
+release-nightly: build-ui build-py ## Prepare nightly release builds. 
+	$(MAKE) OS=linux release-os
+	$(MAKE) OS=darwin release-os
+	$(MAKE) OS=windows EXE_EXT=".exe" release-os
+
 release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)

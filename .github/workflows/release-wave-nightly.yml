@@ -33,7 +33,7 @@ jobs:
         run: make test-ui-ci
 
       - name: Build Release
-        run: make release
+        run: make release-nightly
 
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags
