@@ -134,6 +134,9 @@ The [realtime sync mode](realtime.md) of the app server. One of `unicast` (defau
 ### H2O_WAVE_ADDRESS
 The public host/port of the Wave server. Defaults to `http://127.0.0.1:10101`. Set this variable if you are running the Wave server on a remote machine or container.
 
+### H2O_WAVE_CONNECTION_TIMEOUT
+The number of seconds to attempt to connect to the Wave server before giving up.
+
 ### H2O_WAVE_ACCESS_KEY_ID
 The API access key ID to use when communicating with the Wave server.
 
