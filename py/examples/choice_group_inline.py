@@ -1,5 +1,5 @@
 # Form / Choice Group / Inline
-# Use #choice groups to let users select one option from two or more choices.
+# Use #choice groups to let users select one option from two or more choices and inline to present the choices horizontally.
 # #form #choice_group #inline
 # ---
 from h2o_wave import main, app, Q, ui
