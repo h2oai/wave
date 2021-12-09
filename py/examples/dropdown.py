@@ -33,7 +33,7 @@ async def serve(q: Q):
                         disabled=True),
             ui.dropdown(name='dropdown_dialog', label='Pick multiple in dialog (>100 choices)', values=['1'],
                         required=True, choices=choices_dialog),
-            ui.dropdown(name='dropdown_dialog_always', label='Always show dialog even when choices < 100', value='A',
+            ui.dropdown(name='dropdown_popup_always', label='Always show popup even when choices < 100', value='A',
                         required=True, choices=choices, popup='always'),
             ui.dropdown(name='dropdown_dialog_never', label='Never show dialog even when choices > 100', value='1',
                         required=True, choices=choices_dialog, popup='never'),
