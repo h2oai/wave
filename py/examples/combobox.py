@@ -14,7 +14,6 @@ async def serve(q: Q):
             ui.text(f'combobox={q.args.combobox}'),
             ui.text(f'combobox_disabled={q.args.combobox_disabled}'),
             ui.text(f'combobox_error={q.args.combobox_error}'),
-            ui.text(f'combobox_trigger={q.args.combobox_trigger}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
