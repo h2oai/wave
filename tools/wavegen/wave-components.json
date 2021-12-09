@@ -919,7 +919,7 @@
   "Wave Full ChoiceGroup": {
     "prefix": "w_full_choice_group",
     "body": [
-      "ui.choice_group(name='$1', label='$2', value='$3', required=${4:False}, trigger=${5:False}, width='$6', visible=${7:True}, tooltip='$8', choices=[\n\t\t$9\t\t\n]),$0"
+      "ui.choice_group(name='$1', label='$2', value='$3', required=${4:False}, trigger=${5:False}, inline=${6:False}, width='$7', visible=${8:True}, tooltip='$9', choices=[\n\t\t$10\t\t\n]),$0"
     ],
     "description": "Create a full Wave ChoiceGroup."
   },

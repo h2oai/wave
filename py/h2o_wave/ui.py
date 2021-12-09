@@ -572,6 +572,7 @@ def choice_group(
         choices: Optional[List[Choice]] = None,
         required: Optional[bool] = None,
         trigger: Optional[bool] = None,
+        inline: Optional[bool] = None,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
@@ -594,6 +595,7 @@ def choice_group(
         choices: The choices to be presented.
         required: True if this field is required.
         trigger: True if the form should be submitted when the selection changes.
+        inline: True if choices should be rendered horizontally. Defaults to False.
         width: The width of the choice group, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -607,6 +609,7 @@ def choice_group(
         choices,
         required,
         trigger,
+        inline,
         width,
         visible,
         tooltip,

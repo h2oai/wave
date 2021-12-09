@@ -691,6 +691,7 @@ ui_choice <- function(
 #' @param choices The choices to be presented.
 #' @param required True if this field is required.
 #' @param trigger True if the form should be submitted when the selection changes.
+#' @param inline True if choices should be rendered horizontally. Defaults to False.
 #' @param width The width of the choice group, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -703,6 +704,7 @@ ui_choice_group <- function(
   choices = NULL,
   required = NULL,
   trigger = NULL,
+  inline = NULL,
   width = NULL,
   visible = NULL,
   tooltip = NULL) {
@@ -712,6 +714,7 @@ ui_choice_group <- function(
   .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("required", "logical", required)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("inline", "logical", inline)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
@@ -722,6 +725,7 @@ ui_choice_group <- function(
     choices=choices,
     required=required,
     trigger=trigger,
+    inline=inline,
     width=width,
     visible=visible,
     tooltip=tooltip))
