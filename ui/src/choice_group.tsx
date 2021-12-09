@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
 import { wave } from './ui'
 
 /**
@@ -65,21 +64,6 @@ export interface ChoiceGroup {
   tooltip?: S
 }
 
-const
-  css = stylesheet({
-    inline: {
-      $nest: {
-        '.ms-ChoiceFieldGroup-flexContainer': {
-          display: 'flex',
-          flexWrap: 'wrap',
-        },
-        '.ms-ChoiceField': {
-          marginRight: 15,
-        }
-      }
-    }
-  })
-
 export const
   XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
     const
@@ -87,6 +71,17 @@ export const
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
         if (m.trigger) wave.push()
+      },
+      styles: Fluent.IChoiceGroupStyles = {
+        flexContainer: {
+          display: 'flex',
+          flexWrap: 'wrap',
+          selectors: {
+            '.ms-ChoiceField': {
+              marginRight: 15,
+            }
+          }
+        },
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +89,7 @@ export const
 
     return (
       <Fluent.ChoiceGroup
-        className={m.inline ? css.inline : ''}
+        styles={styles}
         data-test={m.name}
         label={m.label}
         required={m.required}
