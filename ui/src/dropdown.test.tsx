@@ -377,38 +377,38 @@ describe('Dropdown.tsx', () => {
     })
 
     it(`Displays dialog when choices > 100 and 'popup' prop is not provided`, () => {
-      const { getByTestId, getAllByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
 
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('dialog')).toBeDefined()
+      expect(getByRole('dialog')).toBeInTheDocument()
     })
 
     it(`Displays dialog when choices > 100 and 'popup' prop is set as 'auto'`, () => {
-      const { getByTestId, getAllByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
 
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('dialog')).toBeDefined()
+      expect(getByRole('dialog')).toBeInTheDocument()
     })
 
     it(`Displays dialog when choices < 100 and 'popup' prop is set as 'always'`, () => {
       dialogProps.popup = 'always'
       dialogProps.choices = [{ name: 'A' }]
-      const { getByTestId, getAllByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
 
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('dialog')).toBeDefined()
+      expect(getByRole('dialog')).toBeInTheDocument()
     })
 
     it(`Displays dialog when choices > 100 and 'popup' prop is set as 'never'`, () => {
       dialogProps.popup = 'never'
-      const { getByTestId, getAllByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
 
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('listbox')).toBeDefined()
+      expect(getByRole('listbox')).toBeInTheDocument()
     })
   })
 })
