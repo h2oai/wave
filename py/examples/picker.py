@@ -14,7 +14,7 @@ async def serve(q: Q):
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-            ui.picker(name='picker', trigger=True, label='Place an order (try Spam, Eggs or Ham):', choices=[
+            ui.picker(name='picker', label='Place an order (try Spam, Eggs or Ham):', choices=[
                 ui.choice(name='spam', label='Spam'),
                 ui.choice(name='eggs', label='Eggs'),
                 ui.choice(name='ham', label='Ham'),
