@@ -867,7 +867,7 @@ ui_dropdown <- function(
 #' @param width The width of the combobox, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-#' @param trigger True if the choice should be submitted when the dropdown value changes.
+#' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
 #' @return A Combobox instance.
 #' @export
 ui_combobox <- function(

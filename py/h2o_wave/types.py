@@ -1878,7 +1878,7 @@ class Combobox:
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.trigger = trigger
-        """True if the choice should be submitted when the dropdown value changes."""
+        """True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
