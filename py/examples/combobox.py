@@ -25,7 +25,7 @@ async def serve(q: Q):
                         choices=combobox_choices, disabled=True),
             ui.combobox(name='combobox_error', label='Enter or choose a color', placeholder='Color...', value='Blue',
                         choices=combobox_choices, error='This combobox has an error!'),
-            ui.combobox(name='combobox_trigger', trigger=True, label='Enter or choose a color (trigger on selection)', placeholder='Color...', value=q.args.combobox_trigger,
+            ui.combobox(name='combobox_trigger', trigger=True, label='Enter or choose a color (submit color when changed)', placeholder='Color...', value='Blue',
                         choices=combobox_choices),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
