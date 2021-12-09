@@ -402,7 +402,7 @@ describe('Dropdown.tsx', () => {
       expect(getByRole('dialog')).toBeInTheDocument()
     })
 
-    it(`Displays dialog when choices > 100 and 'popup' prop is set as 'never'`, () => {
+    it(`Does not displays dialog when choices > 100 and 'popup' prop is set as 'never'`, () => {
       dialogProps.popup = 'never'
       const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
 
