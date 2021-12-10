@@ -54,6 +54,8 @@ export interface ChoiceGroup {
   required?: B
   /** True if the form should be submitted when the selection changes. */
   trigger?: B
+  /** True if choices should be rendered horizontally. Defaults to False. */
+  inline?: B
   /** The width of the choice group, e.g. '100px'. */
   width?: S
   /** True if the component should be visible. Defaults to True. */
@@ -65,7 +67,8 @@ export interface ChoiceGroup {
 export const
   XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
     const
-      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
+      optionStyles = { choiceFieldWrapper: { marginRight: 15 } },
+      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled, styles: optionStyles })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
         if (m.trigger) wave.push()
@@ -76,6 +79,7 @@ export const
 
     return (
       <Fluent.ChoiceGroup
+        styles={{ flexContainer: { display: 'flex', flexWrap: 'wrap' } }}
         data-test={m.name}
         label={m.label}
         required={m.required}

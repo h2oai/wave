@@ -983,12 +983,13 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_choice_group" value="ui.choice_group(name='$name$',label='$label$',value='$value$',required=$required$,trigger=$trigger$,width='$width$',visible=$visible$,tooltip='$tooltip$',choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave ChoiceGroup with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_choice_group" value="ui.choice_group(name='$name$',label='$label$',value='$value$',required=$required$,trigger=$trigger$,inline=$inline$,width='$width$',visible=$visible$,tooltip='$tooltip$',choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave ChoiceGroup with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="inline" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>

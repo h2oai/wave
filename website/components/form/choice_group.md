@@ -59,3 +59,20 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ])
 ])
 ```
+
+## Horizontal choice group
+
+Choice group renders options vertically (top to bottom) by default, but if you feel like you have a lot of options and
+plenty of wasted space, you can go for `inline` attribute which renders choices horizontally (left to right). There's
+also no need to worry about lines being too long as choice group wraps choices automatically for you.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.choice_group(name='choice_group', label='Choices', inline=True, choices=[
+        ui.choice(name='choice1', label='Choice 1'),
+        ui.choice(name='choice2', label='Choice 2'),
+        ui.choice(name='choice3', label='Choice 3'),
+        ui.choice(name='choice4', label='Choice 4'),
+    ])
+])
+```

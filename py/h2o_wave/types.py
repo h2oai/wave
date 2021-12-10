@@ -1461,6 +1461,7 @@ class ChoiceGroup:
             choices: Optional[List[Choice]] = None,
             required: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            inline: Optional[bool] = None,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -1471,6 +1472,7 @@ class ChoiceGroup:
         _guard_vector('ChoiceGroup.choices', choices, (Choice,), False, True, False)
         _guard_scalar('ChoiceGroup.required', required, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('ChoiceGroup.inline', inline, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.width', width, (str,), False, True, False)
         _guard_scalar('ChoiceGroup.visible', visible, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.tooltip', tooltip, (str,), False, True, False)
@@ -1486,6 +1488,8 @@ class ChoiceGroup:
         """True if this field is required."""
         self.trigger = trigger
         """True if the form should be submitted when the selection changes."""
+        self.inline = inline
+        """True if choices should be rendered horizontally. Defaults to False."""
         self.width = width
         """The width of the choice group, e.g. '100px'."""
         self.visible = visible
@@ -1501,6 +1505,7 @@ class ChoiceGroup:
         _guard_vector('ChoiceGroup.choices', self.choices, (Choice,), False, True, False)
         _guard_scalar('ChoiceGroup.required', self.required, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('ChoiceGroup.inline', self.inline, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.width', self.width, (str,), False, True, False)
         _guard_scalar('ChoiceGroup.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.tooltip', self.tooltip, (str,), False, True, False)
@@ -1511,6 +1516,7 @@ class ChoiceGroup:
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             required=self.required,
             trigger=self.trigger,
+            inline=self.inline,
             width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
@@ -1531,6 +1537,8 @@ class ChoiceGroup:
         _guard_scalar('ChoiceGroup.required', __d_required, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('ChoiceGroup.trigger', __d_trigger, (bool,), False, True, False)
+        __d_inline: Any = __d.get('inline')
+        _guard_scalar('ChoiceGroup.inline', __d_inline, (bool,), False, True, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('ChoiceGroup.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
@@ -1543,6 +1551,7 @@ class ChoiceGroup:
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         required: Optional[bool] = __d_required
         trigger: Optional[bool] = __d_trigger
+        inline: Optional[bool] = __d_inline
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
@@ -1553,6 +1562,7 @@ class ChoiceGroup:
             choices,
             required,
             trigger,
+            inline,
             width,
             visible,
             tooltip,
