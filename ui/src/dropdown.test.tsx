@@ -377,38 +377,38 @@ describe('Dropdown.tsx', () => {
     })
 
     it(`Displays dialog when choices > 100 and 'popup' prop is not provided`, () => {
-      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
 
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
       fireEvent.click(getByTestId(name))
-
-      expect(getByRole('dialog')).toBeInTheDocument()
+      expect(queryByRole('dialog')).toBeInTheDocument()
     })
 
     it(`Displays dialog when choices > 100 and 'popup' prop is set as 'auto'`, () => {
-      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
 
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
       fireEvent.click(getByTestId(name))
-
-      expect(getByRole('dialog')).toBeInTheDocument()
+      expect(queryByRole('dialog')).toBeInTheDocument()
     })
 
     it(`Displays dialog when choices < 100 and 'popup' prop is set as 'always'`, () => {
       dialogProps.popup = 'always'
       dialogProps.choices = [{ name: 'A' }]
-      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
 
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
       fireEvent.click(getByTestId(name))
-
-      expect(getByRole('dialog')).toBeInTheDocument()
+      expect(queryByRole('dialog')).toBeInTheDocument()
     })
 
     it(`Does not displays dialog when choices > 100 and 'popup' prop is set as 'never'`, () => {
       dialogProps.popup = 'never'
-      const { getByTestId, getByRole  } = render(<XDropdown model={dialogProps} />)
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
 
       fireEvent.click(getByTestId(name))
 
-      expect(getByRole('listbox')).toBeInTheDocument()
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
     })
   })
 })

@@ -22,6 +22,8 @@ async def serve(q: Q):
             ui.text(f'dropdown_multi={q.args.dropdown_multi}'),
             ui.text(f'dropdown_disabled={q.args.dropdown_disabled}'),
             ui.text(f'dropdown_dialog={q.args.dropdown_dialog}'),
+            ui.text(f'dropdown_popup_always={q.args.dropdown_popup_always}'),
+            ui.text(f'dropdown_popup_never={q.args.dropdown_popup_never}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
