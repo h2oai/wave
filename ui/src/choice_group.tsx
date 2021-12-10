@@ -71,17 +71,6 @@ export const
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
         if (m.trigger) wave.push()
-      },
-      styles: Fluent.IChoiceGroupStyles = {
-        flexContainer: {
-          display: 'flex',
-          flexWrap: 'wrap',
-          selectors: {
-            '.ms-ChoiceField': {
-              marginRight: 15,
-            }
-          }
-        },
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,7 +78,7 @@ export const
 
     return (
       <Fluent.ChoiceGroup
-        styles={styles}
+        styles={{ flexContainer: { display: 'flex', flexWrap: 'wrap' } }}
         data-test={m.name}
         label={m.label}
         required={m.required}
