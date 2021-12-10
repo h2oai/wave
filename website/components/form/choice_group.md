@@ -68,7 +68,7 @@ also no need to worry about lines being too long as choice group wraps choices a
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.choice_group(name='checklist', label='Choices', inline=True, choices=[
+    ui.choice_group(name='choice_group', label='Choices', inline=True, choices=[
         ui.choice(name='choice1', label='Choice 1'),
         ui.choice(name='choice2', label='Choice 2'),
         ui.choice(name='choice3', label='Choice 3'),
