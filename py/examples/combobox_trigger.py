@@ -2,13 +2,12 @@
 # To handle live changes to a #combobox, enable the `trigger` attribute.
 # #combobox #trigger
 # ---
-from typing import Optional
 from h2o_wave import main, app, Q, ui
 
 combobox_choices = ['Cyan', 'Magenta', 'Yellow', 'Black']
 
 
-def get_form_items(choice: Optional[str]):
+def get_form_items(choice: str):
     return [
         ui.combobox(name='combobox', trigger=True, label='Enter or choose a color', placeholder='Color...', value='Blue',
                     choices=combobox_choices),
