@@ -43,4 +43,15 @@ describe('Combobox.tsx', () => {
 
     expect(wave.args[name]).toBe('Choice1')
   })
+
+  it('Calls sync when trigger is on', () => {
+    const pushMock = jest.fn()
+    wave.push = pushMock
+    const { container, getByText } = render(<XCombobox model={{ ...comboboxProps, trigger: true, choices: ['Choice1', 'Choice2', 'Choice3'] }} />)
+
+    fireEvent.click(container.querySelector('button')!)
+    fireEvent.click(getByText('Choice1'))
+
+    expect(pushMock).toHaveBeenCalled()
+  })
 })

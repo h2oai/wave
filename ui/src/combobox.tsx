@@ -51,6 +51,8 @@ export interface Combobox {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes. */
+  trigger?: B
 }
 
 
@@ -63,8 +65,8 @@ export const
         const v = option?.text || value || ''
         wave.args[m.name] = v
         setText(v)
+        if (m.trigger) wave.push()
       }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
 
