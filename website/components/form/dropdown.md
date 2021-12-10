@@ -88,3 +88,22 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ])
 ])
 ```
+
+## Popup
+
+The popup attribute should be used to specify the dialog behavior.
+You can use one of these values: `'always', 'never', 'auto'`
+
+* `'always'`: display dialog even when number of choices < 100.
+* `'never'`: does not display dialog even when number of choices > 100.
+* `'auto'`: only display dialog when number of choices > 100 (default).
+
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.dropdown(name='dropdown', popup='always', label='Dropdown', choices=[
+        ui.choice(name='choice1', label='Choice 1'),
+        ui.choice(name='choice2', label='Choice 2'),
+        ui.choice(name='choice3', label='Choice 3'),
+    ])
+])
+```

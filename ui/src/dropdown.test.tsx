@@ -375,5 +375,40 @@ describe('Dropdown.tsx', () => {
       fireEvent.click(getByTestId(name))
       expect(getAllByRole('listitem')).toHaveLength(40) // Fluent Detaillist uses virtualization, so only first 40 listitems are rendered.
     })
+
+    it(`Displays dialog when choices > 100 and 'popup' prop is not provided`, () => {
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
+
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
+      fireEvent.click(getByTestId(name))
+      expect(queryByRole('dialog')).toBeInTheDocument()
+    })
+
+    it(`Displays dialog when choices > 100 and 'popup' prop is set as 'auto'`, () => {
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
+
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
+      fireEvent.click(getByTestId(name))
+      expect(queryByRole('dialog')).toBeInTheDocument()
+    })
+
+    it(`Displays dialog when choices < 100 and 'popup' prop is set as 'always'`, () => {
+      dialogProps.popup = 'always'
+      dialogProps.choices = [{ name: 'A' }]
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
+
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
+      fireEvent.click(getByTestId(name))
+      expect(queryByRole('dialog')).toBeInTheDocument()
+    })
+
+    it(`Does not displays dialog when choices > 100 and 'popup' prop is set as 'never'`, () => {
+      dialogProps.popup = 'never'
+      const { getByTestId, queryByRole } = render(<XDropdown model={dialogProps} />)
+
+      fireEvent.click(getByTestId(name))
+
+      expect(queryByRole('dialog')).not.toBeInTheDocument()
+    })
   })
 })

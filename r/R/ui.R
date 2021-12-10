@@ -801,6 +801,8 @@ ui_checklist <- function(
 #' @param width The width of the dropdown, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param popup Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices.
+#'   One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
 #' @return A Dropdown instance.
 #' @export
 ui_dropdown <- function(
@@ -815,7 +817,8 @@ ui_dropdown <- function(
   trigger = NULL,
   width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  popup = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -828,6 +831,7 @@ ui_dropdown <- function(
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  # TODO Validate popup
   .o <- list(dropdown=list(
     name=name,
     label=label,
@@ -840,7 +844,8 @@ ui_dropdown <- function(
     trigger=trigger,
     width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    popup=popup))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

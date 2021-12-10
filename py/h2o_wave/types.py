@@ -1670,6 +1670,15 @@ class Checklist:
         )
 
 
+_DropdownPopup = ['auto', 'always', 'never']
+
+
+class DropdownPopup:
+    AUTO = 'auto'
+    ALWAYS = 'always'
+    NEVER = 'never'
+
+
 class Dropdown:
     """Create a dropdown.
 
@@ -1697,6 +1706,7 @@ class Dropdown:
             width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            popup: Optional[str] = None,
     ):
         _guard_scalar('Dropdown.name', name, (str,), True, False, False)
         _guard_scalar('Dropdown.label', label, (str,), False, True, False)
@@ -1710,6 +1720,7 @@ class Dropdown:
         _guard_scalar('Dropdown.width', width, (str,), False, True, False)
         _guard_scalar('Dropdown.visible', visible, (bool,), False, True, False)
         _guard_scalar('Dropdown.tooltip', tooltip, (str,), False, True, False)
+        _guard_enum('Dropdown.popup', popup, _DropdownPopup, True)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1734,6 +1745,8 @@ class Dropdown:
         """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.popup = popup
+        """Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices. One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1749,6 +1762,7 @@ class Dropdown:
         _guard_scalar('Dropdown.width', self.width, (str,), False, True, False)
         _guard_scalar('Dropdown.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Dropdown.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_enum('Dropdown.popup', self.popup, _DropdownPopup, True)
         return _dump(
             name=self.name,
             label=self.label,
@@ -1762,6 +1776,7 @@ class Dropdown:
             width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
+            popup=self.popup,
         )
 
     @staticmethod
@@ -1791,6 +1806,8 @@ class Dropdown:
         _guard_scalar('Dropdown.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Dropdown.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_popup: Any = __d.get('popup')
+        _guard_enum('Dropdown.popup', __d_popup, _DropdownPopup, True)
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -1803,6 +1820,7 @@ class Dropdown:
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        popup: Optional[str] = __d_popup
         return Dropdown(
             name,
             label,
@@ -1816,6 +1834,7 @@ class Dropdown:
             width,
             visible,
             tooltip,
+            popup,
         )
 
 
