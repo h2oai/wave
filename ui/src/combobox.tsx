@@ -65,9 +65,7 @@ export const
         const v = option?.text || value || ''
         wave.args[m.name] = v
         setText(v)
-        if (m.trigger && options.find(o => o.text === v)) {
-          wave.push()
-        }
+        if (m.trigger) wave.push()
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
