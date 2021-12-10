@@ -15,6 +15,9 @@ custom_edit_url: null
  the arrow keys (up and down) to select a new value. When collapsed the user can select a new
  value by typing.
 
+ Note that if `trigger` is specified, the inputs are submitted if the value changes and user presses Enter
+ or user clicks out of the textbox. The value is also submitted upon drowdown option selection.
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.combobox(name='combobox', label='Combobox', choices=['Cyan', 'Magenta', 'Yellow', 'Black']),
