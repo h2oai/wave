@@ -67,7 +67,8 @@ export interface ChoiceGroup {
 export const
   XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
     const
-      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
+      optionStyles = { choiceFieldWrapper: { marginRight: 15 } },
+      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled, styles: optionStyles })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
         if (m.trigger) wave.push()
