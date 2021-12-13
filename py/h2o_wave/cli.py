@@ -15,6 +15,8 @@
 import sys
 import socket
 from contextlib import closing
+import subprocess
+import platform
 import uvicorn
 import click
 import os
@@ -77,9 +79,21 @@ def run(app: str, no_reload: bool):
     if ext.lower() == '.py':
         app = app_path.replace(os.path.sep, '.')
 
-    uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+    # Try to start Wave daemon.
+    try:
+        exe = './waved'
+        cwd = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', '..', '..')
+
+        if 'Windows' in platform.system():
+            # Windows venv dir structure is different than unix-based OS.
+            cwd = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', '..') + '\\'
+            exe = 'waved.exe'
+
+        subprocess.Popen([exe], cwd=cwd, env=os.environ.copy(), shell=True)
+    finally:
+        uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
 
 
 @main.command()
 def ide():
-    uvicorn.run(f'h2o_wave.ide:ide', host=_localhost, port=10100)
+    uvicorn.run('h2o_wave.ide:ide', host=_localhost, port=10100)

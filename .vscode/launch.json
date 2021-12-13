@@ -12,6 +12,18 @@
       "webRoot": "${workspaceFolder}/ui"
     },
     {
+      "name": "Debug PY Build",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/py",
+      "program": "${workspaceFolder}/py/setup.py",
+      "python": "${workspaceFolder}/py/venv/bin/python3",
+      "console": "integratedTerminal",
+      "args": [
+        "bdist_wheel",
+      ]
+    },
+    {
       "name": "Debug Showcase",
       "type": "python",
       "request": "launch",
