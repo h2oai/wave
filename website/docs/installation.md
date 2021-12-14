@@ -81,3 +81,15 @@ Finally, point your web browser to [http://localhost:10101/](http://localhost:10
 Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner).
 
 In the next few sections, we'll add some content and see what the fuss is all about.
+
+## Wave 0.20.0
+
+Starting from version `0.20.0` the server binary is a part of a python wheel, which means all there is needed to be done is:
+
+```sh
+python3 -m venv venv
+./venv/bin/pip install h2o-wave
+./venv/bin/wave run my-app
+```
+
+The above will start the Wave daemon if not running already and connect your Wave app to it.
