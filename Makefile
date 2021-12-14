@@ -106,16 +106,18 @@ pydocs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
 	cd tools/showcase && $(MAKE) generate
 
-release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
+release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) website
+	$(MAKE) build-py
 
-release-nightly: build-ui build-py ## Prepare nightly release builds. 
+release-nightly: build-ui ## Prepare nightly release builds. 
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
+	$(MAKE) build-py
 
 release-os:
 	rm -rf build/$(REL)
