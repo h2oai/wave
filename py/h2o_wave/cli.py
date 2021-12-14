@@ -81,15 +81,8 @@ def run(app: str, no_reload: bool):
 
     # Try to start Wave daemon.
     try:
-        exe = './waved'
-        cwd = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', '..', '..')
-
-        if 'Windows' in platform.system():
-            # Windows venv dir structure is different than unix-based OS.
-            cwd = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', '..') + '\\'
-            exe = 'waved.exe'
-
-        subprocess.Popen([exe], cwd=cwd, env=os.environ.copy(), shell=True)
+        subprocess.Popen(['waved.exe' if 'Windows' in platform.system() else './waved'],
+                         cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
     finally:
         uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
 
