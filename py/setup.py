@@ -23,11 +23,11 @@ with open('README.rst', 'r') as readme:
 with open('README.md', 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
-platform = os.getenv('OS', 'darwin')
+plat = os.getenv('OS', 'darwin')
 
 
 def get_data_files():
-    build_path = os.path.join('..', 'build', f'wave-DEV-{platform}-amd64', 'www')
+    build_path = os.path.join('..', 'build', f'wave-DEV-{plat}-amd64', 'www')
     data_dict = dict()
     for p in Path(build_path).rglob('*'):
         if os.path.isdir(p):
@@ -38,7 +38,7 @@ def get_data_files():
             data_dict[key].append(str(p))
         else:
             data_dict[key] = [str(p)]
-    return data_dict.items()
+    return list(data_dict.items())
 
 
 setuptools.setup(
@@ -51,7 +51,7 @@ setuptools.setup(
     conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_wave'],
-    data_files=[('', glob(f'../build/wave-DEV-{platform}-amd64/waved*'))] + list(get_data_files()),
+    data_files=None if plat == 'any' else [('', glob(f'../build/wave-DEV-{plat}-amd64/waved*'))] + get_data_files(),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',

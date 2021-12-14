@@ -7,6 +7,7 @@ build: purge
 	export OS=windows; ./venv/bin/python3 setup.py bdist_wheel --plat-name=win_amd64
 	export OS=linux; ./venv/bin/python3 setup.py bdist_wheel --plat-name=manylinux1_x86_64
 	export OS=darwin; ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_10_9_x86_64
+	export OS=any; ./venv/bin/python3 setup.py bdist_wheel
 
 setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
