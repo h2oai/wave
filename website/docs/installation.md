@@ -2,6 +2,18 @@
 title: Installation
 ---
 
+Starting from version `0.20.0` the server binary is a part of a python wheel, which means all there is needed to be done is:
+
+```sh
+python3 -m venv venv
+./venv/bin/pip install h2o-wave
+./venv/bin/wave run my-app
+```
+
+The above will start the Wave daemon if not running already and connect your Wave app to it.
+
+## Wave before 0.20.0
+
 To set up H2O Wave, simply download and extract a release (~10MB). The release ships with a precompiled binary executable, so no explicit installation step is necessary.
 
 ## Prerequisites
@@ -21,6 +33,7 @@ Extract your download.
 ```shell
 tar -xzf wave-x.y.z-linux-amd64.tar.gz
 ```
+
 ### Step 3: Move
 
 Move it to a convenient location, say `$HOME/wave/`.
@@ -81,15 +94,3 @@ Finally, point your web browser to [http://localhost:10101/](http://localhost:10
 Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner).
 
 In the next few sections, we'll add some content and see what the fuss is all about.
-
-## Wave 0.20.0
-
-Starting from version `0.20.0` the server binary is a part of a python wheel, which means all there is needed to be done is:
-
-```sh
-python3 -m venv venv
-./venv/bin/pip install h2o-wave
-./venv/bin/wave run my-app
-```
-
-The above will start the Wave daemon if not running already and connect your Wave app to it.
