@@ -56,6 +56,9 @@ const css = stylesheet({
       }
     }
   },
+  aux_value: {
+    marginBottom: 4,
+  },
   content: {
     flex: 1,
     display: 'flex',
@@ -128,7 +131,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       >
         <div className={css.header}>
           {persona.persona && <XPersona model={persona.persona} />}
-          {aux_value && <div className='wave-s12 wave-t7'>{aux_value}</div>}
+          {aux_value && <div className={clas('wave-s12 wave-t7', css.aux_value)}>{aux_value}</div>}
         </div>
         <div className={css.content}>
           <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
