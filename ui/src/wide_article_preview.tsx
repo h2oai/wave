@@ -97,7 +97,7 @@ export interface State {
   aux_value?: S
   /** The card's caption, displayed bellow the title on the right-hand side. */
   caption?: S
-  /** The card's buttons, displayed at the bottom-right corner. */
+  /** The card's buttons, displayed under the caption. */
   items?: Component[]
 }
 
