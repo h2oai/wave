@@ -54,4 +54,12 @@ describe('WideArticlePreview.tsx', () => {
     expect(pushMock).not.toHaveBeenCalled()
     expect(wave.args[name]).not.toBe(name)
   })
+
+  it('Does not submit data to server if name starts with #', () => {
+    wideArticlePreviewProps.state.name = `#${name}`
+    const { getByTestId } = render(<View {...wideArticlePreviewProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toBeUndefined()
+  })
 })
