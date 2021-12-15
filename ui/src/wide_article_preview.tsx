@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { cards } from './layout'
-import { clas, cssVar, px } from './theme'
+import { clas, cssVar, important, px } from './theme'
 import { bond, wave } from './ui'
 import { XPersona } from './persona'
 
@@ -47,7 +47,7 @@ const css = stylesheet({
         color: cssVar('$text7')
       },
       '.ms-Persona-image': {
-        height: '40px !important',
+        height: important('40px'),
         width: '40px !important',
       },
       '.ms-Persona-imageArea': {
