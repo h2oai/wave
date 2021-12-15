@@ -89,7 +89,7 @@ export interface State {
   persona: Component
   /** The card’s image displayed on the left-hand side. */
   image: S
-  /** The card's title on the righ-hand side */
+  /** The card's title on the right-hand side */
   title: S
   /** An identifying name for this card. Makes the card clickable, similar to a button. */
   name?: S
