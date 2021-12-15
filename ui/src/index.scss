@@ -27,8 +27,12 @@
   &::-webkit-scrollbar {
     width: 12px;
   }
-  
+
   &::-webkit-scrollbar-track {
+    background: var(--text0);
+  }
+
+  &::-webkit-scrollbar-corner {
     background: var(--text0);
   }
 }
