@@ -60,4 +60,5 @@ import './wide_info'
 import './wide_pie_stat'
 import './wide_plot'
 import './wide_series_stat'
+import './wide_article_preview'
 

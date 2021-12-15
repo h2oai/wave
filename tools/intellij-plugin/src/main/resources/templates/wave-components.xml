@@ -793,6 +793,15 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_wide_article_preview_card" value="ui.wide_article_preview_card(box='$box$',persona=$persona$,image='$image$',title='$title$')$END$" description="Create a minimal Wave WideArticlePreviewCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_wide_bar_stat_card" value="ui.wide_bar_stat_card(box='$box$',title='$title$',value='$value$',aux_value='$aux_value$',progress=$progress$)$END$" description="Create a minimal Wave WideBarStatCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1067,7 +1076,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_dropdown" value="ui.dropdown(name='$name$',label='$label$',placeholder='$placeholder$',value='$value$',required=$required$,disabled=$disabled$,trigger=$trigger$,width='$width$',visible=$visible$,tooltip='$tooltip$',values=[&#10;	$values$	&#10;],choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave Dropdown with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_dropdown" value="ui.dropdown(name='$name$',label='$label$',placeholder='$placeholder$',value='$value$',required=$required$,disabled=$disabled$,trigger=$trigger$,width='$width$',visible=$visible$,tooltip='$tooltip$',popup='$popup$',values=[&#10;	$values$	&#10;],choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave Dropdown with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1078,6 +1087,7 @@
     <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="popup" expression="" defaultValue="&quot;auto`, which pops up a dialog only when there are more than 100 choices&quot;" alwaysStopAt="true"/>
     <variable name="values" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="choices" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -2338,6 +2348,20 @@
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="specification" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_wide_article_preview_card" value="ui.wide_article_preview_card(box='$box$',persona=$persona$,image='$image$',title='$title$',name='$name$',aux_value='$aux_value$',caption='$caption$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave WideArticlePreviewCard with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="aux_value" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
