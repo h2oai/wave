@@ -70,7 +70,7 @@ const css = stylesheet({
   title: {
     color: cssVar('$themePrimary')
   },
-  subtitle: {
+  nudgeUp: {
     marginTop: -5, // Nudge up slightly to account for padding.
   },
 })
@@ -132,9 +132,9 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
             {nav && <Fluent.FontIcon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
             {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon} style={{ color: cssVar(icon_color) }} />}
-            <div>
+            <div className={css.nudgeUp}>
               <div className={clas(color !== 'primary' ? css.title : '', 'wave-s24 wave-w5')}>{title}</div>
-              {subtitle && <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>}
+              {subtitle && <div className={clas(css.nudgeUp, 'wave-s12')}>{subtitle}</div>}
             </div>
           </div>
           {secondary_items && <div className={css.center}><XInline model={{ items: secondary_items }} /></div>}
