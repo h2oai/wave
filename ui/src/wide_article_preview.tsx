@@ -81,6 +81,12 @@ const css = stylesheet({
       }
     }
   },
+  title: {
+    marginBottom: 8,
+  },
+  caption: {
+    marginBottom: 24,
+  }
 })
 
 /** Create a wide article preview card displaying a persona, image, title, caption, and optional buttons. */
@@ -128,8 +134,8 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
           <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
           <div className={css.rhs}>
             <div>
-              {title && <div className='wave-s16 wave-w6'>{title}</div>}
-              {caption && <div className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
+              {title && <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>}
+              {caption && <div className={clas('wave-s14 wave-w4 wave-t7', css.caption)}>{caption}</div>}
             </div>
             {items && <div className={css.items}><XComponents items={items} /></div>}
           </div>
