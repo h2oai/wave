@@ -86,6 +86,7 @@ const css = stylesheet({
   },
   title: {
     marginBottom: 8,
+    lineHeight: 0.6,
   },
   caption: {
     marginBottom: 24,
