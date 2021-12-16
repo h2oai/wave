@@ -11,7 +11,6 @@ async def serve(q: Q):
             ui.button(name='back', label='Go back', primary=True),
         ])
     else:
-        q.page['meta'] = ui.meta_card(box='', theme='neon')
         persona_pic = 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=100'
         q.page['example'] = ui.wide_article_preview_card(
             box='1 1 6 5',
