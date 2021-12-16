@@ -79,13 +79,13 @@ def run(app: str, no_reload: bool):
     if ext.lower() == '.py':
         app = app_path.replace(os.path.sep, '.')
 
-    if os.environ.get('H2O_WAVE_NO_AUTOSTART', None) is None:
-        # Try to start Wave daemon.
-        try:
+    # Try to start Wave daemon.
+    try:
+        if os.environ.get('H2O_WAVE_NO_AUTOSTART', None) is None:
             subprocess.Popen(['waved.exe' if 'Windows' in platform.system() else './waved'],
                              cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
-        finally:
-            uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+    finally:
+        uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
 
 
 @main.command()
