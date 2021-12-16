@@ -20,7 +20,8 @@ module.exports = {
       additionalLanguages: ['toml'],
     },
     algolia: {
-      apiKey: '1ff399df2912b1f87d8b235fa995fce6',
+      appId: '1DCIS06TYN',
+      apiKey: '6c848d14efe3428564d69ff571b0f223',
       indexName: 'wave',
       contextualSearch: true,
     },
