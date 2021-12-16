@@ -48,11 +48,11 @@ const css = stylesheet({
       },
       '.ms-Persona-image': {
         height: important('40px'),
-        width: '40px !important',
+        width: important('40px'),
       },
       '.ms-Persona-imageArea': {
-        height: '40px !important',
-        width: '40px !important',
+        height: important('40px'),
+        width: important('40px'),
       }
     }
   },
