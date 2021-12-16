@@ -23,11 +23,13 @@ with open('README.rst', 'r') as readme:
 with open('README.md', 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
-plat = os.getenv('OS', 'darwin')
+platform = os.getenv('OS', 'darwin')
+version = os.getenv('VERSION', 'DEV')
+base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-amd64')
 
 
 def get_data_files():
-    build_path = os.path.join('..', 'build', f'wave-DEV-{plat}-amd64', 'www')
+    build_path = os.path.join(base_path, 'www')
     data_dict = dict()
     for p in Path(build_path).rglob('*'):
         if os.path.isdir(p):
@@ -43,7 +45,7 @@ def get_data_files():
 
 setuptools.setup(
     name='h2o_wave',
-    version=os.getenv('VERSION', '0.19.0'),
+    version=version,
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',
@@ -51,7 +53,7 @@ setuptools.setup(
     conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_wave'],
-    data_files=None if plat == 'any' else [('', glob(f'../build/wave-DEV-{plat}-amd64/waved*'))] + get_data_files(),
+    data_files=None if platform == 'any' else [('', glob(os.path.join(base_path, 'waved*')))] + get_data_files(),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
