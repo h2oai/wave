@@ -33,8 +33,6 @@ async def serve(q: Q):
             caption='''
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum sed odio porro veniam dolorum velit doloremque neque aliquam quisquam rem officiis, eius facilis iste quam, minus repellat magni iure eaque!
                 Veniam pariatur itaque nisi, a nam consequuntur. Aliquam nulla sequi, nihil soluta quaerat vitae inventore magni vero voluptates officiis dolorem alias incidunt iure in sapiente doloribus, quos distinctio? Illo, ullam?
-                Veniam pariatur itaque nisi, a nam consequuntur. Aliquam nulla sequi, nihil soluta quaerat vitae inventore magni vero voluptates officiis dolorem alias incidunt iure in sapiente doloribus, quos distinctio? Illo, ullam?
-                Veniam pariatur itaque nisi, a nam consequuntur. Aliquam nulla sequi, nihil soluta quaerat vitae inventore magni vero voluptates officiis dolorem alias incidunt iure in sapiente doloribus, quos distinctio? Illo, ullam?
             ''',
             items=[
                 ui.inline(justify='end', items=[
