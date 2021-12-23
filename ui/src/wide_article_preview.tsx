@@ -88,9 +88,6 @@ const css = stylesheet({
     marginBottom: 8,
     lineHeight: 0.6,
   },
-  caption: {
-    marginBottom: 24,
-  }
 })
 
 /** Create a wide article preview card displaying a persona, image, title, caption, and optional buttons. */
@@ -139,7 +136,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
           <div className={css.rhs}>
             <div>
               {title && <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>}
-              {caption && <div className={clas('wave-s14 wave-w4 wave-t7', css.caption)}>{caption}</div>}
+              {caption && <div style={{ marginBottom: items ? 24 : 0 }} className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
             </div>
             {items && <div className={css.items}><XComponents items={items} /></div>}
           </div>
