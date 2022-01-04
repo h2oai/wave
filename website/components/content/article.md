@@ -96,8 +96,10 @@ q.page['example'] = ui.wide_article_preview_card(
     image='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
     title='Jasmine Grand',
     caption='''
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum sed odio porro veniam dolorum velit doloremque neque aliquam quisquam rem officiis, eius facilis iste quam, minus repellat magni iure eaque!
-        Veniam pariatur itaque nisi, a nam consequuntur. Aliquam nulla sequi, nihil soluta quaerat vitae inventore magni vero voluptates officiis dolorem alias incidunt iure in sapiente doloribus, quos distinctio? Illo, ullam?
+Duis porttitor tincidunt justo ac semper. Vestibulum et molestie lectus. Proin vel eros a ex condimentum aliquam.
+Sed accumsan tellus sit amet nulla ullamcorper. Suspendisse bibendum tristique sem, quis lacinia ex pulvinar quis.
+Nam elementum accumsan porta. Sed eget aliquam elit, sed luctus lorem. Nulla gravida malesuada purus eu eleifend.
+Maecenas in ante interdum, hendrerit velit at, tempus eros. Nullam convallis tempor libero at viverra.
     ''',
     items=[
         ui.inline(justify='end', items=[
@@ -105,8 +107,8 @@ q.page['example'] = ui.wide_article_preview_card(
                 ui.mini_button(name='like', label='4', icon='Heart'),
                 ui.mini_button(name='comment', label='2', icon='Comment'),
                 ui.mini_button(name='share', label='1', icon='Share'),
-            ]),
+            ])
         ])
-    ],
+    ]
 )
 ```
