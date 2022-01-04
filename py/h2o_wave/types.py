@@ -11296,6 +11296,116 @@ class VegaCard:
         )
 
 
+class WideArticlePreviewCard:
+    """Create a wide article preview card displaying a persona, image, title, caption, and optional buttons.
+    """
+    def __init__(
+            self,
+            box: str,
+            persona: Component,
+            image: str,
+            title: str,
+            name: Optional[str] = None,
+            aux_value: Optional[str] = None,
+            caption: Optional[str] = None,
+            items: Optional[List[Component]] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('WideArticlePreviewCard.box', box, (str,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.persona', persona, (Component,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.image', image, (str,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.title', title, (str,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.name', name, (str,), False, True, False)
+        _guard_scalar('WideArticlePreviewCard.aux_value', aux_value, (str,), False, True, False)
+        _guard_scalar('WideArticlePreviewCard.caption', caption, (str,), False, True, False)
+        _guard_vector('WideArticlePreviewCard.items', items, (Component,), False, True, False)
+        _guard_vector('WideArticlePreviewCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.persona = persona
+        """The card's user avatar, 'size' prop is restricted to 'xs'."""
+        self.image = image
+        """The card’s image displayed on the left-hand side."""
+        self.title = title
+        """The card's title on the righ-hand side"""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable, similar to a button."""
+        self.aux_value = aux_value
+        """The card's auxiliary text, displayed on the right-hand side of the header."""
+        self.caption = caption
+        """The card's caption, displayed bellow the title on the right-hand side."""
+        self.items = items
+        """The card's buttons, displayed at the bottom-right corner."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('WideArticlePreviewCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.persona', self.persona, (Component,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('WideArticlePreviewCard.name', self.name, (str,), False, True, False)
+        _guard_scalar('WideArticlePreviewCard.aux_value', self.aux_value, (str,), False, True, False)
+        _guard_scalar('WideArticlePreviewCard.caption', self.caption, (str,), False, True, False)
+        _guard_vector('WideArticlePreviewCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('WideArticlePreviewCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='wide_article_preview',
+            box=self.box,
+            persona=self.persona.dump(),
+            image=self.image,
+            title=self.title,
+            name=self.name,
+            aux_value=self.aux_value,
+            caption=self.caption,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WideArticlePreviewCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('WideArticlePreviewCard.box', __d_box, (str,), False, False, False)
+        __d_persona: Any = __d.get('persona')
+        _guard_scalar('WideArticlePreviewCard.persona', __d_persona, (dict,), False, False, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('WideArticlePreviewCard.image', __d_image, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('WideArticlePreviewCard.title', __d_title, (str,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('WideArticlePreviewCard.name', __d_name, (str,), False, True, False)
+        __d_aux_value: Any = __d.get('aux_value')
+        _guard_scalar('WideArticlePreviewCard.aux_value', __d_aux_value, (str,), False, True, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('WideArticlePreviewCard.caption', __d_caption, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('WideArticlePreviewCard.items', __d_items, (dict,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('WideArticlePreviewCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        persona: Component = Component.load(__d_persona)
+        image: str = __d_image
+        title: str = __d_title
+        name: Optional[str] = __d_name
+        aux_value: Optional[str] = __d_aux_value
+        caption: Optional[str] = __d_caption
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WideArticlePreviewCard(
+            box,
+            persona,
+            image,
+            title,
+            name,
+            aux_value,
+            caption,
+            items,
+            commands,
+        )
+
+
 class WideBarStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
     """

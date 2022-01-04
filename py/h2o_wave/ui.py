@@ -4038,6 +4038,45 @@ def vega_card(
     )
 
 
+def wide_article_preview_card(
+        box: str,
+        persona: Component,
+        image: str,
+        title: str,
+        name: Optional[str] = None,
+        aux_value: Optional[str] = None,
+        caption: Optional[str] = None,
+        items: Optional[List[Component]] = None,
+        commands: Optional[List[Command]] = None,
+) -> WideArticlePreviewCard:
+    """Create a wide article preview card displaying a persona, image, title, caption, and optional buttons.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        persona: The card's user avatar, 'size' prop is restricted to 'xs'.
+        image: The card’s image displayed on the left-hand side.
+        title: The card's title on the righ-hand side
+        name: An identifying name for this card. Makes the card clickable, similar to a button.
+        aux_value: The card's auxiliary text, displayed on the right-hand side of the header.
+        caption: The card's caption, displayed bellow the title on the right-hand side.
+        items: The card's buttons, displayed at the bottom-right corner.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.WideArticlePreviewCard` instance.
+    """
+    return WideArticlePreviewCard(
+        box,
+        persona,
+        image,
+        title,
+        name,
+        aux_value,
+        caption,
+        items,
+        commands,
+    )
+
+
 def wide_bar_stat_card(
         box: str,
         title: str,

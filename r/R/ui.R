@@ -4687,6 +4687,52 @@ ui_vega_card <- function(
   return(.o)
 }
 
+#' Create a wide article preview card displaying a persona, image, title, caption, and optional buttons.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param persona The card's user avatar, 'size' prop is restricted to 'xs'.
+#' @param image The card’s image displayed on the left-hand side.
+#' @param title The card's title on the righ-hand side
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param aux_value The card's auxiliary text, displayed on the right-hand side of the header.
+#' @param caption The card's caption, displayed bellow the title on the right-hand side.
+#' @param items The card's buttons, displayed at the bottom-right corner.
+#' @param commands Contextual menu commands for this component.
+#' @return A WideArticlePreviewCard instance.
+#' @export
+ui_wide_article_preview_card <- function(
+  box,
+  persona,
+  image,
+  title,
+  name = NULL,
+  aux_value = NULL,
+  caption = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    persona=persona,
+    image=image,
+    title=title,
+    name=name,
+    aux_value=aux_value,
+    caption=caption,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideArticlePreviewCard"))
+  return(.o)
+}
+
 #' Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 #'
 #' @param box A string indicating how to place this component on the page.
