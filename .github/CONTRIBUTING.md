@@ -75,7 +75,7 @@ make run
 Try running the Wave tour to verify if your setup is functional:
 
 ``` bash
-cd py && ./venv/bin/wave examples.tour
+cd py && ./venv/bin/wave run examples.tour
 ```
 
 You should now see the Wave Tour at http://localhost:10101/tour, and examples running at http://localhost:10101/demo.
