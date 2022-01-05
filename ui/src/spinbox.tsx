@@ -67,7 +67,7 @@ const
 export const
   XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
     const
-      [val, setVal] = React.useState<{ val?: S }>(), // Use primitive wrapper to always force a React update.
+      [val, setVal] = React.useState<{ val: S }>({ val: value.toString() }), // Use primitive wrapper to always force a React update.
       precision = Math.max(calculatePrecision(step), 0),
       parseValue = (v: F) => {
         const x = precisionRound(v, precision)
@@ -109,6 +109,7 @@ export const
       },
       debouncedHandleOnInput = wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput),
       onInput = (e: React.SyntheticEvent<HTMLElement>) => trigger ? debouncedHandleOnInput(e) : handleOnInput(e)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = (value < min) ? min : ((value > max) ? max : value) }, [])
 
@@ -120,7 +121,6 @@ export const
         min={min}
         max={max}
         step={step}
-        defaultValue={String(value)}
         value={val?.val}
         onIncrement={onIncrement}
         onDecrement={onDecrement}

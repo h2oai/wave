@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, wait } from '@testing-library/react'
 import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
 import { wave } from './ui'
@@ -58,7 +58,6 @@ describe('Spinbox.tsx', () => {
   })
 
   it('Sets args on increment', () => {
-    console.log()
     const { container } = render(<XSpinbox model={spinboxProps} />)
     simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
     expect(wave.args[name]).toBe(1)
@@ -183,10 +182,10 @@ describe('Spinbox.tsx', () => {
       spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
     fireEvent.input(spinboxInput, { target: { value: '0.' } })
-    expect(spinboxInput).toHaveValue('0')
+    expect(spinboxInput).toHaveValue('0.')
     fireEvent.input(spinboxInput, { target: { value: '0.10' } })
     expect(spinboxInput).toHaveValue('0.10')
-    fireEvent.input(spinboxInput, { target: { value: '0.0001' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.00011' } })
     expect(spinboxInput).toHaveValue('0.0001')
   })
 
