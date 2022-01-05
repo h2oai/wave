@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
-import React, { useState } from 'react'
+import React from 'react'
 import { stylesheet } from 'typestyle'
 import { border, cssVar, formItemWidth, margin } from './theme'
 import { wave } from './ui'
@@ -110,8 +110,8 @@ export const
     const
       { width, value, name, trigger, label, choices, alpha, inline } = model,
       defaultValue = value || null,
-      [selectedColorId, setSelectedColorId] = useState<string | null>(defaultValue),
-      onColorChanged = (_id?: S, color = defaultValue) => {
+      [selectedColorId, setSelectedColorId] = React.useState<S | null>(defaultValue),
+      onSwatchChanged = (_id?: S, color = defaultValue) => {
         wave.args[name] = color
         setSelectedColorId(color)
         if (trigger) wave.push()
@@ -136,7 +136,7 @@ export const
                 <Fluent.Label>{label}</Fluent.Label>
                 {
                   choices?.length
-                    ? <Fluent.SwatchColorPicker columnCount={10} selectedId={selectedColorId || choices[0]} colorCells={toColorCells(choices)} onColorChanged={onColorChanged} />
+                    ? <Fluent.SwatchColorPicker columnCount={10} selectedId={selectedColorId || choices[0]} colorCells={toColorCells(choices)} onColorChanged={onSwatchChanged} />
                     : (
                       <Fluent.ColorPicker
                         alphaType={alpha ? 'alpha' : 'none'}

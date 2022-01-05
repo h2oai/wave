@@ -273,18 +273,18 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Has correct number of initially checked checkboxes', () => {
-      const { getAllByRole, getByTestId } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
+      const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
 
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('checkbox').filter(c => c.getAttribute('aria-checked') === 'true')).toHaveLength(1)
+      expect(getAllByRole('checkbox').filter(i => (i as HTMLInputElement).checked)).toHaveLength(1)
     })
 
     it('Has correct number of checked checkboxes - check and cancel', () => {
       const { getByText, getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
 
       fireEvent.click(getByTestId(name))
-      expect(getAllByRole('checkbox').filter(i => i.getAttribute('aria-checked') === 'true')).toHaveLength(0)
+      expect(getAllByRole('checkbox').filter(i => (i as HTMLInputElement).checked)).toHaveLength(0)
 
       fireEvent.click(getAllByRole('checkbox')[2])
       fireEvent.click(getAllByRole('checkbox')[3])
@@ -292,7 +292,7 @@ describe('Dropdown.tsx', () => {
       fireEvent.click(getByText('Cancel'))
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('checkbox').filter(i => i.getAttribute('aria-checked') === 'true')).toHaveLength(0)
+      expect(getAllByRole('checkbox').filter(i => (i as HTMLInputElement).checked)).toHaveLength(0)
     })
 
     it('Has correct number of checked checkboxes - check and submit', () => {
@@ -305,7 +305,8 @@ describe('Dropdown.tsx', () => {
       fireEvent.click(getByText('Select'))
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('checkbox').filter(c => c.getAttribute('aria-checked') === 'true')).toHaveLength(3)
+
+      expect(getAllByRole('checkbox').filter(i => (i as HTMLInputElement).checked)).toHaveLength(3)
     })
 
     it('Filters correctly', () => {

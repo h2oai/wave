@@ -87,10 +87,9 @@ export const
         setVal({ val: String(newValue) })
         return String(newValue)
       },
-      onBlur = () => setVal({ ...val }), //HACK: Fluent bug in v7, remove after upgrade.
-      handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleOnInput = (e: React.SyntheticEvent<HTMLElement>) => {
         const
-          val = e.target.value,
+          val = (e.target as HTMLInputElement).value,
           isLastCharDotOrTraillingZero = /\.$|\.\d*0+$/,
           value = parseValue(Number(val)),
           newValue = value > max
@@ -108,11 +107,8 @@ export const
           setVal({ val: String(newValue) })
         }
       },
-      debouncedHandleOnchange = wave.debounce(DEBOUNCE_TIMEOUT, handleOnChange),
-      onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.persist()
-        trigger ? debouncedHandleOnchange(e) : handleOnChange(e)
-      }
+      debouncedHandleOnInput = wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput),
+      onInput = (e: React.SyntheticEvent<HTMLElement>) => trigger ? debouncedHandleOnInput(e) : handleOnInput(e)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = (value < min) ? min : ((value > max) ? max : value) }, [])
 
@@ -120,7 +116,7 @@ export const
       <Fluent.SpinButton
         inputProps={{ 'data-test': name } as React.InputHTMLAttributes<HTMLInputElement>}
         label={label}
-        onChange={onChange}
+        onInput={onInput}
         min={min}
         max={max}
         step={step}
@@ -128,7 +124,6 @@ export const
         value={val?.val}
         onIncrement={onIncrement}
         onDecrement={onDecrement}
-        onBlur={onBlur}
         disabled={disabled}
       />
     )

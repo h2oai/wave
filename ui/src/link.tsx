@@ -102,7 +102,7 @@ export const
       _label = label || path,
       _target = target === '' ? '_blank' : target,
       onBtnClick = React.useCallback(() => window.open(path, _target), [_target, path]),
-      onLinkClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement>) => {
+      onLinkClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLElement>) => {
         // HACK: Perform download in a new tab because FF drops WS connection - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
         if (download && path) {
           ev.preventDefault()

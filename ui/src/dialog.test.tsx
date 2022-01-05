@@ -36,35 +36,22 @@ describe('Dialog.tsx', () => {
     dialogB(dialogProps)
   })
 
-  it('should open dialog when global qd.dialogB is set', () => {
+  it('should open dialog when global wave.dialogB is set', () => {
     const { queryByRole } = render(<Dialog />)
     expect(queryByRole('dialog')).toBeInTheDocument()
   })
 
-  it('should close dialog when global qd.dialogB is null', async () => {
+  it('should close dialog when global wave.dialogB is null', async () => {
     const { queryByRole } = render(<Dialog />)
     expect(queryByRole('dialog')).toBeInTheDocument()
     dialogB(null)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
-  it('should render correct title when specified', () => {
-    const title = 'New Title'
-    dialogB({ ...dialogProps, title })
-    const { queryByText } = render(<Dialog />)
-    expect(queryByText(title)).toBeInTheDocument()
-  })
-
-  it('should render X closing button when specified', () => {
-    dialogB({ ...dialogProps, closable: true })
-    const { queryByTitle } = render(<Dialog />)
-    expect(queryByTitle('Close')).toBeInTheDocument()
-  })
-
   it('should close dialog when clicking on X', async () => {
     dialogB({ ...dialogProps, closable: true })
-    const { getByTitle, queryByRole } = render(<Dialog />)
-    fireEvent.click(getByTitle('Close'))
+    const { container, queryByRole } = render(<Dialog />)
+    fireEvent.click(container.parentElement!.querySelector('.ms-Dialog-button--close')!)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 

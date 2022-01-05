@@ -8647,6 +8647,7 @@ class SidePanel:
             title: str,
             items: List[Component],
             width: Optional[str] = None,
+            blocking: Optional[bool] = None,
             name: Optional[str] = None,
             events: Optional[List[str]] = None,
             blocking: Optional[bool] = None,
@@ -8654,6 +8655,7 @@ class SidePanel:
         _guard_scalar('SidePanel.title', title, (str,), False, False, False)
         _guard_vector('SidePanel.items', items, (Component,), False, False, False)
         _guard_scalar('SidePanel.width', width, (str,), False, True, False)
+        _guard_scalar('SidePanel.blocking', blocking, (bool,), False, True, False)
         _guard_scalar('SidePanel.name', name, (str,), True, True, False)
         _guard_vector('SidePanel.events', events, (str,), False, True, False)
         _guard_scalar('SidePanel.blocking', blocking, (bool,), False, True, False)
@@ -8663,6 +8665,8 @@ class SidePanel:
         """The components displayed in this side panel."""
         self.width = width
         """The width of the dialog, e.g. '400px'. Defaults to '600px'."""
+        self.blocking = blocking
+        """True to disable all actions and commands behind the sidepanel. Blocking sidepanels should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False."""
         self.name = name
         """An identifying name for this component."""
         self.events = events
@@ -8675,6 +8679,7 @@ class SidePanel:
         _guard_scalar('SidePanel.title', self.title, (str,), False, False, False)
         _guard_vector('SidePanel.items', self.items, (Component,), False, False, False)
         _guard_scalar('SidePanel.width', self.width, (str,), False, True, False)
+        _guard_scalar('SidePanel.blocking', self.blocking, (bool,), False, True, False)
         _guard_scalar('SidePanel.name', self.name, (str,), True, True, False)
         _guard_vector('SidePanel.events', self.events, (str,), False, True, False)
         _guard_scalar('SidePanel.blocking', self.blocking, (bool,), False, True, False)
@@ -8682,6 +8687,7 @@ class SidePanel:
             title=self.title,
             items=[__e.dump() for __e in self.items],
             width=self.width,
+            blocking=self.blocking,
             name=self.name,
             events=self.events,
             blocking=self.blocking,
@@ -8696,6 +8702,8 @@ class SidePanel:
         _guard_vector('SidePanel.items', __d_items, (dict,), False, False, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('SidePanel.width', __d_width, (str,), False, True, False)
+        __d_blocking: Any = __d.get('blocking')
+        _guard_scalar('SidePanel.blocking', __d_blocking, (bool,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('SidePanel.name', __d_name, (str,), True, True, False)
         __d_events: Any = __d.get('events')
@@ -8705,6 +8713,7 @@ class SidePanel:
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
+        blocking: Optional[bool] = __d_blocking
         name: Optional[str] = __d_name
         events: Optional[List[str]] = __d_events
         blocking: Optional[bool] = __d_blocking
@@ -8712,6 +8721,7 @@ class SidePanel:
             title,
             items,
             width,
+            blocking,
             name,
             events,
             blocking,

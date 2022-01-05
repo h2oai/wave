@@ -499,7 +499,7 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      new CopyPlugin({ patterns: [{ from: "*", to: "fonts/icons/", context: "node_modules/@uifabric/icons/fonts/" }] }),
+      new CopyPlugin({ patterns: [{ from: "*", to: "fonts/icons/", context: "node_modules/@fluentui/font-icons-mdl2/fonts/" }] }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
