@@ -196,6 +196,7 @@ def main():
     try:
         os.makedirs(example_file_path)
         wave_server = subprocess.Popen(['make', 'run'], cwd=os.path.join('..', '..'), stderr=subprocess.DEVNULL, preexec_fn=os.setsid) # noqa
+        time.sleep(1) # TODO: Fix race condition
         chunk_size = math.ceil(len(files) / os.cpu_count())
         file_chunks = [files[i:i + chunk_size] for i in range(0, len(files), chunk_size)]
         with Pool(len(file_chunks)) as pool:

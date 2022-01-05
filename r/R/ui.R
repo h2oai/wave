@@ -479,7 +479,7 @@ ui_message_bar <- function(
 #' @param width The width of the text box, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-#' @param spellcheck True if spellcheck is enabled.
+#' @param spellcheck True if the text may be checked for spelling errors. Defaults to True.
 #' @return A Textbox instance.
 #' @export
 ui_textbox <- function(

@@ -2286,7 +2286,7 @@
     <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="spellcheck" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="spellcheck" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

@@ -63,7 +63,7 @@ export interface Textbox {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
-  /** True if spellcheck is enabled. */
+  /** True if the text may be checked for spelling errors. Defaults to True. */
   spellcheck?: B
 }
 

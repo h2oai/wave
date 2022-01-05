@@ -1040,7 +1040,7 @@ class Textbox:
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.spellcheck = spellcheck
-        """True if spellcheck is enabled."""
+        """True if the text may be checked for spelling errors. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

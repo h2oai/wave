@@ -424,7 +424,7 @@ def textbox(
         width: The width of the text box, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-        spellcheck: True if spellcheck is enabled.
+        spellcheck: True if the text may be checked for spelling errors. Defaults to True.
     Returns:
         A `h2o_wave.types.Textbox` instance.
     """
