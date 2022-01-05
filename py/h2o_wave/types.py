@@ -979,6 +979,7 @@ class Textbox:
             width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            spellcheck: Optional[bool] = None,
     ):
         _guard_scalar('Textbox.name', name, (str,), True, False, False)
         _guard_scalar('Textbox.label', label, (str,), False, True, False)
@@ -999,6 +1000,7 @@ class Textbox:
         _guard_scalar('Textbox.width', width, (str,), False, True, False)
         _guard_scalar('Textbox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', tooltip, (str,), False, True, False)
+        _guard_scalar('Textbox.spellcheck', spellcheck, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1037,6 +1039,8 @@ class Textbox:
         """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.spellcheck = spellcheck
+        """True if spellcheck is enabled."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1059,6 +1063,7 @@ class Textbox:
         _guard_scalar('Textbox.width', self.width, (str,), False, True, False)
         _guard_scalar('Textbox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_scalar('Textbox.spellcheck', self.spellcheck, (bool,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -1079,6 +1084,7 @@ class Textbox:
             width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
+            spellcheck=self.spellcheck,
         )
 
     @staticmethod
@@ -1122,6 +1128,8 @@ class Textbox:
         _guard_scalar('Textbox.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Textbox.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_spellcheck: Any = __d.get('spellcheck')
+        _guard_scalar('Textbox.spellcheck', __d_spellcheck, (bool,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -1141,6 +1149,7 @@ class Textbox:
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        spellcheck: Optional[bool] = __d_spellcheck
         return Textbox(
             name,
             label,
@@ -1161,6 +1170,7 @@ class Textbox:
             width,
             visible,
             tooltip,
+            spellcheck,
         )
 
 
@@ -11327,15 +11337,15 @@ class WideArticlePreviewCard:
         self.image = image
         """The card’s image displayed on the left-hand side."""
         self.title = title
-        """The card's title on the righ-hand side"""
+        """The card's title on the right-hand side"""
         self.name = name
         """An identifying name for this card. Makes the card clickable, similar to a button."""
         self.aux_value = aux_value
         """The card's auxiliary text, displayed on the right-hand side of the header."""
         self.caption = caption
-        """The card's caption, displayed bellow the title on the right-hand side."""
+        """The card's caption, displayed below the title on the right-hand side."""
         self.items = items
-        """The card's buttons, displayed at the bottom-right corner."""
+        """The card's buttons, displayed under the caption."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

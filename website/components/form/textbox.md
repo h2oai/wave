@@ -122,3 +122,14 @@ q.page['example'] = ui.form_card(
     items=[ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True)]
 )
 ```
+
+## Spellcheck
+
+Used for cases when the input should not check the word spelling (e.g. for inputing names or config parameters).
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.textbox(name='textbox_spellcheck_disabled', label='Spellcheck disabled', spellcheck=False)]
+)
+```

@@ -479,6 +479,7 @@ ui_message_bar <- function(
 #' @param width The width of the text box, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param spellcheck True if spellcheck is enabled.
 #' @return A Textbox instance.
 #' @export
 ui_textbox <- function(
@@ -500,7 +501,8 @@ ui_textbox <- function(
   height = NULL,
   width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  spellcheck = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -520,6 +522,7 @@ ui_textbox <- function(
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("spellcheck", "logical", spellcheck)
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -539,7 +542,8 @@ ui_textbox <- function(
     height=height,
     width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    spellcheck=spellcheck))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -4692,11 +4696,11 @@ ui_vega_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param persona The card's user avatar, 'size' prop is restricted to 'xs'.
 #' @param image The card’s image displayed on the left-hand side.
-#' @param title The card's title on the righ-hand side
+#' @param title The card's title on the right-hand side
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param aux_value The card's auxiliary text, displayed on the right-hand side of the header.
-#' @param caption The card's caption, displayed bellow the title on the right-hand side.
-#' @param items The card's buttons, displayed at the bottom-right corner.
+#' @param caption The card's caption, displayed below the title on the right-hand side.
+#' @param items The card's buttons, displayed under the caption.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideArticlePreviewCard instance.
 #' @export

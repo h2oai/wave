@@ -63,6 +63,8 @@ export interface Textbox {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if spellcheck is enabled. */
+  spellcheck?: B
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -107,6 +109,7 @@ export const
           disabled={m.disabled}
           readOnly={m.readonly}
           multiline={m.multiline}
+          spellCheck={m.spellcheck}
           type={m.password ? 'password' : undefined}
           onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
         />

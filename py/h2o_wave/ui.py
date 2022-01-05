@@ -396,6 +396,7 @@ def textbox(
         width: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        spellcheck: Optional[bool] = None,
 ) -> Component:
     """Create a text box.
 
@@ -423,6 +424,7 @@ def textbox(
         width: The width of the text box, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        spellcheck: True if spellcheck is enabled.
     Returns:
         A `h2o_wave.types.Textbox` instance.
     """
@@ -446,6 +448,7 @@ def textbox(
         width,
         visible,
         tooltip,
+        spellcheck,
     ))
 
 
@@ -4055,11 +4058,11 @@ def wide_article_preview_card(
         box: A string indicating how to place this component on the page.
         persona: The card's user avatar, 'size' prop is restricted to 'xs'.
         image: The card’s image displayed on the left-hand side.
-        title: The card's title on the righ-hand side
+        title: The card's title on the right-hand side
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         aux_value: The card's auxiliary text, displayed on the right-hand side of the header.
-        caption: The card's caption, displayed bellow the title on the right-hand side.
-        items: The card's buttons, displayed at the bottom-right corner.
+        caption: The card's caption, displayed below the title on the right-hand side.
+        items: The card's buttons, displayed under the caption.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideArticlePreviewCard` instance.
