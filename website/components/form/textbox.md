@@ -32,7 +32,8 @@ Use `value` attribute when you want to prepopulate the textbox content.
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
-    items=[ui.textbox(name='textbox_default', label='Default value', value='Default value')]
+    items=[ui.textbox(name='textbox_default', label='Default value', 
+                      value='Default value')]
 )
 ```
 
@@ -92,7 +93,8 @@ to do is use `mask` attr with your desired format.
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
-    items=[ui.textbox(name='textbox_mask', label='With input mask', mask='(999) 999 - 9999')]
+    items=[ui.textbox(name='textbox_mask', label='With input mask', 
+                      mask='(999) 999 - 9999')]
 )
 ```
 
@@ -119,6 +121,19 @@ If you expect users to type in longer text that would hardly fit into a small te
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
-    items=[ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True)]
+    items=[ui.textbox(name='textbox_multiline', label='Multiline textarea', 
+                      multiline=True)]
+)
+```
+
+## Spellcheck
+
+Used for cases when the input should not check the word spelling (e.g. for inputing names or config parameters).
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.textbox(name='textbox_spellcheck_disabled', label='Spellcheck disabled', 
+                      value="I have spellcheck disabld", spellcheck=False)]
 )
 ```
