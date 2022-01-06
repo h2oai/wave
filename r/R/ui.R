@@ -2657,6 +2657,37 @@ ui_menu <- function(
   return(.o)
 }
 
+#' Create an information tag with text inside.
+#'
+#' @param name An identifying name for this component.
+#' @param label The text displayed within the tag.
+#' @param color Tag's background color.
+#' @param label_color Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
+#' @param size Tag's size. Defaults to "small" if "large" is not specified.
+#'   One of 'small', 'large'. See enum h2o_wave.ui.InfoTagSize.
+#' @return A InfoTag instance.
+#' @export
+ui_info_tag <- function(
+  name,
+  label,
+  color,
+  label_color = NULL,
+  size = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("label_color", "character", label_color)
+  # TODO Validate size
+  .o <- list(info_tag=list(
+    name=name,
+    label=label,
+    color=color,
+    label_color=label_color,
+    size=size))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.

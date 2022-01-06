@@ -2280,6 +2280,33 @@ def menu(
     ))
 
 
+def info_tag(
+        name: str,
+        label: str,
+        color: str,
+        label_color: Optional[str] = None,
+        size: Optional[str] = None,
+) -> Component:
+    """Create an information tag with text inside.
+
+    Args:
+        name: An identifying name for this component.
+        label: The text displayed within the tag.
+        color: Tag's background color.
+        label_color: Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
+        size: Tag's size. Defaults to "small" if "large" is not specified. One of 'small', 'large'. See enum h2o_wave.ui.InfoTagSize.
+    Returns:
+        A `h2o_wave.types.InfoTag` instance.
+    """
+    return Component(info_tag=InfoTag(
+        name,
+        label,
+        color,
+        label_color,
+        size,
+    ))
+
+
 def article_card(
         box: str,
         title: str,

@@ -223,6 +223,14 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_info_tag" value="ui.info_tag(name='$name$',label='$label$',color='$color$'),$END$" description="Create a minimal Wave InfoTag." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_label" value="ui.label(label='$label$'),$END$" description="Create a minimal Wave Label." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1161,7 +1169,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_component" value="ui.component(text=$text$,text_xl=$text_xl$,text_l=$text_l$,text_m=$text_m$,text_s=$text_s$,text_xs=$text_xs$,label=$label$,separator=$separator$,progress=$progress$,message_bar=$message_bar$,textbox=$textbox$,checkbox=$checkbox$,toggle=$toggle$,choice_group=$choice_group$,checklist=$checklist$,dropdown=$dropdown$,combobox=$combobox$,slider=$slider$,spinbox=$spinbox$,date_picker=$date_picker$,color_picker=$color_picker$,button=$button$,buttons=$buttons$,mini_button=$mini_button$,mini_buttons=$mini_buttons$,file_upload=$file_upload$,table=$table$,link=$link$,links=$links$,tabs=$tabs$,expander=$expander$,frame=$frame$,markup=$markup$,template=$template$,picker=$picker$,range_slider=$range_slider$,stepper=$stepper$,visualization=$visualization$,vega_visualization=$vega_visualization$,stats=$stats$,inline=$inline$,image=$image$,persona=$persona$,text_annotator=$text_annotator$,facepile=$facepile$,copyable_text=$copyable_text$,menu=$menu$),$END$" description="Create Wave Component with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_component" value="ui.component(text=$text$,text_xl=$text_xl$,text_l=$text_l$,text_m=$text_m$,text_s=$text_s$,text_xs=$text_xs$,label=$label$,separator=$separator$,progress=$progress$,message_bar=$message_bar$,textbox=$textbox$,checkbox=$checkbox$,toggle=$toggle$,choice_group=$choice_group$,checklist=$checklist$,dropdown=$dropdown$,combobox=$combobox$,slider=$slider$,spinbox=$spinbox$,date_picker=$date_picker$,color_picker=$color_picker$,button=$button$,buttons=$buttons$,mini_button=$mini_button$,mini_buttons=$mini_buttons$,file_upload=$file_upload$,table=$table$,link=$link$,links=$links$,tabs=$tabs$,expander=$expander$,frame=$frame$,markup=$markup$,template=$template$,picker=$picker$,range_slider=$range_slider$,stepper=$stepper$,visualization=$visualization$,vega_visualization=$vega_visualization$,stats=$stats$,inline=$inline$,image=$image$,persona=$persona$,text_annotator=$text_annotator$,facepile=$facepile$,copyable_text=$copyable_text$,menu=$menu$,info_tag=$info_tag$),$END$" description="Create Wave Component with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_xl" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_l" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1209,6 +1217,7 @@
     <variable name="facepile" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="copyable_text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="menu" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="info_tag" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -1315,6 +1324,16 @@
     <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;true&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_info_tag" value="ui.info_tag(name='$name$',label='$label$',color='$color$',label_color='$label_color$',size='$size$'),$END$" description="Create Wave InfoTag with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label_color" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="size" expression="" defaultValue="&quot;small&quot; if &quot;large&quot; is not specified&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
