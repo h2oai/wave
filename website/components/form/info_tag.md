@@ -12,7 +12,7 @@ Can be used in different scenarios including highlighting a specific keyword or 
 Large tags with numeric value as a label:
 
 ```py
-page['example'] = ui.form_card(box='1 1 4 4', items=[
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.inline(items=[
         ui.info_tag(name='tag-1', color='#610404', label='1', size='large'),
         ui.info_tag(name='tag-2', color='#7F6001', label='2', size='large'),
@@ -24,7 +24,7 @@ page['example'] = ui.form_card(box='1 1 4 4', items=[
 Small tags with text value as a label:
 
 ```py
-page['example'] = ui.form_card(box='1 1 4 4', items=[
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.inline(items=[
         ui.info_tag(name='tag-1', color='#610404', label='Error', size='large'),
         ui.info_tag(name='tag-2', color='#7F6001', label='Warning', size='large'),
