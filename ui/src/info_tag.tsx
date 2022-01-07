@@ -23,6 +23,17 @@ const css = stylesheet({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
+    boxSizing: 'border-box',
+  },
+  large: {
+    minWidth: 49,
+    height: 49,
+    padding: '0 18px',
+  },
+  small: {
+    minWidth: 24,
+    height: 26,
+    padding: '0 10px',
   }
 })
 
@@ -43,24 +54,12 @@ export interface InfoTag {
 export const XInfoTag = ({ model }: { model: InfoTag }) => {
   const
     tagColor = model.color || '$text',
-    background = cssVar(tagColor),
-    color = cssVar(model.label_color || getContrast(tagColor))
-  
-  let width, height, font
-  switch (model.size) {
-    case 'large':
-      width = 49
-      height = 49
-      font = 'wave-s18 wave-w6'
-      break
-    default:
-      width = 24
-      height = 26
-      font = 'wave-s14'
-  }
+    color = cssVar(model.label_color || getContrast(tagColor)),
+    styles = React.useMemo(() => model.size === 'large' ?
+      { font: 'wave-s18 wave-w6', size: css.large } : { font: 'wave-s14', size: css.small }, [model.size])
   
   return (
-    <div data-test={model.name} style={{ background, color, width, height }} className={clas(css.tag, font)}>
+    <div data-test={model.name} style={{ background: cssVar(tagColor), color }} className={clas(css.tag, styles.font, styles.size)}>
       {model.label}
     </div>
   )
