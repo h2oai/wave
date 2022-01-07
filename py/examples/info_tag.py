@@ -1,5 +1,7 @@
 # Info Tag
-# Create 2 rows of information tags with different colors and sizes.
+# Display a tag which consists of a box with text inside.
+# Can be used in different scenarios including highlighting a specific keyword or holding a numeric value with
+# different colors to indicate error, warning, or success.
 # ---
 from h2o_wave import site, ui
 
@@ -18,9 +20,9 @@ page['example'] = ui.form_card(
             ui.info_tag(name='tag-3', color=success, label='3', size='large'),
         ]),
         ui.inline(justify='center', items=[
-            ui.info_tag(name='tag-4', color=error, label='1', size='small'),
-            ui.info_tag(name='tag-5', color=warning, label='2', size='small'),
-            ui.info_tag(name='tag-6', color=success, label='3', size='small'),
+            ui.info_tag(name='tag-4', color=error, label='Error', size='small'),
+            ui.info_tag(name='tag-5', color=warning, label='Warning', size='small'),
+            ui.info_tag(name='tag-6', color=success, label='Success', size='small'),
         ])
     ])
 
