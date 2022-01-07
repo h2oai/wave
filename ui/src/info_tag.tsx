@@ -36,7 +36,7 @@ export interface InfoTag {
   color: S
   /** Tag's label color. If not specified, black or white will be picked based on correct contrast with background. */
   label_color?: S
-  /** Tag's size. Defaults to "small" if "large" is not specified. */
+  /** Tag's size. Defaults to 'small'. */
   size?: 'small' | 'large'
 }
 
