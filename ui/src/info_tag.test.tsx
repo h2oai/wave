@@ -31,9 +31,4 @@ describe('InfoTag.tsx', () => {
     const { queryByTestId } = render(<XInfoTag model={infoTagProps} />)
     expect(queryByTestId(infoTagProps.name)).toBeInTheDocument()
   })
-
-  it('Renders label', () => {
-    const { queryByText } = render(<XInfoTag model={infoTagProps} />)
-    expect(queryByText(infoTagProps.label)).toBeInTheDocument()
-  })
 })
