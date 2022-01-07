@@ -19,8 +19,9 @@ import { S } from 'h2o-wave'
 
 const css = stylesheet({
   tag: {
-    display: 'grid',
-    placeItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 4,
   }
 })
