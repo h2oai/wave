@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Box, box, Id, S } from 'h2o-wave'
+import { B, Box, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'
@@ -36,6 +36,8 @@ export interface SidePanel {
   name?: Id
   /** The events to capture on this side panel. */
   events?: S[]
+  /** True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False. */
+  blocking?: B
 }
 
 export default bond(() => {
@@ -49,9 +51,16 @@ export default bond(() => {
       sidePanelB(null)
     },
     render = () => {
-      const { title, width = '600px', items = [] } = sidePanelB() || {}
+      const { title, width = '600px', items = [], blocking } = sidePanelB() || {}
       return (
-        <Fluent.Panel isOpen={!!sidePanelB()} headerText={title} type={Fluent.PanelType.custom} customWidth={width} onDismiss={onDismiss}>
+        <Fluent.Panel
+          isOpen={!!sidePanelB()}
+          headerText={title}
+          type={Fluent.PanelType.custom}
+          customWidth={width}
+          onDismiss={onDismiss}
+          isBlocking={true}
+          isLightDismiss={!blocking}>
           <XComponents items={items} />
         </Fluent.Panel >
       )

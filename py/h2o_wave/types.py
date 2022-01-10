@@ -8649,12 +8649,14 @@ class SidePanel:
             width: Optional[str] = None,
             name: Optional[str] = None,
             events: Optional[List[str]] = None,
+            blocking: Optional[bool] = None,
     ):
         _guard_scalar('SidePanel.title', title, (str,), False, False, False)
         _guard_vector('SidePanel.items', items, (Component,), False, False, False)
         _guard_scalar('SidePanel.width', width, (str,), False, True, False)
         _guard_scalar('SidePanel.name', name, (str,), True, True, False)
         _guard_vector('SidePanel.events', events, (str,), False, True, False)
+        _guard_scalar('SidePanel.blocking', blocking, (bool,), False, True, False)
         self.title = title
         """The side panel's title."""
         self.items = items
@@ -8665,6 +8667,8 @@ class SidePanel:
         """An identifying name for this component."""
         self.events = events
         """The events to capture on this side panel."""
+        self.blocking = blocking
+        """True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8673,12 +8677,14 @@ class SidePanel:
         _guard_scalar('SidePanel.width', self.width, (str,), False, True, False)
         _guard_scalar('SidePanel.name', self.name, (str,), True, True, False)
         _guard_vector('SidePanel.events', self.events, (str,), False, True, False)
+        _guard_scalar('SidePanel.blocking', self.blocking, (bool,), False, True, False)
         return _dump(
             title=self.title,
             items=[__e.dump() for __e in self.items],
             width=self.width,
             name=self.name,
             events=self.events,
+            blocking=self.blocking,
         )
 
     @staticmethod
@@ -8694,17 +8700,21 @@ class SidePanel:
         _guard_scalar('SidePanel.name', __d_name, (str,), True, True, False)
         __d_events: Any = __d.get('events')
         _guard_vector('SidePanel.events', __d_events, (str,), False, True, False)
+        __d_blocking: Any = __d.get('blocking')
+        _guard_scalar('SidePanel.blocking', __d_blocking, (bool,), False, True, False)
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
         name: Optional[str] = __d_name
         events: Optional[List[str]] = __d_events
+        blocking: Optional[bool] = __d_blocking
         return SidePanel(
             title,
             items,
             width,
             name,
             events,
+            blocking,
         )
 
 

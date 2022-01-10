@@ -19,11 +19,18 @@ import { wave } from './ui'
 
 const
   name = 'sidePanel',
-  sidePanelProps = { name, items: [], title: 'Title' }
+  sidePanelProps = { name, items: [], title: 'Title' },
+  mouseEvent = { clientX: 0, clientY: 0 },
+  simulateClick = (el: Element) => {
+    fireEvent.mouseDown(el, mouseEvent)
+    fireEvent.mouseUp(el, mouseEvent)
+  },
+  emitMock = jest.fn()
 
 describe('SidePanel.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    emitMock.mockReset()
     sidePanelB(sidePanelProps)
   })
 
@@ -53,9 +60,38 @@ describe('SidePanel.tsx', () => {
   it('should fire event if specified when clicking on X', () => {
     sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
     const { container } = render(<SidePanel />)
-    const emitMock = jest.fn()
     wave.emit = emitMock
     fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as any)
     expect(emitMock).toHaveBeenCalled()
   })
+
+  it('should fire event if specified when clicking outside of side panel', () => {
+    sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
+    const { container } = render(<SidePanel />)
+    wave.emit = emitMock
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as any)
+    expect(emitMock).toHaveBeenCalled()
+  })
+
+  it('should not fire event if specified when clicking outside of side panel if blocking is specified', () => {
+    sidePanelB({ ...sidePanelProps, blocking: true, events: ['dismissed'] })
+    const { container } = render(<SidePanel />)
+    wave.emit = emitMock
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as any)
+    expect(emitMock).not.toHaveBeenCalled()
+  })
+
+  it('should close side panel when clicking outside of side panel', async () => {
+    const { queryByRole } = render(<SidePanel />)
+    simulateClick(document.body);
+    await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+  })
+
+  it('should not close side panel when clicking outside of side panel if blocking is specified', async () => {
+    sidePanelB({ ...sidePanelProps, blocking: true })
+    const { queryByRole } = render(<SidePanel />)
+    simulateClick(document.body);
+    await wait(() => expect(queryByRole('dialog')).toBeInTheDocument())
+  })
+
 })

@@ -3557,6 +3557,7 @@ ui_dialog <- function(
 #' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param name An identifying name for this component.
 #' @param events The events to capture on this side panel.
+#' @param blocking True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False.
 #' @return A SidePanel instance.
 #' @export
 ui_side_panel <- function(
@@ -3564,18 +3565,21 @@ ui_side_panel <- function(
   items,
   width = NULL,
   name = NULL,
-  events = NULL) {
+  events = NULL,
+  blocking = NULL) {
   .guard_scalar("title", "character", title)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("width", "character", width)
   .guard_scalar("name", "character", name)
   .guard_vector("events", "character", events)
+  .guard_scalar("blocking", "logical", blocking)
   .o <- list(
     title=title,
     items=items,
     width=width,
     name=name,
-    events=events)
+    events=events,
+    blocking=blocking)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSidePanel"))
   return(.o)
 }

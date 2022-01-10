@@ -3056,6 +3056,7 @@ def side_panel(
         width: Optional[str] = None,
         name: Optional[str] = None,
         events: Optional[List[str]] = None,
+        blocking: Optional[bool] = None,
 ) -> SidePanel:
     """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
     and requires people to interact with it. It’s primarily used for confirming actions,
@@ -3067,6 +3068,7 @@ def side_panel(
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         name: An identifying name for this component.
         events: The events to capture on this side panel.
+        blocking: True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False.
     Returns:
         A `h2o_wave.types.SidePanel` instance.
     """
@@ -3076,6 +3078,7 @@ def side_panel(
         width,
         name,
         events,
+        blocking,
     )
 
 
