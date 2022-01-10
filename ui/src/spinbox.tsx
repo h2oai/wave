@@ -67,29 +67,28 @@ const
 export const
   XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
     const
-      [val, setVal] = React.useState<{ val: S }>({ val: value.toString() }), // Use primitive wrapper to always force a React update.
+      [val, setVal] = React.useState<S>(value.toString()),
       precision = Math.max(calculatePrecision(step), 0),
-      parseValue = (v: F) => {
+      parseValue = React.useCallback((v: F) => {
         const x = precisionRound(v, precision)
         return (!isNaN(x) && isFinite(x)) ? x : value
-      },
-      onIncrement = (v: S) => {
-        const newValue = Math.min(parseValue(Number(v) + step), max)
+      }, [precision, value]),
+      onIncrement = () => {
+        const newValue = Math.min(parseValue(Number(val) + step), max)
         wave.args[name] = newValue
         if (trigger) wave.push()
-        setVal({ val: String(newValue) })
+        setVal(String(newValue))
         return String(newValue)
       },
-      onDecrement = (v: S) => {
-        const newValue = Math.max(parseValue(Number(v) - step), min)
+      onDecrement = () => {
+        const newValue = Math.max(parseValue(Number(val) - step), min)
         wave.args[name] = newValue
         if (trigger) wave.push()
-        setVal({ val: String(newValue) })
+        setVal(String(newValue))
         return String(newValue)
       },
-      handleOnInput = (e: React.SyntheticEvent<HTMLElement>) => {
+      handleOnInput = React.useCallback((val: S) => {
         const
-          val = (e.target as HTMLInputElement).value,
           isLastCharDotOrTraillingZero = /\.$|\.\d*0+$/,
           value = parseValue(Number(val)),
           newValue = value > max
@@ -102,13 +101,17 @@ export const
         if (precision > 0 && isLastCharDotOrTraillingZero.test(val)) {
           // We can't use parseValue because it requires casting to number which will remove the trailling zeros.
           const [head, tail = ''] = val.split('.')
-          setVal({ val: `${head}.${tail.slice(0, precision)}` })
+          setVal(`${head}.${tail.slice(0, precision)}`)
         } else {
-          setVal({ val: String(newValue) })
+          setVal(String(newValue))
         }
-      },
-      debouncedHandleOnInput = wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput),
-      onInput = (e: React.SyntheticEvent<HTMLElement>) => trigger ? debouncedHandleOnInput(e) : handleOnInput(e)
+      }, [max, min, name, parseValue, precision, trigger]),
+      debouncedHandleOnInput = React.useRef(wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput)),
+      onInput = (e: React.SyntheticEvent<HTMLElement>) => {
+        const val = (e.target as HTMLInputElement).value
+        setVal(val)
+        trigger ? debouncedHandleOnInput.current(val) : handleOnInput(val)
+      }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = (value < min) ? min : ((value > max) ? max : value) }, [])
@@ -121,7 +124,7 @@ export const
         min={min}
         max={max}
         step={step}
-        value={val?.val}
+        value={val}
         onIncrement={onIncrement}
         onDecrement={onDecrement}
         disabled={disabled}
