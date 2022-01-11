@@ -14,7 +14,7 @@ async def serve(q: Q):
         q.client.initialized = True
     else:
         if q.args.show_dialog:
-            q.page['meta'].dialog = ui.dialog(title='Order Donuts', closable=True, items=[
+            q.page['meta'].dialog = ui.dialog(title='Order Donuts', items=[
                 ui.text('Donuts cost $1.99. Proceed?'),
                 ui.buttons([ui.button(name='next_step', label='Next', primary=True)])
             ])

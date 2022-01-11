@@ -15,7 +15,7 @@ async def serve(q: Q):
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-            ui.spinbox(name='spinbox', label='Standard spinbox', min=0, max=100, step=0.0001, value=0.001),
+            ui.spinbox(name='spinbox', label='Standard spinbox', min=0, max=100, step=10, value=30),
             ui.spinbox(name='spinbox_disabled', label='Disabled spinbox', min=0, max=100, step=10, value=30,
                        disabled=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
