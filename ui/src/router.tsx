@@ -23,7 +23,7 @@ const
     const
       routes = [
         {
-          path: wave.authURL,
+          path: wave.loginURL,
           exact: true,
           render: () => <Login />,
         },

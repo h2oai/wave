@@ -75,7 +75,8 @@ const
   baseURL = document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/',
   socketURL = baseURL + '_s/',
   uploadURL = baseURL + '_f/',
-  authURL = baseURL + '_auth/login'
+  initURL = baseURL + '_auth/init',
+  loginURL = baseURL + '_auth/login'
 
 export const
   contentB = box<WaveEvent | null>(null),
@@ -152,7 +153,8 @@ export const
     baseURL,
     socketURL,
     uploadURL,
-    authURL,
+    initURL,
+    loginURL,
     args,
     debounce,
     throttle,

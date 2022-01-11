@@ -15,6 +15,7 @@
 import { CompoundButton } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { wave } from './ui'
 
 const
   css = stylesheet({
@@ -31,8 +32,8 @@ const
 const
   Login = () => {
     const
-      queryString = window.location.search,
-      action = `/_auth/init${queryString}`
+      action = `${wave.initURL}${window.location.search}`
+
     return (
       <div className={css.login}>
         <form action={action} method="POST">

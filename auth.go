@@ -80,9 +80,11 @@ type Auth struct {
 	conf     *AuthConf
 	oauth    *oauth2.Config
 	sessions map[string]Session
+	initURL  string
+	loginURL string
 }
 
-func newAuth(conf *AuthConf) (*Auth, error) {
+func newAuth(conf *AuthConf, initURL, loginURL string) (*Auth, error) {
 	oauth, err := connectToProvider(conf)
 	if err != nil {
 		return nil, err
@@ -91,6 +93,8 @@ func newAuth(conf *AuthConf) (*Auth, error) {
 		conf:     conf,
 		oauth:    oauth,
 		sessions: make(map[string]Session),
+		initURL:  initURL,
+		loginURL: loginURL,
 	}, nil
 }
 
@@ -152,9 +156,9 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 			return
 		}
 
-		if r.URL.Path == "/_auth/login" {
+		if r.URL.Path == auth.loginURL {
 			if auth.conf.SkipLogin {
-				redirectToAuth(w, r)
+				auth.redirectToAuth(w, r)
 				return
 			}
 			h.ServeHTTP(w, r)
@@ -162,7 +166,7 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 		}
 
 		if !auth.allow(r) {
-			redirectToLogin(w, r)
+			auth.redirectToLogin(w, r)
 			return
 		}
 
@@ -174,19 +178,19 @@ func (auth *Auth) ensureValidOAuth2Token(ctx context.Context, token *oauth2.Toke
 	return auth.oauth.TokenSource(ctx, token).Token()
 }
 
-func redirectToLogin(w http.ResponseWriter, r *http.Request) {
+func (auth *Auth) redirectToLogin(w http.ResponseWriter, r *http.Request) {
 	// X -> /_auth/login?next=X
-	u, _ := url.Parse("/_auth/login")
+	u, _ := url.Parse(auth.loginURL)
 	q := u.Query()
 	q.Set("next", r.URL.Path)
 	u.RawQuery = q.Encode()
 	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
-func redirectToAuth(w http.ResponseWriter, r *http.Request) {
+func (auth *Auth) redirectToAuth(w http.ResponseWriter, r *http.Request) {
 	// /_auth/login -> /_auth/init
 	// /_auth/login?next=X -> /_auth/init?next=X
-	u, _ := url.Parse("/_auth/init")
+	u, _ := url.Parse(auth.initURL)
 	next := r.URL.Query().Get("next")
 	if next != "" {
 		q := u.Query()

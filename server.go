@@ -78,7 +78,7 @@ func Run(conf ServerConf) {
 
 	if conf.Auth != nil {
 		var err error
-		if auth, err = newAuth(conf.Auth); err != nil {
+		if auth, err = newAuth(conf.Auth, conf.BaseURL+"_auth/init", conf.BaseURL+"_auth/login"); err != nil {
 			panic(fmt.Errorf("failed connecting to OIDC provider: %v", err))
 		}
 		handle("_auth/init", newLoginHandler(auth))
