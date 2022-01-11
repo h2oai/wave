@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, S } from 'h2o-wave'
+import { B, F, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { wave } from './ui'
 
@@ -67,7 +67,7 @@ const
 export const
   XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
     const
-      [val, setVal] = React.useState<S>(value.toString()),
+      [val, setVal] = React.useState<S>(String(value)),
       precision = Math.max(calculatePrecision(step), 0),
       parseValue = React.useCallback((v: F) => {
         const x = precisionRound(v, precision)
@@ -87,7 +87,7 @@ export const
         setVal(String(newValue))
         return String(newValue)
       },
-      handleOnInput = React.useCallback((val: S) => {
+      handleValue = React.useCallback((val: S) => {
         const
           isLastCharDotOrTraillingZero = /\.$|\.\d*0+$/,
           value = parseValue(Number(val)),
@@ -96,21 +96,24 @@ export const
             : value < min
               ? min
               : value
-        wave.args[name] = newValue
-        if (trigger) wave.push()
-        if (precision > 0 && isLastCharDotOrTraillingZero.test(val)) {
+        if (val === '-') setVal('-')
+        else if (!precision) setVal(String(newValue).split('.')[0])
+        else if (isLastCharDotOrTraillingZero.test(val)) {
           // We can't use parseValue because it requires casting to number which will remove the trailling zeros.
           const [head, tail = ''] = val.split('.')
           setVal(`${head}.${tail.slice(0, precision)}`)
-        } else {
-          setVal(String(newValue))
         }
-      }, [max, min, name, parseValue, precision, trigger]),
+        else setVal(String(newValue))
+        return newValue
+      }, [max, min, parseValue, precision]),
+      handleOnInput = React.useCallback((val: U) => {
+        wave.args[name] = val
+        if (trigger) wave.push()
+      }, [name, trigger]),
       debouncedHandleOnInput = React.useRef(wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput)),
       onInput = (e: React.SyntheticEvent<HTMLElement>) => {
-        const val = (e.target as HTMLInputElement).value
-        setVal(val)
-        trigger ? debouncedHandleOnInput.current(val) : handleOnInput(val)
+        const numVal = handleValue((e.target as HTMLInputElement).value)
+        trigger ? debouncedHandleOnInput.current(numVal) : handleOnInput(numVal)
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,13 +121,12 @@ export const
 
     return (
       <Fluent.SpinButton
-        inputProps={{ 'data-test': name } as React.InputHTMLAttributes<HTMLInputElement>}
+        inputProps={{ 'data-test': name, value: val } as React.InputHTMLAttributes<HTMLInputElement>}
         label={label}
         onInput={onInput}
         min={min}
         max={max}
         step={step}
-        value={val}
         onIncrement={onIncrement}
         onDecrement={onDecrement}
         disabled={disabled}
