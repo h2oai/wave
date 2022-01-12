@@ -11,7 +11,8 @@
         return name
     url = dobj.url(relative_to=module, link_prefix=link_prefix,
                    top_ancestor=not show_inherited_members).replace('.html','')
-    return '<a title="{}" href="{}">{}</a>'.format(dobj.refname, url, name)
+    ## Replace "." with "_" because Docusarus doesn't seem to like "." in custom heading ids.
+    return '<a title="{}" href="{}">{}</a>'.format(dobj.refname, url.replace('.', '_'), name)
 
 
   def to_html(text):
@@ -131,7 +132,7 @@ ${"##"} Classes
 
 <div className='api'>
 
-${"###"} ${c.name} <a name="${c.refname}"/>
+${"###"} ${c.name} ${"{#" + c.refname.replace('.', '_') + "}"}
 
 <div className='api__body'>
 
