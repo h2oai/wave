@@ -87,7 +87,7 @@ def run(app: str, no_reload: bool):
         waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
         # OS agnostic wheels do not have waved - needed for HAC.
         is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
-        is_autostart_off = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false') in ['false', '0', 'f']
+        is_autostart_off = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
         if is_autostart_off and is_waved_present and server_not_running:
             subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
