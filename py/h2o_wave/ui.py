@@ -3031,7 +3031,7 @@ def dialog(
         items: The components displayed in this dialog.
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         closable: True if the dialog should have a closing 'X' button at the top right corner.
-        blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False.
+        blocking: True to disable close by clicking or tapping the area outside the dialog. A blocking Dialog also disables all other actions and commands on the page behind it. They should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking Dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False.
         primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
         name: An identifying name for this component.
         events: The events to capture on this dialog.
@@ -3068,7 +3068,7 @@ def side_panel(
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         name: An identifying name for this component.
         events: The events to capture on this side panel.
-        blocking: True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False.
+        blocking: True to disable close by clicking or tapping the area outside the panel. Defaults to False.
     Returns:
         A `h2o_wave.types.SidePanel` instance.
     """

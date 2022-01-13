@@ -8569,7 +8569,7 @@ class Dialog:
         self.closable = closable
         """True if the dialog should have a closing 'X' button at the top right corner."""
         self.blocking = blocking
-        """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False."""
+        """True to disable close by clicking or tapping the area outside the dialog. A blocking Dialog also disables all other actions and commands on the page behind it. They should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking Dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False."""
         self.primary = primary
         """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False."""
         self.name = name
@@ -8668,7 +8668,7 @@ class SidePanel:
         self.events = events
         """The events to capture on this side panel."""
         self.blocking = blocking
-        """True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False."""
+        """True to disable close by clicking or tapping the area outside the panel. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

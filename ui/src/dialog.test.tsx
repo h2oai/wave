@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, wait } from '@testing-library/react'
+import { fireEvent, render, wait, waitForElementToBeRemoved } from '@testing-library/react'
 import React from 'react'
 import Dialog, { dialogB } from './dialog'
 import { wave } from './ui'
@@ -23,10 +23,18 @@ const
     name,
     title: 'Dialog Title',
     items: [],
-  }
+  },
+  emitMock = jest.fn()
+
+
 describe('Dialog.tsx', () => {
 
-  beforeEach(() => dialogB(dialogProps))
+  beforeAll(() => wave.emit = emitMock)
+
+  beforeEach(() => {
+    emitMock.mockReset()
+    dialogB(dialogProps)
+  })
 
   it('should open dialog when global qd.dialogB is set', () => {
     const { queryByRole } = render(<Dialog />)
@@ -63,9 +71,39 @@ describe('Dialog.tsx', () => {
   it('should fire event if specified when clicking on X', () => {
     dialogB({ ...dialogProps, closable: true, events: ['dismissed'] })
     const { getByTitle } = render(<Dialog />)
-    const emitMock = jest.fn()
-    wave.emit = emitMock
     fireEvent.click(getByTitle('Close'))
     expect(emitMock).toHaveBeenCalled()
   })
+
+  it('should not fire event if specified when clicking outside of dialog if blocking is specified', () => {
+    dialogB({ ...dialogProps, blocking: true, events: ['dismissed'] })
+    const { container } = render(<Dialog />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    expect(emitMock).not.toHaveBeenCalled()
+  })
+
+  it('should fire event if specified when clicking outside of dialog', () => {
+    dialogB({ ...dialogProps, events: ['dismissed'] })
+    const { container } = render(<Dialog />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    expect(emitMock).toHaveBeenCalled()
+  })
+
+  it('should close dialog when clicking outside of dialog', async () => {
+    const { container, queryByRole } = render(<Dialog />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    await waitForElementToBeRemoved(() => queryByRole('dialog'))
+    expect(queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('should not close dialog when clicking outside of dialog if blocking is specified', async () => {
+    dialogB({ ...dialogProps, blocking: true })
+    const { queryByRole, container } = render(<Dialog />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    // wait for dialog to be closed in case blocking dialog fails
+    await new Promise((res) => setTimeout(() => res('resolved'), 1000))
+    // when blocking is set to true, 'alertdialog' is rendered instead of a 'dialog'
+    expect(queryByRole('alertdialog')).toBeInTheDocument()
+  })
+
 })

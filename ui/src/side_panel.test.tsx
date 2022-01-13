@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, wait } from '@testing-library/react'
+import { fireEvent, render, wait, waitForElementToBeRemoved } from '@testing-library/react'
 import React from 'react'
 import SidePanel, { sidePanelB } from './side_panel'
 import { wave } from './ui'
@@ -20,16 +20,12 @@ import { wave } from './ui'
 const
   name = 'sidePanel',
   sidePanelProps = { name, items: [], title: 'Title' },
-  mouseEvent = { clientX: 0, clientY: 0 },
-  simulateClick = (el: Element) => {
-    fireEvent.mouseDown(el, mouseEvent)
-    fireEvent.mouseUp(el, mouseEvent)
-  },
   emitMock = jest.fn()
 
 describe('SidePanel.tsx', () => {
+  beforeAll(() => wave.emit = emitMock)
+
   beforeEach(() => {
-    jest.clearAllMocks()
     emitMock.mockReset()
     sidePanelB(sidePanelProps)
   })
@@ -53,45 +49,45 @@ describe('SidePanel.tsx', () => {
 
   it('should close side panel when clicking on X', async () => {
     const { container, queryByRole } = render(<SidePanel />)
-    fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as any)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as HTMLDivElement)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should fire event if specified when clicking on X', () => {
     sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
     const { container } = render(<SidePanel />)
-    wave.emit = emitMock
-    fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as any)
-    expect(emitMock).toHaveBeenCalled()
-  })
-
-  it('should fire event if specified when clicking outside of side panel', () => {
-    sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
-    const { container } = render(<SidePanel />)
-    wave.emit = emitMock
-    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as any)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as HTMLDivElement)
     expect(emitMock).toHaveBeenCalled()
   })
 
   it('should not fire event if specified when clicking outside of side panel if blocking is specified', () => {
     sidePanelB({ ...sidePanelProps, blocking: true, events: ['dismissed'] })
     const { container } = render(<SidePanel />)
-    wave.emit = emitMock
-    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as any)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
     expect(emitMock).not.toHaveBeenCalled()
   })
 
+  it('should fire event if specified when clicking outside of side panel', () => {
+    sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
+    const { container } = render(<SidePanel />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    expect(emitMock).toHaveBeenCalled()
+  })
+
   it('should close side panel when clicking outside of side panel', async () => {
-    const { queryByRole } = render(<SidePanel />)
-    simulateClick(document.body);
-    await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+    const { container, queryByRole } = render(<SidePanel />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    await waitForElementToBeRemoved(() => queryByRole('dialog'))
+    expect(queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('should not close side panel when clicking outside of side panel if blocking is specified', async () => {
     sidePanelB({ ...sidePanelProps, blocking: true })
-    const { queryByRole } = render(<SidePanel />)
-    simulateClick(document.body);
-    await wait(() => expect(queryByRole('dialog')).toBeInTheDocument())
+    const { container, queryByRole } = render(<SidePanel />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Overlay') as HTMLDivElement)
+    // wait for side panel to be closed in case blocking side panel fails
+    await new Promise((res) => setTimeout(() => res('resolved'), 1000))
+    expect(queryByRole('dialog')).toBeInTheDocument()
   })
 
 })

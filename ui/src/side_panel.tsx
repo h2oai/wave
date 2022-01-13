@@ -36,7 +36,7 @@ export interface SidePanel {
   name?: Id
   /** The events to capture on this side panel. */
   events?: S[]
-  /** True to disable all actions and commands behind the side panel and to disable dismiss when clicking outside of side panel. Defaults to False. */
+  /** True to disable close by clicking or tapping the area outside the panel. Defaults to False. */
   blocking?: B
 }
 
@@ -44,14 +44,14 @@ export default bond(() => {
   const
     onDismiss = () => {
       const
-        { name, events } = sidePanelB() || {},
+        { blocking, name, events } = sidePanelB() || {},
         ev = events?.find(e => e === 'dismissed')
 
-      if (ev && name) wave.emit(name, ev, true)
+      if (!blocking && ev && name) wave.emit(name, ev, true)
       sidePanelB(null)
     },
     render = () => {
-      const { title, width = '600px', items = [], blocking } = sidePanelB() || {}
+      const { title, width = '600px', items = [], blocking = false } = sidePanelB() || {}
       return (
         <Fluent.Panel
           isOpen={!!sidePanelB()}
@@ -59,6 +59,7 @@ export default bond(() => {
           type={Fluent.PanelType.custom}
           customWidth={width}
           onDismiss={onDismiss}
+          overlayProps={blocking ? { style: { cursor: 'default' } } : undefined}
           isBlocking={true}
           isLightDismiss={!blocking}>
           <XComponents items={items} />
