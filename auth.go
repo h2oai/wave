@@ -80,11 +80,12 @@ type Auth struct {
 	conf     *AuthConf
 	oauth    *oauth2.Config
 	sessions map[string]Session
+	baseURL  string
 	initURL  string
 	loginURL string
 }
 
-func newAuth(conf *AuthConf, initURL, loginURL string) (*Auth, error) {
+func newAuth(conf *AuthConf, baseURL, initURL, loginURL string) (*Auth, error) {
 	oauth, err := connectToProvider(conf)
 	if err != nil {
 		return nil, err
@@ -93,6 +94,7 @@ func newAuth(conf *AuthConf, initURL, loginURL string) (*Auth, error) {
 		conf:     conf,
 		oauth:    oauth,
 		sessions: make(map[string]Session),
+		baseURL:  baseURL,
 		initURL:  initURL,
 		loginURL: loginURL,
 	}, nil
@@ -235,7 +237,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	successURL := "/"
+	successURL := h.auth.baseURL
 	if nextValues, ok := r.URL.Query()["next"]; ok {
 		successURL = nextValues[0]
 	}
@@ -245,7 +247,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.set(Session{id: sessionID, state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: "/", Expires: expiration}
+	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: expiration}
 	http.SetCookie(w, &cookie)
 	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
@@ -395,7 +397,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken string) {
 	if h.auth.conf.EndSessionURL == "" {
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, h.auth.baseURL, http.StatusFound)
 		return
 	}
 
