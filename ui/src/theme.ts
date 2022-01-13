@@ -548,8 +548,8 @@ const
     benext: {
       palette: {
         text: '#555555',
-        card: '#E3E6EA',
-        page: '#FFFFFF',
+        card: '#FFFFFF',
+        page: '#E3E6EA',
       },
       fluentPalette: {
         neutralDark: '#404040',
