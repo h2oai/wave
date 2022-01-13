@@ -176,6 +176,9 @@ You can use checkpointing as a simple way to save/load your app's data while pro
 
 The checkpoint file is named `h2o_wave.checkpoint`, and is serialized using Python's [pickle](https://docs.python.org/3/library/pickle.html) protocol. Due to the nature of the `pickle` format, checkpointing is only guaranteed to work if the Python version and the versions of your app's dependencies are a perfect match, down to the patch version. In other words, do not expect checkpointing to work if an app is restarted using a newer/older Python version or a newer/older package. If you use checkpointing, it is recommended that you explicitly use `==` to set the `major.minor.patch` version of every package in your app's `requirements.txt` or `setup.py`.
 
+### H2O_WAVE_NO_AUTOSTART
+Disable/enable Wave server boot during `wave run`. Defaults to `false`. Available values: `1`, `t`, `true` to disable; `0`, `f`, `false` to enable.
+
 ## Web Analytics
 
 You can configure your app's web pages to send basic usage information to a third-party web analytics or tracking site. This lets you measure and analyze how users are interacting with various parts of your app.
