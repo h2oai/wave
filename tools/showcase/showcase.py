@@ -1,18 +1,21 @@
-import subprocess
 import argparse
-import time
-import os
-import signal
-import re
-import math
 import json
+import math
+import os
+import re
 import shutil
-from PIL import Image, ImageChops
+import signal
+import socket
+import subprocess
+import time
+from contextlib import closing
 from json import JSONEncoder
-from typing import List
-from pathlib import Path
-from playwright.sync_api import sync_playwright
 from multiprocessing import Pool
+from pathlib import Path
+from typing import List
+
+from PIL import Image, ImageChops
+from playwright.sync_api import sync_playwright
 
 example_file_path = os.path.join('..', '..', 'py', 'showcase')
 docs_path = os.path.join('..', '..', 'website')
@@ -169,6 +172,11 @@ def map_to_doc_file(p: Path) -> DocFile:
     return DocFile(str(p), groups[0] if groups else '', p.stem)
 
 
+def is_port_free(port: int):
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+        return sock.connect_ex(('127.0.0.1', port))
+
+
 def main():
     wave_server = None
     files = []
@@ -196,7 +204,19 @@ def main():
     try:
         os.makedirs(example_file_path)
         wave_server = subprocess.Popen(['make', 'run'], cwd=os.path.join('..', '..'), stderr=subprocess.DEVNULL, preexec_fn=os.setsid) # noqa
-        time.sleep(1) # TODO: Fix race condition
+        time.sleep(1)
+
+        retries = 3
+        server_port = 10101
+        server_not_running = is_port_free(server_port)
+        while retries > 0 and server_not_running:
+            print('Cannot connect to Wave server, retrying...')
+            time.sleep(2)
+            server_not_running = is_port_free(server_port)
+            retries = retries - 1
+        if server_not_running:
+            raise Exception('Could not connect to Wave server.')
+
         chunk_size = math.ceil(len(files) / os.cpu_count())
         file_chunks = [files[i:i + chunk_size] for i in range(0, len(files), chunk_size)]
         with Pool(len(file_chunks)) as pool:

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
 import sys
 import socket
 from contextlib import closing
@@ -80,14 +81,28 @@ def run(app: str, no_reload: bool):
         app = app_path.replace(os.path.sep, '.')
 
     # Try to start Wave daemon if not running or turned off.
+    server_port = int(os.environ.get('H2O_WAVE_LISTEN', 10101))
+    server_not_running = _scan_free_port(server_port) == server_port
     try:
-        server_port = int(os.environ.get('H2O_WAVE_LISTEN', 10101))
-        server_not_running = _scan_free_port(server_port) == server_port
-        if os.environ.get('H2O_WAVE_NO_AUTOSTART', None) is None and server_not_running:
-            subprocess.Popen(['waved.exe' if 'Windows' in platform.system() else './waved'],
-                             cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
+        waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
+        # OS agnostic wheels do not have waved - needed for HAC.
+        is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
+        is_autostart_off = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
+        if is_autostart_off and is_waved_present and server_not_running:
+            subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
+            time.sleep(1)
+            server_not_running = _scan_free_port(server_port) == server_port
+            retries = 3
+            while retries > 0 and server_not_running:
+                print('Cannot connect to Wave server, retrying...')
+                time.sleep(2)
+                server_not_running = _scan_free_port(server_port) == server_port
+                retries = retries - 1
     finally:
-        uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+        if not server_not_running:
+            uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+        else:
+            print('Wave server (waved) needs to be started first.')
 
 
 @main.command()
