@@ -602,7 +602,28 @@ const
 
     if (palette.text) updateTones('text', palette.text)
     if (palette.card) updateTones('card', palette.card)
-    if (fluentPalette.themePrimary) updateTones('primary', fluentPalette.themePrimary)
+    if (fluentPalette.themePrimary) {
+      updateTones('primary', fluentPalette.themePrimary)
+
+      // Handle saturation/desaturation.
+      const fluentPrimary = Fluent.getColorFromString(fluentPalette.themePrimary)
+      if (fluentPrimary) {
+        document.body.style.setProperty(`--saturatedPrimary`, `#${Fluent.hsv2hex(fluentPrimary.h, fluentPrimary.s > 50 ? fluentPrimary.s - 30 : fluentPrimary.s + 30, fluentPrimary.v)}`)
+
+        Object.keys(spectrum).forEach(spectrumColor => {
+          // HSV
+          // const { h, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
+          // document.body.style.setProperty(`--${spectrumColor}`, `#${Fluent.hsv2hex(h, fluentPrimary.s, v)}`)
+          // HSL
+          const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
+          const spectrumHsl = Fluent.hsv2hsl(h, s, v)
+          const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
+          document.body.style.setProperty(`--${spectrumColor}`, `hsl(${spectrumHsl.h}, ${primaryHsl.s}%, ${spectrumHsl.l}%)`)
+        })
+      }
+    }
+
+
 
     // HACK: Execute as microtask to prevent race condition. Since meta is handled in page.tsx:render,
     // Fluent wants to update all components present (Spinner), but throws warning it cannot update unmounted element (Spinner)
