@@ -5,6 +5,10 @@
   "dependencies": {
     "@antv/g2": "4.1.0",
     "@fluentui/react": "^7.175.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.16",
     "@popperjs/core": "^2.1.1",
     "d3": "^5.15.0",
     "fs-extra": "^8.1.0",

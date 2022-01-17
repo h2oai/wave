@@ -1,0 +1,35 @@
+[
+    {
+        "mdl2": {
+            "name": "Home",
+            "unicode": "E80F"
+        },
+        "fa": {
+            "name": "home",
+            "stylePrefix": "fas",
+            "unicode": "f015"
+        }
+    },
+    {
+        "mdl2": {
+            "name": "FavoriteStar",
+            "unicode": "E734"
+        },
+        "fa": {
+            "name": "star",
+            "stylePrefix": "far",
+            "unicode": "f005"
+        }
+    },
+    {
+        "mdl2": {
+            "name": "FavoriteStarFill",
+            "unicode": "E735"
+        },
+        "fa": {
+            "name": "star",
+            "stylePrefix": "fas",
+            "unicode": "f005"
+        }
+    }
+]

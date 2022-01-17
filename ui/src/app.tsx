@@ -23,6 +23,13 @@ import { PageLayout } from './page'
 import SidePanel from './side_panel'
 import { clas, cssVar, pc } from './theme'
 import { bond, busyB, config, contentB, listen, wave } from './ui'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { registerIcons, unregisterIcons } from '@uifabric/styling'
+import { setIconOptions } from '@fluentui/react/lib/Styling'
+import iconMappings from './mdl2_icons_to_font_awesome.json'
+import { IconName, IconPrefix, library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
 
 const
   css = stylesheet({
@@ -107,6 +114,28 @@ const
       },
       render = () => {
         const e = contentB()
+
+        type IconMappings = {
+          mdl2: { name: string, unicode: string }, fa: { name: IconName, stylePrefix: IconPrefix, unicode: string }
+        }[]
+        const mappedIcons = (iconMappings as IconMappings).reduce(
+          (prev, current) => {
+            return { ...prev, ...{ [current.mdl2.name]: <FontAwesomeIcon icon={[current.fa.stylePrefix, current.fa.name]} /> } }
+          }, {})
+        const iconsToUnregister = (iconMappings as IconMappings).map(
+          (icon) => {
+            return icon.mdl2.name
+          })
+        // Suppress icon warnings.
+        setIconOptions({
+          disableWarnings: true
+        })
+        library.add(fas, far)
+        unregisterIcons(iconsToUnregister)
+        registerIcons({
+          style: { fontSize: '40px' }, // TODO:
+          icons: mappedIcons
+        })
         if (e) {
           switch (e.t) {
             case WaveEventType.Page:
