@@ -1,0 +1,5207 @@
+[
+    {
+        "name": "AcceptIcon"
+    },
+    {
+        "name": "AcceptMediumIcon"
+    },
+    {
+        "name": "AccessibiltyCheckerIcon"
+    },
+    {
+        "name": "AccessLogoIcon"
+    },
+    {
+        "name": "AccountActivityIcon"
+    },
+    {
+        "name": "AccountBrowserIcon"
+    },
+    {
+        "name": "AccountManagementIcon"
+    },
+    {
+        "name": "AccountsIcon"
+    },
+    {
+        "name": "ActionCenterIcon"
+    },
+    {
+        "name": "ActivateOrdersIcon"
+    },
+    {
+        "name": "ActivityFeedIcon"
+    },
+    {
+        "name": "AddBookmarkIcon"
+    },
+    {
+        "name": "AddEventIcon"
+    },
+    {
+        "name": "AddFavoriteFillIcon"
+    },
+    {
+        "name": "AddFavoriteIcon"
+    },
+    {
+        "name": "AddFriendIcon"
+    },
+    {
+        "name": "AddGroupIcon"
+    },
+    {
+        "name": "AddHomeIcon"
+    },
+    {
+        "name": "AddIcon"
+    },
+    {
+        "name": "AddInIcon"
+    },
+    {
+        "name": "AddLinkIcon"
+    },
+    {
+        "name": "AddNotesIcon"
+    },
+    {
+        "name": "AddOnlineMeetingIcon"
+    },
+    {
+        "name": "AddPhoneIcon"
+    },
+    {
+        "name": "AddReactionIcon"
+    },
+    {
+        "name": "AddSpaceAfterIcon"
+    },
+    {
+        "name": "AddSpaceBeforeIcon"
+    },
+    {
+        "name": "AddToIcon"
+    },
+    {
+        "name": "AddToShoppingListIcon"
+    },
+    {
+        "name": "AddWorkIcon"
+    },
+    {
+        "name": "AirplaneIcon"
+    },
+    {
+        "name": "AirplaneSolidIcon"
+    },
+    {
+        "name": "AirTicketsIcon"
+    },
+    {
+        "name": "AlarmClockIcon"
+    },
+    {
+        "name": "AlbumIcon"
+    },
+    {
+        "name": "AlbumRemoveIcon"
+    },
+    {
+        "name": "AlertSettingsIcon"
+    },
+    {
+        "name": "AlertSolidIcon"
+    },
+    {
+        "name": "AlignCenterIcon"
+    },
+    {
+        "name": "AlignHorizontalCenterIcon"
+    },
+    {
+        "name": "AlignHorizontalLeftIcon"
+    },
+    {
+        "name": "AlignHorizontalRightIcon"
+    },
+    {
+        "name": "AlignJustifyIcon"
+    },
+    {
+        "name": "AlignLeftIcon"
+    },
+    {
+        "name": "AlignRightIcon"
+    },
+    {
+        "name": "AlignVerticalBottomIcon"
+    },
+    {
+        "name": "AlignVerticalCenterIcon"
+    },
+    {
+        "name": "AlignVerticalTopIcon"
+    },
+    {
+        "name": "AllAppsIcon"
+    },
+    {
+        "name": "AllAppsMirroredIcon"
+    },
+    {
+        "name": "AllCurrencyIcon"
+    },
+    {
+        "name": "AltTextIcon"
+    },
+    {
+        "name": "AmazonWebServicesLogoIcon"
+    },
+    {
+        "name": "AnalyticsQueryIcon"
+    },
+    {
+        "name": "AnalyticsReportIcon"
+    },
+    {
+        "name": "AnalyticsViewIcon"
+    },
+    {
+        "name": "AnchorLockIcon"
+    },
+    {
+        "name": "AndroidLogoIcon"
+    },
+    {
+        "name": "AnnotationIcon"
+    },
+    {
+        "name": "ApacheIvyLogo32Icon"
+    },
+    {
+        "name": "ApacheMavenLogoIcon"
+    },
+    {
+        "name": "ArchiveIcon"
+    },
+    {
+        "name": "ArchiveUndoIcon"
+    },
+    {
+        "name": "AreaChartIcon"
+    },
+    {
+        "name": "ArrangeBringForwardIcon"
+    },
+    {
+        "name": "ArrangeBringToFrontIcon"
+    },
+    {
+        "name": "ArrangeByFromIcon"
+    },
+    {
+        "name": "ArrangeSendBackwardIcon"
+    },
+    {
+        "name": "ArrangeSendToBackIcon"
+    },
+    {
+        "name": "ArrivalsIcon"
+    },
+    {
+        "name": "ArrowDownRight8Icon"
+    },
+    {
+        "name": "ArrowDownRightMirrored8Icon"
+    },
+    {
+        "name": "ArrowTallDownLeftIcon"
+    },
+    {
+        "name": "ArrowTallDownRightIcon"
+    },
+    {
+        "name": "ArrowTallUpLeftIcon"
+    },
+    {
+        "name": "ArrowTallUpRightIcon"
+    },
+    {
+        "name": "ArrowUpRight8Icon"
+    },
+    {
+        "name": "ArrowUpRightIcon"
+    },
+    {
+        "name": "ArrowUpRightMirrored8Icon"
+    },
+    {
+        "name": "ArticlesIcon"
+    },
+    {
+        "name": "AscendingIcon"
+    },
+    {
+        "name": "AspectRatioIcon"
+    },
+    {
+        "name": "AssessmentGroupIcon"
+    },
+    {
+        "name": "AssessmentGroupTemplateIcon"
+    },
+    {
+        "name": "AssetLibraryIcon"
+    },
+    {
+        "name": "AssignIcon"
+    },
+    {
+        "name": "AssignPolicyIcon"
+    },
+    {
+        "name": "AsteriskIcon"
+    },
+    {
+        "name": "AsteriskSolidIcon"
+    },
+    {
+        "name": "AttachIcon"
+    },
+    {
+        "name": "AustralianRulesIcon"
+    },
+    {
+        "name": "AutoDeploySettingsIcon"
+    },
+    {
+        "name": "AutoEnhanceOffIcon"
+    },
+    {
+        "name": "AutoEnhanceOnIcon"
+    },
+    {
+        "name": "AutoFillTemplateIcon"
+    },
+    {
+        "name": "AutoFitContentsIcon"
+    },
+    {
+        "name": "AutoFitWindowIcon"
+    },
+    {
+        "name": "AutoHeightIcon"
+    },
+    {
+        "name": "AutomateFlowIcon"
+    },
+    {
+        "name": "AutoRacingIcon"
+    },
+    {
+        "name": "AwayStatusIcon"
+    },
+    {
+        "name": "BackgroundColorIcon"
+    },
+    {
+        "name": "BackIcon"
+    },
+    {
+        "name": "BacklogBoardIcon"
+    },
+    {
+        "name": "BacklogIcon"
+    },
+    {
+        "name": "BacklogListIcon"
+    },
+    {
+        "name": "BackToWindowIcon"
+    },
+    {
+        "name": "BadgeIcon"
+    },
+    {
+        "name": "BalloonsIcon"
+    },
+    {
+        "name": "BankIcon"
+    },
+    {
+        "name": "BankSolidIcon"
+    },
+    {
+        "name": "BarChart4Icon"
+    },
+    {
+        "name": "BarChartHorizontalIcon"
+    },
+    {
+        "name": "BarChartVerticalEditIcon"
+    },
+    {
+        "name": "BarChartVerticalFillIcon"
+    },
+    {
+        "name": "BarChartVerticalFilterIcon"
+    },
+    {
+        "name": "BarChartVerticalFilterSolidIcon"
+    },
+    {
+        "name": "BarChartVerticalIcon"
+    },
+    {
+        "name": "BaseballIcon"
+    },
+    {
+        "name": "BeerMugIcon"
+    },
+    {
+        "name": "BIDashboardIcon"
+    },
+    {
+        "name": "BidiLtrIcon"
+    },
+    {
+        "name": "BidiRtlIcon"
+    },
+    {
+        "name": "BirthdayCakeIcon"
+    },
+    {
+        "name": "BitbucketLogo32Icon"
+    },
+    {
+        "name": "BlobStorageIcon"
+    },
+    {
+        "name": "BlockContactIcon"
+    },
+    {
+        "name": "Blocked12Icon"
+    },
+    {
+        "name": "Blocked2Icon"
+    },
+    {
+        "name": "Blocked2SolidIcon"
+    },
+    {
+        "name": "BlockedIcon"
+    },
+    {
+        "name": "BlockedSiteIcon"
+    },
+    {
+        "name": "BlockedSiteSolid12Icon"
+    },
+    {
+        "name": "BlockedSolidIcon"
+    },
+    {
+        "name": "BlogIcon"
+    },
+    {
+        "name": "BlowingSnowIcon"
+    },
+    {
+        "name": "BlurIcon"
+    },
+    {
+        "name": "BoardsIcon"
+    },
+    {
+        "name": "BoldIcon"
+    },
+    {
+        "name": "BookAnswersIcon"
+    },
+    {
+        "name": "BookmarkReportIcon"
+    },
+    {
+        "name": "BookmarksIcon"
+    },
+    {
+        "name": "BookmarksMirroredIcon"
+    },
+    {
+        "name": "BorderDashIcon"
+    },
+    {
+        "name": "BorderDotIcon"
+    },
+    {
+        "name": "BoxAdditionSolidIcon"
+    },
+    {
+        "name": "BoxCheckmarkSolidIcon"
+    },
+    {
+        "name": "BoxLogoIcon"
+    },
+    {
+        "name": "BoxMultiplySolidIcon"
+    },
+    {
+        "name": "BoxPlaySolidIcon"
+    },
+    {
+        "name": "BoxSubtractSolidIcon"
+    },
+    {
+        "name": "BranchCommitIcon"
+    },
+    {
+        "name": "BranchCompareIcon"
+    },
+    {
+        "name": "BranchFork2Icon"
+    },
+    {
+        "name": "BranchForkIcon"
+    },
+    {
+        "name": "BranchLockedIcon"
+    },
+    {
+        "name": "BranchMergeIcon"
+    },
+    {
+        "name": "BranchPullRequestIcon"
+    },
+    {
+        "name": "BranchSearchIcon"
+    },
+    {
+        "name": "BranchShelvesetIcon"
+    },
+    {
+        "name": "BreadcrumbIcon"
+    },
+    {
+        "name": "BreakfastIcon"
+    },
+    {
+        "name": "BrightnessIcon"
+    },
+    {
+        "name": "BroomIcon"
+    },
+    {
+        "name": "BrowserScreenShotIcon"
+    },
+    {
+        "name": "BrowserTabIcon"
+    },
+    {
+        "name": "BrowserTabScreenshotIcon"
+    },
+    {
+        "name": "BrunchIcon"
+    },
+    {
+        "name": "BrushIcon"
+    },
+    {
+        "name": "BucketColorFillIcon"
+    },
+    {
+        "name": "BucketColorIcon"
+    },
+    {
+        "name": "BufferTimeAfterIcon"
+    },
+    {
+        "name": "BufferTimeBeforeIcon"
+    },
+    {
+        "name": "BufferTimeBothIcon"
+    },
+    {
+        "name": "BugBlockIcon"
+    },
+    {
+        "name": "BugIcon"
+    },
+    {
+        "name": "BugSolidIcon"
+    },
+    {
+        "name": "BugSyncIcon"
+    },
+    {
+        "name": "BuildDefinitionIcon"
+    },
+    {
+        "name": "BuildIcon"
+    },
+    {
+        "name": "BuildIssueIcon"
+    },
+    {
+        "name": "BuildQueueIcon"
+    },
+    {
+        "name": "BuildQueueNewIcon"
+    },
+    {
+        "name": "BulkUploadIcon"
+    },
+    {
+        "name": "BulletedList2Icon"
+    },
+    {
+        "name": "BulletedList2MirroredIcon"
+    },
+    {
+        "name": "BulletedListBulletIcon"
+    },
+    {
+        "name": "BulletedListBulletMirroredIcon"
+    },
+    {
+        "name": "BulletedListIcon"
+    },
+    {
+        "name": "BulletedListMirroredIcon"
+    },
+    {
+        "name": "BulletedListTextIcon"
+    },
+    {
+        "name": "BulletedListTextMirroredIcon"
+    },
+    {
+        "name": "BulletedTreeListIcon"
+    },
+    {
+        "name": "BullseyeIcon"
+    },
+    {
+        "name": "BullseyeTargetEditIcon"
+    },
+    {
+        "name": "BullseyeTargetIcon"
+    },
+    {
+        "name": "BusIcon"
+    },
+    {
+        "name": "BusinessHoursSignIcon"
+    },
+    {
+        "name": "BusSolidIcon"
+    },
+    {
+        "name": "ButtonControlIcon"
+    },
+    {
+        "name": "CafeIcon"
+    },
+    {
+        "name": "CakeIcon"
+    },
+    {
+        "name": "CalculatorAdditionIcon"
+    },
+    {
+        "name": "CalculatorDeltaIcon"
+    },
+    {
+        "name": "CalculatorEqualToIcon"
+    },
+    {
+        "name": "CalculatorGroupIcon"
+    },
+    {
+        "name": "CalculatorIcon"
+    },
+    {
+        "name": "CalculatorMultiplyIcon"
+    },
+    {
+        "name": "CalculatorNotEqualToIcon"
+    },
+    {
+        "name": "CalculatorPercentageIcon"
+    },
+    {
+        "name": "CalculatorSubtractIcon"
+    },
+    {
+        "name": "CalendarAgendaIcon"
+    },
+    {
+        "name": "CalendarDayIcon"
+    },
+    {
+        "name": "CalendarIcon"
+    },
+    {
+        "name": "CalendarMirroredIcon"
+    },
+    {
+        "name": "CalendarReplyIcon"
+    },
+    {
+        "name": "CalendarSettingsIcon"
+    },
+    {
+        "name": "CalendarSettingsMirroredIcon"
+    },
+    {
+        "name": "CalendarWeekIcon"
+    },
+    {
+        "name": "CalendarWorkWeekIcon"
+    },
+    {
+        "name": "CalendarYearIcon"
+    },
+    {
+        "name": "CaloriesAddIcon"
+    },
+    {
+        "name": "CaloriesIcon"
+    },
+    {
+        "name": "CameraIcon"
+    },
+    {
+        "name": "CampaignTemplateIcon"
+    },
+    {
+        "name": "CancelIcon"
+    },
+    {
+        "name": "CannedChatIcon"
+    },
+    {
+        "name": "CaretBottomLeftCenter8Icon"
+    },
+    {
+        "name": "CaretBottomLeftSolid8Icon"
+    },
+    {
+        "name": "CaretBottomRightCenter8Icon"
+    },
+    {
+        "name": "CaretBottomRightSolid8Icon"
+    },
+    {
+        "name": "CaretDown8Icon"
+    },
+    {
+        "name": "CaretDownSolid8Icon"
+    },
+    {
+        "name": "CaretHollowIcon"
+    },
+    {
+        "name": "CaretHollowMirroredIcon"
+    },
+    {
+        "name": "CaretLeft8Icon"
+    },
+    {
+        "name": "CaretLeftSolid8Icon"
+    },
+    {
+        "name": "CaretRight8Icon"
+    },
+    {
+        "name": "CaretRightIcon"
+    },
+    {
+        "name": "CaretRightSolid8Icon"
+    },
+    {
+        "name": "CaretSolid16Icon"
+    },
+    {
+        "name": "CaretSolidDownIcon"
+    },
+    {
+        "name": "CaretSolidIcon"
+    },
+    {
+        "name": "CaretSolidLeftIcon"
+    },
+    {
+        "name": "CaretSolidMirroredIcon"
+    },
+    {
+        "name": "CaretSolidRightIcon"
+    },
+    {
+        "name": "CaretSolidUpIcon"
+    },
+    {
+        "name": "CaretTopLeftCenter8Icon"
+    },
+    {
+        "name": "CaretTopLeftSolid8Icon"
+    },
+    {
+        "name": "CaretTopRightCenter8Icon"
+    },
+    {
+        "name": "CaretTopRightSolid8Icon"
+    },
+    {
+        "name": "CaretUp8Icon"
+    },
+    {
+        "name": "CaretUpSolid8Icon"
+    },
+    {
+        "name": "CarIcon"
+    },
+    {
+        "name": "CatIcon"
+    },
+    {
+        "name": "CellPhoneIcon"
+    },
+    {
+        "name": "CertificateIcon"
+    },
+    {
+        "name": "CertifiedDatabaseIcon"
+    },
+    {
+        "name": "ChangeEntitlementsIcon"
+    },
+    {
+        "name": "ChartIcon"
+    },
+    {
+        "name": "ChartSeriesIcon"
+    },
+    {
+        "name": "ChartTemplateIcon"
+    },
+    {
+        "name": "ChartXAngleIcon"
+    },
+    {
+        "name": "ChartYAngleIcon"
+    },
+    {
+        "name": "ChatBotIcon"
+    },
+    {
+        "name": "ChatIcon"
+    },
+    {
+        "name": "ChatInviteFriendIcon"
+    },
+    {
+        "name": "ChatSolidIcon"
+    },
+    {
+        "name": "CheckboxCompositeIcon"
+    },
+    {
+        "name": "CheckboxCompositeReversedIcon"
+    },
+    {
+        "name": "CheckboxFillIcon"
+    },
+    {
+        "name": "CheckboxIcon"
+    },
+    {
+        "name": "CheckboxIndeterminateIcon"
+    },
+    {
+        "name": "CheckedOutByOther12Icon"
+    },
+    {
+        "name": "CheckedOutByYou12Icon"
+    },
+    {
+        "name": "CheckListCheckIcon"
+    },
+    {
+        "name": "CheckListCheckMirroredIcon"
+    },
+    {
+        "name": "CheckListIcon"
+    },
+    {
+        "name": "CheckListTextIcon"
+    },
+    {
+        "name": "CheckListTextMirroredIcon"
+    },
+    {
+        "name": "CheckMarkIcon"
+    },
+    {
+        "name": "ChevronDownEnd6Icon"
+    },
+    {
+        "name": "ChevronDownIcon"
+    },
+    {
+        "name": "ChevronDownMedIcon"
+    },
+    {
+        "name": "ChevronDownSmallIcon"
+    },
+    {
+        "name": "ChevronFold10Icon"
+    },
+    {
+        "name": "ChevronLeftEnd6Icon"
+    },
+    {
+        "name": "ChevronLeftIcon"
+    },
+    {
+        "name": "ChevronLeftMedIcon"
+    },
+    {
+        "name": "ChevronLeftSmallIcon"
+    },
+    {
+        "name": "ChevronRightEnd6Icon"
+    },
+    {
+        "name": "ChevronRightIcon"
+    },
+    {
+        "name": "ChevronRightMedIcon"
+    },
+    {
+        "name": "ChevronRightSmallIcon"
+    },
+    {
+        "name": "ChevronUnfold10Icon"
+    },
+    {
+        "name": "ChevronUpEnd6Icon"
+    },
+    {
+        "name": "ChevronUpIcon"
+    },
+    {
+        "name": "ChevronUpMedIcon"
+    },
+    {
+        "name": "ChevronUpSmallIcon"
+    },
+    {
+        "name": "ChildofIcon"
+    },
+    {
+        "name": "ChopsticksIcon"
+    },
+    {
+        "name": "ChromeBackIcon"
+    },
+    {
+        "name": "ChromeBackMirroredIcon"
+    },
+    {
+        "name": "ChromeCloseIcon"
+    },
+    {
+        "name": "ChromeFullScreenIcon"
+    },
+    {
+        "name": "ChromeMinimizeIcon"
+    },
+    {
+        "name": "ChromeRestoreIcon"
+    },
+    {
+        "name": "ChronosLogoIcon"
+    },
+    {
+        "name": "CircleAdditionIcon"
+    },
+    {
+        "name": "CircleAdditionSolidIcon"
+    },
+    {
+        "name": "CircleFillIcon"
+    },
+    {
+        "name": "CircleHalfFullIcon"
+    },
+    {
+        "name": "CirclePauseIcon"
+    },
+    {
+        "name": "CirclePauseSolidIcon"
+    },
+    {
+        "name": "CirclePlusIcon"
+    },
+    {
+        "name": "CircleRingIcon"
+    },
+    {
+        "name": "CircleShapeIcon"
+    },
+    {
+        "name": "CircleShapeSolidIcon"
+    },
+    {
+        "name": "CircleStopIcon"
+    },
+    {
+        "name": "CircleStopSolidIcon"
+    },
+    {
+        "name": "CityNext2Icon"
+    },
+    {
+        "name": "CityNextIcon"
+    },
+    {
+        "name": "ClearFilterIcon"
+    },
+    {
+        "name": "ClearFormattingAIcon"
+    },
+    {
+        "name": "ClearFormattingEraserIcon"
+    },
+    {
+        "name": "ClearFormattingIcon"
+    },
+    {
+        "name": "ClearIcon"
+    },
+    {
+        "name": "ClearNightIcon"
+    },
+    {
+        "name": "ClearSelectionIcon"
+    },
+    {
+        "name": "ClearSelectionMirroredIcon"
+    },
+    {
+        "name": "ClipboardListIcon"
+    },
+    {
+        "name": "ClipboardListMirroredIcon"
+    },
+    {
+        "name": "ClipboardSolidIcon"
+    },
+    {
+        "name": "ClockIcon"
+    },
+    {
+        "name": "CloneToDesktopIcon"
+    },
+    {
+        "name": "ClosedCaptionIcon"
+    },
+    {
+        "name": "ClosePaneIcon"
+    },
+    {
+        "name": "ClosePaneMirroredIcon"
+    },
+    {
+        "name": "CloudWeatherIcon"
+    },
+    {
+        "name": "CloudyIcon"
+    },
+    {
+        "name": "CocktailsIcon"
+    },
+    {
+        "name": "CodeEditIcon"
+    },
+    {
+        "name": "CodeIcon"
+    },
+    {
+        "name": "CoffeeIcon"
+    },
+    {
+        "name": "CoffeeScriptIcon"
+    },
+    {
+        "name": "CollapseContentIcon"
+    },
+    {
+        "name": "CollapseContentSingleIcon"
+    },
+    {
+        "name": "CollapseMenuIcon"
+    },
+    {
+        "name": "CollegeFootballIcon"
+    },
+    {
+        "name": "CollegeHoopsIcon"
+    },
+    {
+        "name": "ColorIcon"
+    },
+    {
+        "name": "ColorSolidIcon"
+    },
+    {
+        "name": "ColumnIcon"
+    },
+    {
+        "name": "ColumnLeftTwoThirdsEditIcon"
+    },
+    {
+        "name": "ColumnLeftTwoThirdsIcon"
+    },
+    {
+        "name": "ColumnOptionsIcon"
+    },
+    {
+        "name": "ColumnRightTwoThirdsEditIcon"
+    },
+    {
+        "name": "ColumnRightTwoThirdsIcon"
+    },
+    {
+        "name": "ColumnVerticalSectionEditIcon"
+    },
+    {
+        "name": "ColumnVerticalSectionIcon"
+    },
+    {
+        "name": "CombineIcon"
+    },
+    {
+        "name": "ComboboxIcon"
+    },
+    {
+        "name": "CommandPromptIcon"
+    },
+    {
+        "name": "CommentActiveIcon"
+    },
+    {
+        "name": "CommentAddIcon"
+    },
+    {
+        "name": "CommentIcon"
+    },
+    {
+        "name": "CommentNextIcon"
+    },
+    {
+        "name": "CommentPreviousIcon"
+    },
+    {
+        "name": "CommentSolidIcon"
+    },
+    {
+        "name": "CommentUrgentIcon"
+    },
+    {
+        "name": "CommitmentsIcon"
+    },
+    {
+        "name": "CommonDataServiceCDSIcon"
+    },
+    {
+        "name": "CommunicationsIcon"
+    },
+    {
+        "name": "CompanyDirectoryIcon"
+    },
+    {
+        "name": "CompanyDirectoryMirroredIcon"
+    },
+    {
+        "name": "CompareIcon"
+    },
+    {
+        "name": "CompareUnevenIcon"
+    },
+    {
+        "name": "CompassNWIcon"
+    },
+    {
+        "name": "CompletedIcon"
+    },
+    {
+        "name": "CompletedSolidIcon"
+    },
+    {
+        "name": "ComplianceAuditIcon"
+    },
+    {
+        "name": "ConfigurationSolidIcon"
+    },
+    {
+        "name": "ConnectContactsIcon"
+    },
+    {
+        "name": "ConnectVirtualMachineIcon"
+    },
+    {
+        "name": "ConstructionConeIcon"
+    },
+    {
+        "name": "ConstructionConeSolidIcon"
+    },
+    {
+        "name": "ContactCardIcon"
+    },
+    {
+        "name": "ContactCardSettingsIcon"
+    },
+    {
+        "name": "ContactCardSettingsMirroredIcon"
+    },
+    {
+        "name": "ContactHeartIcon"
+    },
+    {
+        "name": "ContactIcon"
+    },
+    {
+        "name": "ContactInfoIcon"
+    },
+    {
+        "name": "ContactLinkIcon"
+    },
+    {
+        "name": "ContactListIcon"
+    },
+    {
+        "name": "ContactLockIcon"
+    },
+    {
+        "name": "ContentFeedIcon"
+    },
+    {
+        "name": "ContentSettingsIcon"
+    },
+    {
+        "name": "ContextMenuIcon"
+    },
+    {
+        "name": "ContrastIcon"
+    },
+    {
+        "name": "CopyEditIcon"
+    },
+    {
+        "name": "CopyIcon"
+    },
+    {
+        "name": "CottonIcon"
+    },
+    {
+        "name": "CouponIcon"
+    },
+    {
+        "name": "CPlusPlusIcon"
+    },
+    {
+        "name": "CPlusPlusLanguageIcon"
+    },
+    {
+        "name": "CreateMailRuleIcon"
+    },
+    {
+        "name": "CricketIcon"
+    },
+    {
+        "name": "CRMProcessesIcon"
+    },
+    {
+        "name": "CRMReportIcon"
+    },
+    {
+        "name": "CRMServicesIcon"
+    },
+    {
+        "name": "CropIcon"
+    },
+    {
+        "name": "CrownIcon"
+    },
+    {
+        "name": "CrownSolidIcon"
+    },
+    {
+        "name": "CSSIcon"
+    },
+    {
+        "name": "CubeShapeIcon"
+    },
+    {
+        "name": "CubeShapeSolidIcon"
+    },
+    {
+        "name": "CurrencyIcon"
+    },
+    {
+        "name": "CustomizeToolbarIcon"
+    },
+    {
+        "name": "CustomListIcon"
+    },
+    {
+        "name": "CustomListMirroredIcon"
+    },
+    {
+        "name": "CutIcon"
+    },
+    {
+        "name": "CyclingIcon"
+    },
+    {
+        "name": "DashboardAddIcon"
+    },
+    {
+        "name": "DatabaseIcon"
+    },
+    {
+        "name": "DatabaseSyncIcon"
+    },
+    {
+        "name": "DatabaseViewIcon"
+    },
+    {
+        "name": "DataConnectionLibraryIcon"
+    },
+    {
+        "name": "DataflowsIcon"
+    },
+    {
+        "name": "DataflowsLinkIcon"
+    },
+    {
+        "name": "DataManagementSettingsIcon"
+    },
+    {
+        "name": "DateTime12Icon"
+    },
+    {
+        "name": "DateTime2Icon"
+    },
+    {
+        "name": "DateTimeIcon"
+    },
+    {
+        "name": "DateTimeMirroredIcon"
+    },
+    {
+        "name": "DeactivateOrdersIcon"
+    },
+    {
+        "name": "DecimalsIcon"
+    },
+    {
+        "name": "DecisionSolidIcon"
+    },
+    {
+        "name": "DeclineCallIcon"
+    },
+    {
+        "name": "DecreaseIndentArrowIcon"
+    },
+    {
+        "name": "DecreaseIndentArrowMirroredIcon"
+    },
+    {
+        "name": "DecreaseIndentIcon"
+    },
+    {
+        "name": "DecreaseIndentLegacyIcon"
+    },
+    {
+        "name": "DecreaseIndentMirroredIcon"
+    },
+    {
+        "name": "DecreaseIndentTextIcon"
+    },
+    {
+        "name": "DecreaseIndentTextMirroredIcon"
+    },
+    {
+        "name": "DefaultRatioIcon"
+    },
+    {
+        "name": "DefectSolidIcon"
+    },
+    {
+        "name": "DeleteColumnsIcon"
+    },
+    {
+        "name": "DeleteIcon"
+    },
+    {
+        "name": "DeleteRowsIcon"
+    },
+    {
+        "name": "DeleteRowsMirroredIcon"
+    },
+    {
+        "name": "DeleteTableIcon"
+    },
+    {
+        "name": "DeliveryTruckIcon"
+    },
+    {
+        "name": "DependencyAddIcon"
+    },
+    {
+        "name": "DependencyRemoveIcon"
+    },
+    {
+        "name": "DeployIcon"
+    },
+    {
+        "name": "DescendingIcon"
+    },
+    {
+        "name": "DesignIcon"
+    },
+    {
+        "name": "DesktopScreenshotIcon"
+    },
+    {
+        "name": "DeveloperToolsIcon"
+    },
+    {
+        "name": "DeviceBugIcon"
+    },
+    {
+        "name": "DeviceOffIcon"
+    },
+    {
+        "name": "DeviceRunIcon"
+    },
+    {
+        "name": "Devices2Icon"
+    },
+    {
+        "name": "Devices3Icon"
+    },
+    {
+        "name": "Devices4Icon"
+    },
+    {
+        "name": "DiagnosticDataBarTooltipIcon"
+    },
+    {
+        "name": "DiagnosticIcon"
+    },
+    {
+        "name": "DialpadIcon"
+    },
+    {
+        "name": "DiamondIcon"
+    },
+    {
+        "name": "DiamondSolidIcon"
+    },
+    {
+        "name": "DictionaryIcon"
+    },
+    {
+        "name": "DictionaryRemoveIcon"
+    },
+    {
+        "name": "DietPlanNotebookIcon"
+    },
+    {
+        "name": "DiffInlineIcon"
+    },
+    {
+        "name": "DiffSideBySideIcon"
+    },
+    {
+        "name": "DisableUpdatesIcon"
+    },
+    {
+        "name": "DisconnectVirtualMachineIcon"
+    },
+    {
+        "name": "DislikeIcon"
+    },
+    {
+        "name": "DislikeSolidIcon"
+    },
+    {
+        "name": "DistributeDownIcon"
+    },
+    {
+        "name": "DockerLogoIcon"
+    },
+    {
+        "name": "DockLeftIcon"
+    },
+    {
+        "name": "DockLeftMirroredIcon"
+    },
+    {
+        "name": "DockRightIcon"
+    },
+    {
+        "name": "DocLibraryIcon"
+    },
+    {
+        "name": "DocumentApprovalIcon"
+    },
+    {
+        "name": "DocumentationIcon"
+    },
+    {
+        "name": "DocumentIcon"
+    },
+    {
+        "name": "DocumentManagementIcon"
+    },
+    {
+        "name": "DocumentReplyIcon"
+    },
+    {
+        "name": "DocumentSearchIcon"
+    },
+    {
+        "name": "DocumentSetIcon"
+    },
+    {
+        "name": "DOMIcon"
+    },
+    {
+        "name": "DonutChartIcon"
+    },
+    {
+        "name": "DoorIcon"
+    },
+    {
+        "name": "DoubleBookmarkIcon"
+    },
+    {
+        "name": "DoubleChevronDown12Icon"
+    },
+    {
+        "name": "DoubleChevronDown8Icon"
+    },
+    {
+        "name": "DoubleChevronDownIcon"
+    },
+    {
+        "name": "DoubleChevronLeft12Icon"
+    },
+    {
+        "name": "DoubleChevronLeft8Icon"
+    },
+    {
+        "name": "DoubleChevronLeftIcon"
+    },
+    {
+        "name": "DoubleChevronLeftMedIcon"
+    },
+    {
+        "name": "DoubleChevronLeftMedMirroredIcon"
+    },
+    {
+        "name": "DoubleChevronRight12Icon"
+    },
+    {
+        "name": "DoubleChevronRight8Icon"
+    },
+    {
+        "name": "DoubleChevronRightIcon"
+    },
+    {
+        "name": "DoubleChevronUp12Icon"
+    },
+    {
+        "name": "DoubleChevronUp8Icon"
+    },
+    {
+        "name": "DoubleChevronUpIcon"
+    },
+    {
+        "name": "DoubleColumnEditIcon"
+    },
+    {
+        "name": "DoubleColumnIcon"
+    },
+    {
+        "name": "DoubleDownArrowIcon"
+    },
+    {
+        "name": "DownIcon"
+    },
+    {
+        "name": "DownloadDocumentIcon"
+    },
+    {
+        "name": "DownloadIcon"
+    },
+    {
+        "name": "DragObjectIcon"
+    },
+    {
+        "name": "DrillDownIcon"
+    },
+    {
+        "name": "DrillDownSolidIcon"
+    },
+    {
+        "name": "DrillExpandIcon"
+    },
+    {
+        "name": "DrillShowIcon"
+    },
+    {
+        "name": "DrillThroughIcon"
+    },
+    {
+        "name": "DriverOffIcon"
+    },
+    {
+        "name": "DRMIcon"
+    },
+    {
+        "name": "DropboxLogoIcon"
+    },
+    {
+        "name": "DropdownIcon"
+    },
+    {
+        "name": "DropIcon"
+    },
+    {
+        "name": "DropShapeIcon"
+    },
+    {
+        "name": "DropShapeSolidIcon"
+    },
+    {
+        "name": "DuplicateRowIcon"
+    },
+    {
+        "name": "DuststormIcon"
+    },
+    {
+        "name": "EatDrinkIcon"
+    },
+    {
+        "name": "eDiscoveryIcon"
+    },
+    {
+        "name": "EditContactIcon"
+    },
+    {
+        "name": "EditCreateIcon"
+    },
+    {
+        "name": "EditIcon"
+    },
+    {
+        "name": "EditMailIcon"
+    },
+    {
+        "name": "EditMirroredIcon"
+    },
+    {
+        "name": "EditNoteIcon"
+    },
+    {
+        "name": "EditPhotoIcon"
+    },
+    {
+        "name": "EditSolid12Icon"
+    },
+    {
+        "name": "EditSolidMirrored12Icon"
+    },
+    {
+        "name": "EditStyleIcon"
+    },
+    {
+        "name": "EducationIcon"
+    },
+    {
+        "name": "EgnyteLogoIcon"
+    },
+    {
+        "name": "EllipseIcon"
+    },
+    {
+        "name": "EmbedIcon"
+    },
+    {
+        "name": "EMIIcon"
+    },
+    {
+        "name": "Emoji2Icon"
+    },
+    {
+        "name": "EmojiDisappointedIcon"
+    },
+    {
+        "name": "EmojiIcon"
+    },
+    {
+        "name": "EmojiNeutralIcon"
+    },
+    {
+        "name": "EmojiTabSymbolsIcon"
+    },
+    {
+        "name": "EmptyRecycleBinIcon"
+    },
+    {
+        "name": "EncryptionIcon"
+    },
+    {
+        "name": "EndPointSolidIcon"
+    },
+    {
+        "name": "EngineeringGroupIcon"
+    },
+    {
+        "name": "EntitlementPolicyIcon"
+    },
+    {
+        "name": "EntitlementRedemptionIcon"
+    },
+    {
+        "name": "EntryDeclineIcon"
+    },
+    {
+        "name": "EntryViewIcon"
+    },
+    {
+        "name": "EqualizerIcon"
+    },
+    {
+        "name": "EraseToolIcon"
+    },
+    {
+        "name": "ErrorBadgeIcon"
+    },
+    {
+        "name": "ErrorIcon"
+    },
+    {
+        "name": "Event12Icon"
+    },
+    {
+        "name": "EventAcceptedIcon"
+    },
+    {
+        "name": "EventDateIcon"
+    },
+    {
+        "name": "EventDateMissed12Icon"
+    },
+    {
+        "name": "EventDeclinedIcon"
+    },
+    {
+        "name": "EventIcon"
+    },
+    {
+        "name": "EventInfoIcon"
+    },
+    {
+        "name": "EventTentativeIcon"
+    },
+    {
+        "name": "EventTentativeMirroredIcon"
+    },
+    {
+        "name": "EventToDoLogoIcon"
+    },
+    {
+        "name": "ExerciseTrackerIcon"
+    },
+    {
+        "name": "ExpandMenuIcon"
+    },
+    {
+        "name": "ExploreContentIcon"
+    },
+    {
+        "name": "ExploreContentSingleIcon"
+    },
+    {
+        "name": "ExploreDataIcon"
+    },
+    {
+        "name": "ExportIcon"
+    },
+    {
+        "name": "ExportMirroredIcon"
+    },
+    {
+        "name": "ExternalBuildIcon"
+    },
+    {
+        "name": "ExternalGitIcon"
+    },
+    {
+        "name": "ExternalTFVCIcon"
+    },
+    {
+        "name": "ExternalXAMLIcon"
+    },
+    {
+        "name": "EyedropperIcon"
+    },
+    {
+        "name": "EyeShadowIcon"
+    },
+    {
+        "name": "F12DevToolsIcon"
+    },
+    {
+        "name": "FacebookLogoIcon"
+    },
+    {
+        "name": "FamilyIcon"
+    },
+    {
+        "name": "FangBodyIcon"
+    },
+    {
+        "name": "FastForwardEightXIcon"
+    },
+    {
+        "name": "FastForwardFourXIcon"
+    },
+    {
+        "name": "FastForwardIcon"
+    },
+    {
+        "name": "FastForwardOneFiveXIcon"
+    },
+    {
+        "name": "FastForwardOneXIcon"
+    },
+    {
+        "name": "FastForwardPointFiveXIcon"
+    },
+    {
+        "name": "FastForwardTwoXIcon"
+    },
+    {
+        "name": "FastModeIcon"
+    },
+    {
+        "name": "FaviconIcon"
+    },
+    {
+        "name": "FavoriteListIcon"
+    },
+    {
+        "name": "FavoriteStarFillIcon"
+    },
+    {
+        "name": "FavoriteStarIcon"
+    },
+    {
+        "name": "FaxIcon"
+    },
+    {
+        "name": "FeedbackIcon"
+    },
+    {
+        "name": "FeedbackRequestMirroredSolidIcon"
+    },
+    {
+        "name": "FeedbackRequestSolidIcon"
+    },
+    {
+        "name": "FeedbackResponseSolidIcon"
+    },
+    {
+        "name": "FerryIcon"
+    },
+    {
+        "name": "FerrySolidIcon"
+    },
+    {
+        "name": "FieldChangedIcon"
+    },
+    {
+        "name": "FieldEmptyIcon"
+    },
+    {
+        "name": "FieldFilledIcon"
+    },
+    {
+        "name": "FieldNotChangedIcon"
+    },
+    {
+        "name": "FieldReadOnlyIcon"
+    },
+    {
+        "name": "FieldRequiredIcon"
+    },
+    {
+        "name": "FileASPXIcon"
+    },
+    {
+        "name": "FileBugIcon"
+    },
+    {
+        "name": "FileCodeIcon"
+    },
+    {
+        "name": "FileCommentIcon"
+    },
+    {
+        "name": "FileCSSIcon"
+    },
+    {
+        "name": "FileHTMLIcon"
+    },
+    {
+        "name": "FileImageIcon"
+    },
+    {
+        "name": "FileJAVAIcon"
+    },
+    {
+        "name": "FileLessIcon"
+    },
+    {
+        "name": "FileOffIcon"
+    },
+    {
+        "name": "FilePDBIcon"
+    },
+    {
+        "name": "FileRequestIcon"
+    },
+    {
+        "name": "FileSassIcon"
+    },
+    {
+        "name": "FileSQLIcon"
+    },
+    {
+        "name": "FileSymlinkIcon"
+    },
+    {
+        "name": "FileSystemIcon"
+    },
+    {
+        "name": "FileTemplateIcon"
+    },
+    {
+        "name": "FileYMLIcon"
+    },
+    {
+        "name": "FilterAscendingIcon"
+    },
+    {
+        "name": "FilterDescendingIcon"
+    },
+    {
+        "name": "FilterIcon"
+    },
+    {
+        "name": "FilterSettingsIcon"
+    },
+    {
+        "name": "FiltersIcon"
+    },
+    {
+        "name": "FilterSolidIcon"
+    },
+    {
+        "name": "FiltersSolidIcon"
+    },
+    {
+        "name": "FinancialIcon"
+    },
+    {
+        "name": "FinancialMirroredSolidIcon"
+    },
+    {
+        "name": "FinancialSolidIcon"
+    },
+    {
+        "name": "FingerprintIcon"
+    },
+    {
+        "name": "FitPageIcon"
+    },
+    {
+        "name": "FitWidthIcon"
+    },
+    {
+        "name": "FiveTileGridIcon"
+    },
+    {
+        "name": "FixedAssetManagementIcon"
+    },
+    {
+        "name": "FixedColumnWidthIcon"
+    },
+    {
+        "name": "FlagIcon"
+    },
+    {
+        "name": "FlameSolidIcon"
+    },
+    {
+        "name": "FlashAutoIcon"
+    },
+    {
+        "name": "FlashlightIcon"
+    },
+    {
+        "name": "FlashOffIcon"
+    },
+    {
+        "name": "FlickDownIcon"
+    },
+    {
+        "name": "FlickLeftIcon"
+    },
+    {
+        "name": "FlickRightIcon"
+    },
+    {
+        "name": "FlickUpIcon"
+    },
+    {
+        "name": "FlowChartIcon"
+    },
+    {
+        "name": "FlowerIcon"
+    },
+    {
+        "name": "FlowIcon"
+    },
+    {
+        "name": "FocalPointIcon"
+    },
+    {
+        "name": "FocusIcon"
+    },
+    {
+        "name": "FocusViewIcon"
+    },
+    {
+        "name": "FogIcon"
+    },
+    {
+        "name": "FolderFillIcon"
+    },
+    {
+        "name": "FolderHorizontalIcon"
+    },
+    {
+        "name": "FolderIcon"
+    },
+    {
+        "name": "FolderListIcon"
+    },
+    {
+        "name": "FolderListMirroredIcon"
+    },
+    {
+        "name": "FolderOpenIcon"
+    },
+    {
+        "name": "FolderQueryIcon"
+    },
+    {
+        "name": "FolderSearchIcon"
+    },
+    {
+        "name": "FollowUserIcon"
+    },
+    {
+        "name": "FontColorAIcon"
+    },
+    {
+        "name": "FontColorIcon"
+    },
+    {
+        "name": "FontColorSwatchIcon"
+    },
+    {
+        "name": "FontDecreaseIcon"
+    },
+    {
+        "name": "FontIcon"
+    },
+    {
+        "name": "FontIncreaseIcon"
+    },
+    {
+        "name": "FontSize2Icon"
+    },
+    {
+        "name": "FontSizeIcon"
+    },
+    {
+        "name": "FooterIcon"
+    },
+    {
+        "name": "FormatPainterIcon"
+    },
+    {
+        "name": "FormLibraryIcon"
+    },
+    {
+        "name": "FormLibraryMirroredIcon"
+    },
+    {
+        "name": "ForumIcon"
+    },
+    {
+        "name": "ForwardEventIcon"
+    },
+    {
+        "name": "ForwardIcon"
+    },
+    {
+        "name": "FreezingIcon"
+    },
+    {
+        "name": "FrigidIcon"
+    },
+    {
+        "name": "FrontCameraIcon"
+    },
+    {
+        "name": "FullCircleMaskIcon"
+    },
+    {
+        "name": "FullHistoryIcon"
+    },
+    {
+        "name": "FullScreenIcon"
+    },
+    {
+        "name": "FullViewIcon"
+    },
+    {
+        "name": "FullWidthEditIcon"
+    },
+    {
+        "name": "FullWidthIcon"
+    },
+    {
+        "name": "FunctionalManagerDashboardIcon"
+    },
+    {
+        "name": "FunnelChartIcon"
+    },
+    {
+        "name": "GameIcon"
+    },
+    {
+        "name": "GatherIcon"
+    },
+    {
+        "name": "GenerateIcon"
+    },
+    {
+        "name": "GenericScanFilledIcon"
+    },
+    {
+        "name": "GenericScanIcon"
+    },
+    {
+        "name": "GIFIcon"
+    },
+    {
+        "name": "GiftboxIcon"
+    },
+    {
+        "name": "GiftboxOpenIcon"
+    },
+    {
+        "name": "GiftBoxSolidIcon"
+    },
+    {
+        "name": "GiftCardIcon"
+    },
+    {
+        "name": "GitForkIcon"
+    },
+    {
+        "name": "GitGraphIcon"
+    },
+    {
+        "name": "GitHubLogoIcon"
+    },
+    {
+        "name": "GitLogoIcon"
+    },
+    {
+        "name": "GlassesIcon"
+    },
+    {
+        "name": "GlimmerIcon"
+    },
+    {
+        "name": "GlobalNavButtonActiveIcon"
+    },
+    {
+        "name": "GlobalNavButtonIcon"
+    },
+    {
+        "name": "Globe2Icon"
+    },
+    {
+        "name": "GlobeFavoriteIcon"
+    },
+    {
+        "name": "GlobeIcon"
+    },
+    {
+        "name": "GoIcon"
+    },
+    {
+        "name": "GolfIcon"
+    },
+    {
+        "name": "GoMirroredIcon"
+    },
+    {
+        "name": "GoogleDriveLogoBottomBlueIcon"
+    },
+    {
+        "name": "GoogleDriveLogoIcon"
+    },
+    {
+        "name": "GoogleDriveLogoLeftGreenIcon"
+    },
+    {
+        "name": "GoogleDriveLogoRightYellowIcon"
+    },
+    {
+        "name": "GoToDashboardIcon"
+    },
+    {
+        "name": "GotoTodayIcon"
+    },
+    {
+        "name": "GradleLogo32Icon"
+    },
+    {
+        "name": "GreetingCardIcon"
+    },
+    {
+        "name": "GridViewLargeIcon"
+    },
+    {
+        "name": "GridViewMediumIcon"
+    },
+    {
+        "name": "GridViewSmallIcon"
+    },
+    {
+        "name": "GripperBarHorizontalIcon"
+    },
+    {
+        "name": "GripperBarVerticalIcon"
+    },
+    {
+        "name": "GripperDotsVerticalIcon"
+    },
+    {
+        "name": "GripperToolIcon"
+    },
+    {
+        "name": "GroupedAscendingIcon"
+    },
+    {
+        "name": "GroupedDescendingIcon"
+    },
+    {
+        "name": "GroupedListIcon"
+    },
+    {
+        "name": "GroupIcon"
+    },
+    {
+        "name": "GroupListIcon"
+    },
+    {
+        "name": "GroupObjectIcon"
+    },
+    {
+        "name": "GUIDIcon"
+    },
+    {
+        "name": "GuitarIcon"
+    },
+    {
+        "name": "HailDayIcon"
+    },
+    {
+        "name": "HailNightIcon"
+    },
+    {
+        "name": "HalfAlphaIcon"
+    },
+    {
+        "name": "HalfCircleIcon"
+    },
+    {
+        "name": "HandsFreeIcon"
+    },
+    {
+        "name": "HandwritingIcon"
+    },
+    {
+        "name": "HardDriveGroupIcon"
+    },
+    {
+        "name": "HardDriveIcon"
+    },
+    {
+        "name": "HardDriveLockIcon"
+    },
+    {
+        "name": "HardDriveUnlockIcon"
+    },
+    {
+        "name": "Header1Icon"
+    },
+    {
+        "name": "Header2Icon"
+    },
+    {
+        "name": "Header3Icon"
+    },
+    {
+        "name": "Header4Icon"
+    },
+    {
+        "name": "HeaderIcon"
+    },
+    {
+        "name": "HeadsetIcon"
+    },
+    {
+        "name": "HeadsetSolidIcon"
+    },
+    {
+        "name": "HealthIcon"
+    },
+    {
+        "name": "HealthRefreshIcon"
+    },
+    {
+        "name": "HealthSolidIcon"
+    },
+    {
+        "name": "HeartBrokenIcon"
+    },
+    {
+        "name": "HeartFillIcon"
+    },
+    {
+        "name": "HeartIcon"
+    },
+    {
+        "name": "HelpIcon"
+    },
+    {
+        "name": "HelpMirroredIcon"
+    },
+    {
+        "name": "HexaditeInvestigationCancelIcon"
+    },
+    {
+        "name": "HexaditeInvestigationIcon"
+    },
+    {
+        "name": "HexaditeInvestigationSemiAutoIcon"
+    },
+    {
+        "name": "HexagonIcon"
+    },
+    {
+        "name": "Hide2Icon"
+    },
+    {
+        "name": "Hide3Icon"
+    },
+    {
+        "name": "HideIcon"
+    },
+    {
+        "name": "HighlightIcon"
+    },
+    {
+        "name": "HighlightMappedShapesIcon"
+    },
+    {
+        "name": "HintTextIcon"
+    },
+    {
+        "name": "HistoricalWeatherIcon"
+    },
+    {
+        "name": "HistoryIcon"
+    },
+    {
+        "name": "HomeDropdownIcon"
+    },
+    {
+        "name": "HomeGroupIcon"
+    },
+    {
+        "name": "HomeIcon"
+    },
+    {
+        "name": "HomeSolidIcon"
+    },
+    {
+        "name": "HomeVerifyIcon"
+    },
+    {
+        "name": "HorizontalDistributeCenterIcon"
+    },
+    {
+        "name": "HorizontalTabKeyIcon"
+    },
+    {
+        "name": "HospitalIcon"
+    },
+    {
+        "name": "HotelIcon"
+    },
+    {
+        "name": "HourGlassIcon"
+    },
+    {
+        "name": "IconSetsFlagIcon"
+    },
+    {
+        "name": "IDBadgeIcon"
+    },
+    {
+        "name": "IgnoreConversationIcon"
+    },
+    {
+        "name": "ImageCrosshairIcon"
+    },
+    {
+        "name": "ImageDiffIcon"
+    },
+    {
+        "name": "ImageInARIcon"
+    },
+    {
+        "name": "ImagePixelIcon"
+    },
+    {
+        "name": "ImageSearchIcon"
+    },
+    {
+        "name": "ImportAllMirroredIcon"
+    },
+    {
+        "name": "ImportantIcon"
+    },
+    {
+        "name": "ImportIcon"
+    },
+    {
+        "name": "ImportMirroredIcon"
+    },
+    {
+        "name": "InboxCheckIcon"
+    },
+    {
+        "name": "InboxIcon"
+    },
+    {
+        "name": "IncidentTriangleIcon"
+    },
+    {
+        "name": "IncomingCallIcon"
+    },
+    {
+        "name": "IncreaseIndentArrowIcon"
+    },
+    {
+        "name": "IncreaseIndentArrowMirroredIcon"
+    },
+    {
+        "name": "IncreaseIndentHangingIcon"
+    },
+    {
+        "name": "IncreaseIndentHangingMirroredIcon"
+    },
+    {
+        "name": "IncreaseIndentIcon"
+    },
+    {
+        "name": "IncreaseIndentLegacyIcon"
+    },
+    {
+        "name": "IncreaseIndentMirroredIcon"
+    },
+    {
+        "name": "IncreaseIndentTextIcon"
+    },
+    {
+        "name": "IncreaseIndentTextMirroredIcon"
+    },
+    {
+        "name": "IndentFirstLineIcon"
+    },
+    {
+        "name": "Info2Icon"
+    },
+    {
+        "name": "InfoIcon"
+    },
+    {
+        "name": "InformationBarriersIcon"
+    },
+    {
+        "name": "InfoSolidIcon"
+    },
+    {
+        "name": "InkingToolIcon"
+    },
+    {
+        "name": "InputAddressIcon"
+    },
+    {
+        "name": "InsertColumnsLeftIcon"
+    },
+    {
+        "name": "InsertColumnsRightIcon"
+    },
+    {
+        "name": "InsertIcon"
+    },
+    {
+        "name": "InsertRowsAboveIcon"
+    },
+    {
+        "name": "InsertRowsBelowIcon"
+    },
+    {
+        "name": "InsertSignatureLineIcon"
+    },
+    {
+        "name": "InsertTextBoxIcon"
+    },
+    {
+        "name": "InsightsIcon"
+    },
+    {
+        "name": "InstallationIcon"
+    },
+    {
+        "name": "InstallToDriveIcon"
+    },
+    {
+        "name": "InternalInvestigationIcon"
+    },
+    {
+        "name": "InternetSharingIcon"
+    },
+    {
+        "name": "iOSAppStoreLogoIcon"
+    },
+    {
+        "name": "IOTIcon"
+    },
+    {
+        "name": "IRMForwardIcon"
+    },
+    {
+        "name": "IRMForwardMirroredIcon"
+    },
+    {
+        "name": "IRMReplyIcon"
+    },
+    {
+        "name": "IRMReplyMirroredIcon"
+    },
+    {
+        "name": "IssueSolidIcon"
+    },
+    {
+        "name": "IssueTrackingIcon"
+    },
+    {
+        "name": "IssueTrackingMirroredIcon"
+    },
+    {
+        "name": "ItalicIcon"
+    },
+    {
+        "name": "JavaLogoIcon"
+    },
+    {
+        "name": "JavaScriptLanguageIcon"
+    },
+    {
+        "name": "JenkinsLogoIcon"
+    },
+    {
+        "name": "JoinOnlineMeetingIcon"
+    },
+    {
+        "name": "JSIcon"
+    },
+    {
+        "name": "KeubernetesLogoIcon"
+    },
+    {
+        "name": "KeyboardClassicIcon"
+    },
+    {
+        "name": "KeyPhraseExtractionIcon"
+    },
+    {
+        "name": "KnowledgeArticleIcon"
+    },
+    {
+        "name": "LabelIcon"
+    },
+    {
+        "name": "LadybugSolidIcon"
+    },
+    {
+        "name": "LampIcon"
+    },
+    {
+        "name": "LandscapeOrientationIcon"
+    },
+    {
+        "name": "LaptopSecureIcon"
+    },
+    {
+        "name": "LaptopSelectedIcon"
+    },
+    {
+        "name": "LargeGridIcon"
+    },
+    {
+        "name": "LearningToolsIcon"
+    },
+    {
+        "name": "LeaveIcon"
+    },
+    {
+        "name": "LeaveUserIcon"
+    },
+    {
+        "name": "LibraryIcon"
+    },
+    {
+        "name": "LifesaverIcon"
+    },
+    {
+        "name": "LifesaverLockIcon"
+    },
+    {
+        "name": "LightbulbIcon"
+    },
+    {
+        "name": "LightIcon"
+    },
+    {
+        "name": "LightningBoltIcon"
+    },
+    {
+        "name": "LightningBoltSolidIcon"
+    },
+    {
+        "name": "LightWeightIcon"
+    },
+    {
+        "name": "LikeIcon"
+    },
+    {
+        "name": "LikeSolidIcon"
+    },
+    {
+        "name": "LineChartIcon"
+    },
+    {
+        "name": "LineIcon"
+    },
+    {
+        "name": "LineSpacingIcon"
+    },
+    {
+        "name": "LineStyleIcon"
+    },
+    {
+        "name": "LineThicknessIcon"
+    },
+    {
+        "name": "Link12Icon"
+    },
+    {
+        "name": "LinkedDatabaseIcon"
+    },
+    {
+        "name": "LinkIcon"
+    },
+    {
+        "name": "LinuxLogo32Icon"
+    },
+    {
+        "name": "ListIcon"
+    },
+    {
+        "name": "ListMirroredIcon"
+    },
+    {
+        "name": "LiveSiteIcon"
+    },
+    {
+        "name": "LocaleLanguageIcon"
+    },
+    {
+        "name": "LocationCircleIcon"
+    },
+    {
+        "name": "LocationDotIcon"
+    },
+    {
+        "name": "LocationFillIcon"
+    },
+    {
+        "name": "LocationIcon"
+    },
+    {
+        "name": "LocationOutlineIcon"
+    },
+    {
+        "name": "Lock12Icon"
+    },
+    {
+        "name": "LockIcon"
+    },
+    {
+        "name": "LockShareIcon"
+    },
+    {
+        "name": "LockSolidIcon"
+    },
+    {
+        "name": "LogRemoveIcon"
+    },
+    {
+        "name": "LookupEntitiesIcon"
+    },
+    {
+        "name": "LowerBrightnessIcon"
+    },
+    {
+        "name": "MachineLearningIcon"
+    },
+    {
+        "name": "MailAlertIcon"
+    },
+    {
+        "name": "MailAttachedIcon"
+    },
+    {
+        "name": "MailCheckIcon"
+    },
+    {
+        "name": "MailFillIcon"
+    },
+    {
+        "name": "MailForwardIcon"
+    },
+    {
+        "name": "MailForwardMirroredIcon"
+    },
+    {
+        "name": "MailIcon"
+    },
+    {
+        "name": "MailLowImportanceIcon"
+    },
+    {
+        "name": "MailOptionsIcon"
+    },
+    {
+        "name": "MailPauseIcon"
+    },
+    {
+        "name": "MailReminderIcon"
+    },
+    {
+        "name": "MailRepeatIcon"
+    },
+    {
+        "name": "MailReplyAllIcon"
+    },
+    {
+        "name": "MailReplyAllMirroredIcon"
+    },
+    {
+        "name": "MailReplyIcon"
+    },
+    {
+        "name": "MailReplyMirroredIcon"
+    },
+    {
+        "name": "MailScheduleIcon"
+    },
+    {
+        "name": "MailSolidIcon"
+    },
+    {
+        "name": "MailTentativeIcon"
+    },
+    {
+        "name": "MailTentativeMirroredIcon"
+    },
+    {
+        "name": "MailUndeliveredIcon"
+    },
+    {
+        "name": "ManagerSelfServiceIcon"
+    },
+    {
+        "name": "ManufacturingIcon"
+    },
+    {
+        "name": "MapDirectionsIcon"
+    },
+    {
+        "name": "MapLayersIcon"
+    },
+    {
+        "name": "MapPin12Icon"
+    },
+    {
+        "name": "MapPinIcon"
+    },
+    {
+        "name": "MapPinSolidIcon"
+    },
+    {
+        "name": "MarkAsProtectedIcon"
+    },
+    {
+        "name": "MarkDownLanguageIcon"
+    },
+    {
+        "name": "MarketDownIcon"
+    },
+    {
+        "name": "MarketIcon"
+    },
+    {
+        "name": "MasterDatabaseIcon"
+    },
+    {
+        "name": "MaximumValueIcon"
+    },
+    {
+        "name": "MedalIcon"
+    },
+    {
+        "name": "MedalSolidIcon"
+    },
+    {
+        "name": "MediaAddIcon"
+    },
+    {
+        "name": "MediaIcon"
+    },
+    {
+        "name": "MedicalIcon"
+    },
+    {
+        "name": "MegaphoneIcon"
+    },
+    {
+        "name": "MegaphoneSolidIcon"
+    },
+    {
+        "name": "MemoIcon"
+    },
+    {
+        "name": "MergeDuplicateIcon"
+    },
+    {
+        "name": "MergeIcon"
+    },
+    {
+        "name": "MessageFillIcon"
+    },
+    {
+        "name": "MessageFriendRequestIcon"
+    },
+    {
+        "name": "MessageIcon"
+    },
+    {
+        "name": "MicOff2Icon"
+    },
+    {
+        "name": "MicOffIcon"
+    },
+    {
+        "name": "MicrophoneIcon"
+    },
+    {
+        "name": "MiniContractIcon"
+    },
+    {
+        "name": "MiniContractMirroredIcon"
+    },
+    {
+        "name": "MiniExpandIcon"
+    },
+    {
+        "name": "MiniExpandMirroredIcon"
+    },
+    {
+        "name": "MiniLinkIcon"
+    },
+    {
+        "name": "MinimumValueIcon"
+    },
+    {
+        "name": "MiracastLogoLargeIcon"
+    },
+    {
+        "name": "MobileAngledIcon"
+    },
+    {
+        "name": "MobileReportIcon"
+    },
+    {
+        "name": "MobileSelectedIcon"
+    },
+    {
+        "name": "ModelingViewIcon"
+    },
+    {
+        "name": "MoneyIcon"
+    },
+    {
+        "name": "MoreIcon"
+    },
+    {
+        "name": "MoreSportsIcon"
+    },
+    {
+        "name": "MoreVerticalIcon"
+    },
+    {
+        "name": "MountainClimbingIcon"
+    },
+    {
+        "name": "MoveIcon"
+    },
+    {
+        "name": "MoversIcon"
+    },
+    {
+        "name": "MoveToFolderIcon"
+    },
+    {
+        "name": "MultiSelectIcon"
+    },
+    {
+        "name": "MultiSelectMirroredIcon"
+    },
+    {
+        "name": "MusicInCollectionFillIcon"
+    },
+    {
+        "name": "MusicInCollectionIcon"
+    },
+    {
+        "name": "MusicNoteIcon"
+    },
+    {
+        "name": "MuteChatIcon"
+    },
+    {
+        "name": "MyMoviesTVIcon"
+    },
+    {
+        "name": "MyNetworkIcon"
+    },
+    {
+        "name": "Nav2DMapViewIcon"
+    },
+    {
+        "name": "NavigateBackIcon"
+    },
+    {
+        "name": "NavigateBackMirroredIcon"
+    },
+    {
+        "name": "NavigateExternalInlineIcon"
+    },
+    {
+        "name": "NavigateForwardIcon"
+    },
+    {
+        "name": "NavigateForwardMirroredIcon"
+    },
+    {
+        "name": "NavigationFlipperIcon"
+    },
+    {
+        "name": "NetworkTowerIcon"
+    },
+    {
+        "name": "NewAnalyticsQueryIcon"
+    },
+    {
+        "name": "NewFolderIcon"
+    },
+    {
+        "name": "NewMailIcon"
+    },
+    {
+        "name": "NewsIcon"
+    },
+    {
+        "name": "NewsSearchIcon"
+    },
+    {
+        "name": "NewTeamProjectIcon"
+    },
+    {
+        "name": "NextIcon"
+    },
+    {
+        "name": "NonprofitLogo32Icon"
+    },
+    {
+        "name": "NormalWeightIcon"
+    },
+    {
+        "name": "NoteForwardIcon"
+    },
+    {
+        "name": "NotePinnedIcon"
+    },
+    {
+        "name": "NoteReplyIcon"
+    },
+    {
+        "name": "NotExecutedIcon"
+    },
+    {
+        "name": "NotImpactedSolidIcon"
+    },
+    {
+        "name": "NPMLogoIcon"
+    },
+    {
+        "name": "NumberedListIcon"
+    },
+    {
+        "name": "NumberedListMirroredIcon"
+    },
+    {
+        "name": "NumberedListNumberIcon"
+    },
+    {
+        "name": "NumberedListNumberMirroredIcon"
+    },
+    {
+        "name": "NumberedListTextIcon"
+    },
+    {
+        "name": "NumberedListTextMirroredIcon"
+    },
+    {
+        "name": "NumberFieldIcon"
+    },
+    {
+        "name": "NumberIcon"
+    },
+    {
+        "name": "NumberSequenceIcon"
+    },
+    {
+        "name": "NumberSymbolIcon"
+    },
+    {
+        "name": "OctagonIcon"
+    },
+    {
+        "name": "OEMIcon"
+    },
+    {
+        "name": "OfficeChatIcon"
+    },
+    {
+        "name": "OfficeChatSolidIcon"
+    },
+    {
+        "name": "OfflineStorageIcon"
+    },
+    {
+        "name": "OfflineStorageSolidIcon"
+    },
+    {
+        "name": "OnboardingIcon"
+    },
+    {
+        "name": "OpenEnrollmentIcon"
+    },
+    {
+        "name": "OpenFileIcon"
+    },
+    {
+        "name": "OpenFolderHorizontalIcon"
+    },
+    {
+        "name": "OpenInNewTabIcon"
+    },
+    {
+        "name": "OpenInNewWindowIcon"
+    },
+    {
+        "name": "OpenPaneIcon"
+    },
+    {
+        "name": "OpenPaneMirroredIcon"
+    },
+    {
+        "name": "OpenSourceIcon"
+    },
+    {
+        "name": "OpenWithIcon"
+    },
+    {
+        "name": "OpenWithMirroredIcon"
+    },
+    {
+        "name": "OrgIcon"
+    },
+    {
+        "name": "Orientation2Icon"
+    },
+    {
+        "name": "OrientationIcon"
+    },
+    {
+        "name": "OutOfOfficeIcon"
+    },
+    {
+        "name": "PackageIcon"
+    },
+    {
+        "name": "PackagesIcon"
+    },
+    {
+        "name": "PaddingBottomIcon"
+    },
+    {
+        "name": "PaddingIcon"
+    },
+    {
+        "name": "PaddingLeftIcon"
+    },
+    {
+        "name": "PaddingRightIcon"
+    },
+    {
+        "name": "PaddingTopIcon"
+    },
+    {
+        "name": "PageAddIcon"
+    },
+    {
+        "name": "PageArrowRightIcon"
+    },
+    {
+        "name": "PageCheckedinIcon"
+    },
+    {
+        "name": "PageCheckedOutIcon"
+    },
+    {
+        "name": "PageDataIcon"
+    },
+    {
+        "name": "PageEditIcon"
+    },
+    {
+        "name": "PageHeaderEditIcon"
+    },
+    {
+        "name": "PageHeaderIcon"
+    },
+    {
+        "name": "PageIcon"
+    },
+    {
+        "name": "PageLeftIcon"
+    },
+    {
+        "name": "PageLinkIcon"
+    },
+    {
+        "name": "PageListFilterIcon"
+    },
+    {
+        "name": "PageListIcon"
+    },
+    {
+        "name": "PageListMirroredSolidIcon"
+    },
+    {
+        "name": "PageListSolidIcon"
+    },
+    {
+        "name": "PageLockIcon"
+    },
+    {
+        "name": "PageRemoveIcon"
+    },
+    {
+        "name": "PageRightIcon"
+    },
+    {
+        "name": "PageSharedIcon"
+    },
+    {
+        "name": "PageSolidIcon"
+    },
+    {
+        "name": "PanoIndicatorIcon"
+    },
+    {
+        "name": "ParachuteIcon"
+    },
+    {
+        "name": "ParachuteSolidIcon"
+    },
+    {
+        "name": "ParameterIcon"
+    },
+    {
+        "name": "ParatureLogoIcon"
+    },
+    {
+        "name": "ParkingLocationIcon"
+    },
+    {
+        "name": "ParkingLocationMirroredIcon"
+    },
+    {
+        "name": "ParkingMirroredSolidIcon"
+    },
+    {
+        "name": "ParkingSolidIcon"
+    },
+    {
+        "name": "PartlyCloudyDayIcon"
+    },
+    {
+        "name": "PartlyCloudyNightIcon"
+    },
+    {
+        "name": "PartyLeaderIcon"
+    },
+    {
+        "name": "PassiveAuthenticationIcon"
+    },
+    {
+        "name": "PasswordFieldIcon"
+    },
+    {
+        "name": "PasteAsCodeIcon"
+    },
+    {
+        "name": "PasteAsTextIcon"
+    },
+    {
+        "name": "PasteIcon"
+    },
+    {
+        "name": "PauseIcon"
+    },
+    {
+        "name": "PaymentCardIcon"
+    },
+    {
+        "name": "PC1Icon"
+    },
+    {
+        "name": "PDFIcon"
+    },
+    {
+        "name": "PencilReplyIcon"
+    },
+    {
+        "name": "PentagonIcon"
+    },
+    {
+        "name": "PenWorkspaceIcon"
+    },
+    {
+        "name": "PeopleAddIcon"
+    },
+    {
+        "name": "PeopleAlertIcon"
+    },
+    {
+        "name": "PeopleBlockIcon"
+    },
+    {
+        "name": "PeopleIcon"
+    },
+    {
+        "name": "PeoplePauseIcon"
+    },
+    {
+        "name": "PeopleRepeatIcon"
+    },
+    {
+        "name": "PermissionsIcon"
+    },
+    {
+        "name": "PermissionsSolidIcon"
+    },
+    {
+        "name": "PersonalizeIcon"
+    },
+    {
+        "name": "PhishingIcon"
+    },
+    {
+        "name": "PhoneIcon"
+    },
+    {
+        "name": "Photo2AddIcon"
+    },
+    {
+        "name": "Photo2FillIcon"
+    },
+    {
+        "name": "Photo2Icon"
+    },
+    {
+        "name": "Photo2RemoveIcon"
+    },
+    {
+        "name": "PhotoCollectionIcon"
+    },
+    {
+        "name": "PhotoErrorIcon"
+    },
+    {
+        "name": "PhotoIcon"
+    },
+    {
+        "name": "PhotoVideoMediaIcon"
+    },
+    {
+        "name": "PictureCenterIcon"
+    },
+    {
+        "name": "PictureFillIcon"
+    },
+    {
+        "name": "PictureIcon"
+    },
+    {
+        "name": "PictureLibraryIcon"
+    },
+    {
+        "name": "PicturePositionIcon"
+    },
+    {
+        "name": "PictureStretchIcon"
+    },
+    {
+        "name": "PictureTileIcon"
+    },
+    {
+        "name": "PieDoubleIcon"
+    },
+    {
+        "name": "PieSingleIcon"
+    },
+    {
+        "name": "PieSingleSolidIcon"
+    },
+    {
+        "name": "PillIcon"
+    },
+    {
+        "name": "PinIcon"
+    },
+    {
+        "name": "PinnedFillIcon"
+    },
+    {
+        "name": "PinnedIcon"
+    },
+    {
+        "name": "PinnedSolidIcon"
+    },
+    {
+        "name": "PinSolid12Icon"
+    },
+    {
+        "name": "PinSolidOff12Icon"
+    },
+    {
+        "name": "PivotChartIcon"
+    },
+    {
+        "name": "PlainTextIcon"
+    },
+    {
+        "name": "PlanViewIcon"
+    },
+    {
+        "name": "PlaybackRate1xIcon"
+    },
+    {
+        "name": "PlayerSettingsIcon"
+    },
+    {
+        "name": "PlayIcon"
+    },
+    {
+        "name": "PlayResumeIcon"
+    },
+    {
+        "name": "PlayReverseIcon"
+    },
+    {
+        "name": "PlayReverseResumeIcon"
+    },
+    {
+        "name": "PlaySolidIcon"
+    },
+    {
+        "name": "PlugConnectedIcon"
+    },
+    {
+        "name": "PlugDisconnectedIcon"
+    },
+    {
+        "name": "PlugIcon"
+    },
+    {
+        "name": "PlugSolidIcon"
+    },
+    {
+        "name": "POIIcon"
+    },
+    {
+        "name": "POISolidIcon"
+    },
+    {
+        "name": "PollResultsIcon"
+    },
+    {
+        "name": "PostUpdateIcon"
+    },
+    {
+        "name": "PowerButtonIcon"
+    },
+    {
+        "name": "PrecipitationIcon"
+    },
+    {
+        "name": "PresenceChickletVideoIcon"
+    },
+    {
+        "name": "Presentation12Icon"
+    },
+    {
+        "name": "PresentationIcon"
+    },
+    {
+        "name": "PreviewIcon"
+    },
+    {
+        "name": "PreviewLinkIcon"
+    },
+    {
+        "name": "PreviousIcon"
+    },
+    {
+        "name": "PrimaryCalendarIcon"
+    },
+    {
+        "name": "PrintfaxPrinterFileIcon"
+    },
+    {
+        "name": "PrintIcon"
+    },
+    {
+        "name": "ProcessingCancelIcon"
+    },
+    {
+        "name": "ProcessingIcon"
+    },
+    {
+        "name": "ProcessingPauseIcon"
+    },
+    {
+        "name": "ProcessingRunIcon"
+    },
+    {
+        "name": "ProcessMetaTaskIcon"
+    },
+    {
+        "name": "ProductCatalogIcon"
+    },
+    {
+        "name": "ProductIcon"
+    },
+    {
+        "name": "ProductionFloorManagementIcon"
+    },
+    {
+        "name": "ProductListIcon"
+    },
+    {
+        "name": "ProductReleaseIcon"
+    },
+    {
+        "name": "ProductVariantIcon"
+    },
+    {
+        "name": "ProfileSearchIcon"
+    },
+    {
+        "name": "ProFootballIcon"
+    },
+    {
+        "name": "ProgressLoopInnerIcon"
+    },
+    {
+        "name": "ProgressLoopOuterIcon"
+    },
+    {
+        "name": "ProgressRingDotsIcon"
+    },
+    {
+        "name": "ProHockeyIcon"
+    },
+    {
+        "name": "PromotedDatabaseIcon"
+    },
+    {
+        "name": "ProtectedDocumentIcon"
+    },
+    {
+        "name": "ProtectRestrictIcon"
+    },
+    {
+        "name": "ProvisioningPackageIcon"
+    },
+    {
+        "name": "PublicCalendarIcon"
+    },
+    {
+        "name": "PublicContactCardIcon"
+    },
+    {
+        "name": "PublicContactCardMirroredIcon"
+    },
+    {
+        "name": "PublicEmailIcon"
+    },
+    {
+        "name": "PublicFolderIcon"
+    },
+    {
+        "name": "PublishContentIcon"
+    },
+    {
+        "name": "PublishCourseIcon"
+    },
+    {
+        "name": "PuzzleIcon"
+    },
+    {
+        "name": "PYIcon"
+    },
+    {
+        "name": "PythonLanguageIcon"
+    },
+    {
+        "name": "PythonLogoBlueIcon"
+    },
+    {
+        "name": "PythonLogoYellowIcon"
+    },
+    {
+        "name": "QandAIcon"
+    },
+    {
+        "name": "QandAMirrorIcon"
+    },
+    {
+        "name": "QRCodeIcon"
+    },
+    {
+        "name": "QuadColumnIcon"
+    },
+    {
+        "name": "QuantityIcon"
+    },
+    {
+        "name": "QuarterCircleIcon"
+    },
+    {
+        "name": "QueryListIcon"
+    },
+    {
+        "name": "QuestionnaireIcon"
+    },
+    {
+        "name": "QuestionnaireMirroredIcon"
+    },
+    {
+        "name": "QuickNoteIcon"
+    },
+    {
+        "name": "QuickNoteSolidIcon"
+    },
+    {
+        "name": "RadioBtnOffIcon"
+    },
+    {
+        "name": "RadioBtnOnIcon"
+    },
+    {
+        "name": "RadioBulletIcon"
+    },
+    {
+        "name": "RainIcon"
+    },
+    {
+        "name": "RainShowersDayIcon"
+    },
+    {
+        "name": "RainShowersNightIcon"
+    },
+    {
+        "name": "RainSnowIcon"
+    },
+    {
+        "name": "RawSourceIcon"
+    },
+    {
+        "name": "ReactLogoIcon"
+    },
+    {
+        "name": "ReadIcon"
+    },
+    {
+        "name": "ReadingModeIcon"
+    },
+    {
+        "name": "ReadingModeSolidIcon"
+    },
+    {
+        "name": "ReadOutLoudIcon"
+    },
+    {
+        "name": "RealEstateIcon"
+    },
+    {
+        "name": "ReceiptCheckIcon"
+    },
+    {
+        "name": "ReceiptForwardIcon"
+    },
+    {
+        "name": "ReceiptReplyIcon"
+    },
+    {
+        "name": "ReceiptTentativeIcon"
+    },
+    {
+        "name": "ReceiptTentativeMirroredIcon"
+    },
+    {
+        "name": "ReceiptUndeliveredIcon"
+    },
+    {
+        "name": "RecentIcon"
+    },
+    {
+        "name": "Record2Icon"
+    },
+    {
+        "name": "RecruitmentManagementIcon"
+    },
+    {
+        "name": "RectangleShapeIcon"
+    },
+    {
+        "name": "RectangleShapeSolidIcon"
+    },
+    {
+        "name": "RectangularClippingIcon"
+    },
+    {
+        "name": "RecurringEventIcon"
+    },
+    {
+        "name": "RecurringTaskIcon"
+    },
+    {
+        "name": "RedeployIcon"
+    },
+    {
+        "name": "RedEye12Icon"
+    },
+    {
+        "name": "RedEyeIcon"
+    },
+    {
+        "name": "RedoIcon"
+    },
+    {
+        "name": "RefreshIcon"
+    },
+    {
+        "name": "RegistryEditorIcon"
+    },
+    {
+        "name": "RelationshipIcon"
+    },
+    {
+        "name": "ReleaseDefinitionIcon"
+    },
+    {
+        "name": "ReleaseGateCheckIcon"
+    },
+    {
+        "name": "ReleaseGateErrorIcon"
+    },
+    {
+        "name": "ReleaseGateIcon"
+    },
+    {
+        "name": "ReminderGroupIcon"
+    },
+    {
+        "name": "ReminderPersonIcon"
+    },
+    {
+        "name": "ReminderTimeIcon"
+    },
+    {
+        "name": "RemoteIcon"
+    },
+    {
+        "name": "RemoveContentIcon"
+    },
+    {
+        "name": "RemoveEventIcon"
+    },
+    {
+        "name": "RemoveFilterIcon"
+    },
+    {
+        "name": "RemoveFromShoppingListIcon"
+    },
+    {
+        "name": "RemoveFromTrashIcon"
+    },
+    {
+        "name": "RemoveIcon"
+    },
+    {
+        "name": "RemoveLinkChainIcon"
+    },
+    {
+        "name": "RemoveLinkIcon"
+    },
+    {
+        "name": "RemoveLinkXIcon"
+    },
+    {
+        "name": "RemoveOccurrenceIcon"
+    },
+    {
+        "name": "RenameIcon"
+    },
+    {
+        "name": "RenewalCurrentIcon"
+    },
+    {
+        "name": "RenewalFutureIcon"
+    },
+    {
+        "name": "ReopenPagesIcon"
+    },
+    {
+        "name": "RepairIcon"
+    },
+    {
+        "name": "RepeatAllIcon"
+    },
+    {
+        "name": "RepeatHeaderRowsIcon"
+    },
+    {
+        "name": "RepeatOneIcon"
+    },
+    {
+        "name": "ReplyAllAltIcon"
+    },
+    {
+        "name": "ReplyAllIcon"
+    },
+    {
+        "name": "ReplyAllMirroredIcon"
+    },
+    {
+        "name": "ReplyAltIcon"
+    },
+    {
+        "name": "ReplyIcon"
+    },
+    {
+        "name": "ReplyMirroredIcon"
+    },
+    {
+        "name": "RepoIcon"
+    },
+    {
+        "name": "ReportAddIcon"
+    },
+    {
+        "name": "ReportDocumentIcon"
+    },
+    {
+        "name": "ReportHackedIcon"
+    },
+    {
+        "name": "ReportLibraryIcon"
+    },
+    {
+        "name": "ReportLibraryMirroredIcon"
+    },
+    {
+        "name": "ReportLockIcon"
+    },
+    {
+        "name": "ReportWarningIcon"
+    },
+    {
+        "name": "RepoSolidIcon"
+    },
+    {
+        "name": "RerunIcon"
+    },
+    {
+        "name": "ReservationOrdersIcon"
+    },
+    {
+        "name": "ResetDeviceIcon"
+    },
+    {
+        "name": "ResetIcon"
+    },
+    {
+        "name": "ResponsesMenuIcon"
+    },
+    {
+        "name": "ReturnKeyIcon"
+    },
+    {
+        "name": "ReturnToSessionIcon"
+    },
+    {
+        "name": "ReviewRequestMirroredSolidIcon"
+    },
+    {
+        "name": "ReviewRequestSolidIcon"
+    },
+    {
+        "name": "ReviewResponseSolidIcon"
+    },
+    {
+        "name": "ReviewSolidIcon"
+    },
+    {
+        "name": "RevToggleKeyIcon"
+    },
+    {
+        "name": "RewindEightXIcon"
+    },
+    {
+        "name": "RewindFourXIcon"
+    },
+    {
+        "name": "RewindIcon"
+    },
+    {
+        "name": "RewindOneFiveXIcon"
+    },
+    {
+        "name": "RewindOneXIcon"
+    },
+    {
+        "name": "RewindPointFiveXIcon"
+    },
+    {
+        "name": "RewindTwoXIcon"
+    },
+    {
+        "name": "RibbonIcon"
+    },
+    {
+        "name": "RibbonSolidIcon"
+    },
+    {
+        "name": "RIcon"
+    },
+    {
+        "name": "RightDoubleQuoteIcon"
+    },
+    {
+        "name": "RightTriangleIcon"
+    },
+    {
+        "name": "RingerIcon"
+    },
+    {
+        "name": "RingerOffIcon"
+    },
+    {
+        "name": "RingerRemoveIcon"
+    },
+    {
+        "name": "RingerSolidIcon"
+    },
+    {
+        "name": "RobotIcon"
+    },
+    {
+        "name": "RocketIcon"
+    },
+    {
+        "name": "RoomIcon"
+    },
+    {
+        "name": "Rotate90ClockwiseIcon"
+    },
+    {
+        "name": "Rotate90CounterClockwiseIcon"
+    },
+    {
+        "name": "RotateIcon"
+    },
+    {
+        "name": "RowsChildIcon"
+    },
+    {
+        "name": "RowsGroupIcon"
+    },
+    {
+        "name": "RubyGemsLogoIcon"
+    },
+    {
+        "name": "RugbyIcon"
+    },
+    {
+        "name": "RunningIcon"
+    },
+    {
+        "name": "RustLanguageLogoIcon"
+    },
+    {
+        "name": "SadIcon"
+    },
+    {
+        "name": "SadSolidIcon"
+    },
+    {
+        "name": "SaveAllIcon"
+    },
+    {
+        "name": "SaveAndCloseIcon"
+    },
+    {
+        "name": "SaveAsIcon"
+    },
+    {
+        "name": "SaveIcon"
+    },
+    {
+        "name": "SaveTemplateIcon"
+    },
+    {
+        "name": "SaveToMobileIcon"
+    },
+    {
+        "name": "SavingsIcon"
+    },
+    {
+        "name": "ScaleUpIcon"
+    },
+    {
+        "name": "ScaleVolumeIcon"
+    },
+    {
+        "name": "ScatterChartIcon"
+    },
+    {
+        "name": "ScheduleEventActionIcon"
+    },
+    {
+        "name": "ScopeTemplateIcon"
+    },
+    {
+        "name": "ScreenCastIcon"
+    },
+    {
+        "name": "ScreenTimeIcon"
+    },
+    {
+        "name": "ScriptIcon"
+    },
+    {
+        "name": "ScrollUpDownIcon"
+    },
+    {
+        "name": "SDCardIcon"
+    },
+    {
+        "name": "SearchAndAppsIcon"
+    },
+    {
+        "name": "SearchBookmarkIcon"
+    },
+    {
+        "name": "SearchCalendarIcon"
+    },
+    {
+        "name": "SearchDataIcon"
+    },
+    {
+        "name": "SearchIcon"
+    },
+    {
+        "name": "SearchIssueIcon"
+    },
+    {
+        "name": "SearchIssueMirroredIcon"
+    },
+    {
+        "name": "SearchNearbyIcon"
+    },
+    {
+        "name": "SecondaryNavIcon"
+    },
+    {
+        "name": "SectionIcon"
+    },
+    {
+        "name": "SectionsIcon"
+    },
+    {
+        "name": "SecurityGroupIcon"
+    },
+    {
+        "name": "SeeDoIcon"
+    },
+    {
+        "name": "SelectAllIcon"
+    },
+    {
+        "name": "SellIcon"
+    },
+    {
+        "name": "SemiboldWeightIcon"
+    },
+    {
+        "name": "SendIcon"
+    },
+    {
+        "name": "SendMirroredIcon"
+    },
+    {
+        "name": "SentimentAnalysisIcon"
+    },
+    {
+        "name": "SeparatorIcon"
+    },
+    {
+        "name": "ServerEnviromentIcon"
+    },
+    {
+        "name": "ServerIcon"
+    },
+    {
+        "name": "ServerProcessesIcon"
+    },
+    {
+        "name": "ServiceOffIcon"
+    },
+    {
+        "name": "SetActionIcon"
+    },
+    {
+        "name": "SettingsIcon"
+    },
+    {
+        "name": "ShakeDeviceIcon"
+    },
+    {
+        "name": "ShapesIcon"
+    },
+    {
+        "name": "ShapeSolidIcon"
+    },
+    {
+        "name": "SharedDatabaseIcon"
+    },
+    {
+        "name": "ShareIcon"
+    },
+    {
+        "name": "ShareiOSIcon"
+    },
+    {
+        "name": "ShirtIcon"
+    },
+    {
+        "name": "ShopIcon"
+    },
+    {
+        "name": "ShoppingCartIcon"
+    },
+    {
+        "name": "ShoppingCartSolidIcon"
+    },
+    {
+        "name": "ShopServerIcon"
+    },
+    {
+        "name": "ShowGridIcon"
+    },
+    {
+        "name": "ShowResultsIcon"
+    },
+    {
+        "name": "ShowResultsMirroredIcon"
+    },
+    {
+        "name": "ShowTimeAsIcon"
+    },
+    {
+        "name": "SidePanelIcon"
+    },
+    {
+        "name": "SidePanelMirroredIcon"
+    },
+    {
+        "name": "SigninIcon"
+    },
+    {
+        "name": "SignOutIcon"
+    },
+    {
+        "name": "SingleBookmarkIcon"
+    },
+    {
+        "name": "SingleBookmarkSolidIcon"
+    },
+    {
+        "name": "SingleColumnEditIcon"
+    },
+    {
+        "name": "SingleColumnIcon"
+    },
+    {
+        "name": "SIPMoveIcon"
+    },
+    {
+        "name": "SiteScanIcon"
+    },
+    {
+        "name": "SixPointStarIcon"
+    },
+    {
+        "name": "SizeLegacyIcon"
+    },
+    {
+        "name": "SkipBack10Icon"
+    },
+    {
+        "name": "SkipForward30Icon"
+    },
+    {
+        "name": "SkiResortsIcon"
+    },
+    {
+        "name": "SkypeArrowIcon"
+    },
+    {
+        "name": "SkypeCheckIcon"
+    },
+    {
+        "name": "SkypeClockIcon"
+    },
+    {
+        "name": "SkypeMinusIcon"
+    },
+    {
+        "name": "SliderHandleSizeIcon"
+    },
+    {
+        "name": "SliderIcon"
+    },
+    {
+        "name": "SliderThumbIcon"
+    },
+    {
+        "name": "SlideshowIcon"
+    },
+    {
+        "name": "SmartGlassRemoteIcon"
+    },
+    {
+        "name": "SnapToGridIcon"
+    },
+    {
+        "name": "SnoozeIcon"
+    },
+    {
+        "name": "SnowflakeIcon"
+    },
+    {
+        "name": "SnowIcon"
+    },
+    {
+        "name": "SnowShowerDayIcon"
+    },
+    {
+        "name": "SnowShowerNightIcon"
+    },
+    {
+        "name": "SoccerIcon"
+    },
+    {
+        "name": "SortDownIcon"
+    },
+    {
+        "name": "SortIcon"
+    },
+    {
+        "name": "SortLinesAscendingIcon"
+    },
+    {
+        "name": "SortLinesIcon"
+    },
+    {
+        "name": "SortUpIcon"
+    },
+    {
+        "name": "SourceIcon"
+    },
+    {
+        "name": "SpacerIcon"
+    },
+    {
+        "name": "SpeakersIcon"
+    },
+    {
+        "name": "SpecialEventIcon"
+    },
+    {
+        "name": "SpeedHighIcon"
+    },
+    {
+        "name": "SpellingIcon"
+    },
+    {
+        "name": "SplitIcon"
+    },
+    {
+        "name": "SplitObjectIcon"
+    },
+    {
+        "name": "SprintIcon"
+    },
+    {
+        "name": "SQLAnalyticsPoolIcon"
+    },
+    {
+        "name": "SquallsIcon"
+    },
+    {
+        "name": "SquareShapeIcon"
+    },
+    {
+        "name": "SquareShapeSolidIcon"
+    },
+    {
+        "name": "StackColumnChartIcon"
+    },
+    {
+        "name": "StackedBarChartIcon"
+    },
+    {
+        "name": "StackedColumnChart2FillIcon"
+    },
+    {
+        "name": "StackedColumnChart2Icon"
+    },
+    {
+        "name": "StackedLineChartIcon"
+    },
+    {
+        "name": "StackIcon"
+    },
+    {
+        "name": "StackIndicatorIcon"
+    },
+    {
+        "name": "StarburstIcon"
+    },
+    {
+        "name": "StarburstSolidIcon"
+    },
+    {
+        "name": "StatusCircleBlock2Icon"
+    },
+    {
+        "name": "StatusCircleBlockIcon"
+    },
+    {
+        "name": "StatusCircleCheckmarkIcon"
+    },
+    {
+        "name": "StatusCircleErrorXIcon"
+    },
+    {
+        "name": "StatusCircleExclamationIcon"
+    },
+    {
+        "name": "StatusCircleInfoIcon"
+    },
+    {
+        "name": "StatusCircleInnerIcon"
+    },
+    {
+        "name": "StatusCircleOuterIcon"
+    },
+    {
+        "name": "StatusCircleQuestionMarkIcon"
+    },
+    {
+        "name": "StatusCircleRingIcon"
+    },
+    {
+        "name": "StatusCircleSyncIcon"
+    },
+    {
+        "name": "StatusErrorFullIcon"
+    },
+    {
+        "name": "StatusTriangleExclamationIcon"
+    },
+    {
+        "name": "StatusTriangleIcon"
+    },
+    {
+        "name": "StatusTriangleInnerIcon"
+    },
+    {
+        "name": "StatusTriangleOuterIcon"
+    },
+    {
+        "name": "StepIcon"
+    },
+    {
+        "name": "StepInsertIcon"
+    },
+    {
+        "name": "StepSharedAddIcon"
+    },
+    {
+        "name": "StepSharedIcon"
+    },
+    {
+        "name": "StepSharedInsertIcon"
+    },
+    {
+        "name": "StockDownIcon"
+    },
+    {
+        "name": "StockUpIcon"
+    },
+    {
+        "name": "StopIcon"
+    },
+    {
+        "name": "StopSolidIcon"
+    },
+    {
+        "name": "StopwatchIcon"
+    },
+    {
+        "name": "StorageAcountIcon"
+    },
+    {
+        "name": "StorageOpticalIcon"
+    },
+    {
+        "name": "StoryboardIcon"
+    },
+    {
+        "name": "StreamingIcon"
+    },
+    {
+        "name": "StreamingOffIcon"
+    },
+    {
+        "name": "StreetIcon"
+    },
+    {
+        "name": "StreetsideSplitMinimizeIcon"
+    },
+    {
+        "name": "StrikethroughIcon"
+    },
+    {
+        "name": "SubscribeIcon"
+    },
+    {
+        "name": "SubscriptIcon"
+    },
+    {
+        "name": "SubstitutionsInIcon"
+    },
+    {
+        "name": "SuitcaseIcon"
+    },
+    {
+        "name": "SunAddIcon"
+    },
+    {
+        "name": "SunnyIcon"
+    },
+    {
+        "name": "SunQuestionMarkIcon"
+    },
+    {
+        "name": "SuperscriptIcon"
+    },
+    {
+        "name": "SurveyQuestionsIcon"
+    },
+    {
+        "name": "SVNLogoIcon"
+    },
+    {
+        "name": "SwiftLogoIcon"
+    },
+    {
+        "name": "SwitcherStartEndIcon"
+    },
+    {
+        "name": "SwitchIcon"
+    },
+    {
+        "name": "SwitchUserIcon"
+    },
+    {
+        "name": "SyncFolderIcon"
+    },
+    {
+        "name": "SyncIcon"
+    },
+    {
+        "name": "SyncOccurenceIcon"
+    },
+    {
+        "name": "SyncStatusIcon"
+    },
+    {
+        "name": "SyncStatusSolidIcon"
+    },
+    {
+        "name": "SyncToPCIcon"
+    },
+    {
+        "name": "SystemIcon"
+    },
+    {
+        "name": "TabCenterIcon"
+    },
+    {
+        "name": "TabIcon"
+    },
+    {
+        "name": "TableBrandedColumnIcon"
+    },
+    {
+        "name": "TableBrandedRowIcon"
+    },
+    {
+        "name": "TableComputedIcon"
+    },
+    {
+        "name": "TableFirstColumnIcon"
+    },
+    {
+        "name": "TableGroupIcon"
+    },
+    {
+        "name": "TableHeaderRowIcon"
+    },
+    {
+        "name": "TableIcon"
+    },
+    {
+        "name": "TableLastColumnIcon"
+    },
+    {
+        "name": "TableLinkIcon"
+    },
+    {
+        "name": "TabletIcon"
+    },
+    {
+        "name": "TabletModeIcon"
+    },
+    {
+        "name": "TableTotalRowIcon"
+    },
+    {
+        "name": "TabletSelectedIcon"
+    },
+    {
+        "name": "TabOneColumnIcon"
+    },
+    {
+        "name": "TabThreeColumnIcon"
+    },
+    {
+        "name": "TabTwoColumnIcon"
+    },
+    {
+        "name": "TagGroupIcon"
+    },
+    {
+        "name": "TagIcon"
+    },
+    {
+        "name": "TagSolidIcon"
+    },
+    {
+        "name": "TagUnknown12Icon"
+    },
+    {
+        "name": "TagUnknown12MirrorIcon"
+    },
+    {
+        "name": "TagUnknownIcon"
+    },
+    {
+        "name": "TagUnknownMirrorIcon"
+    },
+    {
+        "name": "TaskboardIcon"
+    },
+    {
+        "name": "TaskGroupIcon"
+    },
+    {
+        "name": "TaskGroupMirroredIcon"
+    },
+    {
+        "name": "TaskListIcon"
+    },
+    {
+        "name": "TaskManagerIcon"
+    },
+    {
+        "name": "TaskManagerMirroredIcon"
+    },
+    {
+        "name": "TaskSolidIcon"
+    },
+    {
+        "name": "TaxiIcon"
+    },
+    {
+        "name": "TeamFavoriteIcon"
+    },
+    {
+        "name": "TeamworkIcon"
+    },
+    {
+        "name": "TeethIcon"
+    },
+    {
+        "name": "TelemarketerIcon"
+    },
+    {
+        "name": "TemporaryUserIcon"
+    },
+    {
+        "name": "TennisIcon"
+    },
+    {
+        "name": "TestAutoSolidIcon"
+    },
+    {
+        "name": "TestBeakerIcon"
+    },
+    {
+        "name": "TestBeakerSolidIcon"
+    },
+    {
+        "name": "TestCaseIcon"
+    },
+    {
+        "name": "TestExploreSolidIcon"
+    },
+    {
+        "name": "TestImpactSolidIcon"
+    },
+    {
+        "name": "TestParameterIcon"
+    },
+    {
+        "name": "TestPlanIcon"
+    },
+    {
+        "name": "TestStepIcon"
+    },
+    {
+        "name": "TestSuiteIcon"
+    },
+    {
+        "name": "TestUserSolidIcon"
+    },
+    {
+        "name": "TextAlignBottomIcon"
+    },
+    {
+        "name": "TextAlignMiddleIcon"
+    },
+    {
+        "name": "TextAlignTopIcon"
+    },
+    {
+        "name": "TextBoxIcon"
+    },
+    {
+        "name": "TextCalloutIcon"
+    },
+    {
+        "name": "TextDocumentEditIcon"
+    },
+    {
+        "name": "TextDocumentIcon"
+    },
+    {
+        "name": "TextDocumentSettingsIcon"
+    },
+    {
+        "name": "TextDocumentSharedIcon"
+    },
+    {
+        "name": "TextFieldIcon"
+    },
+    {
+        "name": "TextOverflowIcon"
+    },
+    {
+        "name": "TextParagraphOptionIcon"
+    },
+    {
+        "name": "TextRecognitionIcon"
+    },
+    {
+        "name": "TextRotate270DegreesIcon"
+    },
+    {
+        "name": "TextRotate90DegreesIcon"
+    },
+    {
+        "name": "TextRotateHorizontalIcon"
+    },
+    {
+        "name": "TextRotationIcon"
+    },
+    {
+        "name": "ThisPCIcon"
+    },
+    {
+        "name": "ThreeQuarterCircleIcon"
+    },
+    {
+        "name": "ThumbnailViewIcon"
+    },
+    {
+        "name": "ThumbnailViewMirroredIcon"
+    },
+    {
+        "name": "ThunderstormsIcon"
+    },
+    {
+        "name": "TicketIcon"
+    },
+    {
+        "name": "Tiles2Icon"
+    },
+    {
+        "name": "TilesIcon"
+    },
+    {
+        "name": "TimeEntryIcon"
+    },
+    {
+        "name": "TimelineDeliveryIcon"
+    },
+    {
+        "name": "TimelineIcon"
+    },
+    {
+        "name": "TimelineMatrixViewIcon"
+    },
+    {
+        "name": "TimelineProgressIcon"
+    },
+    {
+        "name": "TimePickerIcon"
+    },
+    {
+        "name": "TimerIcon"
+    },
+    {
+        "name": "TimeSheetIcon"
+    },
+    {
+        "name": "ToggleBorderIcon"
+    },
+    {
+        "name": "ToggleFilledIcon"
+    },
+    {
+        "name": "ToggleLeftIcon"
+    },
+    {
+        "name": "ToggleRightIcon"
+    },
+    {
+        "name": "ToggleThumbIcon"
+    },
+    {
+        "name": "TollIcon"
+    },
+    {
+        "name": "ToolboxIcon"
+    },
+    {
+        "name": "TotalIcon"
+    },
+    {
+        "name": "TouchIcon"
+    },
+    {
+        "name": "TouchPointerIcon"
+    },
+    {
+        "name": "TrackersIcon"
+    },
+    {
+        "name": "TrackersMirroredIcon"
+    },
+    {
+        "name": "TrainIcon"
+    },
+    {
+        "name": "TrainSolidIcon"
+    },
+    {
+        "name": "TransferCallIcon"
+    },
+    {
+        "name": "TransitionEffectIcon"
+    },
+    {
+        "name": "TransitionIcon"
+    },
+    {
+        "name": "TransitionPopIcon"
+    },
+    {
+        "name": "TransitionPushIcon"
+    },
+    {
+        "name": "TranslateIcon"
+    },
+    {
+        "name": "Trending12Icon"
+    },
+    {
+        "name": "TriangleDown12Icon"
+    },
+    {
+        "name": "TriangleLeft12Icon"
+    },
+    {
+        "name": "TriangleRight12Icon"
+    },
+    {
+        "name": "TriangleShapeIcon"
+    },
+    {
+        "name": "TriangleShapeSolidIcon"
+    },
+    {
+        "name": "TriangleSolidDown12Icon"
+    },
+    {
+        "name": "TriangleSolidIcon"
+    },
+    {
+        "name": "TriangleSolidLeft12Icon"
+    },
+    {
+        "name": "TriangleSolidRight12Icon"
+    },
+    {
+        "name": "TriangleSolidUp12Icon"
+    },
+    {
+        "name": "TriangleUp12Icon"
+    },
+    {
+        "name": "TriggerApprovalIcon"
+    },
+    {
+        "name": "TriggerAutoIcon"
+    },
+    {
+        "name": "TriggerUserIcon"
+    },
+    {
+        "name": "TrimEndIcon"
+    },
+    {
+        "name": "TrimIcon"
+    },
+    {
+        "name": "TrimStartIcon"
+    },
+    {
+        "name": "TripleColumnEditIcon"
+    },
+    {
+        "name": "TripleColumnIcon"
+    },
+    {
+        "name": "TripleColumnWideIcon"
+    },
+    {
+        "name": "Trophy2Icon"
+    },
+    {
+        "name": "Trophy2SolidIcon"
+    },
+    {
+        "name": "TrophyIcon"
+    },
+    {
+        "name": "TurnRightIcon"
+    },
+    {
+        "name": "TVMonitorIcon"
+    },
+    {
+        "name": "TVMonitorSelectedIcon"
+    },
+    {
+        "name": "TwelvePointStarIcon"
+    },
+    {
+        "name": "TwitterLogoIcon"
+    },
+    {
+        "name": "UmbrellaIcon"
+    },
+    {
+        "name": "UnderlineIcon"
+    },
+    {
+        "name": "UndoIcon"
+    },
+    {
+        "name": "Uneditable2Icon"
+    },
+    {
+        "name": "Uneditable2MirroredIcon"
+    },
+    {
+        "name": "UneditableIcon"
+    },
+    {
+        "name": "UneditableMirroredIcon"
+    },
+    {
+        "name": "UneditableSolid12Icon"
+    },
+    {
+        "name": "UneditableSolidMirrored12Icon"
+    },
+    {
+        "name": "UnfavoriteIcon"
+    },
+    {
+        "name": "UngroupObjectIcon"
+    },
+    {
+        "name": "UnknownCallIcon"
+    },
+    {
+        "name": "UnknownIcon"
+    },
+    {
+        "name": "UnknownMirroredIcon"
+    },
+    {
+        "name": "UnknownMirroredSolidIcon"
+    },
+    {
+        "name": "UnknownSolidIcon"
+    },
+    {
+        "name": "UnlockIcon"
+    },
+    {
+        "name": "UnlockSolidIcon"
+    },
+    {
+        "name": "UnpinIcon"
+    },
+    {
+        "name": "UnpublishContentIcon"
+    },
+    {
+        "name": "UnSetColorIcon"
+    },
+    {
+        "name": "UnstackSelectedIcon"
+    },
+    {
+        "name": "UnsubscribeIcon"
+    },
+    {
+        "name": "UnsyncFolderIcon"
+    },
+    {
+        "name": "UnsyncOccurenceIcon"
+    },
+    {
+        "name": "UntagIcon"
+    },
+    {
+        "name": "UpdateRestoreIcon"
+    },
+    {
+        "name": "UpgradeAnalysisIcon"
+    },
+    {
+        "name": "UpIcon"
+    },
+    {
+        "name": "UploadIcon"
+    },
+    {
+        "name": "URLBlockIcon"
+    },
+    {
+        "name": "USBIcon"
+    },
+    {
+        "name": "UserEventIcon"
+    },
+    {
+        "name": "UserFollowedIcon"
+    },
+    {
+        "name": "UserGaugeIcon"
+    },
+    {
+        "name": "UserOptionalIcon"
+    },
+    {
+        "name": "UserPauseIcon"
+    },
+    {
+        "name": "UserRemoveIcon"
+    },
+    {
+        "name": "UserSyncIcon"
+    },
+    {
+        "name": "UserWarningIcon"
+    },
+    {
+        "name": "VacationIcon"
+    },
+    {
+        "name": "VaccinationIcon"
+    },
+    {
+        "name": "Variable2Icon"
+    },
+    {
+        "name": "VariableGroupIcon"
+    },
+    {
+        "name": "VariableIcon"
+    },
+    {
+        "name": "VBIcon"
+    },
+    {
+        "name": "VennDiagramIcon"
+    },
+    {
+        "name": "VerifiedBrandIcon"
+    },
+    {
+        "name": "VerifiedBrandSolidIcon"
+    },
+    {
+        "name": "VersionControlPushIcon"
+    },
+    {
+        "name": "VerticalDistributeCenterIcon"
+    },
+    {
+        "name": "Video360GenericIcon"
+    },
+    {
+        "name": "VideoIcon"
+    },
+    {
+        "name": "VideoLightOffIcon"
+    },
+    {
+        "name": "VideoOff2Icon"
+    },
+    {
+        "name": "VideoOffIcon"
+    },
+    {
+        "name": "VideoSearchIcon"
+    },
+    {
+        "name": "VideoSolidIcon"
+    },
+    {
+        "name": "ViewAll2Icon"
+    },
+    {
+        "name": "ViewAllIcon"
+    },
+    {
+        "name": "ViewDashboardIcon"
+    },
+    {
+        "name": "ViewIcon"
+    },
+    {
+        "name": "ViewInARIcon"
+    },
+    {
+        "name": "ViewListGroupIcon"
+    },
+    {
+        "name": "ViewListIcon"
+    },
+    {
+        "name": "ViewListTreeIcon"
+    },
+    {
+        "name": "ViewOriginalIcon"
+    },
+    {
+        "name": "VisuallyImpairedIcon"
+    },
+    {
+        "name": "VisualsFolderIcon"
+    },
+    {
+        "name": "VisualsStoreIcon"
+    },
+    {
+        "name": "VoicemailForwardIcon"
+    },
+    {
+        "name": "VoicemailIRMIcon"
+    },
+    {
+        "name": "VoicemailReplyIcon"
+    },
+    {
+        "name": "Volume0Icon"
+    },
+    {
+        "name": "Volume1Icon"
+    },
+    {
+        "name": "Volume2Icon"
+    },
+    {
+        "name": "Volume3Icon"
+    },
+    {
+        "name": "VolumeDisabledIcon"
+    },
+    {
+        "name": "WaffleIcon"
+    },
+    {
+        "name": "WaitlistConfirmIcon"
+    },
+    {
+        "name": "WaitlistConfirmMirroredIcon"
+    },
+    {
+        "name": "Warning12Icon"
+    },
+    {
+        "name": "WarningIcon"
+    },
+    {
+        "name": "WarningSolidIcon"
+    },
+    {
+        "name": "WavingHandIcon"
+    },
+    {
+        "name": "Webcam2Icon"
+    },
+    {
+        "name": "Webcam2OffIcon"
+    },
+    {
+        "name": "WebComponentsIcon"
+    },
+    {
+        "name": "WebEnvironmentIcon"
+    },
+    {
+        "name": "WebPublishIcon"
+    },
+    {
+        "name": "WebsiteIcon"
+    },
+    {
+        "name": "WebTemplateIcon"
+    },
+    {
+        "name": "WeightsIcon"
+    },
+    {
+        "name": "WheelchairIcon"
+    },
+    {
+        "name": "WifiEthernetIcon"
+    },
+    {
+        "name": "WifiWarning4Icon"
+    },
+    {
+        "name": "WindDirectionIcon"
+    },
+    {
+        "name": "WindowEditIcon"
+    },
+    {
+        "name": "WinesIcon"
+    },
+    {
+        "name": "WipePhoneIcon"
+    },
+    {
+        "name": "WorkFlowIcon"
+    },
+    {
+        "name": "WorkforceManagementIcon"
+    },
+    {
+        "name": "WorkIcon"
+    },
+    {
+        "name": "WorkItemAlertIcon"
+    },
+    {
+        "name": "WorkItemBarIcon"
+    },
+    {
+        "name": "WorkItemBarSolidIcon"
+    },
+    {
+        "name": "WorkItemBugIcon"
+    },
+    {
+        "name": "WorkItemIcon"
+    },
+    {
+        "name": "WorldClockIcon"
+    },
+    {
+        "name": "WorldIcon"
+    },
+    {
+        "name": "XamarinLogoIcon"
+    },
+    {
+        "name": "XboxControllerIcon"
+    },
+    {
+        "name": "ZipFolderIcon"
+    },
+    {
+        "name": "ZoomIcon"
+    },
+    {
+        "name": "ZoomInIcon"
+    },
+    {
+        "name": "ZoomOutIcon"
+    },
+    {
+        "name": "ZoomToFitIcon"
+    }
+]

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons, loadTheme } from '@fluentui/react'
+import { loadTheme, registerIcons } from '@fluentui/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './cards'
@@ -20,13 +20,27 @@ import './index.scss'
 import Router from './router'
 import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from './theme'
+import reactIcons from './react-icons-mdl2-list.json'
+import * as Icons from '@fluentui/react-icons-mdl2'
+
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },
   palette: defaultTheme.fluentPalette,
 })
 
-initializeIcons('fonts/icons/')
+
+type IconMappings = {
+  name: keyof typeof import("/Users/mmihok/Documents/h2o-ai/projects/wave/repo/wave/ui/node_modules/@fluentui/react-icons-mdl2/lib/index")
+}[]
+const iconsToRegister = (reactIcons as IconMappings).reduce(
+  (prev, current) => {
+    return { ...prev, ...{ [current.name.substring(0, current.name.length - 4)]: React.createElement(Icons[current.name] as React.FC, {}) } }
+  }, {})
+
+registerIcons({
+  icons: iconsToRegister
+})
 
 ReactDOM.render(<Router />, document.getElementById('root'))
 
