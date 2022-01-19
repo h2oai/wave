@@ -3512,7 +3512,7 @@ ui_layout <- function(
 #' @param items The components displayed in this dialog.
 #' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param closable True if the dialog should have a closing 'X' button at the top right corner.
-#' @param blocking True to disable close by clicking or tapping the area outside the dialog. A blocking Dialog also disables all other actions and commands on the page behind it. They should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking Dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False.
+#' @param blocking True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False.
 #' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
 #' @param name An identifying name for this component.
 #' @param events The events to capture on this dialog.
@@ -3557,7 +3557,7 @@ ui_dialog <- function(
 #' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param name An identifying name for this component.
 #' @param events The events to capture on this side panel.
-#' @param blocking True to disable close by clicking or tapping the area outside the panel. Defaults to False.
+#' @param blocking True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
 #' @return A SidePanel instance.
 #' @export
 ui_side_panel <- function(

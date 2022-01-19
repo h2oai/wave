@@ -36,7 +36,7 @@ export interface SidePanel {
   name?: Id
   /** The events to capture on this side panel. */
   events?: S[]
-  /** True to disable close by clicking or tapping the area outside the panel. Defaults to False. */
+  /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
   blocking?: B
 }
 
@@ -60,7 +60,7 @@ export default bond(() => {
           customWidth={width}
           onDismiss={onDismiss}
           overlayProps={blocking ? { style: { cursor: 'default' } } : undefined}
-          isBlocking={true}
+          isBlocking
           isLightDismiss={!blocking}>
           <XComponents items={items} />
         </Fluent.Panel >
