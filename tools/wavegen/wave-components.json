@@ -1220,7 +1220,7 @@
   "Wave Full NavItem": {
     "prefix": "w_full_nav_item",
     "body": [
-      "ui.nav_item(name='$1', label='$2', icon='$3', disabled=${4:False}),$0"
+      "ui.nav_item(name='$1', label='$2', icon='$3', disabled=${4:False}, title='$5'),$0"
     ],
     "description": "Create a full Wave NavItem."
   },
