@@ -611,10 +611,6 @@ const
         document.body.style.setProperty(`--saturatedPrimary`, `#${Fluent.hsv2hex(fluentPrimary.h, fluentPrimary.s > 50 ? fluentPrimary.s - 30 : fluentPrimary.s + 30, fluentPrimary.v)}`)
 
         Object.keys(spectrum).forEach(spectrumColor => {
-          // HSV
-          // const { h, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
-          // document.body.style.setProperty(`--${spectrumColor}`, `#${Fluent.hsv2hex(h, fluentPrimary.s, v)}`)
-          // HSL
           const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
           const spectrumHsl = Fluent.hsv2hsl(h, s, v)
           const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
