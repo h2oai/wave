@@ -3031,7 +3031,7 @@ def dialog(
         items: The components displayed in this dialog.
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         closable: True if the dialog should have a closing 'X' button at the top right corner.
-        blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to False.
+        blocking: True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False.
         primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
         name: An identifying name for this component.
         events: The events to capture on this dialog.
@@ -3056,6 +3056,7 @@ def side_panel(
         width: Optional[str] = None,
         name: Optional[str] = None,
         events: Optional[List[str]] = None,
+        blocking: Optional[bool] = None,
 ) -> SidePanel:
     """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
     and requires people to interact with it. It’s primarily used for confirming actions,
@@ -3067,6 +3068,7 @@ def side_panel(
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         name: An identifying name for this component.
         events: The events to capture on this side panel.
+        blocking: True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
     Returns:
         A `h2o_wave.types.SidePanel` instance.
     """
@@ -3076,6 +3078,7 @@ def side_panel(
         width,
         name,
         events,
+        blocking,
     )
 
 

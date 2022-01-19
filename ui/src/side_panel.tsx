@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Box, box, Id, S } from 'h2o-wave'
+import { B, Box, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'
@@ -36,22 +36,32 @@ export interface SidePanel {
   name?: Id
   /** The events to capture on this side panel. */
   events?: S[]
+  /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
+  blocking?: B
 }
 
 export default bond(() => {
   const
     onDismiss = () => {
       const
-        { name, events } = sidePanelB() || {},
+        { blocking, name, events } = sidePanelB() || {},
         ev = events?.find(e => e === 'dismissed')
 
-      if (ev && name) wave.emit(name, ev, true)
+      if (!blocking && ev && name) wave.emit(name, ev, true)
       sidePanelB(null)
     },
     render = () => {
-      const { title, width = '600px', items = [] } = sidePanelB() || {}
+      const { title, width = '600px', items = [], blocking = false } = sidePanelB() || {}
       return (
-        <Fluent.Panel isOpen={!!sidePanelB()} headerText={title} type={Fluent.PanelType.custom} customWidth={width} onDismiss={onDismiss}>
+        <Fluent.Panel
+          isOpen={!!sidePanelB()}
+          headerText={title}
+          type={Fluent.PanelType.custom}
+          customWidth={width}
+          onDismiss={onDismiss}
+          overlayProps={blocking ? { style: { cursor: 'default' } } : undefined}
+          isBlocking
+          isLightDismiss={!blocking}>
           <XComponents items={items} />
         </Fluent.Panel >
       )
