@@ -429,6 +429,7 @@ ui_progress <- function(
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
 #' @param text The text displayed on the message bar.
 #' @param name An identifying name for this component.
+#' @param buttons Specify one or more action buttons.
 #' @param width The width of the message bar, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @return A MessageBar instance.
@@ -437,17 +438,20 @@ ui_message_bar <- function(
   type = NULL,
   text = NULL,
   name = NULL,
+  buttons = NULL,
   width = NULL,
   visible = NULL) {
   # TODO Validate type
   .guard_scalar("text", "character", text)
   .guard_scalar("name", "character", name)
+  .guard_vector("buttons", "WaveComponent", buttons)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(message_bar=list(
     type=type,
     text=text,
     name=name,
+    buttons=buttons,
     width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -3425,6 +3429,45 @@ ui_markup_card <- function(
   return(.o)
 }
 
+#' Create a notification bar.
+#' 
+#' A notification bar is an area at the edge of a primary view that displays relevant status information.
+#' You can use a notification bar to tell the user about a result of an action, e.g. "Data has been successfully saved".
+#'
+#' @param text The text displayed on the notification bar.
+#' @param type The icon and color of the notification bar. Defaults to 'info'.
+#'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType.
+#' @param timeout When should the notification bar disappear in seconds. Defaults to 5.
+#' @param buttons Specify one or more action buttons.
+#' @param position Specify the location of notification. Defaults to 'top-right'.
+#'   One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.
+#' @param events The events to capture on this notification bar.
+#' @return A NotificationBar instance.
+#' @export
+ui_notification_bar <- function(
+  text,
+  type = NULL,
+  timeout = NULL,
+  buttons = NULL,
+  position = NULL,
+  events = NULL) {
+  .guard_scalar("text", "character", text)
+  # TODO Validate type
+  .guard_scalar("timeout", "numeric", timeout)
+  .guard_vector("buttons", "WaveComponent", buttons)
+  # TODO Validate position
+  .guard_vector("events", "character", events)
+  .o <- list(
+    text=text,
+    type=type,
+    timeout=timeout,
+    buttons=buttons,
+    position=position,
+    events=events)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveNotificationBar"))
+  return(.o)
+}
+
 #' Represents an zone within a page layout.
 #'
 #' @param name An identifying name for this zone.
@@ -3752,6 +3795,7 @@ ui_stylesheet <- function(
 #' @param title The title of the page.
 #' @param refresh Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
 #' @param notification Display a desktop notification.
+#' @param notification_bar Display an in-app notification bar.
 #' @param redirect Redirect the page to a new URL.
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
 #'   Not supported in Safari.
@@ -3773,6 +3817,7 @@ ui_meta_card <- function(
   title = NULL,
   refresh = NULL,
   notification = NULL,
+  notification_bar = NULL,
   redirect = NULL,
   icon = NULL,
   layouts = NULL,
@@ -3790,6 +3835,7 @@ ui_meta_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("refresh", "numeric", refresh)
   .guard_scalar("notification", "character", notification)
+  .guard_scalar("notification_bar", "WaveNotificationBar", notification_bar)
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("icon", "character", icon)
   .guard_vector("layouts", "WaveLayout", layouts)
@@ -3808,6 +3854,7 @@ ui_meta_card <- function(
     title=title,
     refresh=refresh,
     notification=notification,
+    notification_bar=notification_bar,
     redirect=redirect,
     icon=icon,
     layouts=layouts,

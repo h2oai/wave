@@ -369,6 +369,12 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_notification_bar" value="ui.notification_bar(text='$text$'),$END$" description="Create a minimal Wave NotificationBar." toReformat="true" toShortenFQNames="true">
+    <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_persona" value="ui.persona(title='$title$'),$END$" description="Create a minimal Wave Persona." toReformat="true" toShortenFQNames="true">
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1450,12 +1456,13 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_message_bar" value="ui.message_bar(type='$type$',text='$text$',name='$name$',width='$width$',visible=$visible$),$END$" description="Create Wave MessageBar with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_message_bar" value="ui.message_bar(type='$type$',text='$text$',name='$name$',width='$width$',visible=$visible$,buttons=[&#10;	$buttons$	&#10;]),$END$" description="Create Wave MessageBar with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="&quot;100%&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="buttons" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -1511,11 +1518,12 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_meta_card" value="ui.meta_card(box='$box$',title='$title$',refresh=$refresh$,notification='$notification$',redirect='$redirect$',icon='$icon$',dialog=$dialog$,side_panel=$side_panel$,theme='$theme$',tracker=$tracker$,script=$script$,stylesheet=$stylesheet$,layouts=[&#10;	$layouts$	&#10;],themes=[&#10;	$themes$	&#10;],scripts=[&#10;	$scripts$	&#10;],stylesheets=[&#10;	$stylesheets$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MetaCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_meta_card" value="ui.meta_card(box='$box$',title='$title$',refresh=$refresh$,notification='$notification$',notification_bar=$notification_bar$,redirect='$redirect$',icon='$icon$',dialog=$dialog$,side_panel=$side_panel$,theme='$theme$',tracker=$tracker$,script=$script$,stylesheet=$stylesheet$,layouts=[&#10;	$layouts$	&#10;],themes=[&#10;	$themes$	&#10;],scripts=[&#10;	$scripts$	&#10;],stylesheets=[&#10;	$stylesheets$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MetaCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="refresh" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="notification" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="notification_bar" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="redirect" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="dialog" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1564,6 +1572,17 @@
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="secondary_items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_notification_bar" value="ui.notification_bar(text='$text$',type='$type$',timeout=$timeout$,position='$position$',buttons=[&#10;	$buttons$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave NotificationBar with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="&quot;info&quot;" alwaysStopAt="true"/>
+    <variable name="timeout" expression="" defaultValue="&quot;5&quot;" alwaysStopAt="true"/>
+    <variable name="position" expression="" defaultValue="&quot;top-right&quot;" alwaysStopAt="true"/>
+    <variable name="buttons" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
