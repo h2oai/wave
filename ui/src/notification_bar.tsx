@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Box, box, S, U } from 'h2o-wave'
 import React from 'react'
 import { Component } from './form'
+import { grid } from './layout'
 import { MessageBar } from "./message_bar"
 import { bond } from './ui'
 
@@ -40,7 +41,7 @@ export interface NotificationBar {
   events?: S[]
 }
 
-const gap = 15
+const gap = grid.gap
 
 export const
   notificationBarB: Box<NotificationBar | null> = box(null),
