@@ -20,7 +20,6 @@ import './index.scss'
 import Router from './router'
 import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from './theme'
-import reactIcons from './react-icons-mdl2-list.json'
 import * as Icons from '@fluentui/react-icons-mdl2'
 
 
@@ -29,14 +28,16 @@ loadTheme({
   palette: defaultTheme.fluentPalette,
 })
 
+type IconMapping = keyof typeof Icons
 
-type IconMappings = {
-  name: keyof typeof import("/Users/mmihok/Documents/h2o-ai/projects/wave/repo/wave/ui/node_modules/@fluentui/react-icons-mdl2/lib/index")
-}[]
-const iconsToRegister = (reactIcons as IconMappings).reduce(
-  (prev, current) => {
-    return { ...prev, ...{ [current.name.substring(0, current.name.length - 4)]: React.createElement(Icons[current.name] as React.FC, {}) } }
-  }, {})
+const reactIcons = Object.keys(Icons).filter((icon) => {
+  return Icons[icon as IconMapping].name === 'Component'
+})
+
+const iconsToRegister = (reactIcons as IconMapping[]).reduce(
+  (acc: { [key: string]: React.FunctionComponentElement<React.FC> }, cur) => (
+    acc[cur.substring(0, cur.length - 4)] = React.createElement<React.FC>(Icons[cur] as React.FC), acc
+  ), {})
 
 registerIcons({
   icons: iconsToRegister
