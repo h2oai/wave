@@ -119,7 +119,7 @@ type WaveColumn = Fluent.IColumn & {
 
 type DataTable = {
   model: Table
-  onFilterChange: (filterKey: S, filterVal: S, setContextualMenuFilters: (checked: boolean) => void) => (e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => void
+  onFilterChange: (filterKey: S, filterVal: S, checked?: boolean) => void
   sort: (col: WaveColumn) => void,
   reset: () => void
   filteredItems: any[]
@@ -133,7 +133,7 @@ type DataTable = {
 }
 
 type ContextualMenuState = {
-  onFilterChange: (filterKey: S, filterVal: S, setContextualMenuFilters: (checked: boolean) => void) => (e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => void
+  onFilterChange: (filterKey: S, filterVal: S, checked?: boolean) => void
   col: WaveColumn
   listProps: Fluent.IContextualMenuListProps
   selectedFiltersRef: React.MutableRefObject<Dict<S[]> | null>
@@ -228,15 +228,16 @@ const
         : listProps.items.map(i => ({ ...i, checked: isFilterChecked(i.data, i.key) }))
       ),
       selectAll = () => {
-        setFilters(listProps.items.map(i => ({ ...i, checked: true })))
-        setFiltersInBulk(col.key, filters.map(f => f.text || ''))
+        setFilters(filters.map(i => ({ ...i, checked: true })))
+        setFiltersInBulk(col.key, filters.map(f => f.key))
       },
       deselectAll = () => {
-        setFilters(listProps.items.map(i => ({ ...i, checked: false })))
+        setFilters(filters.map(i => ({ ...i, checked: false })))
         setFiltersInBulk(col.key, [])
       },
-      createSetFilters = (key: S) => (checked: boolean) => {
+      getOnFilterChangeHandler = (data: S, key: S) => (_ev?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: boolean) => {
         setFilters(filters => filters.map(f => f.key === key ? ({ ...f, checked }) : f))
+        onFilterChange(data, key, checked)
       }
 
     return (
@@ -251,7 +252,7 @@ const
               key={key}
               label={key}
               checked={checked}
-              onChange={onFilterChange(data || '', key || '', createSetFilters(key))}
+              onChange={getOnFilterChangeHandler(data, key)}
               styles={{ root: { marginBottom: 5 } }}
             />
           )
@@ -578,9 +579,8 @@ export const
         setGroupByKey(option.key as S)
         initGroups()
       },
-      onFilterChange = React.useCallback((filterKey: S, filterVal: S, setContextualMenuFilters) => (_e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
+      onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked) => {
         setSelectedFilters(selectedFilters => {
-          setContextualMenuFilters(checked)
           let filters: Dict<S[]> | null = null
           filters = selectedFilters || {}
           if (checked) {
@@ -642,18 +642,19 @@ export const
       }, []),
       setFiltersInBulk = React.useCallback((colKey: S, filters: S[]) => {
         setSelectedFilters(selectedFilters => {
-          return {
+          const newFilters = {
             ...selectedFilters,
             [colKey]: filters
           }
-        }),
-        filter(selectedFilters)
-        search()
-        setGroups(groups => {
-          if (groups) initGroups()
-          return groups
+          filter(newFilters)
+          search()
+          setGroups(groups => {
+            if (groups) initGroups()
+            return groups
+          })
+          return newFilters
         })
-      }, [filter, search, selectedFilters, initGroups])
+      }, [filter, search, initGroups])
 
     React.useEffect(() => {
       wave.args[m.name] = []
