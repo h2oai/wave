@@ -35,9 +35,10 @@ const reactIcons = Object.keys(Icons).filter((icon) => {
 })
 
 const iconsToRegister = (reactIcons as IconMapping[]).reduce(
-  (acc: { [key: string]: React.FunctionComponentElement<React.FC> }, cur) => (
-    acc[cur.substring(0, cur.length - 4)] = React.createElement<React.FC>(Icons[cur] as React.FC), acc
-  ), {})
+  (acc: { [key: string]: React.FunctionComponentElement<React.FC> }, cur) => {
+    acc[cur.substring(0, cur.length - 4)] = React.createElement<React.FC>(Icons[cur] as React.FC)
+    return acc
+  }, {})
 
 registerIcons({
   icons: iconsToRegister
