@@ -119,7 +119,7 @@ type WaveColumn = Fluent.IColumn & {
 
 type DataTable = {
   model: Table
-  onFilterChange: (filterKey: S, filterVal: S, checked?: boolean) => void
+  onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
   sort: (col: WaveColumn) => void,
   reset: () => void
   filteredItems: any[]
@@ -132,8 +132,8 @@ type DataTable = {
   setFiltersInBulk: (colKey: S, filters: S[]) => void
 }
 
-type ContextualMenuState = {
-  onFilterChange: (filterKey: S, filterVal: S, checked?: boolean) => void
+type ContextualMenuProps = {
+  onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
   col: WaveColumn
   listProps: Fluent.IContextualMenuListProps
   selectedFiltersRef: React.MutableRefObject<Dict<S[]> | null>
@@ -217,26 +217,26 @@ const
     const line = JSON.stringify(row)
     return line.substr(1, line.length - 2)
   }).join('\n'),
-  ContextualMenu = ({ onFilterChange, col, listProps, selectedFiltersRef, setFiltersInBulk }: ContextualMenuState) => {
+  ContextualMenu = ({ onFilterChange, col, listProps, selectedFiltersRef, setFiltersInBulk }: ContextualMenuProps) => {
     const
       isFilterChecked = (data: S, key: S) => !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(key),
-      [filters, setFilters] = React.useState(col.cellType?.tag
+      [menuFilters, setMenuFilters] = React.useState(col.cellType?.tag
         ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
-          key.split(',').forEach(key => _filters.set(key, { key, text, data }))
+          key.split(',').forEach(key => _filters.set(key, { key, text, data, checked: isFilterChecked(data, key) }))
           return _filters
         }, new Map<S, Fluent.IContextualMenuItem>()).values())
         : listProps.items.map(i => ({ ...i, checked: isFilterChecked(i.data, i.key) }))
       ),
       selectAll = () => {
-        setFilters(filters.map(i => ({ ...i, checked: true })))
-        setFiltersInBulk(col.key, filters.map(f => f.key))
+        setMenuFilters(menuFilters.map(i => ({ ...i, checked: true })))
+        setFiltersInBulk(col.key, menuFilters.map(f => f.key))
       },
       deselectAll = () => {
-        setFilters(filters.map(i => ({ ...i, checked: false })))
+        setMenuFilters(menuFilters.map(i => ({ ...i, checked: false })))
         setFiltersInBulk(col.key, [])
       },
-      getOnFilterChangeHandler = (data: S, key: S) => (_ev?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: boolean) => {
-        setFilters(filters => filters.map(f => f.key === key ? ({ ...f, checked }) : f))
+      getOnFilterChangeHandler = (data: S, key: S) => (_ev?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
+        setMenuFilters(filters => filters.map(f => f.key === key ? ({ ...f, checked }) : f))
         onFilterChange(data, key, checked)
       }
 
@@ -247,7 +247,7 @@ const
           <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
         </Fluent.Text>
         {
-          filters.map(({ key, data, checked }) => (
+          menuFilters.map(({ key, data, checked }) => (
             <Fluent.Checkbox
               key={key}
               label={key}
@@ -579,7 +579,7 @@ export const
         setGroupByKey(option.key as S)
         initGroups()
       },
-      onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked) => {
+      onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
           let filters: Dict<S[]> | null = null
           filters = selectedFilters || {}
