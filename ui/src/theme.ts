@@ -608,7 +608,8 @@ const
       // Handle saturation/desaturation.
       const fluentPrimary = Fluent.getColorFromString(fluentPalette.themePrimary)
       if (fluentPrimary) {
-        document.body.style.setProperty(`--saturatedPrimary`, `#${Fluent.hsv2hex(fluentPrimary.h, fluentPrimary.s > 50 ? fluentPrimary.s - 30 : fluentPrimary.s + 30, fluentPrimary.v)}`)
+        const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
+        document.body.style.setProperty(`--saturatedPrimary`, `hsl(${primaryHsl.h}, ${primaryHsl.s > 50 ? primaryHsl.s - 30 : primaryHsl.s + 30}%, ${primaryHsl.l}%)`)
 
         Object.keys(spectrum).forEach(spectrumColor => {
           const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
