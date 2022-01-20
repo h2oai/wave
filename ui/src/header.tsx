@@ -127,7 +127,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
     render = () => {
       const { title, subtitle, icon, icon_color, nav, items, image, secondary_items, color = 'primary' } = state
       return (
-        <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))}>
+        <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))} style={{ background: color === 'primary' ? cssVar('$saturatedPrimary') : undefined }}>
           <div className={css.inline}>
             {nav && <Fluent.FontIcon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
