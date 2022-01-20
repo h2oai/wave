@@ -13,15 +13,20 @@
 # limitations under the License.
 
 import time
+import tarfile
+import shutil
 import sys
 import socket
 from contextlib import closing
 import subprocess
+from pathlib import Path
 import platform
 import uvicorn
 import click
 import os
+from urllib import request
 from urllib.parse import urlparse
+from .version import __version__
 
 _localhost = '127.0.0.1'
 
@@ -108,3 +113,55 @@ def run(app: str, no_reload: bool):
 @main.command()
 def ide():
     uvicorn.run('h2o_wave.ide:ide', host=_localhost, port=10100)
+
+
+@main.command()
+def fetch():
+    """Download examples and related files to ./wave.
+
+    \b
+    $ wave fetch
+    """
+    print('Fetching examples and related files. Please wait...')
+    tar_name = f'wave-{__version__}-linux-amd64'
+    tar_file = f'{tar_name}.tar.gz'
+    tar_url = f'https://github.com/h2oai/wave/releases/download/v{__version__}/{tar_file}'
+    tar_path = Path(tar_file)
+
+    if not tar_path.is_file():
+        print(f'Downloading {tar_url}')
+        request.urlretrieve(tar_url, tar_file)
+        tar_path = Path(tar_file)
+        if not tar_path.is_file():  # double-check
+            raise click.ClickException(f'Failed fetching {tar_file}.')
+    else:
+        print(f'{tar_file} already exists. Skipping download.')
+
+    print(f'Extracting...')
+    with tarfile.open(tar_file) as tar:
+        tar.extractall()
+
+    tar_dir = Path(tar_name)
+    if not tar_dir.is_dir():
+        raise click.ClickException(f'Failed extracting archive.')
+
+    more_dir = 'wave'
+    more_path = Path(more_dir)
+    if more_path.exists() and more_path.is_dir():
+        shutil.rmtree(more_dir)
+    tar_dir.rename(more_dir)
+
+    resolved_path = more_path.resolve()
+
+    print('')
+    print(f'All additional files downloaded and extracted successfully!')
+
+    everything = (
+        ('Examples and tour.............', 'examples'),
+        ('Demos and layout samples......', 'demo'),
+        ('Automated test harness........', 'test'),
+        ('Wave daemon for deployments...', ''),
+    )
+
+    for label, location in everything:
+        print(f"{label} {resolved_path.joinpath(location)}")
