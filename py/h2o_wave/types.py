@@ -7463,13 +7463,13 @@ class NavItem:
             label: str,
             icon: Optional[str] = None,
             disabled: Optional[bool] = None,
-            title: Optional[str] = None,
+            tooltip: Optional[str] = None,
     ):
         _guard_scalar('NavItem.name', name, (str,), True, False, False)
         _guard_scalar('NavItem.label', label, (str,), False, False, False)
         _guard_scalar('NavItem.icon', icon, (str,), False, True, False)
         _guard_scalar('NavItem.disabled', disabled, (bool,), False, True, False)
-        _guard_scalar('NavItem.title', title, (str,), False, True, False)
+        _guard_scalar('NavItem.tooltip', tooltip, (str,), False, True, False)
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
@@ -7478,8 +7478,8 @@ class NavItem:
         """An optional icon to display next to the label."""
         self.disabled = disabled
         """True if this item should be disabled."""
-        self.title = title
-        """The item title, typically displayed as a tooltip."""
+        self.tooltip = tooltip
+        """An optional tooltip message displayed when a user hovers over this item."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7487,13 +7487,13 @@ class NavItem:
         _guard_scalar('NavItem.label', self.label, (str,), False, False, False)
         _guard_scalar('NavItem.icon', self.icon, (str,), False, True, False)
         _guard_scalar('NavItem.disabled', self.disabled, (bool,), False, True, False)
-        _guard_scalar('NavItem.title', self.title, (str,), False, True, False)
+        _guard_scalar('NavItem.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
             icon=self.icon,
             disabled=self.disabled,
-            title=self.title,
+            tooltip=self.tooltip,
         )
 
     @staticmethod
@@ -7507,19 +7507,19 @@ class NavItem:
         _guard_scalar('NavItem.icon', __d_icon, (str,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('NavItem.disabled', __d_disabled, (bool,), False, True, False)
-        __d_title: Any = __d.get('title')
-        _guard_scalar('NavItem.title', __d_title, (str,), False, True, False)
+        __d_tooltip: Any = __d.get('tooltip')
+        _guard_scalar('NavItem.tooltip', __d_tooltip, (str,), False, True, False)
         name: str = __d_name
         label: str = __d_label
         icon: Optional[str] = __d_icon
         disabled: Optional[bool] = __d_disabled
-        title: Optional[str] = __d_title
+        tooltip: Optional[str] = __d_tooltip
         return NavItem(
             name,
             label,
             icon,
             disabled,
-            title,
+            tooltip,
         )
 
 

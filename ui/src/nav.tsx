@@ -32,8 +32,8 @@ export interface NavItem {
   icon?: S
   /** True if this item should be disabled. */
   disabled?: B
-  /** The item title, typically displayed as a tooltip. */
-  title?: S
+  /** An optional tooltip message displayed when a user hovers over this item. */
+  tooltip?: S
 }
 
 /** Create a group of navigation items. */
@@ -117,12 +117,12 @@ export const
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled, title }): Fluent.INavLink => ({
+      links: g.items.map(({ name, label, icon, disabled, tooltip }): Fluent.INavLink => ({
         key: name,
         name: label,
         icon,
         disabled,
-        title,
+        title: tooltip,
         style: disabled ? { opacity: 0.7 } : undefined,
         url: '',
         onClick: () => {
@@ -142,7 +142,7 @@ export const
     const render = () => {
       const { title, subtitle, icon, icon_color = '$text', image, persona, secondary_items, color = 'card' } = state
       return (
-        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: color === 'primary' ? cssVar('$saturatedPrimary') : undefined }}>
+        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)}>
           <div className={css.header}>
             {(image || icon) && (
               <div className={css.brand}>
