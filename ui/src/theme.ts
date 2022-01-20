@@ -417,7 +417,7 @@ const
       palette: {
         card: '#263238',
         page: '#1E272C',
-        text: '#B0BEC5',
+        text: '#ced5d9',
       },
       fluentPalette: {
         black: '#d0dade',
