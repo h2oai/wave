@@ -3,19 +3,29 @@ title: Color Theming
 ---
 
 
-Wave ships with a few prebuilt themes that are ready to be used. These currently include:
+Wave ships with prebuilt themes that are ready to be used. These include:
 
-* `default` - The initial black and white theme.
-* `neon` - Dark neon yellow theme.
-* `h2o-dark` - H2O brand dark theme.
+* `default`
+* `neon`
+* `h2o-dark`
+* `benext`
+* `ember`
+* `fuchasia`
+* `kiwi`
+* `lighting`
+* `monokai`
+* `nature`
+* `nord`
+* `oceanic`
+* `one-dark-pro`
+* `solarized`
+* `winter-is-coming`
 
 Setting a theme is very simple:
 
 ```py
 q.page['meta'] = ui.meta_card(box='', theme='h2o-dark')
 ```
-
- We plan on expanding the list to at least a dozen in the future. If interested, you can track the progress [here](https://github.com/h2oai/wave/issues/696).
 
 ## Custom user-defined themes
 
