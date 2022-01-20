@@ -614,7 +614,6 @@ const
         Object.keys(spectrum).forEach(spectrumColor => {
           const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
           const spectrumHsl = Fluent.hsv2hsl(h, s, v)
-          const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
           document.body.style.setProperty(`--${spectrumColor}`, `hsl(${spectrumHsl.h}, ${primaryHsl.s}%, ${spectrumHsl.l}%)`)
         })
       }
