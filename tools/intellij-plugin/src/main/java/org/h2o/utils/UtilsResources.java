@@ -4,7 +4,19 @@ public class UtilsResources {
     public static final String[] THEMES = new String[]{
             "default",
             "neon",
-            "h2o-dark"
+            "h2o-dark",
+            "fuchasia",
+            "winter-is-coming",
+            "kiwi",
+            "nord",
+            "benext",
+            "monokai",
+            "solarized",
+            "lighting",
+            "ember",
+            "oceanic",
+            "nature",
+            "one-dark-pro"
     };
     public static final String[] FLUENT_ICONS = new String[]{
             "12PointStar",
