@@ -35,8 +35,8 @@ from .routing import on, handle_on
 from .db import connect, WaveDBConnection, WaveDB, WaveDBError
 from .types import *
 from .test import cypress, Cypress
+from .version import __version__
 
-__version__ = '0.19.0'
 __author__ = 'Prithvi Prabhu'
 
 __pdoc__ = {

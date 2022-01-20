@@ -36,7 +36,7 @@ clean: purge ## Clean
 .PHONY: tag
 tag: # Bump version
 	sed -i -r -e "s/version.+/version=os.getenv('VERSION', '$(VERSION)'),/" setup.py
-	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/__init__.py
+	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/version.py
 	# Causes chicken-egg situation during CI
 	# sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
 
