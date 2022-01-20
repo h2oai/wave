@@ -31,7 +31,7 @@ module.exports = {
     'Getting Started': [
       'getting-started',
       'installation',
-      'tour',
+      'installation-8-20',
       'tutorial-hello',
       'tutorial-beer',
       'tutorial-monitor',

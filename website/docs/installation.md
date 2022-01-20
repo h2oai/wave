@@ -2,95 +2,98 @@
 title: Installation
 ---
 
-Starting from version `0.20.0` the server binary is a part of a python wheel, which means all there is needed to be done is:
+## Install
 
-```sh
+:::important
+These instructions apply to v0.20 or later. For previous versions, [click here](installation-8-20.md).
+:::
+
+Install the `h2o-wave` package from PyPI:
+
+```shell
+pip install h2o-wave
+```
+
+To install in a virtual environment (recommended):
+
+```shell
 python3 -m venv venv
-./venv/bin/pip install h2o-wave
-./venv/bin/wave run my-app
+source venv/bin/activate
+pip install h2o-wave
 ```
 
-The above will start the Wave daemon if not running already and connect your Wave app to it.
-
-## Wave before 0.20.0
-
-To set up H2O Wave, simply download and extract a release (~10MB). The release ships with a precompiled binary executable, so no explicit installation step is necessary.
-
-## Prerequisites
-
-H2O Wave runs on Linux, macOS, and Windows, having Python 3.6+.
-
-## Setup
-
-### Step 1: Download
-
-[Download the H2O Wave SDK](https://github.com/h2oai/wave/releases/latest) for your platform.
-
-### Step 2: Extract
-
-Extract your download.
+To install in a virtual environment (Windows):
 
 ```shell
-tar -xzf wave-x.y.z-linux-amd64.tar.gz
+python3 -m venv venv
+venv\Scripts\activate.bat
+pip install h2o-wave
 ```
 
-### Step 3: Move
-
-Move it to a convenient location, say `$HOME/wave/`.
+To install using Conda:
 
 ```shell
- mv wave-x.y.z-linux-amd64 $HOME/wave
+conda install -c h2oai h2o_wave
 ```
 
-:::note
-If you have a previous version of Wave installed, be sure to remove it before installing another. To remove it, simply delete the previous directory.
+To install in a Conda virtual environment:
+
+```shell
+conda create -n venv
+conda activate venv
+conda install -c h2oai h2o_wave
+```
+
+## Download examples
+
+Run `wave fetch` to download examples, demos, and the interactive tour.
+
+```shell
+(venv) $ wave fetch
+```
+
+You should now have access to 200+ examples locally. 
+
+```
+Fetching examples and related files. Please wait...
+Downloading https://github.com/h2oai/wave/releases/download/v0.19.0/wave-0.19.0-linux-amd64.tar.gz
+Extracting...
+
+All additional files downloaded and extracted successfully!
+Examples and tour............. /home/elp/git/wave/py/wave/examples
+Demos and layout samples...... /home/elp/git/wave/py/wave/demo
+Automated test harness........ /home/elp/git/wave/py/wave/test
+Wave daemon for deployments... /home/elp/git/wave/py/wave
+```
+
+## Run the tour
+
+The Wave tour is a Wave app that lets you play with all the examples interactively. 
+
+![tour](assets/tour__tour.png)
+
+To run the tour, simply launch `examples/tour.py` like this:
+
+```shell
+cd wave
+pip install -r examples/requirements.txt
+wave run --no-reload examples.tour
+```
+
+Then navigate to [http://localhost:10101/tour](http://localhost:10101/tour) to access the tour.
+
+`tour.py` is an ordinary Wave app that runs other apps. The tour itself runs at the route `/tour`, and each of the examples runs at `/demo`.
+
+:::tip
+To play with the tour's active example in isolation, simply open a new browser tab and head to [http://localhost:10101/demo](http://localhost:10101/demo).
 :::
 
-Inspect your `$HOME/wave` directory. You should see the following content:
+## Wrapping up
 
-```
-.
-├── examples/       ... Examples
-├── test/           ... Browser testing framework
-├── www/            ... Wave server web root (do not modify!)
-└── waved           ... Wave server executable
-```
-
-### Step 4: Run
-
-Go to your Wave directory.
+In this section, we installed Wave and then launched `tour.py` to experience the tour. In general, this is how you'd typically launch any app, including your own. There is nothing special about `tour.py`. In fact, to run any example, all you need to do is repeat the steps above in a new terminal window. For example, to run `todo.py`, simply run:
 
 ```shell
-cd $HOME/wave
+wave run examples.todo
 ```
 
-Start the Wave server.
-
-```shell
-./waved
-```
-
-```
-2020/10/27 16:16:34 # 
-2020/10/27 16:16:34 # ┌─────────────────────────┐
-2020/10/27 16:16:34 # │  ┌    ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
-2020/10/27 16:16:34 # │  │ ┌──┘ │──│ │  │ └┐    │ (version) (build)
-2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
-2020/10/27 16:16:34 # └─────────────────────────┘
-2020/10/27 16:16:34 # 
-2020/10/27 16:16:34 # {"address":":10101","t":"listen","webroot":"/home/elp/wave/www"}
-```
-
-:::info
-On Windows, run `waved.exe` to start the server.
-:::
-
-### Step 5: Verify
-
-Finally, point your web browser to [http://localhost:10101/](http://localhost:10101/). You should see an empty page with a blinker that looks like this:
-
-![blinker](assets/installation__waiting.gif)
-
-Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner).
-
-In the next few sections, we'll add some content and see what the fuss is all about.
+You can now access the example at [http://localhost:10101/demo](http://localhost:10101/demo). Simple!
