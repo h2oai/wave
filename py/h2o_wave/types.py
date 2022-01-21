@@ -3209,6 +3209,15 @@ class TableColumnDataType:
     TIME = 'time'
 
 
+_TableColumnOverflow = ['ellipsis', 'tooltip', 'wrap']
+
+
+class TableColumnOverflow:
+    ELLIPSIS = 'ellipsis'
+    TOOLTIP = 'tooltip'
+    WRAP = 'wrap'
+
+
 class TableColumn:
     """Create a table column.
     """
@@ -3224,6 +3233,7 @@ class TableColumn:
             link: Optional[bool] = None,
             data_type: Optional[str] = None,
             cell_type: Optional[TableCellType] = None,
+            overflow: Optional[str] = None,
     ):
         _guard_scalar('TableColumn.name', name, (str,), True, False, False)
         _guard_scalar('TableColumn.label', label, (str,), False, False, False)
@@ -3235,6 +3245,7 @@ class TableColumn:
         _guard_scalar('TableColumn.link', link, (bool,), False, True, False)
         _guard_enum('TableColumn.data_type', data_type, _TableColumnDataType, True)
         _guard_scalar('TableColumn.cell_type', cell_type, (TableCellType,), False, True, False)
+        _guard_enum('TableColumn.overflow', overflow, _TableColumnOverflow, True)
         self.name = name
         """An identifying name for this column."""
         self.label = label
@@ -3255,6 +3266,8 @@ class TableColumn:
         """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Renders as plain text by default."""
+        self.overflow = overflow
+        """Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'. One of 'ellipsis', 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3268,6 +3281,7 @@ class TableColumn:
         _guard_scalar('TableColumn.link', self.link, (bool,), False, True, False)
         _guard_enum('TableColumn.data_type', self.data_type, _TableColumnDataType, True)
         _guard_scalar('TableColumn.cell_type', self.cell_type, (TableCellType,), False, True, False)
+        _guard_enum('TableColumn.overflow', self.overflow, _TableColumnOverflow, True)
         return _dump(
             name=self.name,
             label=self.label,
@@ -3279,6 +3293,7 @@ class TableColumn:
             link=self.link,
             data_type=self.data_type,
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
+            overflow=self.overflow,
         )
 
     @staticmethod
@@ -3304,6 +3319,8 @@ class TableColumn:
         _guard_enum('TableColumn.data_type', __d_data_type, _TableColumnDataType, True)
         __d_cell_type: Any = __d.get('cell_type')
         _guard_scalar('TableColumn.cell_type', __d_cell_type, (dict,), False, True, False)
+        __d_overflow: Any = __d.get('overflow')
+        _guard_enum('TableColumn.overflow', __d_overflow, _TableColumnOverflow, True)
         name: str = __d_name
         label: str = __d_label
         min_width: Optional[str] = __d_min_width
@@ -3314,6 +3331,7 @@ class TableColumn:
         link: Optional[bool] = __d_link
         data_type: Optional[str] = __d_data_type
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
+        overflow: Optional[str] = __d_overflow
         return TableColumn(
             name,
             label,
@@ -3325,6 +3343,7 @@ class TableColumn:
             link,
             data_type,
             cell_type,
+            overflow,
         )
 
 

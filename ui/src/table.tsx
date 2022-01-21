@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { TooltipHost, TooltipOverflowMode } from '@fluentui/react'
 import { B, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -54,6 +55,8 @@ interface TableColumn {
   data_type?: 'string' | 'number' | 'time'
   /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType
+  /** Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'. */
+  overflow?: 'ellipsis' | 'tooltip' | 'wrap'
 }
 
 /** Create a table row. */
@@ -115,6 +118,7 @@ type WaveColumn = Fluent.IColumn & {
   dataType?: S
   cellType?: TableCellType
   isSortable?: B
+  overflow?: 'ellipsis' | 'tooltip' | 'wrap' // TODO: repeated type
 }
 
 type DataTable = {
@@ -297,6 +301,7 @@ const
           cellType: c.cell_type,
           dataType: c.data_type,
           isSortable: c.sortable,
+          overflow: c.overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
         }
@@ -372,6 +377,13 @@ const
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
+        // TODO: find out if aria-describedby is necessary - e.g. on FireFox
+        const TooltipWrapper = ({ children }: { children: string }) => {
+          if (col.overflow === 'tooltip') return <TooltipHost id={item.key as string} content={children} overflowMode={TooltipOverflowMode.Parent}><span aria-describedby={item.key as string}>{children}</span></TooltipHost>
+          if (col.overflow === 'wrap') return <span style={{ whiteSpace: col.overflow === 'wrap' ? 'normal' : undefined, textOverflow: col.overflow === 'wrap' ? 'clip' : undefined }}>{children}</span>
+          return <>{children}</> // TODO: fix type without <></>
+        }
+
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
@@ -382,10 +394,10 @@ const
             wave.args[m.name] = [item.key as S]
             wave.push()
           }
-          return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
+          return <Fluent.Link onClick={onClick}><TooltipWrapper>{v}</TooltipWrapper></Fluent.Link>
         }
 
-        return v
+        return <TooltipWrapper>{v}</TooltipWrapper>
       }
 
     // HACK: React stale closures - https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function

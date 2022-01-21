@@ -2062,7 +2062,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_table_column" value="ui.table_column(name='$name$',label='$label$',min_width='$min_width$',max_width='$max_width$',sortable=$sortable$,searchable=$searchable$,filterable=$filterable$,link=$link$,data_type='$data_type$',cell_type=$cell_type$),$END$" description="Create Wave TableColumn with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_table_column" value="ui.table_column(name='$name$',label='$label$',min_width='$min_width$',max_width='$max_width$',sortable=$sortable$,searchable=$searchable$,filterable=$filterable$,link=$link$,data_type='$data_type$',cell_type=$cell_type$,overflow='$overflow$'),$END$" description="Create Wave TableColumn with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="min_width" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2073,6 +2073,7 @@
     <variable name="link" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="data_type" expression="" defaultValue="&quot;string&quot;" alwaysStopAt="true"/>
     <variable name="cell_type" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="overflow" expression="" defaultValue="&quot;ellipsis&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

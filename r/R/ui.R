@@ -1452,6 +1452,8 @@ ui_tag_table_cell_type <- function(
 #' @param data_type Defines the data type of this column. Defaults to `string`.
 #'   One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
 #' @param cell_type Defines how to render each cell in this column. Renders as plain text by default.
+#' @param overflow Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'.
+#'   One of 'ellipsis', 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(
@@ -1464,7 +1466,8 @@ ui_table_column <- function(
   filterable = NULL,
   link = NULL,
   data_type = NULL,
-  cell_type = NULL) {
+  cell_type = NULL,
+  overflow = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("min_width", "character", min_width)
@@ -1475,6 +1478,7 @@ ui_table_column <- function(
   .guard_scalar("link", "logical", link)
   # TODO Validate data_type
   .guard_scalar("cell_type", "WaveTableCellType", cell_type)
+  # TODO Validate overflow
   .o <- list(
     name=name,
     label=label,
@@ -1485,7 +1489,8 @@ ui_table_column <- function(
     filterable=filterable,
     link=link,
     data_type=data_type,
-    cell_type=cell_type)
+    cell_type=cell_type,
+    overflow=overflow)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableColumn"))
   return(.o)
 }
