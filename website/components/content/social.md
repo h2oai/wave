@@ -64,15 +64,15 @@ q.page['example'] = ui.profile_card(
 )
 ```
 
-## Postcard
+## Post card
 
-Need a slightly more complex layout than `ui.profile_card`? Use `ui.postcard_card` instead!
+Need a slightly more complex layout than `ui.profile_card`? Use `ui.post_card` instead!
 
-Check the full API at [ui.postcard_card](/docs/api/ui#postcard_card).
+Check the full API at [ui.post_card](/docs/api/ui#post_card).
 
 ```py
 image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
-q.page['example'] = ui.postcard_card(
+q.page['example'] = ui.post_card(
     box='1 1 3 5',
     persona=ui.persona(title='John Doe', subtitle='Data Scientist', image=image, caption='caption'),
     commands=[

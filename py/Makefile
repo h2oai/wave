@@ -26,6 +26,7 @@ docs: ## Build API docs
 	mkdir -p ../website/docs/api/h2o_wave_ml
 	mv build/docs/h2o_wave/* ../website/docs/api/
 	mv build/docs/h2o_wave_ml/* ../website/docs/api/h2o_wave_ml/
+	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build
 	rm -rf build dist h2o_wave.egg-info

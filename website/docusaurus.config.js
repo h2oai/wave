@@ -32,6 +32,7 @@ module.exports = {
         src: 'img/logo.svg',
       },
       items: [
+        { to: 'docs/examples', label: 'Gallery', position: 'left' },
         { to: 'docs/components/overview', label: 'Components', position: 'left' },
         { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
@@ -49,6 +50,10 @@ module.exports = {
         {
           title: 'Learn',
           items: [
+            {
+              label: 'Gallery',
+              to: 'docs/examples',
+            },
             {
               label: 'Components',
               to: 'docs/components/overview',
