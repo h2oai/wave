@@ -412,12 +412,12 @@
     ],
     "description": "Create a minimal Wave PlotCard."
   },
-  "Wave PostcardCard": {
-    "prefix": "w_postcard_card",
+  "Wave PostCard": {
+    "prefix": "w_post_card",
     "body": [
-      "ui.postcard_card(box='$1', persona=$2, image='$3')$0"
+      "ui.post_card(box='$1', persona=$2, image='$3')$0"
     ],
-    "description": "Create a minimal Wave PostcardCard."
+    "description": "Create a minimal Wave PostCard."
   },
   "Wave PreviewCard": {
     "prefix": "w_preview_card",
@@ -1301,12 +1301,12 @@
     ],
     "description": "Create a full Wave PlotCard."
   },
-  "Wave Full PostcardCard": {
-    "prefix": "w_full_postcard_card",
+  "Wave Full PostCard": {
+    "prefix": "w_full_post_card",
     "body": [
-      "ui.postcard_card(box='$1', persona=$2, image='$3', aux_value='$4', caption='$5', items=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
+      "ui.post_card(box='$1', persona=$2, image='$3', aux_value='$4', caption='$5', items=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
     ],
-    "description": "Create a full Wave PostcardCard."
+    "description": "Create a full Wave PostCard."
   },
   "Wave Full PreviewCard": {
     "prefix": "w_full_preview_card",

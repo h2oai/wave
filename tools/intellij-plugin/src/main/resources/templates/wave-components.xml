@@ -418,7 +418,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_postcard_card" value="ui.postcard_card(box='$box$',persona=$persona$,image='$image$')$END$" description="Create a minimal Wave PostcardCard." toReformat="true" toShortenFQNames="true">
+  <template name="w_post_card" value="ui.post_card(box='$box$',persona=$persona$,image='$image$')$END$" description="Create a minimal Wave PostCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1724,7 +1724,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_postcard_card" value="ui.postcard_card(box='$box$',persona=$persona$,image='$image$',aux_value='$aux_value$',caption='$caption$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave PostcardCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_post_card" value="ui.post_card(box='$box$',persona=$persona$,image='$image$',aux_value='$aux_value$',caption='$caption$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave PostCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>

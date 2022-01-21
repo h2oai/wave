@@ -9518,7 +9518,7 @@ class PlotCard:
         )
 
 
-class PostcardCard:
+class PostCard:
     """Create a postcard displaying a persona, image, caption and optional buttons.
     """
     def __init__(
@@ -9531,13 +9531,13 @@ class PostcardCard:
             items: Optional[List[Component]] = None,
             commands: Optional[List[Command]] = None,
     ):
-        _guard_scalar('PostcardCard.box', box, (str,), False, False, False)
-        _guard_scalar('PostcardCard.persona', persona, (Component,), False, False, False)
-        _guard_scalar('PostcardCard.image', image, (str,), False, False, False)
-        _guard_scalar('PostcardCard.aux_value', aux_value, (str,), False, True, False)
-        _guard_scalar('PostcardCard.caption', caption, (str,), False, True, False)
-        _guard_vector('PostcardCard.items', items, (Component,), False, True, False)
-        _guard_vector('PostcardCard.commands', commands, (Command,), False, True, False)
+        _guard_scalar('PostCard.box', box, (str,), False, False, False)
+        _guard_scalar('PostCard.persona', persona, (Component,), False, False, False)
+        _guard_scalar('PostCard.image', image, (str,), False, False, False)
+        _guard_scalar('PostCard.aux_value', aux_value, (str,), False, True, False)
+        _guard_scalar('PostCard.caption', caption, (str,), False, True, False)
+        _guard_vector('PostCard.items', items, (Component,), False, True, False)
+        _guard_vector('PostCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.persona = persona
@@ -9555,15 +9555,15 @@ class PostcardCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('PostcardCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('PostcardCard.persona', self.persona, (Component,), False, False, False)
-        _guard_scalar('PostcardCard.image', self.image, (str,), False, False, False)
-        _guard_scalar('PostcardCard.aux_value', self.aux_value, (str,), False, True, False)
-        _guard_scalar('PostcardCard.caption', self.caption, (str,), False, True, False)
-        _guard_vector('PostcardCard.items', self.items, (Component,), False, True, False)
-        _guard_vector('PostcardCard.commands', self.commands, (Command,), False, True, False)
+        _guard_scalar('PostCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('PostCard.persona', self.persona, (Component,), False, False, False)
+        _guard_scalar('PostCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('PostCard.aux_value', self.aux_value, (str,), False, True, False)
+        _guard_scalar('PostCard.caption', self.caption, (str,), False, True, False)
+        _guard_vector('PostCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('PostCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
-            view='postcard',
+            view='post',
             box=self.box,
             persona=self.persona.dump(),
             image=self.image,
@@ -9574,22 +9574,22 @@ class PostcardCard:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'PostcardCard':
+    def load(__d: Dict) -> 'PostCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        _guard_scalar('PostcardCard.box', __d_box, (str,), False, False, False)
+        _guard_scalar('PostCard.box', __d_box, (str,), False, False, False)
         __d_persona: Any = __d.get('persona')
-        _guard_scalar('PostcardCard.persona', __d_persona, (dict,), False, False, False)
+        _guard_scalar('PostCard.persona', __d_persona, (dict,), False, False, False)
         __d_image: Any = __d.get('image')
-        _guard_scalar('PostcardCard.image', __d_image, (str,), False, False, False)
+        _guard_scalar('PostCard.image', __d_image, (str,), False, False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        _guard_scalar('PostcardCard.aux_value', __d_aux_value, (str,), False, True, False)
+        _guard_scalar('PostCard.aux_value', __d_aux_value, (str,), False, True, False)
         __d_caption: Any = __d.get('caption')
-        _guard_scalar('PostcardCard.caption', __d_caption, (str,), False, True, False)
+        _guard_scalar('PostCard.caption', __d_caption, (str,), False, True, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('PostcardCard.items', __d_items, (dict,), False, True, False)
+        _guard_vector('PostCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('PostcardCard.commands', __d_commands, (dict,), False, True, False)
+        _guard_vector('PostCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         persona: Component = Component.load(__d_persona)
         image: str = __d_image
@@ -9597,7 +9597,7 @@ class PostcardCard:
         caption: Optional[str] = __d_caption
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return PostcardCard(
+        return PostCard(
             box,
             persona,
             image,

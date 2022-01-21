@@ -111,4 +111,4 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
   return { render, changed }
 })
 
-cards.register('postcard', View)
+cards.register('post', View)

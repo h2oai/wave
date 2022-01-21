@@ -15,12 +15,12 @@
 import { render } from '@testing-library/react'
 import { box, Model } from 'h2o-wave'
 import React from 'react'
-import { View } from './postcard'
+import { View } from './post'
 
 const name = 'postcard'
 let postcardProps: Model<any>
 
-describe('Postcard.tsx', () => {
+describe('Post.tsx', () => {
   beforeEach(() => {
     postcardProps = {
       name,

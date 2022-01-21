@@ -3385,7 +3385,7 @@ def plot_card(
     )
 
 
-def postcard_card(
+def post_card(
         box: str,
         persona: Component,
         image: str,
@@ -3393,7 +3393,7 @@ def postcard_card(
         caption: Optional[str] = None,
         items: Optional[List[Component]] = None,
         commands: Optional[List[Command]] = None,
-) -> PostcardCard:
+) -> PostCard:
     """Create a postcard displaying a persona, image, caption and optional buttons.
 
     Args:
@@ -3405,9 +3405,9 @@ def postcard_card(
         items: The card's buttons, displayed at the bottom.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_wave.types.PostcardCard` instance.
+        A `h2o_wave.types.PostCard` instance.
     """
-    return PostcardCard(
+    return PostCard(
         box,
         persona,
         image,

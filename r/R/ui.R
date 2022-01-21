@@ -3938,9 +3938,9 @@ ui_plot_card <- function(
 #' @param caption The card's caption, displayed below the image.
 #' @param items The card's buttons, displayed at the bottom.
 #' @param commands Contextual menu commands for this component.
-#' @return A PostcardCard instance.
+#' @return A PostCard instance.
 #' @export
-ui_postcard_card <- function(
+ui_post_card <- function(
   box,
   persona,
   image,
@@ -3963,7 +3963,7 @@ ui_postcard_card <- function(
     caption=caption,
     items=items,
     commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WavePostcardCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePostCard"))
   return(.o)
 }
 

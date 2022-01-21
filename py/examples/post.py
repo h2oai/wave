@@ -1,12 +1,12 @@
-# Postcard
-# Create a postcard displaying persona, image, caption and optional buttons.
+# Post card
+# Create a post card displaying persona, image, caption and optional buttons.
 # ---
 from h2o_wave import site, ui
 
 page = site['/demo']
 
 image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
-page['example'] = ui.postcard_card(
+page['example'] = ui.post_card(
     box='1 1 3 5',
     persona=ui.persona(title='John Doe', subtitle='Data Scientist', image=image, caption='caption'),
     commands=[
