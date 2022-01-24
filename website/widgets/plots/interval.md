@@ -1,5 +1,5 @@
 ---
-title: Native Interval
+title: Interval
 custom_edit_url: null
 ---
 

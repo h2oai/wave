@@ -1,5 +1,5 @@
 ---
-title: Native Path
+title: Path
 custom_edit_url: null
 ---
 

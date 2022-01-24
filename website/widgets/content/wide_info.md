@@ -1,47 +1,11 @@
 ---
-title: Info
+title: Wide info
 keywords:
   - info
 custom_edit_url: null
 ---
 
 Use info cards as entries leading to detail views or when you just need to display an image with a caption.
-
-## Tall info
-
-Vertical variant.
-
-```py
-q.page['example'] = ui.tall_info_card(
-    box='1 1 3 4',
-    name='info_card',
-    title='Info Card',
-    caption='Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-    category='Category',
-    label='Click me',
-    image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-)
-```
-
-Check the full API at [ui.tall_info](/docs/api/ui#tall_info).
-
-### Icon
-
-```py
-q.page['example'] = ui.tall_info_card(
-    box='1 1 3 4',
-    name='info_card',
-    title='Info Card',
-    caption='Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-    category='Category',
-    label='Click me',
-    icon='Heart',
-)
-```
-
-## Wide info
-
-Horizontal variant.
 
 ```py
 q.page['example'] = ui.wide_info_card(
@@ -63,7 +27,7 @@ maiores consequatur dolores illo inventore quae obcaecati culpa totam corporis! 
 
 Check the full API at [ui.wide_info](/docs/api/ui#wide_info).
 
-### Icon
+## Icon
 
 ```py
 q.page['example'] = ui.wide_info_card(

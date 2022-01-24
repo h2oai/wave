@@ -1,6 +1,6 @@
 SHELL := bash
 setup:
-	mkdir -p ../../website/docs/components
+	mkdir -p ../../website/docs/widgets
 	mkdir -p test/base test/compare test/diff
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
@@ -31,4 +31,4 @@ clean-snapshots:
 clean:
 	rm -rf venv
 	rm -rf test
-	rm -rf ../../website/docs/components 
+	rm -rf ../../website/docs/widgets 

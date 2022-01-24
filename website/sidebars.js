@@ -1,19 +1,32 @@
 const
   examples = require('./examples'),
   capitalize = str => str.charAt(0).toUpperCase() + str.slice(1),
-  { groups, plainFiles } = require('./components')
+  { groups, plainFiles } = require('./widgets')
     .sort((a, b) => a.path.localeCompare(b.path))
-    .reduce((acc, { group, path }) => {
+    .reduce((acc, { groups, path }) => {
       path = path.replace('.md', '')
-      if (group) {
+      if (groups.length === 1) {
+        const [group] = groups
         if (acc.groups.has(group)) {
           const items = acc.groups.get(group).items
           path.includes('overview') ? items.unshift(path) : items.push(path)
         }
         else acc.groups.set(group, { type: 'category', label: capitalize(group), items: [path], })
       }
+      else if (groups.length === 2) {
+        const [grp1, grp2] = groups
+        if (acc.groups.has(grp1)) {
+          const nestedGroup = acc.groups.get(grp1).items.find(i => i.label === capitalize(grp2))
+          if (nestedGroup) {
+            nestedGroup.items.push(path)
+          }
+          else {
+            acc.groups.get(grp1).items.push({ type: 'category', label: capitalize(grp2), items: [path] })
+          }
+        }
+        else acc.groups.set(grp1, { type: 'category', label: capitalize(grp1), items: [path], })
+      }
       else acc.plainFiles.push(path)
-
       return acc
     }, { groups: new Map(), plainFiles: [] })
 
@@ -69,7 +82,7 @@ module.exports = {
       'wavedb',
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
-    'Components': [...plainFiles, ...sortedGroups],
+    'Widgets': [...plainFiles, ...sortedGroups],
     'API': [
       'api/index',
       'api/core',

@@ -27,6 +27,7 @@ The table below summarizes how to interpret inputs from various components.
 | Component | If the component is named `foo`, the value of `q.args.foo` is... |
 |---|---|
 | `ui.button()` | `value` if provided, else `True`. |
+| `ui.breadcrumb()` | `True` if clicked. |
 | `ui.checkbox()` | `True` if checked, `False` if unchecked, `None` if indeterminate. |
 | `ui.checklist()` | A list of names of all the selected choices (a list of strings). |
 | `ui.choice_group()` | The name of the selected choice (a string). |
@@ -36,8 +37,10 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.date_picker()` | The selected date in `YYYY-MM-DD` format (a string). |
 | `ui.dropdown()` | If multi-valued, a list of names of all the selected choices (a list of strings), otherwise the name of the selected choice (a string).  |
 | `ui.expander()` | `True` if expanded, else `False`. |
+| `ui.facepile()` | `value` if provided, else `True`. |
 | `ui.file_upload()` | A list of paths to the uploaded files (a list of strings). |
 | `ui.nav_item()` | `True` if clicked. |
+| `ui.persona()` | `True` if clicked. |
 | `ui.picker()` | A list of names of all the selected choices (a list of strings). |
 | `ui.range_slider()` | `[min, max]` (a list of two numbers). |
 | `ui.slider()` | The selected value (a number). |
@@ -45,6 +48,7 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.table()` | A list of names of all the selected rows (a list of strings). |
 | `ui.tabs()` | The name of the active tab (a string). |
 | `ui.textbox()` | The value typed in (a string). |
+| `ui.text_annotator()` | List of lists containing parts of text with accompanying tag (if not annotated, tag is `''`). |
 | `ui.toggle()` | `True` if checked, `False` if unchecked. |
 
 ## Handling interactivity

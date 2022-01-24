@@ -168,3 +168,85 @@ q.page['example'] = ui.wide_plot_card(
     plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)])
 )
 ```
+
+## Point
+
+- [Basic](/docs/examples/plot-point): Make a scatterplot.
+- [Shapes](/docs/examples/plot-point-shapes): Make a scatterplot with categories encoded as mark shapes.
+- [Sizes](/docs/examples/plot-point-sizes): Make a scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
+- [Map](/docs/examples/plot-point-map): Make a plot to compare quantities across categories. Similar to a heatmap, but using size-encoding instead of color-encoding.
+- [Groups](/docs/examples/plot-point-groups): Make a scatterplot with categories encoded as colors.
+- [Annotation](/docs/examples/plot-point-annotation): Add annotations (points, lines and regions) to a plot.
+- [Custom](/docs/examples/plot-point-custom): Customize a plot's fill/stroke color, size and opacity.
+
+## Interval
+
+### Columns
+
+- [Basic](/docs/examples/plot-interval): Make a column plot.
+- [Groups](/docs/examples/plot-interval-groups): Make a grouped column plot.
+- [Range](/docs/examples/plot-interval-range): Make a column plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
+- [Labels](/docs/examples/plot-interval-labels): Make a column plot with labels on each bar.
+- [Stacked](/docs/examples/plot-interval-stacked): Make a stacked column plot.
+- [Stacked, Grouped](/docs/examples/plot-interval-stacked-grouped): Make a column plot with both stacked and grouped bars.
+- [Annotation](/docs/examples/plot-interval-annotation): Add annotations to a column plot.
+- [Theta](/docs/examples/plot-interval-theta): Make a "racetrack" plot (a column plot in polar coordinates).
+
+### Bars
+
+- [Basic](/docs/examples/plot-interval-transpose): Make a bar plot.
+- [Groups](/docs/examples/plot-interval-groups-transpose): Make a grouped bar plot.
+- [Range](/docs/examples/plot-interval-range-transpose): Make a bar plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
+- [Stacked](/docs/examples/plot-interval-stacked-transpose): Make a stacked bar plot.
+- [Stacked, Grouped](/docs/examples/plot-interval-stacked-grouped-transpose): Make a bar plot with both stacked and grouped bars.
+- [Annotation](/docs/examples/plot-interval-annotation-transpose): Add annotations to a bar plot.
+- [Polar](/docs/examples/plot-interval-polar): Make a rose plot (a bar plot in polar coordinates).
+- [Polar, Stacked](/docs/examples/plot-interval-polar-stacked): Make a stacked rose plot (a stacked bar plot in polar coordinates).
+- [Helix](/docs/examples/plot-interval-helix): Make a bar plot in helical coordinates.
+
+## Line
+
+- [Basic](/docs/examples/plot-line): Make a line plot.
+- [Groups](/docs/examples/plot-line-groups): Make a multi-series line plot.
+- [Smooth](/docs/examples/plot-line-smooth): Make a line plot using a smooth curve.
+- [Step](/docs/examples/plot-step): Make a line plot with a step curve.
+- [Step, After](/docs/examples/plot-step-after): Make a line plot with a step-after curve.
+- [Step, Before](/docs/examples/plot-step-before): Make a line plot with a step-before curve.
+- [Labels](/docs/examples/plot-line-labels): Add labels to a line plot.
+- [Labels, Stroked](/docs/examples/plot-line-labels-stroked): Customize label rendering: add a subtle outline to labels to improve readability.
+- [Labels, Occlusion](/docs/examples/plot-line-labels-no-overlap): Make a line plot with non-overlapping labels.
+- [Annotation](/docs/examples/plot-line-annotation): Add annotations to a line plot.
+
+## Path
+
+- [Basic](/docs/examples/plot-path): Make a path plot.
+- [Point](/docs/examples/plot-path-point): Make a path plot with an additional layer of points.
+- [Smooth](/docs/examples/plot-path-smooth): Make a path plot with a smooth curve.
+
+## Area
+
+- [Basic](/docs/examples/plot-area): Make an area plot.
+- [Groups](/docs/examples/plot-area-groups): Make an area plot showing multiple categories.
+- [Negative](/docs/examples/plot-area-negative): Make an area plot showing positive and negative values.
+- [Range](/docs/examples/plot-area-range): Make an area plot representing a range (band) of values.
+- [Smooth](/docs/examples/plot-area-smooth): Make an area plot with a smooth curve.
+- [Stacked](/docs/examples/plot-area-stacked): Make a stacked area plot.
+
+## Area + Line
+
+- [Area + Line](/docs/examples/plot-area-line): Make an area plot with an additional line layer on top.
+- [Area + Smooth](/docs/examples/plot-area-line-smooth): Make a combined area + line plot using a smooth curve.
+- [Area + Groups](/docs/examples/plot-area-line-groups): Make an combined area + line plot showing multiple categories.
+
+## Polygon
+
+- [Basic](/docs/examples/plot-polygon): Make a heatmap.
+
+## Schema
+
+- [Histogram](/docs/examples/plot-histogram): Make a histogram.
+
+## Other
+
+- [Axis Titles](/docs/examples/plot-axis-title): Display custom axis titles on a plot.
+- [Form](/docs/examples/plot-form): Display a plot inside a form.

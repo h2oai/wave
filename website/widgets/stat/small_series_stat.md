@@ -1,21 +1,9 @@
 ---
-title: Small Stats
+title: Small Series Stat
 keywords:
   - stats
 custom_edit_url: null
 ---
-
-## Small stat
-
-Use this stat, if you want to display a single value only and nothing else.
-
-```py
-q.page['example'] = ui.small_stat_card(box='1 1 1 1', title='Stat title', value='99.99')
-```
-
-Check the full API at [ui.small_stat_card](/docs/api/ui#small_stat_card).
-
-## Small series stat
 
 If you need more than textual content and want to display also how is your data trending, use series stat.
 
@@ -23,7 +11,7 @@ Series stats can be either an area with different `plot_curve`s or an interval d
 
 Check the full API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
 
-### Small series area linear curve
+## With line
 
 ```py
 from h2o_wave import data
@@ -42,7 +30,7 @@ q.page['linear'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series area smooth curve
+## With curve
 
 ```py
 from h2o_wave import data
@@ -61,7 +49,7 @@ q.page['smooth'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series area step curve
+## With step
 
 ```py
 from h2o_wave import data
@@ -80,7 +68,7 @@ q.page['step'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series area step-after curve
+## With step-after
 
 ```py
 from h2o_wave import data
@@ -99,7 +87,7 @@ q.page['step-after'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series area step-before curve
+## With step-before
 
 ```py
 from h2o_wave import data
@@ -118,9 +106,7 @@ q.page['step-before'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series area interval
-
-If you need more than textual content and want to display also how is your data trending.
+## With bars
 
 ```py
 from h2o_wave import data
@@ -138,5 +124,3 @@ q.page['example'] = ui.small_series_stat_card(
     plot_zero_value=0,
 )
 ```
-
-Check the full API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).

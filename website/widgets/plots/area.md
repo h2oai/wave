@@ -1,5 +1,5 @@
 ---
-title: Native Area
+title: Area
 custom_edit_url: null
 ---
 

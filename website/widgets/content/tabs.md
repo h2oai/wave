@@ -5,7 +5,11 @@ keywords:
 custom_edit_url: null
 ---
 
-Use tab card to navigate between two or more distinct content categories.
+Use the tab card to navigate between two or more distinct content categories.
+
+You can see the API for [ui.tab_card](/docs/api/ui#tab_card) or check the interactive example in the Tour app.
+
+## Basic tabs
 
 ```py
 q.page['example'] = ui.tab_card(box='1 1 4 1', items=[
@@ -17,7 +21,7 @@ q.page['example'] = ui.tab_card(box='1 1 4 1', items=[
 )
 ```
 
-## Initial value
+## With a selection
 
 ```py
 q.page['example'] = ui.tab_card( box='1 1 4 1', value='#menu/ham', items=[
@@ -29,7 +33,7 @@ q.page['example'] = ui.tab_card( box='1 1 4 1', value='#menu/ham', items=[
 )
 ```
 
-## Links
+## Tabs as links
 
 ```py
 q.page['example'] = ui.tab_card( box='1 1 4 1', link=True, value='#about', items=[
