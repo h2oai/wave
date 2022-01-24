@@ -22,27 +22,16 @@ import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from './theme'
 import * as Icons from '@fluentui/react-icons-mdl2'
 
-
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },
   palette: defaultTheme.fluentPalette,
 })
 
-type IconMapping = keyof typeof Icons
-
-const reactIcons = Object.keys(Icons).filter((icon) => {
-  return Icons[icon as IconMapping].name === 'Component'
-})
-
-const iconsToRegister = (reactIcons as IconMapping[]).reduce(
-  (acc: { [key: string]: React.FunctionComponentElement<React.FC> }, cur) => {
-    acc[cur.substring(0, cur.length - 4)] = React.createElement<React.FC>(Icons[cur] as React.FC)
-    return acc
-  }, {})
-
-registerIcons({
-  icons: iconsToRegister
-})
+const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
+  if (iconComponent.name === 'Component') acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
+  return acc
+}, {} as { [key: string]: JSX.Element })
+registerIcons({ icons })
 
 ReactDOM.render(<Router />, document.getElementById('root'))
 
