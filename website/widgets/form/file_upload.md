@@ -11,17 +11,19 @@ Use this component when you wish to collect files.
 You can upload files either by drag&drop or by clicking the upload button and choosing a file from
 your local file system.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.file_upload](/docs/api/ui#file_upload) or check the interactive example in Tour app.
+
+## Basic file upload
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.file_upload(name='file_upload', label='File Upload')
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
-
-You can see the API for [ui.file_upload](/docs/api/ui#file_upload) or check the interactive example in Tour app.
-
-## Constraints
+## With constraints
 
 It's common to want to allow your users to only upload files with very specific parameters, for example:
 
@@ -45,7 +47,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-## Sizing
+## Setting width and height
 
 In addition to the `width` attribute that is present on every form component, file upload provides also
 a way to control height via the `height` attribute. It supports all the [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units), however `%` may not always work as you
@@ -57,7 +59,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-## Compact
+## Compact file upload
 
 When you need just a single file to be uploaded and don't have too much space to waste.
 

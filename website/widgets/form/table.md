@@ -10,6 +10,12 @@ This table differs from a markdown table in that it supports clicking or selecti
 built-in search, sort, filter and group by. If you simply want to display a non-interactive
 table of information, use a markdown table.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.table](/docs/api/ui#table) or check the interactive example in Tour app.
+
+## Basic table
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
     ui.table(name='table', columns=[
@@ -23,11 +29,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
-
-You can see the API for [ui.table](/docs/api/ui#table) or check the interactive example in Tour app.
-
-## Selection
+## With selection
 
 If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked,
 the form is submitted automatically and `q.args.table_name` is set to `[row_name]`, where
@@ -71,7 +73,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
-## Preselection
+## With preselection
 
 If you want to see some rows preselected, use the `values` attribute. Note that if this parameter is set,
 multiple selections will be allowed (`multiple=True` implicitly).
@@ -89,7 +91,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
-## Search
+## With search
 
 As stated above, the table provides a built-in search also. Activation consists of specifying any
 column as `searchable`. This way one can control which columns should affect searched results.
@@ -107,11 +109,11 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
-## Filter
+## With filter
 
 Similar to search if you want to take advantage of a built-in filter, just specify a column as
 `filterable`. This will render a small chevron next to a column name which expands after clicking, giving
-you the option to check any of the unique column values and filter the table. We advise to use filtering
+you the option to check any of the unique column values and filter the table. We advise using filtering
 only on columns that consist of a limited set of values, e.g. statuses like `RUNNING`, `PENDING`. If
 you specified it on a column with any arbitrary text column, there would be too many filtering
 checkboxes which would be hard to navigate for your users.
@@ -129,10 +131,10 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
-## Group by
+## With group by
 
 Another cool feature of the Wave table is group by. All it takes is to specify a `groupable` option
-on table and a dropdown will render with columns on which a user can group by data.
+on the table and a dropdown will render with columns on which a user can group by data.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
@@ -147,7 +149,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
-## Download
+## With download
 
 Want to allow your users to download the data you just showed them via table? No problem! Simply
 specify `downloadable` prop.
@@ -165,10 +167,10 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-## Reset
+## With reset
 
 If you take advantage of all these built-in features, it might be a good idea to provide your users with an
-escape hatch when they search / filter / groupby too much and would like to get back to original view
+escape hatch when they search/filter/group by too much and would like to get back to original view
 with ease. That's exactly what `resettable` is for.
 
 ```py
@@ -184,7 +186,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-## Sizing
+## Setting width and height
 
 By default, the table tries to fit all horizontal available space and use as much vertical space as
 needed. For tables with > 10 rows, the initial height is `500px`.
@@ -207,7 +209,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-## Tags
+## With tags
 
 Use tags to emphasize a specific value, usually an enum value like a certain state for example. For multiple tags in a single row use `,` as a delimiter.
 

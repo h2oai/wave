@@ -8,6 +8,10 @@ custom_edit_url: null
 
 A face pile displays a list of personas. Each circle represents a person and contains their image or initials. Often this control is used when sharing who has access to a specific view or file.
 
+Check the full API at [ui.facepile](/docs/api/ui#facepile).
+
+## Basic facepile
+
 ```py
 image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
 q.page['example'] = ui.form_card(box='1 1 2 1', items=[
@@ -20,8 +24,6 @@ q.page['example'] = ui.form_card(box='1 1 2 1', items=[
     ])
 ])
 ```
-
-Check the full API at [ui.facepile](/docs/api/ui#facepile).
 
 ## Limit number of facepiles
 
@@ -40,7 +42,7 @@ q.page['example'] = ui.form_card(box='1 1 2 1', items=[
 ])
 ```
 
-## Add button
+## With an add button
 
 Use the `name` attribute to render an "Add button" at the beginning of the facepile. Subsequent click will populate `q.args.<facepile-name>` with `True`.
 

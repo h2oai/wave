@@ -8,14 +8,16 @@ custom_edit_url: null
 
 Can be used to display an individual's avatar (or a composition of the person’s initials on a background color), their name or identification, and online status.
 
+Check the full API at [ui.persona](/docs/api/ui#persona).
+
+## Basic persona
+
 ```py
 image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
 q.page['example'] = ui.form_card(box='1 1 2 7', items=[
     ui.persona(title='John Doe', subtitle='Data Scientist', caption='Online', image=image),
 ])
 ```
-
-Check the full API at [ui.persona](/docs/api/ui#persona).
 
 ## Sizes
 
@@ -35,7 +37,7 @@ q.page['example'] = ui.form_card(box='1 1 2 7', items=[
 ])
 ```
 
-## Initials
+## With initials
 
 If you don't have any user avatar image at hand, you can simply fallback to name initials instead.
 
@@ -45,7 +47,7 @@ q.page['example'] = ui.form_card(box='1 1 2 7', items=[
 ])
 ```
 
-## Interactivity
+## Handling interactivity
 
 Persona also provides a `name` attr that makes the whole component clickable, submitting `q.args.<persona-name-attr>`
 after click. Note that hash routing is supported as well.

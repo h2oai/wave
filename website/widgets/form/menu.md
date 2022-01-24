@@ -10,6 +10,8 @@ Create a contextual menu component. Useful when you have a lot of links and want
 
 Check the full API at [ui.menu](/docs/api/ui#menu).
 
+## Basic menu
+
 ```py
 q.page['form'] = ui.form_card(
     box='1 1 2 2',
@@ -23,7 +25,7 @@ q.page['form'] = ui.form_card(
 )
 ```
 
-## User avatar
+## With image
 
 Use the `image` attribute when you want to inline an image (preferably a user avatar) with the context menu. This attribute is mutually exclusive with the `icon` attribute.
 
@@ -42,7 +44,7 @@ q.page['form'] = ui.form_card(
 )
 ```
 
-## Icon
+## With icon
 
 Use the `icon` attribute when you want to inline an icon. This attribute is mutually exclusive with the `image` attribute.
 

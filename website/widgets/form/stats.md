@@ -10,6 +10,10 @@ Stats are textual pairs - title + value laid out horizontally. Their purpose is
 to display contextually related values that might be of higher importance than the rest of
 the textual contents. They are best used with [visualizations](/docs/components/form/visualization).
 
+Check the full API at [ui.stats](/docs/api/ui#stats).
+
+## Basic stats
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 2', items=[
     ui.stats([
@@ -20,9 +24,7 @@ q.page['example'] = ui.form_card(box='1 1 4 2', items=[
 ])
 ```
 
-Check the full API at [ui.stats](/docs/api/ui#stats).
-
-## Icons
+## With icon
 
 Make your stats even nicer by using [icons](https://uifabricicons.azurewebsites.net/). This component
 also provides control over `icon_color`.
@@ -54,8 +56,8 @@ q.page['example'] = ui.form_card(box='1 1 5 2', items=[
 
 ## More attention
 
-If you feel like your stats are too important and want to make sure your users won't miss it by
-any chance, use `inset` attribute, which displays the stats with a contrasting background.
+If you feel like your stats are too important and want to make sure your users won't miss them by
+any chance, use the `inset` attribute, which displays the stats with a contrasting background.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 2', items=[

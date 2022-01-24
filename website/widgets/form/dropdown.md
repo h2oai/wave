@@ -12,6 +12,12 @@ custom_edit_url: null
  To change the value, users open the list and click another value or use the arrow keys (up and down) to
  select a new value.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.dropdown](/docs/api/ui#dropdown) or check the interactive example in Tour app.
+
+## Basic dropdown
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.dropdown(name='dropdown', label='Dropdown', choices=[
@@ -22,11 +28,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
-
-You can see the API for [ui.dropdown](/docs/api/ui#dropdown) or check the interactive example in Tour app.
-
-## Default value
+## Setting initial values
 
 Use either the `value` parameter or the `values` parameter. Setting the `values` parameter
 renders a multi-select dropdown.
@@ -41,11 +43,11 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Required
+## Required dropdown
 
-Use `required` attribute to render a small asterisk next to label indicating this dropdown needs
+Use the `required` attribute to render a small asterisk next to the label indicating this dropdown needs
 to have a value filled in otherwise the form is considered invalid. Note that validation logic needs
-to be handled by developer.
+to be handled by the developer.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -57,11 +59,11 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Placeholder
+## With placeholder
 
-A string rendered until a value is picked and provides hint on what kind of information is expected
-to be filled in. However, don't mix it with `label`. For example label could be `Name` and
-placeholder `John Doe`. It might be tempting to omit label and use placeholder instead, but that
+A string that is rendered until a value is picked, provides a hint on what kind of information is expected
+to be filled in. However, don't mix it with `label`. For example, the label could be `Name` and
+the placeholder `John Doe`. It might be tempting to omit the label and use the placeholder instead, but that
 is considered a UX anti-pattern.
 
 ```py
@@ -74,10 +76,10 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Disabled
+## Disabled dropdown
 
 Use disabled attribute to indicate that the dropdown is read-only or not actionable yet (e.g.
-waiting for user to fill in other form items).
+waiting for a user to fill in other form items).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -89,14 +91,14 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Popup
+## With popup
 
 The popup attribute should be used to specify the dialog behavior.
 You can use one of these values: `'always', 'never', 'auto'`
 
-* `'always'`: display dialog even when number of choices < 100.
-* `'never'`: does not display dialog even when number of choices > 100.
-* `'auto'`: only display dialog when number of choices > 100 (default).
+* `'always'`: display dialog even when the number of choices < 100.
+* `'never'`: does not display dialog even when the number of choices > 100.
+* `'auto'`: only display dialog when the number of choices > 100 (default).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[

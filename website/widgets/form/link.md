@@ -10,15 +10,17 @@ Hyperlinks can be internal (within Wave app) or external.
 Internal hyperlinks have paths that begin with a `/` and point to URLs within the Wave UI.
 All other kinds of paths are treated as external hyperlinks.
 
+You can see the API for [ui.link](/docs/api/ui#link) or check the interactive example in Tour app.
+
+## Basic link
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.link(label='Go to h2o.ai', path='https://www.h2o.ai/')
 ])
 ```
 
-You can see the API for [ui.link](/docs/api/ui#link) or check the interactive example in Tour app.
-
-## Target
+## With a target
 
 Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or
 window.
@@ -29,7 +31,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Disabled
+## Disabled link
 
 Used for cases when the link should not be clickable.
 
@@ -39,7 +41,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Button
+## With button
 
 Links don't only need to be rendered as text. If you would like to give your links more attention
 (e.g. the link is a final result of some more complex action) you can render it as a `button`.
@@ -50,9 +52,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Download
+## Download link
 
-If you want to allow your users to download a file, use `download` attribute. Note that this
+If you want to allow your users to download a file, use the `download` attribute. Note that this
 attribute doesn't work with `button`.
 
 ```py

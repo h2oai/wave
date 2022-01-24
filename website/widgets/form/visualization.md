@@ -11,6 +11,10 @@ Wave uses [Grammar of Graphics](https://towardsdatascience.com/a-comprehensive-g
 
 For a more thorough explanation of how Wave plots work, please see [Plots overview](/docs/components/plot/overview).
 
+Check the full API at [ui.visualization](/docs/api/ui#visualization).
+
+## Basic visualization
+
 ```py
 from h2o_wave import data
 
@@ -26,9 +30,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-Check the full API at [ui.visualization](/docs/api/ui#visualization).
-
-## Dimensions
+## With dimensions
 
 In addition to the `width` attribute that is present on every form component, visualization also provides
 a way to control height via the `height` attribute, which defaults to `300px`. It supports all the
@@ -52,7 +54,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-## Events
+## With events
 
 Wave plots provide a way to listen for user clicks on certain parts of the
 visualization. All it takes is to register the event, e.g. `events=['select_marks']` and once

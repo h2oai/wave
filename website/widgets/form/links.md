@@ -12,6 +12,8 @@ All other kinds of paths are treated as external hyperlinks.
 
 You can see the API for [ui.links](/docs/api/ui#links) or check the interactive example in Tour app.
 
+## Basic links
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.links(label='Column', items=[
@@ -22,7 +24,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Inline
+## Inline links
 
 If a horizontal version is needed, use the `inline` attribute.
 

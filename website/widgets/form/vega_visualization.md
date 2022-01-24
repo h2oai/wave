@@ -43,12 +43,12 @@ q.page['example'] = ui.form_card(box='1 1 2 4', items=[
 
 Check the full API at [ui.vega_visualization](/docs/api/ui#vega_visualization).
 
-## Dimensions
+## With dimensions
 
-In addition to `width` attribute that is present on every form component, vega visualization also provides
-a way to control height via `height` attribute, which defaults to `300px`. It supports all the
+In addition to the `width` attribute that is present on every form component, vega visualization also provides
+a way to control height via the `height` attribute, which defaults to `300px`. It supports all the
 [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units),
-however, `%` may not always work as you could expect so we advise to use static units like `px`,
+however, `%` may not always work as you could expect so we advise using static units like `px`,
 `rem` etc. instead.
 
 ```py

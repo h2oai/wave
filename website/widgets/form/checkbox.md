@@ -8,6 +8,12 @@ custom_edit_url: null
 
 Use checkboxes when you need to switch between 2 mutually exclusive options.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.checkbox](/docs/api/ui#checkbox) or check the interactive example in Tour app.
+
+## Basic checkbox
+
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
@@ -15,13 +21,9 @@ q.page['example'] = ui.form_card(
 )
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+## Setting initial values
 
-You can see the API for [ui.checkbox](/docs/api/ui#checkbox) or check the interactive example in Tour app.
-
-## Default value
-
-Use `value` attribute when you want to prepopulate the checkbox content.
+Use the `value` attribute when you want to prepopulate the checkbox content.
 
 ```py
 q.page['example'] = ui.form_card(
@@ -41,7 +43,7 @@ q.page['example'] = ui.form_card(
 
 ## Disabled checkbox
 
-Used for cases when the checkbox should not be changable yet (e.g. waiting for filling some other form element first)
+Used for cases when the checkbox should not be changeable yet (e.g. waiting for filling some other form element first)
 or serves as read-only information.
 
 ```py

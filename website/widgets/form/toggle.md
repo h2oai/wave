@@ -12,19 +12,21 @@ or off). The difference is that toggles should be used when the user expects ins
 app theme change. In other words, use them for actions that take immediate effect. Checkboxes
 on the other hand usually require a submit button press, e.g. filling a form.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.toggle](/docs/api/ui#toggle) or check the interactive example in Tour app.
+
+## Basic toggle
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.toggle(name='toggle', label='Toggle'),
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+## Setting initial values
 
-You can see the API for [ui.toggle](/docs/api/ui#toggle) or check the interactive example in Tour app.
-
-## Default value
-
-As most of the components, toggle also uses `value` attribute to determine the initial
+As most of the components, toggle also uses the `value` attribute to determine the initial
 component state.
 
 ```py
@@ -33,7 +35,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Disabled
+## Disabled toggle
 
 Used for cases when the toggle should not be changeable yet (e.g. waiting for filling some
 other form elements first) or serves as read-only information.

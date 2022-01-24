@@ -15,8 +15,14 @@ custom_edit_url: null
  the arrow keys (up and down) to select a new value. When collapsed the user can select a new
  value by typing.
 
- Note that if `trigger` is specified, the inputs are submitted if the value changes and user presses Enter
- or user clicks out of the textbox. The value is also submitted upon drowdown option selection.
+ Note that if `trigger` is specified, the inputs are submitted if the value changes and the user presses Enter
+ or clicks out of the textbox. The value is also submitted upon dropdown option selection.
+
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.combobox](/docs/api/ui#combobox) or check the interactive example in Tour app.
+
+## Basic combobox
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -24,13 +30,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+## Setting initial values
 
-You can see the API for [ui.combobox](/docs/api/ui#combobox) or check the interactive example in Tour app.
-
-## Default value
-
-Use `value` attribute in order to control preselected state of the combobox.
+Use the `value` attribute to control the preselected state of the combobox.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -39,11 +41,11 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Placeholder
+## With placeholder
 
-A string rendered until a value is picked and provides hint on what kind of information is expected
-to be filled in. However, don't mix it with `label`. For example label could be `Name` and
-placeholder `John Doe`. It might be tempting to omit label and use placeholder instead, but that
+A string that is rendered until a value is picked, provides a hint on what kind of information is expected
+to be filled in. However, don't mix it with `label`. For example, the label could be `Name` and
+the placeholder `John Doe`. It might be tempting to omit the label and use a placeholder instead, but that
 is considered a UX anti-pattern.
 
 ```py
@@ -53,10 +55,10 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Disabled
+## Disabled combobox
 
 Use disabled attribute to indicate that the combobox is read-only or not actionable yet (e.g.
-waiting for user to fill in other form items).
+waiting for a user to fill in other form items).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -65,10 +67,10 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Error
+## With error
 
-Used for validation results. Also make sure to not use generic error messages like `An error occured`.
-Make sure the error messages are clear and user will know what to change in order to make validation
+Used for validation results. Make sure to not use generic error messages as `An error occurred`.
+Make sure the error messages are clear and the user will know what to change to make validation
 pass.
 
 ```py

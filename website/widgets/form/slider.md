@@ -22,15 +22,17 @@ The default value of the slider will be zero or be constrained to the `min` and 
 The `min` will be returned if the value is set under the `min` and the `max` will be returned if set
 higher than the `max` value.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.slider](/docs/api/ui#slider) or check the interactive example in Tour app.
+
+## Basic slider
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.slider(name='slider', label='Slider')
 ])
 ```
-
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
-
-You can see the API for [ui.slider](/docs/api/ui#slider) or check the interactive example in Tour app.
 
 ## Default attribute values
 
@@ -41,9 +43,9 @@ You can see the API for [ui.slider](/docs/api/ui#slider) or check the interactiv
 | step        | 1       |
 | value       | 0       |
 
-## Default value
+## Setting initial values
 
-Use `value` attribute in order to control preselected state of the slider.
+Use the `value` attribute to control the preselected state of the slider.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -51,10 +53,10 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Disabled
+## Disabled slider
 
-Use `disabled` attribute to indicate that the slider is read-only or not actionable yet (e.g.
-waiting for user to fill in other form items).
+Use the `disabled` attribute to indicate that the slider is read-only or not actionable yet (e.g.
+waiting for a user to fill in other form items).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[

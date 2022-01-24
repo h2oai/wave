@@ -10,6 +10,8 @@ Do you have a text that your users need to copy-paste? Use `ui.copyable_text` th
 
 Check the full API at [ui.copyable_text](/docs/api/ui#copyable_text).
 
+## Basic copyable text
+
 ```py
 q.page['form'] = ui.form_card(
     box='1 1 2 2',
@@ -17,7 +19,7 @@ q.page['form'] = ui.form_card(
 )
 ```
 
-## Multiline
+## Multiline copyable text
 
 If you need to display longer content, use the `multiline` attribute.
 

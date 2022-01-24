@@ -6,7 +6,11 @@ keywords:
 custom_edit_url: null
 ---
 
-Make your app come to life by including an interesting imagery.
+Make your app come to life by including interesting imagery.
+
+Check the full API at [ui.image](/docs/api/ui#image).
+
+## Basic image
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
@@ -14,11 +18,9 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-Check the full API at [ui.image](/docs/api/ui#image).
+## Base64 image
 
-## Base64
-
-Wave also support images in [Base64](https://en.wikipedia.org/wiki/Base64) format. You need to
+Wave also supports images in [Base64](https://en.wikipedia.org/wiki/Base64) format. You need to
 provide `image` with a base64 string and `type` of the image.
 
 ```py
@@ -48,7 +50,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-Another alternative how to make use of a Base64 images is constructing a
+Another alternative how to make use of Base64 images is constructing a
 [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs).
 
 ```py
@@ -78,10 +80,10 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
-## Markdown
+## Markdown image
 
 Apart from using a dedicated [ui.image](/docs/api/ui#image) component, one can also include images
-using any textual component that supports Markdown. This way requires a regular image URLs (no base64).
+using any textual component that supports Markdown. This way requires regular image URLs (no base64).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[

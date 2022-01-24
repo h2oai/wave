@@ -6,7 +6,7 @@ keywords:
 custom_edit_url: null
 ---
 
-Used for rendering a dynamic custom HTML content using a templating language.
+Used for rendering dynamic custom HTML content using a templating language.
 
 :::warning
 One of the key advantages of Wave is zero HTML / CSS / JS knowledge. We strongly advise you to use

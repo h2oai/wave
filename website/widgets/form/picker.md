@@ -9,6 +9,12 @@ custom_edit_url: null
 Pickers are used to select one or more choices, such as tags, from a list.
 Use a picker to allow the user to quickly search for or manage a few tags.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.picker](/docs/api/ui#picker) or check the interactive example in Tour app.
+
+## Basic picker
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.picker(name='picker', label='Picker', choices=[
@@ -19,13 +25,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+## With preselection
 
-You can see the API for [ui.picker](/docs/api/ui#picker) or check the interactive example in Tour app.
-
-## Preselection
-
-Use `values` attribute to preselect certain tags.
+Use the `values` attribute to preselect certain tags.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -37,9 +39,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Limit selection
+## With a limited selection
 
-Wave also makes it possible to limit the number of choices a user might pick via `max_choices` attribute.
+Wave also makes it possible to limit the number of choices a user might pick via the `max_choices` attribute.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -51,9 +53,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Disabled
+## Disabled picker
 
-Used for cases when the picker should not be changable yet (e.g. waiting for filling some other
+Used for cases when the picker should not be changeable yet (e.g. waiting for filling some other
 form element first) or should serve as a read-only element.
 
 ```py
@@ -66,10 +68,10 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Required
+## Required picker
 
 Renders a small asterisk next to the label. Used for cases when the input has to be provided,
-otherwise the form is considered invalid.
+otherwise, the form is considered invalid.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[

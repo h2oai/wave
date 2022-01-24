@@ -6,7 +6,7 @@ keywords:
 custom_edit_url: null
 ---
 
-Used for rendering a custom HTML content.
+Used for rendering custom HTML content.
 
 :::warning
 One of the key advantages of Wave is zero HTML / CSS / JS knowledge. We strongly advise you to use
@@ -26,6 +26,6 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
 
 Check the full API at [ui.markup](/docs/api/ui#markup).

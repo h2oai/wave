@@ -10,6 +10,12 @@ Need to display textual content? No worries, we've got you covered.
 
 Check the full API at [ui.text](/docs/api/ui#text).
 
+## Basic text
+
+```py
+q.page['form'] = ui.form_card(box='1 1 2 4', items=[ui.text('Normal text')])
+```
+
 ## Sizes
 
 Wave supports a lot of text variations. This may come in handy when you want to distinguish certain parts of text from the other. For example title
@@ -45,7 +51,7 @@ q.page['form'] = ui.form_card(
 )
 ```
 
-## Markdown
+## With markdown
 
 Interested in even more text flexibility? Wave supports `Markdown` in all these components!
 
@@ -89,42 +95,5 @@ Table:
 q.page['form'] = ui.form_card(
     box='1 1 4 10',
     items=[ui.text(sample_markdown)]
-)
-```
-
-## Label
-
-Despite the fact most of the form elements have label built in, controlled by an attribute, it still sometimes make sense to want your own label. One example
-could be having an interactive visualization on a form that requires user input. Wave supports standard, required and disabled states.
-
-```py
-q.page['form'] = ui.form_card(
-    box='1 1 2 2',
-    items=[
-        ui.label(label='Standard Label'),
-        ui.label(label='Required Label', required=True),
-        ui.label(label='Disabled Label', disabled=True),
-    ]
-)
-```
-
-## Message bar
-
-Message bar is a more fancy way of telling your users what's going on. Whether something finished with success or failure or to give them additional info / warning about
-upcoming app maintenance. This component supports plaintext, markdown and even HTML!
-
-```py
-q.page['form'] = ui.form_card(
-    box='1 1 4 6',
-    items=[
-        ui.message_bar(type='blocked', text='This action is blocked.'),
-        ui.message_bar(type='error', text='This is an error message'),
-        ui.message_bar(type='warning', text='This is a warning message.'),
-        ui.message_bar(type='info', text='This is an information message.'),
-        ui.message_bar(type='success', text='This is an success message.'),
-        ui.message_bar(type='danger', text='This is a danger message.'),
-        ui.message_bar(type='success', text='This is a **MARKDOWN** _message_.'),
-        ui.message_bar(type='success', text='This is an <b>HTML</b> <i>message</i>.'),
-    ]
 )
 ```

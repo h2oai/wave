@@ -8,6 +8,12 @@ custom_edit_url: null
 
 Use this component when you want to navigate between multiple groups of related content.
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.tabs](/docs/api/ui#tabs) or check the interactive example in Tour app.
+
+## Basic tabs
+
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.tabs(name='tabs', items=[
@@ -18,13 +24,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+## Setting initial values
 
-You can see the API for [ui.tabs](/docs/api/ui#tabs) or check the interactive example in Tour app.
-
-## Default value
-
-Use `value` attribute in order to control preselected state of the tabs. If not specified,
+Use the `value` attribute to control the preselected state of the tabs. If not specified,
 the first tab is selected by default.
 
 ```py
@@ -37,7 +39,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Icons
+## With icons
 
 Polish your tabs with [icons](https://uifabricicons.azurewebsites.net/), it's simple!
 
@@ -51,9 +53,9 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## Links
+## With links
 
-If you prefer textual look over default buttons, use `link` attribute.
+If you prefer textual look over default buttons, use the `link` attribute.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
