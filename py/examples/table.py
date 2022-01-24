@@ -39,7 +39,7 @@ issues = [
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width='300'),
+    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width='300', overflow='tooltip'),
     ui.table_column(name='status', label='Status', filterable=True),
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
     ui.table_column(name='views', label='Views', sortable=True, data_type='number'),

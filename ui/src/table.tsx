@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { TooltipHost, TooltipOverflowMode } from '@fluentui/react'
+import { ITooltipHostStyles, TooltipHost, TooltipOverflowMode } from '@fluentui/react'
 import { B, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -118,7 +118,7 @@ type WaveColumn = Fluent.IColumn & {
   dataType?: S
   cellType?: TableCellType
   isSortable?: B
-  overflow?: 'ellipsis' | 'tooltip' | 'wrap' // TODO: repeated type
+  overflow?: S
 }
 
 type DataTable = {
@@ -377,11 +377,20 @@ const
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
-        // TODO: find out if aria-describedby is necessary - e.g. on FireFox
+        // prevent Safari from showing a default tooltip
+        const hostStyles: Partial<ITooltipHostStyles> = {
+          root: {
+            '::after': {
+              content: '',
+              display: 'block',
+            }
+          },
+        }
+
         const TooltipWrapper = ({ children }: { children: string }) => {
-          if (col.overflow === 'tooltip') return <TooltipHost id={item.key as string} content={children} overflowMode={TooltipOverflowMode.Parent}><span aria-describedby={item.key as string}>{children}</span></TooltipHost>
-          if (col.overflow === 'wrap') return <span style={{ whiteSpace: col.overflow === 'wrap' ? 'normal' : undefined, textOverflow: col.overflow === 'wrap' ? 'clip' : undefined }}>{children}</span>
-          return <>{children}</> // TODO: fix type without <></>
+          if (col.overflow === 'tooltip') return <TooltipHost styles={hostStyles} id={item.key as string} content={children} overflowMode={TooltipOverflowMode.Parent} title={children}>{children}</TooltipHost>
+          if (col.overflow === 'wrap') return <span style={{ whiteSpace: col.overflow === 'wrap' ? 'normal' : undefined }}>{children}</span>
+          return <div>{children}</div>
         }
 
         let v = item[col.fieldName as S]
