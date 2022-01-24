@@ -581,8 +581,7 @@ export const
       },
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
-          let filters: Dict<S[]> | null = null
-          filters = selectedFilters || {}
+          const filters = selectedFilters || {}
           if (checked) {
             if (filters[filterKey]) filters[filterKey].push(filterVal)
             else filters[filterKey] = [filterVal]
