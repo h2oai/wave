@@ -71,6 +71,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6.1',
     install_requires=[
+        'certifi',  # Workaround for urllib.error.URLError SSL: CERTIFICATE_VERIFY_FAILED on OSX
         'Click',
         'httpx==0.16.1',
         'starlette==0.13.8',
