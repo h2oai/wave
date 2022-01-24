@@ -26,10 +26,10 @@ async def serve(q: Q):
             image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
             items=[
                 ui.nav_group('Menu', items=[
-                    ui.nav_item(name='#menu/spam', label='Spam', tooltip='I contain unwanted messages.'),
-                    ui.nav_item(name='#menu/ham', label='Ham', tooltip='I am tasty!'),
+                    ui.nav_item(name='#menu/spam', label='Spam'),
+                    ui.nav_item(name='#menu/ham', label='Ham'),
                     ui.nav_item(name='#menu/eggs', label='Eggs', tooltip='Make me a scrambled egg.'),
-                    ui.nav_item(name='#menu/toast', label='Toast', tooltip='I love toasters!', disabled=True),
+                    ui.nav_item(name='#menu/toast', label='Toast', disabled=True),
                 ]),
                 ui.nav_group('Help', items=[
                     ui.nav_item(name='#about', label='About', icon='Info'),

@@ -142,7 +142,7 @@ export const
     const render = () => {
       const { title, subtitle, icon, icon_color = '$text', image, persona, secondary_items, color = 'card' } = state
       return (
-        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)}>
+        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: color === 'primary' ? cssVar('$saturatedPrimary') : undefined }}>
           <div className={css.header}>
             {(image || icon) && (
               <div className={css.brand}>
