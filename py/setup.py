@@ -24,9 +24,7 @@ with open('README.md', 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
 platform = os.getenv('OS', 'darwin')
-__version__ = 'DEV'
-exec(open('h2o_wave/version.py').read())
-version = __version__
+version = os.getenv('VERSION', 'DEV')
 base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-amd64')
 
 
