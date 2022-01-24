@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, getContrast } from './theme'
-import { S } from 'h2o-wave'
+import { Tag } from './tag_table_cell_type'
 
 const css = stylesheet({
   tag: {
@@ -24,42 +24,19 @@ const css = stylesheet({
     alignItems: 'center',
     borderRadius: 4,
     boxSizing: 'border-box',
-  },
-  large: {
     minWidth: 49,
     height: 49,
     padding: '0 18px',
-  },
-  small: {
-    minWidth: 24,
-    height: 26,
-    padding: '0 10px',
   }
 })
 
-/** Create an information tag with text inside. */
-export interface InfoTag {
-  /** An identifying name for this component. */
-  name: S
-  /** The text displayed within the tag. */
-  label: S
-  /** Tag's background color. */
-  color: S
-  /** Tag's label color. If not specified, black or white will be picked based on correct contrast with background. */
-  label_color?: S
-  /** Tag's size. Defaults to 'small'. */
-  size?: 'small' | 'large'
-}
-
-export const XInfoTag = ({ model }: { model: InfoTag }) => {
+export const XInfoTag = ({ model }: { model: Tag }) => {
   const
     tagColor = model.color || '$text',
-    color = cssVar(model.label_color || getContrast(tagColor)),
-    styles = React.useMemo(() => model.size === 'large' ?
-      { font: 'wave-s18 wave-w6', size: css.large } : { font: 'wave-s14', size: css.small }, [model.size])
+    color = cssVar(model.label_color || getContrast(tagColor))
   
   return (
-    <div data-test={model.name} style={{ background: cssVar(tagColor), color }} className={clas(css.tag, styles.font, styles.size)}>
+    <div style={{ background: cssVar(tagColor), color }} className={clas(css.tag, 'wave-s18 wave-w6' )}>
       {model.label}
     </div>
   )

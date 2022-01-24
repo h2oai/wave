@@ -15,14 +15,14 @@ page['example'] = ui.form_card(
     box='1 1 2 2',
     items=[
         ui.inline(justify='center', items=[
-            ui.info_tag(name='tag-1', color=error, label='1', size='large'),
-            ui.info_tag(name='tag-2', color=warning, label='2', size='large'),
-            ui.info_tag(name='tag-3', color=success, label='3', size='large'),
+            ui.tag(color=error, label='1'),
+            ui.tag(color=warning, label='2'),
+            ui.tag(color=success, label='3'),
         ]),
         ui.inline(justify='center', items=[
-            ui.info_tag(name='tag-4', color=error, label='Error', size='small'),
-            ui.info_tag(name='tag-5', color=warning, label='Warning', size='small'),
-            ui.info_tag(name='tag-6', color=success, label='Success', size='small'),
+            ui.tag(color=error, label='Error'),
+            ui.tag(color=warning, label='Warning'),
+            ui.tag(color=success, label='Success'),
         ])
     ])
 

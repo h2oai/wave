@@ -6100,83 +6100,6 @@ class Menu:
         )
 
 
-_InfoTagSize = ['small', 'large']
-
-
-class InfoTagSize:
-    SMALL = 'small'
-    LARGE = 'large'
-
-
-class InfoTag:
-    """Create an information tag with text inside.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: str,
-            color: str,
-            label_color: Optional[str] = None,
-            size: Optional[str] = None,
-    ):
-        _guard_scalar('InfoTag.name', name, (str,), False, False, False)
-        _guard_scalar('InfoTag.label', label, (str,), False, False, False)
-        _guard_scalar('InfoTag.color', color, (str,), False, False, False)
-        _guard_scalar('InfoTag.label_color', label_color, (str,), False, True, False)
-        _guard_enum('InfoTag.size', size, _InfoTagSize, True)
-        self.name = name
-        """An identifying name for this component."""
-        self.label = label
-        """The text displayed within the tag."""
-        self.color = color
-        """Tag's background color."""
-        self.label_color = label_color
-        """Tag's label color. If not specified, black or white will be picked based on correct contrast with background."""
-        self.size = size
-        """Tag's size. Defaults to "small" if "large" is not specified. One of 'small', 'large'. See enum h2o_wave.ui.InfoTagSize."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('InfoTag.name', self.name, (str,), False, False, False)
-        _guard_scalar('InfoTag.label', self.label, (str,), False, False, False)
-        _guard_scalar('InfoTag.color', self.color, (str,), False, False, False)
-        _guard_scalar('InfoTag.label_color', self.label_color, (str,), False, True, False)
-        _guard_enum('InfoTag.size', self.size, _InfoTagSize, True)
-        return _dump(
-            name=self.name,
-            label=self.label,
-            color=self.color,
-            label_color=self.label_color,
-            size=self.size,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'InfoTag':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        _guard_scalar('InfoTag.name', __d_name, (str,), False, False, False)
-        __d_label: Any = __d.get('label')
-        _guard_scalar('InfoTag.label', __d_label, (str,), False, False, False)
-        __d_color: Any = __d.get('color')
-        _guard_scalar('InfoTag.color', __d_color, (str,), False, False, False)
-        __d_label_color: Any = __d.get('label_color')
-        _guard_scalar('InfoTag.label_color', __d_label_color, (str,), False, True, False)
-        __d_size: Any = __d.get('size')
-        _guard_enum('InfoTag.size', __d_size, _InfoTagSize, True)
-        name: str = __d_name
-        label: str = __d_label
-        color: str = __d_color
-        label_color: Optional[str] = __d_label_color
-        size: Optional[str] = __d_size
-        return InfoTag(
-            name,
-            label,
-            color,
-            label_color,
-            size,
-        )
-
-
 class Component:
     """Create a component.
     """
@@ -6229,7 +6152,7 @@ class Component:
             facepile: Optional[Facepile] = None,
             copyable_text: Optional[CopyableText] = None,
             menu: Optional[Menu] = None,
-            info_tag: Optional[InfoTag] = None,
+            tag: Optional[Tag] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6278,7 +6201,7 @@ class Component:
         _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
-        _guard_scalar('Component.info_tag', info_tag, (InfoTag,), False, True, False)
+        _guard_scalar('Component.tag', tag, (Tag,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6373,7 +6296,7 @@ class Component:
         """Copyable text."""
         self.menu = menu
         """Menu."""
-        self.info_tag = info_tag
+        self.tag = tag
         """Information tag."""
 
     def dump(self) -> Dict:
@@ -6425,7 +6348,7 @@ class Component:
         _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
-        _guard_scalar('Component.info_tag', self.info_tag, (InfoTag,), False, True, False)
+        _guard_scalar('Component.tag', self.tag, (Tag,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6474,7 +6397,7 @@ class Component:
             facepile=None if self.facepile is None else self.facepile.dump(),
             copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
             menu=None if self.menu is None else self.menu.dump(),
-            info_tag=None if self.info_tag is None else self.info_tag.dump(),
+            tag=None if self.tag is None else self.tag.dump(),
         )
 
     @staticmethod
@@ -6574,8 +6497,8 @@ class Component:
         _guard_scalar('Component.copyable_text', __d_copyable_text, (dict,), False, True, False)
         __d_menu: Any = __d.get('menu')
         _guard_scalar('Component.menu', __d_menu, (dict,), False, True, False)
-        __d_info_tag: Any = __d.get('info_tag')
-        _guard_scalar('Component.info_tag', __d_info_tag, (dict,), False, True, False)
+        __d_tag: Any = __d.get('tag')
+        _guard_scalar('Component.tag', __d_tag, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6623,7 +6546,7 @@ class Component:
         facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
         copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
         menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
-        info_tag: Optional[InfoTag] = None if __d_info_tag is None else InfoTag.load(__d_info_tag)
+        tag: Optional[Tag] = None if __d_tag is None else Tag.load(__d_tag)
         return Component(
             text,
             text_xl,
@@ -6672,7 +6595,7 @@ class Component:
             facepile,
             copyable_text,
             menu,
-            info_tag,
+            tag,
         )
 
 

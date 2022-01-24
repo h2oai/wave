@@ -230,13 +230,6 @@
     ],
     "description": "Create a minimal Wave Image."
   },
-  "Wave InfoTag": {
-    "prefix": "w_info_tag",
-    "body": [
-      "ui.info_tag(name='$1', label='$2', color='$3'),$0"
-    ],
-    "description": "Create a minimal Wave InfoTag."
-  },
   "Wave Label": {
     "prefix": "w_label",
     "body": [
@@ -1024,7 +1017,7 @@
   "Wave Full Component": {
     "prefix": "w_full_component",
     "body": [
-      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, facepile=$45, copyable_text=$46, menu=$47, info_tag=$48),$0"
+      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, facepile=$45, copyable_text=$46, menu=$47, tag=$48),$0"
     ],
     "description": "Create a full Wave Component."
   },
@@ -1097,13 +1090,6 @@
       "ui.image(title='$1', type='$2', image='$3', path='$4', width='$5', visible=${6:true}),$0"
     ],
     "description": "Create a full Wave Image."
-  },
-  "Wave Full InfoTag": {
-    "prefix": "w_full_info_tag",
-    "body": [
-      "ui.info_tag(name='$1', label='$2', color='$3', label_color='$4', size='${5:small\" if \"large\" is not specified}'),$0"
-    ],
-    "description": "Create a full Wave InfoTag."
   },
   "Wave Full Label": {
     "prefix": "w_full_label",
