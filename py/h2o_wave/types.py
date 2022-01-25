@@ -3209,11 +3209,10 @@ class TableColumnDataType:
     TIME = 'time'
 
 
-_TableColumnOverflow = ['ellipsis', 'tooltip', 'wrap']
+_TableColumnOverflow = ['tooltip', 'wrap']
 
 
 class TableColumnOverflow:
-    ELLIPSIS = 'ellipsis'
     TOOLTIP = 'tooltip'
     WRAP = 'wrap'
 
@@ -3267,7 +3266,7 @@ class TableColumn:
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Renders as plain text by default."""
         self.overflow = overflow
-        """Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'. One of 'ellipsis', 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow."""
+        """Defines how to handle the long text that does not fit into the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

@@ -55,8 +55,8 @@ interface TableColumn {
   data_type?: 'string' | 'number' | 'time'
   /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType
-  /** Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'. */
-  overflow?: 'ellipsis' | 'tooltip' | 'wrap'
+  /** Defines how to handle the long text that does not fit into the cell. */
+  overflow?: 'tooltip' | 'wrap'
 }
 
 /** Create a table row. */
@@ -115,10 +115,10 @@ export interface Table {
 }
 
 type WaveColumn = Fluent.IColumn & {
-  dataType?: S
+  dataType?: 'string' | 'number' | 'time'
   cellType?: TableCellType
   isSortable?: B
-  overflow?: S
+  overflow?: 'tooltip' | 'wrap'
 }
 
 type DataTable = {
@@ -377,7 +377,7 @@ const
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
-        // prevent Safari from showing a default tooltip
+        // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
         const hostStyles: Partial<ITooltipHostStyles> = {
           root: {
             '::after': {
@@ -390,7 +390,7 @@ const
         const TooltipWrapper = ({ children }: { children: string }) => {
           if (col.overflow === 'tooltip') return <TooltipHost styles={hostStyles} id={item.key as string} content={children} overflowMode={TooltipOverflowMode.Parent} title={children}>{children}</TooltipHost>
           if (col.overflow === 'wrap') return <span style={{ whiteSpace: col.overflow === 'wrap' ? 'normal' : undefined }}>{children}</span>
-          return <div>{children}</div>
+          return <>{children}</>
         }
 
         let v = item[col.fieldName as S]

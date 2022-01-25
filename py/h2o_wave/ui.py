@@ -1259,7 +1259,7 @@ def table_column(
         link: Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table.
         data_type: Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
         cell_type: Defines how to render each cell in this column. Renders as plain text by default.
-        overflow: Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'. One of 'ellipsis', 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow.
+        overflow: Defines how to handle the long text that does not fit into the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow.
     Returns:
         A `h2o_wave.types.TableColumn` instance.
     """

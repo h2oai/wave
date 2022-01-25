@@ -2073,7 +2073,7 @@
     <variable name="link" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="data_type" expression="" defaultValue="&quot;string&quot;" alwaysStopAt="true"/>
     <variable name="cell_type" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="overflow" expression="" defaultValue="&quot;ellipsis&quot;" alwaysStopAt="true"/>
+    <variable name="overflow" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

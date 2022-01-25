@@ -1452,8 +1452,8 @@ ui_tag_table_cell_type <- function(
 #' @param data_type Defines the data type of this column. Defaults to `string`.
 #'   One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
 #' @param cell_type Defines how to render each cell in this column. Renders as plain text by default.
-#' @param overflow Defines how to handle the long text that does not fit into the cell. Defaults to 'ellipsis'.
-#'   One of 'ellipsis', 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow.
+#' @param overflow Defines how to handle the long text that does not fit into the cell.
+#'   One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnOverflow.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(
