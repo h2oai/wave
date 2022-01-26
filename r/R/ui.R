@@ -1401,11 +1401,11 @@ ui_tag <- function(
   .guard_scalar("label", "character", label)
   .guard_scalar("color", "character", color)
   .guard_scalar("label_color", "character", label_color)
-  .o <- list(tag=list(
+  .o <- list(
     label=label,
     color=color,
-    label_color=label_color))
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+    label_color=label_color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTag"))
   return(.o)
 }
 
@@ -2653,6 +2653,20 @@ ui_menu <- function(
     icon=icon,
     image=image,
     name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a set of tags laid out horizontally.
+#'
+#' @param items Tags in this set.
+#' @return A Tags instance.
+#' @export
+ui_tags <- function(
+  items) {
+  .guard_vector("items", "WaveTag", items)
+  .o <- list(tags=list(
+    items=items))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

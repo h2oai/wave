@@ -18,6 +18,10 @@ import { clas, cssVar, getContrast } from './theme'
 import { Tag } from './tag_table_cell_type'
 
 const css = stylesheet({
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   tag: {
     display: 'flex',
     justifyContent: 'center',
@@ -27,17 +31,32 @@ const css = stylesheet({
     minWidth: 49,
     height: 49,
     padding: '0 18px',
+    marginRight: 10,
   }
 })
 
-export const XInfoTag = ({ model }: { model: Tag }) => {
-  const
-    tagColor = model.color || '$text',
-    color = cssVar(model.label_color || getContrast(tagColor))
+/** Create a set of tags laid out horizontally. */
+export interface Tags {
+  /** Tags in this set. */
+  items: Tag[]
+}
+
+export const XTags = ({ model }: { model: Tags }) => {
+  const tags = model.items.map((tag, idx) => {
+    const
+      tagColor = tag.color || '$text',
+      color = cssVar(tag.label_color || getContrast(tagColor))
+  
+    return (
+      <div key={idx} style={{ background: cssVar(tagColor), color }} className={clas(css.tag, 'wave-s18 wave-w6' )}>
+        {tag.label}
+      </div>
+    )
+  })
   
   return (
-    <div style={{ background: cssVar(tagColor), color }} className={clas(css.tag, 'wave-s18 wave-w6' )}>
-      {model.label}
+    <div className={css.container}>
+      {tags}
     </div>
   )
 }

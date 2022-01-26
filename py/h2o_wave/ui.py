@@ -1187,7 +1187,7 @@ def tag(
         label: str,
         color: str,
         label_color: Optional[str] = None,
-) -> Component:
+) -> Tag:
     """Create a tag.
 
     Args:
@@ -1197,11 +1197,11 @@ def tag(
     Returns:
         A `h2o_wave.types.Tag` instance.
     """
-    return Component(tag=Tag(
+    return Tag(
         label,
         color,
         label_color,
-    ))
+    )
 
 
 def tag_table_cell_type(
@@ -2277,6 +2277,21 @@ def menu(
         icon,
         image,
         name,
+    ))
+
+
+def tags(
+        items: List[Tag],
+) -> Component:
+    """Create a set of tags laid out horizontally.
+
+    Args:
+        items: Tags in this set.
+    Returns:
+        A `h2o_wave.types.Tags` instance.
+    """
+    return Component(tags=Tags(
+        items,
     ))
 
 
