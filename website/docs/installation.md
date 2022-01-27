@@ -56,14 +56,14 @@ You should now have access to 200+ examples locally.
 
 ```
 Fetching examples and related files. Please wait...
-Downloading https://github.com/h2oai/wave/releases/download/v0.19.0/wave-0.19.0-linux-amd64.tar.gz
+Downloading https://github.com/h2oai/wave/releases/download/v0.20.0/wave-0.20.0-linux-amd64.tar.gz
 Extracting...
 
 All additional files downloaded and extracted successfully!
-Examples and tour............. /home/elp/git/wave/py/wave/examples
-Demos and layout samples...... /home/elp/git/wave/py/wave/demo
-Automated test harness........ /home/elp/git/wave/py/wave/test
-Wave daemon for deployments... /home/elp/git/wave/py/wave
+Examples and tour............. /home/wave/examples
+Demos and layout samples...... /home/wave/demo
+Automated test harness........ /home/wave/test
+Wave daemon for deployments... /home/wave
 ```
 
 :::info
