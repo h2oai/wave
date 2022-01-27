@@ -162,8 +162,6 @@ def append_images(files: List[DocFile]):
 def map_to_doc_file(p: Path) -> DocFile:
     p = p.relative_to(docs_path)
     _, *groups, _ = p.parts
-    if len(groups) > 2:
-        raise ValueError(f'2-level nesting not supported - {"/".join(groups)}')
     return DocFile(str(p), groups, p.stem)
 
 
