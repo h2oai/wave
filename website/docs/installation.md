@@ -66,6 +66,10 @@ Automated test harness........ /home/elp/git/wave/py/wave/test
 Wave daemon for deployments... /home/elp/git/wave/py/wave
 ```
 
+:::info
+On recent versions of OSX, it's possible to run into certificate verification errors while running `wave fetch`, specifically `urllib.error.URLError: urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate`. To fix this problem, navigate to `Application/Python 3.7` on your system and execute `Install Certificates.command`.
+:::
+
 ## Run the tour
 
 The Wave tour is a Wave app that lets you play with all the examples interactively. 
