@@ -44,7 +44,7 @@ The browser-based client's job is to render content on the user interface, and t
 
 ## How does it work?
 
-The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](/docs/components/overview). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md).
+The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](/docs/widgets/overview). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md).
 
 When a browser is pointed to a route, it pulls a copy of the page, creates a *replica* locally, and renders the content on the user interface.
 

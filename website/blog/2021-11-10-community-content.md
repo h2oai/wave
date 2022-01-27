@@ -22,7 +22,7 @@ Have feedback? Documentation is often written by the product experts. Have an op
 
 1.  [Learn what Wave does](https://wave.h2o.ai/docs/getting-started)
 2.  [Install the software on your local workstation](https://wave.h2o.ai/docs/installation)
-3.  [Run a pre-built app on your local workstation to have access to over 150 examples](https://wave.h2o.ai/docs/tour)
+3.  [Run a pre-built app on your local workstation to have access to over 150 examples](/docs/installation#run-the-tour)
 4.  Work through the [Hello World](https://wave.h2o.ai/docs/tutorial-hello), [Beer Wall](https://wave.h2o.ai/docs/tutorial-beer), [System Monitor](https://wave.h2o.ai/docs/tutorial-monitor), [Bean Counter](https://wave.h2o.ai/docs/tutorial-counter), and [Todo List](https://wave.h2o.ai/docs/tutorial-todo) tutorials
     
 
@@ -89,7 +89,7 @@ Here is a list of some apps you may want to use as reference:
 -   A Tour of Wave - these are 150+ short examples which can be accessed in several different ways
 	-   Use the documentation at [wave.h2o.ai](http://wave.h2o.ai/) when you want to search for something and get an example app returned. Look for the Examples title in the search results.
 	-   Explore the examples directly in the [documentation gallery](https://wave.h2o.ai/docs/examples)
-	-   [Run the examples as single app, a Tour of Wave, on your local workstation](https://wave.h2o.ai/docs/tour)
+	-   [Run the examples as single app, a Tour of Wave, on your local workstation](/docs/installation#run-the-tour)
 -   [Sample Applications](https://github.com/h2oai/wave-apps) - these eight apps can be used as a starting point in your app development journey. Have an idea for how to improve them or streamline the source code or make the code more readable? Make some changes and a PR.
 	-   [Explainable Hotel Ratings](https://github.com/h2oai/wave-apps/blob/main/explaining-ratings/README.md): This app allows you to filter hotel reviews and compare the most common phrases from the subset to the overall most common phrases.
 	-   [Guess the Number](https://github.com/h2oai/wave-apps/blob/main/guess-the-number/README.md): This a game where the machine "thinks" of a number and the human has to guess, getting told higher or lower. This application has a leader board where different users can compete to see who can guess numbers in the fewest number of turns, on average. This application teaches the developer about different app states and could be fun for new users.

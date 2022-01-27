@@ -50,7 +50,7 @@ At this point, your app will be up and running, but it doesn't do anything yet. 
 
 Let's add a button to our app. Our goal is to increment and display the bean count each time the button is clicked.
 
-To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](/docs/components/form/overview) (also called *widgets*). In this case, our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
+To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](/docs/widgets/form/overview) (also called *widgets*). In this case, our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
 
 ```py {5-18} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui
@@ -126,7 +126,7 @@ From now on, any time you see the term 'client', recall that it's a technical te
 :::
 
 :::info
-Each component in the Wave component library populates `q.args` with its own value. For more information, see [Components](/docs/components/form/overview).
+Each component in the Wave component library populates `q.args` with its own value. For more information, see [Components](/docs/widgets/form/overview).
 :::
 
 Your button should now count beans when clicked:

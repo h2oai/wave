@@ -101,7 +101,7 @@ Next, we turn each incomplete to-do item into a checkbox (using `ui.checkbox()`)
 Also, we want each checkbox to raise an event immediately when checked, so we set its `trigger` attribute to `True`.
 
 :::tip
-Several [components](/docs/components/form/overview) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
+Several [components](/docs/widgets/form/overview) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
 :::
 
 ```py {1,30-37} title="$HOME/wave-apps/todo.py"
@@ -450,7 +450,8 @@ A little housekeeping goes a long way: add a "Clear" button on the main page to 
 
 Congratulations! You've completed all the tutorials (hopefully). There are three paths you can take from here:
 
-- [Components](/docs/components/overview). 150+ examples that cover everything that Wave has to offer.
+- [Widgets](/docs/widgets/overview). Widgets that cover best UX practices and a lot of widgets variations.
+- [Gallery](examples). 150+ examples that cover everything that Wave has to offer.
 - [Guide](guide). An in-depth look at each of Wave's features.
 - [API](api/index). Reference-level documentation for the Python API.
 

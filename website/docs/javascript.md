@@ -125,4 +125,4 @@ async def serve(q: Q):
 
 ## Examples
 
-You can play with more examples in the [Wave Tour](tour) as well.
+You can play with more examples in the [Wave Tour](/docs/installation#run-the-tour) as well.
