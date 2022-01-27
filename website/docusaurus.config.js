@@ -35,6 +35,7 @@ module.exports = {
         { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
         { to: 'docs/widgets/overview', label: 'Widgets', position: 'left' },
+        { to: 'docs/examples', label: 'Examples', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/wave/discussions', label: 'Discuss', position: 'left' },
@@ -50,14 +51,6 @@ module.exports = {
           title: 'Learn',
           items: [
             {
-              label: 'Gallery',
-              to: 'docs/examples',
-            },
-            {
-              label: 'Widgets',
-              to: 'docs/widgets/overview',
-            },
-            {
               label: 'Get Started',
               to: 'docs/getting-started',
               activeBasePath: 'docs',
@@ -67,8 +60,12 @@ module.exports = {
               to: 'docs/guide',
             },
             {
-              label: 'Enterprise',
-              to: 'https://h2oai.github.io/h2o-ai-cloud/',
+              label: 'Widgets',
+              to: 'docs/widgets/overview',
+            },
+            {
+              label: 'Examples',
+              to: 'docs/examples',
             },
             {
               label: 'API',
@@ -103,6 +100,10 @@ module.exports = {
             {
               label: 'Blog',
               to: 'blog',
+            },
+            {
+              label: 'Enterprise',
+              to: 'https://h2oai.github.io/h2o-ai-cloud/',
             },
             {
               label: 'Download',

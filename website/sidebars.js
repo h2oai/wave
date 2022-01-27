@@ -48,7 +48,6 @@ module.exports = {
       'wave-ml',
       'wavedb',
     ],
-    'Examples': examples.map(e => `examples/${e.slug}`),
     'Widgets': [
       "widgets/overview",
       {
@@ -140,6 +139,7 @@ module.exports = {
         ]
       },
     ],
+    'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [
       'api/index',
       'api/core',
