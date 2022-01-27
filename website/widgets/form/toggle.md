@@ -6,7 +6,7 @@ keywords:
 custom_edit_url: null
 ---
 
-Similar to [checkbox](/docs/components/form/checkbox), this control is used when your user
+Similar to [checkbox](/docs/widgets/form/checkbox), this control is used when your user
 needs to decide between 2 mutually exclusive options (like toggling something on
 or off). The difference is that toggles should be used when the user expects instant change, e.g.
 app theme change. In other words, use them for actions that take immediate effect. Checkboxes

@@ -159,12 +159,6 @@ def append_images(files: List[DocFile]):
             f.writelines(img_lines)
 
 
-def generate_json():
-    files = [map_to_doc_file(p) for p in Path(widgets_docs_path).rglob('*.md')]
-    with open(os.path.join(docs_path, 'widgets.js'), 'w') as f:
-        f.write(f'module.exports={json.dumps(files, cls=CustomEncoder)}')
-
-
 def map_to_doc_file(p: Path) -> DocFile:
     p = p.relative_to(docs_path)
     _, *groups, _ = p.parts
@@ -226,7 +220,6 @@ def main():
             pool.join()
         if not args.test:
             append_images(files)
-            generate_json()
         else:
             generate_diff_view()
             print('Testing finished, run \033[92mmake test-result\033[0m to see the results.')

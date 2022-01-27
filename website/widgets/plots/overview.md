@@ -12,7 +12,7 @@ A *plot* is a layered graphic, created using `ui.plot()`. Each layer displays *m
 There are two ways to add plots to a page:
 
 - Use a plot card (`ui.plot_card()`) and set its `plot` attribute using `ui.plot()`.
-- Use a form card (`ui.form_card()`), insert a visualization (`ui.visualization()`) and set its `plot` attribute using `ui.plot()`. See [form visualization](/docs/components/form/visualization) for more info.
+- Use a form card (`ui.form_card()`), insert a visualization (`ui.visualization()`) and set its `plot` attribute using `ui.plot()`. See [form visualization](/docs/widgets/form/visualization) for more info.
 
 Here's a short example that renders a scatterplot of values between [0, 1].
 

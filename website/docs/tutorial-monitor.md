@@ -81,7 +81,7 @@ Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Wave SDK ships with a variety of [stats cards](/docs/components/stat/overview), which are cards that display values or graphics, or a combination of both.
+The Wave SDK ships with a variety of [stats cards](/docs/widgets/stat/overview), which are cards that display values or graphics, or a combination of both.
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 
@@ -196,7 +196,7 @@ Point your browser to [http://localhost:10101/monitor](http://localhost:10101/mo
 
 ## Exercise
 
-Explore other kinds of cards in the [Components](/docs/components/overview) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
+Explore other kinds of cards in the [Widgets](/docs/widgets/overview) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
 
 ## Summary
 

@@ -9,7 +9,7 @@ custom_edit_url: null
 Visualizations are charts/plots/graphs that help you better understand your data.
 Wave uses [Grammar of Graphics](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149) to describe its plots.
 
-For a more thorough explanation of how Wave plots work, please see [Plots overview](/docs/components/plot/overview).
+For a more thorough explanation of how Wave plots work, please see [Plots overview](/docs/widgets/plot/overview).
 
 Check the full API at [ui.visualization](/docs/api/ui#visualization).
 
