@@ -27,25 +27,25 @@ native Wave components and use custom HTML only as a last resort solution.
 
 ## Content
 
-- [article](/docs/widgets/content/article)
-- [breadcrumbs](/docs/widgets/content/breadcrumbs)
-- [footer](/docs/widgets/content/footer)
-- [frame](/docs/widgets/content/frame)
 - [header](/docs/widgets/content/header)
-- [image](/docs/widgets/content/image)
-- [markdown](/docs/widgets/content/markdown)
-- [markup](/docs/widgets/content/markup)
+- [footer](/docs/widgets/content/footer)
 - [navigation](/docs/widgets/content/navigation)
-- [post](/docs/widgets/content/post)
-- [preview](/docs/widgets/content/preview)
-- [profile](/docs/widgets/content/profile)
-- [tabs](/docs/widgets/content/tabs)
-- [tall_article_preview](/docs/widgets/content/tall_article_preview)
-- [tall_info](/docs/widgets/content/tall_info)
-- [template](/docs/widgets/content/template)
+- [breadcrumbs](/docs/widgets/content/breadcrumbs)
 - [toolbar](/docs/widgets/content/toolbar)
+- [tabs](/docs/widgets/content/tabs)
+- [markdown](/docs/widgets/content/markdown)
+- [image](/docs/widgets/content/image)
+- [article](/docs/widgets/content/article)
+- [tall_article_preview](/docs/widgets/content/tall_article_preview)
 - [wide_article_preview](/docs/widgets/content/wide_article_preview)
+- [preview](/docs/widgets/content/preview)
+- [tall_info](/docs/widgets/content/tall_info)
 - [wide_info](/docs/widgets/content/wide_info)
+- [post](/docs/widgets/content/post)
+- [profile](/docs/widgets/content/profile)
+- [template](/docs/widgets/content/template)
+- [markup](/docs/widgets/content/markup)
+- [frame](/docs/widgets/content/frame)
 
 ## Form
 
@@ -91,31 +91,14 @@ native Wave components and use custom HTML only as a last resort solution.
 
 ## Stat
 
-- [large_bar_stat](/docs/widgets/stat/large_bar_stat)
 - [large_stat](/docs/widgets/stat/large_stat)
-- [small_series_stat](/docs/widgets/stat/small_series_stat)
+- [large_bar_stat](/docs/widgets/stat/large_bar_stat)
 - [small_stat](/docs/widgets/stat/small_stat)
+- [small_series_stat](/docs/widgets/stat/small_series_stat)
+- [tall_stats](/docs/widgets/stat/tall_stats)
 - [tall_gauge_stat](/docs/widgets/stat/tall_gauge_stat)
 - [tall_series_stat](/docs/widgets/stat/tall_series_stat)
-- [tall_stats](/docs/widgets/stat/tall_stats)
+- [wide_pie_stat](/docs/widgets/stat/wide_pie_stat)
 - [wide_bar_stat](/docs/widgets/stat/wide_bar_stat)
 - [wide_gauge_stat](/docs/widgets/stat/wide_gauge_stat)
-- [wide_pie_stat](/docs/widgets/stat/wide_pie_stat)
-- [wide_series_stat](/docs/widgets/stat/wide_series_stat)
-
-## Plots
-
-- [area](/docs/widgets/plots/area)
-- [interval](/docs/widgets/plots/interval)
-- [line](/docs/widgets/plots/line)
-- [path](/docs/widgets/plots/path)
-- [point](/docs/widgets/plots/point)
-
-### Third-party
-
-- [altair](/docs/widgets/plots/third-party/altair)
-- [bokeh](/docs/widgets/plots/third-party/bokeh)
-- [d3](/docs/widgets/plots/third-party/d3)
-- [matplotlib](/docs/widgets/plots/third-party/matplotlib)
-- [plotly](/docs/widgets/plots/third-party/plotly)
-- [vegalite](/docs/widgets/plots/third-party/vegalite)
+- [wide_series_stat](/docs/widgets/stat/wide_series_stat
