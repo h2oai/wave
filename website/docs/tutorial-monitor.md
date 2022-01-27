@@ -81,7 +81,7 @@ Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Wave SDK ships with a variety of [stats cards](/docs/widgets/stat/overview), which are cards that display values or graphics, or a combination of both.
+The Wave SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more).
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 

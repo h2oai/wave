@@ -54,8 +54,8 @@ module.exports = {
               to: 'docs/examples',
             },
             {
-              label: 'Components',
-              to: 'docs/components/overview',
+              label: 'Widgets',
+              to: 'docs/widgets/overview',
             },
             {
               label: 'Get Started',

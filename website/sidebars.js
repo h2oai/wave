@@ -34,6 +34,7 @@ module.exports = {
       'background',
       'expressions',
       'files',
+      'plotting',
       'javascript',
       'graphics',
       'security',
@@ -79,7 +80,6 @@ module.exports = {
         "type": "category",
         "label": "Stat",
         "items": [
-          "widgets/stat/overview",
           "widgets/stat/large_stat",
           "widgets/stat/large_bar_stat",
           "widgets/stat/small_stat",

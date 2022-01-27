@@ -450,7 +450,7 @@ A little housekeeping goes a long way: add a "Clear" button on the main page to 
 
 Congratulations! You've completed all the tutorials (hopefully). There are three paths you can take from here:
 
-- [Widgets](widgets). Widgets that cover best UX practices and a lot of widgets variations.
+- [Widgets](/docs/widgets/overview). Widgets that cover best UX practices and a lot of widgets variations.
 - [Gallery](examples). 150+ examples that cover everything that Wave has to offer.
 - [Guide](guide). An in-depth look at each of Wave's features.
 - [API](api/index). Reference-level documentation for the Python API.
