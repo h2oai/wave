@@ -47,6 +47,20 @@ native Wave components and use custom HTML only as a last resort solution.
 - [markup](/docs/widgets/content/markup)
 - [frame](/docs/widgets/content/frame)
 
+## Stat
+
+- [large_stat](/docs/widgets/stat/large_stat)
+- [large_bar_stat](/docs/widgets/stat/large_bar_stat)
+- [small_stat](/docs/widgets/stat/small_stat)
+- [small_series_stat](/docs/widgets/stat/small_series_stat)
+- [tall_stats](/docs/widgets/stat/tall_stats)
+- [tall_gauge_stat](/docs/widgets/stat/tall_gauge_stat)
+- [tall_series_stat](/docs/widgets/stat/tall_series_stat)
+- [wide_pie_stat](/docs/widgets/stat/wide_pie_stat)
+- [wide_bar_stat](/docs/widgets/stat/wide_bar_stat)
+- [wide_gauge_stat](/docs/widgets/stat/wide_gauge_stat)
+- [wide_series_stat](/docs/widgets/stat/wide_series_stat
+
 ## Form
 
 - [button](/docs/widgets/form/button)
@@ -88,17 +102,3 @@ native Wave components and use custom HTML only as a last resort solution.
 - [toggle](/docs/widgets/form/toggle)
 - [vega_visualization](/docs/widgets/form/vega_visualization)
 - [visualization](/docs/widgets/form/visualization)
-
-## Stat
-
-- [large_stat](/docs/widgets/stat/large_stat)
-- [large_bar_stat](/docs/widgets/stat/large_bar_stat)
-- [small_stat](/docs/widgets/stat/small_stat)
-- [small_series_stat](/docs/widgets/stat/small_series_stat)
-- [tall_stats](/docs/widgets/stat/tall_stats)
-- [tall_gauge_stat](/docs/widgets/stat/tall_gauge_stat)
-- [tall_series_stat](/docs/widgets/stat/tall_series_stat)
-- [wide_pie_stat](/docs/widgets/stat/wide_pie_stat)
-- [wide_bar_stat](/docs/widgets/stat/wide_bar_stat)
-- [wide_gauge_stat](/docs/widgets/stat/wide_gauge_stat)
-- [wide_series_stat](/docs/widgets/stat/wide_series_stat
