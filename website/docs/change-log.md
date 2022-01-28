@@ -12,6 +12,41 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.20.0
+January 28, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.20.0)
+- Added
+  - New: Base URL support.
+  - New: Menu component.
+  - New: TallStats card.
+  - New: Post card.
+  - New: Preview card.
+  - New: WideArticlePreview card.
+  - New: Add `items`, `secondary_items` and `color` to header.
+  - New: Add `items` to footer.
+  - New: Add `image`, `persona`, `secondary_items` and `color` to navigation.
+  - New: More official themes.
+  - New: Download examples locally with a new `wave fetch` CLI command.
+  - New: Add `value` to facepile component.
+  - New: Add `popup` to dropdown component.
+  - New: Add `trigger` to combobox component.
+  - New: Add `inline` to choice group.
+  - New: Add `blocking` to side panel.
+  - New: Add `spellcheck` to textbox.
+  - New: Add `height` to profile card.
+  - Docs: New widgets section.
+  - Docs: Color theming guide.
+- Changed
+  - Scrollbars now respect the active theme.
+  - Wave server is now part of Python distribution.
+  - Tall and wide info cards now support markdown for the `caption` attribute.
+  - Info cards are now clickable only when `name` attribute is not empty.
+  - Improve Wave Tour app header by providing logo and important links.
+- Fixed
+  - Fix handling decimal point for `ui.spinbox` component.
+  - Respect UTC time when selecting date via `ui.datepicker`.
+  - Swatch color picker now shows selected color upon clicking correctly.
+  - Fix incorrect links across API docs.
+
 ## v0.19.0
 October 29, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.19.0)
 - Added
