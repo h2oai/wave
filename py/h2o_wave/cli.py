@@ -46,8 +46,9 @@ def main():
 
 @main.command()
 @click.argument('app')
-@click.option("--no-reload", is_flag=True, default=False, help="Disable auto-reload.")
-def run(app: str, no_reload: bool):
+@click.option("--no-reload", is_flag=True, default=False, help="Don't restart app when source code is changed.")
+@click.option("--no-autostart", is_flag=True, default=False, help="Don't launch the Wave server automatically.")
+def run(app: str, no_reload: bool, no_autostart: bool):
     """Run an app.
 
     \b
@@ -92,8 +93,8 @@ def run(app: str, no_reload: bool):
         waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
         # OS agnostic wheels do not have waved - needed for HAC.
         is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
-        is_autostart_off = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
-        if is_autostart_off and is_waved_present and server_not_running:
+        autostart = (not no_autostart) or os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
+        if autostart and is_waved_present and server_not_running:
             subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
             server_not_running = _scan_free_port(server_port) == server_port
@@ -107,7 +108,7 @@ def run(app: str, no_reload: bool):
         if not server_not_running:
             uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
         else:
-            print('Wave server (waved) needs to be started first.')
+            print('Wave server not found. Please start the Wave server (waved or waved.exe) prior to running any app.')
 
 
 @main.command()

@@ -46,15 +46,11 @@ conda install -c h2oai h2o_wave
 
 ## Download examples
 
-Run `wave fetch` to download examples, demos, and the interactive tour.
+Run `wave fetch` to download app examples, demos, and the interactive tour.
 
 ```shell
 (venv) $ wave fetch
-```
 
-You should now have access to 200+ examples locally. 
-
-```
 Fetching examples and related files. Please wait...
 Downloading https://github.com/h2oai/wave/releases/download/v0.20.0/wave-0.20.0-linux-amd64.tar.gz
 Extracting...
@@ -65,6 +61,8 @@ Demos and layout samples...... /home/wave/demo
 Automated test harness........ /home/wave/test
 Wave daemon for deployments... /home/wave
 ```
+
+You should now have access to 200+ examples locally. 
 
 :::info
 On recent versions of OSX, it's possible to run into certificate verification errors while running `wave fetch`, specifically `urllib.error.URLError: urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate`. To fix this problem, navigate to `Application/Python 3.7` on your system and execute `Install Certificates.command`.
