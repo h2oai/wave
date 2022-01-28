@@ -15,6 +15,7 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 ## v0.20.0
 January 28, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.20.0)
 - Added
+  - New: Run `wave fetch` to download examples and tour locally.
   - New: Base URL support.
   - New: Menu component.
   - New: TallStats card.
@@ -25,7 +26,6 @@ January 28, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.20.0
   - New: Add `items` to footer.
   - New: Add `image`, `persona`, `secondary_items` and `color` to navigation.
   - New: More official themes.
-  - New: Download examples locally with a new `wave fetch` CLI command.
   - New: Add `value` to facepile component.
   - New: Add `popup` to dropdown component.
   - New: Add `trigger` to combobox component.
@@ -36,8 +36,9 @@ January 28, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.20.0
   - Docs: New widgets section.
   - Docs: Color theming guide.
 - Changed
+  - **The Wave server is now included in the Python distribution.** 
+  - **Starting apps using `wave run` now automatically starts the Wave Server.**
   - Scrollbars now respect the active theme.
-  - Wave server is now part of Python distribution.
   - Tall and wide info cards now support markdown for the `caption` attribute.
   - Info cards are now clickable only when `name` attribute is not empty.
   - Improve Wave Tour app header by providing logo and important links.
