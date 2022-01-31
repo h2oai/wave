@@ -150,7 +150,7 @@ tag: ## Bump version and tag
 	git add .
 	git commit -m "chore: Release v$(VERSION)"
 	git tag v$(VERSION)
-	# git push origin && git push origin --tags
+	git push origin && git push origin --tags
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
