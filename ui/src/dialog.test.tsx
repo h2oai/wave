@@ -51,7 +51,7 @@ describe('Dialog.tsx', () => {
   it('should close dialog when clicking on X', async () => {
     dialogB({ ...dialogProps, closable: true })
     const { container, queryByRole } = render(<Dialog />)
-    fireEvent.click(container.parentElement!.querySelector('.ms-Dialog-button--close')!)
+    fireEvent.click(container.parentElement!.querySelector('.ms-Dialog-button--close') as HTMLButtonElement)
     await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, wait } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
 import { wave } from './ui'
