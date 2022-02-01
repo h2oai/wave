@@ -59,7 +59,7 @@ native Wave components and use custom HTML only as a last resort solution.
 - [wide_pie_stat](/docs/widgets/stat/wide_pie_stat)
 - [wide_bar_stat](/docs/widgets/stat/wide_bar_stat)
 - [wide_gauge_stat](/docs/widgets/stat/wide_gauge_stat)
-- [wide_series_stat](/docs/widgets/stat/wide_series_stat
+- [wide_series_stat](/docs/widgets/stat/wide_series_stat)
 
 ## Form
 
