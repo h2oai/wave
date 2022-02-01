@@ -14,7 +14,7 @@ public class UtilsResources {
             "neon",
             "nord",
             "oceanic",
-            "one-dark-pro"
+            "one-dark-pro",
             "solarized",
             "winter-is-coming",
     };
