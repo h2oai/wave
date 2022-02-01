@@ -87,7 +87,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         app = app_path.replace(os.path.sep, '.')
 
     # Try to start Wave daemon if not running or turned off.
-    server_port = int(os.environ.get('H2O_WAVE_LISTEN', 10101))
+    server_port = int(os.environ.get('H2O_WAVE_LISTEN', ':10101').split(':')[-1])
     server_not_running = _scan_free_port(server_port) == server_port
     try:
         waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
