@@ -41,25 +41,25 @@ describe('Expander.tsx', () => {
 
   it('Expands/collapses on click', () => {
     const { getByTestId, getByRole } = render(<XExpander model={expanderProps} />)
-    expect(getByTestId('textbox')).not.toBeVisible()
+    expect(getByTestId(name).dataset.visible).toBe('hidden')
     fireEvent.click(getByRole('button'))
-    expect(getByTestId('textbox')).toBeVisible()
+    expect(getByTestId(name).dataset.visible).toBe('visible')
   })
 
   it('Collapsed by default', () => {
     const { getByTestId } = render(<XExpander model={expanderProps} />)
-    expect(getByTestId('textbox')).not.toBeVisible()
+    expect(getByTestId(name).dataset.visible).toBe('hidden')
   })
 
   it('Expands initially if expanded specified', () => {
     const { getByTestId } = render(<XExpander model={{ ...expanderProps, expanded: true }} />)
-    expect(getByTestId('textbox')).toBeVisible()
+    expect(getByTestId(name).dataset.visible).toBe('visible')
   })
 
   it('Expands/collapses on server change', () => {
     const { getByTestId, rerender } = render(<XExpander model={expanderProps} />)
-    expect(getByTestId('textbox')).not.toBeVisible()
+    expect(getByTestId(name).dataset.visible).toBe('hidden')
     rerender(<XExpander model={{ ...expanderProps, expanded: true }} />)
-    expect(getByTestId('textbox')).toBeVisible()
+    expect(getByTestId(name).dataset.visible).toBe('visible')
   })
 })

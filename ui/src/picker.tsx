@@ -59,9 +59,8 @@ export const XPicker = ({ model: m }: { model: Picker }) => {
     [selectedTags, setSelectedTags] = React.useState<Fluent.ITag[]>(tags.filter(({ key }) => m.values?.includes(key as S))),
     filterSuggestedTags = (filterText: S, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
-      const isAlreadySelected = (t: Fluent.ITag) => selectedTags && selectedTags.includes(t)
       const isStringMatch = (name: S) => name.toLowerCase().includes(filterText.toLowerCase())
-      return tags.filter(t => isStringMatch(t.name) && !isAlreadySelected(t))
+      return tags.filter(t => isStringMatch(t.name) && !selectedTags?.includes(t))
     },
     onChange = (items?: Fluent.ITag[]) => {
       setSelectedTags(items || [])

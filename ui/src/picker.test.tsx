@@ -126,7 +126,7 @@ describe('Picker.tsx', () => {
     fireEvent.click(getByRole('option'))
     typeToInput(input, name)
 
-    expect(queryByRole('option')).not.toBeInTheDocument()
+    expect(queryByRole('option')?.querySelector('.ms-Suggestions-none')).toBeInTheDocument()
   })
 
   it('Sets args - single selection', () => {

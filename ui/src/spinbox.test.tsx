@@ -73,7 +73,7 @@ describe('Spinbox.tsx', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
     simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
     expect(wave.args[name]).toBe(1)
-    expect(pushMock).toHaveBeenCalledTimes(1)
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Sets args on decrement', () => {
@@ -116,10 +116,14 @@ describe('Spinbox.tsx', () => {
   })
 
   it('Calls push on input if trigger specified', () => {
-    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
-    fireEvent.change(getByTestId(name), { target: { value: 50 } })
+    const
+      { container, getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
-    expect(wave.debounce).toHaveBeenCalled() // Not called immediately, but after specified timeout.
+    fireEvent.input(getByTestId(name), { target: { value: 50 } })
+
+    expect(spinboxInput.value).toBe('50') // Should be updated as user types - immediately.
+    expect(jest.getTimerCount()).toBe(1) // Not called immediately, but after specified timeout.
     expect(pushMock).toHaveBeenCalled()
   })
 
@@ -168,11 +172,11 @@ describe('Spinbox.tsx', () => {
       { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
       spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
-    fireEvent.change(spinboxInput, { target: { value: '0.00020001' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.00020001' } })
     expect(wave.args[name]).toBe(0.0002)
-    fireEvent.change(spinboxInput, { target: { value: '0.' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.' } })
     expect(wave.args[name]).toBe(0)
-    fireEvent.change(spinboxInput, { target: { value: '0.010000000' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.010000000' } })
     expect(wave.args[name]).toBe(0.01)
   })
 
@@ -181,24 +185,56 @@ describe('Spinbox.tsx', () => {
       { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
       spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
-    fireEvent.change(spinboxInput, { target: { value: '0.' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.' } })
     expect(spinboxInput).toHaveValue('0.')
-    fireEvent.change(spinboxInput, { target: { value: '0.10' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.10' } })
     expect(spinboxInput).toHaveValue('0.10')
-    fireEvent.change(spinboxInput, { target: { value: '0.0001' } })
+    fireEvent.input(spinboxInput, { target: { value: '0.00011' } })
     expect(spinboxInput).toHaveValue('0.0001')
   })
 
-  it('Should increment correctly after typing value when trigger is specified', () => {
+  it('Should allow typing -', () => {
     const
-      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.01, step: 0.01, trigger: true }} />),
-      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement,
-      incrementBtn = container.querySelector('.ms-UpButton') as HTMLButtonElement
+      { container } = render(<XSpinbox model={{ ...spinboxProps, min: -10 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
 
-    fireEvent.change(spinboxInput, { target: { value: '0.10' } })
-    jest.runOnlyPendingTimers()
-    expect(spinboxInput).toHaveValue('0.10')
-    simulateClick(incrementBtn)
-    expect(spinboxInput).toHaveValue('0.11')
+    expect(spinboxInput).toHaveValue('0')
+    expect(wave.args[name]).toBe(0)
+    fireEvent.input(spinboxInput, { target: { value: '-' } })
+    expect(spinboxInput).toHaveValue('-')
+    expect(wave.args[name]).toBe(0)
+    fireEvent.input(spinboxInput, { target: { value: '-5' } })
+    expect(spinboxInput).toHaveValue('-5')
+    expect(wave.args[name]).toBe(-5)
+  })
+
+  it('Should overwrite user input when beyond max', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, max: 10 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    expect(spinboxInput).toHaveValue('0')
+    expect(wave.args[name]).toBe(0)
+    fireEvent.input(spinboxInput, { target: { value: '5' } })
+    expect(spinboxInput).toHaveValue('5')
+    expect(wave.args[name]).toBe(5)
+    fireEvent.input(spinboxInput, { target: { value: '15' } })
+    expect(spinboxInput).toHaveValue('10')
+    expect(wave.args[name]).toBe(10)
+  })
+
+  it('Should overwrite user input when beyond min', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, min: 10, value: 15 }} />),
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    expect(spinboxInput).toHaveValue('15')
+    expect(wave.args[name]).toBe(15)
+    fireEvent.input(spinboxInput, { target: { value: '11' } })
+    expect(spinboxInput).toHaveValue('11')
+    expect(wave.args[name]).toBe(11)
+    fireEvent.input(spinboxInput, { target: { value: '5' } })
+    expect(spinboxInput).toHaveValue('10')
+    expect(wave.args[name]).toBe(10)
   })
 })

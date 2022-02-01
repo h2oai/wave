@@ -33,7 +33,7 @@
       "console": "integratedTerminal",
     },
     {
-      "name": "Debug Tests",
+      "name": "Debug UI Tests",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "node",

@@ -73,7 +73,7 @@ export const XExpander = ({ model: m }: { model: Expander }) => {
   }, [m])
 
   return (
-    <div data-test={m.name} className={isOpen ? css.expanderOpen : css.expanderClosed}>
+    <div data-test={m.name} className={isOpen ? css.expanderOpen : css.expanderClosed} data-visible={isOpen ? 'visible' : 'hidden'}>
       <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
         <Fluent.ActionButton
           title={isOpen ? 'Shrink' : 'Expand'}

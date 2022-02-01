@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
+import { Pivot, PivotItem } from '@fluentui/react'
 import { B, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -61,7 +61,7 @@ export const
       },
       render = () => {
         const
-          linkFormat = state.link ? PivotLinkFormat.links : PivotLinkFormat.tabs,
+          linkFormat = state.link ? 'links' : 'tabs',
           items = state.items.map(({ name, label, icon }) => (
             <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
           ))

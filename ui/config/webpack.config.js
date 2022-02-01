@@ -499,7 +499,7 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      new CopyPlugin({ patterns: [{ from: "*", to: "fonts/icons/", context: "node_modules/@uifabric/icons/fonts/" }] }),
+      new CopyPlugin({ patterns: [{ from: "*", to: "fonts/icons/", context: "node_modules/@fluentui/font-icons-mdl2/fonts/" }] }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
@@ -641,6 +641,7 @@ module.exports = function (webpackEnv) {
         // The formatter is invoked directly in WebpackDevServerUtils during development
         formatter: isEnvProduction ? typescriptFormatter : undefined,
       }),
+      new webpack.ProgressPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.

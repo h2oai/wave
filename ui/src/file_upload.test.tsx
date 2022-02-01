@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { createEvent, fireEvent, render, wait } from '@testing-library/react'
+import { createEvent, fireEvent, render, waitFor } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { FileUpload, XFileUpload } from './file_upload'
@@ -76,8 +76,8 @@ describe('FileUpload.tsx', () => {
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
     fireEvent.click(getByText('upload'))
 
-    await wait(() => expect(wave.args[name]).toMatchObject([{ name: 'file.txt' }]), { timeout: 1000 })
-    await wait(() => expect(pushMock).toHaveBeenCalled(), { timeout: 1000 })
+    await waitFor(() => expect(wave.args[name]).toMatchObject([{ name: 'file.txt' }]), { timeout: 1000 })
+    await waitFor(() => expect(pushMock).toHaveBeenCalled(), { timeout: 1000 })
   })
 
   it('Shows success screen on success upload', async () => {
@@ -87,7 +87,7 @@ describe('FileUpload.tsx', () => {
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
     fireEvent.click(getByText('upload'))
 
-    await wait(() => expect(getByText('Successfully uploaded files: file.txt.')).toBeInTheDocument(), { timeout: 1000 })
+    await waitFor(() => expect(getByText('Successfully uploaded files: file.txt.')).toBeInTheDocument(), { timeout: 1000 })
   })
 
   it('Shows error screen on error upload', async () => {
@@ -97,7 +97,7 @@ describe('FileUpload.tsx', () => {
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
     fireEvent.click(getByText('upload'))
 
-    await wait(() => expect(getByText('There was an error when uploading file.')).toBeInTheDocument(), { timeout: 1000 })
+    await waitFor(() => expect(getByText('There was an error when uploading file.')).toBeInTheDocument(), { timeout: 1000 })
   })
 
   describe('OS file browser', () => {
@@ -214,7 +214,7 @@ describe('FileUpload.tsx', () => {
       const { getByTestId } = render(<XFileUpload model={props} />)
       fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
 
-      await wait(() => expect(getByTestId(`textfield-${name}`)).toHaveValue('file.txt'), { timeout: 1000 })
+      await waitFor(() => expect(getByTestId(`textfield-${name}`)).toHaveValue('file.txt'), { timeout: 1000 })
     })
 
     it('Shows an error when uploading larger file than maxSize', async () => {
@@ -222,7 +222,7 @@ describe('FileUpload.tsx', () => {
       fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt', size: 2 * 1024 * 1024 }]))
 
       expect(getByTestId(`textfield-${name}`)).toHaveValue('')
-      await wait(() => expect(queryByText('Total max file size exceeded. Allowed size: 1Mb.')).toBeInTheDocument(), { timeout: 1000 })
+      await waitFor(() => expect(queryByText('Total max file size exceeded. Allowed size: 1Mb.')).toBeInTheDocument(), { timeout: 1000 })
     })
 
     it('Shows an error when uploading larger file than maxFileSize', async () => {
@@ -230,7 +230,7 @@ describe('FileUpload.tsx', () => {
       fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt', size: 2 * 1024 * 1024 }]))
 
       expect(getByTestId(`textfield-${name}`)).toHaveValue('')
-      await wait(() => expect(queryByText(`Max file size exceeded for files: file.txt. Allowed size per file: 1Mb.`)).toBeInTheDocument(), { timeout: 1000 })
+      await waitFor(() => expect(queryByText(`Max file size exceeded for files: file.txt. Allowed size per file: 1Mb.`)).toBeInTheDocument(), { timeout: 1000 })
     })
   })
 })
