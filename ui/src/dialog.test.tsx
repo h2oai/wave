@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, wait, waitForElementToBeRemoved } from '@testing-library/react'
+import { fireEvent, render, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
 import React from 'react'
 import Dialog, { dialogB } from './dialog'
 import { wave } from './ui'
@@ -45,20 +45,20 @@ describe('Dialog.tsx', () => {
     const { queryByRole } = render(<Dialog />)
     expect(queryByRole('dialog')).toBeInTheDocument()
     dialogB(null)
-    await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+    await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should close dialog when clicking on X', async () => {
     dialogB({ ...dialogProps, closable: true })
     const { container, queryByRole } = render(<Dialog />)
     fireEvent.click(container.parentElement!.querySelector('.ms-Dialog-button--close')!)
-    await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+    await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should fire event if specified when clicking on X', () => {
     dialogB({ ...dialogProps, closable: true, events: ['dismissed'] })
-    const { getByTitle } = render(<Dialog />)
-    fireEvent.click(getByTitle('Close'))
+    const { container } = render(<Dialog />)
+    fireEvent.click(container.parentElement!.querySelector('.ms-Dialog-button--close') as HTMLButtonElement)
     expect(emitMock).toHaveBeenCalled()
   })
 
