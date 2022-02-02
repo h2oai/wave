@@ -32,6 +32,8 @@ export interface NavItem {
   icon?: S
   /** True if this item should be disabled. */
   disabled?: B
+  /** An optional tooltip message displayed when a user hovers over this item. */
+  tooltip?: S
 }
 
 /** Create a group of navigation items. */
@@ -115,11 +117,12 @@ export const
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled }): Fluent.INavLink => ({
+      links: g.items.map(({ name, label, icon, disabled, tooltip }): Fluent.INavLink => ({
         key: name,
         name: label,
         icon,
         disabled,
+        title: tooltip,
         style: disabled ? { opacity: 0.7 } : undefined,
         url: '',
         onClick: () => {

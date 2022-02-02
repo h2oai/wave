@@ -28,7 +28,7 @@ async def serve(q: Q):
                 ui.nav_group('Menu', items=[
                     ui.nav_item(name='#menu/spam', label='Spam'),
                     ui.nav_item(name='#menu/ham', label='Ham'),
-                    ui.nav_item(name='#menu/eggs', label='Eggs'),
+                    ui.nav_item(name='#menu/eggs', label='Eggs', tooltip='Make me a scrambled egg.'),
                     ui.nav_item(name='#menu/toast', label='Toast', disabled=True),
                 ]),
                 ui.nav_group('Help', items=[

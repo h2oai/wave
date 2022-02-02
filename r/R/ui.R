@@ -3045,22 +3045,26 @@ ui_grid_card <- function(
 #' @param label The label to display.
 #' @param icon An optional icon to display next to the label.
 #' @param disabled True if this item should be disabled.
+#' @param tooltip An optional tooltip message displayed when a user hovers over this item.
 #' @return A NavItem instance.
 #' @export
 ui_nav_item <- function(
   name,
   label,
   icon = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(
     name=name,
     label=label,
     icon=icon,
-    disabled=disabled)
+    disabled=disabled,
+    tooltip=tooltip)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNavItem"))
   return(.o)
 }

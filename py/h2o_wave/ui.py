@@ -2623,6 +2623,7 @@ def nav_item(
         label: str,
         icon: Optional[str] = None,
         disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> NavItem:
     """Create a navigation item.
 
@@ -2631,6 +2632,7 @@ def nav_item(
         label: The label to display.
         icon: An optional icon to display next to the label.
         disabled: True if this item should be disabled.
+        tooltip: An optional tooltip message displayed when a user hovers over this item.
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
@@ -2639,6 +2641,7 @@ def nav_item(
         label,
         icon,
         disabled,
+        tooltip,
     )
 
 
