@@ -16,7 +16,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='My app',
     subtitle='My app subtitle',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
 )
 ```
 
@@ -69,7 +69,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='My app',
     subtitle='My app subtitle',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     items=[
         ui.links(inline=True, items=[
             ui.link(label='Sample link', path='https://www.h2o.ai/', target='_blank'),
@@ -87,7 +87,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='My app',
     subtitle='My app subtitle',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     items=[ui.textbox(name='search', icon='Search', width='300px', placeholder='Search...')]
 )
 ```
@@ -99,7 +99,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='My app',
     subtitle='My app subtitle',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     items=[ui.toggle(name='theme', label='Toggle dark theme')]
 )
 ```
@@ -112,7 +112,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='My app',
     subtitle='My app subtitle',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     items=[ui.menu(image=image, items=[
         ui.command(name='profile', label='Profile', icon='Contact'),
         ui.command(name='preferences', label='Preferences', icon='Settings'),
@@ -130,7 +130,7 @@ q.page['header'] = ui.header_card(
     box='1 1 7 1',
     title='Transparent header',
     subtitle='And now for something completely different!',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     items=[
         ui.button(name='btn1', label='Button 1'),
         ui.button(name='btn2', label='Button 2'),
@@ -148,7 +148,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='Primary color',
     subtitle='And now for something completely different!',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     color='primary'
 )
 ```
@@ -162,7 +162,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='Card color',
     subtitle='And now for something completely different!',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     color='card'
 )
 ```
@@ -172,7 +172,7 @@ q.page['header'] = ui.header_card(
     box='1 1 5 1',
     title='Transparent color',
     subtitle='And now for something completely different!',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     color='transparent'
 )
 ```

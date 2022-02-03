@@ -23,7 +23,7 @@ async def serve(q: Q):
             value='#menu/spam',
             title='H2O Wave',
             subtitle='And now for something completely different!',
-            image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+            image='https://wave.h2o.ai/img/h2o-logo.svg',
             items=[
                 ui.nav_group('Menu', items=[
                     ui.nav_item(name='#menu/spam', label='Spam'),
