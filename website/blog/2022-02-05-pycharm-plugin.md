@@ -16,9 +16,9 @@ In addition to the most recent [0.20 release](https://wave.h2o.ai/blog/release-0
 
 ## Code snippets
 
-Code snippets are reusable blocks of code that save you from writing out the whole code yourself, saving you time and mental energy. They also give you easy access to Wave code best practices. Thus they allow writing Wave code somewhat declaratively - the developer needs to only focus on the big picture. Let's take the following scenario: I want to create a new Wave app, but I do not remember the base boilerplate needed. In this case, you can simply use the `w_app_base` snippet and you are good to go! See it in action:
+Code snippets are reusable blocks of code that save you from writing out the whole code yourself, saving you time and mental energy. They also give you easy access to Wave code best practices. Thus they allow writing Wave code somewhat declaratively - the developer needs to only focus on the big picture. Let's take the following scenario: I want to create a new Wave app, but I do not remember the base boilerplate needed. In this case, you can simply use the `w_app_base` snippet and you are good to go! See it in action in the following video by [Michelle Tanco](https://github.com/mtanco):
 
-![plugin-demo](assets/2022-02-05/plugin-demo.gif)
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/Z1SJmk8qUFI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 The plugin supports the following types of code snippets:
 
