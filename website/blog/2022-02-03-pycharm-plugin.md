@@ -28,7 +28,7 @@ The plugin supports the following types of code snippets:
   * Minimal snippets - prefixed with `w_`, e.g. `w_button` provides snippet with required attributes only.
   * Full snippets - prefixed with `w_full_`, e.g. `w_full_button` provides snippet with all attributes so you can easily see and learn all customizing options.
 
-![autocomplete1](assets/2022-02-05/autocomplete1.png)
+![autocomplete1](assets/2022-02-03/autocomplete1.png)
 
 ## Autocomplete
 
@@ -42,9 +42,9 @@ Have you ever wanted to handle that button click in Wave, but didn't really reme
 * icon attributes
 * theme attributes
 
-![autocomplete2](assets/2022-02-05/autocomplete2.png)
-![autocomplete3](assets/2022-02-05/autocomplete3.png)
-![autocomplete4](assets/2022-02-05/autocomplete4.png)
+![autocomplete2](assets/2022-02-03/autocomplete2.png)
+![autocomplete3](assets/2022-02-03/autocomplete3.png)
+![autocomplete4](assets/2022-02-03/autocomplete4.png)
 
 ## Installation
 
