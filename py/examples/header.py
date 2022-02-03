@@ -14,7 +14,7 @@ page['header1'] = ui.header_card(
     box='1 1 9 1',
     title='Transparent header',
     subtitle='And now for something completely different!',
-    image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+    image='https://wave.h2o.ai/img/h2o-logo.svg',
     items=[
         ui.button(name='btn1', label='Button 1'),
         ui.button(name='btn2', label='Button 2'),

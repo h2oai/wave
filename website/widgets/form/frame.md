@@ -16,7 +16,7 @@ Check the full API at [ui.frame](/docs/api/ui#frame).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 7 7', items=[
-    ui.frame(path='https://www.h2o.ai/', height='600px')
+    ui.frame(path='https://example.com', height='600px')
 ])
 ```
 
@@ -53,6 +53,6 @@ could expect so we advise using static units like `px`, `rem` etc. instead.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
-    ui.frame(path='https://www.h2o.ai/', width='200px', height='200px')
+    ui.frame(path='https://example.com', width='200px', height='200px')
 ])
 ```

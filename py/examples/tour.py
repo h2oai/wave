@@ -184,7 +184,7 @@ async def setup_page(q: Q):
         box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
-        image='https://www.h2o.ai/wp-content/themes/h2o2018/templates/dist/images/h2o_logo.svg',
+        image='https://wave.h2o.ai/img/h2o-logo.svg',
         items=[
             ui.links(inline=True, items=[
                 ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
