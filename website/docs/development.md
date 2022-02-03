@@ -35,6 +35,10 @@ python3 -m venv venv
 5. Write some code (see sample below).
 6. Right-click anywhere inside the file and choose "Run foo" or "Debug foo".
 
+:::tip
+To make Wave app development easier, we suggest installing our [PyCharm plugin](https://plugins.jetbrains.com/plugin/18530-h2o-wave). If you want to learn more about all of its features check out [this blog post](https://wave.h2o.ai/blog/h2o-wave-pycharm-plugin).
+:::
+
 ### Using Visual Studio Code
 
 1. Launch Visual Studio Code
@@ -58,8 +62,6 @@ The command `wave run --no-reload foo` is equivalent to `python -m h2o_wave run 
 - Under "Configuration", change the "Script path" dropdown to "Module name".
 - Set "Module name" to `h2o_wave`.
 - Set "Parameters" to `run foo` (assuming your app's source code is in `foo.py`)
-
-To make Wave app development easier, we suggest installing our [PyCharm plugin](https://plugins.jetbrains.com/plugin/18530-h2o-wave). If you want to learn more about all of its features check out [this blog post](https://wave.h2o.ai/blog/h2o-wave-pycharm-plugin).
 
 ## Using OpenID Connect
 
