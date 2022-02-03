@@ -1,6 +1,6 @@
 ---
 slug: h2o-wave-pycharm-plugin
-title: "H2O Wave Pycharm plugin"
+title: "Code Snippets and Autocomplete for PyCharm"
 author: Martin Turoci
 author_title: Software Engineer @ H2O.ai
 author_url: https://github.com/mturoci
