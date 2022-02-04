@@ -28,7 +28,7 @@ loadTheme({
 })
 
 const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
-  if (iconComponent.name === 'Component') acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
+  if ('displayName' in iconComponent) acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
   return acc
 }, {} as { [key: string]: JSX.Element })
 registerIcons({ icons })
