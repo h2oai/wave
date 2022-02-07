@@ -203,7 +203,7 @@ $ heroku container:login
 
 #### Create a Heroku app
 
-Be in the root of the repo and run
+Be in the root of the repo and run.
 
 ```shell
 $ heroku create
