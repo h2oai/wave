@@ -29,10 +29,10 @@ Before we begin, please make sure you have these requirements covered.
 
 ## Overview
 
-1. Create a Wave app and make sure it is running on our local machine
-2. Dockerize the Wave app
-3. Deploy the Docker image to Heroku
-4. Cake
+1. Create a Wave app and make sure it is running on our local machine.
+2. Dockerize the Wave app.
+3. Deploy the Docker image to Heroku.
+4. Cake.
 
 ## Step by Step
 
