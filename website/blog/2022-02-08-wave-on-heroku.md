@@ -213,7 +213,7 @@ https://hidden-reef-76107.herokuapp.com/ | https://git.heroku.com/hidden-reef-76
 ```
 
 Optionally, rename the app to give it a friendly name.
-Make sure that the name is unique
+Make sure that the name is unique.
 
 ```shell
 $ heroku apps:rename --app hidden-reef-76107 my-wave-app-1234
