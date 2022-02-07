@@ -107,6 +107,54 @@
         "-oidc-redirect-url",
         "http://localhost:10101/_auth/callback",
       ]
+    },
+    {
+      "name": "Debug VSC extension tests",
+      "type": "python",
+      "cwd": "${workspaceFolder}/tools/vscode-extension",
+      "python": "${workspaceFolder}/tools/vscode-extension/venv/bin/python",
+      "request": "launch",
+      "module": "server.tests"
+    },
+    {
+      "name": "Debug VSC Client",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "cwd": "${workspaceFolder}/tools/vscode-extension",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceRoot}"
+      ],
+      "outFiles": [
+        "${workspaceRoot}/client/out/**/*.js"
+      ],
+      "env": {
+        "VSCODE_DEBUG_MODE": "true"
+      }
+    },
+    {
+      "name": "Debug VSC Server",
+      "type": "python",
+      "request": "launch",
+      "module": "server",
+      "cwd": "${workspaceFolder}/tools/vscode-extension",
+      "python": "${workspaceFolder}/tools/vscode-extension/venv/bin/python",
+      "args": [
+        "--tcp"
+      ],
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/tools/vscode-extension/venv/bin/python"
+      }
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Debug VSC extension",
+      "configurations": [
+        "Debug VSC Server",
+        "Debug VSC Client"
+      ]
     }
   ]
 }
