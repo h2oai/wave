@@ -7,22 +7,13 @@ from h2o_wave import site, ui
 
 page = site['/demo']
 
-error = '#610404'
-warning = '#7F6001'
-success = '#054007'
-
 page['example'] = ui.form_card(
     box='1 1 2 2',
     items=[
         ui.tags([
-            ui.tag(color=error, label='1'),
-            ui.tag(color=warning, label='2'),
-            ui.tag(color=success, label='3'),
-        ]),
-        ui.tags([
-            ui.tag(color=error, label='Error'),
-            ui.tag(color=warning, label='Warning'),
-            ui.tag(color=success, label='Success'),
+            ui.tag(color='#610404', label='Error'),
+            ui.tag(color='#7F6001', label='Warning'),
+            ui.tag(color='#054007', label='Success'),
         ])
     ])
 
