@@ -39,7 +39,6 @@ import * as path from 'path'
 import ts from 'typescript'
 // @ts-ignore
 import { toXML } from 'jstoxml'
-import VSCBaseSnippets from './vsc-base-snippets.json'
 
 const licenseLines = `Copyright 2020 H2O.ai, Inc.
 
@@ -1134,7 +1133,8 @@ const
       acc[name] = { prefix, body, description }
       return acc
     }, {} as { [key: string]: { prefix: S, body: S[], description: S } })
-    fs.writeFileSync('wave-components.json', JSON.stringify({ ...resultJSON, ...VSCBaseSnippets }, null, 2))
+
+    fs.writeFileSync('../vscode-extension/component-snippets.json', JSON.stringify(resultJSON, null, 2))
   },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []

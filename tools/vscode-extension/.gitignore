@@ -1,0 +1,15 @@
+out
+node_modules
+*__pycache__*
+.vscode-test
+.vscode/settings.json
+.mypy*
+.pytest*
+*.pyc
+*.vsix
+pygls.log
+venv
+snippets.json
+
+# Generated during build.
+README.md
