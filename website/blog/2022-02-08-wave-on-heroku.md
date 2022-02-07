@@ -184,7 +184,7 @@ Ok. Hard part is over. Let's login to Heroku and deploy our app.
 #### Log into Heroku using CLI
 
 Once we have Heroku CLI installed, we can login to Heroku using the following command.
-This will open a browser and ask you to login to Heroku
+This will open a browser and ask you to login to Heroku.
 
 ```shell
 $ heroku login
