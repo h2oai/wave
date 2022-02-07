@@ -15,7 +15,7 @@ The following is a walk through on how to deploy a Wave app on Heroku.
 
 <!--truncate-->
 
-Following are the step by step instructions to deploy your [Wave][wave] app to [Heroku][heroku-home] platform. A GitHub repository with an example Wave app that can be deployed to Heroku is available [here][wave-heroku-repo].
+Following are the step by step instructions to deploy your [Wave][wave] app to [Heroku][heroku-home] platform. All the code for this blog post is also available in a [GitHub repository][wave-heroku-repo].
 
 To know more about Heroku, read [What is Heroku ?][what-is-heroku] And yes, we can deploy our Wave apps for free on Heroku.
 
