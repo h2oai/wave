@@ -2280,6 +2280,21 @@ def menu(
     ))
 
 
+def tags(
+        items: List[Tag],
+) -> Component:
+    """Create a set of tags laid out horizontally.
+
+    Args:
+        items: Tags in this set.
+    Returns:
+        A `h2o_wave.types.Tags` instance.
+    """
+    return Component(tags=Tags(
+        items,
+    ))
+
+
 def article_card(
         box: str,
         title: str,

@@ -2657,6 +2657,20 @@ ui_menu <- function(
   return(.o)
 }
 
+#' Create a set of tags laid out horizontally.
+#'
+#' @param items Tags in this set.
+#' @return A Tags instance.
+#' @export
+ui_tags <- function(
+  items) {
+  .guard_vector("items", "WaveTag", items)
+  .o <- list(tags=list(
+    items=items))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.

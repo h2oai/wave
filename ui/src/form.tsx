@@ -57,6 +57,7 @@ import { XToolTip } from './tooltip'
 import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
 import { Menu, XMenu } from './menu'
+import { XTags, Tags } from './tags'
 
 /** Create a component. */
 export interface Component {
@@ -154,6 +155,8 @@ export interface Component {
   copyable_text?: CopyableText
   /** Menu. */
   menu?: Menu
+  /** Tags. */
+  tags?: Tags
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -286,6 +289,7 @@ const
     if (m.facepile) return <XFacepile model={m.facepile} />
     if (m.copyable_text) return <XCopyableText model={m.copyable_text} />
     if (m.menu) return <XMenu model={m.menu} />
+    if (m.tags) return <XTags model={m.tags} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
