@@ -46,17 +46,13 @@ export const XTags = ({ model }: { model: Tags }) => {
     const
       tagColor = tag.color || '$text',
       color = cssVar(tag.label_color || getContrast(tagColor))
-  
+
     return (
-      <div key={idx} style={{ background: cssVar(tagColor), color }} className={clas(css.tag, 'wave-s18 wave-w6' )}>
+      <div key={idx} style={{ background: cssVar(tagColor), color }} className={clas(css.tag, 'wave-s18 wave-w6')}>
         {tag.label}
       </div>
     )
   })
-  
-  return (
-    <div className={css.container}>
-      {tags}
-    </div>
-  )
+
+  return <div className={css.container}>{tags}</div>
 }

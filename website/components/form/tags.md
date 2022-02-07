@@ -6,8 +6,8 @@ keywords:
 custom_edit_url: null
 ---
 
-Used to display a set of tags in a row. Each tag consists of box with text inside.
-Can be used in different scenarios including highlighting a specific keyword or holding a numeric value with different colors to indicate error, warning, or success.
+Used to display a set of tags in a row. Each tag consists of a box with text inside.
+Can be used in different scenarios including highlighting a specific keyword or holding a numeric value with different colors to indicate an error, warning, or success.
 
 Tags with numeric value as a label:
 
