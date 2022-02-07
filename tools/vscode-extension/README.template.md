@@ -1,7 +1,6 @@
 # H2O Wave
 
-<!-- TODO: Handle during merge into Wave repo. -->
-<!-- ![Plugin demo](preview.gif) -->
+![Plugin demo](https://wave.h2o.ai/img/vscode-extension-preview.gif)
 
 Makes H2O Wave App development easier by providing:
 
