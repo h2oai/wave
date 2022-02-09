@@ -18,6 +18,9 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [reactRefresh()],
+  optimizeDeps: {
+    entries: ['src/index.tsx']
+  },
   server: {
     proxy: {
       '/_s': {
