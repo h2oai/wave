@@ -65,6 +65,6 @@
     "start": "vite",
     "build": "node esbuild.mjs",
     "test": "LC_ALL=en_US.UTF8 jest --watch",
-    "test:ci": "CI=true jest --bail --ci --runInBand"
+    "test:ci": "CI=true jest --bail --ci"
   }
 }
