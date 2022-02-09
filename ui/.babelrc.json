@@ -1,3 +1,4 @@
+// Needed for Jest tests.
 {
   "presets": [
     "react-app"
