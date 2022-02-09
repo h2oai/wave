@@ -2,7 +2,7 @@ import esbuild from 'esbuild'
 import { sassPlugin } from 'esbuild-sass-plugin'
 import fs from 'fs'
 
-const onLoadPlugin = {
+const wavePlugin = {
   name: 'wave-plugin',
   setup(build) {
     build.onLoad({ filter: /handlebars\/lib\/index\.js$/ }, async (args) => {
@@ -16,9 +16,11 @@ const onLoadPlugin = {
       const js = files.filter(f => f.endsWith('.js') && !f.includes('.module')).map(f => `<script type="module" src="${f}"></script>`).join('\n')
 
       let index = await fs.promises.readFile('index.html', 'utf8')
-      index = index.replace('<!-- SCRIPTS -->', js)
-      index = index.replace('<!-- STYLES -->', files.filter(f => f.endsWith('.css')).map(f => `<link href="${f}" rel="stylesheet">`).join('\n'))
-      index = index.replace('<script type="module" src="/src/index.tsx"></script>', '') // Development-only script.
+      index = index
+        .replace('<!-- SCRIPTS -->', js)
+        .replace('<!-- STYLES -->', files.filter(f => f.endsWith('.css')).map(f => `<link href="${f}" rel="stylesheet">`).join('\n'))
+        .replace('<script type="module" src="/src/index.tsx"></script>\n', '') // Development-only.
+        .replace('<link href="inter.css" rel="stylesheet">\n', '') // Development-only.
 
       await fs.promises.writeFile(`${outdir}/index.html`, index)
     })
@@ -26,7 +28,7 @@ const onLoadPlugin = {
 }
 
 esbuild.build({
-  entryPoints: ['./src/index.tsx', "./src/index.scss"],
+  entryPoints: ['./src/index.tsx', "./src/index.scss", "./public/inter.css"],
   entryNames: '[name]-[hash]',
   bundle: true,
   minify: true,
@@ -38,8 +40,7 @@ esbuild.build({
   legalComments: 'linked',
   assetNames: '[name]-[hash]',
   drop: ['debugger'],
-  plugins: [
-    onLoadPlugin,
-    sassPlugin(),
-  ]
+  loader: { '.ttf': 'file' },
+  external: ['*.ttf'],
+  plugins: [wavePlugin, sassPlugin()]
 }).catch(() => process.exit(1))
