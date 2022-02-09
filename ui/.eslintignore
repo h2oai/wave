@@ -7,7 +7,7 @@ config/
 scripts/
 jest.config.js
 .eslintrc.js
-src/setupProxy.js
+vite.config.js
 
 # Linter
 eslint/linter.js
@@ -15,3 +15,6 @@ eslint/linter.js
 # React boilerplate
 src/react-app-env.d.ts
 src/serviceWorker.ts
+
+# Build
+esbuild.mjs

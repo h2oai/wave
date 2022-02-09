@@ -1,6 +1,5 @@
 import esbuild from 'esbuild'
 import { sassPlugin } from 'esbuild-sass-plugin'
-import gzipPlugin from '@luncheon/esbuild-plugin-gzip'
 import fs from 'fs'
 
 const onLoadPlugin = {
@@ -16,7 +15,7 @@ const onLoadPlugin = {
       const files = Object.keys(result.metafile.outputs).map(f => f.replace(outdir + '/', ''))
       const js = files.filter(f => f.endsWith('.js') && !f.includes('.module')).map(f => `<script type="module" src="${f}"></script>`).join('\n')
 
-      let index = await fs.promises.readFile('public/index.html', 'utf8')
+      let index = await fs.promises.readFile('index.html', 'utf8')
       index = index.replace('<!-- SCRIPTS -->', js)
       index = index.replace('<!-- STYLES -->', files.filter(f => f.endsWith('.css')).map(f => `<link href="${f}" rel="stylesheet">`).join('\n'))
 
@@ -42,9 +41,5 @@ esbuild.build({
   plugins: [
     onLoadPlugin,
     sassPlugin(),
-    gzipPlugin({
-      uncompressed: true,
-      brotli: false,
-      gzip: false,
-    })]
+  ]
 }).catch(() => process.exit(1))
