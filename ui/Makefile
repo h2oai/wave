@@ -12,7 +12,10 @@ run: ## Launch server in development mode
 
 .PHONY: build
 build: ## Build front-end (production)
-	npm run build
+	rm -rf build
+	mkdir build
+	cp -r public/ build
+	node esbuild.mjs
 
 test: ## Run tests
 	npm test
