@@ -15,7 +15,7 @@ build: ## Build front-end (production)
 	rm -rf build
 	mkdir build
 	cp -r public/ build
-	node esbuild.mjs
+	npm run build
 
 test: ## Run tests
 	npm test

@@ -18,6 +18,7 @@ const onLoadPlugin = {
       let index = await fs.promises.readFile('index.html', 'utf8')
       index = index.replace('<!-- SCRIPTS -->', js)
       index = index.replace('<!-- STYLES -->', files.filter(f => f.endsWith('.css')).map(f => `<link href="${f}" rel="stylesheet">`).join('\n'))
+      index = index.replace('<script type="module" src="/src/index.tsx"></script>', '') // Development-only script.
 
       await fs.promises.writeFile(`${outdir}/index.html`, index)
     })
@@ -31,7 +32,6 @@ esbuild.build({
   minify: true,
   splitting: true,
   metafile: true,
-  write: false,
   logLevel: 'info',
   format: 'esm',
   outdir: 'build',
