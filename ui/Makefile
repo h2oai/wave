@@ -12,9 +12,6 @@ run: ## Launch server in development mode
 
 .PHONY: build
 build: ## Build front-end (production)
-	rm -rf build
-	mkdir build
-	cp -r public/ build
 	npm run build
 
 test: ## Run tests
