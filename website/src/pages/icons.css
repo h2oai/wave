@@ -1,0 +1,51 @@
+.searchBox {
+    width: 260px;
+    border: 1px solid grey;
+    border-radius: 8px;
+    padding: 6px 12px 6px 12px;
+}
+
+.input {
+    outline: none;
+    border: none;
+    margin-left: 6px;
+    font-size: 18px;
+}
+
+.box {
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: 1px 1px 3px grey;
+    width: 130px;
+    height: 130px;
+}
+
+.box:hover {
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px grey;
+}
+
+.iconName {
+    font-size: 11px;
+    margin-top: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.box > .iconName {
+    visibility: hidden;
+}
+.box:hover > .iconName {
+    visibility: visible;
+}
+
+.copiedBox {
+    height: 12px;
+}
+
+.copied {
+    font-size: 11px;
+    color: grey;
+}
