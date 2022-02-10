@@ -68,19 +68,31 @@ const
   })
 
 export const
-  markdown = MarkdownIt({ html: true, linkify: true, typographer: true, }),
-  Markdown = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />
+  Markdown = ({ source }: { source: S }) => {
+    const [markdown, setMarkdown] = React.useState<MarkdownIt | null>(null)
 
-const defaultRenderer = markdown.renderer.rules.text
-markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Options, env: any, self: Renderer) => {
-  const
-    linkOpenToken = tokens[idx + 1],
-    hrefAttr = linkOpenToken?.attrGet('href')
+    React.useEffect(() => {
+      (async () => {
+        const { default: MarkdownIt } = await import('markdown-it')
+        const markdown = MarkdownIt({ html: true, linkify: true, typographer: true, })
 
-  // Onclick has to be inlined otherwise a global function would be needed. Custom event is handled at App.tsx. Return false prevents navigation behavior.
-  if (hrefAttr?.startsWith('?')) linkOpenToken.attrPush(['onclick', `window.dispatchEvent(new CustomEvent("md-link-click", {detail:"${hrefAttr.substring(1)}" }));return false`])
-  return defaultRenderer!(tokens, idx, options, env, self)
-}
+        const defaultRenderer = markdown.renderer.rules.text
+        markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Options, env: any, self: Renderer) => {
+          const
+            linkOpenToken = tokens[idx + 1],
+            hrefAttr = linkOpenToken?.attrGet('href')
+
+          // Onclick has to be inlined otherwise a global function would be needed. Custom event is handled at App.tsx. Return false prevents navigation behavior.
+          if (hrefAttr?.startsWith('?')) linkOpenToken.attrPush(['onclick', `window.dispatchEvent(new CustomEvent("md-link-click", {detail:"${hrefAttr.substring(1)}" }));return false`])
+          return defaultRenderer!(tokens, idx, options, env, self)
+        }
+        setMarkdown(markdown)
+      })()
+    }, [])
+
+    return markdown ? <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} /> : null
+  }
+
 
 /**
  * Create a card that renders Markdown content.

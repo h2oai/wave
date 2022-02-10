@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Chart, registerInteraction } from '@antv/g2'
+import { Chart } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
 import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
@@ -256,11 +256,14 @@ export interface Plot {
   marks: Mark[];
 }
 
-registerInteraction('drag-move', {
-  start: [{ trigger: 'plot:mousedown', action: 'scale-translate:start' }],
-  processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: { wait: 100, leading: true, trailing: false } }],
-  end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }],
-})
+(async () => {
+  const { registerInteraction } = await import('@antv/g2')
+  registerInteraction('drag-move', {
+    start: [{ trigger: 'plot:mousedown', action: 'scale-translate:start' }],
+    processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: { wait: 100, leading: true, trailing: false } }],
+    end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }],
+  })
+})()
 
 // TODO not in use
 export const
@@ -927,7 +930,7 @@ export const
           init()
         }
       },
-      init = () => {
+      init = async () => {
         // Map CSS var colors to their hex values.
         cat10 = cat10.map(cssVarValue)
         const el = container.current
@@ -941,6 +944,7 @@ export const
           plot: Plot = { marks },
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
+          { Chart } = await import('@antv/g2'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
         currentPlot.current = plot
         if (chart) {
@@ -969,7 +973,7 @@ export const
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(init, [])
+    React.useEffect(() => { init() }, [])
     React.useEffect(() => {
       const el = container.current
       if (!el || !currentChart.current || !currentPlot.current) return
