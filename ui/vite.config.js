@@ -21,6 +21,11 @@ export default defineConfig({
   optimizeDeps: {
     entries: ['src/index.tsx']
   },
+  build: {
+    outDir: 'build',
+    assetsDir: 'static',
+    chunkSizeWarningLimit: 900
+  },
   server: {
     proxy: {
       '/_s': {

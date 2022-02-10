@@ -40,6 +40,7 @@ esbuild.build({
   legalComments: 'linked',
   assetNames: '[name]-[hash]',
   drop: ['debugger'],
+  target: ['es2015'],
   loader: { '.ttf': 'file' },
   external: ['*.ttf'],
   plugins: [wavePlugin, sassPlugin()]
