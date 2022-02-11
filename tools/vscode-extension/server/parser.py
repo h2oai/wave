@@ -112,17 +112,18 @@ def get_initial_completions(root: str) -> Dict[str, FileMetadata]:
                 store[dep] = new_metadata
     return store
 
+
 def get_completion_type(row: int, col: int, file_content: str) -> Optional[str]:
     try:
         leaf = parso.parse(file_content).get_leaf_for_position((row + 1, col - 1))
         # Expr statements (q.client, q.events etc.)
         expr_leaf = leaf.parent.get_previous_sibling()
-        if expr_leaf and len(expr_leaf.parent.children) <= 3:
-            if expr_leaf.type == 'name' and expr_leaf.value == 'q': 
+        if expr_leaf and len([x for x in expr_leaf.parent.children if x.type != 'keyword']) <= 3:
+            if expr_leaf.type == 'name' and expr_leaf.value == 'q':
                 return leaf.parent.children[1].value
             # Bracket notation for expr statements (q.client[''], q.events[''] etc.)
             expr_leaf = leaf.parent.parent.children[0]
-            if expr_leaf.type == 'name' and expr_leaf.value == 'q': 
+            if expr_leaf.type == 'name' and expr_leaf.value == 'q':
                 return leaf.parent.get_previous_sibling().children[1].value
             expr_leaf = parso.tree.search_ancestor(leaf, 'atom_expr')
 
@@ -133,7 +134,7 @@ def get_completion_type(row: int, col: int, file_content: str) -> Optional[str]:
             if code.startswith('ui.box') and leaf.type in ['string', 'operator'] and is_zone_arg:
                 return 'zones'
         if leaf.parent and leaf.parent.get_last_leaf().type == 'string' and is_in_ui_obj(leaf):
-            arg_name = leaf.parent.get_first_leaf().value 
+            arg_name = leaf.parent.get_first_leaf().value
             if arg_name in ['box', 'zone']:
                 return 'zones'
             elif arg_name == 'icon':

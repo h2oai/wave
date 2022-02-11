@@ -14,3 +14,8 @@ class TestEventCompletions(BaseTestCase):
 
     def test_autocomplete_stop_bracket(self):
         self.assertEqual(len(self.get_completions('q.events[""][""]')), 0)
+
+    def test_autocomplete_if_statement(self):
+        self.assertEqual(len(self.get_completions('if q.events.')), 3)
+        self.assertEqual(len(self.get_completions('if q.events[""]')), 3)
+        self.assertEqual(len(self.get_completions("if q.events['']")), 3)

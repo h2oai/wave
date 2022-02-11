@@ -109,7 +109,7 @@
       ]
     },
     {
-      "name": "Debug VSC extension tests",
+      "name": "Debug VSC tests",
       "type": "python",
       "cwd": "${workspaceFolder}/tools/vscode-extension",
       "python": "${workspaceFolder}/tools/vscode-extension/venv/bin/python",
