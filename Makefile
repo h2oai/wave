@@ -112,12 +112,17 @@ release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) website
 	$(MAKE) build-py
+	$(MAKE) publish-release-s3
 
 release-nightly: build-ui ## Prepare nightly release builds. 
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) build-py
+
+publish-release-s3:
+	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
+	aws s3 sync py/dist/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.whl"
 
 release-os:
 	rm -rf build/$(REL)
