@@ -48,6 +48,7 @@
     "markdownlint-cli": "^0.25.0",
     "react-app-polyfill": "^1.0.6",
     "react-test-renderer": "^17.0.2",
+    "sass": "^1.49.7",
     "typescript": "^4.5",
     "vite": "^2.8.0"
   },
