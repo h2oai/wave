@@ -25,11 +25,7 @@ module.exports = {
       'apps',
       'pages',
       'layout',
-      {
-        type: 'link',
-        label: 'Icons',
-        href: 'https://wave.h2o.ai/icons' // HACK: Unable to add custom page to be shown with sidebar; provided direct url instead of "/icons" https://github.com/facebook/Docusaurus/issues/1499
-      },
+      'icons',
       'color-theming',
       'buffers',
       'arguments',

@@ -1,0 +1,79 @@
+import * as Icons from '@fluentui/react-icons-mdl2'
+import '@site/src/css/icons.css'
+
+export const IconsPage = () => {
+    // HACK: Fix broken TextDocumentSettingsIcon size https://github.com/microsoft/fluentui/issues/21645
+    const iconComponentRef = React.useRef()
+    React.useEffect(() => {
+        const svgElementRef = iconComponentRef.current?.children[0]?.children[0]
+        if (svgElementRef) {
+            svgElementRef.style.width = "36px"
+            svgElementRef.style.height = "36px"
+        }
+    }, [iconComponentRef.current])
+    const [copiedIconName, setCopiedIconName] = React.useState()
+    const [query, setQuery] = React.useState("")
+    const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
+        const icon = React.createElement(iconComponent, { style: { width: 36, height: 36 } })
+        if ('displayName' in iconComponent) {
+            acc[iconName.slice(0, -4)] = iconName === "TextDocumentSettingsIcon" ? <div ref={iconComponentRef}>{icon}</div> : icon
+        }
+        return acc
+    }, {})
+    async function copyTextToClipboard(text) {
+        if ('clipboard' in navigator) {
+            return await navigator.clipboard.writeText(text);
+        } else {
+            return document.execCommand('copy', true, text);
+        }
+    }
+    const handleCopyClick = (iconName) => {
+        copyTextToClipboard(iconName)
+            .then(() => {
+                setCopiedIconName(iconName);
+                setTimeout(() => {
+                    setCopiedIconName('');
+                }, 800);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    return (
+        <div>
+            <div className="searchBox" style={{ alignItems: 'center',  display: 'flex', flexWrap: 'no-wrap' }} >
+                <div>{React.createElement(Icons["SearchIcon"], { style: { width: 18, height: 18 } })}</div>
+                <input className="input" type="text" placeholder="Search icons" onChange={event => setQuery(event.target.value)} />
+                {query && <div onClick={() => {setQuery('')}}>{React.createElement(Icons["CancelIcon"], { style: { width: 18, height: 18 } })}</div>}
+            </div>
+            <br />
+            <div
+                id="iconSet"
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    flexWrap: 'wrap',
+                    gap: '30px',
+                }}>
+                {Object.entries(icons).filter((icon) => {
+                    if (query === '') return icon
+                    if (icon[0].toLowerCase().includes(query.toLowerCase())) return icon
+                }).map(([iconName, iconElement]) => {
+                    return <div key={iconName} style={{
+                        textAlign: 'center',
+                    }} >
+                        <div
+                            className='box'
+                            onClick={() => { handleCopyClick(iconName) }}>
+                            <div style={{paddingTop: 47}}>{iconElement}</div>
+                            <div className='iconName' >{iconName}</div>
+                            <div className={copiedIconName === iconName && 'copiedBox'} style={{display: 'flex', flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center', height: 16}}><div className="copied">{copiedIconName === iconName && "Copied!"}</div></div>
+                        </div>
+                    </div>
+                })}
+            </div>
+        </div>
+    );
+}
+
+<IconsPage />

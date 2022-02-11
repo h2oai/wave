@@ -1,5 +1,5 @@
 .searchBox {
-    width: 260px;
+    width: 280px;
     border: 1px solid grey;
     border-radius: 8px;
     padding: 6px 12px 6px 12px;
@@ -10,10 +10,11 @@
     border: none;
     margin-left: 6px;
     font-size: 18px;
+    width: 208px;
+    padding: 0px 12px 0px 12px;
 }
 
 .box {
-    border: 1px solid transparent;
     border-radius: 8px;
     box-shadow: 1px 1px 3px grey;
     width: 130px;
@@ -21,14 +22,13 @@
 }
 
 .box:hover {
-    border: 1px solid transparent;
     border-radius: 8px;
-    box-shadow: 2px 2px 5px grey;
+    box-shadow: 1px 1px 6px grey;
 }
 
 .iconName {
     font-size: 11px;
-    margin-top: 9px;
+    padding-top: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -42,10 +42,13 @@
 }
 
 .copiedBox {
-    height: 12px;
+    margin-top: 8px;
+    background-color: #ffe52a;
+    border-radius: 0px 0px 8px 8px;
 }
 
 .copied {
     font-size: 11px;
-    color: grey;
+    font-weight: bold;
+    color: black;
 }
