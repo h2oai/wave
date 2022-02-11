@@ -15,6 +15,3 @@ eslint/linter.js
 # React boilerplate
 src/react-app-env.d.ts
 src/serviceWorker.ts
-
-# Build
-esbuild.mjs
