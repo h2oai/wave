@@ -6,7 +6,7 @@ In the previous tutorials, we've been authoring [Wave scripts](scripts.md). A Wa
 
 In the fine tradition of keeping tutorials succinct and useful, we'll author a little app that counts beans of the virtual kind, or, a bean counter, not to be confused with dubiously intentioned financial officers.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
 
 This tutorial outlines the basics of how to handle events, update the UI, manage state and easily add realtime sync capabilities to your app. It's probably the most important tutorial to wrap your head around if you're interested in authoring interactive applications.
 
@@ -131,7 +131,7 @@ Each component in the Wave component library populates `q.args` with its own val
 
 Your button should now count beans when clicked:
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 
@@ -181,7 +181,7 @@ In the above steps, we learned about `q.args` (request arguments submitted from 
 
 Before we do that, try accessing [http://localhost:10101/counter](http://localhost:10101/counter) from two different browser tabs and playing with them. You'll notice that each browser tab (or, each client) maintains separate bean counts.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__client.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__client.mp4').default} type='video/mp4'/></video>
 
 Maintaining separate bean counts per client is one way to count beans. You can also maintain bean counts at the user level and the app level.
 
@@ -230,7 +230,7 @@ async def serve(q: Q):
 
 Now when you play with your app, you'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__user-nosync.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__user-nosync.mp4').default} type='video/mp4'/></video>
 
 This would be considered normal behavior for a typical web application, and most users familiar with the interwebs are also familiar with the reload button, but we can do better, because having to hit the reload button to get updates is about as exciting as waiting for paint to dry.
 
@@ -269,16 +269,11 @@ The default app mode is `unicast`, which means "don't sync across clients". On t
 
 If you play with your app now, you'll see that the user-level bean count indeed syncs across tabs:
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__user-sync.mp4').default} type='video/mp4'/></video>
-
-
-
-
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__user-sync.mp4').default} type='video/mp4'/></video>
 
 ## Step 6: App-level realtime sync
 
 Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the app mode to `broadcast`:
-
 
 ```py {5,7,27} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui

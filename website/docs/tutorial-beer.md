@@ -14,7 +14,7 @@ The program we'll be writing is a verse generator for the runaway mid-20th centu
 >
 > ...
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
 
 Our program will be analogous to [our "Hello, World!" program](tutorial-hello.md), with the addition of a loop. We'll generate a verse every second, and observe the verse change in the browser in realtime. After that, we'll take a stab at making our program a bit more efficient, introducing how [expressions](expressions.md) work.
 
@@ -52,7 +52,7 @@ Take one down, pass it around, {i - 1} bottles of beer on the wall...
 
 ## Step 2: Run your program
 
-```shell 
+```shell
 cd $HOME/wave-apps
 ./venv/bin/python beer_wall.py
 ```
@@ -61,7 +61,7 @@ cd $HOME/wave-apps
 
 Point your browser to [http://localhost:10101/beer](http://localhost:10101/beer), and watch the verses fly by.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 
@@ -85,6 +85,7 @@ beer_verse = '''={{before}} bottles of beer on the wall, {{before}} bottles of b
 Take one down, pass it around, {{after}} bottles of beer on the wall...
 '''
 ```
+
 We've used a triple-quoted multi-line string here, but you can use single- or double-quoted strings as well. The tokens inside the `{{` and `}}` are placeholders. Note how the verse string starts with a `=`, indicating that this is an expression.
 
 Next, we create the markdown card as usual using our verse as the `content`. But more importantly, we set the card's `data` attribute to a Python dictionary containing values for the placeholders `before` and `after`:
@@ -135,9 +136,9 @@ for i in range(99, 0, -1):
     time.sleep(1)
 ```
 
-Run your program again. You should see the same results in your browser as before, but you'll notice that the information flowing through the Wave server is significantly less than before: 
+Run your program again. You should see the same results in your browser as before, but you'll notice that the information flowing through the Wave server is significantly less than before:
 
-``` 
+```
 2020/10/02 13:53:11 * /beer {"d":[{"k":"wall data before","v":"98"},{"k":"wall data after","v":"97"}]}
 2020/10/02 13:53:12 * /beer {"d":[{"k":"wall data before","v":"97"},{"k":"wall data after","v":"96"}]}
 2020/10/02 13:53:13 * /beer {"d":[{"k":"wall data before","v":"96"},{"k":"wall data after","v":"95"}]}
@@ -148,6 +149,6 @@ Run your program again. You should see the same results in your browser as befor
 
 ## Summary
 
-In this tutorial, we learned how to send periodic updates to the Wave server and observe changes in realtime. 
+In this tutorial, we learned how to send periodic updates to the Wave server and observe changes in realtime.
 
 In the next tutorial, we'll put these principles to real-world use, popping up charts for a song instead of chart topping pop songs.

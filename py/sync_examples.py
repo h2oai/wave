@@ -169,7 +169,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 
 def make_gallery_thumbnail(e: Example):
-    return f"<a class='thumbnail' href={{useBaseUrl('docs/examples/{e.slug}')}}><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"  # noqa: E501
+    return f"<a className='thumbnail' href={{useBaseUrl('docs/examples/{e.slug}')}}><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"  # noqa: E501
 
 
 def make_gallery(examples: List[Example]):

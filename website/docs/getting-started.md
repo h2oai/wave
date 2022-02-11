@@ -10,13 +10,14 @@ H2O Wave is a software stack for building beautiful, low-latency, realtime, brow
 
 It excels at capturing data, visualizations, and graphics from multiple sources and broadcasting them live over the web.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/getting-started__dashboard.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/getting-started__dashboard.mp4').default} type='video/mp4'/></video>
 
 ## What can I do with it?
 
 H2O Wave gives your Python programs the ability to push content to connected clients as it happens, in realtime. In other words, it lets your program display up-to-date information without asking your users to hit their browser's reload button.
 
 You can use H2O Wave for:
+
 - Dashboards and visualizations for live monitoring.
 - Live information displays: news, tickers, health, or performance data.
 - Apps that require instant notifications, updates, events, or alerts.
@@ -27,21 +28,22 @@ You can also use H2O Wave when you find yourself reaching for a web application 
 
 ## How do I use it?
 
-H2O Wave's mental model is simple, but powerful[^1]: 
+H2O Wave's mental model is simple, but powerful[^1]:
+
 1. Your instance holds a collection of pages.
-2. To change a page, simply grab a reference to a page, change it, and save it. 
+2. To change a page, simply grab a reference to a page, change it, and save it.
 
 That's it. Your changes are now visible to everyone.
 
-This simplicity makes it fast, fun, and easy to rapidly build and deploy interactive applications without having to reason about client/server, HTTP request/response, browser quirks, or front-end development. 
+This simplicity makes it fast, fun, and easy to rapidly build and deploy interactive applications without having to reason about client/server, HTTP request/response, browser quirks, or front-end development.
 
 The API is concise and elegant, freeing you to create in broad strokes, tackling high level ideas first and polishing up the details later.
 
-## Show me some code!
+## Show me some code
 
 Here's a bean counter. Clicking the button increments the bean count:
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/getting-started__beans.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoPlay' loop='loop' muted='muted'><source src={require('./assets/getting-started__beans.mp4').default} type='video/mp4'/></video>
 
 And here's how it's written:
 
@@ -78,7 +80,7 @@ H2O Wave is not only a programming toolkit but a programmable content server as 
 
 The Wave server stores all the content and acts as a hub between your user's web browser and your apps. Therefore, it must be up and running before you launch Wave apps. Typically, you only need one Wave server to serve several apps.
 
-``` 
+```
                                       +---------+
                        +------------->+ app1.py |
                        |              +---------+
@@ -92,9 +94,6 @@ The Wave server stores all the content and acts as a hub between your user's web
                                       +---------+
 
 ```
-
-
-
 
 ## In Summary
 

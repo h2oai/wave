@@ -23,7 +23,7 @@ const Notice = () => {
 export default function Footer(props) {
   return (
     <>
-      <BrowserOnly>{Notice}</BrowserOnly>
+      <BrowserOnly fallback={null}>{Notice}</BrowserOnly>
       <OriginalFooter {...props} />
     </>
   )
