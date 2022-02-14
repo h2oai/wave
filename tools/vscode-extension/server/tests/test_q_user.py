@@ -21,3 +21,7 @@ class TestQUserCompletions(BaseTestCase):
         self.assertEqual(len(self.get_completions('if q.user.')), 4)
         self.assertEqual(len(self.get_completions('if q.user[""]')), 4)
         self.assertEqual(len(self.get_completions("if q.user['']")), 4)
+
+    def test_in_function_call(self):
+        self.assertEqual(len(self.get_completions('print(q.user.)', typing_offset=1)), 4)
+        self.assertEqual(len(self.get_completions('print(q.user.')), 4)

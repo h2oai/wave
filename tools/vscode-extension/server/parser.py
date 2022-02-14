@@ -1,10 +1,12 @@
 import parso
 import os
 import itertools
-from typing import Dict, List, Any, Optional, Set 
+from typing import Dict, List, Any, Optional, Set
+
 
 class FileMetadata():
     files_to_parse: Dict[str, str] = {}
+
     def __init__(self) -> None:
         self.args: List[str] = []
         self.events: List[str] = []
@@ -13,13 +15,13 @@ class FileMetadata():
         self.app: List[str] = []
         self.user: List[str] = []
         self.deps: Set[str] = set()
-    
+
     def add_completion(self, node: Any, completion_type: str) -> None:
-        if node.type == 'string' or not completion_type in ['zones', 'args', 'events']:
+        if node.type == 'string' or completion_type not in ['zones', 'args', 'events']:
             val = node.value.replace("'", '').replace('"', '')
             if completion_type != 'args' or not val.startswith('#'):
                 getattr(self, completion_type).append(val) if val else None
-    
+
     @staticmethod
     def set_files_to_parse(files: List[str]) -> None:
         for f in files:
@@ -34,6 +36,7 @@ class FileMetadata():
 def read_file(file: str) -> str:
     with open(file, 'r') as f:
         return f.read()
+
 
 def fill_metadata(node: Any, file_metadata: FileMetadata) -> None:
     completion_found = False
@@ -116,23 +119,25 @@ def get_initial_completions(root: str) -> Dict[str, FileMetadata]:
 def get_completion_type(row: int, col: int, file_content: str) -> Optional[str]:
     try:
         leaf = parso.parse(file_content).get_leaf_for_position((row + 1, col - 1))
-        # Expr statements (q.client, q.events etc.)
+        # Expr statements (q.client, q.events).
         expr_leaf = leaf.parent.get_previous_sibling()
-        if expr_leaf and len([x for x in expr_leaf.parent.children if x.type != 'keyword']) <= 3:
-            if expr_leaf.type == 'name' and expr_leaf.value == 'q':
-                return leaf.parent.children[1].value
-            # Bracket notation for expr statements (q.client[''], q.events[''] etc.)
-            expr_leaf = leaf.parent.parent.children[0]
-            if expr_leaf.type == 'name' and expr_leaf.value == 'q':
-                return leaf.parent.get_previous_sibling().children[1].value
-            expr_leaf = parso.tree.search_ancestor(leaf, 'atom_expr')
+        if expr_leaf and expr_leaf.type == 'name' and expr_leaf.value == 'q':
+            return leaf.parent.children[1].value
 
-            code = expr_leaf.get_code(False)
-            if code.startswith('ui.boxes') and leaf.type in ['string', 'operator']:
-                return 'zones'
-            is_zone_arg = (leaf.parent.type != 'argument' and leaf.get_previous_sibling().value == '(') or leaf.parent.children[0].value == 'zone'
-            if code.startswith('ui.box') and leaf.type in ['string', 'operator'] and is_zone_arg:
-                return 'zones'
+        # Bracket notation for expr statements (q.client[''], q.events['']).
+        expr_leaf = leaf.parent.parent.children[0]
+        if len(leaf.parent.parent.children) <= 3 and expr_leaf.type == 'name' and expr_leaf.value == 'q':
+            return leaf.parent.get_previous_sibling().children[1].value
+
+        # Zones.
+        expr_leaf = parso.tree.search_ancestor(leaf, 'atom_expr')
+        code = expr_leaf.get_code(False)
+        if code.startswith('ui.boxes') and leaf.type in ['string', 'operator']:
+            return 'zones'
+        is_zone_arg = (leaf.parent.type != 'argument' and leaf.get_previous_sibling().value == '(') or leaf.parent.children[0].value == 'zone'
+        if code.startswith('ui.box') and leaf.type in ['string', 'operator'] and is_zone_arg:
+            return 'zones'
+
         if leaf.parent and leaf.parent.get_last_leaf().type == 'string' and is_in_ui_obj(leaf):
             arg_name = leaf.parent.get_first_leaf().value
             if arg_name in ['box', 'zone']:

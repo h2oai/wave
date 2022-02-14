@@ -19,3 +19,7 @@ class TestEventCompletions(BaseTestCase):
         self.assertEqual(len(self.get_completions('if q.events.')), 3)
         self.assertEqual(len(self.get_completions('if q.events[""]')), 3)
         self.assertEqual(len(self.get_completions("if q.events['']")), 3)
+
+    def test_in_function_call(self):
+        self.assertEqual(len(self.get_completions('print(q.events.)', typing_offset=1)), 3)
+        self.assertEqual(len(self.get_completions('print(q.events.')), 3)

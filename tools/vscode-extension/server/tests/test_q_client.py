@@ -25,3 +25,7 @@ class TestQClientCompletions(BaseTestCase):
         self.assertEqual(len(self.get_completions('if q.client.')), 4)
         self.assertEqual(len(self.get_completions('if q.client[""]')), 4)
         self.assertEqual(len(self.get_completions("if q.client['']")), 4)
+
+    def test_in_function_call(self):
+        self.assertEqual(len(self.get_completions('print(q.client.)', typing_offset=1)), 4)
+        self.assertEqual(len(self.get_completions('print(q.client.')), 4)

@@ -17,7 +17,12 @@ class TestQArgsCompletions(BaseTestCase):
         self.assertEqual(len(self.get_completions('q.args[""][""]')), 0)
         self.assertEqual(len(self.get_completions("q.args['']['']")), 0)
 
-    def test_autocomplete_if_statement(self):
+    def test_autocomplete_block_statements(self):
         self.assertEqual(len(self.get_completions('if q.args.')), 3)
         self.assertEqual(len(self.get_completions('if q.args[""]')), 3)
         self.assertEqual(len(self.get_completions("if q.args['']")), 3)
+        self.assertEqual(len(self.get_completions('while q.args.')), 3)
+
+    def test_in_function_call(self):
+        self.assertEqual(len(self.get_completions('print(q.args.)', typing_offset=1)), 3)
+        self.assertEqual(len(self.get_completions('print(q.args.')), 3)
