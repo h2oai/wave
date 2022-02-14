@@ -890,44 +890,44 @@ class MessageBar:
             type: Optional[str] = None,
             text: Optional[str] = None,
             name: Optional[str] = None,
-            buttons: Optional[List['Component']] = None,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            buttons: Optional[List['Component']] = None,
     ):
         _guard_enum('MessageBar.type', type, _MessageBarType, True)
         _guard_scalar('MessageBar.text', text, (str,), False, True, False)
         _guard_scalar('MessageBar.name', name, (str,), False, True, False)
-        _guard_vector('MessageBar.buttons', buttons, (Component,), False, True, False)
         _guard_scalar('MessageBar.width', width, (str,), False, True, False)
         _guard_scalar('MessageBar.visible', visible, (bool,), False, True, False)
+        _guard_vector('MessageBar.buttons', buttons, (Component,), False, True, False)
         self.type = type
         """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType."""
         self.text = text
         """The text displayed on the message bar."""
         self.name = name
         """An identifying name for this component."""
-        self.buttons = buttons
-        """Specify one or more action buttons."""
         self.width = width
         """The width of the message bar, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.buttons = buttons
+        """Specify one or more action buttons."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_enum('MessageBar.type', self.type, _MessageBarType, True)
         _guard_scalar('MessageBar.text', self.text, (str,), False, True, False)
         _guard_scalar('MessageBar.name', self.name, (str,), False, True, False)
-        _guard_vector('MessageBar.buttons', self.buttons, (Component,), False, True, False)
         _guard_scalar('MessageBar.width', self.width, (str,), False, True, False)
         _guard_scalar('MessageBar.visible', self.visible, (bool,), False, True, False)
+        _guard_vector('MessageBar.buttons', self.buttons, (Component,), False, True, False)
         return _dump(
             type=self.type,
             text=self.text,
             name=self.name,
-            buttons=None if self.buttons is None else [__e.dump() for __e in self.buttons],
             width=self.width,
             visible=self.visible,
+            buttons=None if self.buttons is None else [__e.dump() for __e in self.buttons],
         )
 
     @staticmethod
@@ -939,25 +939,25 @@ class MessageBar:
         _guard_scalar('MessageBar.text', __d_text, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('MessageBar.name', __d_name, (str,), False, True, False)
-        __d_buttons: Any = __d.get('buttons')
-        _guard_vector('MessageBar.buttons', __d_buttons, (dict,), False, True, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('MessageBar.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('MessageBar.visible', __d_visible, (bool,), False, True, False)
+        __d_buttons: Any = __d.get('buttons')
+        _guard_vector('MessageBar.buttons', __d_buttons, (dict,), False, True, False)
         type: Optional[str] = __d_type
         text: Optional[str] = __d_text
         name: Optional[str] = __d_name
-        buttons: Optional[List['Component']] = None if __d_buttons is None else [Component.load(__e) for __e in __d_buttons]
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        buttons: Optional[List['Component']] = None if __d_buttons is None else [Component.load(__e) for __e in __d_buttons]
         return MessageBar(
             type,
             text,
             name,
-            buttons,
             width,
             visible,
+            buttons,
         )
 
 
@@ -8406,7 +8406,7 @@ class NotificationBar:
         self.type = type
         """The icon and color of the notification bar. Defaults to 'info'. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType."""
         self.timeout = timeout
-        """When should the notification bar disappear in seconds. Defaults to 5."""
+        """How long the notification stays visible, in seconds. Defaults to 5."""
         self.buttons = buttons
         """Specify one or more action buttons."""
         self.position = position

@@ -429,31 +429,31 @@ ui_progress <- function(
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
 #' @param text The text displayed on the message bar.
 #' @param name An identifying name for this component.
-#' @param buttons Specify one or more action buttons.
 #' @param width The width of the message bar, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param buttons Specify one or more action buttons.
 #' @return A MessageBar instance.
 #' @export
 ui_message_bar <- function(
   type = NULL,
   text = NULL,
   name = NULL,
-  buttons = NULL,
   width = NULL,
-  visible = NULL) {
+  visible = NULL,
+  buttons = NULL) {
   # TODO Validate type
   .guard_scalar("text", "character", text)
   .guard_scalar("name", "character", name)
-  .guard_vector("buttons", "WaveComponent", buttons)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  .guard_vector("buttons", "WaveComponent", buttons)
   .o <- list(message_bar=list(
     type=type,
     text=text,
     name=name,
-    buttons=buttons,
     width=width,
-    visible=visible))
+    visible=visible,
+    buttons=buttons))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3437,7 +3437,7 @@ ui_markup_card <- function(
 #' @param text The text displayed on the notification bar.
 #' @param type The icon and color of the notification bar. Defaults to 'info'.
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType.
-#' @param timeout When should the notification bar disappear in seconds. Defaults to 5.
+#' @param timeout How long the notification stays visible, in seconds. Defaults to 5.
 #' @param buttons Specify one or more action buttons.
 #' @param position Specify the location of notification. Defaults to 'top-right'.
 #'   One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.

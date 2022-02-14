@@ -349,9 +349,9 @@ def message_bar(
         type: Optional[str] = None,
         text: Optional[str] = None,
         name: Optional[str] = None,
-        buttons: Optional[List[Component]] = None,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        buttons: Optional[List[Component]] = None,
 ) -> Component:
     """Create a message bar.
 
@@ -363,9 +363,9 @@ def message_bar(
         type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
         text: The text displayed on the message bar.
         name: An identifying name for this component.
-        buttons: Specify one or more action buttons.
         width: The width of the message bar, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
+        buttons: Specify one or more action buttons.
     Returns:
         A `h2o_wave.types.MessageBar` instance.
     """
@@ -373,9 +373,9 @@ def message_bar(
         type,
         text,
         name,
-        buttons,
         width,
         visible,
+        buttons,
     ))
 
 
@@ -2977,7 +2977,7 @@ def notification_bar(
     Args:
         text: The text displayed on the notification bar.
         type: The icon and color of the notification bar. Defaults to 'info'. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType.
-        timeout: When should the notification bar disappear in seconds. Defaults to 5.
+        timeout: How long the notification stays visible, in seconds. Defaults to 5.
         buttons: Specify one or more action buttons.
         position: Specify the location of notification. Defaults to 'top-right'. One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.
         events: The events to capture on this notification bar.
