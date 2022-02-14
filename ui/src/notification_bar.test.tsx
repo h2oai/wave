@@ -29,10 +29,17 @@ describe('NotificationBar.tsx', () => {
   })
 
   it('should not close the notifification bar after timeout if buttons specified', () => {
-    notificationBarB({ ...notificationbarProps, buttons: [] })
+    notificationBarB({ ...notificationbarProps, buttons: [{ button: { name: 'btn' } }] })
     render(<NotificationBar />)
     jest.runOnlyPendingTimers()
     expect(notificationBarB()).not.toBeNull()
+  })
+
+  it('should close the notifification bar after timeout if other components than buttons specified', () => {
+    notificationBarB({ ...notificationbarProps, buttons: [{ text: { content: 'btn' } }] })
+    render(<NotificationBar />)
+    jest.runOnlyPendingTimers()
+    expect(notificationBarB()).toBeNull()
   })
 
   it('should close the notifification bar after timeout if no buttons specified', () => {

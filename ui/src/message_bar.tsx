@@ -34,12 +34,12 @@ export interface MessageBar {
   text?: S
   /** An identifying name for this component. */
   name?: S
-  /** Specify one or more action buttons. */
-  buttons?: Component[]
   /** The width of the message bar, e.g. '100px'. Defaults to '100%'. */
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** Specify one or more action buttons. */
+  buttons?: Component[]
 }
 
 const
@@ -115,14 +115,15 @@ const
   },
   isMessagebarMultiline = (text?: S, buttons?: Component[]) => {
     const textLength = text?.length || 0
-    const buttonTextLength = buttons?.filter(({ button }) => button).reduce((prev, curr) => prev + (curr.button?.label?.length || 0) + 15, 0) || 0
+    const buttonTextLength = buttons?.reduce((prev, curr) => prev + (curr.button?.label?.length || 0) + 15, 0) || 0
     return textLength + buttonTextLength > 54
   }
 
 export const
   MessageBar = ({ type, text, buttons, name, extraStyles = {}, onDismiss }: MessagebarProps) => {
     const { iconName, color, background } = notificationTypes[type || 'info']
-    const isMultiline = isMessagebarMultiline(text, buttons)
+    const btns = buttons?.filter(({ button }) => button)
+    const isMultiline = isMessagebarMultiline(text, btns)
     return (
       text?.length
         ? (
@@ -153,7 +154,7 @@ export const
             onDismiss={onDismiss}
             className={css.messageBar}
             isMultiline={isMultiline}
-            actions={buttons ? <XComponents items={buttons || []} alignment='end' /> : undefined}
+            actions={btns?.length ? <XComponents items={btns || []} alignment='end' /> : undefined}
             messageBarIconProps={{ iconName }}
           >
             <Markdown source={text} />

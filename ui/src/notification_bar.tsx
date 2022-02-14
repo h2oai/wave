@@ -82,11 +82,12 @@ export const
             animationDuration: '0.5s',
             animationFillMode: 'forwards',
             ...getPosition(currentModel?.position, shouldBeOpen)
-          }
+          },
+          buttons = currentModel?.buttons?.filter(({ button }) => button)
 
-        if (!model?.buttons && shouldBeOpen) timeout = window.setTimeout(onDismiss, model?.timeout || 5000)
+        if (!buttons?.length && shouldBeOpen) timeout = window.setTimeout(onDismiss, model?.timeout || 5000)
 
-        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={currentModel?.buttons} extraStyles={extraStyles} onDismiss={onDismiss} />
+        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={buttons} extraStyles={extraStyles} onDismiss={onDismiss} />
       },
       dispose = () => window.clearTimeout(timeout)
 
