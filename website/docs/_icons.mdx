@@ -61,7 +61,7 @@ export const IconsPage = () => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexWrap: 'wrap',
-                    gap: '14px',
+                    gap: '6px',
                 }}>
                 {Object.entries(icons).filter((icon) => {
                     if (inputValue === '') return icon
@@ -82,8 +82,7 @@ export const IconsPage = () => {
                                 }}
                             >
                             <div>{iconElement}</div>
-                            <div className='iconName' style={{position: 'absolute', marginTop: 58, width: 76}}>{iconName}</div>
-                            <div className={copiedIconName === iconName && 'copiedBox'} style={{position: 'absolute', width: 86, height: 20, marginTop: 66}}><div className="copied">{copiedIconName === iconName && "Copied!"}</div></div>
+                            {copiedIconName === iconName ? <div className='copiedBox' title={iconName} style={{position: 'absolute', width: 62, height: 17, marginTop: 62, zIndex: 1}}><div className="copied">{"Copied!"}</div></div> : <div className='iconName' style={{position: 'absolute', marginTop: 58, width: 76, width: '100%'}}>{iconName}</div>}
                         </div>
                     </div>
                 })}

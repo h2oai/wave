@@ -15,23 +15,14 @@
 }
 
 .box {
-    border-radius: 8px;
-    box-shadow: 1px 1px 3px grey;
     width: 86px;
     height: 86px;
-}
-
-.box:hover {
-    border-radius: 8px;
-    box-shadow: 1px 1px 6px grey;
 }
 
 .iconName {
     font-size: 11px;
     padding-top: 5px;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .box > .iconName {
@@ -42,9 +33,9 @@
 }
 
 .copiedBox {
-    margin-top: 8px;
+    margin-top: 2px;
     background-color: #ffe52a;
-    border-radius: 0px 0px 8px 8px;
+    border-radius: 8px 8px 8px 8px;
 }
 
 .copied {
