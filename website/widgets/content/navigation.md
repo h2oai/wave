@@ -78,7 +78,7 @@ q.page['nav'] = ui.nav_card(
 
 ## With icon
 
-Don't have a logo, but still want to give your app some identity? No problem, just use the `icon` attribute and pick one from [supported icons](https://uifabricicons.azurewebsites.net/).
+Don't have a logo, but still want to give your app some identity? No problem, just use the `icon` attribute and pick one from [supported icons](/docs/icons).
 
 ```py
 q.page['nav'] = ui.nav_card(

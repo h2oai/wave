@@ -22,7 +22,7 @@ q.page['header'] = ui.header_card(
 
 ## With icon
 
-If you don't have a logo image, you can specify the `icon` attribute and pick one of the [supported icons](https://uifabricicons.azurewebsites.net/). Note that the `icon` attribute is mutually exclusive with the `image` attribute.
+If you don't have a logo image, you can specify the `icon` attribute and pick one of the [supported icons](/docs/icons). Note that the `icon` attribute is mutually exclusive with the `image` attribute.
 
 ```py
 q.page['header'] = ui.header_card(
