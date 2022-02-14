@@ -17,8 +17,8 @@
 .box {
     border-radius: 8px;
     box-shadow: 1px 1px 3px grey;
-    width: 130px;
-    height: 130px;
+    width: 86px;
+    height: 86px;
 }
 
 .box:hover {
