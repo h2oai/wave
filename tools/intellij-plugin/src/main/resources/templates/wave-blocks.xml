@@ -31,6 +31,12 @@
       <option name="Python" value="true" />
     </context>
   </template>
+  <template name="w_site_upload" value="q.app.file1,$END$ = await q.site.upload([$files$])" description="Uploads static files to Wave server" toReformat="true" toShortenFQNames="true">
+    <variable name="files" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="WAVE" value="true" />
+    </context>
+  </template>
   <template name="w_page_drop" value="q.page.drop()$END$" description="Delete all cards" toReformat="true" toShortenFQNames="true">
     <context>
       <option name="Python" value="true" />

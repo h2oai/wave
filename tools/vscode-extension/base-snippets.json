@@ -65,6 +65,13 @@
     ],
     "description": "Deletes all Wave cards."
   },
+  "Wave site upload": {
+    "prefix": "w_site_upload",
+    "body": [
+      "q.app.file1,$0 = await q.site.upload([${1}])"
+    ],
+    "description": "Uploads static files to Wave server"
+  },
   "Wave meta page": {
     "prefix": "w_meta",
     "body": [
