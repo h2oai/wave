@@ -111,7 +111,7 @@ export const
       { width, value, name, trigger, label, choices, alpha, inline } = model,
       defaultValue = value || null,
       [selectedColorId, setSelectedColorId] = React.useState<S | null>(defaultValue),
-      onSwatchChanged = (_id?: S, color = defaultValue) => {
+      onSwatchChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color = defaultValue) => {
         wave.args[name] = color
         setSelectedColorId(color)
         if (trigger) wave.push()
@@ -136,7 +136,7 @@ export const
                 <Fluent.Label>{label}</Fluent.Label>
                 {
                   choices?.length
-                    ? <Fluent.SwatchColorPicker columnCount={10} selectedId={selectedColorId || choices[0]} colorCells={toColorCells(choices)} onColorChanged={onSwatchChanged} />
+                    ? <Fluent.SwatchColorPicker columnCount={10} selectedId={selectedColorId || choices[0]} colorCells={toColorCells(choices)} onChange={onSwatchChange} />
                     : (
                       <Fluent.ColorPicker
                         alphaType={alpha ? 'alpha' : 'none'}
