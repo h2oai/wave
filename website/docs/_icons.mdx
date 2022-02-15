@@ -1,94 +1,77 @@
 import * as Icons from '@fluentui/react-icons-mdl2'
-import '@site/src/css/icons.css'
+import styles from '@site/src/css/icons.module.css'
 
 export const IconsPage = () => {
-    // TODO: Refactor code
-    // TODO: Fix nav breakpoint
     // HACK: Fix broken TextDocumentSettingsIcon size https://github.com/microsoft/fluentui/issues/21645
     const iconComponentRef = React.useRef()
-    const [copiedIconName, setCopiedIconName] = React.useState()
     const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
         const icon = React.createElement(iconComponent, { style: { width: 36, height: 36 } })
         if ('displayName' in iconComponent) {
-            acc[iconName.slice(0, -4)] = iconName === "TextDocumentSettingsIcon" ? <div ref={iconComponentRef}>{icon}</div> : icon
+            acc[iconName.slice(0, -4)] = iconName === 'TextDocumentSettingsIcon' ? <div ref={iconComponentRef}>{icon}</div> : icon
         }
         return acc
     }, {})
-    async function copyTextToClipboard(text) {
+    const [copiedIconName, setCopiedIconName] = React.useState('')
+    const copyTextToClipboard = async (text) => {
         if ('clipboard' in navigator) {
-            return await navigator.clipboard.writeText(text);
+            return await navigator.clipboard.writeText(text)
         } else {
-            return document.execCommand('copy', true, text);
+            return document.execCommand('copy', true, text)
         }
     }
     const handleCopyClick = (iconName) => {
         copyTextToClipboard(iconName)
             .then(() => {
-                setCopiedIconName(iconName);
-                setTimeout(() => {
-                    setCopiedIconName('');
-                }, 800);
+                setCopiedIconName(iconName)
+                setTimeout(() => { setCopiedIconName('') }, 1000)
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            .catch(err => { console.log('Error copying to clipboard:', err) })
     }
-  const [inputValue, setInputValue] = React.useState("");
-  const handleUserInput = (e) => {
-    setInputValue(e.target.value);
-  };
-  const resetInputField = () => {
-    setInputValue("");
-  };
+    const [inputValue, setInputValue] = React.useState('')
+    const handleUserInput = (e) => {
+        setInputValue(e.target.value)
+    }
+    const resetInputField = () => {
+        setInputValue('')
+    }
     React.useEffect(() => {
-        const svgElementRef = iconComponentRef.current?.children[0]?.children[0]
-        if (svgElementRef) {
-            svgElementRef.style.width = "36px"
-            svgElementRef.style.height = "36px"
+        const svgElement = iconComponentRef.current?.children[0]?.children[0]
+        if (svgElement) {
+            svgElement.style.width = '36px'
+            svgElement.style.height = '36px'
         }
     }, [iconComponentRef.current, inputValue])
     return (
         <div>
-            <div className="searchBox" style={{ alignItems: 'center',  display: 'flex', flexWrap: 'no-wrap' }} >
-                <div>{React.createElement(Icons["SearchIcon"], { style: { width: 18, height: 18 } })}</div>
-                <input className="input" type="text" placeholder="Search icons" value={inputValue} onChange={handleUserInput} />
-                {inputValue && <div onClick={() => {resetInputField()}}>{React.createElement(Icons["CancelIcon"], { style: { width: 18, height: 18 } })}</div>}
+            <div className={styles.searchBox}>
+                <div>{React.createElement(Icons['SearchIcon'], { style: {width: 20, height: 20} })}</div>
+                <input className={styles.input} type='text' placeholder='Search icons' value={inputValue} onChange={handleUserInput} />
+                {inputValue && <div onClick={() => { resetInputField() }}>{React.createElement(Icons['CancelIcon'], { style: {width: 18, height: 18} })}</div>}
             </div>
             <br />
-            <div
-                id="iconSet"
-                style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    flexWrap: 'wrap',
-                    gap: '6px',
-                }}>
-                {Object.entries(icons).filter((icon) => {
-                    if (inputValue === '') return icon
-                    if (icon[0].toLowerCase().includes(inputValue.toLowerCase())) return icon
-                }).map(([iconName, iconElement]) => {
-                    return <div key={iconName} style={{
-                        textAlign: 'center',
-                    }} >
-                        <div
-                            className='box'
-                            onClick={() => { handleCopyClick(iconName) }}
-                            style={{
-                                    flex: 1,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
-                            >
-                            <div>{iconElement}</div>
-                            {copiedIconName === iconName ? <div className='copiedBox' title={iconName} style={{position: 'absolute', width: 62, height: 17, marginTop: 62, zIndex: 1}}><div className="copied">{"Copied!"}</div></div> : <div className='iconName' style={{position: 'absolute', marginTop: 58, width: 76, width: '100%'}}>{iconName}</div>}
+            <div className={styles.iconSet}>
+                {Object.entries(icons)
+                    .filter(icon => {
+                        if (!inputValue) return icon
+                        if (icon[0].toLowerCase().includes(inputValue.toLowerCase())) return icon
+                    })
+                    .map(([iconName, iconElement]) => {
+                        return <div key={iconName}>
+                            <div className={styles.box} onClick={() => { handleCopyClick(iconName) }}>
+                                <div>{iconElement}</div>
+                                <div className={styles.description}>
+                                    {copiedIconName !== iconName ?
+                                        <div className={styles.iconName} title={iconName}>{iconName}</div> : 
+                                        <div className={styles.copied}>{'Copied!'}</div>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                })}
+                    })
+                }
             </div>
         </div>
-    );
+    )
 }
 
 <IconsPage />
