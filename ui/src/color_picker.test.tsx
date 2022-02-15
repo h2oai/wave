@@ -12,27 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { ColorPicker, XColorPicker } from './color_picker'
 import { wave } from './ui'
 
 const name = 'colorPicker'
-const colorPickerProps: ColorPicker = { name }
+const pushMock = jest.fn()
+let colorPickerProps: ColorPicker = { name }
 describe('ColorPicker.tsx', () => {
-  beforeAll(() => initializeIcons())
-  beforeEach(() => { wave.args[name] = null })
+  beforeAll(() => wave.push = pushMock)
+  beforeEach(() => {
+    wave.args[name] = null
+    pushMock.mockReset()
+    colorPickerProps = { name }
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XColorPicker model={colorPickerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display color picker when visible is false', () => {
-    const { queryByTestId } = render(<XColorPicker model={{ ...colorPickerProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init - value not specified', () => {
@@ -53,17 +51,14 @@ describe('ColorPicker.tsx', () => {
     expect(wave.args[name]).toBeTruthy()
   })
 
-  it('Sets args - choices specified', () => {
+  it('Sets args - Swatch picker', () => {
     const { getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, choices: ['#AAA', '#BBB', '#CCC', '#DDD'] }} />)
-    fireEvent.click(getAllByRole('gridcell')[3])
+    fireEvent.click(getAllByRole('radio')[3])
 
     expect(wave.args[name]).toBe('#DDD')
   })
 
   it('Calls sync when trigger is specified', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
     const { container } = render(<XColorPicker model={{ ...colorPickerProps, trigger: true }} />)
     // Changing alpha in order to trigger component's onChange.
     fireEvent.input(container.querySelectorAll('input')[3]!, { target: { value: 100 } })
@@ -72,9 +67,6 @@ describe('ColorPicker.tsx', () => {
   })
 
   it('Does not call sync - trigger not specified', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
     const { container } = render(<XColorPicker model={colorPickerProps} />)
     // Changing alpha in order to trigger component's onChange.
     fireEvent.input(container.querySelectorAll('input')[3]!, { target: { value: 100 } })
@@ -82,24 +74,22 @@ describe('ColorPicker.tsx', () => {
     expect(pushMock).not.toBeCalled()
   })
 
-  it('Calls sync when trigger is specified - Swatch picker', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
+  describe('Swatch picker', () => {
 
-    const { getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, trigger: true, choices: ['#AAA', '#BBB', '#CCC', '#DDD'] }} />)
-    fireEvent.click(getAllByRole('gridcell')[3])
+    beforeEach(() => colorPickerProps = { ...colorPickerProps, choices: ['#AAA', '#BBB', '#CCC', '#DDD'] })
 
-    expect(pushMock).toBeCalled()
+    it('Calls sync when trigger is specified', () => {
+      const { getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, trigger: true }} />)
+      fireEvent.click(getAllByRole('radio')[3])
+
+      expect(pushMock).toBeCalled()
+    })
+
+    it('Does not call sync - trigger not specified', () => {
+      const { getAllByRole } = render(<XColorPicker model={colorPickerProps} />)
+      fireEvent.click(getAllByRole('radio')[3])
+
+      expect(pushMock).not.toBeCalled()
+    })
   })
-
-  it('Does not call sync - trigger not specified - Swatch picker', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, choices: ['#AAA', '#BBB', '#CCC', '#DDD'] }} />)
-    fireEvent.click(getAllByRole('gridcell')[3])
-
-    expect(pushMock).not.toBeCalled()
-  })
-
 })

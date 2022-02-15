@@ -15,7 +15,7 @@
 import { Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Component, XComponentAlignment, XComponents } from './form'
+import { Component, XComponents } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
 import { clas } from './theme'
@@ -27,8 +27,9 @@ const
       display: 'flex',
       paddingTop: 5,
     },
-    lhs: {
+    rhs: {
       flexGrow: 1,
+      marginLeft: 15
     },
     subtitle: {
       $nest: {
@@ -59,14 +60,14 @@ export const
           { title, subtitle, items } = state,
           components = unpack<Component[]>(items), // XXX ugly
           form = items && (
-            <div>
-              <XComponents items={components} alignment={XComponentAlignment.Right} />
+            <div className={css.rhs}>
+              <XComponents items={components} alignment='end' />
             </div>
           )
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.lhs}>
+            <div>
               <div className='wave-s14 wave-w6'>{title}</div>
               <div className={clas(css.subtitle, 'wave-s12')}><Markdown source={subtitle} /></div>
             </div>

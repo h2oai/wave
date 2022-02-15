@@ -15,8 +15,9 @@
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond } from './ui'
+import { stylesheet } from 'typestyle'
+import { Component } from './form'
+import { clas, margin } from './theme'
 
 /**
  * Create a hyperlink.
@@ -36,7 +37,9 @@ export interface Link {
   download?: B
   /** True if the link should be rendered as a button. */
   button?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the link, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window. */
   target?: S
@@ -45,28 +48,69 @@ export interface Link {
   /** An identifying name for this component. */
   name?: S
 }
+const
+  css = stylesheet({
+    linkGroup: {
+      margin: margin(-6, 12, 0, 12),
+      $nest: {
+        a: {
+          display: 'block',
+          marginTop: 8
+        },
+        'a:first-of-type': {
+          marginTop: 0
+        }
+      }
+    },
+    linkGroupLabel: {
+      marginBottom: 10
+    },
+    inline: {
+      display: 'flex',
+      $nest: {
+        a: {
+          marginRight: 16
+        },
+        'a:last-child': {
+          marginRight: 0
+        },
+      }
+    }
+  })
+
+/** Create a collection of links. */
+export interface Links {
+  /** The links contained in this group. */
+  items: Component[]
+  /** The name of the link group. */
+  label?: S
+  /** Render links horizontally. Defaults to 'false'. */
+  inline?: B
+  /** The width of the links, e.g. '100px'. */
+  width?: S
+}
 
 export const
-  XLink = bond(({ model: m }: { model: Link }) => {
+  XLinks = ({ model: { label, items, inline } }: { model: Links }) => (
+    <div className={inline ? css.inline : css.linkGroup}>
+      {label && <div className={clas('wave-s20 wave-w6', css.linkGroupLabel)}>{label}</div>}
+      {items.filter(({ link }) => link).map((link, i) => <XLink key={i} model={link.link!} />)}
+    </div>
+  ),
+  XLink = ({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
     const
-      label = m.label || m.path,
-      target = m.target === '' ? '_blank' : m.target,
-      onClick = () => target ? window.open(m.path, target) : window.open(m.path),
-      render = () => (
-        <div style={displayMixin(m.visible)}>
-          {
-            m.button
-              ? <Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} />
-              : <Fluent.Link
-                data-test={m.name}
-                href={m.path}
-                download={m.download}
-                disabled={m.disabled}
-                target={target}>
-                {label}
-              </Fluent.Link>
-          }
-        </div>
-      )
-    return { render }
-  })
+      _label = label || path,
+      _target = target === '' ? '_blank' : target,
+      onBtnClick = React.useCallback(() => window.open(path, _target), [_target, path]),
+      onLinkClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLElement>) => {
+        // HACK: Perform download in a new tab because FF drops WS connection - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
+        if (download && path) {
+          ev.preventDefault()
+          window.open(path, '_blank')
+        }
+      }, [download, path])
+
+    return button
+      ? <Fluent.DefaultButton data-test={name} text={_label} disabled={disabled} onClick={onBtnClick} />
+      : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={_target}>{_label}</Fluent.Link>
+  }

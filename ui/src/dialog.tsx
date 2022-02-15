@@ -30,13 +30,13 @@ export interface Dialog {
   title: S
   /** The components displayed in this dialog. */
   items: Component[]
-  /** The width of the dialog, e.g. '400px', defaults to '600px'. */
+  /** The width of the dialog, e.g. '400px'. Defaults to '600px'. */
   width?: S
   /** True if the dialog should have a closing 'X' button at the top right corner. */
   closable?: B
-  /** True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false. */
+  /** True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False. */
   blocking?: B
-  /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false. */
+  /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False. */
   primary?: B
   /** An identifying name for this component. */
   name?: Id
@@ -47,8 +47,8 @@ export interface Dialog {
 export default bond(() => {
   const
     onDismiss = () => {
-      const { closable, name, events } = dialogB() || {}
-      if (closable && name) {
+      const { closable, blocking, name, events } = dialogB() || {}
+      if ((closable || !blocking) && name) {
         events?.forEach(e => {
           if (e === 'dismissed') wave.emit(name, e, true)
         })
@@ -57,10 +57,11 @@ export default bond(() => {
     },
     render = () => {
       const
-        { title, width = '600px', items = [], closable, primary, blocking } = dialogB() || {},
+        { title, width = '600px', items = [], closable, primary, blocking = false } = dialogB() || {},
         dialogContentProps: Fluent.IDialogContentProps = {
           title,
           onDismiss,
+          showCloseButton: closable,
           type: closable
             ? Fluent.DialogType.close
             : primary
@@ -69,7 +70,13 @@ export default bond(() => {
         }
 
       return (
-        <Fluent.Dialog hidden={!dialogB()} dialogContentProps={dialogContentProps} modalProps={{ isBlocking: blocking }} minWidth={width} maxWidth={width}>
+        <Fluent.Dialog
+          hidden={!dialogB()}
+          onDismiss={onDismiss}
+          dialogContentProps={dialogContentProps}
+          modalProps={{ isBlocking: blocking }}
+          minWidth={width}
+          maxWidth={width}>
           <XComponents items={items} />
         </Fluent.Dialog>
       )

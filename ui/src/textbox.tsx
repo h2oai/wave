@@ -15,8 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, debounce, wave } from './ui'
+import { debounce, wave } from './ui'
 
 /**
  * Create a text box.
@@ -58,58 +57,61 @@ export interface Textbox {
   trigger?: B
   /** The height of the text box, e.g. '100px'. Applicable only if `multiline` is true. */
   height?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the text box, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if the text may be checked for spelling errors. Defaults to True. */
+  spellcheck?: B
 }
 
 const DEBOUNCE_TIMEOUT = 500
 export const
-  XTextbox = bond(({ model: m }: { model: Textbox }) => {
-    wave.args[m.name] = m.value || ''
-    const
-      onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
-        v = v || (target as HTMLInputElement).value
+  XTextbox = ({ model: m }: { model: Textbox }) => {
+    const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
+      v = v || (target as HTMLInputElement).value
 
-        wave.args[m.name] = v ?? (m.value || '')
-        if (m.trigger) wave.push()
-      },
-      render = () => m.mask
-        ? (
-          <Fluent.MaskedTextField
-            data-test={m.name}
-            style={displayMixin(m.visible)}
-            label={m.label}
-            defaultValue={m.value}
-            mask={m.mask}
-            errorMessage={m.error}
-            required={m.required}
-            disabled={m.disabled}
-            readOnly={m.readonly}
-            onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
-          />
-        )
-        : (
-          <Fluent.TextField
-            data-test={m.name}
-            style={displayMixin(m.visible)}
-            styles={m.multiline && m.height ? { fieldGroup: { height: m.height } } : undefined}
-            label={m.label}
-            placeholder={m.placeholder}
-            iconProps={{ iconName: m.icon }}
-            prefix={m.prefix}
-            suffix={m.suffix}
-            defaultValue={m.value}
-            errorMessage={m.error}
-            required={m.required}
-            disabled={m.disabled}
-            readOnly={m.readonly}
-            multiline={m.multiline}
-            type={m.password ? 'password' : undefined}
-            onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
-          />
-        )
+      wave.args[m.name] = v ?? (m.value || '')
+      if (m.trigger) wave.push()
+    }
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = m.value || '' }, [])
+
+    return m.mask
+      ? (
+        <Fluent.MaskedTextField
+          data-test={m.name}
+          label={m.label}
+          defaultValue={m.value}
+          mask={m.mask}
+          errorMessage={m.error}
+          required={m.required}
+          disabled={m.disabled}
+          readOnly={m.readonly}
+          onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+        />
+      )
+      : (
+        <Fluent.TextField
+          data-test={m.name}
+          styles={m.multiline && m.height ? { fieldGroup: { height: m.height } } : undefined}
+          label={m.label}
+          placeholder={m.placeholder}
+          iconProps={{ iconName: m.icon }}
+          prefix={m.prefix}
+          suffix={m.suffix}
+          defaultValue={m.value}
+          errorMessage={m.error}
+          required={m.required}
+          disabled={m.disabled}
+          readOnly={m.readonly}
+          multiline={m.multiline}
+          spellCheck={m.spellcheck}
+          type={m.password ? 'password' : undefined}
+          onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+        />
+      )
+  }

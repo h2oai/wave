@@ -10,19 +10,20 @@ setup: ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
+	cd tools/showcase && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/wavegen && $(MAKE) clean
+	cd tools/showcase && $(MAKE) clean
 	rm -f waved
 
 setup-ts: ## Set up NPM package and symlinks
 	cd ts && npm ci && npm run build
 	cd ts && npm link
 	cd ui && npm link h2o-wave
-	cd u && npm link h2o-wave
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -86,7 +87,7 @@ build-docker:
 		.
 
 run: ## Run server
-	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
+	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy -public-dir /assets/@./assets
 
 run-db: ## Run database server
 	go run cmd/wavedb/main.go
@@ -100,15 +101,23 @@ run-cypress: ## Run Cypress
 generate: ## Generate driver bindings
 	cd tools/wavegen && $(MAKE) run
 
-.PHONY: docs
-docs: ## Generate API docs and copy to website
+.PHONY: pydocs
+pydocs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
+	cd tools/showcase && $(MAKE) generate
 
-release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
+release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
-	$(MAKE) build-website
+	$(MAKE) website
+	$(MAKE) build-py
+
+release-nightly: build-ui ## Prepare nightly release builds. 
+	$(MAKE) OS=linux release-os
+	$(MAKE) OS=darwin release-os
+	$(MAKE) OS=windows EXE_EXT=".exe" release-os
+	$(MAKE) build-py
 
 release-os:
 	rm -rf build/$(REL)
@@ -124,7 +133,8 @@ release-os:
 	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
-build-website: docs ## Build website
+.PHONY: website
+website: pydocs ## Build website
 	cd website && npm ci && npm run build
 
 preview-website: ## Preview website
@@ -133,6 +143,9 @@ preview-website: ## Preview website
 publish-website: ## Publish website
 	aws s3 sync website/build s3://wave.h2o.ai --delete
 
+publish-pycharm: ## Publish website
+	cd tools/intellij-plugin && $(MAKE) publish
+	
 .PHONY: tag
 tag: ## Bump version and tag
 	cd py && $(MAKE) tag

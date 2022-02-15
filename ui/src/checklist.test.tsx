@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Checklist, XChecklist } from './checklist'
@@ -21,7 +20,6 @@ import { wave } from './ui'
 const name = 'checklist'
 const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
 describe('Checklist.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     wave.args[name] = null
@@ -30,12 +28,6 @@ describe('Checklist.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XChecklist model={checklistProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display checklist when visible is false', () => {
-    const { queryByTestId } = render(<XChecklist model={{ ...checklistProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - single selection', () => {

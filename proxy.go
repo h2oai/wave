@@ -66,10 +66,7 @@ func newProxy(auth *Auth, maxRequestSize, maxResponseSize int64) *Proxy {
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		// Disallow if:
-		// - unauthorized api call
-		// - auth not enabled or auth enabled and unauthorized
-		if p.auth == nil || (p.auth != nil && !p.auth.allow(r)) {
+		if p.auth != nil && !p.auth.allow(r) {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -77,6 +74,10 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		req, err := readRequestWithLimit(w, r.Body, p.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read proxy request body", "error": err.Error()})
+			if isRequestTooLarge(err) {
+				http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
+				return
+			}
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}

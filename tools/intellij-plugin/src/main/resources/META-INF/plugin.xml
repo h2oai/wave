@@ -1,0 +1,33 @@
+<idea-plugin>
+  <id>wave.h2o.ai</id>
+  <name>H2O Wave</name>
+  <vendor url="https://www.h2o.ai/">H2O.ai</vendor>
+
+  <!-- Product and plugin compatibility requirements -->
+  <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+  <depends>com.intellij.modules.python</depends>
+
+  <description>
+    <![CDATA[
+        <p>Makes <a href="https://wave.h2o.ai/">H2O Wave</a> app development easier by providing</p>
+        <ul>
+            <li>Custom code snippets.</li>
+            <li>Advanced autocomplete.</li>
+        </ul>
+        <p>See all snippets in Preferences -> Editor -> Live Templates -> Wave</p>
+        <p>See also:</p>
+        <ul>
+            <li><a href='https://github.com/h2oai/wave/issues'>Issue tracking.</a></li>
+            <li><a href='https://wave.h2o.ai/'>H2O Wave docs.</a></li>
+        </ul>
+    ]]>
+  </description>
+
+  <vendor url="https://www.h2o.ai/">H2O.ai</vendor>
+  <extensions defaultExtensionNs="com.intellij">
+    <defaultLiveTemplates file="templates/wave.xml" />
+    <liveTemplateContext implementation="org.h2o.templates.WaveTemplateContext" />
+    <completion.contributor language="Python" order="first" implementationClass="org.h2o.autocompletion.WaveCompletionContributor" />
+  </extensions>
+
+</idea-plugin>

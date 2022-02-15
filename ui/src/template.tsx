@@ -27,7 +27,9 @@ export interface Template {
   data?: Rec
   /** An identifying name for this component. */
   name?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the template, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 
@@ -42,15 +44,12 @@ interface State {
 }
 
 export const
-  XTemplate = bond(({ model: m }: { model: Template }) => {
+  XTemplate = ({ model: m }: { model: Template }) => {
     const
       template = Handlebars.compile(m.content || ''),
-      render = () => {
-        const data = unpack<Rec>(m.data)
-        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}), visible: m.visible }} /></div>
-      }
-    return { render }
-  }),
+      data = unpack<Rec>(m.data)
+    return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
+  },
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       template = Handlebars.compile(state.content || ''),

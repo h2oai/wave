@@ -95,24 +95,6 @@ export const cardDefs: CardDef[] = [
     ]
   },
   {
-    "view": "footer",
-    "icon": "Footer",
-    "attrs": [
-      {
-        "name": "box",
-        "optional": false,
-        "t": "box",
-        "value": "{\"zone\":\"Body\"}"
-      },
-      {
-        "name": "caption",
-        "optional": false,
-        "t": "textbox",
-        "value": "(c) Your Company, Inc."
-      }
-    ]
-  },
-  {
     "view": "frame",
     "icon": "PageAdd",
     "attrs": [
@@ -139,42 +121,6 @@ export const cardDefs: CardDef[] = [
         "optional": true,
         "t": "textarea",
         "value": ""
-      }
-    ]
-  },
-  {
-    "view": "header",
-    "icon": "Header",
-    "attrs": [
-      {
-        "name": "box",
-        "optional": false,
-        "t": "box",
-        "value": "{\"zone\":\"Body\"}"
-      },
-      {
-        "name": "title",
-        "optional": false,
-        "t": "textbox",
-        "value": "Untitled Page"
-      },
-      {
-        "name": "subtitle",
-        "optional": false,
-        "t": "textbox",
-        "value": "Powered by H2O Wave."
-      },
-      {
-        "name": "icon",
-        "optional": true,
-        "t": "textbox",
-        "value": "AppIconDefault"
-      },
-      {
-        "name": "icon_color",
-        "optional": true,
-        "t": "textbox",
-        "value": "yellow"
       }
     ]
   },

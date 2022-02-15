@@ -40,11 +40,6 @@ type App struct {
 	keySecret string  // access key secret
 }
 
-// Boot represents the initial message sent when a client connects to an app
-type Boot struct {
-	Hash string `json:"#,omitempty"` // location hash
-}
-
 func toAppMode(mode string) AppMode {
 	switch mode {
 	case "broadcast":
@@ -83,7 +78,9 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 	req.SetBasicAuth(app.keyID, app.keySecret)
 
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Set("Wave-Client-ID", clientID)
+	if len(clientID) > 0 {
+		req.Header.Set("Wave-Client-ID", clientID)
+	}
 	req.Header.Set("Wave-Subject-ID", session.subject)
 	req.Header.Set("Wave-Username", session.username)
 	if session.subject != anon {

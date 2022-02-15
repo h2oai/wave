@@ -4,7 +4,10 @@ all: build ## Build h2o_wave wheel
 
 .PHONY: build
 build: purge
-	./venv/bin/python3 setup.py bdist_wheel
+	export OS=windows; ./venv/bin/python3 setup.py bdist_wheel --plat-name=win_amd64
+	export OS=linux; ./venv/bin/python3 setup.py bdist_wheel --plat-name=manylinux1_x86_64
+	export OS=darwin; ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_10_9_x86_64
+	export OS=any; ./venv/bin/python3 setup.py bdist_wheel
 
 setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
@@ -33,8 +36,8 @@ clean: purge ## Clean
 
 .PHONY: tag
 tag: # Bump version
-	sed -i -r -e "s/version.+/version='$(VERSION)',/" setup.py
-	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/__init__.py
+	sed -i -r -e "s/version.+/version=os.getenv('VERSION', '$(VERSION)'),/" setup.py
+	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/version.py
 	# Causes chicken-egg situation during CI
 	# sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
 

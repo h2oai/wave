@@ -32,12 +32,6 @@ describe('Slider.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not display slider when visible is false', () => {
-    const { queryByTestId } = render(<XSlider model={{ ...sliderProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
-  })
-
   it('Sets args - init', () => {
     render(<XSlider model={sliderProps} />)
     expect(wave.args[name]).toBe(0)

@@ -7,7 +7,7 @@ from h2o_wave import Q, ui, main, app
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        q.page['meta'] = ui.meta_card(box='')
+        q.page['meta'] = ui.meta_card(box='', theme='neon')
         q.page['controls'] = ui.form_card(box='1 1 2 8', items=[
             ui.text_xl('Form'),
             ui.textbox(name='textbox', label='Textbox'),

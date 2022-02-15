@@ -8,7 +8,7 @@ In the fine tradition of keeping tutorials succinct and useful, we'll author a l
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
 
-This tutorial outlines the basics of how to handle events, update the UI, manage state and easily add realtime sync capabilities to your app. It's probably the most important tutorial to wrap your head around if you're interesting in authoring interactive applications.
+This tutorial outlines the basics of how to handle events, update the UI, manage state and easily add realtime sync capabilities to your app. It's probably the most important tutorial to wrap your head around if you're interested in authoring interactive applications.
 
 ## Prerequisites
 
@@ -48,9 +48,9 @@ At this point, your app will be up and running, but it doesn't do anything yet. 
 
 ## Step 2: Display a button
 
-Let's add a button to our app. Out goal is to increment and display the bean count each time the button is clicked.
+Let's add a button to our app. Our goal is to increment and display the bean count each time the button is clicked.
 
-To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
+To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](/docs/widgets/form/overview) (also called *widgets*). In this case, our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
 
 ```py {5-18} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui
@@ -118,7 +118,7 @@ async def serve(q: Q):
 
 The above edit introduces two important concepts: `q.client` and `q.args`.
 
-- `q.client` is a dictionary-like object for storing and retrieving arbitrary information related to the active *client* (a browser tab or browser session). Anything you put into `q.client` while handling a event can be read back while handling a subsequent event, provided the subsequent event originates from the same client. In our case, we read `q.client.bean_count` to get the bean count. If it's unavailable (which means this is a new client), we default the bean count to `0`.
+- `q.client` is a dictionary-like object for storing and retrieving arbitrary information related to the active *client* (a browser tab or browser session). Anything you put into `q.client` while handling an event can be read back while handling a subsequent event, provided the subsequent event originates from the same client. In our case, we read `q.client.bean_count` to get the bean count. If it's unavailable (which means this is a new client), we default the bean count to `0`.
 - `q.args`, also a dictionary-like object, carries *event arguments*, which contains information about what the user did. In our case, if the user clicked on our button (named `increment`), `q.args.increment` will be `True`. If not, `q.args.increment` will be `None`. Therefore, if `q.args.increment` is `True`, we increment the client's `bean_count`. If not, we do nothing.
 
 :::note
@@ -126,13 +126,12 @@ From now on, any time you see the term 'client', recall that it's a technical te
 :::
 
 :::info
-Each component in the Wave component library populates `q.args` with its own value. For more information, see [Components](components.md).
+Each component in the Wave component library populates `q.args` with its own value. For more information, see [Components](/docs/widgets/form/overview).
 :::
 
 Your button should now count beans when clicked:
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
-
 
 ## Step 4: Make it more efficient
 
@@ -143,7 +142,6 @@ To view the Wave server's log, switch to the terminal window running the Wave se
 :::
 
 Let's wrinkle our noses in disgust and fix this gross inefficiency right away to make our little bean counter web-scale for great good.
-
 
 ```py {9-10,22-23} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui
@@ -173,7 +171,8 @@ async def serve(q: Q):
 ```
 
 In the above edit, we check for an arbitrary flag in `q.client` called `initialized`.
-- If the flag is not set, we assume that the request is originating from new, empty client. If so, we set `initialized` to `True` (to make a note to ourselves that the client is not empty anymore), then add our form card to the page.
+
+- If the flag is not set, we assume that the request is originating from a new, empty client. If so, we set `initialized` to `True` (to make a note to ourselves that the client is not empty anymore), then add our form card to the page.
 - If the flag is already set, we assume that the form card (and the button inside it) are already on the page, and simply update the button's caption with the new bean count.
 
 ## Intermission: Understanding state
@@ -191,6 +190,7 @@ In real world apps, the decision on whether to store information at the client, 
 Similar to how `q.client` stores arbitrary information associated with the client, `q.user` and `q.app` store arbitrary information associated with the user and the app, respectively.
 
 In most apps, you'll end up using a mix of `q.client`, `q.user` and `q.app` to correctly handle requests originating from:
+
 1. Different users.
 2. Different browser tabs belonging to the same user (possibly from different devices).
 3. The same browser tab.
@@ -199,8 +199,7 @@ In other words, your Wave app is multi-user by default, but how the app manages 
 
 ## Step 5: User-level realtime sync
 
-To maintain bean counts at the user level, all we have to do store `bean_count` in `q.user` instead of `q.client`.
-
+To maintain bean counts at the user level, all we have to do is store `bean_count` in `q.user` instead of `q.client`.
 
 ```py {5,7} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui

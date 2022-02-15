@@ -17,9 +17,9 @@ import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { displayMixin } from './theme'
+import { cssVar, formItemWidth, padding } from './theme'
 import { XToolTip } from './tooltip'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a button.
@@ -56,7 +56,9 @@ export interface Button {
   link?: B
   /** An optional icon to display next to the button label (not applicable for links). */
   icon?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the button, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -64,21 +66,41 @@ export interface Button {
 
 /** Create a set of buttons laid out horizontally. */
 export interface Buttons {
-  /** The button in this set. */
+  /** The buttons in this set. */
   items: Component[]
   /** Specifies how to lay out buttons horizontally. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** An identifying name for this component. */
   name?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the buttons, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 
+/** Create a set of mini buttons laid out horizontally. */
+export interface MiniButtons {
+  /** The buttons in this set. */
+  items: Component[]
+  /** True if the component should be visible. Defaults to True. */
+  visible?: B
+}
+
+/** Create a mini button - same as regular button, but smaller in size. */
+export interface MiniButton {
+  /** An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked. */
+  name: Id
+  /** The text displayed on the button. */
+  label: S
+  /** An optional icon to display next to the button label. */
+  icon?: S
+}
 
 const
   css = stylesheet({
     buttons: {
       boxSizing: 'border-box',
+      overflowX: 'auto'
     },
   }),
   justifications: Dict<Fluent.Alignment> = {
@@ -90,48 +112,95 @@ const
   }
 
 const
-  XButton = bond(({ model: m }: { model: Button }) => {
-    wave.args[m.name] = false
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width } }: { model: Button }) => {
     const
-      onClick = () => {
-        if (m.name.startsWith('#')) {
-          window.location.hash = m.name.substr(1)
+      onClick = (ev: any) => {
+        ev.stopPropagation()
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
           return
         }
-        wave.args[m.name] = m.value === undefined || m.value
+        wave.args[name] = value === undefined || value
         wave.push()
       },
-      render = () => {
-        if (m.link) {
-          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>
+      // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
+      styles: Fluent.IButtonStyles = {
+        root: {
+          display: visible ? undefined : 'none',
+          width: formItemWidth(width),
+          minWidth: width ? 'initial' : undefined
+        },
+        icon: {
+          fontSize: 20
         }
-        const btnProps: Fluent.IButtonProps = { text: m.label, disabled: m.disabled, onClick, iconProps: { iconName: m.icon } }
-        return m.caption?.length
-          ? m.primary
-            ? <Fluent.CompoundButton {...btnProps} data-test={m.name} primary secondaryText={m.caption} />
-            : <Fluent.CompoundButton {...btnProps} data-test={m.name} secondaryText={m.caption} />
-          : m.primary
-            ? <Fluent.PrimaryButton {...btnProps} data-test={m.name} />
-            : <Fluent.DefaultButton {...btnProps} data-test={m.name} />
       }
-    return { render }
-  })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[name] = false }, [])
+
+    if (link) {
+      return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
+    }
+    const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
+    if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
+
+    return caption?.length
+      ? primary
+        ? <Fluent.CompoundButton {...btnProps} data-test={name} primary secondaryText={caption} />
+        : <Fluent.CompoundButton {...btnProps} data-test={name} secondaryText={caption} />
+      : primary
+        ? <Fluent.PrimaryButton {...btnProps} data-test={name} />
+        : <Fluent.DefaultButton {...btnProps} data-test={name} />
+  }
 export const
-  XButtons = ({ model: m }: { model: Buttons }) => {
+  XButtons = ({ model }: { model: Buttons }) => {
     const
-      children = (m.items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
+      { name, items, justify, width } = model,
+      children = (items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
         <XToolTip key={b.name} content={b.tooltip} showIcon={false} expand={false}>
-          <XButton model={b}>{b.label}</XButton>
+          <XButton model={b} />
         </XToolTip>
       ))
     return (
-      <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
-        <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
+      <div data-test={name} className={css.buttons} style={{ width }}>
+        <Fluent.Stack horizontal horizontalAlign={justifications[justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
       </div>
     )
   },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div className={css.buttons} style={displayMixin(m.visible)}>
-      <XButton key={m.name} model={m}>{m.label}</XButton>
+    <div className={css.buttons}>
+      <XButton key={m.name} model={m} />
     </div>
-  )
+  ),
+  XMiniButtons = ({ model }: { model: MiniButtons }) => (
+    <Fluent.Stack horizontal verticalAlign='center' styles={{ root: { height: 24 } }}>
+      {model.items.map(({ mini_button }) => mini_button ? <XMiniButton key={mini_button.name} model={mini_button} /> : null)}
+    </Fluent.Stack>
+  ),
+  XMiniButton = ({ model }: { model: MiniButton }) => {
+    const
+      { name, label, icon } = model,
+      onClick = () => {
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
+          return
+        }
+        wave.args[name] = true
+        wave.push()
+      }
+
+    return (
+      <Fluent.ActionButton
+        data-test={name}
+        styles={{
+          label: { color: cssVar('$neutralTertiary') },
+          labelHovered: { color: 'inherit' },
+          icon: { color: cssVar('$neutralTertiary') },
+          root: { padding: padding(0, 1) }
+        }}
+        text={label}
+        iconProps={{ iconName: icon }}
+        onClick={onClick}
+      />
+    )
+  }

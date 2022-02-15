@@ -1,0 +1,106 @@
+<templateSet group="Wave">
+    <template name="w_base_app"
+              value="from h2o_wave import main, app, Q, ui&#10;&#10;&#10;@app('/$URL$')&#10;async def serve(q: Q):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Basic scaffolding for a wave app" toReformat="false" toShortenFQNames="true">
+        <variable name="URL" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_client_initialize"
+              value="if not q.client.initialized:&#10;    $END$&#10;    q.client.initialized = True"
+              description="Client level initialization logic" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_user_initialize"
+              value="if not q.user.initialized:&#10;    $END$&#10;    q.user.initialized = True"
+              description="User level initialization logic" toReformat="true" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_app_initialize" value="if not q.app.initialized:&#10;    $END$&#10;    q.app.initialized = True"
+              description="App level initialization logic" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_base_script"
+              value="from h2o_wave import site, ui&#10;&#10;page = site['/$SITE']&#10;$END$&#10;page.save()"
+              description="Basic scaffolding for a wave script" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_page" value="q.page['$PAGE$'] = $END$" description="Creates a new page for card"
+              toReformat="false" toShortenFQNames="true">
+        <variable name="PAGE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_page_drop" value="q.page.drop()$END$" description="Delete all cards" toReformat="true"
+              toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_meta" value="q.page['meta']$END$" description="Shorthand for accessing meta card"
+              toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_advanced_app"
+              value="from h2o_wave import main, app, Q, ui&#10;&#10;&#10;def on_startup():&#10;    $STARTUP$&#10;&#10;&#10;def on_shutdown():&#10;    $SHUTDOWN$&#10;&#10;&#10;@app('/$URL$', on_startup=on_startup, on_shutdown=on_shutdown)&#10;async def serve(q: Q):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Advanced scaffolding for a wave app" toReformat="false" toShortenFQNames="true">
+        <variable name="STARTUP" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="SHUTDOWN" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="URL" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on" value="@on()&#10;async def $NAME$(q: Q):&#10;    $END$" shortcut="TAB"
+              description="Interactivity handler" toReformat="false" toShortenFQNames="true">
+        <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on_route"
+              value="@on(arg='#$ROUTE$')&#10;async def handle_$ROUTE$(q: Q):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Route handler" toReformat="false" toShortenFQNames="true">
+        <variable name="ROUTE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on_route_param"
+              value="@on(arg='#$ROUTE$/{$PARAM$}')&#10;async def handle_$ROUTE$(q: Q, $PARAM$: str):&#10;    $END$&#10;    await q.page.save()&#10;"
+              description="Route handler with url param" toReformat="true" toShortenFQNames="true">
+        <variable name="ROUTE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="PARAM" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_on_handler_app"
+              value="from h2o_wave import main, app, Q, ui, on, handle_on&#10;&#10;&#10;@app('/$URL$')&#10;async def serve(q: Q):&#10;    $END$&#10;    await handle_on(q)&#10;    await q.page.save()"
+              description="Scaffolding for an app that uses &quot;on&quot; handlers" toReformat="true"
+              toShortenFQNames="true">
+        <variable name="URL" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+    <template name="w_page_delete" value="del q.page['$PAGE$']$END$" description="Delete a specific Wave card" toReformat="true"
+              toShortenFQNames="true">
+        <variable name="PAGE" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Python" value="true"/>
+        </context>
+    </template>
+</templateSet>

@@ -12,33 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Link, XLink } from './link'
 
 const
   name = 'link',
-  linkProps: Link = { name, path: name }
+  linkProps: Link = { name, path: name },
+  windowOpenMock = jest.fn()
 
 describe('Link.tsx', () => {
-  beforeAll(() => initializeIcons())
+  beforeAll(() => window.open = windowOpenMock)
   beforeEach(() => { jest.clearAllMocks() })
-
-  it('Does not render data-test attr', () => {
-    const { container } = render(<XLink model={{}} />)
-    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
-  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XLink model={linkProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display link when visible is false', () => {
-    const { queryByTestId } = render(<XLink model={{ ...linkProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets default label when not specified', () => {
@@ -46,18 +35,21 @@ describe('Link.tsx', () => {
     expect(queryByText(name)).toBeInTheDocument()
   })
 
+  it('Sets label when specified', () => {
+    const label = 'label'
+    const { queryByText } = render(<XLink model={{ ...linkProps, label }} />)
+    expect(queryByText(label)).toBeInTheDocument()
+  })
+
   it('Opens button link in same tab', () => {
-    const windowOpenMock = jest.fn()
-    window.open = windowOpenMock
     const { getByText } = render(<XLink model={{ ...linkProps, button: true }} />)
 
     fireEvent.click(getByText(name))
     expect(windowOpenMock).toHaveBeenCalled()
-    expect(windowOpenMock).toHaveBeenCalledWith(name)
+    expect(windowOpenMock).toHaveBeenCalledWith(name, undefined)
   })
-  it('Opens button link in same tab', () => {
-    const windowOpenMock = jest.fn()
-    window.open = windowOpenMock
+
+  it('Opens button link in a new tab', () => {
     const { getByText } = render(<XLink model={{ ...linkProps, button: true, target: '' }} />)
 
     fireEvent.click(getByText(name))
@@ -65,14 +57,18 @@ describe('Link.tsx', () => {
     expect(windowOpenMock).toHaveBeenCalledWith(name, '_blank')
   })
 
-  it('Renders download attribute', () => {
-    const { getByTestId } = render(<XLink model={{ ...linkProps, download: true }} />)
-    expect(getByTestId(name).getAttribute('download')).toEqual('')
-  })
-
   it('Renders link target attribute when new tab specified', () => {
     const { getByTestId } = render(<XLink model={{ ...linkProps, target: '' }} />)
     expect(getByTestId(name).getAttribute('target')).toEqual('_blank')
+  })
+
+  // Needed for FF - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
+  it('Downloads from a new tab', () => {
+    const { getByText } = render(<XLink model={{ ...linkProps, download: true }} />)
+
+    fireEvent.click(getByText(name))
+    expect(windowOpenMock).toHaveBeenCalled()
+    expect(windowOpenMock).toHaveBeenCalledWith(name, '_blank')
   })
 
 })

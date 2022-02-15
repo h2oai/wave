@@ -61,6 +61,7 @@ See https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md.
 ## Development Setup
 
 Prerequisites:
+
 - [Go](https://golang.org/) v1.16+
 - [Node.js](http://nodejs.org) v14 or v15
 - [Python](https://www.python.org/) 3.6+
@@ -143,13 +144,6 @@ test-ui-watch                  Run UI unit tests
 
 ### Committing Changes
 
-Commit messages must follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). After commit, we have hooks in place that will:
+Commit messages must follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
-- Lint commit message format.
-- Lint staged files based on their extension. Linting supported for `.ts`, `.tsx`, `.go`, `.py`, `.md` files.
-- Run accompanying unit tests if found.
-
-If any of these checks fails, the commit is aborted and you have to fix the errors first.
-
-Make sure your commit message also ends with an issue number e.g. `fix: Typo #11`. (Tip: If you name your branch name in format `something-#GITHUB_ISSUE_NUM`, the issue number will get appended automatically to your commit message.)
-
+Make sure your commit message also ends with an issue number e.g. `fix: Typo #11`.

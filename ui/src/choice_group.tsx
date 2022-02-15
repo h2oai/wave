@@ -15,8 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  *  Create a choice for a checklist, choice group or dropdown.
@@ -55,32 +54,39 @@ export interface ChoiceGroup {
   required?: B
   /** True if the form should be submitted when the selection changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** True if choices should be rendered horizontally. Defaults to False. */
+  inline?: B
+  /** The width of the choice group, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
 export const
-  XChoiceGroup = bond(({ model: m }: { model: ChoiceGroup }) => {
-    wave.args[m.name] = m.value || null
+  XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
     const
-      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
+      optionStyles = { choiceFieldWrapper: { marginRight: 15 } },
+      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled, styles: optionStyles })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
         if (m.trigger) wave.push()
-      },
-      render = () => (
-        <Fluent.ChoiceGroup
-          data-test={m.name}
-          style={displayMixin(m.visible)}
-          label={m.label}
-          required={m.required}
-          defaultSelectedKey={m.value}
-          options={options}
-          onChange={onChange}
-        />
-      )
+      }
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
+
+    return (
+      <Fluent.ChoiceGroup
+        styles={{ flexContainer: { display: 'flex', flexWrap: 'wrap' } }}
+        data-test={m.name}
+        label={m.label}
+        required={m.required}
+        defaultSelectedKey={m.value}
+        options={options}
+        onChange={onChange}
+      />
+    )
+
+  }

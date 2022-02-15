@@ -16,8 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { displayMixin, rem } from './theme'
-import { bond } from './ui'
+import { rem } from './theme'
 
 /**
  * Create a step for a stepper.
@@ -40,7 +39,9 @@ export interface Stepper {
   name: Id
   /** The sequence of steps to be displayed. */
   items: Step[]
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the stepper, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -67,7 +68,7 @@ const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 24 } }
 
 export const
-  XStepper = bond(({ model: m }: { model: Stepper }) => {
+  XStepper = ({ model: m }: { model: Stepper }) => {
     const
       steps = m.items,
       disabledStyles = (stepIdx: U) => stepIdx > 0 && !steps[stepIdx - 1].done ? css.disabled : '',
@@ -91,18 +92,11 @@ export const
           </Fluent.Stack>
           {(steps.length - 1) !== i && <Fluent.Separator styles={{ root: { width: '100%' } }} />}
         </React.Fragment>
-      ),
-      render = () => (
-        <Fluent.Stack
-          style={displayMixin(m.visible)}
-          data-test={m.name}
-          horizontal
-          horizontalAlign='space-between'
-          verticalAlign='center'
-        >
-          {steps.map(createStep)}
-        </Fluent.Stack>
       )
 
-    return { render }
-  })
+    return (
+      <Fluent.Stack data-test={m.name} horizontal horizontalAlign='space-between' verticalAlign='center'>
+        {steps.map(createStep)}
+      </Fluent.Stack>
+    )
+  }

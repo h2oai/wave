@@ -316,3 +316,15 @@ This function is called when `q.events.donut_plot.select_marks` between 42 and 4
 async def on_marks_selected(q: Q, count: int):
     pass
 ```
+
+### Handling user logout
+
+To get notified when a user logs out of your apps, use the system-wide `@system.logout` event.
+
+```py
+@on('@system.logout')
+async def on_user_logout(q: Q):
+    print(f'User {q.auth.username} logged out.')
+```
+
+Note that when a user logs out of the Wave daemon, all the apps linked to the daemon get notified with a `@system.logout` event.

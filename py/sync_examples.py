@@ -44,27 +44,24 @@ class Example:
 title: {self.title}
 keywords:
 {tags_meta}
+custom_edit_url: null
 ---
-
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
         """
             footer = f"""
-
 **Tags**:  {tags_links}
-
             """
         else:
             header = f"""---
 title: {self.title}
+custom_edit_url: null
 ---
         """
             footer = ""
 
         body = f"""
-
 {self.description}
-
 <div className='cover' style={{{{ backgroundImage: 'url(' + require('./assets/{self.slug}.png').default + ')' }}}} />
 
 ```py
@@ -92,7 +89,6 @@ def write_file(p: str, txt: str) -> str:
 
 def strip_comment(line: str) -> str:
     """Returns the content of a line without '#' and ' ' characters
-
     remove leading '#', but preserve '#' that is part of a tag
     example:
     >>> '# #hello '.strip('#').strip()
@@ -103,26 +99,18 @@ def strip_comment(line: str) -> str:
 
 def parse_tags(description: str) -> Tuple[str, List[str]]:
     """Creates tags from description.
-
     Accepts a description containing tags and returns a (new_description, tags) tuple.
-
     The convention for tags:
     1. Any valid twitter hashtag
-
     For example, accept a description in any of the following forms
-
     1. Use a checklist to group a set of related checkboxes. #form #checkbox #checklist
-
     2. Use a checklist to group a set of related checkboxes.
        #form #checkbox #checklist
-
     3. Use a #checklist to group a set of related checkboxes.
        #form #checkbox
-
     and return
     ('Use a checklist to group a set of related checkboxes.', ['checkbox', 'checklist', 'form']). The list of tags will
     be sorted and all tags will be converted to lowercase.
-
     Args:
         description: Complete description of an example.
     Returns:
@@ -173,8 +161,8 @@ def make_toc(examples: List[Example]):
     return '''---
 title: All Examples
 slug: /examples/all
+custom_edit_url: null
 ---
-
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ''' + '\n\n'.join([f"- <a href={{useBaseUrl('docs/examples/{e.slug}')}}>{e.title}</a>: {e.subtitle}" for e in examples])
@@ -188,9 +176,10 @@ def make_gallery(examples: List[Example]):
     return '''---
 title: Gallery
 slug: /examples
+custom_edit_url: null
 ---
-
 import useBaseUrl from '@docusaurus/useBaseUrl';
+
 ''' + '\n' + '\n\n'.join([make_gallery_thumbnail(e) for e in examples])
 
 
@@ -216,9 +205,10 @@ def make_examples_by_tag(examples: List[Example]):
     return '''---
 title: Examples by Tag
 slug: /examples/tags
+custom_edit_url: null
 ---
-
 import useBaseUrl from '@docusaurus/useBaseUrl';
+
 ''' + '\n' + '\n\n'.join([make_tag_group(t, e) for t, e in tags])
 
 

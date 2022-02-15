@@ -78,8 +78,14 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
 
     def wrap(func):
         func_name = func.__name__
-        if not asyncio.iscoroutinefunction(func):
-            raise ValueError(f"@on function '{func_name}' must be async")
+
+        # This check fails in Cythonized apps.
+        # Related:
+        # - https://bugs.python.org/issue38225
+        # - https://github.com/cython/cython/issues/2273
+        # if not asyncio.iscoroutinefunction(func):
+        #    raise ValueError(f"@on function '{func_name}' must be async")
+
         if predicate:
             if not callable(predicate):
                 raise ValueError(f"@on predicate must be callable for '{func_name}'")

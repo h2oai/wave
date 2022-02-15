@@ -8,11 +8,32 @@
       "type": "chrome",
       "request": "launch",
       "name": "Debug UI",
-      "url": "http://localhost:3000/tour",
+      "url": "http://localhost:3000/demo",
       "webRoot": "${workspaceFolder}/ui"
     },
     {
-      "name": "Debug Tests",
+      "name": "Debug PY Build",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/py",
+      "program": "${workspaceFolder}/py/setup.py",
+      "python": "${workspaceFolder}/py/venv/bin/python3",
+      "console": "integratedTerminal",
+      "args": [
+        "bdist_wheel",
+      ]
+    },
+    {
+      "name": "Debug Showcase",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/tools/showcase",
+      "program": "${workspaceFolder}/tools/showcase/showcase.py",
+      "python": "${workspaceFolder}/tools/showcase/venv/bin/python",
+      "console": "integratedTerminal",
+    },
+    {
+      "name": "Debug UI Tests",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "node",
@@ -28,6 +49,25 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Wavegen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "cwd": "${workspaceFolder}/tools/wavegen",
+      "args": [
+        "../../ui/src",
+        "../../py/h2o_wave",
+        "../../r/R"
+      ],
+      "preLaunchTask": "tsc: build - tools/wavegen/tsconfig.json",
+      "program": "${workspaceFolder}/tools/wavegen/src/wavegen.ts",
+      "outFiles": [
+        "${workspaceFolder}/tools/wavegen/build/**/*.js"
+      ]
+    },
+    {
       "name": "Debug Wave Server",
       "type": "go",
       "request": "launch",
@@ -39,6 +79,9 @@
         "./ui/build",
         "-debug",
         "-editable",
+        "proxy",
+        "-public-dir",
+        "/assets/@./assets"
       ]
     },
     {
@@ -63,6 +106,54 @@
         "http://localhost:10101/_auth/callback",
         "-oidc-redirect-url",
         "http://localhost:10101/_auth/callback",
+      ]
+    },
+    {
+      "name": "Debug VSC tests",
+      "type": "python",
+      "cwd": "${workspaceFolder}/tools/vscode-extension",
+      "python": "${workspaceFolder}/tools/vscode-extension/venv/bin/python",
+      "request": "launch",
+      "module": "server.tests"
+    },
+    {
+      "name": "Debug VSC Client",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "cwd": "${workspaceFolder}/tools/vscode-extension",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/tools/vscode-extension"
+      ],
+      "outFiles": [
+        "${workspaceRoot}/client/out/**/*.js"
+      ],
+      "env": {
+        "VSCODE_DEBUG_MODE": "true"
+      }
+    },
+    {
+      "name": "Debug VSC Server",
+      "type": "python",
+      "request": "launch",
+      "module": "server",
+      "cwd": "${workspaceFolder}/tools/vscode-extension",
+      "python": "${workspaceFolder}/tools/vscode-extension/venv/bin/python",
+      "args": [
+        "--tcp"
+      ],
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/tools/vscode-extension/venv/bin/python"
+      }
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Debug VSC extension",
+      "configurations": [
+        "Debug VSC Server",
+        "Debug VSC Client"
       ]
     }
   ]

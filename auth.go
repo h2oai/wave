@@ -31,6 +31,8 @@ import (
 
 const authCookieName = "oidcsession"
 
+var authDefaultScopes = []string{oidc.ScopeOpenID, "profile"}
+
 func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -38,14 +40,16 @@ func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	scopes := authDefaultScopes
+	if len(conf.Scopes) > 0 && conf.Scopes[0] != "" {
+		scopes = conf.Scopes
+	}
 	return &oauth2.Config{
 		ClientID:     conf.ClientID,
 		ClientSecret: conf.ClientSecret,
 		Endpoint:     provider.Endpoint(),
 		RedirectURL:  conf.RedirectURL,
-		//TODO: make configurable
-		//TODO review: does this return preferred_username if Profile is not included in scope?
-		Scopes: []string{oidc.ScopeOpenID},
+		Scopes:       scopes,
 	}, nil
 }
 
@@ -76,9 +80,12 @@ type Auth struct {
 	conf     *AuthConf
 	oauth    *oauth2.Config
 	sessions map[string]Session
+	baseURL  string
+	initURL  string
+	loginURL string
 }
 
-func newAuth(conf *AuthConf) (*Auth, error) {
+func newAuth(conf *AuthConf, baseURL, initURL, loginURL string) (*Auth, error) {
 	oauth, err := connectToProvider(conf)
 	if err != nil {
 		return nil, err
@@ -87,6 +94,9 @@ func newAuth(conf *AuthConf) (*Auth, error) {
 		conf:     conf,
 		oauth:    oauth,
 		sessions: make(map[string]Session),
+		baseURL:  baseURL,
+		initURL:  initURL,
+		loginURL: loginURL,
 	}, nil
 }
 
@@ -148,9 +158,9 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 			return
 		}
 
-		if r.URL.Path == "/_auth/login" {
+		if r.URL.Path == auth.loginURL {
 			if auth.conf.SkipLogin {
-				redirectToAuth(w, r)
+				auth.redirectToAuth(w, r)
 				return
 			}
 			h.ServeHTTP(w, r)
@@ -158,7 +168,7 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 		}
 
 		if !auth.allow(r) {
-			redirectToLogin(w, r)
+			auth.redirectToLogin(w, r)
 			return
 		}
 
@@ -170,19 +180,19 @@ func (auth *Auth) ensureValidOAuth2Token(ctx context.Context, token *oauth2.Toke
 	return auth.oauth.TokenSource(ctx, token).Token()
 }
 
-func redirectToLogin(w http.ResponseWriter, r *http.Request) {
+func (auth *Auth) redirectToLogin(w http.ResponseWriter, r *http.Request) {
 	// X -> /_auth/login?next=X
-	u, _ := url.Parse("/_auth/login")
+	u, _ := url.Parse(auth.loginURL)
 	q := u.Query()
 	q.Set("next", r.URL.Path)
 	u.RawQuery = q.Encode()
 	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
-func redirectToAuth(w http.ResponseWriter, r *http.Request) {
+func (auth *Auth) redirectToAuth(w http.ResponseWriter, r *http.Request) {
 	// /_auth/login -> /_auth/init
 	// /_auth/login?next=X -> /_auth/init?next=X
-	u, _ := url.Parse("/_auth/init")
+	u, _ := url.Parse(auth.initURL)
 	next := r.URL.Query().Get("next")
 	if next != "" {
 		q := u.Query()
@@ -227,7 +237,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	successURL := "/"
+	successURL := h.auth.baseURL
 	if nextValues, ok := r.URL.Query()["next"]; ok {
 		successURL = nextValues[0]
 	}
@@ -237,7 +247,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.set(Session{id: sessionID, state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: "/", Expires: expiration}
+	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: expiration}
 	http.SetCookie(w, &cookie)
 	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
@@ -378,6 +388,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		// Reload all of this user's browser tabs
 		h.broker.resetClients(session.subject)
+		h.broker.notifyAppsAboutLogout(&session)
 		idToken, _ = session.token.Extra("id_token").(string) // raw id_token (required by Okta)
 	}
 
@@ -386,7 +397,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken string) {
 	if h.auth.conf.EndSessionURL == "" {
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, h.auth.baseURL, http.StatusFound)
 		return
 	}
 

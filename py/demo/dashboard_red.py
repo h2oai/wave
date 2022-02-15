@@ -36,9 +36,9 @@ async def show_red_dashboard(q: Q):
         subtitle=next(sample_caption),
         items=[
             ui.label(label='Start:'),
-            ui.date_picker(name='target_date', label='', value='2020-12-20'),
+            ui.date_picker(name='target_date1', label='', value='2020-12-20'),
             ui.label(label='End:'),
-            ui.date_picker(name='target_date', label='', value='2020-12-25'),
+            ui.date_picker(name='target_date2', label='', value='2020-12-25'),
         ],
     )
 

@@ -58,21 +58,38 @@ dump_object <- function(x) {
 }
 
 
-#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+#' Create text content.
 #'
-#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-#' @param label The label to display.
-#' @return A Breadcrumb instance.
+#' @param content The text content.
+#' @param size The font size of the text content.
+#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
+#' @param tooltip Tooltip message.
+#' @param name An identifying name for this component.
+#' @return A Text instance.
 #' @export
-ui_breadcrumb <- function(
-  name,
-  label) {
+ui_text <- function(
+  content,
+  size = NULL,
+  width = NULL,
+  visible = NULL,
+  tooltip = NULL,
+  name = NULL) {
+  .guard_scalar("content", "character", content)
+  # TODO Validate size
+  .guard_scalar("width", "character", width)
+  .guard_scalar("visible", "logical", visible)
+  .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .o <- list(
-    name=name,
-    label=label)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
+  .o <- list(text=list(
+    content=content,
+    size=size,
+    width=width,
+    visible=visible,
+    tooltip=tooltip,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -116,240 +133,11 @@ ui_command <- function(
   return(.o)
 }
 
-#' Create a card containing breadcrumbs.
-#' Breadcrumbs should be used as a navigational aid in your app or site.
-#' They indicate the current page’s location within a hierarchy and help
-#' the user understand where they are in relation to the rest of that hierarchy.
-#' They also afford one-click access to higher levels of that hierarchy.
-#' Breadcrumbs are typically placed, in horizontal form, under the masthead
-#' or navigation of an experience, above the primary content area.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
-#' @param commands Contextual menu commands for this component.
-#' @return A BreadcrumbsCard instance.
-#' @export
-ui_breadcrumbs_card <- function(
-  box,
-  items,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_vector("items", "WaveBreadcrumb", items)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    items=items,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
-  return(.o)
-}
-
-#' WARNING: Experimental and subject to change.
-#' Do not use in production sites!
-#' 
-#' Create a card that displays a drawing canvas (whiteboard).
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param title The title for this card.
-#' @param width Canvas width, in pixels.
-#' @param height Canvas height, in pixels.
-#' @param data The data for this card.
-#' @param commands Contextual menu commands for this component.
-#' @return A CanvasCard instance.
-#' @export
-ui_canvas_card <- function(
-  box,
-  title,
-  width,
-  height,
-  data,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  .guard_scalar("width", "numeric", width)
-  .guard_scalar("height", "numeric", height)
-  # TODO Validate data: Rec
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    title=title,
-    width=width,
-    height=height,
-    data=data,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveCanvasCard"))
-  return(.o)
-}
-
-#' WARNING: Experimental and subject to change.
-#' Do not use in production sites!
-#' 
-#' Create a card that displays a chat room.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param title The title for this card.
-#' @param data The data for this card.
-#' @param capacity The maximum number of messages contained in this card. Defaults to 50 messages.
-#' @param commands Contextual menu commands for this component.
-#' @return A ChatCard instance.
-#' @export
-ui_chat_card <- function(
-  box,
-  title,
-  data,
-  capacity = NULL,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  # TODO Validate data: Rec
-  .guard_scalar("capacity", "numeric", capacity)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    title=title,
-    data=data,
-    capacity=capacity,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
-  return(.o)
-}
-
-#' WARNING: Experimental and subject to change.
-#' Do not use in production sites!
-#' 
-#' Create a card that enables WYSIWYG editing on a page.
-#' Adding this card to a page makes the page editable by end-users.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param mode The editing mode. Defaults to `public`.
-#'   One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
-#' @param commands Contextual menu commands for this component.
-#' @return A EditorCard instance.
-#' @export
-ui_editor_card <- function(
-  box,
-  mode,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  # TODO Validate mode
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    mode=mode,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveEditorCard"))
-  return(.o)
-}
-
-#' EXPERIMENTAL. DO NOT USE.
-#' Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param item_view The child card type.
-#' @param item_props The child card properties.
-#' @param data Data for this card.
-#' @param direction Layout direction.
-#'   One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
-#' @param justify Layout strategy for main axis.
-#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
-#' @param align Layout strategy for cross axis.
-#'   One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
-#' @param wrap Wrapping strategy.
-#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
-#' @param commands Contextual menu commands for this component.
-#' @return A FlexCard instance.
-#' @export
-ui_flex_card <- function(
-  box,
-  item_view,
-  item_props,
-  data,
-  direction = NULL,
-  justify = NULL,
-  align = NULL,
-  wrap = NULL,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("item_view", "character", item_view)
-  # TODO Validate item_props: Rec
-  # TODO Validate data: Data
-  # TODO Validate direction
-  # TODO Validate justify
-  # TODO Validate align
-  # TODO Validate wrap
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    item_view=item_view,
-    item_props=item_props,
-    data=data,
-    direction=direction,
-    justify=justify,
-    align=align,
-    wrap=wrap,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveFlexCard"))
-  return(.o)
-}
-
-#' Render a page footer displaying a caption.
-#' Footer cards are typically displayed at the bottom of a page.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param caption The caption. Supports markdown.
-#' @param commands Contextual menu commands for this component.
-#' @return A FooterCard instance.
-#' @export
-ui_footer_card <- function(
-  box,
-  caption,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("caption", "character", caption)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    caption=caption,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
-  return(.o)
-}
-
-#' Create text content.
-#'
-#' @param content The text content.
-#' @param size The font size of the text content.
-#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
-#' @param visible True if the component should be visible. Defaults to true.
-#' @param tooltip Tooltip message.
-#' @param name An identifying name for this component.
-#' @return A Text instance.
-#' @export
-ui_text <- function(
-  content,
-  size = NULL,
-  visible = NULL,
-  tooltip = NULL,
-  name = NULL) {
-  .guard_scalar("content", "character", content)
-  # TODO Validate size
-  .guard_scalar("visible", "logical", visible)
-  .guard_scalar("tooltip", "character", tooltip)
-  .guard_scalar("name", "character", name)
-  .o <- list(text=list(
-    content=content,
-    size=size,
-    visible=visible,
-    tooltip=tooltip,
-    name=name))
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
-  return(.o)
-}
-
 #' Create extra-large sized text content.
 #'
 #' @param content The text content.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -357,17 +145,20 @@ ui_text <- function(
 #' @export
 ui_text_xl <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   commands = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
   .o <- list(text_xl=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     commands=commands,
@@ -379,7 +170,8 @@ ui_text_xl <- function(
 #' Create large sized text content.
 #'
 #' @param content The text content.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -387,17 +179,20 @@ ui_text_xl <- function(
 #' @export
 ui_text_l <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   commands = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
   .o <- list(text_l=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     commands=commands,
@@ -409,22 +204,26 @@ ui_text_l <- function(
 #' Create medium sized text content.
 #'
 #' @param content The text content.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextM instance.
 #' @export
 ui_text_m <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_m=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -435,22 +234,26 @@ ui_text_m <- function(
 #' Create small sized text content.
 #'
 #' @param content The text content.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextS instance.
 #' @export
 ui_text_s <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_s=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -461,22 +264,26 @@ ui_text_s <- function(
 #' Create extra-small sized text content.
 #'
 #' @param content The text content.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextXs instance.
 #' @export
 ui_text_xs <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_xs=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -495,7 +302,8 @@ ui_text_xs <- function(
 #' @param label The text displayed on the label.
 #' @param required True if the field is required.
 #' @param disabled True if the label should be disabled.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the label , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Label instance.
@@ -504,12 +312,14 @@ ui_label <- function(
   label,
   required = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
@@ -517,6 +327,7 @@ ui_label <- function(
     label=label,
     required=required,
     disabled=disabled,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -530,19 +341,23 @@ ui_label <- function(
 #'
 #' @param label The text displayed on the separator.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the separator , e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Separator instance.
 #' @export
 ui_separator <- function(
   label = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(separator=list(
     label=label,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -571,7 +386,8 @@ ui_separator <- function(
 #' @param label The text displayed above the bar.
 #' @param caption The text displayed below the bar.
 #' @param value The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the separator, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Progress instance.
@@ -580,12 +396,14 @@ ui_progress <- function(
   label,
   caption = NULL,
   value = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("value", "numeric", value)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
@@ -593,6 +411,7 @@ ui_progress <- function(
     label=label,
     caption=caption,
     value=value,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -610,22 +429,26 @@ ui_progress <- function(
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
 #' @param text The text displayed on the message bar.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the message bar, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A MessageBar instance.
 #' @export
 ui_message_bar <- function(
   type = NULL,
   text = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   # TODO Validate type
   .guard_scalar("text", "character", text)
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(message_bar=list(
     type=type,
     text=text,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -653,8 +476,10 @@ ui_message_bar <- function(
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
 #' @param height The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text box, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param spellcheck True if the text may be checked for spelling errors. Defaults to True.
 #' @return A Textbox instance.
 #' @export
 ui_textbox <- function(
@@ -674,8 +499,10 @@ ui_textbox <- function(
   password = NULL,
   trigger = NULL,
   height = NULL,
+  width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  spellcheck = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -692,8 +519,10 @@ ui_textbox <- function(
   .guard_scalar("password", "logical", password)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("spellcheck", "logical", spellcheck)
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -711,8 +540,10 @@ ui_textbox <- function(
     password=password,
     trigger=trigger,
     height=height,
+    width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    spellcheck=spellcheck))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -738,7 +569,8 @@ ui_textbox <- function(
 #' @param indeterminate True if the selection is indeterminate (neither selected nor unselected).
 #' @param disabled True if the checkbox is disabled.
 #' @param trigger True if the form should be submitted when the checkbox value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the checkbox, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checkbox instance.
 #' @export
@@ -749,6 +581,7 @@ ui_checkbox <- function(
   indeterminate = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -757,6 +590,7 @@ ui_checkbox <- function(
   .guard_scalar("indeterminate", "logical", indeterminate)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checkbox=list(
@@ -766,6 +600,7 @@ ui_checkbox <- function(
     indeterminate=indeterminate,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -786,7 +621,8 @@ ui_checkbox <- function(
 #' @param value True if selected, False if unselected.
 #' @param disabled True if the checkbox is disabled.
 #' @param trigger True if the form should be submitted when the toggle value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the toggle, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Toggle instance.
 #' @export
@@ -796,6 +632,7 @@ ui_toggle <- function(
   value = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -803,6 +640,7 @@ ui_toggle <- function(
   .guard_scalar("value", "logical", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(toggle=list(
@@ -811,6 +649,7 @@ ui_toggle <- function(
     value=value,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -856,7 +695,9 @@ ui_choice <- function(
 #' @param choices The choices to be presented.
 #' @param required True if this field is required.
 #' @param trigger True if the form should be submitted when the selection changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param inline True if choices should be rendered horizontally. Defaults to False.
+#' @param width The width of the choice group, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ChoiceGroup instance.
 #' @export
@@ -867,6 +708,8 @@ ui_choice_group <- function(
   choices = NULL,
   required = NULL,
   trigger = NULL,
+  inline = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -875,6 +718,8 @@ ui_choice_group <- function(
   .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("required", "logical", required)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("inline", "logical", inline)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(choice_group=list(
@@ -884,6 +729,8 @@ ui_choice_group <- function(
     choices=choices,
     required=required,
     trigger=trigger,
+    inline=inline,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -899,7 +746,9 @@ ui_choice_group <- function(
 #' @param values The names of the selected choices.
 #' @param choices The choices to be presented.
 #' @param trigger True if the form should be submitted when the checklist value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param inline True if checklist should be rendered horizontally. Defaults to False.
+#' @param width The width of the checklist, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
 #' @export
@@ -909,6 +758,8 @@ ui_checklist <- function(
   values = NULL,
   choices = NULL,
   trigger = NULL,
+  inline = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -916,6 +767,8 @@ ui_checklist <- function(
   .guard_vector("values", "character", values)
   .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("inline", "logical", inline)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checklist=list(
@@ -924,6 +777,8 @@ ui_checklist <- function(
     values=values,
     choices=choices,
     trigger=trigger,
+    inline=inline,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -951,8 +806,11 @@ ui_checklist <- function(
 #' @param required True if this is a required field.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the dropdown value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the dropdown, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param popup Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices.
+#'   One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
 #' @return A Dropdown instance.
 #' @export
 ui_dropdown <- function(
@@ -965,8 +823,10 @@ ui_dropdown <- function(
   required = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  popup = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -976,8 +836,10 @@ ui_dropdown <- function(
   .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  # TODO Validate popup
   .o <- list(dropdown=list(
     name=name,
     label=label,
@@ -988,8 +850,10 @@ ui_dropdown <- function(
     required=required,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    popup=popup))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -1013,8 +877,10 @@ ui_dropdown <- function(
 #' @param choices The choices to be presented.
 #' @param error Text to be displayed as an error below the text box.
 #' @param disabled True if this field is disabled.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the combobox, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
 #' @return A Combobox instance.
 #' @export
 ui_combobox <- function(
@@ -1025,8 +891,10 @@ ui_combobox <- function(
   choices = NULL,
   error = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  trigger = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -1034,8 +902,10 @@ ui_combobox <- function(
   .guard_vector("choices", "character", choices)
   .guard_scalar("error", "character", error)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("trigger", "logical", trigger)
   .o <- list(combobox=list(
     name=name,
     label=label,
@@ -1044,8 +914,10 @@ ui_combobox <- function(
     choices=choices,
     error=error,
     disabled=disabled,
+    width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    trigger=trigger))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -1073,7 +945,8 @@ ui_combobox <- function(
 #' @param value The current value of the slider.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the slider value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the slider, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Slider instance.
 #' @export
@@ -1086,6 +959,7 @@ ui_slider <- function(
   value = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1096,6 +970,7 @@ ui_slider <- function(
   .guard_scalar("value", "numeric", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(slider=list(
@@ -1107,6 +982,7 @@ ui_slider <- function(
     value=value,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1116,16 +992,17 @@ ui_slider <- function(
 #' Create a spinbox.
 #' 
 #' A spinbox allows the user to incrementally adjust a value in small steps.
-#' It is mainly used for numeric values, but other values are supported too.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param min The minimum value of the spinbox.
-#' @param max The maximum value of the spinbox.
-#' @param step The difference between two adjacent values of the spinbox.
-#' @param value The current value of the spinbox.
+#' @param min The minimum value of the spinbox. Defaults to "0".
+#' @param max The maximum value of the spinbox. Defaults to "100".
+#' @param step The difference between two adjacent values of the spinbox. Defaults to "1".
+#' @param value The current value of the spinbox. Defaults to "0".
 #' @param disabled True if this field is disabled.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the spinbox, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
+#' @param trigger True if the form should be submitted when the spinbox value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Spinbox instance.
 #' @export
@@ -1137,7 +1014,9 @@ ui_spinbox <- function(
   step = NULL,
   value = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
@@ -1146,7 +1025,9 @@ ui_spinbox <- function(
   .guard_scalar("step", "numeric", step)
   .guard_scalar("value", "numeric", value)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(spinbox=list(
     name=name,
@@ -1156,7 +1037,9 @@ ui_spinbox <- function(
     step=step,
     value=value,
     disabled=disabled,
+    width=width,
     visible=visible,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1172,8 +1055,11 @@ ui_spinbox <- function(
 #' @param value The date value in YYYY-MM-DD format.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the datepicker value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the date picker, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param min The minimum allowed date value in YYYY-MM-DD format.
+#' @param max The maximum allowed date value in YYYY-MM-DD format.
 #' @return A DatePicker instance.
 #' @export
 ui_date_picker <- function(
@@ -1183,16 +1069,22 @@ ui_date_picker <- function(
   value = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  min = NULL,
+  max = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
   .guard_scalar("value", "character", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("min", "character", min)
+  .guard_scalar("max", "character", max)
   .o <- list(date_picker=list(
     name=name,
     label=label,
@@ -1200,22 +1092,28 @@ ui_date_picker <- function(
     value=value,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    min=min,
+    max=max))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
 #' Create a color picker.
 #' 
-#' A date picker allows a user to pick a color value.
+#' A color picker allows a user to pick a color value.
 #' If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
 #' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the color picker, e.g. '100px'. Defaults to '300px'.
+#' @param alpha True if user should be allowed to pick color transparency. Defaults to True.
+#' @param inline True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to False.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.
@@ -1225,6 +1123,9 @@ ui_color_picker <- function(
   label = NULL,
   value = NULL,
   choices = NULL,
+  width = NULL,
+  alpha = NULL,
+  inline = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1232,6 +1133,9 @@ ui_color_picker <- function(
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
   .guard_vector("choices", "character", choices)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("alpha", "logical", alpha)
+  .guard_scalar("inline", "logical", inline)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1240,6 +1144,9 @@ ui_color_picker <- function(
     label=label,
     value=value,
     choices=choices,
+    width=width,
+    alpha=alpha,
+    inline=inline,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
@@ -1272,7 +1179,8 @@ ui_color_picker <- function(
 #' @param disabled True if the button should be disabled.
 #' @param link True if the button should be rendered as link text and not a standard button.
 #' @param icon An optional icon to display next to the button label (not applicable for links).
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the button, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Button instance.
 #' @export
@@ -1285,6 +1193,7 @@ ui_button <- function(
   disabled = NULL,
   link = NULL,
   icon = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1295,6 +1204,7 @@ ui_button <- function(
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("link", "logical", link)
   .guard_scalar("icon", "character", icon)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(button=list(
@@ -1306,6 +1216,7 @@ ui_button <- function(
     disabled=disabled,
     link=link,
     icon=icon,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1314,26 +1225,70 @@ ui_button <- function(
 
 #' Create a set of buttons laid out horizontally.
 #'
-#' @param items The button in this set.
+#' @param items The buttons in this set.
 #' @param justify Specifies how to lay out buttons horizontally.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the buttons, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Buttons instance.
 #' @export
 ui_buttons <- function(
   items,
   justify = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_vector("items", "WaveComponent", items)
   # TODO Validate justify
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(buttons=list(
     items=items,
     justify=justify,
     name=name,
+    width=width,
+    visible=visible))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a mini button - same as regular button, but smaller in size.
+#'
+#' @param name An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
+#' @param label The text displayed on the button.
+#' @param icon An optional icon to display next to the button label.
+#' @return A MiniButton instance.
+#' @export
+ui_mini_button <- function(
+  name,
+  label,
+  icon = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
+  .o <- list(mini_button=list(
+    name=name,
+    label=label,
+    icon=icon))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a set of mini buttons laid out horizontally.
+#'
+#' @param items The buttons in this set.
+#' @param visible True if the component should be visible. Defaults to True.
+#' @return A MiniButtons instance.
+#' @export
+ui_mini_buttons <- function(
+  items,
+  visible = NULL) {
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("visible", "logical", visible)
+  .o <- list(mini_buttons=list(
+    items=items,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1346,10 +1301,12 @@ ui_buttons <- function(
 #' @param label Text to be displayed in the bottom button. Defaults to "Upload".
 #' @param multiple True if the component should allow multiple files to be uploaded.
 #' @param file_extensions List of allowed file extensions, e.g. `pdf`, `docx`, etc.
-#' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
-#' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
-#' @param height The height of the file upload, e.g. '400px', '50%', etc.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param max_file_size Maximum allowed size (Mb) per file. No limit by default.
+#' @param max_size Maximum allowed size (Mb) for all files combined. No limit by default.
+#' @param height The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px.
+#' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
+#' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
 #' @export
@@ -1361,6 +1318,8 @@ ui_file_upload <- function(
   max_file_size = NULL,
   max_size = NULL,
   height = NULL,
+  width = NULL,
+  compact = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1370,6 +1329,8 @@ ui_file_upload <- function(
   .guard_scalar("max_file_size", "numeric", max_file_size)
   .guard_scalar("max_size", "numeric", max_size)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("compact", "logical", compact)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(file_upload=list(
@@ -1380,6 +1341,8 @@ ui_file_upload <- function(
     max_file_size=max_file_size,
     max_size=max_size,
     height=height,
+    width=width,
+    compact=compact,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1424,6 +1387,54 @@ ui_icon_table_cell_type <- function(
   return(.o)
 }
 
+#' Create a tag.
+#'
+#' @param label The text displayed within the tag.
+#' @param color Tag's background color.
+#' @param label_color Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
+#' @return A Tag instance.
+#' @export
+ui_tag <- function(
+  label,
+  color,
+  label_color = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("label_color", "character", label_color)
+  .o <- list(
+    label=label,
+    color=color,
+    label_color=label_color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTag"))
+  return(.o)
+}
+
+#' Creates a collection of tags, usually used for rendering state values.
+#' In case of multiple tags per row, make sure the row values are
+#' separated by "," within a single cell string.
+#' E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
+#' Each value should correspond to a `ui.tag.label` attr.
+#' For the example above: [
+#' ui.tag(label="TAG1", color="red"),
+#' ui.tag(label="TAG2", color="green"),
+#' ]
+#'
+#' @param name An identifying name for this component.
+#' @param tags Tags to be rendered.
+#' @return A TagTableCellType instance.
+#' @export
+ui_tag_table_cell_type <- function(
+  name,
+  tags = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_vector("tags", "WaveTag", tags)
+  .o <- list(tag=list(
+    name=name,
+    tags=tags))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
+  return(.o)
+}
+
 #' Create a table column.
 #'
 #' @param name An identifying name for this column.
@@ -1436,7 +1447,7 @@ ui_icon_table_cell_type <- function(
 #' @param link Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table.
 #' @param data_type Defines the data type of this column. Defaults to `string`.
 #'   One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
-#' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
+#' @param cell_type Defines how to render each cell in this column. Renders as plain text by default.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(
@@ -1517,10 +1528,11 @@ ui_table_row <- function(
 #' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
+#' @param width The width of the table, e.g. '100px'. Defaults to '100%'.
 #' @param values The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
 #' @param checkbox_visibility Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'.
 #'   One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 #' @export
@@ -1533,6 +1545,7 @@ ui_table <- function(
   downloadable = NULL,
   resettable = NULL,
   height = NULL,
+  width = NULL,
   values = NULL,
   checkbox_visibility = NULL,
   visible = NULL,
@@ -1545,6 +1558,7 @@ ui_table <- function(
   .guard_scalar("downloadable", "logical", downloadable)
   .guard_scalar("resettable", "logical", resettable)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
   .guard_vector("values", "character", values)
   # TODO Validate checkbox_visibility
   .guard_scalar("visible", "logical", visible)
@@ -1558,6 +1572,7 @@ ui_table <- function(
     downloadable=downloadable,
     resettable=resettable,
     height=height,
+    width=width,
     values=values,
     checkbox_visibility=checkbox_visibility,
     visible=visible,
@@ -1577,7 +1592,8 @@ ui_table <- function(
 #' @param disabled True if the link should be disabled.
 #' @param download True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false.
 #' @param button True if the link should be rendered as a button.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the link, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param target Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
@@ -1589,6 +1605,7 @@ ui_link <- function(
   disabled = NULL,
   download = NULL,
   button = NULL,
+  width = NULL,
   visible = NULL,
   target = NULL,
   tooltip = NULL,
@@ -1598,6 +1615,7 @@ ui_link <- function(
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("download", "logical", download)
   .guard_scalar("button", "logical", button)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("target", "character", target)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1608,10 +1626,37 @@ ui_link <- function(
     disabled=disabled,
     download=download,
     button=button,
+    width=width,
     visible=visible,
     target=target,
     tooltip=tooltip,
     name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a collection of links.
+#'
+#' @param items The links contained in this group.
+#' @param label The name of the link group.
+#' @param inline Render links horizontally. Defaults to 'false'.
+#' @param width The width of the links, e.g. '100px'.
+#' @return A Links instance.
+#' @export
+ui_links <- function(
+  items,
+  label = NULL,
+  inline = NULL,
+  width = NULL) {
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("inline", "logical", inline)
+  .guard_scalar("width", "character", width)
+  .o <- list(links=list(
+    items=items,
+    label=label,
+    inline=inline,
+    width=width))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -1641,9 +1686,10 @@ ui_tab <- function(
 #' Create a tab bar.
 #'
 #' @param name An identifying name for this component.
-#' @param value The name of the tab to select.
+#' @param value The name of the tab to select initially.
 #' @param items The tabs in this tab bar.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the tabs, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param link True if tabs should be rendered as links instead of buttons.
 #' @return A Tabs instance.
 #' @export
@@ -1651,17 +1697,20 @@ ui_tabs <- function(
   name,
   value = NULL,
   items = NULL,
+  width = NULL,
   visible = NULL,
   link = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("value", "character", value)
   .guard_vector("items", "WaveTab", items)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("link", "logical", link)
   .o <- list(tabs=list(
     name=name,
     value=value,
     items=items,
+    width=width,
     visible=visible,
     link=link))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1676,7 +1725,8 @@ ui_tabs <- function(
 #' @param label The text displayed on the expander.
 #' @param expanded True if expanded, False if collapsed.
 #' @param items List of components to be hideable by the expander.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the expander, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Expander instance.
 #' @export
 ui_expander <- function(
@@ -1684,17 +1734,20 @@ ui_expander <- function(
   label = NULL,
   expanded = NULL,
   items = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("expanded", "logical", expanded)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(expander=list(
     name=name,
     label=label,
     expanded=expanded,
     items=items,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1704,10 +1757,10 @@ ui_expander <- function(
 #'
 #' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
 #' @param content The HTML content of the page. A string containing `<html>...</html>`.
-#' @param width The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
-#' @param height The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+#' @param width The width of the frame, e.g. `200px`, `50%`, etc. Defaults to '100%'.
+#' @param height The height of the frame, e.g. `200px`, `50%`, etc. Defaults to '150px'.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Frame instance.
 #' @export
 ui_frame <- function(
@@ -1738,19 +1791,23 @@ ui_frame <- function(
 #'
 #' @param content The HTML content.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the markup, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Markup instance.
 #' @export
 ui_markup <- function(
   content,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(markup=list(
     content=content,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1761,22 +1818,26 @@ ui_markup <- function(
 #' @param content The Handlebars template. https://handlebarsjs.com/guide/
 #' @param data Data for the Handlebars template
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the template, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Template instance.
 #' @export
 ui_template <- function(
   content,
   data = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(template=list(
     content=content,
     data=data,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1790,9 +1851,11 @@ ui_template <- function(
 #' @param choices The choices to be presented.
 #' @param label Text to be displayed above the component.
 #' @param values The names of the selected choices.
-#' @param max_choices Maximum number of selectable choices. Defaults to no limit.
+#' @param max_choices Maximum number of selectable choices.
+#' @param required True if the picker is a required field.
 #' @param disabled Controls whether the picker should be disabled or not.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the picker, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param trigger True if the form should be submitted when the picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Picker instance.
@@ -1803,7 +1866,9 @@ ui_picker <- function(
   label = NULL,
   values = NULL,
   max_choices = NULL,
+  required = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1812,7 +1877,9 @@ ui_picker <- function(
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
   .guard_scalar("max_choices", "numeric", max_choices)
+  .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1822,7 +1889,9 @@ ui_picker <- function(
     label=label,
     values=values,
     max_choices=max_choices,
+    required=required,
     disabled=disabled,
+    width=width,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
@@ -1842,10 +1911,11 @@ ui_picker <- function(
 #' @param max The maximum value of the slider. Defaults to 100.
 #' @param step The difference between two adjacent values of the slider.
 #' @param min_value The lower bound of the selected range.
-#' @param max_value The upper bound of the selected range.
+#' @param max_value The upper bound of the selected range. Default value is `max`.
 #' @param disabled True if this field is disabled.
+#' @param width The width of the range slider, e.g. '100px'. Defaults to '100%'.
 #' @param trigger True if the form should be submitted when the slider value changes.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A RangeSlider instance.
 #' @export
@@ -1858,6 +1928,7 @@ ui_range_slider <- function(
   min_value = NULL,
   max_value = NULL,
   disabled = NULL,
+  width = NULL,
   trigger = NULL,
   visible = NULL,
   tooltip = NULL) {
@@ -1869,6 +1940,7 @@ ui_range_slider <- function(
   .guard_scalar("min_value", "numeric", min_value)
   .guard_scalar("max_value", "numeric", max_value)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1881,6 +1953,7 @@ ui_range_slider <- function(
     min_value=min_value,
     max_value=max_value,
     disabled=disabled,
+    width=width,
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
@@ -1915,22 +1988,26 @@ ui_step <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param items The sequence of steps to be displayed.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the stepper, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Stepper instance.
 #' @export
 ui_stepper <- function(
   name,
   items,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("items", "WaveStep", items)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(stepper=list(
     name=name,
     items=items,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -2198,10 +2275,10 @@ ui_plot <- function(
 #'
 #' @param plot The plot to be rendered in this visualization.
 #' @param data Data for this visualization.
-#' @param width The width of the visualization. Defaults to 100%.
-#' @param height The hight of the visualization. Defaults to 300px.
+#' @param width The width of the visualization. Defaults to '100%'.
+#' @param height The hight of the visualization. Defaults to '300px'.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param events The events to capture on this visualization.
 #' @return A Visualization instance.
 #' @export
@@ -2236,10 +2313,10 @@ ui_visualization <- function(
 #'
 #' @param specification The Vega-lite specification.
 #' @param data Data for the plot, if any.
-#' @param width The width of the visualization. Defaults to 100%.
-#' @param height The height of the visualization. Defaults to 300px.
+#' @param width The width of the visualization. Defaults to '100%'.
+#' @param height The height of the visualization. Defaults to '300px'.
 #' @param name An identifying name for this component.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A VegaVisualization instance.
 #' @export
 ui_vega_visualization <- function(
@@ -2302,19 +2379,27 @@ ui_stat <- function(
 #' @param justify Specifies how to lay out the individual stats. Defaults to 'start'.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
+#' @param width The width of the stats, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
   items,
   justify = NULL,
-  inset = NULL) {
+  inset = NULL,
+  width = NULL,
+  visible = NULL) {
   .guard_vector("items", "WaveStat", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("visible", "logical", visible)
   .o <- list(stats=list(
     items=items,
     justify=justify,
-    inset=inset))
+    inset=inset,
+    width=width,
+    visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2323,7 +2408,7 @@ ui_stats <- function(
 #'
 #' @param items The components laid out inline.
 #' @param justify Specifies how to lay out the individual components. Defaults to 'start'.
-#'   One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify.
 #' @param inset Whether to display the components inset from the parent form, with a contrasting background.
 #' @return A Inline instance.
 #' @export
@@ -2348,23 +2433,492 @@ ui_inline <- function(
 #' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
 #' @param image Image data, base64-encoded.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @param width The width of the image, e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
   title,
   type = NULL,
   image = NULL,
-  path = NULL) {
+  path = NULL,
+  width = NULL,
+  visible = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   .guard_scalar("path", "character", path)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("visible", "logical", visible)
   .o <- list(image=list(
     title=title,
     type=type,
     image=image,
-    path=path))
+    path=path,
+    width=width,
+    visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create an individual's persona or avatar, a visual representation of a person across products.
+#' Can be used to display an individual's avatar (or a composition of the person’s initials on a background color), their name or identification, and online status.
+#'
+#' @param title Primary text, displayed next to the persona coin.
+#' @param subtitle Secondary text, displayed under the title.
+#' @param caption Tertiary text, displayed under the subtitle. Only visible for sizes >= 'm'.
+#' @param size The size of the persona coin. Defaults to 'm'.
+#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.PersonaSize.
+#' @param image Image, URL or base64-encoded (`data:image/png;base64,???`).
+#' @param initials Initials, if `image` is not specified.
+#' @param initials_color Initials background color (CSS-compatible string).
+#' @param name An identifying name for this component.
+#' @return A Persona instance.
+#' @export
+ui_persona <- function(
+  title,
+  subtitle = NULL,
+  caption = NULL,
+  size = NULL,
+  image = NULL,
+  initials = NULL,
+  initials_color = NULL,
+  name = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("caption", "character", caption)
+  # TODO Validate size
+  .guard_scalar("image", "character", image)
+  .guard_scalar("initials", "character", initials)
+  .guard_scalar("initials_color", "character", initials_color)
+  .guard_scalar("name", "character", name)
+  .o <- list(persona=list(
+    title=title,
+    subtitle=subtitle,
+    caption=caption,
+    size=size,
+    image=image,
+    initials=initials,
+    initials_color=initials_color,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a tag.
+#'
+#' @param name An identifying name for this component.
+#' @param label Text to be displayed for this tag.
+#' @param color HEX or RGB color string used as background for highlighted phrases.
+#' @return A TextAnnotatorTag instance.
+#' @export
+ui_text_annotator_tag <- function(
+  name,
+  label,
+  color) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .o <- list(
+    name=name,
+    label=label,
+    color=color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorTag"))
+  return(.o)
+}
+
+#' Create an annotator item with initial selected tags or no tag for plaintext.
+#'
+#' @param text Text to be highlighted.
+#' @param tag Tag connected to the highlighted text.
+#' @return A TextAnnotatorItem instance.
+#' @export
+ui_text_annotator_item <- function(
+  text,
+  tag = NULL) {
+  .guard_scalar("text", "character", text)
+  .guard_scalar("tag", "character", tag)
+  .o <- list(
+    text=text,
+    tag=tag)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorItem"))
+  return(.o)
+}
+
+#' Create a text annotator component.
+#' 
+#' The text annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+#'
+#' @param name An identifying name for this component.
+#' @param title The text annotator's title.
+#' @param tags List of tags the user can annotate with.
+#' @param items Pretagged parts of text content.
+#' @param trigger True if the form should be submitted when the annotator value changes.
+#' @return A TextAnnotator instance.
+#' @export
+ui_text_annotator <- function(
+  name,
+  title,
+  tags,
+  items,
+  trigger = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("title", "character", title)
+  .guard_vector("tags", "WaveTextAnnotatorTag", tags)
+  .guard_vector("items", "WaveTextAnnotatorItem", items)
+  .guard_scalar("trigger", "logical", trigger)
+  .o <- list(text_annotator=list(
+    name=name,
+    title=title,
+    tags=tags,
+    items=items,
+    trigger=trigger))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
+#' Often this control is used when sharing who has access to a specific view or file.
+#'
+#' @param items List of personas to be displayed.
+#' @param name An identifying name for this component. If specified `Add button` will be rendered.
+#' @param max Maximum number of personas to be displayed.
+#' @param value A value for the facepile. If a value is set, it is used for the button's submitted instead of a boolean True.
+#' @return A Facepile instance.
+#' @export
+ui_facepile <- function(
+  items,
+  name = NULL,
+  max = NULL,
+  value = NULL) {
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("max", "numeric", max)
+  .guard_scalar("value", "character", value)
+  .o <- list(facepile=list(
+    items=items,
+    name=name,
+    max=max,
+    value=value))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a copyable text component.
+#' Use this component when you want to enable your users to quickly copy paste sections of text.
+#'
+#' @param value Text to be displayed inside the component.
+#' @param label The text displayed above the textbox.
+#' @param name An identifying name for this component.
+#' @param multiline True if the component should allow multi-line text entry.
+#' @return A CopyableText instance.
+#' @export
+ui_copyable_text <- function(
+  value,
+  label,
+  name = NULL,
+  multiline = NULL) {
+  .guard_scalar("value", "character", value)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("multiline", "logical", multiline)
+  .o <- list(copyable_text=list(
+    value=value,
+    label=label,
+    name=name,
+    multiline=multiline))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
+#'
+#' @param items Commands to render.
+#' @param icon The card's icon. Mutually exclusive with the image.
+#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon.
+#' @param name An identifying name for this component.
+#' @return A Menu instance.
+#' @export
+ui_menu <- function(
+  items,
+  icon = NULL,
+  image = NULL,
+  name = NULL) {
+  .guard_vector("items", "WaveCommand", items)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("name", "character", name)
+  .o <- list(menu=list(
+    items=items,
+    icon=icon,
+    image=image,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a set of tags laid out horizontally.
+#'
+#' @param items Tags in this set.
+#' @return A Tags instance.
+#' @export
+ui_tags <- function(
+  items) {
+  .guard_vector("items", "WaveTag", items)
+  .o <- list(tags=list(
+    items=items))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create an article card for longer texts.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card’s title, displayed at the top.
+#' @param content Markdown text.
+#' @param items Collection of small buttons rendered under the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A ArticleCard instance.
+#' @export
+ui_article_card <- function(
+  box,
+  title,
+  content = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("content", "character", content)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    content=content,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
+  return(.o)
+}
+
+#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+#'
+#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+#' @param label The label to display.
+#' @return A Breadcrumb instance.
+#' @export
+ui_breadcrumb <- function(
+  name,
+  label) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .o <- list(
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
+  return(.o)
+}
+
+#' Create a card containing breadcrumbs.
+#' Breadcrumbs should be used as a navigational aid in your app or site.
+#' They indicate the current page’s location within a hierarchy and help
+#' the user understand where they are in relation to the rest of that hierarchy.
+#' They also afford one-click access to higher levels of that hierarchy.
+#' Breadcrumbs are typically placed, in horizontal form, under the masthead
+#' or navigation of an experience, above the primary content area.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
+#' @param commands Contextual menu commands for this component.
+#' @return A BreadcrumbsCard instance.
+#' @export
+ui_breadcrumbs_card <- function(
+  box,
+  items,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "WaveBreadcrumb", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
+  return(.o)
+}
+
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card that displays a drawing canvas (whiteboard).
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param width Canvas width, in pixels.
+#' @param height Canvas height, in pixels.
+#' @param data The data for this card.
+#' @param commands Contextual menu commands for this component.
+#' @return A CanvasCard instance.
+#' @export
+ui_canvas_card <- function(
+  box,
+  title,
+  width,
+  height,
+  data,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("width", "numeric", width)
+  .guard_scalar("height", "numeric", height)
+  # TODO Validate data: Rec
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    width=width,
+    height=height,
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveCanvasCard"))
+  return(.o)
+}
+
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card that displays a chat room.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param data The data for this card.
+#' @param capacity The maximum number of messages contained in this card. Defaults to 50.
+#' @param commands Contextual menu commands for this component.
+#' @return A ChatCard instance.
+#' @export
+ui_chat_card <- function(
+  box,
+  title,
+  data,
+  capacity = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  # TODO Validate data: Rec
+  .guard_scalar("capacity", "numeric", capacity)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    data=data,
+    capacity=capacity,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
+  return(.o)
+}
+
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card that enables WYSIWYG editing on a page.
+#' Adding this card to a page makes the page editable by end-users.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param mode The editing mode. Defaults to `public`.
+#'   One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
+#' @param commands Contextual menu commands for this component.
+#' @return A EditorCard instance.
+#' @export
+ui_editor_card <- function(
+  box,
+  mode,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  # TODO Validate mode
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    mode=mode,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveEditorCard"))
+  return(.o)
+}
+
+#' EXPERIMENTAL. DO NOT USE.
+#' Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param item_view The child card type.
+#' @param item_props The child card properties.
+#' @param data Data for this card.
+#' @param direction Layout direction.
+#'   One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
+#' @param justify Layout strategy for main axis.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
+#' @param align Layout strategy for cross axis.
+#'   One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
+#' @param wrap Wrapping strategy.
+#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
+#' @param commands Contextual menu commands for this component.
+#' @return A FlexCard instance.
+#' @export
+ui_flex_card <- function(
+  box,
+  item_view,
+  item_props,
+  data,
+  direction = NULL,
+  justify = NULL,
+  align = NULL,
+  wrap = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("item_view", "character", item_view)
+  # TODO Validate item_props: Rec
+  # TODO Validate data: Data
+  # TODO Validate direction
+  # TODO Validate justify
+  # TODO Validate align
+  # TODO Validate wrap
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    item_view=item_view,
+    item_props=item_props,
+    data=data,
+    direction=direction,
+    justify=justify,
+    align=align,
+    wrap=wrap,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFlexCard"))
+  return(.o)
+}
+
+#' Render a page footer displaying a caption.
+#' Footer cards are typically displayed at the bottom of a page.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param caption The caption. Supports markdown. *
+#' @param items The components displayed to the right of the caption.
+#' @param commands Contextual menu commands for this component.
+#' @return A FooterCard instance.
+#' @export
+ui_footer_card <- function(
+  box,
+  caption,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    caption=caption,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
   return(.o)
 }
 
@@ -2505,22 +3059,26 @@ ui_grid_card <- function(
 #' @param label The label to display.
 #' @param icon An optional icon to display next to the label.
 #' @param disabled True if this item should be disabled.
+#' @param tooltip An optional tooltip message displayed when a user hovers over this item.
 #' @return A NavItem instance.
 #' @export
 ui_nav_item <- function(
   name,
   label,
   icon = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(
     name=name,
     label=label,
     icon=icon,
-    disabled=disabled)
+    disabled=disabled,
+    tooltip=tooltip)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNavItem"))
   return(.o)
 }
@@ -2551,11 +3109,16 @@ ui_nav_group <- function(
 #' Header cards are typically used for top-level navigation.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param title The title.
-#' @param subtitle The subtitle, displayed below the title.
-#' @param icon The icon, displayed to the left.
-#' @param icon_color The icon's color.
-#' @param nav The navigation menu to display when the header's icon is clicked.
+#' @param title The title. *
+#' @param subtitle The subtitle, displayed below the title. *
+#' @param icon The icon, displayed to the left. *
+#' @param icon_color The icon's color. *
+#' @param image The logo displayed to the left. Mutually exclusive with icon. *
+#' @param nav The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *
+#' @param items Items that should be displayed on the right side of the header.
+#' @param secondary_items Items that should be displayed in the center of the header.
+#' @param color Header background color. Defaults to 'primary'.
+#'   One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 #' @export
@@ -2565,14 +3128,22 @@ ui_header_card <- function(
   subtitle,
   icon = NULL,
   icon_color = NULL,
+  image = NULL,
   nav = NULL,
+  items = NULL,
+  secondary_items = NULL,
+  color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
+  .guard_scalar("image", "character", image)
   .guard_vector("nav", "WaveNavGroup", nav)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("secondary_items", "WaveComponent", secondary_items)
+  # TODO Validate color
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -2580,7 +3151,11 @@ ui_header_card <- function(
     subtitle=subtitle,
     icon=icon,
     icon_color=icon_color,
+    image=image,
     nav=nav,
+    items=items,
+    secondary_items=secondary_items,
+    color=color,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
   return(.o)
@@ -2953,10 +3528,10 @@ ui_layout <- function(
 #'
 #' @param title The dialog's title.
 #' @param items The components displayed in this dialog.
-#' @param width The width of the dialog, e.g. '400px', defaults to '600px'.
+#' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param closable True if the dialog should have a closing 'X' button at the top right corner.
-#' @param blocking True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
-#' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+#' @param blocking True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False.
+#' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
 #' @param name An identifying name for this component.
 #' @param events The events to capture on this dialog.
 #' @return A Dialog instance.
@@ -2988,6 +3563,72 @@ ui_dialog <- function(
     name=name,
     events=events)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveDialog"))
+  return(.o)
+}
+
+#' A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+#' and requires people to interact with it. It’s primarily used for confirming actions,
+#' such as deleting a file, or asking people to make a choice.
+#'
+#' @param title The side panel's title.
+#' @param items The components displayed in this side panel.
+#' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
+#' @param name An identifying name for this component.
+#' @param events The events to capture on this side panel.
+#' @param blocking True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
+#' @return A SidePanel instance.
+#' @export
+ui_side_panel <- function(
+  title,
+  items,
+  width = NULL,
+  name = NULL,
+  events = NULL,
+  blocking = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("name", "character", name)
+  .guard_vector("events", "character", events)
+  .guard_scalar("blocking", "logical", blocking)
+  .o <- list(
+    title=title,
+    items=items,
+    width=width,
+    name=name,
+    events=events,
+    blocking=blocking)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveSidePanel"))
+  return(.o)
+}
+
+#' Theme (color scheme) to apply colors to the app.
+#'
+#' @param name An identifying name for this theme.
+#' @param text Base color of the textual components.
+#' @param card Card background color.
+#' @param page Page background color.
+#' @param primary Primary color used to accent components.
+#' @return A Theme instance.
+#' @export
+ui_theme <- function(
+  name,
+  text,
+  card,
+  page,
+  primary) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("text", "character", text)
+  .guard_scalar("card", "character", card)
+  .guard_scalar("page", "character", page)
+  .guard_scalar("primary", "character", primary)
+  .o <- list(
+    name=name,
+    text=text,
+    card=card,
+    page=page,
+    primary=primary)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTheme"))
   return(.o)
 }
 
@@ -3062,6 +3703,46 @@ ui_inline_script <- function(
   return(.o)
 }
 
+#' Create an inline CSS to be injected into a page.
+#'
+#' @param content The CSS to be applied to this page.
+#' @param media A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
+#' @return A InlineStylesheet instance.
+#' @export
+ui_inline_stylesheet <- function(
+  content,
+  media = NULL) {
+  .guard_scalar("content", "character", content)
+  .guard_scalar("media", "character", media)
+  .o <- list(
+    content=content,
+    media=media)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveInlineStylesheet"))
+  return(.o)
+}
+
+#' Create a reference to an external CSS file to be included on a page.
+#'
+#' @param path The URI of an external stylesheet.
+#' @param media A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
+#' @param cross_origin The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
+#' @return A Stylesheet instance.
+#' @export
+ui_stylesheet <- function(
+  path,
+  media = NULL,
+  cross_origin = NULL) {
+  .guard_scalar("path", "character", path)
+  .guard_scalar("media", "character", media)
+  .guard_scalar("cross_origin", "character", cross_origin)
+  .o <- list(
+    path=path,
+    media=media,
+    cross_origin=cross_origin)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStylesheet"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -3076,10 +3757,14 @@ ui_inline_script <- function(
 #'   Not supported in Safari.
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
-#' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+#' @param side_panel Display a side panel on the page.
+#' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'.
+#' @param themes * Themes (color schemes) that define color used in the app.
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
 #' @param script Javascript code to execute on this page.
+#' @param stylesheet CSS stylesheet to be applied to this page.
+#' @param stylesheets External CSS files to load into the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -3092,10 +3777,14 @@ ui_meta_card <- function(
   icon = NULL,
   layouts = NULL,
   dialog = NULL,
+  side_panel = NULL,
   theme = NULL,
+  themes = NULL,
   tracker = NULL,
   scripts = NULL,
   script = NULL,
+  stylesheet = NULL,
+  stylesheets = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3105,10 +3794,14 @@ ui_meta_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_vector("layouts", "WaveLayout", layouts)
   .guard_scalar("dialog", "WaveDialog", dialog)
+  .guard_scalar("side_panel", "WaveSidePanel", side_panel)
   .guard_scalar("theme", "character", theme)
+  .guard_vector("themes", "WaveTheme", themes)
   .guard_scalar("tracker", "WaveTracker", tracker)
   .guard_vector("scripts", "WaveScript", scripts)
   .guard_scalar("script", "WaveInlineScript", script)
+  .guard_scalar("stylesheet", "WaveInlineStylesheet", stylesheet)
+  .guard_vector("stylesheets", "WaveStylesheet", stylesheets)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3119,10 +3812,14 @@ ui_meta_card <- function(
     icon=icon,
     layouts=layouts,
     dialog=dialog,
+    side_panel=side_panel,
     theme=theme,
+    themes=themes,
     tracker=tracker,
     scripts=scripts,
     script=script,
+    stylesheet=stylesheet,
+    stylesheets=stylesheets,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)
@@ -3132,7 +3829,16 @@ ui_meta_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
-#' @param value The name of the active (highlighted) navigation item.
+#' @param value The name of the initially active (highlighted) navigation item.
+#' @param title The card's title.
+#' @param subtitle The card's subtitle.
+#' @param icon The icon, displayed to the left. *
+#' @param icon_color The icon's color. *
+#' @param image The logo displayed at the top. *
+#' @param persona The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *
+#' @param secondary_items Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle.
+#' @param color Card background color. Defaults to 'card'.
+#'   One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor.
 #' @param commands Contextual menu commands for this component.
 #' @return A NavCard instance.
 #' @export
@@ -3140,15 +3846,39 @@ ui_nav_card <- function(
   box,
   items,
   value = NULL,
+  title = NULL,
+  subtitle = NULL,
+  icon = NULL,
+  icon_color = NULL,
+  image = NULL,
+  persona = NULL,
+  secondary_items = NULL,
+  color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveNavGroup", items)
   .guard_scalar("value", "character", value)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("icon_color", "character", icon_color)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_vector("secondary_items", "WaveComponent", secondary_items)
+  # TODO Validate color
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     value=value,
+    title=title,
+    subtitle=subtitle,
+    icon=icon,
+    icon_color=icon_color,
+    image=image,
+    persona=persona,
+    secondary_items=secondary_items,
+    color=color,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNavCard"))
   return(.o)
@@ -3214,6 +3944,122 @@ ui_plot_card <- function(
     events=events,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WavePlotCard"))
+  return(.o)
+}
+
+#' Create a postcard displaying a persona, image, caption and optional buttons.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param persona The card's user avatar, 'size' prop is restricted to 'xs'.
+#' @param image The card’s image.
+#' @param aux_value The card's aux_value, displayed on the right hand side of the image.
+#' @param caption The card's caption, displayed below the image.
+#' @param items The card's buttons, displayed at the bottom.
+#' @param commands Contextual menu commands for this component.
+#' @return A PostCard instance.
+#' @export
+ui_post_card <- function(
+  box,
+  persona,
+  image,
+  aux_value = NULL,
+  caption = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    persona=persona,
+    image=image,
+    aux_value=aux_value,
+    caption=caption,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePostCard"))
+  return(.o)
+}
+
+#' Create a preview card displaying an image with shadow overlay, title, social icons, caption, and button.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param name An identifying name for this card. Makes the card clickable if label is not provided, similar to a button.
+#' @param image The card’s image.
+#' @param title The card's title
+#' @param items Mini buttons displayed at the top-right corner
+#' @param caption The card's caption, displayed bellow the title.
+#' @param label Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore.
+#' @param commands Contextual menu commands for this component.
+#' @return A PreviewCard instance.
+#' @export
+ui_preview_card <- function(
+  box,
+  name,
+  image,
+  title = NULL,
+  items = NULL,
+  caption = NULL,
+  label = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("title", "character", title)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("label", "character", label)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    name=name,
+    image=image,
+    title=title,
+    items=items,
+    caption=caption,
+    label=label,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePreviewCard"))
+  return(.o)
+}
+
+#' Create a profile card to display information about a user.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param persona The persona represented by this card.
+#' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
+#'   or a path to an image hosted on the Wave daemon (starting with `/`).
+#'   .
+#' @param items Components in this card displayed below the image.
+#' @param height The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views.
+#' @param commands Contextual menu commands for this component.
+#' @return A ProfileCard instance.
+#' @export
+ui_profile_card <- function(
+  box,
+  persona,
+  image,
+  items = NULL,
+  height = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_scalar("image", "character", image)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("height", "character", height)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    persona=persona,
+    image=image,
+    items=items,
+    height=height,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
   return(.o)
 }
 
@@ -3551,6 +4397,54 @@ ui_tab_card <- function(
   return(.o)
 }
 
+#' Create a tall article preview card.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param image The card’s background image URL, either a base64-encoded image, a path to an image hosted
+#'   externally (starting with `https://` or `http://`) or a path to an
+#'   image hosted on the Wave daemon (starting with `/`)
+#' @param subtitle The card's subtitle, displayed below the title.
+#' @param value The value displayed to the right of the title/subtitle.
+#' @param content Markdown text.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param items Components displayed in the body of the card.
+#' @param commands Contextual menu commands for this component.
+#' @return A TallArticlePreviewCard instance.
+#' @export
+ui_tall_article_preview_card <- function(
+  box,
+  title,
+  image,
+  subtitle = NULL,
+  value = NULL,
+  content = NULL,
+  name = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("content", "character", content)
+  .guard_scalar("name", "character", name)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    image=image,
+    subtitle=subtitle,
+    value=value,
+    content=content,
+    name=name,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallArticlePreviewCard"))
+  return(.o)
+}
+
 #' Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -3590,6 +4484,56 @@ ui_tall_gauge_stat_card <- function(
     data=data,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallGaugeStatCard"))
+  return(.o)
+}
+
+#' Create a tall information card displaying a title, caption and either an icon or image.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param name An identifying name for this card. Makes the card clickable only if name is not empty and label is empty
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title. Supports markdown.
+#' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
+#' @param icon The card's icon.
+#' @param image The card’s image.
+#' @param image_height The card’s image height in px. Defaults to '150px'.
+#' @param category The card's category, displayed below the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A TallInfoCard instance.
+#' @export
+ui_tall_info_card <- function(
+  box,
+  name,
+  title,
+  caption,
+  label = NULL,
+  icon = NULL,
+  image = NULL,
+  image_height = NULL,
+  category = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("image_height", "character", image_height)
+  .guard_scalar("category", "character", category)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    name=name,
+    title=title,
+    caption=caption,
+    label=label,
+    icon=icon,
+    image=image,
+    image_height=image_height,
+    category=category,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallInfoCard"))
   return(.o)
 }
 
@@ -3654,6 +4598,28 @@ ui_tall_series_stat_card <- function(
     data=data,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallSeriesStatCard"))
+  return(.o)
+}
+
+#' Create a vertical label-value pairs collection.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param items The individual stats to be displayed.
+#' @param commands Contextual menu commands for this component.
+#' @return A TallStatsCard instance.
+#' @export
+ui_tall_stats_card <- function(
+  box,
+  items,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "WaveStat", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallStatsCard"))
   return(.o)
 }
 
@@ -3747,6 +4713,52 @@ ui_vega_card <- function(
   return(.o)
 }
 
+#' Create a wide article preview card displaying a persona, image, title, caption, and optional buttons.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param persona The card's user avatar, 'size' prop is restricted to 'xs'.
+#' @param image The card’s image displayed on the left-hand side.
+#' @param title The card's title on the right-hand side
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param aux_value The card's auxiliary text, displayed on the right-hand side of the header.
+#' @param caption The card's caption, displayed below the title on the right-hand side.
+#' @param items The card's buttons, displayed under the caption.
+#' @param commands Contextual menu commands for this component.
+#' @return A WideArticlePreviewCard instance.
+#' @export
+ui_wide_article_preview_card <- function(
+  box,
+  persona,
+  image,
+  title,
+  name = NULL,
+  aux_value = NULL,
+  caption = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("persona", "WaveComponent", persona)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    persona=persona,
+    image=image,
+    title=title,
+    name=name,
+    aux_value=aux_value,
+    caption=caption,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideArticlePreviewCard"))
+  return(.o)
+}
+
 #' Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -3834,46 +4846,145 @@ ui_wide_gauge_stat_card <- function(
 #' Create a wide information card displaying a title, caption, and either an icon or image.
 #'
 #' @param box A string indicating how to place this component on the page.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param title The card's title.
-#' @param caption The card's caption, displayed below the title.
+#' @param caption The card's caption, displayed below the subtitle. Supports markdown.
+#' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore..
+#' @param subtitle The card's subtitle, displayed below the title.
+#' @param align The card's alignment, determines the position of an image / icon. Defaults to 'left'.
+#'   One of 'left', 'right'. See enum h2o_wave.ui.WideInfoCardAlign.
 #' @param icon The card's icon.
 #' @param image The card’s image.
 #' @param category The card's category, displayed above the title.
-#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
-#' @param color The card's background color.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideInfoCard instance.
 #' @export
 ui_wide_info_card <- function(
   box,
+  name,
   title,
   caption,
+  label = NULL,
+  subtitle = NULL,
+  align = NULL,
   icon = NULL,
   image = NULL,
   category = NULL,
-  name = NULL,
-  color = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("subtitle", "character", subtitle)
+  # TODO Validate align
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("category", "character", category)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    name=name,
+    title=title,
+    caption=caption,
+    label=label,
+    subtitle=subtitle,
+    align=align,
+    icon=icon,
+    image=image,
+    category=category,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
+  return(.o)
+}
+
+#' Card's pie chart data to be displayed.
+#'
+#' @param label The description for the pie, displayed in the legend.
+#' @param value The formatted value displayed on the pie.
+#' @param fraction A value between 0 and 1 indicating the size of the pie.
+#' @param color The color of the pie.
+#' @param aux_value The auxiliary value, displayed below the label.
+#' @return A Pie instance.
+#' @export
+ui_pie <- function(
+  label,
+  value,
+  fraction,
+  color,
+  aux_value = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("fraction", "numeric", fraction)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("aux_value", "character", aux_value)
+  .o <- list(
+    label=label,
+    value=value,
+    fraction=fraction,
+    color=color,
+    aux_value=aux_value)
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePie"))
+  return(.o)
+}
+
+#' Create a wide pie stat card displaying a title and pie chart with legend.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param pies The pies to be included in the pie chart.
+#' @param commands Contextual menu commands for this component.
+#' @return A WidePieStatCard instance.
+#' @export
+ui_wide_pie_stat_card <- function(
+  box,
+  title,
+  pies,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_vector("pies", "WavePie", pies)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    pies=pies,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePieStatCard"))
+  return(.o)
+}
+
+#' Create a wide plot card displaying a title, caption and a plot.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title.
+#' @param plot The card's plot.
+#' @param data The card's plot data.
+#' @param commands Contextual menu commands for this component.
+#' @return A WidePlotCard instance.
+#' @export
+ui_wide_plot_card <- function(
+  box,
+  title,
+  caption,
+  plot,
+  data,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("caption", "character", caption)
-  .guard_scalar("icon", "character", icon)
-  .guard_scalar("image", "character", image)
-  .guard_scalar("category", "character", category)
-  .guard_scalar("name", "character", name)
-  .guard_scalar("color", "character", color)
+  .guard_scalar("plot", "WavePlot", plot)
+  # TODO Validate data: Rec
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     caption=caption,
-    icon=icon,
-    image=image,
-    category=category,
-    name=name,
-    color=color,
+    plot=plot,
+    data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePlotCard"))
   return(.o)
 }
 

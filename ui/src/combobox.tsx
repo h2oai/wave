@@ -13,10 +13,9 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a combobox.
@@ -46,38 +45,43 @@ export interface Combobox {
   error?: S
   /** True if this field is disabled. */
   disabled?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the combobox, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes. */
+  trigger?: B
 }
 
 
 export const
-  XCombobox = bond(({ model: m }: { model: Combobox }) => {
-    wave.args[m.name] = m.value || null
+  XCombobox = ({ model: m }: { model: Combobox }) => {
     const
-      textB = box(m.value),
+      [text, setText] = React.useState(m.value),
       options = (m.choices || []).map((text, i): Fluent.IComboBoxOption => ({ key: `${i}`, text })),
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: string) => {
         const v = option?.text || value || ''
         wave.args[m.name] = v
-        textB(v)
-      },
-      render = () => (
-        <Fluent.ComboBox
-          data-test={m.name}
-          style={displayMixin(m.visible)}
-          label={m.label}
-          placeholder={m.placeholder}
-          options={options}
-          disabled={m.disabled}
-          autoComplete="on"
-          allowFreeform={true}
-          errorMessage={m.error}
-          text={textB()}
-          onChange={onChange}
-        />
-      )
-    return { render, textB }
-  })
+        setText(v)
+        if (m.trigger) wave.push()
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
+
+    return (
+      <Fluent.ComboBox
+        data-test={m.name}
+        label={m.label}
+        placeholder={m.placeholder}
+        options={options}
+        disabled={m.disabled}
+        autoComplete="on"
+        allowFreeform={true}
+        errorMessage={m.error}
+        text={text}
+        onChange={onChange}
+      />
+    )
+  }

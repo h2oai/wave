@@ -25,6 +25,6 @@ jobs:
 
       - name: Publish Docs
         run: |
-          make build-website
+          make website
           make publish-website
 

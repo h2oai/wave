@@ -2,14 +2,13 @@
 title: "Tutorial: System Monitor"
 ---
 
-In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page. 
+In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page.
 
 ![CPU](assets/tutorial-monitor__cpu_mem.png)
 
 For example, if you have a spare 256-node Raspberry Pi cluster lying somewhere, you can run this program to each node and monitor your entire cluster's system utilization from one place. How cool is that?
 
 We'll also introduce a new concept, called [data buffers](buffers.md), which allows you to use the Wave server to store *rows* (also called *tuples* or *records*) of information - much like how you would use tables in a database, or dataframes in Python or R - to deal with structured data.
-
 
 ## Prerequisites
 
@@ -28,7 +27,7 @@ cd $HOME/wave-apps
 
 Here's what our program looks like:
 
-```py {7,12,25} title="$HOME/wave-apps/system_monitor.py" 
+```py {7,12,25} title="$HOME/wave-apps/system_monitor.py"
 import time
 import psutil
 from h2o_wave import site, ui, data
@@ -76,13 +75,13 @@ You'll notice that the above program is quite similar to the program we wrote du
 
 1. We use a `ui.small_series_stat_card()` instead of a `ui.markdown_card()`.
 2. The card is capable of dealing with multiple rows of data.
-3. To display information on the card, you only need to send it new values (and not all the data rows all over again). 
+3. To display information on the card, you only need to send it new values (and not all the data rows all over again).
 
 Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Wave SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more). 
+The Wave SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more).
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 
@@ -136,7 +135,7 @@ Internally, the card's data buffer might look like this in memory while in use:
 
 As a final step, we can duplicate parts of our program to create another card that displays memory stats. The two cards behave identically, except that one displays CPU usage and the other, memory.
 
-```py {18-28,38-40} title="$HOME/wave-apps/system_monitor.py" 
+```py {18-28,38-40} title="$HOME/wave-apps/system_monitor.py"
 import time
 import psutil
 from h2o_wave import site, ui, data
@@ -181,6 +180,7 @@ while True:
     page.save()
     time.sleep(1)
 ```
+
 ## Step 6: Run your program again
 
 Terminate your program (`^C`) and restart it:
@@ -189,17 +189,17 @@ Terminate your program (`^C`) and restart it:
 cd $HOME/wave-apps
 ./venv/bin/python system_monitor.py
 ```
+
 Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor). You should now see both CPU and memory stats live:
 
 ![CPU](assets/tutorial-monitor__cpu_mem.png)
 
 ## Exercise
 
-Explore other kinds of cards in the [Gallery](examples) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
+Explore other kinds of cards in the [Widgets](/docs/widgets/overview) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
 
 ## Summary
 
 In this tutorial, we learned how to use stats cards to display live information. The knowledge you've gained from these first few tutorials should be enough to design and deploy live dashboards using Wave. You will also have noticed that you don't need to keep your Python program running all the time to continue displaying your pages. You can terminate your Python program any time, and the Wave server will happily display the last known state of all your pages.
 
-The programs you've been authoring till now are one kind of programs, called [Wave scripts](scripts.md). Wave scripts are not interactive. They can modify pages on the Wave server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Wave Apps](apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial. 
-
+The programs you've been authoring till now are one kind of programs, called [Wave scripts](scripts.md). Wave scripts are not interactive. They can modify pages on the Wave server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Wave Apps](apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial.

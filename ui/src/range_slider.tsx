@@ -13,91 +13,9 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, F, Id, S, U } from 'h2o-wave'
+import { B, F, Id, S, U } from 'h2o-wave'
 import React from 'react'
-import InputRange, { Range } from 'react-input-range'
-import 'react-input-range/lib/css/index.css'
-import { stylesheet } from 'typestyle'
-import { displayMixin, padding } from './theme'
-import { bond, wave } from './ui'
-
-const
-  css = stylesheet({
-    container: {
-      padding: padding(0, 8),
-      $nest: {
-        '.input-range': {
-          marginTop: 15,
-          marginBottom: 35,
-          $nest: {
-            '&__slider': {
-              borderWidth: 2,
-              borderRadius: 10,
-              borderColor: 'var(--neutralPrimary)',
-              background: 'var(--white)',
-              width: 16,
-              height: 16,
-              boxSizing: 'border-box',
-              cursor: 'initial',
-              $nest: {
-                '&:active': {
-                  transform: 'none'
-                }
-              }
-            },
-            '&__label': {
-              fontFamily: 'inherit',
-              fontSize: 14,
-              fontWeight: 600
-            },
-            '&__label-container': {
-              color: 'var(--neutralPrimary)'
-            },
-            '&__track': {
-              height: 4,
-              borderRadius: 4,
-              background: 'var(--neutralTertiaryAlt)',
-              cursor: 'initial',
-              $nest: {
-                '&--active': {
-                  background: 'var(--neutralSecondary)',
-                },
-              }
-            },
-          }
-        },
-        '&:active .input-range': {
-          $nest: {
-            '&__slider': {
-              borderColor: 'var(--themeDark)',
-            },
-            '&__track': {
-              background: 'var(--themeLighter)',
-            },
-            '&__track--active': {
-              background: 'var(--themeDark)',
-            },
-          }
-        },
-        '&:hover .input-range': {
-          $nest: {
-            '&__slider': {
-              borderColor: 'var(--themePrimary)',
-            },
-            '&__track': {
-              background: 'var(--themeLighter)',
-            },
-            '&__track--active': {
-              background: 'var(--themePrimary)',
-            },
-          }
-        },
-      }
-    },
-    disabled: {
-      opacity: 0.5
-    }
-  })
+import { wave } from './ui'
 
 /**
  * Create a range slider.
@@ -120,42 +38,48 @@ export interface RangeSlider {
   step?: F
   /** The lower bound of the selected range. */
   min_value?: F
-  /** The upper bound of the selected range. */
+  /** The upper bound of the selected range. Default value is `max`. */
   max_value?: F
   /** True if this field is disabled. */
   disabled?: B
+  /** The width of the range slider, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
-export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
+export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
   const
-    { min = 0, max = 100, step = 1 } = m,
-    value = {
-      min: (m.min_value && m.min_value > min && m.min_value <= max) ? m.min_value : min,
-      max: (m.max_value && m.max_value > min && m.max_value <= max) ? m.max_value : max
-    }
+    { min = 0, max = 100, step = 1, min_value, max_value = max, disabled, trigger, name, label } = model,
+    onChange = React.useCallback((_val: U, val_range?: [U, U]) => { if (val_range) wave.args[name] = val_range }, [name]),
+    onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger])
 
-  wave.args[m.name] = Object.values(value as Range)
+  React.useEffect(() => {
+    wave.args[name] = [
+      typeof min_value == 'number' && min_value > min && min_value <= max ? min_value : min,
+      typeof max_value == 'number' && max_value > min && max_value <= max ? max_value : max,
+    ]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const
-    valueB = box<Range>(value),
-    onChange = (val: Range | U) => {
-      valueB(val as Range)
-      wave.args[m.name] = Object.values(val as Range)
-      if (m.trigger) wave.push()
-    },
-    render = () => (
-      <div data-test={m.name} style={displayMixin(m.visible)}>
-        {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
-        <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
-          <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />
-        </div>
-      </div>
-    )
-  return { render, valueB }
-})
+  return (
+    <div data-test={name}>
+      <Fluent.Slider
+        ranged
+        max={max}
+        min={min}
+        step={step}
+        label={label}
+        defaultLowerValue={min_value}
+        defaultValue={max_value}
+        disabled={disabled}
+        onChange={onChange}
+        onChanged={onChanged}
+      />
+    </div>
+  )
+}

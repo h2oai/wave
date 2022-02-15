@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import datetime
 import asyncio
 from concurrent.futures import Executor
 
@@ -238,16 +239,30 @@ class _App:
 
     async def _register(self):
         app_address = _get_env('APP_ADDRESS', _config.app_address)
+        connection_timeout = _config.hub_connection_timeout
+        start_time = datetime.datetime.now()
         logger.debug(f'Registering app at {app_address} ...')
-        await self._wave.call(
-            'register_app',
-            mode=self._mode,
-            route=self._route,
-            address=app_address,
-            key_id=_config.app_access_key_id,
-            key_secret=_config.app_access_key_secret,
-        )
-        logger.debug('Register: success!')
+        while True:
+            try:
+                await self._wave.call(
+                    'register_app',
+                    mode=self._mode,
+                    route=self._route,
+                    address=app_address,
+                    key_id=_config.app_access_key_id,
+                    key_secret=_config.app_access_key_secret,
+                )
+                logger.debug('Register: success!')
+                break
+            except httpx.ConnectError as exception:
+                logger.debug('Register: failed.')
+                current_time = datetime.datetime.now()
+                elapsed_time = current_time - start_time
+                if elapsed_time.seconds > connection_timeout:
+                    logger.debug(f'Register: giving up after retrying for {connection_timeout} seconds')
+                    raise exception
+                await asyncio.sleep(1)
+                logger.debug('Register: retrying...')
 
     async def _unregister(self):
         logger.debug(f'Unregistering app...')

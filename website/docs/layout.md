@@ -4,9 +4,9 @@ title: Layout
 
 This section illustrates how to lay out cards on a page.
 
-Wave support two layout systems out of the box: a grid layout and a flex (flexible) layout.
+Wave supports two layout systems out of the box: a grid layout and a flex (flexible) layout.
 
-By default, pages use the grid-based system. The grid-based system is simpler to use, and ensures that your page layout looks exactly the same on every display, without surprises.
+By default, pages use the grid-based system. The grid-based system is simpler to use and ensures that your page layout looks exactly the same on every display, without surprises.
 
 To switch to a flex layout, simply define a page layout using the `ui.layout()` API, as shown below.
 
@@ -15,7 +15,7 @@ To switch to a flex layout, simply define a page layout using the `ui.layout()` 
 The flex layout system allows you to build user interfaces and dashboards that adapt to various device and screen sizes ("responsive layout").
 
 :::info
-To view examples of flex and responsive layouts in actions, see https://github.com/h2oai/wave/tree/master/py/demo
+To view examples of flex and responsive layouts in actions, see <https://github.com/h2oai/wave/tree/master/py/demo>
 :::
 
 To define a layout for your page, attach a layout to your page's meta card using `ui.layout()`.
@@ -165,6 +165,35 @@ q.page['shopping_cart'] = ui.markdown_card(box=ui.boxes(
 ), ... )
 ```
 
+### Aligning cards
+
+Wave cards take all available space by default to avoid unnecessary whitespace. If the extra whitespace is desirable though, one may need to use `align` and `justify` zone attributes.
+
+![layout-alignment](assets/layout_alignment.png)
+
+```py
+q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout(breakpoint='xs', zones=[
+    ui.zone(
+        name='content',
+        direction=ui.ZoneDirection.ROW,
+        # Specify a zone size, otherwise will be adapted to the biggest card in the zone.
+        size='500px', 
+        # Align cards on the cross-axis (vertical direction for ROW and horizontal for COLUMN).
+        align='center', 
+        # Align cards on the main-axis (vertical direction for COLUMN and horizontal for ROW).
+        justify='around' 
+    )
+])])
+q.page['card1'] = ui.tall_info_card(box=ui.box('content', width='200px', height='200px'), name='', 
+                                    title='Card', caption='Lorem ipsum')
+q.page['card2'] = ui.tall_info_card(box=ui.box('content', width='200px', height='200px'), name='',
+                                    title='Card', caption='Lorem ipsum')
+q.page['card3'] = ui.tall_info_card(box=ui.box('content', width='200px', height='200px'), name='',
+                                    title='Card', caption='Lorem ipsum')
+```
+
+To see the full alignment effect it's important to note that card sizes have to either be explicitly set (like in the example code) or the `size` attribute has to be set to `'0'` (since it defaults to `'1'`).
+
 ## Grid Layout
 
 By default, every page has a grid system in place, designed to fit HD displays (1920 x 1080 pixels). The grid has 12 columns and 10 rows. A column is 134 pixels wide. A row is 76 pixels high. The gap between rows and columns is set to 15 pixels.
@@ -205,5 +234,4 @@ The default grid is designed to fit HD displays (1920 x 1080 pixels), so if you 
 
 ## See also
 
-[Positioning](examples/layout.md) and [Sizing](examples/layout-size.md) examples.
-
+`layout.py` and `layout-size.py` in Tour app.

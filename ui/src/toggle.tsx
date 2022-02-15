@@ -15,8 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a toggle.
@@ -39,33 +38,34 @@ export interface Toggle {
   disabled?: B
   /** True if the form should be submitted when the toggle value changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the toggle, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
 export const
-  XToggle = bond(({ model: m }: { model: Toggle }) => {
-    wave.args[m.name] = !!m.value
-    const
-      onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        wave.args[m.name] = !!checked
-        if (m.trigger) wave.push()
-      },
-      render = () => (
-        <Fluent.Toggle
-          data-test={m.name}
-          style={displayMixin(m.visible)}
-          label={m.label}
-          defaultChecked={m.value}
-          onChange={onChange}
-          disabled={m.disabled}
-          onText="On"
-          offText="Off"
-          inlineLabel
-        />
-      )
+  XToggle = ({ model: m }: { model: Toggle }) => {
+    const onChange = React.useCallback((_e?: React.FormEvent<HTMLElement>, checked?: B) => {
+      wave.args[m.name] = !!checked
+      if (m.trigger) wave.push()
+    }, [m.name, m.trigger])
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = !!m.value }, [])
+
+    return (
+      <Fluent.Toggle
+        data-test={m.name}
+        label={m.label}
+        defaultChecked={m.value}
+        onChange={onChange}
+        disabled={m.disabled}
+        onText="On"
+        offText="Off"
+        inlineLabel
+      />
+    )
+  }

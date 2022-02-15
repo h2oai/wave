@@ -23,13 +23,15 @@ type SocketServer struct {
 	broker   *Broker
 	auth     *Auth
 	editable bool
+	baseURL  string
 }
 
-func newSocketServer(broker *Broker, auth *Auth, editable bool) *SocketServer {
+func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string) *SocketServer {
 	return &SocketServer{
 		broker,
 		auth,
 		editable,
+		baseURL,
 	}
 }
 
@@ -49,7 +51,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := newClient(getRemoteAddr(r), s.auth, user, s.broker, conn, s.editable)
+	client := newClient(getRemoteAddr(r), s.auth, user, s.broker, conn, s.editable, s.baseURL)
 	go client.flush()
 	go client.listen()
 }

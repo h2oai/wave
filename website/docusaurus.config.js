@@ -20,7 +20,8 @@ module.exports = {
       additionalLanguages: ['toml'],
     },
     algolia: {
-      apiKey: '1ff399df2912b1f87d8b235fa995fce6',
+      appId: '1DCIS06TYN',
+      apiKey: '6c848d14efe3428564d69ff571b0f223',
       indexName: 'wave',
       contextualSearch: true,
     },
@@ -31,13 +32,14 @@ module.exports = {
         src: 'img/logo.svg',
       },
       items: [
-        { to: 'docs/examples', label: 'Gallery', position: 'left' },
         { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
-        { to: 'https://h2oai.github.io/h2o-ai-cloud/', label: 'Enterprise', position: 'left', },
+        { to: 'docs/widgets/overview', label: 'Widgets', position: 'left' },
+        { to: 'docs/examples', label: 'Examples', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/wave/discussions', label: 'Discuss', position: 'left' },
+        { to: 'https://h2oai.github.io/h2o-ai-cloud/', label: 'Enterprise', position: 'left', },
         { to: 'https://github.com/h2oai/wave/releases', label: 'Download', position: 'right', },
         { href: 'https://github.com/h2oai/wave', label: 'GitHub', position: 'right', },
       ],
@@ -49,10 +51,6 @@ module.exports = {
           title: 'Learn',
           items: [
             {
-              label: 'Gallery',
-              to: 'docs/examples',
-            },
-            {
               label: 'Get Started',
               to: 'docs/getting-started',
               activeBasePath: 'docs',
@@ -62,8 +60,12 @@ module.exports = {
               to: 'docs/guide',
             },
             {
-              label: 'Enterprise',
-              to: 'https://h2oai.github.io/h2o-ai-cloud/',
+              label: 'Widgets',
+              to: 'docs/widgets/overview',
+            },
+            {
+              label: 'Examples',
+              to: 'docs/examples',
             },
             {
               label: 'API',
@@ -98,6 +100,10 @@ module.exports = {
             {
               label: 'Blog',
               to: 'blog',
+            },
+            {
+              label: 'Enterprise',
+              to: 'https://h2oai.github.io/h2o-ai-cloud/',
             },
             {
               label: 'Download',
@@ -139,4 +145,4 @@ module.exports = {
       defer: false,
     },
   ],
-};
+}

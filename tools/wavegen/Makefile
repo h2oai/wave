@@ -8,7 +8,7 @@ setup:
 	npm ci
 
 run:
-	node build/wavegen.js ../../ui/src ../../py/h2o_wave ../../r/R
+	npx ts-node src/wavegen.ts ../../ui/src ../../py/h2o_wave ../../r/R
 
 clean:
 	rm -rf build node_modules

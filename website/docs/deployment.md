@@ -17,7 +17,7 @@ To run your app using an ASGI server, append `:main` to the `app` argument. For 
 These commands are equivalent:
 
 ```shell
-(venv) $ wave run --no-reload foo
+(venv) $ wave run --no-reload --no-autostart foo
 ```
 
 ```shell

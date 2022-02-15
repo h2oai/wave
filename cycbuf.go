@@ -20,10 +20,6 @@ type CycBuf struct {
 	i int
 }
 
-func newCycBuf(t Typ, n, i int) *CycBuf {
-	return &CycBuf{newFixBuf(t, n), i}
-}
-
 func (b *CycBuf) put(ixs interface{}) {
 	if xs, ok := ixs.([]interface{}); ok {
 		for _, x := range xs {

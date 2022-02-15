@@ -13,6 +13,30 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+* {
+  // For Firefox
+  scrollbar-width: thin;
+  scrollbar-color: var(--text2) var(--text0);
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--text2);
+    border-radius: 12px;
+    border: 3px solid var(--card8);
+  }
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--text0);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: var(--text0);
+  }
+}
+
 body {
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
@@ -54,11 +78,11 @@ body,
   --red: #f44336;
   --tangerine: #ff5722;
   --teal: #009688;
-  --text: #323130;
   --violet: #673ab7;
   --yellow: #ffeb3b;
 
   /* Text tones. */
+  --text: #323130;
   --text0: rgba(50, 49, 48, 0.05);
   --text1: rgba(50, 49, 48, 0.1);
   --text2: rgba(50, 49, 48, 0.2);
@@ -69,6 +93,31 @@ body,
   --text7: rgba(50, 49, 48, 0.7);
   --text8: rgba(50, 49, 48, 0.8);
   --text9: rgba(50, 49, 48, 0.9);
+
+  /* Primary color tones. */
+  --primary0: rgba(50, 49, 48, 0.05);
+  --primary1: rgba(50, 49, 48, 0.1);
+  --primary2: rgba(50, 49, 48, 0.2);
+  --primary3: rgba(50, 49, 48, 0.3);
+  --primary4: rgba(50, 49, 48, 0.4);
+  --primary5: rgba(50, 49, 48, 0.5);
+  --primary6: rgba(50, 49, 48, 0.6);
+  --primary7: rgba(50, 49, 48, 0.7);
+  --primary8: rgba(50, 49, 48, 0.8);
+  --primary9: rgba(50, 49, 48, 0.9);
+  --saturatedPrimary: hsl(0, 20%, 0%);
+
+  /* Card color tones. */
+  --card0: rgba(255, 255, 255, 0.05);
+  --card1: rgba(255, 255, 255, 0.1);
+  --card2: rgba(255, 255, 255, 0.2);
+  --card3: rgba(255, 255, 255, 0.3);
+  --card4: rgba(255, 255, 255, 0.4);
+  --card5: rgba(255, 255, 255, 0.5);
+  --card6: rgba(255, 255, 255, 0.6);
+  --card7: rgba(255, 255, 255, 0.7);
+  --card8: rgba(255, 255, 255, 0.8);
+  --card9: rgba(255, 255, 255, 0.9);
 
   /* Fluent colors. */
   --themePrimary: #000000;
@@ -132,10 +181,16 @@ $fontTrackings: (
   }
 }
 
-// Generate text color classes.
-@for $text from 0 through 9 {
-  .wave-t#{$text} {
-    color: var(--text#{$text});
+// Generate color classes.
+@for $i from 0 through 9 {
+  .wave-t#{$i} {
+    color: var(--text#{$i});
+  }
+  .wave-c#{$i} {
+    color: var(--card#{$i});
+  }
+  .wave-p#{$i} {
+    color: var(--primary#{$i});
   }
 }
 

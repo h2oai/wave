@@ -13,26 +13,29 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Model, Packed, S, unpack, xid } from 'h2o-wave'
+import { B, Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Button, Buttons, XButtons, XStandAloneButton } from './button'
+import { Button, Buttons, MiniButton, MiniButtons, XButtons, XMiniButton, XMiniButtons, XStandAloneButton } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
+import { CopyableText, XCopyableText } from "./copyable_text"
 import { ColorPicker, XColorPicker } from './color_picker'
 import { Combobox, XCombobox } from './combobox'
 import { DatePicker, XDatePicker } from './date_picker'
 import { Dropdown, XDropdown } from './dropdown'
 import { Expander, XExpander } from './expander'
+import { Facepile, XFacepile } from "./facepile"
 import { FileUpload, XFileUpload } from './file_upload'
 import { Frame, XFrame } from './frame'
 import { Image, XImage } from './image'
 import { Label, XLabel } from './label'
 import { cards } from './layout'
-import { Link, XLink } from './link'
+import { Link, XLink, Links, XLinks } from './link'
 import { Markup, XMarkup } from './markup'
 import { MessageBar, XMessageBar } from './message_bar'
+import { Persona, XPersona } from "./persona"
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
@@ -47,11 +50,14 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { clas, cssVar, margin, padding } from './theme'
+import { TextAnnotator, XTextAnnotator } from './text_annotator'
+import { clas, cssVar, justifications, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
+import { Menu, XMenu } from './menu'
+import { XTags, Tags } from './tags'
 
 /** Create a component. */
 export interface Component {
@@ -101,12 +107,18 @@ export interface Component {
   button?: Button
   /** Button set. */
   buttons?: Buttons
+  /** Mini button. */
+  mini_button?: MiniButton
+  /** Mini button set. */
+  mini_buttons?: MiniButtons
   /** File upload. */
   file_upload?: FileUpload
   /** Table. */
   table?: Table;
   /** Link. */
   link?: Link
+  /** Link set. */
+  links?: Links
   /** Tabs. */
   tabs?: Tabs;
   /** Expander. */
@@ -115,9 +127,9 @@ export interface Component {
   frame?: Frame
   /** Markup */
   markup?: Markup
-  /** Template */
+  /** Template. */
   template?: Template
-  /** Picker.*/
+  /** Picker. */
   picker?: Picker
   /** Range Slider. */
   range_slider?: RangeSlider
@@ -127,12 +139,24 @@ export interface Component {
   visualization?: Visualization
   /** Vega-lite Visualization. */
   vega_visualization?: VegaVisualization
-  /** Stats */
+  /** Stats. */
   stats?: Stats
-  /** Inline components */
+  /** Inline components. */
   inline?: Inline
   /** Image */
   image?: Image
+  /** Persona. */
+  persona?: Persona
+  /** Annotator. */
+  text_annotator?: TextAnnotator
+  /** Facepile. */
+  facepile?: Facepile
+  /** Copyable text. */
+  copyable_text?: CopyableText
+  /** Menu. */
+  menu?: Menu
+  /** Tags. */
+  tags?: Tags
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -140,7 +164,7 @@ interface Inline {
   /** The components laid out inline. */
   items: Component[]
   /** Specifies how to lay out the individual components. Defaults to 'start'. */
-  justify?: 'start' | 'end'
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
 }
@@ -164,7 +188,7 @@ const
       flexDirection: 'column',
       flexGrow: 1,
       $nest: {
-        '>*:not(:first-child)': {
+        '> [data-visible="true"] ~ div': {
           marginTop: 10
         },
       }
@@ -172,45 +196,45 @@ const
     horizontal: {
       display: 'flex',
       alignItems: 'center',
+      $nest: {
+        '> [data-visible="true"] ~ div': {
+          marginLeft: 8
+        }
+      }
     },
     inset: {
       background: cssVar('$page'),
       padding: padding(10, 15)
     },
-    horizontalLeft: {
-      $nest: {
-        '> *': {
-          margin: margin(0, 25, 0, 0),
-        }
-      }
-    },
-    horizontalRight: {
-      justifyContent: 'flex-end',
-      $nest: {
-        '> *': {
-          margin: margin(0, 0, 0, 25),
-        }
-      }
-    },
   })
 
-export enum XComponentAlignment { Top, Left, Right }
+type XComponentAlignment = 'start' | 'end' | 'center' | 'between' | 'around'
 
 export const
   XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
     const
-      components = items.map(m => <XComponent key={xid()} model={m} />),
-      className = alignment === XComponentAlignment.Left
-        ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
-        : alignment === XComponentAlignment.Right
-          ? clas(css.horizontal, css.horizontalRight, inset ? css.inset : '')
-          : css.vertical
-    return <div className={className}>{components}</div>
+      components = items.map((m: any, i) => {
+        const
+          // All form items are wrapped by their component name (first and only prop of "m").
+          [componentKey] = Object.keys(m),
+          { name, visible = true, width = 'auto' } = m[componentKey],
+          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
+          // TODO: Ugly, maybe introduce 'align' prop to ui.inline?
+          alignSelf = componentKey === 'links' ? 'flex-start' : undefined
+
+        return (
+          // Recreate only if name or position within form items changed, update otherwise.
+          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width, alignSelf }}>
+            <XComponent model={m} />
+          </div>
+        )
+      })
+    return <div className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '')} style={{ justifyContent: justifications[alignment || ''] }}>{components}</div>
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
+      alignment={m.justify || 'start'}
       inset={m.inset}
     />
   )
@@ -218,14 +242,15 @@ export const
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
-    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText name={m.text.name} content={m.text.content} size={m.text.size} visibility={m.text.visible} /></XToolTip>
-    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText name={m.text_xl.name} content={m.text_xl.content} size='xl' commands={m.text_xl.commands} visibility={m.text_xl.visible} /></XToolTip>
-    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText name={m.text_l.name} content={m.text_l.content} size='l' commands={m.text_l.commands} visibility={m.text_l.visible} /></XToolTip>
-    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText name={m.text_m.name} content={m.text_m.content} visibility={m.text_m.visible} /></XToolTip>
-    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText name={m.text_s.name} content={m.text_s.content} size='s' visibility={m.text_s.visible} /></XToolTip>
-    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText name={m.text_xs.name} content={m.text_xs.content} size='xs' visibility={m.text_xs.visible} /></XToolTip>
+    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText name={m.text.name} content={m.text.content} size={m.text.size} /></XToolTip>
+    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText name={m.text_xl.name} content={m.text_xl.content} size='xl' commands={m.text_xl.commands} /></XToolTip>
+    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText name={m.text_l.name} content={m.text_l.content} size='l' commands={m.text_l.commands} /></XToolTip>
+    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText name={m.text_m.name} content={m.text_m.content} /></XToolTip>
+    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText name={m.text_s.name} content={m.text_s.content} size='s' /></XToolTip>
+    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText name={m.text_xs.name} content={m.text_xs.content} size='xs' /></XToolTip>
     if (m.label) return <XToolTip content={m.label.tooltip} expand={false}><XLabel model={m.label} /></XToolTip>
     if (m.link) return <XToolTip content={m.link.tooltip} expand={false}><XLink model={m.link} /></XToolTip>
+    if (m.links) return <XLinks model={m.links} />
     if (m.separator) return <XSeparator model={m.separator} />
     if (m.progress) return <XToolTip content={m.progress.tooltip}><XProgress model={m.progress} /></XToolTip>
     if (m.message_bar) return <XMessageBar model={m.message_bar} />
@@ -237,7 +262,7 @@ const
     if (m.checklist) return <XToolTip content={m.checklist.tooltip}><XChecklist model={m.checklist} /></XToolTip>
     if (m.combobox) return <XToolTip content={m.combobox.tooltip}><XCombobox model={m.combobox} /></XToolTip>
     if (m.slider) return <XToolTip content={m.slider.tooltip}><XSlider model={m.slider} /></XToolTip>
-    if (m.spinbox) return <XToolTip content={m.spinbox.tooltip} expand={false}><XSpinbox model={m.spinbox} /></XToolTip>
+    if (m.spinbox) return <XToolTip content={m.spinbox.tooltip}><XSpinbox model={m.spinbox} /></XToolTip>
     if (m.date_picker) return <XToolTip content={m.date_picker.tooltip}><XDatePicker model={m.date_picker} /></XToolTip>
     if (m.color_picker) return <XToolTip content={m.color_picker.tooltip}><XColorPicker model={m.color_picker} /></XToolTip>
     if (m.file_upload) return <XToolTip content={m.file_upload.tooltip}><XFileUpload model={m.file_upload} /></XToolTip>
@@ -245,7 +270,7 @@ const
     if (m.buttons) return <XButtons model={m.buttons} />
     if (m.tabs) return <XTabs model={m.tabs} />
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
-    if (m.expander) return <XExpander model={m.expander} />
+    if (m.expander) return <XExpander model={{ ...m.expander }} /> //HACK: Force new props reference on every update.
     if (m.frame) return <XFrame model={m.frame} />
     if (m.markup) return <XMarkup model={m.markup} />
     if (m.template) return <XTemplate model={m.template} />
@@ -257,6 +282,14 @@ const
     if (m.stats) return <XStats model={m.stats} />
     if (m.inline) return <XInline model={m.inline} />
     if (m.image) return <XImage model={m.image} />
+    if (m.persona) return <XPersona model={m.persona} />
+    if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
+    if (m.mini_button) return <XMiniButton model={m.mini_button} />
+    if (m.mini_buttons) return <XMiniButtons model={m.mini_buttons} />
+    if (m.facepile) return <XFacepile model={m.facepile} />
+    if (m.copyable_text) return <XCopyableText model={m.copyable_text} />
+    if (m.menu) return <XMenu model={m.menu} />
+    if (m.tags) return <XTags model={m.tags} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
@@ -280,4 +313,3 @@ export const
   })
 
 cards.register('form', View)
-

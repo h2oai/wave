@@ -17,21 +17,24 @@ package keychain
 import (
 	"bytes"
 	"crypto/rand"
+	"crypto/sha512"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
+	lru "github.com/hashicorp/golang-lru"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var (
-	idChars              = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	secretChars          = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
-	colon                = []byte(":")
-	newline              = []byte{'\n'}
-	invalidKeychainEntry = errors.New("invalid entry found in keychain")
+	idChars                 = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	secretChars             = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+	colon                   = []byte(":")
+	newline                 = []byte{'\n'}
+	errInvalidKeychainEntry = errors.New("invalid entry found in keychain")
 )
 
 func generateRandString(chars []byte, n int) (string, error) {
@@ -70,8 +73,9 @@ func HashSecret(secret string) ([]byte, error) {
 
 // Keychain represents a collection of access keys that are allowed to use the API
 type Keychain struct {
-	Name string
-	keys map[string][]byte
+	Name  string
+	keys  map[string][]byte
+	cache *lru.Cache
 }
 
 func CreateAccessKey() (id, secret string, hash []byte, err error) {
@@ -94,8 +98,17 @@ func (kc *Keychain) verify(id, secret string) bool {
 	if !ok {
 		return false
 	}
-	err := bcrypt.CompareHashAndPassword(hash, []byte(secret))
-	return err == nil
+
+	key := sha512.Sum512([]byte(strings.Join([]string{id, secret}, "\x00")))
+
+	if result, hit := kc.cache.Get(key); hit {
+		return result.(bool)
+	}
+
+	ok = bcrypt.CompareHashAndPassword(hash, []byte(secret)) == nil
+	kc.cache.Add(key, ok)
+
+	return ok
 }
 
 func (kc *Keychain) Remove(id string) bool {
@@ -120,11 +133,26 @@ func (kc *Keychain) Len() int {
 	return len(kc.keys)
 }
 
+func newLruCache(size int) (*lru.Cache, error) {
+	if size < 8 {
+		size = 8
+	}
+	cache, err := lru.New(size)
+	if err != nil {
+		return nil, fmt.Errorf("failed creating keychain LRU cache: %s", err)
+	}
+	return cache, nil
+}
+
 func LoadKeychain(name string) (*Keychain, error) {
 	keys := make(map[string][]byte)
 
 	if _, err := os.Stat(name); os.IsNotExist(err) {
-		return &Keychain{name, keys}, nil
+		cache, err := newLruCache(128)
+		if err != nil {
+			return nil, err
+		}
+		return &Keychain{name, keys, cache}, nil
 	}
 
 	file, err := os.Open(name)
@@ -144,16 +172,21 @@ func LoadKeychain(name string) (*Keychain, error) {
 		}
 		tokens := bytes.SplitN(line, colon, 2)
 		if len(tokens) != 2 {
-			return nil, invalidKeychainEntry
+			return nil, errInvalidKeychainEntry
 		}
 		id, hash := tokens[0], tokens[1]
 		if len(id) == 0 || len(hash) == 0 {
-			return nil, invalidKeychainEntry
+			return nil, errInvalidKeychainEntry
 		}
 		keys[string(id)] = hash
 	}
 
-	return &Keychain{name, keys}, nil
+	cache, err := newLruCache(len(keys))
+	if err != nil {
+		return nil, err
+	}
+
+	return &Keychain{name, keys, cache}, nil
 }
 
 func (kc *Keychain) Save() error {

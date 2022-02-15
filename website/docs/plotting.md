@@ -9,6 +9,7 @@ A *plot* is a layered graphic, created using `ui.plot()`. Each layer displays *m
 `ui.mark()` describes a collection of marks, not one mark. Since each `ui.mark()` describes one layer in the plot, it follows that all the marks on a layer are of the same `type` (its *geometry*). A mark's `type` can be one of `point`, `interval`, `line`, `path`, `area`, `polygon`, `schema`, `edge`.
 
 There are two ways to add plots to a page:
+
 - Use a plot card (`ui.plot_card()`) and set its `plot` attribute using `ui.plot()`.
 - Use a form card (`ui.form_card()`), insert a visualization (`ui.visualization()`) and set its `plot` attribute using `ui.plot()`.
 
@@ -119,6 +120,7 @@ ui.plot([
 - [Basic](examples/plot-polygon): Make a heatmap.
 
 ## Schema
+
 - [Histogram](examples/plot-histogram): Make a histogram.
 
 ## Other

@@ -1,4 +1,4 @@
-import { border, centerMixin, clas, cssVar, dashed, displayMixin, margin, padding, pc, px, rem } from "./theme"
+import { border, centerMixin, clas, cssVar, dashed, margin, padding, pc, px, rem } from "./theme"
 
 describe('Theme util functions', () => {
 
@@ -42,11 +42,6 @@ describe('Theme util functions', () => {
 
   it('returns expected flex centering obj', () => {
     expect(centerMixin()).toMatchObject({ display: 'flex', alignItems: 'center', justifyContent: 'center' })
-  })
-
-  it('returns expected display obj', () => {
-    expect(displayMixin()).toMatchObject({})
-    expect(displayMixin(false)).toMatchObject({ display: 'none' })
   })
 
   describe('CSS var func', () => {

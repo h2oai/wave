@@ -17,8 +17,10 @@ py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
 
+_base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get(f'H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
 _app_host, _app_port = _app_address.hostname, '10102'
+default_example_name = 'hello_world'
 
 
 class Example:
@@ -35,9 +37,11 @@ class Example:
         self.is_app = source.find('@app(') > 0
 
     async def start(self):
+        env = dict(H2O_WAVE_BASE_URL=_base_url)
         # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
-        env = {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {}
+        if sys.platform.lower().startswith('win'):
+            env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
         if self.is_app:
             self.process = subprocess.Popen([
                 sys.executable, '-m', 'uvicorn',
@@ -169,7 +173,7 @@ async def setup_page(q: Q):
         ui.layout(breakpoint='xs', zones=[
             ui.zone('header'),
             ui.zone('blurb'),
-            ui.zone('main', size='calc(100vh - 130px)', direction=ui.ZoneDirection.ROW, zones=[
+            ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
                 ui.zone('code'),
                 ui.zone('preview')
             ])
@@ -180,17 +184,20 @@ async def setup_page(q: Q):
         box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
-        nav=[
-            ui.nav_group(
-                label='Examples',
-                items=[ui.nav_item(name=f'#{e.name}', label=e.title) for e in catalog.values()]
-            )
-        ],
+        image='https://wave.h2o.ai/img/h2o-logo.svg',
+        items=[
+            ui.links(inline=True, items=[
+                ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
+                ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
+                ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
+                ui.link(label='Hybrid Cloud', path='https://www.h2o.ai/hybrid-cloud/', target='_blank'),
+                ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
+            ])
+        ]
     )
-
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.frame_card(box='code', title='', content='')
-    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path='/demo')
+    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path=f'{_base_url}demo')
 
     await q.page.save()
 
@@ -199,12 +206,14 @@ def make_blurb(q: Q, example: Example):
     blurb_card = q.page['blurb']
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
-    buttons = []
+    # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
+    items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
+                         choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
     if example.previous_example:
-        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
-        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = buttons
+        items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+    blurb_card.items = items
 
 
 async def show_example(q: Q, example: Example):
@@ -237,7 +246,7 @@ async def show_example(q: Q, example: Example):
     # HACK
     # The ?e= appended to the path forces the frame to reload.
     # The url param is not actually used.
-    preview_card.path = f'/demo?e={active_example.name}'
+    preview_card.path = f'{_base_url}demo?e={active_example.name}'
     await q.page.save()
 
 
@@ -247,11 +256,11 @@ async def serve(q: Q):
         q.client.initialized = True
         await setup_page(q)
 
-    route = q.args['#']
-    if not route:
-        route = 'hello_world'
+    search = q.args[q.args['#'] or default_example_name]
+    if search:
+        q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
-    await show_example(q, catalog[route])
+    await show_example(q, catalog[search or q.args['#'] or default_example_name])
 
 
 example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if

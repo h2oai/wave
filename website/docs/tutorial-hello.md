@@ -12,6 +12,10 @@ These tutorials assume that you have some familiarity with the Python programmin
 
 ## Step 1: Start the Wave server
 
+:::important
+You can skip this step if you're running Wave 0.20.0 or later.
+:::
+
 <StartQ/>
 
 ## Step 2: Set up a working directory

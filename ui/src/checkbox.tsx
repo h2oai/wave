@@ -15,8 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a checkbox.
@@ -47,32 +46,33 @@ export interface Checkbox {
   disabled?: B
   /** True if the form should be submitted when the checkbox value changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the checkbox, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
 export const
-  XCheckbox = bond(({ model: m }: { model: Checkbox }) => {
-    wave.args[m.name] = !!m.value
-    const
-      onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        wave.args[m.name] = checked === null ? null : !!checked
-        if (m.trigger) wave.push()
-      },
-      render = () => (
-        <Fluent.Checkbox
-          data-test={m.name}
-          style={displayMixin(m.visible)}
-          inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-          label={m.label}
-          defaultIndeterminate={m.indeterminate}
-          defaultChecked={m.value}
-          onChange={onChange}
-          disabled={m.disabled}
-        />
-      )
+  XCheckbox = ({ model: m }: { model: Checkbox }) => {
+    const onChange = (_e?: React.FormEvent<HTMLElement>, checked?: B) => {
+      wave.args[m.name] = checked === null ? null : !!checked
+      if (m.trigger) wave.push()
+    }
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = !!m.value }, [])
+
+    return (
+      <Fluent.Checkbox
+        data-test={m.name}
+        inputProps={{ 'data-test': m.name } as React.ButtonHTMLAttributes<HTMLButtonElement>}
+        label={m.label}
+        defaultIndeterminate={m.indeterminate}
+        defaultChecked={m.value}
+        onChange={onChange}
+        disabled={m.disabled}
+      />
+    )
+  }

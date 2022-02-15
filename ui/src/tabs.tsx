@@ -16,8 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a tab.
@@ -37,11 +36,13 @@ export interface Tab {
 export interface Tabs {
   /** An identifying name for this component. */
   name: Id
-  /** The name of the tab to select. */
+  /** The name of the tab to select initially. */
   value?: S
   /** The tabs in this tab bar. */
   items?: Tab[]
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the tabs, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if tabs should be rendered as links instead of buttons. */
   link?: B
@@ -52,13 +53,15 @@ const
     pivot: {
       // Actual height of the Fluent pivot is 44.
       // When used standalone in a flex layout, scrollbars show up when attempting to fit to content height.
-      // So explicitly set a height to work around this issue.
+      // Explicitly set a height to work around.
       minHeight: 46,
+      overflowX: 'auto',
+      overflowY: 'hidden'
     }
   })
 
 export const
-  XTabs = bond(({ model: m }: { model: Tabs }) => {
+  XTabs = ({ model: m }: { model: Tabs }) => {
     const
       onLinkClick = (item?: Fluent.PivotItem) => {
         const name = item?.props.itemKey
@@ -77,24 +80,15 @@ export const
           wave.push()
         }
       },
-      render = () => {
-        const tabs = m.items?.map(t => (
-          <Fluent.PivotItem
-            key={t.name}
-            itemIcon={t.icon}
-            itemKey={t.name}
-            headerText={t.label} />
-        ))
-        return (
-          <div className={css.pivot}>
-            <Fluent.Pivot
-              data-test={m.name}
-              style={displayMixin(m.visible)}
-              selectedKey={m.value ?? null}
-              linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
-              onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
-          </div>
-        )
-      }
-    return { render }
-  })
+      tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
+    return (
+      <div className={css.pivot}>
+        <Fluent.Pivot
+          data-test={m.name}
+          className={m.link ? 'w-tabs-link' : 'w-tabs'} //HACK: Marker classes.
+          defaultSelectedKey={m.value}
+          linkFormat={m.link ? 'links' : 'tabs'}
+          onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+      </div>
+    )
+  }

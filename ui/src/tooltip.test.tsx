@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { render } from '@testing-library/react'
 import React from 'react'
 import { XToolTip } from './tooltip'
@@ -21,8 +20,6 @@ const name = 'tooltip'
 const tooltipProps = { children: <div />, content: 'content' }
 
 describe('Tooltip.tsx', () => {
-  beforeAll(() => initializeIcons())
-
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XToolTip {...tooltipProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()

@@ -1,0 +1,55 @@
+name: Release Wave Nightly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
+
+env:
+  VERSION: nightly
+  TAG: nightly
+
+jobs:
+  release:
+    name: Release Wave Nightly
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+
+      - name: Setup
+        run: make setup
+
+      - name: Unit Test
+        run: make test-ui-ci
+
+      - name: Build Release
+        run: make release-nightly
+
+      - name: Update tag
+        run: git tag -f ${{ env.TAG }} && git push -f --tags
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
+            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
+            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
+            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
+            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+          tag_name: ${{ env.TAG }}
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

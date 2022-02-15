@@ -19,7 +19,7 @@ import logging
 import os
 import os.path
 import sys
-from typing import List, Dict, Union, Tuple, Any, Optional
+from typing import List, Dict, Union, Tuple, Any, Optional, IO
 
 import httpx
 
@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
+FileContent = Union[IO[str], IO[bytes], str, bytes]
 
 UNICAST = 'unicast'
 MULTICAST = 'multicast'
@@ -45,7 +46,10 @@ class _Config:
         self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
         self.app_address = _get_env('APP_ADDRESS', _get_env('EXTERNAL_ADDRESS', self.internal_address))
         self.app_mode = _get_env('APP_MODE', UNICAST)
-        self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:10101')
+        self.hub_base_url = _get_env('BASE_URL', '/')
+        self.hub_host_address = _get_env('ADDRESS', 'http://127.0.0.1:10101')
+        self.hub_address = self.hub_host_address + self.hub_base_url
+        self.hub_connection_timeout: int = int(_get_env('CONNECTION_TIMEOUT', '0'))
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
         self.app_access_key_id: str = _get_env('APP_ACCESS_KEY_ID', None) or secrets.token_urlsafe(16)
@@ -110,6 +114,10 @@ def _guard_key(key: str):
     else:
         if not _is_int(key):
             raise KeyError('invalid key type: want str or int')
+
+
+def _rebase(host: str, path: str):
+    return f"{host}{path.lstrip('/')}"
 
 
 class ServiceError(Exception):
@@ -399,49 +407,43 @@ class _ServerCacheBase:
 
 
 class _AsyncServerCache(_ServerCacheBase):
-    def __init__(self):
-        self._http = httpx.AsyncClient(
-            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-            verify=False,
-        )
+    def __init__(self, http: httpx.AsyncClient):
+        self._http = http
 
     async def get(self, shard: str, key: str, default=None) -> Any:
-        res = await self._http.get(f'{_config.hub_address}/_c/{shard}/{key}')
+        res = await self._http.get(f'{_config.hub_address}_c/{shard}/{key}')
         if res.status_code == 200:
-            return json.loads(res.text)
+            return unmarshal(res.text)
         return default
 
     async def keys(self, shard: str) -> List[str]:
-        res = await self._http.get(f'{_config.hub_address}/_c/{shard}')
+        res = await self._http.get(f'{_config.hub_address}_c/{shard}')
         return self._keys(res.text) if res.status_code == 200 else []
 
     async def set(self, shard: str, key: str, value: Any):
-        content = json.dumps(value)
-        res = await self._http.put(f'{_config.hub_address}/_c/{shard}/{key}', content=content)
+        content = marshal(value)
+        res = await self._http.put(f'{_config.hub_address}_c/{shard}/{key}', content=content)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
 
 class _ServerCache(_ServerCacheBase):
-    def __init__(self):
-        self._http = httpx.Client(
-            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-            verify=False,
-        )
+    def __init__(self, http: httpx.Client):
+        self._http = http
 
     def get(self, shard: str, key: str, default=None):
-        res = self._http.get(f'{_config.hub_address}/_c/{shard}/{key}')
+        res = self._http.get(f'{_config.hub_address}_c/{shard}/{key}')
         if res.status_code == 200:
-            return json.loads(res.text)
+            return unmarshal(res.text)
         return default
 
     def keys(self, shard: str) -> List[str]:
-        res = self._http.get(f'{_config.hub_address}/_c/{shard}')
+        res = self._http.get(f'{_config.hub_address}_c/{shard}')
         return self._keys(res.text) if res.status_code == 200 else []
 
     def set(self, shard: str, key: str, value: Any):
-        content = json.dumps(value)
-        res = self._http.put(f'{_config.hub_address}/_c/{shard}/{key}', content=content)
+        content = marshal(value)
+        res = self._http.put(f'{_config.hub_address}_c/{shard}/{key}', content=content)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -615,6 +617,7 @@ class Site:
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
         )
+        self.cache = _ServerCache(self._http)
 
     def __getitem__(self, url) -> Page:
         return Page(self, url)
@@ -624,7 +627,7 @@ class Site:
         page.drop()
 
     def _save(self, url: str, patch: str):
-        res = self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        res = self._http.patch(_rebase(_config.hub_address, url), content=patch)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -638,7 +641,7 @@ class Site:
         Returns:
             The serialized page.
         """
-        res = self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        res = self._http.get(_rebase(_config.hub_address, url), headers=_content_type_json)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
@@ -653,8 +656,8 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        upload_url = f'{_config.hub_address}/_f'
-        res = self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        res = self._http.post(f'{_config.hub_address}_f/',
+                              files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
@@ -675,7 +678,7 @@ class Site:
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
         with open(filepath, 'wb') as f:
-            with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+            with self._http.stream('GET', f'{_config.hub_host_address}{url}') as r:
                 for chunk in r.iter_bytes():
                     f.write(chunk)
 
@@ -688,10 +691,53 @@ class Site:
         Args:
             url: The URL of the file to delete.
         """
-        res = self._http.delete(f'{_config.hub_address}{url}')
+        res = self._http.delete(f'{_config.hub_host_address}{url}')
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
+
+    def uplink(self, path: str, content_type: str, file: FileContent) -> str:
+        """
+        Create or update a stream of images.
+
+        The typical use of this function is to transmit a stream of images to a web page, providing the appearance of a
+         video. The path returned by this function can be passed to ui.image() or ui.image_card() (or even a custom HTML
+         img element). The stream is displayed in browsers using multipart/x-mixed-replace content. Callers must call
+         the unlink() function to signal end-of-stream.
+
+        Args:
+            path: a unique path or name for the stream (e.g. 'foo/bar/qux.png'). Must be a valid URL path.
+            content_type: The MIME type of the streamed content (e.g. 'image/jpeg', 'image/png', etc.).
+            file: A file or file-like object (on-disk file, standard I/O, in-memory buffers, sockets or pipes).
+
+        Returns:
+            The stream endpoint, typically used as an image path.
+        """
+        endpoint = f'_m/{path}'
+        res = self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
+        if res.status_code == 200:
+            return _config.hub_base_url + endpoint
+        raise ServiceError(f'Uplink failed (code={res.status_code}): {res.text}')
+
+    def unlink(self, path: str):
+        """
+        Signal the end of a stream.
+
+        Args:
+            path: The path of the stream
+        """
+        endpoint = f'_m/{path}'
+        res = self._http.delete(f'{_config.hub_address}{endpoint}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
+
+    def proxy(self, method: str, url: str, headers: Optional[Dict[str, List[str]]] = None, body: Optional[str] = None):
+        req = dict(method=method, url=url, headers=headers, body=body)
+        res = self._http.post(f'{_config.hub_address}_p/', content=marshal(req))
+        if res.status_code == 200:
+            return res.json()
+        raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
 
 
 site = Site()
@@ -707,6 +753,7 @@ class AsyncSite:
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
         )
+        self.cache = _AsyncServerCache(self._http)
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)
@@ -716,7 +763,7 @@ class AsyncSite:
         page.drop()
 
     async def _save(self, url: str, patch: str):
-        res = await self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        res = await self._http.patch(_rebase(_config.hub_address, url), content=patch)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
@@ -730,7 +777,7 @@ class AsyncSite:
         Returns:
             The serialized page.
         """
-        res = await self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        res = await self._http.get(_rebase(_config.hub_address, url), headers=_content_type_json)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
@@ -745,8 +792,8 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        upload_url = f'{_config.hub_address}/_f'
-        res = await self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        res = await self._http.post(f'{_config.hub_address}_f/',
+                                    files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
@@ -766,7 +813,7 @@ class AsyncSite:
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
         with open(filepath, 'wb') as f:
-            async with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+            async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as r:
                 async for chunk in r.aiter_bytes():
                     f.write(chunk)
 
@@ -779,10 +826,54 @@ class AsyncSite:
         Args:
             url: The URL of the file to delete.
         """
-        res = await self._http.delete(f'{_config.hub_address}{url}')
+        res = await self._http.delete(f'{_config.hub_host_address}{url}')
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
+
+    async def uplink(self, path: str, content_type: str, file: FileContent) -> str:
+        """
+        Create or update a stream of images.
+
+        The typical use of this function is to transmit a stream of images to a web page, providing the appearance of a
+         video. The path returned by this function can be passed to ui.image() or ui.image_card() (or even a custom HTML
+         img element). The stream is displayed in browsers using multipart/x-mixed-replace content. Callers must call
+         the unlink() function to signal end-of-stream.
+
+        Args:
+            path: a unique path or name for the stream (e.g. 'foo/bar/qux.png'). Must be a valid URL path.
+            content_type: The MIME type of the streamed content (e.g. 'image/jpeg', 'image/png', etc.).
+            file: A file or file-like object (on-disk file, standard I/O, in-memory buffers, sockets or pipes).
+
+        Returns:
+            The stream endpoint, typically used as an image path.
+        """
+        endpoint = f'_m/{path}'
+        res = await self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
+        if res.status_code == 200:
+            return _config.hub_base_url + endpoint
+        raise ServiceError(f'Uplink failed (code={res.status_code}): {res.text}')
+
+    async def unlink(self, path: str):
+        """
+        Signal the end of a stream.
+
+        Args:
+            path: The path of the stream
+        """
+        endpoint = f'_m/{path}'
+        res = await self._http.delete(f'{_config.hub_address}{endpoint}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
+
+    async def proxy(self, method: str, url: str, headers: Optional[Dict[str, List[str]]] = None,
+                    body: Optional[str] = None):
+        req = dict(method=method, url=url, headers=headers, body=body)
+        res = await self._http.post(f'{_config.hub_address}_p/', content=marshal(req))
+        if res.status_code == 200:
+            return res.json()
+        raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
 
 
 def _kv(key: str, index: str, value: Any):

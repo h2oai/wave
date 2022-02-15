@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 
 /**
  * Create a progress bar.
@@ -45,7 +44,9 @@ export interface Progress {
   caption?: S
   /** The progress, between 0.0 and 1.0, or -1 (default) if indeterminate. */
   value?: F
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the separator, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -56,14 +57,10 @@ export interface Progress {
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { label, caption = 'Please wait...', value, visible, name } = model
+      { label, caption = 'Please wait...', value, name } = model
     return (
-      <div data-test={name} style={displayMixin(visible)}>
-        <Fluent.ProgressIndicator
-          label={label}
-          description={caption}
-          percentComplete={value}
-        />
+      <div data-test={name}>
+        <Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />
       </div>
     )
   }

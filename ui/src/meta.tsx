@@ -18,7 +18,8 @@ import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
 import { executeScript, InlineScript, installScripts, Script } from './script'
-import { themeB } from './theme'
+import { SidePanel, sidePanelB } from './side_panel'
+import { themeB, themesB } from './theme'
 import { setupTracker, Tracker } from './tracking'
 import { bond } from './ui'
 
@@ -26,6 +27,27 @@ import { bond } from './ui'
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
 
 
+/**
+ * Create an inline CSS to be injected into a page.
+ */
+interface InlineStylesheet {
+  /** The CSS to be applied to this page. */
+  content: S
+  /** A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media. */
+  media?: S
+}
+
+/**
+ * Create a reference to an external CSS file to be included on a page.
+ */
+interface Stylesheet {
+  /** The URI of an external stylesheet. */
+  path: S
+  /** A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media. */
+  media?: S
+  /** The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin */
+  cross_origin?: S
+}
 /**
  * Represents the layout structure for a page.
  */
@@ -81,6 +103,22 @@ export interface Zone {
   zones?: Zone[]
 }
 
+/** 
+ * Theme (color scheme) to apply colors to the app.
+*/
+export interface Theme {
+  /** An identifying name for this theme. */
+  name: Id
+  /** Base color of the textual components. */
+  text: S
+  /** Card background color. */
+  card: S
+  /** Page background color. */
+  page: S
+  /** Primary color used to accent components. */
+  primary: S
+}
+
 /**
  * Represents page-global state.
  *
@@ -105,14 +143,22 @@ interface State {
   layouts?: Layout[]
   /** Display a dialog on the page. */
   dialog?: Dialog
-  /** Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'. */
+  /** Display a side panel on the page. */
+  side_panel?: SidePanel
+  /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'. */
   theme?: S
+  /** * Themes (color schemes) that define color used in the app. */
+  themes?: Theme[]
   /** Configure a tracker for the page (for web analytics). */
   tracker?: Tracker
   /** External Javascript files to load into the page. */
   scripts?: Script[]
   /** Javascript code to execute on this page. */
   script?: InlineScript
+  /** CSS stylesheet to be applied to this page. */
+  stylesheet?: InlineStylesheet
+  /** External CSS files to load into the page. */
+  stylesheets?: Stylesheet[]
 }
 
 const
@@ -132,27 +178,48 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Model<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script } = state
+    const {
+      title,
+      icon,
+      refresh,
+      notification,
+      redirect,
+      layouts,
+      dialog,
+      side_panel,
+      theme,
+      themes,
+      tracker,
+      scripts,
+      script,
+      stylesheet,
+      stylesheets
+    } = state
 
     if (redirect) {
       try {
-        const url = new URL(redirect)
+        const
+          { location } = window,
+          url = new URL(`${location.origin}${location.pathname}${redirect}`)
         if (redirect === url.hash) {
-          window.location.hash = redirect
+          location.hash = redirect
         } else {
-          window.location.replace(redirect)
+          location.replace(redirect)
         }
       } catch (e) {
-        console.error(`Could not redirect: ${redirect} is an invalid URL`)
+        console.error(`Could not redirect: ${redirect} is an invalid URL`, e)
       }
+      delete state.redirect
     }
 
     dialogB(dialog ? { ...dialog } : null)
+    sidePanelB(side_panel ? { ...side_panel } : null)
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)
     if (typeof refresh === 'number' && refresh === 0) disconnect()
     if (theme) themeB(theme)
+    if (themes) themesB(themes)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
@@ -160,6 +227,26 @@ export const
     if (script) {
       delete state.script
       executeScript(script)
+    }
+    if (stylesheet) {
+      const styleEl = document.createElement('style')
+      const { content, media } = stylesheet
+      styleEl.innerText = content
+      if (media) styleEl.media = media
+      document.head.appendChild(styleEl)
+      delete state.stylesheet
+    }
+    if (stylesheets) {
+      stylesheets.forEach(({ path, media, cross_origin }) => {
+        const linkEl = document.createElement('link')
+        linkEl.rel = 'stylesheet'
+        linkEl.href = path
+        linkEl.as = 'style'
+        if (media) linkEl.media = media
+        if (cross_origin) linkEl.crossOrigin = cross_origin
+        document.head.appendChild(linkEl)
+      })
+      delete state.stylesheets
     }
   }
 

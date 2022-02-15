@@ -807,7 +807,7 @@ const
 
 export const
   disconnect = () => refreshRateB(0),
-  connect = (handle: WaveEventHandler): Wave => {
+  connect = (address: S, handle: WaveEventHandler): Wave => {
     let
       _socket: WebSocket | null = null,
       _page: XPage | null = null,
@@ -904,7 +904,7 @@ export const
       if (_socket) _socket.close()
     })
 
-    reconnect(toSocketAddress('/_s'))
+    reconnect(toSocketAddress(address))
 
     return { fork, push }
   }

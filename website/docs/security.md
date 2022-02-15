@@ -6,7 +6,7 @@ title: Security
 
 Wave apps and scripts access the Wave server using access keys via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617).
 
-An application access key is a pair of strings: ID and Secret. 
+An application access key is a pair of strings: ID and Secret.
 
 ### Development
 
@@ -107,10 +107,11 @@ Wave has built-in support for [OpenID Connect](https://openid.net/connect/).
 To enable OpenID Connect, pass the following flags when starting the Wave server:
 
 - `-oidc-provider-url`: The URL for authentication (the identity provider's URL).
-- `-oidc-redirect-url`: The URL to redirect back to after authentication. This is typically `/_auth/callback` appended to the Wave server's address. For example, if the Wave server is running at `https://192.168.42.42:80`, set this to `https://192.168.42.42:80/_auth/callback`. If you're testing your app's authorization workflow during development and the Wave server is running at `http://localhost:10101`, you can set this argument to `http://localhost:10101/_auth/callback`.
+- `-oidc-redirect-url`: The URL to redirect back to after authentication. This is typically `/_auth/callback` appended to the Wave server's address. For example, if the Wave server is running at `https://192.168.42.42:80`, set this to `https://192.168.42.42:80/_auth/callback`. If you're testing your app's authorization workflow during development and the Wave server is running at `http://localhost:10101`, you can set this argument to `http://localhost:10101/_auth/callback`. If you also specified the `-base-url` argument for Wave server, then make sure the redirect URL includes the base URL. For example, if the base URL is set to `/my/app/`, set the redirect URL to `https://192.168.42.42:80/my/app/_auth/callback`.
 - `-oidc-end-session-url`: URL to log out (refer to your identity provider's documentation). This flag is optional and might not be supported by your identity provider.
 - `-oidc-client-id`: Client ID (refer to your identity provider's documentation).
 - `-oidc-client-secret`:  Client secret (refer to your identity provider's documentation).
+- `-oidc-scopes`: Comma-separated scopes that will override defaults (`openid,profile`).
 
 Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](api/server#auth) class for details):
 
@@ -131,7 +132,21 @@ the query handler `serve()` is called.
 :::
 
 
-
 ## App Server API Access Keys
 
 Access to a Wave app is controlled via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617). The basic authentication username/password pair is automatically generated on app launch, and is visible only to the Wave server. You can manually override this behavior by setting the `$WAVE_APP_ACCESS_KEY_ID` / `$WAVE_APP_ACCESS_KEY_SECRET` environment variables (for development/testing only - not recommended in production).
+
+## Additional HTTP Response Headers
+
+You can make the Wave daemon include additional HTTP response headers by using the `-http-headers-file` command line argument to `waved`, pointing to a [MIME-formatted](https://en.wikipedia.org/wiki/MIME#MIME_header_fields) file.
+
+[A sample file](https://github.com/h2oai/wave/blob/master/headers.txt) (make sure there's an empty line at the end):
+
+```txt title="headers.txt"
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+
+```
+
+

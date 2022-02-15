@@ -55,4 +55,62 @@ async def serve(q: Q):
 `q.site.upload()` accepts a list of file paths, so you can upload multiple files at a time.
 :::
 
+## Serving image streams
+
+Use image streams to display images that can be updated in near real time, say for use cases such as real time object detection in videos or webcam streams. This feature lets you display an initial image on a web page, then follow up with updated images (or frames).
+
+Use `q.site.uplink()` to stream a frame. This function returns the path to an image that can be passed to `ui.image()` or `ui.image_card()`, or any UI or HTML element that accepts an image source.
+
+Use `q.site.unlink()` to signal the end of a stream.
+
+```py
+@app('/demo')
+async def serve(q: Q):
+    # Create stream by sending initial image
+    path = await q.site.uplink('my_stream', 'image/jpeg', my_image)
+
+    # Display image on page
+    q.page['qux'] = ui.form_card(box='1 1 5 5', items=[ui.image('Image Stream', path=path)])
+    await q.page.save()
+
+    # Update image
+    for i in range(100):
+        await q.site.uplink('my_stream', 'image/jpeg', my_image)
+
+    # Stop stream
+    await q.site.unlink('my_stream')
+```
+
+See `examples/file_stream.py` for a complete example.
+
+## Serving files directly from the Wave server
+
+As an alternative to using the above `upload()` or `download()` mechanisms, you can make the Wave server (`waved`) directly serve the contents of one or more existing directories. If the Wave server and your app both have access to the directories on the file system, your app can simply create or copy files to the directories to make them accessible from web browsers.
+
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/
+
+```
+waved -public-dir /datasets/@/home/zaphod/data
+```
+
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, and `/home/zaphod/models` at http://localhost:10101/public/models
+
+```
+waved -public-dir /datasets/@/home/zaphod/data -public-dir /public/models/@/home/zaphod/models
+```
+
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, but only to authenticated users.
+
+```
+waved -private-dir /datasets/@/home/zaphod/data
+```
+
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, and `/home/zaphod/models` at http://localhost:10101/public/models, but only to authenticated users.
+
+```
+waved -private-dir /datasets/@/home/zaphod/data -private-dir /public/models/@/home/zaphod/models
+```
+
+Note that any number of `-public-dir` and `-private-dir` arguments are allowed.
+
 

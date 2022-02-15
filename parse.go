@@ -33,7 +33,7 @@ const (
 	EXABYTE
 )
 
-var invalidByteSizeError = errors.New("invalid byte size")
+var errInvalidByteSize = errors.New("invalid byte size")
 
 // ParseBytes parses string representations (e.g. 42K or 42KB or 42KiB) to bytes
 func ParseBytes(s string) (uint64, error) {
@@ -41,13 +41,13 @@ func ParseBytes(s string) (uint64, error) {
 	i := strings.IndexFunc(s, unicode.IsLetter)
 
 	if i == -1 {
-		return 0, invalidByteSizeError
+		return 0, errInvalidByteSize
 	}
 
 	num, unit := s[:i], s[i:]
 	b, err := strconv.ParseFloat(num, 64)
 	if err != nil || b < 0 {
-		return 0, invalidByteSizeError
+		return 0, errInvalidByteSize
 	}
 
 	switch unit {
@@ -66,6 +66,6 @@ func ParseBytes(s string) (uint64, error) {
 	case "B":
 		return uint64(b), nil
 	default:
-		return 0, invalidByteSizeError
+		return 0, errInvalidByteSize
 	}
 }

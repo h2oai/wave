@@ -71,7 +71,12 @@ const
   args: Rec = {},
   clearRec = (a: Rec) => {
     for (const k in a) delete a[k]
-  }
+  },
+  baseURL = document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/',
+  socketURL = baseURL + '_s/',
+  uploadURL = baseURL + '_f/',
+  initURL = baseURL + '_auth/init',
+  loginURL = baseURL + '_auth/login'
 
 export const
   contentB = box<WaveEvent | null>(null),
@@ -109,8 +114,8 @@ export const
       window.setTimeout(() => { wait = false }, timeout)
     }
   },
-  listen = () => {
-    _wave = connect(e => {
+  listen = (address: S) => {
+    _wave = connect(address, e => {
       switch (e.t) {
         case WaveEventType.Page:
         case WaveEventType.Error:
@@ -131,34 +136,41 @@ export const
       }
     })
   },
+  push = () => {
+    if (!_wave) return
+
+    // Unconditionally set location hash so that the app doesn't have to track changes.
+    const h = window.location.hash
+    if (h?.length > 1) args['#'] = h.substr(1)
+
+    const d: Dict<any> = { ...args } // shallow clone
+    clearRec(args) // clear
+    _wave.push(d) // push clone
+    busyB(true)
+    argsB(d)
+  },
   wave = { // Public API
+    baseURL,
+    socketURL,
+    uploadURL,
+    initURL,
+    loginURL,
     args,
     debounce,
     throttle,
-    push: () => {
-      if (!_wave) return
-
-      // Unconditionally set location hash so that the app doesn't have to track changes.
-      const h = window.location.hash
-      if (h?.length > 1) args['#'] = h.substr(1)
-
-      const d: Dict<any> = { ...args } // shallow clone
-      clearRec(args) // clear
-      _wave.push(d) // push clone
-      busyB(true)
-      argsB(d)
-    },
+    push,
     fork: (): ChangeSet => {
       if (!_wave) throw new Error('not initialized')
       return _wave.fork()
     },
-    emit: (name: S, event: S, data: any) => {
+    emit: (source: S, name: S, data: any) => {
       const
-        args: Dict<any> = {},
+        event: Dict<any> = {},
         events: Dict<any> = {}
-      args[event] = data
-      events[name] = args
-      _wave?.push({ '': events })
+      event[name] = data
+      events[source] = event
+      args[''] = events // '' is special-cased in clients
+      push()
     }
   };
 

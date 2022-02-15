@@ -31,7 +31,7 @@ const
       top: 0, left: 0, bottom: 0, right: 0
     },
     percent: {
-      opacity: 0.5,
+      color: cssVar('$text6')
     },
   })
 

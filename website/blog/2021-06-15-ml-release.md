@@ -5,6 +5,8 @@ author: Peter Szabó
 author_title: Lead Software Engineer @ H2O.ai
 author_url: https://github.com/geomodular
 author_image_url: https://www.gravatar.com/avatar/17c05e511a981a1f0b35eb8d4648947c
+image: /img/wave-type-yellow-1100x400.png
+
 tags: [release]
 ---
 

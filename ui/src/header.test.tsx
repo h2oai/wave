@@ -12,26 +12,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
-import { render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import { fireEvent, render } from '@testing-library/react'
+import { box, Model } from 'h2o-wave'
 import React from 'react'
 import { View } from './header'
 
 const
   name = 'header',
-  headerProps: T.Model<any> = {
-    name,
-    state: {},
-    changed: T.box(false)
-  }
+  label = 'label'
+
+let headerProps: Model<any>
 
 describe('Header.tsx', () => {
-  beforeAll(() => initializeIcons())
+  beforeEach(() => {
+    headerProps = {
+      name,
+      state: {
+        nav: [{ label: 'group1', items: [{ name, label }] }],
+        commands: [{ name: 'command', label }],
+        image: 'img'
+      },
+      changed: box(false),
+    }
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...headerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Closes nav on click', () => {
+    const { container, queryByText } = render(<View {...headerProps} />)
+    fireEvent.click(container.querySelector('.ms-Icon')!)
+
+    const menuItem = queryByText(label)
+    expect(menuItem).toBeInTheDocument()
+
+    fireEvent.click(menuItem!)
+    expect(menuItem).not.toBeVisible()
+  })
+
+  it('Routes to home page (#) on logo click', () => {
+    const { container } = render(<View {...headerProps} />)
+
+    window.location.hash = 'about'
+    fireEvent.click(container.querySelector('.ms-Image-image') as HTMLImageElement)
+
+    expect(window.location.hash).toBe('')
+  })
 })

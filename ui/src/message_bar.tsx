@@ -15,7 +15,8 @@
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
+import { stylesheet } from 'typestyle'
+import { Markdown } from './markdown'
 
 /**
  * Create a message bar.
@@ -31,11 +32,22 @@ export interface MessageBar {
   text?: S
   /** An identifying name for this component. */
   name?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the message bar, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 
 const
+  css = stylesheet({
+    messageBar: {
+      $nest: {
+        // Adjust spacing to align with Fluent Messagebar icon.
+        '.wave-markdown > *:first-child': { marginTop: 0 },
+        '.wave-markdown > *:only-child': { marginBottom: 0 },
+      }
+    }
+  }),
   toMessageBarType = (t?: S): Fluent.MessageBarType => {
     switch (t) {
       case 'error': return Fluent.MessageBarType.error
@@ -51,10 +63,9 @@ export const
   XMessageBar = ({ model: m }: { model: MessageBar }) => (
     m.text?.length
       ? (
-        <Fluent.MessageBar
-          data-test={m.name}
-          style={displayMixin(m.visible)}
-          messageBarType={toMessageBarType(m.type)} >{m.text}</Fluent.MessageBar>
+        <Fluent.MessageBar data-test={m.name} messageBarType={toMessageBarType(m.type)} className={css.messageBar}>
+          <Markdown source={m.text} />
+        </Fluent.MessageBar>
       )
       : <div />
   )

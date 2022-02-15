@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S, unpack } from 'h2o-wave'
-import markdownit from 'markdown-it'
+import { Model, Rec, S, U, unpack } from 'h2o-wave'
+import MarkdownIt from 'markdown-it'
+import Renderer from 'markdown-it/lib/renderer'
+import Token from 'markdown-it/lib/token'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid, substitute } from './layout'
-import { border, cssVar, padding, pc } from './theme'
+import { border, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
 
 const
@@ -32,6 +34,9 @@ const
     },
     markdown: {
       $nest: {
+        '>*:only-child': {
+          margin: 0
+        },
         a: {
           color: cssVar('$themePrimary'),
           $nest: {
@@ -63,11 +68,19 @@ const
   })
 
 export const
-  markdown = markdownit({ html: true, linkify: true, typographer: true, }),
-  markdownSafe = markdownit({ typographer: true, linkify: true }),
-  Markdown = ({ source }: { source: S }) => (<div className={css.markdown} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />),
-  MarkdownSafe = ({ source }: { source: S }) => (<div className={css.markdown} dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />)
+  markdown = MarkdownIt({ html: true, linkify: true, typographer: true, }),
+  Markdown = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />
 
+const defaultRenderer = markdown.renderer.rules.text
+markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Options, env: any, self: Renderer) => {
+  const
+    linkOpenToken = tokens[idx + 1],
+    hrefAttr = linkOpenToken?.attrGet('href')
+
+  // Onclick has to be inlined otherwise a global function would be needed. Custom event is handled at App.tsx. Return false prevents navigation behavior.
+  if (hrefAttr?.startsWith('?')) linkOpenToken.attrPush(['onclick', `window.dispatchEvent(new CustomEvent("md-link-click", {detail:"${hrefAttr.substring(1)}" }));return false`])
+  return defaultRenderer!(tokens, idx, options, env, self)
+}
 
 /**
  * Create a card that renders Markdown content.

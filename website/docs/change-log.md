@@ -12,6 +12,118 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.20.0
+January 28, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.20.0)
+- Added
+  - New: Run `wave fetch` to download examples and tour locally.
+  - New: Base URL support.
+  - New: Menu component.
+  - New: TallStats card.
+  - New: Post card.
+  - New: Preview card.
+  - New: WideArticlePreview card.
+  - New: Add `items`, `secondary_items` and `color` to header.
+  - New: Add `items` to footer.
+  - New: Add `image`, `persona`, `secondary_items` and `color` to navigation.
+  - New: More official themes.
+  - New: Add `value` to facepile component.
+  - New: Add `popup` to dropdown component.
+  - New: Add `trigger` to combobox component.
+  - New: Add `inline` to choice group.
+  - New: Add `blocking` to side panel.
+  - New: Add `spellcheck` to textbox.
+  - New: Add `height` to profile card.
+  - Docs: New widgets section.
+  - Docs: Color theming guide.
+- Changed
+  - **The Wave server is now included in the Python distribution.** 
+  - **Starting apps using `wave run` now automatically starts the Wave Server.**
+  - Scrollbars now respect the active theme.
+  - Tall and wide info cards now support markdown for the `caption` attribute.
+  - Info cards are now clickable only when `name` attribute is not empty.
+  - Improve Wave Tour app header by providing logo and important links.
+- Fixed
+  - Fix handling decimal point for `ui.spinbox` component.
+  - Respect UTC time when selecting date via `ui.datepicker`.
+  - Swatch color picker now shows selected color upon clicking correctly.
+  - Fix incorrect links across API docs.
+
+## v0.19.0
+October 29, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.19.0)
+- Added
+  - Make examples in Tour searchable.
+  - New: Copyable text component.
+  - New: Add badges/tags to table rows.
+  - New: Facepile component.
+  - Apps now receive a system-wide `@system.logout` event when a user logs out.
+  - Add custom HTTP response headers using `-http-headers-file`.
+  - Performance: Wave daemon AOF logging is disabled if `-no-log` is set.
+  - Performance: Wave daemon content store is disabled if `-no-store` is set.
+  - Performance: Skip writes to content store for unicast apps.
+  - Performance: Use LRU cache to speed up API authorization.
+  - New: Compact version of file upload component.
+  - New: Profile card for displaying user profiles.
+  - New: Article card for long-form articles.
+  - New: Tall article preview card.
+  - New: Annotator component.
+  - Add min/max date constraints to date picker component.
+  - New: Tall info card.
+  - Improve wide info card design.
+  - New: Wide pie chart.
+  - New: Wide plot card.
+  - User defined themes.
+  - Plots are now theme-able.
+  - New: H2O Dark Theme.
+  - Add more justification options to ui.inline().
+- Changed
+  - Dropdowns now display a dialog with filtering for 100+ choices.
+- Fixed
+  - Respect `H2O_WAVE_APP_ADDRESS` in Wave CLI.
+  - Expand spinbox input to available space when tooltip is specified.
+  - Fix Neon theme disabled state colors.
+  - Adjust selected rect stroke on plots.
+  - Adjust plot text color for upgraded G2.
+  - Adjust Hover color contrast on stat table.
+  - Fix url in graphics example.
+  - Fix plot regressions caused by G2 upgrade.
+
+## v0.18.0
+September 18, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.18.0)
+- Added
+  - Persona component.
+  - Add support for streaming/multipart endpoints.
+  - Read command line args from env if available.
+  - Allow public/private directories to be hosted by the Wave daemon.
+  - Side panel component.
+  - Custom inline / external CSS support.
+  - Allow controlling width of form items.
+  - Icon button component.
+  - Allow submitting text phrases within markdown.
+  - Allow using markdown / HTML within message bar.
+  - Add inline prop to checklist component.
+  - Add trigger attribute for spinbox component.
+  - OIDC: Update default scopes and add `-oidc-scopes` command line argument.
+- Changed
+  - Sort table group titles by default when grouped.
+  - Range slider replaced with native Fluent component.
+  - Report HTTP error 413 instead of 500 if request is too large.
+  - Disable async function validation (failed under Cython).
+- Fixed
+  - Submit range slider values on releasing mouse.
+  - Datepicker color contrast for date selection.
+  - Unify ui.picker label with th rest of the form components, add 'required' prop to picker.
+  - Expander ignoring expanded attr on initial render.
+  - Prevent floating-point precision display in spinbox.
+  - Redirect only once, not on every render.
+  - Stretch slider for available space within `ui.inline` and `ui.section`.
+  - Update form items client side if possible instead of recreate on data change.
+  - Meta redirect for Firefox.
+  - Set location hash when script events are triggered.
+  - Download files in new tab to prevent FF dropping WS connection.
+  - Increase tab card min height to prevent overflow.
+  - Safari title overflow in grey dashboard.
+  - Ensure that first column in tables functions properly when non-text.
+
 ## v0.17.0
 June 30, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.17.0)
 - Added

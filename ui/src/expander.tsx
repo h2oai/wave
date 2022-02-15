@@ -13,12 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Creates a new expander.
@@ -34,16 +33,14 @@ export interface Expander {
   expanded?: B
   /** List of components to be hideable by the expander. */
   items?: Component[]
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the expander, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 
 const
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
     expanderOpen: {
       $nest: {
         '>div:last-child': {
@@ -60,33 +57,31 @@ const
     },
   })
 
-export const
-  XExpander = bond(({ model: m }: { model: Expander }) => {
-    const
-      isOpenB = box(!!wave.args[m.name]),
-      onClick = () => {
-        wave.args[m.name] = m.expanded = !m.expanded
-        isOpenB(m.expanded)
-      },
-      render = () => {
-        const
-          isOpen = isOpenB(),
-          actionTitle = isOpen ? 'Shrink' : 'Expand',
-          expanderIcon = { iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' },
-          className = isOpenB() ? css.expanderOpen : css.expanderClosed
+export const XExpander = ({ model: m }: { model: Expander }) => {
+  const
+    [isOpen, setIsOpen] = React.useState(m.expanded),
+    onClick = React.useCallback(() => {
+      wave.args[m.name] = !isOpen
+      setIsOpen(!isOpen)
+    }, [isOpen, m.name])
 
-        return (
-          <div data-test={m.name} className={className} style={displayMixin(m.visible)}>
-            <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
-              <Fluent.ActionButton
-                title={actionTitle}
-                iconProps={expanderIcon}
-                onClick={onClick}
-                styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
-            </Fluent.Separator>
-            <XComponents items={m.items || []} />
-          </div>
-        )
-      }
-    return { isOpenB, render }
-  })
+  React.useEffect(() => {
+    if (m.expanded !== undefined) {
+      wave.args[m.name] = !!m.expanded
+      setIsOpen(m.expanded)
+    }
+  }, [m])
+
+  return (
+    <div data-test={m.name} className={isOpen ? css.expanderOpen : css.expanderClosed} data-visible={isOpen ? 'visible' : 'hidden'}>
+      <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
+        <Fluent.ActionButton
+          title={isOpen ? 'Shrink' : 'Expand'}
+          iconProps={{ iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' }}
+          onClick={onClick}
+          styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
+      </Fluent.Separator>
+      <XComponents items={m.items || []} />
+    </div>
+  )
+}

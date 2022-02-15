@@ -46,7 +46,7 @@ async def serve(q: Q):
         q.client.train_df, q.client.test_df = train_test_split(data, train_size=0.8)
 
         # columns
-        column_choices = [ui.choice(x, x) for x in q.client.train_df.columns if x not in ['target', 'magnesium', 'proline']]
+        column_choices = [ui.choice(x, x) for x in q.client.train_df.columns if x != 'target']
 
         # display ui
         q.page['example'] = ui.form_card(

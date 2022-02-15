@@ -16,18 +16,19 @@ import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import App from './app'
 import Login from './login'
+import { wave } from './ui'
 
 const
   Router = () => {
     const
       routes = [
         {
-          path: '/_auth/login',
+          path: wave.loginURL,
           exact: true,
           render: () => <Login />,
         },
         {
-          path: '/',
+          path: wave.baseURL,
           exact: false,
           render: () => <App />
         },

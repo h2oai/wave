@@ -43,7 +43,9 @@ type Msg struct {
 var (
 	msgSep     = []byte{' '}
 	emptyJSON  = []byte("{}")
+	resetMsg   []byte
 	invalidMsg = Msg{t: badMsgT}
+	logoutMsg  = []byte(`{"":{"@system":{"logout":true}}}`)
 )
 
 // Pub represents a published message
@@ -61,6 +63,9 @@ type Sub struct {
 // Broker represents a message broker.
 type Broker struct {
 	site        *Site
+	editable    bool
+	noStore     bool
+	noLog       bool
 	clients     map[string]map[*Client]interface{} // route => client-set
 	publish     chan Pub
 	subscribe   chan Sub
@@ -68,17 +73,24 @@ type Broker struct {
 	logout      chan Pub
 	apps        map[string]*App // route => app
 	appsMux     sync.RWMutex    // mutex for tracking apps
+	unicasts    map[string]bool // "/client_id" => true
+	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
 }
 
-func newBroker(site *Site) *Broker {
+func newBroker(site *Site, editable, noStore, noLog bool) *Broker {
 	return &Broker{
 		site,
+		editable,
+		noStore,
+		noLog,
 		make(map[string]map[*Client]interface{}),
 		make(chan Pub, 1024),     // TODO tune
 		make(chan Sub, 1024),     // TODO tune
 		make(chan *Client, 1024), // TODO tune
 		make(chan Pub, 1024),     // TODO tune
 		make(map[string]*App),
+		sync.RWMutex{},
+		make(map[string]bool),
 		sync.RWMutex{},
 	}
 }
@@ -99,8 +111,17 @@ func (b *Broker) addApp(mode, route, addr, keyID, keySecret string) {
 func (b *Broker) getApp(route string) *App {
 	b.appsMux.RLock()
 	defer b.appsMux.RUnlock()
-	app, _ := b.apps[route]
-	return app
+	return b.apps[route]
+}
+
+func (b *Broker) getApps() []*App {
+	b.appsMux.RLock()
+	defer b.appsMux.RUnlock()
+	var apps []*App
+	for _, app := range b.apps {
+		apps = append(apps, app)
+	}
+	return apps
 }
 
 func (b *Broker) dropApp(route string) {
@@ -144,21 +165,33 @@ func parseMsg(s []byte) Msg {
 	return invalidMsg
 }
 
+func (b *Broker) isUnicast(route string) bool {
+	b.unicastsMux.RLock()
+	defer b.unicastsMux.RUnlock()
+	_, ok := b.unicasts[route]
+	return ok
+}
+
 // patch broadcasts changes to clients and patches site data.
 func (b *Broker) patch(route string, data []byte) {
 	b.publish <- Pub{route, data}
-	// Write AOF entry with patch marker "*" as-is to log file.
-	// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
-	// so reading back in is unreliable.
-	log.Println("*", route, string(data))
+
+	if !b.noLog {
+		// Write AOF entry with patch marker "*" as-is to log file.
+		// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
+		// so reading back in is unreliable.
+		log.Println("*", route, string(data))
+	}
+
+	// Skip writes if storage is disabled or unicast apps without -editable
+	if b.noStore || (!b.editable && b.isUnicast(route)) {
+		return
+	}
+
 	if err := b.site.patch(route, data); err != nil {
 		echo(Log{"t": "broker_patch", "error": err.Error()})
 	}
 }
-
-var (
-	resetMsg []byte
-)
 
 func init() {
 	var err error
@@ -170,9 +203,17 @@ func init() {
 func (b *Broker) resetSubscribers(route string) {
 	b.publish <- Pub{route, resetMsg}
 }
-
 func (b *Broker) resetClients(subjectID string) {
 	b.logout <- Pub{subjectID, resetMsg}
+}
+
+func (b *Broker) notifyAppsAboutLogout(session *Session) {
+	apps := b.getApps()
+	for _, app := range apps {
+		go func(app *App) {
+			app.forward("", session, logoutMsg)
+		}(app)
+	}
 }
 
 // run starts i/o between the broker and clients.
@@ -218,6 +259,10 @@ func (b *Broker) addClient(route string, client *Client) {
 	}
 	clients[client] = nil
 
+	b.unicastsMux.Lock()
+	b.unicasts["/"+client.id] = true
+	b.unicastsMux.Unlock()
+
 	echo(Log{"t": "ui_add", "addr": client.addr, "route": route})
 }
 
@@ -241,6 +286,10 @@ func (b *Broker) dropClient(client *Client) {
 
 	// FIXME leak: this is not captured in the AOF logging; page will be recreated on hydration
 	b.site.del(client.id) // delete transient page, if any.
+
+	b.unicastsMux.Lock()
+	delete(b.unicasts, "/"+client.id)
+	b.unicastsMux.Unlock()
 
 	echo(Log{"t": "ui_drop", "addr": client.addr})
 }

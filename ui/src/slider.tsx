@@ -13,10 +13,9 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, S } from 'h2o-wave'
+import { B, F, Id, S, U } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a slider.
@@ -51,38 +50,39 @@ export interface Slider {
   disabled?: B
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the slider, e.g. '100px'. Defaults to '100%'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
 export const
-  XSlider = bond(({ model: m }: { model: Slider }) => {
+  XSlider = ({ model: m }: { model: Slider }) => {
     const
       { min = 0, max = 100, step = 1, value = 0 } = m,
-      defaultValue = (value < min) ? min : ((value > max) ? max : value)
-    wave.args[m.name] = defaultValue
-    const
-      onChange = (v: number) => wave.args[m.name] = v,
-      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) wave.push() },
-      render = () => (
-        <Fluent.Slider
-          data-test={m.name}
-          styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
-          buttonProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-          label={m.label}
-          min={min}
-          max={max}
-          step={step}
-          defaultValue={defaultValue}
-          showValue={true}
-          originFromZero={min < 0 && max >= 0}
-          onChange={onChange}
-          onChanged={onChanged}
-          disabled={m.disabled}
-        />
-      )
+      defaultValue = (value < min) ? min : ((value > max) ? max : value),
+      onChange = (v: U) => wave.args[m.name] = v,
+      onChanged = React.useCallback((_e: MouseEvent | KeyboardEvent | TouchEvent, _value: U) => { if (m.trigger) wave.push() }, [m.trigger])
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = defaultValue }, [])
+
+    return (
+      <Fluent.Slider
+        data-test={m.name}
+        buttonProps={{ 'data-test': m.name } as React.HTMLAttributes<HTMLButtonElement>}
+        label={m.label}
+        min={min}
+        max={max}
+        step={step}
+        defaultValue={defaultValue}
+        showValue
+        originFromZero={min < 0 && max >= 0}
+        onChange={onChange}
+        onChanged={onChanged}
+        disabled={m.disabled}
+      />
+    )
+  }

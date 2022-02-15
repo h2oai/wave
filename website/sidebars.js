@@ -1,4 +1,4 @@
-const examples = require('./examples');
+const examples = require('./examples')
 
 module.exports = {
   someSidebar: {
@@ -11,7 +11,7 @@ module.exports = {
     'Getting Started': [
       'getting-started',
       'installation',
-      'tour',
+      'installation-8-20',
       'tutorial-hello',
       'tutorial-beer',
       'tutorial-monitor',
@@ -25,9 +25,8 @@ module.exports = {
       'apps',
       'pages',
       'layout',
-      'cards',
+      'color-theming',
       'buffers',
-      'components',
       'arguments',
       'state',
       'routing',
@@ -49,6 +48,97 @@ module.exports = {
       'wave-ml',
       'wavedb',
     ],
+    'Widgets': [
+      "widgets/overview",
+      {
+        "type": "category",
+        "label": "Content",
+        "items": [
+          "widgets/content/header",
+          "widgets/content/footer",
+          "widgets/content/navigation",
+          "widgets/content/breadcrumbs",
+          "widgets/content/toolbar",
+          "widgets/content/tabs",
+          "widgets/content/markdown",
+          "widgets/content/image",
+          "widgets/content/article",
+          "widgets/content/tall_article_preview",
+          "widgets/content/wide_article_preview",
+          "widgets/content/preview",
+          "widgets/content/tall_info",
+          "widgets/content/wide_info",
+          "widgets/content/post",
+          "widgets/content/profile",
+          "widgets/content/template",
+          "widgets/content/markup",
+          "widgets/content/frame",
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Stat",
+        "items": [
+          "widgets/stat/large_stat",
+          "widgets/stat/large_bar_stat",
+          "widgets/stat/small_stat",
+          "widgets/stat/small_series_stat",
+          "widgets/stat/tall_stats",
+          "widgets/stat/tall_gauge_stat",
+          "widgets/stat/tall_series_stat",
+          "widgets/stat/wide_pie_stat",
+          "widgets/stat/wide_bar_stat",
+          "widgets/stat/wide_gauge_stat",
+          "widgets/stat/wide_series_stat"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Form",
+        "items": [
+          "widgets/form/overview",
+          "widgets/form/button",
+          "widgets/form/checkbox",
+          "widgets/form/checklist",
+          "widgets/form/choice_group",
+          "widgets/form/color_picker",
+          "widgets/form/combobox",
+          "widgets/form/copyable_text",
+          "widgets/form/date_picker",
+          "widgets/form/dropdown",
+          "widgets/form/expander",
+          "widgets/form/facepile",
+          "widgets/form/file_upload",
+          "widgets/form/frame",
+          "widgets/form/image",
+          "widgets/form/inline",
+          "widgets/form/label",
+          "widgets/form/link",
+          "widgets/form/links",
+          "widgets/form/markup",
+          "widgets/form/menu",
+          "widgets/form/message_bar",
+          "widgets/form/persona",
+          "widgets/form/picker",
+          "widgets/form/progress",
+          "widgets/form/range_slider",
+          "widgets/form/separator",
+          "widgets/form/slider",
+          "widgets/form/spinbox",
+          "widgets/form/stats",
+          "widgets/form/stepper",
+          "widgets/form/table",
+          "widgets/form/tabs",
+          "widgets/form/template",
+          "widgets/form/text_annotator",
+          "widgets/form/text",
+          "widgets/form/textbox",
+          "widgets/form/toggle",
+          "widgets/form/vega_visualization",
+          "widgets/form/visualization"
+        ]
+      },
+    ],
     'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [
       'api/index',
@@ -65,4 +155,4 @@ module.exports = {
       'api/h2o_wave_ml/utils',
     ],
   },
-};
+}

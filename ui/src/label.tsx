@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 
 /**
  * Create a label.
@@ -33,7 +32,9 @@ export interface Label {
   required?: B
   /** True if the label should be disabled. */
   disabled?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the label , e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -43,13 +44,6 @@ export interface Label {
 
 export const
   XLabel = ({ model }: { model: Label }) => {
-    const { label, required = false, disabled = false, visible, name } = model
-    return (
-      <Fluent.Label
-        data-test={name}
-        style={displayMixin(visible)}
-        required={required}
-        disabled={disabled}
-      >{label}</Fluent.Label>
-    )
+    const { label, required = false, disabled = false, name } = model
+    return <Fluent.Label data-test={name} required={required} disabled={disabled} >{label}</Fluent.Label>
   }

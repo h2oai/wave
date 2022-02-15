@@ -12,27 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Expander, XExpander } from './expander'
 import { wave } from './ui'
 
 const name = 'expander'
-const expanderProps: Expander = { name }
+const expanderProps: Expander = { name, items: [{ textbox: { name: 'textbox' } }] }
 describe('Expander.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XExpander model={expanderProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display expander when visible is false', () => {
-    const { queryByTestId } = render(<XExpander model={{ ...expanderProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init - null', () => {
@@ -45,5 +37,29 @@ describe('Expander.tsx', () => {
     fireEvent.click(getByRole('button'))
 
     expect(wave.args[name]).toBe(true)
+  })
+
+  it('Expands/collapses on click', () => {
+    const { getByTestId, getByRole } = render(<XExpander model={expanderProps} />)
+    expect(getByTestId(name).dataset.visible).toBe('hidden')
+    fireEvent.click(getByRole('button'))
+    expect(getByTestId(name).dataset.visible).toBe('visible')
+  })
+
+  it('Collapsed by default', () => {
+    const { getByTestId } = render(<XExpander model={expanderProps} />)
+    expect(getByTestId(name).dataset.visible).toBe('hidden')
+  })
+
+  it('Expands initially if expanded specified', () => {
+    const { getByTestId } = render(<XExpander model={{ ...expanderProps, expanded: true }} />)
+    expect(getByTestId(name).dataset.visible).toBe('visible')
+  })
+
+  it('Expands/collapses on server change', () => {
+    const { getByTestId, rerender } = render(<XExpander model={expanderProps} />)
+    expect(getByTestId(name).dataset.visible).toBe('hidden')
+    rerender(<XExpander model={{ ...expanderProps, expanded: true }} />)
+    expect(getByTestId(name).dataset.visible).toBe('visible')
   })
 })

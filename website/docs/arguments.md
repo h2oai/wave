@@ -2,7 +2,7 @@
 title: Query Arguments
 ---
 
-When a user interacts with [components](components.md) on a page - like typing in text, making choices, clicking buttons, and so on - that information is available to your app in the form of *query arguments*.
+When a user interacts with [components](/docs/widgets/overview) on a page - like typing in text, making choices, clicking buttons, and so on - that information is available to your app in the form of *query arguments*.
 
 The query arguments can be read from `q.args`, a read-only dictionary-like object passed to your `@app()` handler:
 
@@ -27,6 +27,7 @@ The table below summarizes how to interpret inputs from various components.
 | Component | If the component is named `foo`, the value of `q.args.foo` is... |
 |---|---|
 | `ui.button()` | `value` if provided, else `True`. |
+| `ui.breadcrumb()` | `True` if clicked. |
 | `ui.checkbox()` | `True` if checked, `False` if unchecked, `None` if indeterminate. |
 | `ui.checklist()` | A list of names of all the selected choices (a list of strings). |
 | `ui.choice_group()` | The name of the selected choice (a string). |
@@ -36,8 +37,10 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.date_picker()` | The selected date in `YYYY-MM-DD` format (a string). |
 | `ui.dropdown()` | If multi-valued, a list of names of all the selected choices (a list of strings), otherwise the name of the selected choice (a string).  |
 | `ui.expander()` | `True` if expanded, else `False`. |
+| `ui.facepile()` | `value` if provided, else `True`. |
 | `ui.file_upload()` | A list of paths to the uploaded files (a list of strings). |
 | `ui.nav_item()` | `True` if clicked. |
+| `ui.persona()` | `True` if clicked. |
 | `ui.picker()` | A list of names of all the selected choices (a list of strings). |
 | `ui.range_slider()` | `[min, max]` (a list of two numbers). |
 | `ui.slider()` | The selected value (a number). |
@@ -45,8 +48,8 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.table()` | A list of names of all the selected rows (a list of strings). |
 | `ui.tabs()` | The name of the active tab (a string). |
 | `ui.textbox()` | The value typed in (a string). |
+| `ui.text_annotator()` | List of lists containing parts of text with accompanying tag (if not annotated, tag is `''`). |
 | `ui.toggle()` | `True` if checked, `False` if unchecked. |
-
 
 ## Handling interactivity
 
@@ -84,7 +87,6 @@ async def serve(q: Q):
 
 If this feels too repetitive, you can use `on` and `handle_on` to remove some of the boilerplate:
 
-
 ```py {3,7,11,15,21}
 from h2o_wave import Q, main, app, on, handle_on
 
@@ -113,7 +115,6 @@ async def serve(q: Q):
 In the above example, the `@on('add_to_cart')` is read as "when `q.arg['add_to_cart']` is `True` (or truthy), then invoke the function the `@on()` is applied to" - in this case, `add_to_cart()`.
 
 If the name of the function is the same as the name of the query argument, then the name can be elided. This simplifies the above example to:
-
 
 ```py {3,7,11,15}
 from h2o_wave import Q, main, app, on, handle_on

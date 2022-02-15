@@ -71,7 +71,7 @@ interface State {
    */
   data: Rec
   /**
-   * The maximum number of messages contained in this card. Defaults to 50 messages.
+   * The maximum number of messages contained in this card. Defaults to 50.
    * :t "spinbox"
    * :value 50
    * :min 10

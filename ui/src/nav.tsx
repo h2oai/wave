@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import { B, Id, Model, S } from 'h2o-wave'
 import React from 'react'
-import { CardEffect, cards } from './layout'
+import { stylesheet } from 'typestyle'
+import { Component, XComponents } from './form'
+import { CardEffect, cards, getEffectClass, toCardEffect } from './layout'
+import { XPersona } from './persona'
+import { clas, cssVar, padding } from './theme'
 import { bond, wave } from './ui'
 
 /** Create a navigation item. */
@@ -28,6 +32,8 @@ export interface NavItem {
   icon?: S
   /** True if this item should be disabled. */
   disabled?: B
+  /** An optional tooltip message displayed when a user hovers over this item. */
+  tooltip?: S
 }
 
 /** Create a group of navigation items. */
@@ -44,22 +50,83 @@ export interface NavGroup {
 export interface State {
   /** The navigation groups contained in this pane. */
   items: NavGroup[]
-  /** The name of the active (highlighted) navigation item. */
+  /** The name of the initially active (highlighted) navigation item. */
   value?: S
+  /** The card's title. */
+  title?: S
+  /** The card's subtitle. */
+  subtitle?: S
+  /** The icon, displayed to the left. **/
+  icon?: S
+  /** The icon's color. **/
+  icon_color?: S
+  /** The logo displayed at the top. **/
+  image?: S
+  /** The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. **/
+  persona?: Component
+  /** Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle. */
+  secondary_items?: Component[]
+  /** Card background color. Defaults to 'card'. */
+  color?: 'card' | 'primary'
 }
 
+const css = stylesheet({
+  card: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  title: {
+    color: cssVar('$themePrimary')
+  },
+  icon: {
+    fontSize: 56
+  },
+  header: {
+    padding: padding(24, 24, 0),
+    textAlign: 'center'
+  },
+  img: {
+    maxHeight: 100
+  },
+  brand: {
+    marginBottom: 10
+  },
+  secondaryItems: {
+    padding: 24,
+  },
+  persona: {
+    $nest: {
+      '.ms-Persona': {
+        flexDirection: 'column',
+        height: 'auto',
+      },
+      '.ms-Persona-details': {
+        alignItems: 'center',
+        padding: 0
+      },
+      '.ms-Persona-primaryText': {
+        fontWeight: 500,
+        marginTop: 12,
+      }
+    },
+  },
+})
+
 export const
-  XNav = ({ items, value }: State) => {
-    const groups = items.map((g): INavLinkGroup => ({
+  XNav = ({ items, value, hideNav }: State & { hideNav?: () => void }) => {
+    const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled }): INavLink => ({
+      links: g.items.map(({ name, label, icon, disabled, tooltip }): Fluent.INavLink => ({
         key: name,
         name: label,
         icon,
         disabled,
+        title: tooltip,
+        style: disabled ? { opacity: 0.7 } : undefined,
         url: '',
         onClick: () => {
+          if (hideNav) hideNav()
           if (name.startsWith('#')) {
             window.location.hash = name.substr(1)
             return
@@ -69,11 +136,29 @@ export const
         }
       }))
     }))
-    return <Nav groups={groups} selectedKey={value} />
+    return <Fluent.Nav groups={groups} initialSelectedKey={value} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
-    const render = () => <div data-test={name}><XNav {...state} /></div>
+    const render = () => {
+      const { title, subtitle, icon, icon_color = '$text', image, persona, secondary_items, color = 'card' } = state
+      return (
+        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: color === 'primary' ? cssVar('$saturatedPrimary') : undefined }}>
+          <div className={css.header}>
+            {(image || icon) && (
+              <div className={css.brand}>
+                {image && <img src={image} className={css.img} />}
+                {icon && !image && <Fluent.FontIcon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
+              </div>
+            )}
+            {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}
+            {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
+            {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
+          </div>
+          <XNav {...state} />
+          {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
+        </div>)
+    }
     return { render, changed }
   })
 
-cards.register('nav', View, { effect: CardEffect.Flat })
+cards.register('nav', View, { effect: CardEffect.Flat, marginless: true })

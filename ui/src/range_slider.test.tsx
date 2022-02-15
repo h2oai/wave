@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { RangeSlider, XRangeSlider } from './range_slider'
@@ -24,18 +23,11 @@ const defaultRect = { left: 0, top: 0, right: 0, bottom: 0, width: 100, height: 
 const mouseEvent = { clientX: 50, clientY: 0 }
 
 describe('rangeSlider.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XRangeSlider model={rangeSliderProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display range slider when visible is false', () => {
-    const { queryByTestId } = render(<XRangeSlider model={{ ...rangeSliderProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init', () => {
@@ -62,10 +54,10 @@ describe('rangeSlider.tsx', () => {
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
     expect(wave.args[name]).toMatchObject([0, 100])
 
-    container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
-    fireEvent.mouseDown(getAllByRole('slider')[1]!, mouseEvent)
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
+    fireEvent.mouseDown(getAllByRole('slider')[0]!, mouseEvent)
 
-    expect(wave.args[name]).toMatchObject([0, 50])
+    expect(wave.args[name]).toMatchObject([50, 100])
   })
 
   it('Calls sync on slide', () => {
@@ -73,7 +65,7 @@ describe('rangeSlider.tsx', () => {
     wave.push = pushMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={{ ...rangeSliderProps, trigger: true }} />)
-    container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
 
     const slidebox = getAllByRole('slider')[0]!
     fireEvent.mouseDown(slidebox, mouseEvent)
@@ -87,7 +79,7 @@ describe('rangeSlider.tsx', () => {
     wave.push = pushMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
-    container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
 
     const slidebox = getAllByRole('slider')[0]!
     fireEvent.mouseDown(slidebox, mouseEvent)

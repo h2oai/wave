@@ -15,13 +15,14 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
-import { bond, wave } from './ui'
+import { stylesheet } from 'typestyle'
+import { border, cssVar, formItemWidth, margin } from './theme'
+import { wave } from './ui'
 
 /**
  * Create a color picker.
  *
- * A date picker allows a user to pick a color value.
+ * A color picker allows a user to pick a color value.
  * If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
  */
 export interface ColorPicker {
@@ -33,7 +34,13 @@ export interface ColorPicker {
   value?: S
   /** A list of colors (CSS-compatible strings) to limit color choices to. */
   choices?: S[]
-  /** True if the component should be visible. Defaults to true. */
+  /** The width of the color picker, e.g. '100px'. Defaults to '300px'. */
+  width?: S
+  /** True if user should be allowed to pick color transparency. Defaults to True. */
+  alpha?: B
+  /** True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to False. */
+  inline?: B
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if the form should be submitted when the color picker value changes. */
   trigger?: B
@@ -42,40 +49,106 @@ export interface ColorPicker {
 }
 
 const
-  toColorCells = (cs: S[]) => cs.map((c): Fluent.IColorCellProps => ({ id: c, label: c, color: c }))
+  css = stylesheet({
+    inlinePickerContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      maxWidth: 250
+    },
+    preview: {
+      width: 20,
+      height: 20,
+      margin: margin(0, 15),
+      border: border(1, cssVar('$text')),
+    },
+    rhs: {
+      display: 'flex',
+      alignItems: 'center',
+    }
+  }),
+  toColorCells = (cs: S[]) => cs.map((c): Fluent.IColorCellProps => ({ id: c, label: c, color: c })),
+  InlineColorPicker = ({ model, onChange }: { model: ColorPicker, onChange: (...args: any) => void }) => {
+    const
+      [isCalloutVisible, setIsCalloutVisible] = React.useState(false),
+      val = model.value || '#000',
+      [color, setColor] = React.useState(Fluent.getColorFromString(val)),
+      [colorText, setColorText] = React.useState(val),
+      toggleCallout = () => setIsCalloutVisible(!isCalloutVisible),
+      onTextChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, val = '') => {
+        setColorText(val)
+        if (!val?.match(/^#([0-9a-f]{3}){1,2}$/i)) return // Hex format validation.
+
+        const fluentColor = Fluent.getColorFromString(val)!
+        setColor(fluentColor)
+        onChange(null, fluentColor)
+      },
+      onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
+        setColor(color)
+        setColorText(color.str)
+        onChange(null, color)
+      }
+
+    return (
+      <div className={css.inlinePickerContainer}>
+        <Fluent.Label>{model.label}</Fluent.Label>
+        <div className={css.rhs}>
+          <div className={css.preview} style={{ background: color?.str }} onClick={toggleCallout} />
+          {isCalloutVisible && (
+            <Fluent.Callout directionalHint={Fluent.DirectionalHint.rightBottomEdge} target={`.${css.preview}`} onDismiss={toggleCallout} gapSpace={10}>
+              <Fluent.ColorPicker alphaType={model.alpha ? 'alpha' : 'none'} color={color!} onChange={onColorChange} />
+            </Fluent.Callout>
+          )}
+          <Fluent.TextField value={colorText} onChange={onTextChange} />
+        </div>
+      </div>
+    )
+  }
 
 export const
-  XColorPicker = bond(({ model: m }: { model: ColorPicker }) => {
-    const value = m.value || null
-    wave.args[m.name] = value
+  XColorPicker = ({ model }: { model: ColorPicker }) => {
     const
-      onColorChanged = (_id?: string, color?: string) => {
-        wave.args[m.name] = color || value
-
-        if (m.trigger) wave.push()
+      { width, value, name, trigger, label, choices, alpha, inline } = model,
+      defaultValue = value || null,
+      [selectedColorId, setSelectedColorId] = React.useState<S | null>(defaultValue),
+      onSwatchChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color = defaultValue) => {
+        wave.args[name] = color
+        setSelectedColorId(color)
+        if (trigger) wave.push()
       },
-      onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
-        wave.args[m.name] = color?.str || value
-        if (m.trigger) wave.push()
+      onChange = (_e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => {
+        wave.args[name] = str || defaultValue
+        if (trigger) wave.push()
       },
-      render = () => (
-        <div data-test={m.name} style={displayMixin(m.visible)}>
-          <Fluent.Label>{m.label}</Fluent.Label>
-          {
-            m.choices?.length
-              ? <Fluent.SwatchColorPicker
-                columnCount={10}
-                selectedId={value || m.choices[0]}
-                colorCells={toColorCells(m.choices)}
-                onColorChanged={onColorChanged}
-              />
-              : <Fluent.ColorPicker
-                color={value || '#000'}
-                onChange={onChange}
-              />
-          }
-        </div>
-      )
+      normalizedWidth = formItemWidth(width),
+      minMaxWidth = !normalizedWidth?.includes('%') ? `calc(${normalizedWidth} - 35px)` : 'initial'
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[name] = defaultValue }, [])
+
+    return (
+      <div data-test={name}>
+        {
+          inline
+            ? <InlineColorPicker model={model} onChange={onChange} />
+            : (
+              <>
+                <Fluent.Label>{label}</Fluent.Label>
+                {
+                  choices?.length
+                    ? <Fluent.SwatchColorPicker columnCount={10} selectedId={selectedColorId || choices[0]} colorCells={toColorCells(choices)} onChange={onSwatchChange} />
+                    : (
+                      <Fluent.ColorPicker
+                        alphaType={alpha ? 'alpha' : 'none'}
+                        color={defaultValue || '#000'}
+                        onChange={onChange}
+                        styles={{ root: { width: normalizedWidth, maxWidth: normalizedWidth }, colorRectangle: { minWidth: minMaxWidth, maxWidth: minMaxWidth } }}
+                      />
+                    )
+                }
+              </>
+            )
+        }
+      </div>
+    )
+  }

@@ -12,12 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+import tarfile
+import shutil
 import sys
 import socket
 from contextlib import closing
+import subprocess
+from pathlib import Path
+import platform
 import uvicorn
 import click
 import os
+from urllib import request
+from urllib.parse import urlparse
+from .version import __version__
 
 _localhost = '127.0.0.1'
 
@@ -37,8 +46,9 @@ def main():
 
 @main.command()
 @click.argument('app')
-@click.option("--no-reload", is_flag=True, default=False, help="Disable auto-reload.")
-def run(app: str, no_reload: bool):
+@click.option("--no-reload", is_flag=True, default=False, help="Don't restart app when source code is changed.")
+@click.option("--no-autostart", is_flag=True, default=False, help="Don't launch the Wave server automatically.")
+def run(app: str, no_reload: bool, no_autostart: bool):
     """Run an app.
 
     \b
@@ -57,8 +67,11 @@ def run(app: str, no_reload: bool):
     $ wave run --no-reload path/to/app.py
     """
 
-    port = _scan_free_port()
-    addr = f'http://{_localhost}:{port}'
+    app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', f'http://{_localhost}:{_scan_free_port()}'))
+    host = app_address.hostname
+    port = app_address.port
+
+    addr = f'http://{host}:{port}'
     os.environ['H2O_WAVE_INTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_EXTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_APP_ADDRESS'] = addr
@@ -73,9 +86,83 @@ def run(app: str, no_reload: bool):
     if ext.lower() == '.py':
         app = app_path.replace(os.path.sep, '.')
 
-    uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+    # Try to start Wave daemon if not running or turned off.
+    server_port = int(os.environ.get('H2O_WAVE_LISTEN', ':10101').split(':')[-1])
+    server_not_running = _scan_free_port(server_port) == server_port
+    try:
+        waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
+        # OS agnostic wheels do not have waved - needed for HAC.
+        is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
+        autostart = (not no_autostart) or os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
+        if autostart and is_waved_present and server_not_running:
+            subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
+            time.sleep(1)
+            server_not_running = _scan_free_port(server_port) == server_port
+            retries = 3
+            while retries > 0 and server_not_running:
+                print('Cannot connect to Wave server, retrying...')
+                time.sleep(2)
+                server_not_running = _scan_free_port(server_port) == server_port
+                retries = retries - 1
+    finally:
+        if not server_not_running:
+            uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+        else:
+            print('Wave server not found. Please start the Wave server (waved or waved.exe) prior to running any app.')
 
 
 @main.command()
 def ide():
-    uvicorn.run(f'h2o_wave.ide:ide', host=_localhost, port=10100)
+    uvicorn.run('h2o_wave.ide:ide', host=_localhost, port=10100)
+
+
+@main.command()
+def fetch():
+    """Download examples and related files to ./wave.
+
+    \b
+    $ wave fetch
+    """
+    print('Fetching examples and related files. Please wait...')
+    tar_name = f'wave-{__version__}-linux-amd64'
+    tar_file = f'{tar_name}.tar.gz'
+    tar_url = f'https://github.com/h2oai/wave/releases/download/v{__version__}/{tar_file}'
+    tar_path = Path(tar_file)
+
+    if not tar_path.is_file():
+        print(f'Downloading {tar_url}')
+        request.urlretrieve(tar_url, tar_file)
+        tar_path = Path(tar_file)
+        if not tar_path.is_file():  # double-check
+            raise click.ClickException(f'Failed fetching {tar_file}.')
+    else:
+        print(f'{tar_file} already exists. Skipping download.')
+
+    print(f'Extracting...')
+    with tarfile.open(tar_file) as tar:
+        tar.extractall()
+
+    tar_dir = Path(tar_name)
+    if not tar_dir.is_dir():
+        raise click.ClickException(f'Failed extracting archive.')
+
+    more_dir = 'wave'
+    more_path = Path(more_dir)
+    if more_path.exists() and more_path.is_dir():
+        shutil.rmtree(more_dir)
+    tar_dir.rename(more_dir)
+
+    resolved_path = more_path.resolve()
+
+    print('')
+    print(f'All additional files downloaded and extracted successfully!')
+
+    everything = (
+        ('Examples and tour.............', 'examples'),
+        ('Demos and layout samples......', 'demo'),
+        ('Automated test harness........', 'test'),
+        ('Wave daemon for deployments...', ''),
+    )
+
+    for label, location in everything:
+        print(f"{label} {resolved_path.joinpath(location)}")

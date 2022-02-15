@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Textbox, XTextbox } from './textbox'
@@ -22,7 +21,6 @@ const name = 'textbox'
 const textboxProps: Textbox = { name }
 
 describe('Textbox.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     jest.useFakeTimers()
@@ -32,12 +30,6 @@ describe('Textbox.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XTextbox model={textboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display textbox when visible is false', () => {
-    const { queryByTestId } = render(<XTextbox model={{ ...textboxProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Renders data-test attr - masked', () => {

@@ -12,20 +12,21 @@ At the time of writing, PyCharm's type-checking and error-detection is superior 
 
 ## Getting started
 
-The simplest way to get started in either PyCharm or Visual Studio Code is the same: 
+The simplest way to get started in either PyCharm or Visual Studio Code is the same:
+
 1. Create a working directory.
 2. Set up a Python [virtual environment](https://docs.python.org/3/tutorial/venv.html).
 3. Install the `h2o-wave` package.
 4. Open the directory in your IDE.
 
-```shell 
+```shell
 mkdir $HOME/wave-apps
 cd $HOME/wave-apps
 python3 -m venv venv
 ./venv/bin/pip install h2o-wave
 ```
 
-### Using PyCharm 
+### Using PyCharm
 
 1. Launch PyCharm
 2. Click "File" -> "Open...", then choose `$HOME/wave-apps`.
@@ -33,6 +34,10 @@ python3 -m venv venv
 4. Enter a file name, say, `foo.py`.
 5. Write some code (see sample below).
 6. Right-click anywhere inside the file and choose "Run foo" or "Debug foo".
+
+:::tip
+To make Wave app development easier, we suggest installing our [PyCharm plugin](https://plugins.jetbrains.com/plugin/18530-h2o-wave). If you want to learn more about all of its features check out [this blog post](https://wave.h2o.ai/blog/h2o-wave-pycharm-plugin).
+:::
 
 ### Using Visual Studio Code
 
@@ -81,36 +86,36 @@ $ docker run \
   quay.io/keycloak/keycloak:10.0.2
 ```
 
-Keycloak should now be running at http://localhost:8080/.
+Keycloak should now be running at <http://localhost:8080/>.
 
 ### Add a client
 
 Next, create a *client* in Keycloak to represent our app:
 
-- Go to Keycloak at http://localhost:8080/.
+- Go to Keycloak at <http://localhost:8080/>.
 - Click on "Administration Console".
 - Log in with username `admin`, password `admin`.
 - Under "Configure", click on "Clients"
-	- Click the "Create" button to create a new client.
-	- Set "Client ID" to `wave`.
-	- Click "Save".
-	- In the "Settings" tab, change "Access Type" to `confidential`.
-	- Set "Valid Redirect URIs" to `*`.
-	- Click "Save".
-	- Copy the "Secret" field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+  - Click the "Create" button to create a new client.
+  - Set "Client ID" to `wave`.
+  - Click "Save".
+  - In the "Settings" tab, change "Access Type" to `confidential`.
+  - Set "Valid Redirect URIs" to `*`.
+  - Click "Save".
+  - Copy the "Secret" field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
 
 ### Add test users
 
 Next, add one or more users to Keycloak:
 
 - Under "Manage", click on "Users".
-	- Click the "Add User" button to create a new user.
-	- Set the "Username" field.
-	- Click "Save".
-	- Go to the "Credentials" tab
-	- Set the password fields.
-	- Change "Temporary" to "OFF".
-	- Click "Set Password"
+  - Click the "Add User" button to create a new user.
+  - Set the "Username" field.
+  - Click "Save".
+  - Go to the "Credentials" tab
+  - Set the password fields.
+  - Change "Temporary" to "OFF".
+  - Click "Set Password"
 
 ### Point Wave to Keycloak
 

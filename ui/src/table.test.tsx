@@ -21,7 +21,8 @@ const
   name = 'table',
   cell11 = 'Quick brown fox.',
   cell21 = 'Jumps over a dog.',
-  cell31 = 'Wooo hooo.'
+  cell31 = 'Wooo hooo.',
+  headerRow = 1
 
 let tableProps: Table
 
@@ -48,12 +49,6 @@ describe('Table.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not display table when visible is false', () => {
-    const { queryByTestId } = render(<XTable model={{ ...tableProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
-  })
-
   it('Renders time column correctly', () => {
     tableProps = {
       ...tableProps,
@@ -75,7 +70,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('189px')
+      expect(getByTestId(name).style.height).toBe('194px')
 
     })
 
@@ -88,7 +83,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('293px')
+      expect(getByTestId(name).style.height).toBe('320px')
     })
 
     it('Computes properly for custom progress cell - toptoolbar, header, rows, footer', () => {
@@ -100,7 +95,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('368px')
+      expect(getByTestId(name).style.height).toBe('404px')
     })
 
     it('Computes properly for custom icon cell - toptoolbar, header, rows, footer', () => {
@@ -117,7 +112,7 @@ describe('Table.tsx', () => {
         ]
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('314px')
+      expect(getByTestId(name).style.height).toBe('320px')
     })
 
   })
@@ -284,44 +279,39 @@ describe('Table.tsx', () => {
   describe('search', () => {
     it('Searches correctly', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
 
     it('Searches correctly - no match', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow)
     })
 
     it('Searches correctly - clear search', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: '' } })
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
     })
 
     it('Searches correctly - search uppercase, contain lowercase', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toUpperCase() } })
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
 
     it('Searches correctly - search lowercase, contain uppercase', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toLowerCase() } })
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
 
     it('Does not render search when no col is searchable', () => {
@@ -338,24 +328,24 @@ describe('Table.tsx', () => {
   })
 
   describe('filter', () => {
+
     it('Filters correctly - single option', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
+
     it('Filters correctly - multiple options', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
       fireEvent.click(getAllByText('2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
 
     it('Filters correctly - multiple filters', () => {
@@ -374,12 +364,75 @@ describe('Table.tsx', () => {
       }
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
       fireEvent.click(getAllByText('2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+    })
+  })
+
+  describe('filter - tags', () => {
+    beforeEach(() => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'col1' },
+          {
+            name: 'colname2',
+            label: 'col2',
+            filterable: true,
+            cell_type: {
+              tag: {
+                name: 'tags',
+                tags: [
+                  { label: 'TAG1', color: 'red' },
+                  { label: 'TAG2', color: 'green' },
+                  { label: 'TAG3', color: 'blue' },
+                ]
+              }
+            }
+          },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'TAG1'] },
+          { name: 'rowname2', cells: [cell21, 'TAG2,TAG3'] },
+          { name: 'rowname3', cells: [cell31, 'TAG2'] }
+        ]
+      }
+    })
+
+    it('Filters correctly - tags - correct tags are selected', () => {
+      const { getByTestId, container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('TAG3')[1].parentElement!)
+      // Mimic close and reopen filter context menu.
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      const [tag1, tag2, tag3] = getAllByRole('checkbox')
+      expect(tag1).not.toBeChecked()
+      expect(tag2).not.toBeChecked()
+      expect(tag3).toBeChecked()
+    })
+
+    it('Filters correctly - tags - multiple filters', () => {
+      const { container, getAllByText, getByText, getAllByRole } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('TAG1')[1].parentElement!)
+      fireEvent.click(getByText('TAG3').parentElement!)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+    })
+
+    it('Filters correctly - tags - single', () => {
+      const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('TAG1')[1].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
   })
 
@@ -402,77 +455,73 @@ describe('Table.tsx', () => {
     it('Filter -> search', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
 
     it('Filter -> search - no search match', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell11 } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow)
     })
 
     it('Filter -> search clear', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: '' } })
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
 
     it('Search -> filter', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: 'w' } })
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
 
     it('Search -> filter clear', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: 'w' } })
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(3)
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
   })
 
   describe('Group by', () => {
+    const groupByRow = 1
     beforeEach(() => {
       tableProps = {
         ...tableProps,
@@ -494,6 +543,58 @@ describe('Table.tsx', () => {
       expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(tableProps.rows.length)
     })
 
+    it('Renders alphabetically sorted group by list - strings', () => {
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent(`${cell21}(1)`)
+      expect(groupHeaders[1]).toHaveTextContent(`${cell11}(1)`)
+      expect(groupHeaders[2]).toHaveTextContent(`${cell31}(1)`)
+    })
+
+    it('Renders alphabetically sorted group by list - numbers', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: ['2', 'Group1'] },
+          { name: 'rowname2', cells: ['3', 'Group1'] },
+          { name: 'rowname3', cells: ['1', 'Group2'] }
+        ]
+      }
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent('1(1)')
+      expect(groupHeaders[1]).toHaveTextContent('2(1)')
+      expect(groupHeaders[2]).toHaveTextContent('3(1)')
+    })
+
+    it('Renders alphabetically sorted group by list - dates', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: ['1994-04-19T23:56:40', 'Group1'] },
+          { name: 'rowname2', cells: ['2012-09-14T18:26:01', 'Group1'] },
+          { name: 'rowname3', cells: ['1970-04-30T18:02:01', 'Group2'] }
+        ]
+      }
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent(`${new Date('1970-04-30T18:02:01').toLocaleString()}(1)`)
+      expect(groupHeaders[1]).toHaveTextContent(`${new Date('1994-04-19T23:56:40').toLocaleString()}(1)`)
+      expect(groupHeaders[2]).toHaveTextContent(`${new Date('2012-09-14T18:26:01').toLocaleString()}(1)`)
+    })
+
     it('Sorts grouped list', () => {
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
@@ -501,27 +602,25 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      let gridcell1 = getAllByRole('gridcell')[0]
+      let gridcell1 = getAllByRole('gridcell')[3]
       expect(gridcell1.textContent).toBe(cell11)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
 
-      gridcell1 = getAllByRole('gridcell')[0]
+      gridcell1 = getAllByRole('gridcell')[3]
       expect(gridcell1.textContent).toBe(cell21)
     })
 
     it('Searches grouped list', () => {
-
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
       fireEvent.click(getByTestId('groupby'))
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow + groupByRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupByRow)
     })
 
     it('Filters grouped list - single option', () => {
@@ -531,10 +630,10 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow + groupByRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group2')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupByRow)
     })
 
     it('Filters grouped list - multiple options', () => {
@@ -544,27 +643,11 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow + groupByRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group1')[1].parentElement!)
       fireEvent.click(getAllByText('Group2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow + groupByRow)
     })
-
-    it('Filters grouped list - multiple options', () => {
-      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-
-      fireEvent.click(getByTestId('groupby'))
-      fireEvent.click(getAllByText('Col2')[1]!)
-      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
-
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      fireEvent.click(getAllByText('Group1')[1].parentElement!)
-      fireEvent.click(getAllByText('Group2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
-    })
-
   })
-
 })

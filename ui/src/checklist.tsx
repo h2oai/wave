@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Box, Id, on, S } from 'h2o-wave'
+import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { displayMixin, margin } from './theme'
-import { bond, wave } from './ui'
+import { clas, margin } from './theme'
+import { wave } from './ui'
 
 /**
  * Create a set of checkboxes.
@@ -36,7 +36,11 @@ export interface Checklist {
   choices?: Choice[]
   /** True if the form should be submitted when the checklist value changes. */
   trigger?: B
-  /** True if the component should be visible. Defaults to true. */
+  /** True if checklist should be rendered horizontally. Defaults to False. */
+  inline?: B
+  /** The width of the checklist, e.g. '100px'. */
+  width?: S
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -54,67 +58,64 @@ const
         }
       },
     },
-  }),
-  XChecklistItem = bond(({ name, label, disabled, selectedB }: { name: S, label: S, disabled: B, selectedB: Box<B> }) => {
-    const
-      onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => selectedB(!!checked),
-      render = () => {
-        return (
-          <Fluent.Checkbox
-            data-test={name}
-            label={label}
-            checked={selectedB()}
-            onChange={onChange}
-            disabled={disabled}
-            styles={{ root: { marginBottom: 4 } }}
-          />
-        )
+    inline: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      $nest: {
+        '.checklist-item': {
+          marginRight: 15
+        }
       }
-    return { render, selectedB }
+    }
   })
 
 export const
-  XChecklist = bond(({ model: m }: { model: Checklist }) => {
-    wave.args[m.name] = m.values || []
-    let _pause = false
+  XChecklist = ({ model: m }: { model: Checklist }) => {
     const
-      defaultSelection = new Set<S>(m.values),
-      choices = (m.choices || []).map(c => ({
-        choice: c,
-        selectedB: box(defaultSelection.has(c.name))
-      })),
-      capture = () => {
-        if (_pause) return
-        const vs: S[] = []
-        for (const c of choices) if (c.selectedB()) vs.push(c.choice.name)
-        wave.args[m.name] = vs
+      defaultSelection = React.useMemo(() => new Set<S>(m.values), [m.values]),
+      getMappedChoices = React.useCallback(() => m.choices?.map(c => ({ c, selected: defaultSelection.has(c.name) })) || [], [defaultSelection, m.choices]),
+      [choices, setChoices] = React.useState(getMappedChoices()),
+      capture = (choices: { c: Choice, selected: B }[]) => {
+        wave.args[m.name] = choices.filter(({ selected }) => selected).map(({ c }) => c.name)
         if (m.trigger) wave.push()
       },
       select = (value: B) => {
-        _pause = true
-        for (const c of choices) if (!c.choice.disabled) c.selectedB(value)
-        _pause = false
-        capture()
+        const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
+        setChoices(_choices)
+        capture(_choices)
       },
       selectAll = () => select(true),
       deselectAll = () => select(false),
-      render = () => {
-        const
-          items = choices.map(({ choice, selectedB }, i) => (
-            <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label || choice.name} disabled={!!choice.disabled} selectedB={selectedB} />
-          ))
-        return (
-          <div data-test={m.name} style={displayMixin(m.visible)}>
-            <Fluent.Label>{m.label}</Fluent.Label>
-            <div className={css.toolbar}>
-              <Fluent.Text variant='small'>
-                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
-              </Fluent.Text>
-            </div>
-            <div className={css.items}>{items}</div>
-          </div>
-        )
-      }
-    choices.forEach(c => on(c.selectedB, capture))
-    return { render }
-  })
+      onChange = (idx: U) => (_e?: React.FormEvent<HTMLElement>, checked = false) => {
+        const _choices = [...choices]
+        _choices[idx].selected = checked
+        setChoices(_choices)
+        capture(_choices)
+      },
+      items = choices.map(({ c, selected }, i) => (
+        <Fluent.Checkbox
+          key={i}
+          data-test={`checkbox-${i + 1}`}
+          className='checklist-item'
+          label={c.label || c.name}
+          checked={selected}
+          onChange={onChange(i)}
+          disabled={!!c.disabled}
+          styles={{ root: { marginBottom: 4 } }}
+        />
+      ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = m.values || [] }, [])
+    React.useEffect(() => { setChoices(getMappedChoices()) }, [getMappedChoices, m.choices])
+    return (
+      <div data-test={m.name}>
+        <Fluent.Label>{m.label}</Fluent.Label>
+        <div className={css.toolbar}>
+          <Fluent.Text variant='small'>
+            <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+          </Fluent.Text>
+        </div>
+        <div className={clas(css.items, m.inline ? css.inline : '')}>{items}</div>
+      </div>
+    )
+  }
