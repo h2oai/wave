@@ -165,7 +165,8 @@ html[data-theme="dark"] .DocSearch {
   --docsearch-container-background: rgba(47, 55, 69, 0.7);
   /* Modal */
   --docsearch-modal-background: var(--ifm-background-color);
-  --docsearch-modal-shadow: inset 1px 1px 0 0 var(--ifm-color-emphasis-100), 0 3px 8px 0 #000309;
+  --docsearch-modal-shadow: inset 1px 1px 0 0 var(--ifm-color-emphasis-100),
+    0 3px 8px 0 #000309;
   /* Search box */
   --docsearch-searchbox-background: var(--ifm-background-color);
   --docsearch-searchbox-focus-background: var(--ifm-color-black);
@@ -175,7 +176,8 @@ html[data-theme="dark"] .DocSearch {
   --docsearch-hit-background: var(--ifm-color-emphasis-100);
   /* Footer */
   --docsearch-footer-background: var(--ifm-background-surface-color);
-  --docsearch-footer-shadow: inset 0 1px 0 0 var(--ifm-color-emphasis-200), 0 -4px 8px 0 rgba(0, 0, 0, 0.2);
+  --docsearch-footer-shadow: inset 0 1px 0 0 var(--ifm-color-emphasis-200),
+    0 -4px 8px 0 rgba(0, 0, 0, 0.2);
   /* Keys */
   --docsearch-key-gradient: linear-gradient(
     -26.5deg,
@@ -183,7 +185,8 @@ html[data-theme="dark"] .DocSearch {
     var(--ifm-color-emphasis-100) 100%
   );
   --docsearch-key-shadow: inset 0 -2px 0 0 var(--ifm-color-emphasis-100),
-    inset 0 0 1px 1px var(--ifm-color-emphasis-200), 0 2px 2px 0 rgba(3, 4, 9, 0.3);
+    inset 0 0 1px 1px var(--ifm-color-emphasis-200),
+    0 2px 2px 0 rgba(3, 4, 9, 0.3);
 }
 
 @media screen and (max-width: 1078px) {
