@@ -16,5 +16,11 @@ verify:
 help:
 	./gradlew -q :tasks --all
 
+publish:
+	$(MAKE) generate
+	$(MAKE) test
+	$(MAKE) verify
+	./gradlew publishPlugin
+
 clean:
 	./gradlew clean

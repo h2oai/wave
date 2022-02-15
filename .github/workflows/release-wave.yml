@@ -104,8 +104,4 @@ jobs:
       - name: Publish Plugin
         env:
           JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
-        run: |
-          make generate
-          make test
-          make verify
-          ./gradlew publishPlugin
+        run: make publish-pycharm
