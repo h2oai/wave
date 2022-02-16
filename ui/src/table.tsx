@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { ITooltipHostStyles, TooltipHost, TooltipOverflowMode } from '@fluentui/react'
 import { B, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -304,6 +303,7 @@ const
           overflow: c.overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
+          isMultiline: c.overflow === 'wrap'
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
@@ -377,19 +377,17 @@ const
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
-        // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
-        const hostStyles: Partial<ITooltipHostStyles> = {
-          root: {
-            '::after': {
-              content: '',
-              display: 'block',
-            }
-          },
-        }
-
-        const TooltipWrapper = ({ children }: { children: string }) => {
-          if (col.overflow === 'tooltip') return <TooltipHost styles={hostStyles} id={item.key as string} content={children} overflowMode={TooltipOverflowMode.Parent} title={children}>{children}</TooltipHost>
-          if (col.overflow === 'wrap') return <span style={{ whiteSpace: col.overflow === 'wrap' ? 'normal' : undefined }}>{children}</span>
+        const TooltipWrapper = ({ children }: { children: S }) => {
+          if (col.overflow === 'tooltip') return (
+            <Fluent.TooltipHost
+              id={item.key as S}
+              // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
+              styles={{ root: { '::after': { content: '', display: 'block' } } }}
+              content={children}
+              overflowMode={Fluent.TooltipOverflowMode.Parent}
+              title={children}
+            >{children}</Fluent.TooltipHost>
+          )
           return <>{children}</>
         }
 
