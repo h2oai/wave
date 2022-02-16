@@ -33,7 +33,7 @@ pip install h2o-wave
 To install using Conda:
 
 ```shell
-conda install -c h2oai h2o_wave
+conda install -c h2oai h2o-wave
 ```
 
 To install in a Conda virtual environment:
@@ -41,7 +41,7 @@ To install in a Conda virtual environment:
 ```shell
 conda create -n venv
 conda activate venv
-conda install -c h2oai h2o_wave
+conda install -c h2oai h2o-wave
 ```
 
 ## Download examples
@@ -62,7 +62,7 @@ Automated test harness........ /home/wave/test
 Wave daemon for deployments... /home/wave
 ```
 
-You should now have access to 200+ examples locally. 
+You should now have access to 200+ examples locally.
 
 :::info
 On recent versions of OSX, it's possible to run into certificate verification errors while running `wave fetch`, specifically `urllib.error.URLError: urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate`. To fix this problem, navigate to `Application/Python 3.7` on your system and execute `Install Certificates.command`.
@@ -70,7 +70,7 @@ On recent versions of OSX, it's possible to run into certificate verification er
 
 ## Run the tour
 
-The Wave tour is a Wave app that lets you play with all the examples interactively. 
+The Wave tour is a Wave app that lets you play with all the examples interactively.
 
 ![tour](assets/tour__tour.png)
 
