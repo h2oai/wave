@@ -19,7 +19,7 @@ import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
-import { border, cssVar, rem } from './theme'
+import { border, cssVar, important, rem } from './theme'
 import { wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
@@ -121,13 +121,11 @@ type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
   sort: (col: WaveColumn) => void,
-  reset: () => void
   filteredItems: any[]
   selectedFilters: Dict<S[]> | null
   items: any[]
   selection: Fluent.Selection
   isMultiple: B
-  isSearchable: B
   groups?: Fluent.IGroup[]
   setFiltersInBulk: (colKey: S, filters: S[]) => void
 }
@@ -172,7 +170,6 @@ const
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
     contentWrapper: {
-      border: border(2, cssVar('$neutralLight')),
       borderTop: 'none',
       '.ms-List-page:first-child .ms-List-cell:first-child .ms-DetailsRow': {
         borderTop: border(2, 'transparent'),
@@ -261,7 +258,7 @@ const
       </div>
     )
   },
-  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSearchable, groups, sort, reset, setFiltersInBulk }: DataTable) => {
+  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, sort, setFiltersInBulk }: DataTable) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
@@ -305,8 +302,6 @@ const
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
-      isFilterable = m.columns.some(c => c.filterable),
-      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER,
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         return listProps ?
           <ContextualMenu
@@ -337,13 +332,16 @@ const
               {...props}
               onColumnContextMenu={onColumnContextMenu}
               styles={{
-                ...props.styles, root: {
+                ...props.styles,
+                root: {
                   padding: 0,
                   height: 48,
                   lineHeight: '48px',
                   background: cssVar('$neutralLight'),
                   borderBottom: 'none',
-                  borderRadius: '4px 4px 0 0',
+                },
+                cellSizerEnd: {
+                  marginLeft: -8,
                 }
               }}
               className={groups ? css.hideCellGroupCollapse : ''}
@@ -351,43 +349,6 @@ const
           </Fluent.Sticky>
         )
       }, [groups, onColumnContextMenu]),
-      onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
-        if (!props || !shouldShowFooter) return null
-
-        const
-          footerItems: Fluent.ICommandBarItemProps[] = [],
-          buttonStyles = { root: { background: cssVar('$card') } }
-        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
-        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
-
-        return (
-          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
-            <Fluent.Stack
-              horizontal
-              horizontalAlign='space-between'
-              verticalAlign='center'
-              styles={{ root: { background: cssVar('$neutralLight'), borderRadius: '0 0 4px 4px', paddingLeft: 12, height: 46 } }}>
-              {
-                (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
-                  <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
-                    <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
-                  </Fluent.Text>
-                )
-              }
-              {
-                footerItems.length && (
-                  <Fluent.StackItem grow={1}>
-                    <Fluent.CommandBar items={footerItems} styles={{
-                      root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
-                      primarySet: { justifyContent: 'flex-end' }
-                    }} />
-                  </Fluent.StackItem>
-                )
-              }
-            </Fluent.Stack>
-          </Fluent.Sticky>
-        )
-      },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
         ? <Fluent.DetailsRow {...props} styles={{
           cell: { alignSelf: 'center', fontSize: 14, lineHeight: 20, color: cssVar('$text9') },
@@ -396,13 +357,11 @@ const
             width: '100%',
             border: border(2, 'transparent'),
             borderTop: border(2, cssVar('$neutralLight')),
-            boxSizing: 'border-box',
             background: cssVar('$card'),
             minHeight: 48,
             '&:hover': {
               background: cssVar('$neutralLight'),
               border: `${border(2, cssVar('$themePrimary'))} !important`,
-              boxSizing: 'border-box'
             }
           }
         }} />
@@ -410,20 +369,6 @@ const
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
         wave.push()
-      },
-      download = () => {
-        // TODO: Prompt a dialog for name, encoding, etc.
-        const
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
-          a = document.createElement('a'),
-          blob = new Blob([data], { type: "octet/stream" }),
-          url = window.URL.createObjectURL(blob)
-
-        a.href = url
-        a.download = 'exported_data.csv'
-        a.click()
-
-        window.URL.revokeObjectURL(url)
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
@@ -464,7 +409,6 @@ const
           onRenderRow={onRenderRow}
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
-          onRenderDetailsFooter={onRenderDetailsFooter}
           checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
         />
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
@@ -579,6 +523,69 @@ export const
         setGroupByKey(option.key as S)
         initGroups()
       },
+      isSearchable = !!searchableKeys.length,
+      download = () => {
+        // TODO: Prompt a dialog for name, encoding, etc.
+        const
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
+          a = document.createElement('a'),
+          blob = new Blob([data], { type: "octet/stream" }),
+          url = window.URL.createObjectURL(blob)
+
+        a.href = url
+        a.download = 'exported_data.csv'
+        a.click()
+
+        window.URL.revokeObjectURL(url)
+      },
+      isFilterable = m.columns.some(c => c.filterable),
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER,
+      Footer = () => {
+        if (!shouldShowFooter) return null
+
+        const
+          footerItems: Fluent.ICommandBarItemProps[] = [],
+          buttonStyles = { root: { background: cssVar('$card') } }
+        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
+        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
+
+        return (
+          <Fluent.Stack
+            horizontal
+            horizontalAlign='space-between'
+            verticalAlign='center'
+            styles={{
+              root: {
+                background: cssVar('$neutralLight'),
+                borderRadius: '0 0 4px 4px',
+                paddingLeft: 12,
+                height: 46,
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0
+              }
+            }}>
+            {
+              (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
+                <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
+                  <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
+                </Fluent.Text>
+              )
+            }
+            {
+              footerItems.length && (
+                <Fluent.StackItem grow={1}>
+                  <Fluent.CommandBar items={footerItems} styles={{
+                    root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
+                    primarySet: { justifyContent: 'flex-end' }
+                  }} />
+                </Fluent.StackItem>
+              )
+            }
+          </Fluent.Stack>
+        )
+      },
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
           const filters = selectedFilters || {}
@@ -616,7 +623,7 @@ export const
 
         const
           topToolbarHeight = searchableKeys.length || m.groupable ? 80 : 0,
-          headerHeight = 48,
+          headerHeight = 50,
           rowHeight = m.columns.some(c => c.cell_type)
             ? m.columns.some(c => c.cell_type?.progress) ? 76 : 48
             : 48,
@@ -675,10 +682,8 @@ export const
       selection,
       sort,
       isMultiple,
-      reset,
-      isSearchable: !!searchableKeys.length,
       setFiltersInBulk
-    }), [filteredItems, groups, isMultiple, items, m, onFilterChange, reset, searchableKeys.length, selectedFilters, selection, sort, setFiltersInBulk])
+    }), [filteredItems, groups, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
@@ -688,13 +693,18 @@ export const
         </Fluent.Stack>
         <Fluent.ScrollablePane
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
-          styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
+          styles={{
+            root: { top: m.groupable || searchableKeys.length ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
+            stickyAbove: { right: important('0px'), border: border(2, 'transparent') },
+            contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
+          }}>
           {
             isMultiple
               ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
               : <DataTable {...dataTableProps} />
           }
         </Fluent.ScrollablePane>
+        <Footer />
       </div>
     )
   }
