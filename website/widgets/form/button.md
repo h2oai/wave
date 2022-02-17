@@ -46,7 +46,7 @@ q.page['form'] = ui.form_card(box='1 1 2 2', items=[
 
 ## With icon
 
-To reinforce the information a button holds, an [icon](https://uifabricicons.azurewebsites.net/) can be used.
+To reinforce the information a button holds, an [icon](/docs/icons) can be used.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 2 1', items=[

@@ -278,7 +278,7 @@ export const
         )
         else return (
           <>
-            <Fluent.Icon iconName='CloudUpload' styles={{ root: { fontSize: 50 } }} />
+            <Fluent.Icon iconName='Upload' styles={{ root: { fontSize: 50 } }} />
             <input
               id={name}
               data-test={name}

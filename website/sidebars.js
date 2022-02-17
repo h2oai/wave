@@ -25,6 +25,7 @@ module.exports = {
       'apps',
       'pages',
       'layout',
+      'icons',
       'color-theming',
       'buffers',
       'arguments',

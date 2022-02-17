@@ -26,7 +26,7 @@ q.page['example'] = ui.form_card(box='1 1 4 2', items=[
 
 ## With icon
 
-Make your stats even nicer by using [icons](https://uifabricicons.azurewebsites.net/). This component
+Make your stats even nicer by using [icons](/docs/icons). This component
 also provides control over `icon_color`.
 
 ```py

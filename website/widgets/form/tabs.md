@@ -41,7 +41,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 
 ## With icons
 
-Polish your tabs with [icons](https://uifabricicons.azurewebsites.net/), it's simple!
+Polish your tabs with [icons](/docs/icons), it's simple!
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[

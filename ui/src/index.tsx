@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons, loadTheme } from '@fluentui/react'
+import { loadTheme, registerIcons } from '@fluentui/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './cards'
@@ -20,13 +20,18 @@ import './index.scss'
 import Router from './router'
 import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from './theme'
+import * as Icons from '@fluentui/react-icons-mdl2'
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },
   palette: defaultTheme.fluentPalette,
 })
 
-initializeIcons('fonts/icons/')
+const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
+  if ('displayName' in iconComponent) acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
+  return acc
+}, {} as { [key: string]: JSX.Element })
+registerIcons({ icons })
 
 ReactDOM.render(<Router />, document.getElementById('root'))
 

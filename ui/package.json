@@ -5,6 +5,7 @@
   "dependencies": {
     "@antv/g2": "4.1.0",
     "@fluentui/react": "^8.49.0",
+    "@fluentui/react-icons-mdl2": "^1.2.12",
     "@popperjs/core": "^2.1.1",
     "d3": "^5.15.0",
     "fs-extra": "^8.1.0",
