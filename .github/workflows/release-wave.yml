@@ -118,11 +118,9 @@ jobs:
       - name: Publish Docs
         run: |
           make publish-website
-          curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
+          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
         env:
-          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
-          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
-          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
       # Needed for PyCharm plugin publish.
       - name: Setup Java
@@ -139,3 +137,11 @@ jobs:
 
       - name: Publish to S3
         run: make publish-release-s3
+
+      # Call some time after cloudfront invalidation due to aws cli being async - crawler needs to hit fresh cache.
+      - name: Reindex docs for proper search
+        run: curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
+        env:
+          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
