@@ -19,6 +19,7 @@ import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
 import { LayoutPicker } from './editor'
 import { Logo } from './logo'
+import { NotificationBar } from './notification_bar'
 import { PageLayout } from './page'
 import SidePanel from './side_panel'
 import { clas, cssVar, pc } from './theme'
@@ -119,6 +120,7 @@ const
                       <BusyOverlay />
                       <Dialog />
                       <SidePanel />
+                      <NotificationBar />
                     </div>
                   </Fluent.Fabric>
                 )

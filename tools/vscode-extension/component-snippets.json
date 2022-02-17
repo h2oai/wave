@@ -363,6 +363,13 @@
     ],
     "description": "Create a minimal Wave NavCard."
   },
+  "Wave NotificationBar": {
+    "prefix": "w_notification_bar",
+    "body": [
+      "ui.notification_bar(text='$1'),$0"
+    ],
+    "description": "Create a minimal Wave NotificationBar."
+  },
   "Wave Persona": {
     "prefix": "w_persona",
     "body": [
@@ -1178,7 +1185,7 @@
   "Wave Full MessageBar": {
     "prefix": "w_full_message_bar",
     "body": [
-      "ui.message_bar(type='$1', text='$2', name='$3', width='${4:100%'}', visible=${5:True}),$0"
+      "ui.message_bar(type='$1', text='$2', name='$3', width='${4:100%'}', visible=${5:True}, buttons=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave MessageBar."
   },
@@ -1220,7 +1227,7 @@
   "Wave Full MetaCard": {
     "prefix": "w_full_meta_card",
     "body": [
-      "ui.meta_card(box='$1', title='$2', refresh=${3:None}, notification='$4', redirect='$5', icon='$6', dialog=$7, side_panel=$8, theme='$9', tracker=$10, script=$11, stylesheet=$12, layouts=[\n\t\t$13\t\t\n], themes=[\n\t\t$14\t\t\n], scripts=[\n\t\t$15\t\t\n], stylesheets=[\n\t\t$16\t\t\n], commands=[\n\t\t$17\t\t\n])$0"
+      "ui.meta_card(box='$1', title='$2', refresh=${3:None}, notification='$4', notification_bar=$5, redirect='$6', icon='$7', dialog=$8, side_panel=$9, theme='$10', tracker=$11, script=$12, stylesheet=$13, layouts=[\n\t\t$14\t\t\n], themes=[\n\t\t$15\t\t\n], scripts=[\n\t\t$16\t\t\n], stylesheets=[\n\t\t$17\t\t\n], commands=[\n\t\t$18\t\t\n])$0"
     ],
     "description": "Create a full Wave MetaCard."
   },
@@ -1244,6 +1251,13 @@
       "ui.nav_card(box='$1', value='$2', title='$3', subtitle='$4', icon='$5', icon_color='$6', image='$7', persona=$8, color='${9:card'}', items=[\n\t\t$10\t\t\n], secondary_items=[\n\t\t$11\t\t\n], commands=[\n\t\t$12\t\t\n])$0"
     ],
     "description": "Create a full Wave NavCard."
+  },
+  "Wave Full NotificationBar": {
+    "prefix": "w_full_notification_bar",
+    "body": [
+      "ui.notification_bar(text='$1', type='${2:info'}', timeout=${3:5}, position='${4:top-right'}', buttons=[\n\t\t$5\t\t\n], events=[\n\t\t$6\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave NotificationBar."
   },
   "Wave Full Persona": {
     "prefix": "w_full_persona",
