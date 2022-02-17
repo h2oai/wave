@@ -188,7 +188,7 @@ html[data-theme="dark"] .DocSearch {
 
 .icons__iconSet {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 
@@ -227,13 +227,14 @@ html[data-theme="dark"] .input {
 }
 
 .icons__description {
+  display: flex;
+  justify-content: center;
   position: absolute;
-  padding-top: 64px;
+  padding-top: 44px;
 }
 
 .icons__iconName {
-  position: relative;
-  text-align: center;
+  position: absolute;
   font-size: 11px;
   visibility: hidden;
 }
@@ -243,7 +244,7 @@ html[data-theme="dark"] .input {
 }
 
 .icons__copied {
-  position: relative;
+  position: absolute;
   background-color: #ffe52a;
   padding: 0px 3px 0px 3px;
   border-radius: 8px 8px 8px 8px;

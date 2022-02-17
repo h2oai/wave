@@ -1,19 +1,21 @@
 import * as Icons from '@fluentui/react-icons-mdl2'
 import React from 'react'
 const
-  Iconset = React.memo((props) => {
+  Iconset = React.memo(({ filteredIcons }) => {
     const
       [copiedIconName, setCopiedIconName] = React.useState(''),
+      timeoutRef = React.useRef(),
       handleCopyClick = async (iconName) => {
         try {
           'clipboard' in navigator ? await navigator.clipboard.writeText(iconName) : document.execCommand('copy', true, iconName)
+          clearTimeout(timeoutRef.current)
           setCopiedIconName(iconName)
-          setTimeout(() => setCopiedIconName(''), 1000)
+          timeoutRef.current = setTimeout(() => setCopiedIconName(''), 1000)
         } catch (err) {
           console.log('Error copying to clipboard:', err)
         }
       }
-    return props.filteredIcons.map(([iconName, iconElement]) => (
+    return filteredIcons.map(([iconName, iconElement]) => (
       <div key={iconName}>
         <div className='icons__box' onClick={() => handleCopyClick(iconName)}>
           {iconElement}
@@ -70,9 +72,9 @@ export const IconsPage = () => {
     }, []), []),
     [filteredIcons, setFilteredIcons] = React.useState(icons),
     debouncedFilter = debounce(500, e => {
-      setFilteredIcons(prevIcons => {
+      setFilteredIcons(() => {
         const val = e.target.value
-        return !val ? icons : prevIcons.filter(([iconName]) => fuzzysearch(iconName, val))
+        return !val ? icons : icons.filter(([iconName]) => fuzzysearch(iconName, val))
       })
       fixSvgSize()
     }),
