@@ -70,6 +70,38 @@ jobs:
           asset_name: "wave-${{ env.VERSION }}-windows-amd64.tar.gz"
           asset_content_type: application/gzip
 
+      - name: Upload OS-agnostic Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-any.whl"
+          asset_content_type: application/gzip
+
+      - name: Upload MacOS Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl"
+          asset_content_type: application/gzip
+
+      - name: Upload Windows Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl"
+          asset_content_type: application/gzip
+
+      - name: Upload Linux Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl"
+          asset_content_type: application/gzip
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
@@ -92,7 +124,6 @@ jobs:
           ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
           ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
-
       # Needed for PyCharm plugin publish.
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -105,3 +136,6 @@ jobs:
         env:
           JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
         run: make publish-pycharm
+
+      - name: Publish to S3
+        run: make publish-release-s3
