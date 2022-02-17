@@ -1,10 +1,9 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import React from 'react'
 
 export const Downloads = () => {
   const [items, setItems] = React.useState([])
   const isDestroyed = React.useRef(false)
-  const mapToLink = ({Key}) => <div key={Key}><a href={'https://h2o-wave.s3.amazonaws.com/' + Key }>{Key.replace('releases/', '')}</a></div>
+  const mapToLink = ({ Key }) => <div key={Key}><a href={'https://h2o-wave.s3.amazonaws.com/' + Key}>{Key.replace('releases/', '')}</a></div>
   React.useEffect(() => {
     new AWS
       .S3({ region: 'us-east-1', params: { Bucket: 'h2o-wave' } })
@@ -19,20 +18,18 @@ export const Downloads = () => {
           ])
         }
       })
-      return () => isDestroyed.current = true
-    }, [])
-  return items.length 
-    ? ( 
+    return () => isDestroyed.current = true
+  }, [])
+  return items.length
+    ? (
       <>
-       <h4>Wave server</h4>
-       { items[0].map(mapToLink) }
-       <h4>Python client</h4>
-       { items[1].map(mapToLink) }
-       <h4>WaveDB</h4>
-       { items[2].map(mapToLink) }
+        <h4>Wave server</h4>
+        {items[0].map(mapToLink)}
+        <h4>Python client</h4>
+        {items[1].map(mapToLink)}
+        <h4>WaveDB</h4>
+        {items[2].map(mapToLink)}
       </>
     )
     : 'Loading...'
 }
-
-<Downloads />
