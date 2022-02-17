@@ -26,3 +26,17 @@ q.page['form'] = ui.form_card(
     ]
 )
 ```
+
+## With buttons
+
+```py
+q.page['form'] = ui.form_card(
+    box='1 1 4 2',
+    items=[
+        ui.message_bar(type='success', text='This is a success message.', buttons=[
+            ui.button(name='cancel', label='Cancel'),
+            ui.button(name='agree', label='Agree', primary=True),
+        ]),
+    ]
+)
+```
