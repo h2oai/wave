@@ -26,7 +26,7 @@
     return annot
 %>
 
-<%def name="ident(name)"><span class="ident">${name}</span></%def>
+<%def name="ident(name)"><span className="ident">${name}</span></%def>
 
 <%def name="show_desc(d, short=False)">
   <%
@@ -88,21 +88,21 @@ title: ${'Namespace' if module.is_namespace else  \
 ${module.docstring | to_html}
 
     % if submodules:
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<h2 className="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
     % for m in submodules:
-<dt><code class="name">${link(m)}</code></dt>
+<dt><code className="name">${link(m)}</code></dt>
 <dd>${show_desc(m, short=True)}</dd>
     % endfor
 </dl>
     % endif
 
     % if variables:
-<h2 class="section-title" id="header-variables">Global variables</h2>
+<h2 className="section-title" id="header-variables">Global variables</h2>
 <dl>
     % for v in variables:
       <% return_type = get_annotation(v.type_annotation) %>
-<dt id="${v.refname}"><code class="name">var ${ident(v.name)}${return_type}</code></dt>
+<dt id="${v.refname}"><code className="name">var ${ident(v.name)}${return_type}</code></dt>
 <dd>${show_desc(v)}</dd>
     % endfor
 </dl>

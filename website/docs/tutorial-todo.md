@@ -262,15 +262,15 @@ def show_todos(q: Q):
     ])
 ```
 
-You should now be able to check/uncheck the items in your todo list. 
+You should now be able to check/uncheck the items in your todo list.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__2.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__2.mp4').default} type='video/mp4'/></video>
 
 Next, let's see how to add new items to the list.
 
 ## Step 7: The 'new todo' form
 
-Next, let's display a form to add new items to our list. For that, we'll add a new button to our existing form, named `new_todo`, and direct the `serve()` function to the `new_todo()` function if the button is clicked. Recall that when buttons are clicked, `q.args.button_name` will be `True`, so we check if `q.args.new_todo` is `True`. 
+Next, let's display a form to add new items to our list. For that, we'll add a new button to our existing form, named `new_todo`, and direct the `serve()` function to the `new_todo()` function if the button is clicked. Recall that when buttons are clicked, `q.args.button_name` will be `True`, so we check if `q.args.new_todo` is `True`.
 
 In the `new_todo()` function, we display a new form containing a textbox (using `ui.textbox()`) and a set of buttons to add the item or return to to-do list (a `ui.buttons()` helps us display buttons side-by-side).
 
@@ -338,9 +338,9 @@ def new_todo(q: Q):
     ])
 ```
 
-You should now be able to bring up the new to-do form. 
+You should now be able to bring up the new to-do form.
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__3.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__3.mp4').default} type='video/mp4'/></video>
 
 ## Step 8: Add to-do and return
 
@@ -426,7 +426,7 @@ def new_todo(q: Q):
 
 You should now be able to add new to-do items to your list. Congratulations!
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__4.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__4.mp4').default} type='video/mp4'/></video>
 
 ## Step 9: Make it realtime
 
@@ -438,7 +438,7 @@ To make your app realtime, simply pass `mode='multicast'` to `@app()`.
 
 Now try opening [http://localhost:10101/todo](http://localhost:10101/todo) from multiple browser tabs:
 
-<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__5.mp4').default} type='video/mp4'/></video>
+<video autoPlay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__5.mp4').default} type='video/mp4'/></video>
 
 Groovy!
 

@@ -53,7 +53,6 @@ module.exports = {
             {
               label: 'Get Started',
               to: 'docs/getting-started',
-              activeBasePath: 'docs',
             },
             {
               label: 'Guide',
@@ -141,6 +140,11 @@ module.exports = {
   scripts: [
     {
       src: '/fix-location.js',
+      async: false,
+      defer: false,
+    },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.1067.0/aws-sdk.min.js',
       async: false,
       defer: false,
     },

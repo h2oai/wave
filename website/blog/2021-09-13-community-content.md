@@ -34,7 +34,7 @@ Interested in seeing what it takes to make this type of application? In a 1 hour
 
 Here's the replay:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/alYWqXv8Sdg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/alYWqXv8Sdg" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
 ## Ideas for Improvement
 
