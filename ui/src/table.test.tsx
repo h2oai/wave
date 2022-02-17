@@ -70,7 +70,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('194px')
+      expect(getByTestId(name).style.height).toBe('196px')
 
     })
 
@@ -83,7 +83,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('320px')
+      expect(getByTestId(name).style.height).toBe('322px')
     })
 
     it('Computes properly for custom progress cell - toptoolbar, header, rows, footer', () => {
@@ -95,7 +95,7 @@ describe('Table.tsx', () => {
         ],
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('404px')
+      expect(getByTestId(name).style.height).toBe('406px')
     })
 
     it('Computes properly for custom icon cell - toptoolbar, header, rows, footer', () => {
@@ -112,12 +112,12 @@ describe('Table.tsx', () => {
         ]
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
-      expect(getByTestId(name).style.height).toBe('320px')
+      expect(getByTestId(name).style.height).toBe('322px')
     })
 
   })
 
-  describe('Q calls', () => {
+  describe('Wave calls', () => {
     it('Sets args on init - values not specified', () => {
       render(<XTable model={tableProps} />)
       expect(wave.args[name]).toMatchObject([])
