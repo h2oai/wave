@@ -54,10 +54,16 @@ interface Mark {
   x?: V
   /** X base field or value. */
   x0?: V
-  /** X bin lower bound field or value. For histograms. */
+  /** X bin lower bound field or value. For histograms and box plots. */
   x1?: V
-  /** X bin upper bound field or value. For histograms. */
+  /** X bin upper bound field or value. For histograms and box plots. */
   x2?: V
+  /** X lower quartile. For box plots. */
+  x_q1?: V
+  /** X median. For box plots. */
+  x_q2?: V
+  /** X upper quartile. For box plots. */
+  x_q3?: V
   /** X axis scale minimum. */
   x_min?: F
   /** X axis scale maximum. */
@@ -72,10 +78,16 @@ interface Mark {
   y?: V
   /** Y base field or value. */
   y0?: V
-  /** Y bin lower bound field or value. For histograms. */
+  /** Y bin lower bound field or value. For histograms and box plots. */
   y1?: V
-  /** Y bin upper bound field or value. For histograms. */
+  /** Y bin upper bound field or value. For histograms and box plots. */
   y2?: V
+  /** Y lower quartile. For box plots. */
+  y_q1?: V
+  /** Y median. For box plots. */
+  y_q2?: V
+  /** Y upper quartile. For box plots. */
+  y_q3?: V
   /** Y axis scale minimum. */
   y_min?: F
   /** Y axis scale maximum. */
@@ -179,6 +191,18 @@ interface MarkExt extends Mark {
   /** Format string. */
   x2_format?: Fmt
   /** Field. */
+  x_q1_field?: S
+  /** Format string. */
+  x_q1_format?: Fmt
+  /** Field. */
+  x_q2_field?: S
+  /** Format string. */
+  x_q2_format?: Fmt
+  /** Field. */
+  x_q3_field?: S
+  /** Format string. */
+  x_q3__format?: Fmt
+  /** Field. */
   y_field?: S
   /** Format string. */
   y_format?: Fmt
@@ -194,6 +218,18 @@ interface MarkExt extends Mark {
   y2_field?: S
   /** Format string. */
   y2_format?: Fmt
+  /** Field. */
+  y_q1_field?: S
+  /** Format string. */
+  y_q1_format?: Fmt
+  /** Field. */
+  y_q2_field?: S
+  /** Format string. */
+  y_q2_format?: Fmt
+  /** Field. */
+  y_q3_field?: S
+  /** Format string. */
+  y_q3__format?: Fmt
   /** Field. */
   color_field?: S
   /** Format string. */
@@ -263,7 +299,10 @@ const
   convertToPairs = (ds: any[], f0: S, f1: S, f: S) => {
     for (const d of ds) if (d) d[f] = [d[f0], d[f1]]
   },
-  xyVariants = ' 0 1 2'.split(' '),
+  convertToSchemaSet = (ds: any[], lo: S, q1: S, q2: S, q3: S, hi: S, f: S) => {
+    for (const d of ds) if (d) d[f] = [d[lo], d[q1], d[q2], d[q3], d[hi]]
+  },
+  xyVariants = ' 0 1 2 _q1 _q2 _q3'.split(' '),
   xyExtra = split('min max nice scale title'),
   makeXYProps = (p: S) => xyVariants.map(s => p + s),
   makeXYExtraProps = (p: S) => xyExtra.map(s => `${p}_${s}`),
@@ -383,6 +422,20 @@ const
       if (type === 'interval' && isS(y1_field) && isS(y2_field) && isS(x_field)) { // histogram on y
         mark.y_field = y1_field + ' - ' + y2_field
         convertToPairs(ds, y1_field, y2_field, mark.y_field)
+      }
+    }
+    for (const mark of marks) {
+      const { type, x1_field, x_q1_field, x_q2_field, x_q3_field, x2_field, y_field } = mark
+      if (type === 'schema' && isS(x1_field) && isS(x_q1_field) && isS(x_q2_field) && isS(x_q3_field) && isS(x2_field) && isS(y_field)) { // box plot on x
+        mark.x_field = [x1_field, x_q1_field, x_q2_field, x_q3_field, x2_field].join('-')
+        convertToSchemaSet(ds, x1_field, x_q1_field, x_q2_field, x_q3_field, x2_field, mark.x_field)
+      }
+    }
+    for (const mark of marks) {
+      const { type, x_field, y1_field, y_q1_field, y_q2_field, y_q3_field, y2_field } = mark
+      if (type === 'schema' && isS(y1_field) && isS(y_q1_field) && isS(y_q2_field) && isS(y_q3_field) && isS(y2_field) && isS(x_field)) { // box plot on y
+        mark.y_field = [y1_field, y_q1_field, y_q2_field, y_q3_field, y2_field].join('-')
+        convertToSchemaSet(ds, y1_field, y_q1_field, y_q2_field, y_q3_field, y2_field, mark.y_field)
       }
     }
     return ds
@@ -516,6 +569,10 @@ const
     } else if (isS(shape)) {
       o.shape = shape
     }
+
+    // force shape for box plots; other shapes don't make sense here.
+    if (type === 'schema') o.shape = 'box'
+
     if (isS(size_field)) {
       if (isS(size_range)) {
         o.size = { fields: [size_field], values: parseInts(size_range) }

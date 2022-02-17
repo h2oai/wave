@@ -1744,6 +1744,9 @@ def mark(
         x0: Optional[Value] = None,
         x1: Optional[Value] = None,
         x2: Optional[Value] = None,
+        x_q1: Optional[Value] = None,
+        x_q2: Optional[Value] = None,
+        x_q3: Optional[Value] = None,
         x_min: Optional[float] = None,
         x_max: Optional[float] = None,
         x_nice: Optional[bool] = None,
@@ -1753,6 +1756,9 @@ def mark(
         y0: Optional[Value] = None,
         y1: Optional[Value] = None,
         y2: Optional[Value] = None,
+        y_q1: Optional[Value] = None,
+        y_q2: Optional[Value] = None,
+        y_q3: Optional[Value] = None,
         y_min: Optional[float] = None,
         y_max: Optional[float] = None,
         y_nice: Optional[bool] = None,
@@ -1803,8 +1809,11 @@ def mark(
         type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType.
         x: X field or value.
         x0: X base field or value.
-        x1: X bin lower bound field or value. For histograms.
-        x2: X bin upper bound field or value. For histograms.
+        x1: X bin lower bound field or value. For histograms and box plots.
+        x2: X bin upper bound field or value. For histograms and box plots.
+        x_q1: X lower quartile. For box plots.
+        x_q2: X median. For box plots.
+        x_q3: X upper quartile. For box plots.
         x_min: X axis scale minimum.
         x_max: X axis scale maximum.
         x_nice: Whether to nice X axis scale ticks.
@@ -1812,8 +1821,11 @@ def mark(
         x_title: X axis title.
         y: Y field or value.
         y0: Y base field or value.
-        y1: Y bin lower bound field or value. For histograms.
-        y2: Y bin upper bound field or value. For histograms.
+        y1: Y bin lower bound field or value. For histograms and box plots.
+        y2: Y bin upper bound field or value. For histograms and box plots.
+        y_q1: Y lower quartile. For box plots.
+        y_q2: Y median. For box plots.
+        y_q3: Y upper quartile. For box plots.
         y_min: Y axis scale minimum.
         y_max: Y axis scale maximum.
         y_nice: Whether to nice Y axis scale ticks.
@@ -1865,6 +1877,9 @@ def mark(
         x0,
         x1,
         x2,
+        x_q1,
+        x_q2,
+        x_q3,
         x_min,
         x_max,
         x_nice,
@@ -1874,6 +1889,9 @@ def mark(
         y0,
         y1,
         y2,
+        y_q1,
+        y_q2,
+        y_q3,
         y_min,
         y_max,
         y_nice,

@@ -2023,8 +2023,11 @@ ui_stepper <- function(
 #'   One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType.
 #' @param x X field or value.
 #' @param x0 X base field or value.
-#' @param x1 X bin lower bound field or value. For histograms.
-#' @param x2 X bin upper bound field or value. For histograms.
+#' @param x1 X bin lower bound field or value. For histograms and box plots.
+#' @param x2 X bin upper bound field or value. For histograms and box plots.
+#' @param x_q1 X lower quartile. For box plots.
+#' @param x_q2 X median. For box plots.
+#' @param x_q3 X upper quartile. For box plots.
 #' @param x_min X axis scale minimum.
 #' @param x_max X axis scale maximum.
 #' @param x_nice Whether to nice X axis scale ticks.
@@ -2033,8 +2036,11 @@ ui_stepper <- function(
 #' @param x_title X axis title.
 #' @param y Y field or value.
 #' @param y0 Y base field or value.
-#' @param y1 Y bin lower bound field or value. For histograms.
-#' @param y2 Y bin upper bound field or value. For histograms.
+#' @param y1 Y bin lower bound field or value. For histograms and box plots.
+#' @param y2 Y bin upper bound field or value. For histograms and box plots.
+#' @param y_q1 Y lower quartile. For box plots.
+#' @param y_q2 Y median. For box plots.
+#' @param y_q3 Y upper quartile. For box plots.
 #' @param y_min Y axis scale minimum.
 #' @param y_max Y axis scale maximum.
 #' @param y_nice Whether to nice Y axis scale ticks.
@@ -2090,6 +2096,9 @@ ui_mark <- function(
   x0 = NULL,
   x1 = NULL,
   x2 = NULL,
+  x_q1 = NULL,
+  x_q2 = NULL,
+  x_q3 = NULL,
   x_min = NULL,
   x_max = NULL,
   x_nice = NULL,
@@ -2099,6 +2108,9 @@ ui_mark <- function(
   y0 = NULL,
   y1 = NULL,
   y2 = NULL,
+  y_q1 = NULL,
+  y_q2 = NULL,
+  y_q3 = NULL,
   y_min = NULL,
   y_max = NULL,
   y_nice = NULL,
@@ -2146,6 +2158,9 @@ ui_mark <- function(
   # TODO Validate x0: V
   # TODO Validate x1: V
   # TODO Validate x2: V
+  # TODO Validate x_q1: V
+  # TODO Validate x_q2: V
+  # TODO Validate x_q3: V
   .guard_scalar("x_min", "numeric", x_min)
   .guard_scalar("x_max", "numeric", x_max)
   .guard_scalar("x_nice", "logical", x_nice)
@@ -2155,6 +2170,9 @@ ui_mark <- function(
   # TODO Validate y0: V
   # TODO Validate y1: V
   # TODO Validate y2: V
+  # TODO Validate y_q1: V
+  # TODO Validate y_q2: V
+  # TODO Validate y_q3: V
   .guard_scalar("y_min", "numeric", y_min)
   .guard_scalar("y_max", "numeric", y_max)
   .guard_scalar("y_nice", "logical", y_nice)
@@ -2203,6 +2221,9 @@ ui_mark <- function(
     x0=x0,
     x1=x1,
     x2=x2,
+    x_q1=x_q1,
+    x_q2=x_q2,
+    x_q3=x_q3,
     x_min=x_min,
     x_max=x_max,
     x_nice=x_nice,
@@ -2212,6 +2233,9 @@ ui_mark <- function(
     y0=y0,
     y1=y1,
     y2=y2,
+    y_q1=y_q1,
+    y_q2=y_q2,
+    y_q3=y_q3,
     y_min=y_min,
     y_max=y_max,
     y_nice=y_nice,

@@ -1612,13 +1612,16 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_mark" value="ui.mark(coord='$coord$',type='$type$',x=$x$,x0=$x0$,x1=$x1$,x2=$x2$,x_min=$x_min$,x_max=$x_max$,x_nice=$x_nice$,x_scale='$x_scale$',x_title='$x_title$',y=$y$,y0=$y0$,y1=$y1$,y2=$y2$,y_min=$y_min$,y_max=$y_max$,y_nice=$y_nice$,y_scale='$y_scale$',y_title='$y_title$',color='$color$',color_range='$color_range$',shape='$shape$',shape_range='$shape_range$',size=$size$,size_range='$size_range$',stack='$stack$',dodge='$dodge$',curve='$curve$',fill_color='$fill_color$',fill_opacity=$fill_opacity$,stroke_color='$stroke_color$',stroke_opacity=$stroke_opacity$,stroke_size=$stroke_size$,stroke_dash='$stroke_dash$',label='$label$',label_offset=$label_offset$,label_offset_x=$label_offset_x$,label_offset_y=$label_offset_y$,label_rotation='$label_rotation$',label_position='$label_position$',label_overlap='$label_overlap$',label_fill_color='$label_fill_color$',label_fill_opacity=$label_fill_opacity$,label_stroke_color='$label_stroke_color$',label_stroke_opacity=$label_stroke_opacity$,label_stroke_size=$label_stroke_size$,label_font_size=$label_font_size$,label_font_weight='$label_font_weight$',label_line_height=$label_line_height$,label_align='$label_align$',ref_stroke_color='$ref_stroke_color$',ref_stroke_opacity=$ref_stroke_opacity$,ref_stroke_size=$ref_stroke_size$,ref_stroke_dash='$ref_stroke_dash$',color_domain=[&#10;	$color_domain$	&#10;]),$END$" description="Create Wave Mark with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_mark" value="ui.mark(coord='$coord$',type='$type$',x=$x$,x0=$x0$,x1=$x1$,x2=$x2$,x_q1=$x_q1$,x_q2=$x_q2$,x_q3=$x_q3$,x_min=$x_min$,x_max=$x_max$,x_nice=$x_nice$,x_scale='$x_scale$',x_title='$x_title$',y=$y$,y0=$y0$,y1=$y1$,y2=$y2$,y_q1=$y_q1$,y_q2=$y_q2$,y_q3=$y_q3$,y_min=$y_min$,y_max=$y_max$,y_nice=$y_nice$,y_scale='$y_scale$',y_title='$y_title$',color='$color$',color_range='$color_range$',shape='$shape$',shape_range='$shape_range$',size=$size$,size_range='$size_range$',stack='$stack$',dodge='$dodge$',curve='$curve$',fill_color='$fill_color$',fill_opacity=$fill_opacity$,stroke_color='$stroke_color$',stroke_opacity=$stroke_opacity$,stroke_size=$stroke_size$,stroke_dash='$stroke_dash$',label='$label$',label_offset=$label_offset$,label_offset_x=$label_offset_x$,label_offset_y=$label_offset_y$,label_rotation='$label_rotation$',label_position='$label_position$',label_overlap='$label_overlap$',label_fill_color='$label_fill_color$',label_fill_opacity=$label_fill_opacity$,label_stroke_color='$label_stroke_color$',label_stroke_opacity=$label_stroke_opacity$,label_stroke_size=$label_stroke_size$,label_font_size=$label_font_size$,label_font_weight='$label_font_weight$',label_line_height=$label_line_height$,label_align='$label_align$',ref_stroke_color='$ref_stroke_color$',ref_stroke_opacity=$ref_stroke_opacity$,ref_stroke_size=$ref_stroke_size$,ref_stroke_dash='$ref_stroke_dash$',color_domain=[&#10;	$color_domain$	&#10;]),$END$" description="Create Wave Mark with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="coord" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x0" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x1" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x2" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q1" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q2" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q3" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x_min" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="x_max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="x_nice" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
@@ -1628,6 +1631,9 @@
     <variable name="y0" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y1" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y2" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q1" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q2" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q3" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y_min" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="y_max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="y_nice" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
@@ -1673,7 +1679,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_mark_ext" value="ui.mark_ext(x_field='$x_field$',x_format=$x_format$,x0_field='$x0_field$',x0_format=$x0_format$,x1_field='$x1_field$',x1_format=$x1_format$,x2_field='$x2_field$',x2_format=$x2_format$,y_field='$y_field$',y_format=$y_format$,y0_field='$y0_field$',y0_format=$y0_format$,y1_field='$y1_field$',y1_format=$y1_format$,y2_field='$y2_field$',y2_format=$y2_format$,color_field='$color_field$',color_format=$color_format$,shape_field='$shape_field$',shape_format=$shape_format$,size_format=$size_format$,size_field='$size_field$',dodge_field='$dodge_field$',label_field='$label_field$',label_format=$label_format$),$END$" description="Create Wave MarkExt with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_mark_ext" value="ui.mark_ext(x_field='$x_field$',x_format=$x_format$,x0_field='$x0_field$',x0_format=$x0_format$,x1_field='$x1_field$',x1_format=$x1_format$,x2_field='$x2_field$',x2_format=$x2_format$,x_q1_field='$x_q1_field$',x_q1_format=$x_q1_format$,x_q2_field='$x_q2_field$',x_q2_format=$x_q2_format$,x_q3_field='$x_q3_field$',x_q3__format=$x_q3__format$,y_field='$y_field$',y_format=$y_format$,y0_field='$y0_field$',y0_format=$y0_format$,y1_field='$y1_field$',y1_format=$y1_format$,y2_field='$y2_field$',y2_format=$y2_format$,y_q1_field='$y_q1_field$',y_q1_format=$y_q1_format$,y_q2_field='$y_q2_field$',y_q2_format=$y_q2_format$,y_q3_field='$y_q3_field$',y_q3__format=$y_q3__format$,color_field='$color_field$',color_format=$color_format$,shape_field='$shape_field$',shape_format=$shape_format$,size_format=$size_format$,size_field='$size_field$',dodge_field='$dodge_field$',label_field='$label_field$',label_format=$label_format$),$END$" description="Create Wave MarkExt with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="x_field" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x_format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x0_field" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1682,6 +1688,12 @@
     <variable name="x1_format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x2_field" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="x2_format" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q1_field" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q1_format" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q2_field" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q2_format" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q3_field" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="x_q3__format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y_field" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y_format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y0_field" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1690,6 +1702,12 @@
     <variable name="y1_format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y2_field" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y2_format" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q1_field" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q1_format" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q2_field" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q2_format" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q3_field" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y_q3__format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="color_field" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="color_format" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="shape_field" expression="" defaultValue="" alwaysStopAt="true"/>

@@ -4631,6 +4631,9 @@ class Mark:
             x0: Optional[Value] = None,
             x1: Optional[Value] = None,
             x2: Optional[Value] = None,
+            x_q1: Optional[Value] = None,
+            x_q2: Optional[Value] = None,
+            x_q3: Optional[Value] = None,
             x_min: Optional[float] = None,
             x_max: Optional[float] = None,
             x_nice: Optional[bool] = None,
@@ -4640,6 +4643,9 @@ class Mark:
             y0: Optional[Value] = None,
             y1: Optional[Value] = None,
             y2: Optional[Value] = None,
+            y_q1: Optional[Value] = None,
+            y_q2: Optional[Value] = None,
+            y_q3: Optional[Value] = None,
             y_min: Optional[float] = None,
             y_max: Optional[float] = None,
             y_nice: Optional[bool] = None,
@@ -4738,9 +4744,15 @@ class Mark:
         self.x0 = x0
         """X base field or value."""
         self.x1 = x1
-        """X bin lower bound field or value. For histograms."""
+        """X bin lower bound field or value. For histograms and box plots."""
         self.x2 = x2
-        """X bin upper bound field or value. For histograms."""
+        """X bin upper bound field or value. For histograms and box plots."""
+        self.x_q1 = x_q1
+        """X lower quartile. For box plots."""
+        self.x_q2 = x_q2
+        """X median. For box plots."""
+        self.x_q3 = x_q3
+        """X upper quartile. For box plots."""
         self.x_min = x_min
         """X axis scale minimum."""
         self.x_max = x_max
@@ -4756,9 +4768,15 @@ class Mark:
         self.y0 = y0
         """Y base field or value."""
         self.y1 = y1
-        """Y bin lower bound field or value. For histograms."""
+        """Y bin lower bound field or value. For histograms and box plots."""
         self.y2 = y2
-        """Y bin upper bound field or value. For histograms."""
+        """Y bin upper bound field or value. For histograms and box plots."""
+        self.y_q1 = y_q1
+        """Y lower quartile. For box plots."""
+        self.y_q2 = y_q2
+        """Y median. For box plots."""
+        self.y_q3 = y_q3
+        """Y upper quartile. For box plots."""
         self.y_min = y_min
         """Y axis scale minimum."""
         self.y_max = y_max
@@ -4898,6 +4916,9 @@ class Mark:
             x0=self.x0,
             x1=self.x1,
             x2=self.x2,
+            x_q1=self.x_q1,
+            x_q2=self.x_q2,
+            x_q3=self.x_q3,
             x_min=self.x_min,
             x_max=self.x_max,
             x_nice=self.x_nice,
@@ -4907,6 +4928,9 @@ class Mark:
             y0=self.y0,
             y1=self.y1,
             y2=self.y2,
+            y_q1=self.y_q1,
+            y_q2=self.y_q2,
+            y_q3=self.y_q3,
             y_min=self.y_min,
             y_max=self.y_max,
             y_nice=self.y_nice,
@@ -4961,6 +4985,9 @@ class Mark:
         __d_x0: Any = __d.get('x0')
         __d_x1: Any = __d.get('x1')
         __d_x2: Any = __d.get('x2')
+        __d_x_q1: Any = __d.get('x_q1')
+        __d_x_q2: Any = __d.get('x_q2')
+        __d_x_q3: Any = __d.get('x_q3')
         __d_x_min: Any = __d.get('x_min')
         _guard_scalar('Mark.x_min', __d_x_min, (float, int,), False, True, False)
         __d_x_max: Any = __d.get('x_max')
@@ -4975,6 +5002,9 @@ class Mark:
         __d_y0: Any = __d.get('y0')
         __d_y1: Any = __d.get('y1')
         __d_y2: Any = __d.get('y2')
+        __d_y_q1: Any = __d.get('y_q1')
+        __d_y_q2: Any = __d.get('y_q2')
+        __d_y_q3: Any = __d.get('y_q3')
         __d_y_min: Any = __d.get('y_min')
         _guard_scalar('Mark.y_min', __d_y_min, (float, int,), False, True, False)
         __d_y_max: Any = __d.get('y_max')
@@ -5062,6 +5092,9 @@ class Mark:
         x0: Optional[Value] = __d_x0
         x1: Optional[Value] = __d_x1
         x2: Optional[Value] = __d_x2
+        x_q1: Optional[Value] = __d_x_q1
+        x_q2: Optional[Value] = __d_x_q2
+        x_q3: Optional[Value] = __d_x_q3
         x_min: Optional[float] = __d_x_min
         x_max: Optional[float] = __d_x_max
         x_nice: Optional[bool] = __d_x_nice
@@ -5071,6 +5104,9 @@ class Mark:
         y0: Optional[Value] = __d_y0
         y1: Optional[Value] = __d_y1
         y2: Optional[Value] = __d_y2
+        y_q1: Optional[Value] = __d_y_q1
+        y_q2: Optional[Value] = __d_y_q2
+        y_q3: Optional[Value] = __d_y_q3
         y_min: Optional[float] = __d_y_min
         y_max: Optional[float] = __d_y_max
         y_nice: Optional[bool] = __d_y_nice
@@ -5119,6 +5155,9 @@ class Mark:
             x0,
             x1,
             x2,
+            x_q1,
+            x_q2,
+            x_q3,
             x_min,
             x_max,
             x_nice,
@@ -5128,6 +5167,9 @@ class Mark:
             y0,
             y1,
             y2,
+            y_q1,
+            y_q2,
+            y_q3,
             y_min,
             y_max,
             y_nice,
