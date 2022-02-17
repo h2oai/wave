@@ -15,6 +15,7 @@ const
           console.log('Error copying to clipboard:', err)
         }
       }
+    React.useEffect(() => () => clearTimeout(timeoutRef.current), [])
     return filteredIcons.map(([iconName, iconElement]) => (
       <div key={iconName}>
         <div className='icons__box' onClick={() => handleCopyClick(iconName)}>
@@ -72,10 +73,8 @@ export const IconsPage = () => {
     }, []), []),
     [filteredIcons, setFilteredIcons] = React.useState(icons),
     debouncedFilter = debounce(500, e => {
-      setFilteredIcons(() => {
-        const val = e.target.value
-        return !val ? icons : icons.filter(([iconName]) => fuzzysearch(iconName, val))
-      })
+      const val = e.target.value
+      setFilteredIcons(!val ? icons : icons.filter(([iconName]) => fuzzysearch(iconName, val)))
       fixSvgSize()
     }),
     clear = () => {
