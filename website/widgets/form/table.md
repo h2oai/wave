@@ -240,7 +240,6 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ## Text overflow
 
 By default, text that does not fit into the table cell is signaled to users with ellipsis (...). However, you can change this with an `overflow` prop. Available options are:
-`tooltip`, `wrap` 
 
 - `'tooltip'`: shows the whole text in a tooltip when hovering over it
 - `'wrap'`: wraps the long text on multiple lines
