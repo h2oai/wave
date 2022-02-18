@@ -15,17 +15,16 @@
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import legacy from '@vitejs/plugin-legacy'
+import eslintPlugin from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     reactRefresh(),
+    eslintPlugin({ cache: false, exclude: ['node_modules', 'package-lock.json'] }),
     // Build legacy bundle only when version is specified (releases). Not needed for regular development.
     process.env.VERSION ? legacy({ targets: ['Edge >= 16', 'Firefox >= 31', 'Chrome >= 49', 'Opera >= 36', 'Safari >= 10'] }) : null
   ],
-  optimizeDeps: {
-    entries: ['src/index.tsx']
-  },
   build: {
     outDir: 'build',
     assetsDir: 'static',
