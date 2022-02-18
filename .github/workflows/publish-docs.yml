@@ -2,11 +2,6 @@ name: Publish Docs
 
 on:
   workflow_dispatch:
-    inputs:
-      commit:
-        description: 'Commit Message'
-        default: 'docs: Publish documentation website'
-        required: false
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -20,11 +15,30 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+
       - name: Setup
-        run: make setup
+        run: make all
 
       - name: Publish Docs
         run: |
           make website
           make publish-website
-
+          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+        env:
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-west-2'
+      
+      # Needs a sleep to wait for cloudfront cache bust.
+      - name: Reindex Algolia search
+        run: |
+          sleep 50s
+          curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
+        env:
+          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}

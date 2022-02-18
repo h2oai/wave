@@ -25,10 +25,6 @@ jobs:
         with:
           go-version: '1.16'
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '15'
-
       - name: Setup
         run: make setup
 
@@ -138,8 +134,8 @@ jobs:
       - name: Publish to S3
         run: make publish-release-s3
 
-      # Call some time after cloudfront invalidation due to aws cli being async - crawler needs to hit fresh cache.
-      - name: Reindex docs for proper search
+      # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
+      - name: Reindex Algolia search
         run: |
           curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
         env:
