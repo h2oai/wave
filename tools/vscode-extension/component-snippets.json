@@ -594,10 +594,17 @@
     ],
     "description": "Create a minimal Wave TableRow."
   },
+  "Wave TableGroup": {
+    "prefix": "w_table_group",
+    "body": [
+      "ui.table_group(label='$1', rows=[\n\t\t$2\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave TableGroup."
+  },
   "Wave Table": {
     "prefix": "w_table",
     "body": [
-      "ui.table(name='$1', columns=[\n\t\t$2\t\t\n], rows=[\n\t\t$3\t\t\n]),$0"
+      "ui.table(name='$1', columns=[\n\t\t$2\t\t\n]),$0"
     ],
     "description": "Create a minimal Wave Table."
   },
@@ -1518,10 +1525,17 @@
     ],
     "description": "Create a full Wave TableRow."
   },
+  "Wave Full TableGroup": {
+    "prefix": "w_full_table_group",
+    "body": [
+      "ui.table_group(label='$1', collapsed=${2:True}, rows=[\n\t\t$3\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave TableGroup."
+  },
   "Wave Full Table": {
     "prefix": "w_full_table",
     "body": [
-      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%'}', checkbox_visibility='${8:on-hover'}', visible=${9:True}, tooltip='$10', columns=[\n\t\t$11\t\t\n], rows=[\n\t\t$12\t\t\n], values=[\n\t\t$13\t\t\n]),$0"
+      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%'}', checkbox_visibility='${8:on-hover'}', visible=${9:True}, tooltip='$10', columns=[\n\t\t$11\t\t\n], rows=[\n\t\t$12\t\t\n], values=[\n\t\t$13\t\t\n], groups=[\n\t\t$14\t\t\n]),$0"
     ],
     "description": "Create a full Wave Table."
   },
