@@ -18,11 +18,7 @@ module.exports = {
   ],
   testEnvironment: "jest-environment-jsdom-fourteen",
   transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": [
-      '<rootDir>/node_modules/babel-jest', { configFile: process.env.GIT_HOOK ? './ui/.babelrc.json' : undefined }
-    ],
-    "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-    "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    "^.+\\.(js|jsx|ts|tsx)$": '<rootDir>/node_modules/babel-jest',
   },
   transformIgnorePatterns: [
     "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",

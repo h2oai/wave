@@ -15,7 +15,6 @@
 import { B, Model, Rec, S, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import vegaEmbed from 'vega-embed'
 import { cards } from './layout'
 import { formItemWidth } from './theme'
 import { bond, debounce } from './ui'
@@ -65,7 +64,7 @@ export const
   XVegaVisualization = ({ model: state }: { model: VegaVisualization }) => {
     const
       ref = React.useRef<HTMLDivElement>(null),
-      init = React.useCallback(() => {
+      init = React.useCallback(async () => {
         const el = ref.current
         if (!el) return
 
@@ -81,6 +80,7 @@ export const
           height = el.clientHeight - 10 // HACK: Vega calculates dimensions with extra 10px for some reason.
 
         if (data) spec.data = { values: data }
+        const { default: vegaEmbed } = await import('vega-embed')
         vegaEmbed(el, spec, {
           mode: 'vega-lite',
           defaultStyle: false,
@@ -106,7 +106,7 @@ export const
         ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
 
-    React.useEffect(init, [init, state])
+    React.useEffect(() => { init() }, [init, state])
     React.useEffect(() => {
       init()
       window.addEventListener('resize', onResize)
