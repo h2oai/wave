@@ -71,11 +71,10 @@ setuptools.setup(
     ],
     python_requires='>=3.6.1',
     install_requires=[
-        'certifi',  # Workaround for urllib.error.URLError SSL: CERTIFICATE_VERIFY_FAILED on OSX
         'Click',
         'httpx==0.16.1',
         'starlette==0.13.8',
-        'uvicorn==0.12.2',
+        'uvicorn==0.16',
     ],
     entry_points=dict(
         console_scripts=["wave = h2o_wave.cli:main"]

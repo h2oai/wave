@@ -91,11 +91,12 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     server_not_running = _scan_free_port(server_port) == server_port
     try:
         waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
+        waved_process = None
         # OS agnostic wheels do not have waved - needed for HAC.
         is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
         autostart = (not no_autostart) or os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
         if autostart and is_waved_present and server_not_running:
-            subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
+            waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
             server_not_running = _scan_free_port(server_port) == server_port
             retries = 3
@@ -106,7 +107,11 @@ def run(app: str, no_reload: bool, no_autostart: bool):
                 retries = retries - 1
     finally:
         if not server_not_running:
-            uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+            try:
+                uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+            except:
+                if waved_process:
+                    waved_process.kill()
         else:
             print('Wave server not found. Please start the Wave server (waved or waved.exe) prior to running any app.')
 
