@@ -1009,7 +1009,7 @@ def button(
     Args:
         name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
         label: The text displayed on the button.
-        caption: The caption displayed below the label. Setting a caption renders a compound button.
+        caption: The caption displayed below the label.
         value: A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
         primary: True if the button should be rendered as the primary button in the set.
         disabled: True if the button should be disabled.

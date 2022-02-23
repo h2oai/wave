@@ -2581,7 +2581,7 @@ class Button:
         self.label = label
         """The text displayed on the button."""
         self.caption = caption
-        """The caption displayed below the label. Setting a caption renders a compound button."""
+        """The caption displayed below the label."""
         self.value = value
         """A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True."""
         self.primary = primary

@@ -44,7 +44,7 @@ export interface Button {
   name: Id
   /** The text displayed on the button. */
   label?: S
-  /** The caption displayed below the label. Setting a caption renders a compound button. */
+  /** The caption displayed below the label. */
   caption?: S
   /** A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True. */
   value?: S

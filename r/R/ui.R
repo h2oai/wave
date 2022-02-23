@@ -1177,7 +1177,7 @@ ui_color_picker <- function(
 #'
 #' @param name An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
 #' @param label The text displayed on the button.
-#' @param caption The caption displayed below the label. Setting a caption renders a compound button.
+#' @param caption The caption displayed below the label.
 #' @param value A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
 #' @param primary True if the button should be rendered as the primary button in the set.
 #' @param disabled True if the button should be disabled.
