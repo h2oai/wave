@@ -60,7 +60,7 @@ export interface State {
   icon?: S
   /** The icon's color. **/
   icon_color?: S
-  /** The logo displayed at the top. **/
+  /** The URL of an image (usually logo) displayed at the top. **/
   image?: S
   /** The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. **/
   persona?: Component

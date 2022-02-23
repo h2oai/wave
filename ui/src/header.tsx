@@ -88,7 +88,7 @@ interface State {
   icon?: S
   /** The icon's color. **/
   icon_color?: S
-  /** The logo displayed to the left. Mutually exclusive with icon. **/
+  /** The URL of an image (usually logo) displayed to the left. Mutually exclusive with icon. **/
   image?: S
   /** The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. **/
   nav?: NavGroup[]

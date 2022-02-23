@@ -7712,7 +7712,7 @@ class HeaderCard:
         self.icon_color = icon_color
         """The icon's color. *"""
         self.image = image
-        """The logo displayed to the left. Mutually exclusive with icon. *"""
+        """The URL of an image (usually logo) displayed to the left. Mutually exclusive with icon. *"""
         self.nav = nav
         """The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *"""
         self.items = items
@@ -9503,7 +9503,7 @@ class NavCard:
         self.icon_color = icon_color
         """The icon's color. *"""
         self.image = image
-        """The logo displayed at the top. *"""
+        """The URL of an image (usually logo) displayed at the top. *"""
         self.persona = persona
         """The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *"""
         self.secondary_items = secondary_items

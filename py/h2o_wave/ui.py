@@ -2724,7 +2724,7 @@ def header_card(
         subtitle: The subtitle, displayed below the title. *
         icon: The icon, displayed to the left. *
         icon_color: The icon's color. *
-        image: The logo displayed to the left. Mutually exclusive with icon. *
+        image: The URL of an image (usually logo) displayed to the left. Mutually exclusive with icon. *
         nav: The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *
         items: Items that should be displayed on the right side of the header.
         secondary_items: Items that should be displayed in the center of the header.
@@ -3379,7 +3379,7 @@ def nav_card(
         subtitle: The card's subtitle.
         icon: The icon, displayed to the left. *
         icon_color: The icon's color. *
-        image: The logo displayed at the top. *
+        image: The URL of an image (usually logo) displayed at the top. *
         persona: The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *
         secondary_items: Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle.
         color: Card background color. Defaults to 'card'. One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor.

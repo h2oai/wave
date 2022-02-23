@@ -3141,7 +3141,7 @@ ui_nav_group <- function(
 #' @param subtitle The subtitle, displayed below the title. *
 #' @param icon The icon, displayed to the left. *
 #' @param icon_color The icon's color. *
-#' @param image The logo displayed to the left. Mutually exclusive with icon. *
+#' @param image The URL of an image (usually logo) displayed to the left. Mutually exclusive with icon. *
 #' @param nav The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. *
 #' @param items Items that should be displayed on the right side of the header.
 #' @param secondary_items Items that should be displayed in the center of the header.
@@ -3905,7 +3905,7 @@ ui_meta_card <- function(
 #' @param subtitle The card's subtitle.
 #' @param icon The icon, displayed to the left. *
 #' @param icon_color The icon's color. *
-#' @param image The logo displayed at the top. *
+#' @param image The URL of an image (usually logo) displayed at the top. *
 #' @param persona The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *
 #' @param secondary_items Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle.
 #' @param color Card background color. Defaults to 'card'.
