@@ -41,7 +41,13 @@ export interface NotificationBar {
   events?: S[]
 }
 
-const gap = grid.gap
+const
+  gap = grid.gap,
+  isMessagebarMultiline = (text?: S, buttons?: Component[]) => {
+    const textLength = text?.length || 0
+    const buttonTextLength = buttons?.reduce((prev, curr) => prev + (curr.button?.label?.length || 0) + 15, 0) || 0
+    return textLength + buttonTextLength > 54
+  }
 
 export const
   notificationBarB: Box<NotificationBar | null> = box(null),
@@ -81,13 +87,15 @@ export const
             position: 'fixed',
             animationDuration: '0.5s',
             animationFillMode: 'forwards',
+            maxWidth: 500,
             ...getPosition(currentModel?.position, shouldBeOpen)
           },
-          buttons = currentModel?.buttons?.filter(({ button }) => button)
+          buttons = currentModel?.buttons?.filter(({ button }) => button),
+          isMultiline = isMessagebarMultiline(currentModel?.text, buttons)
 
         if (!buttons?.length && shouldBeOpen) timeout = window.setTimeout(onDismiss, model?.timeout || 5000)
 
-        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={buttons} extraStyles={extraStyles} onDismiss={onDismiss} />
+        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={buttons} extraStyles={extraStyles} onDismiss={onDismiss} isMultiline={isMultiline} />
       },
       dispose = () => window.clearTimeout(timeout)
 

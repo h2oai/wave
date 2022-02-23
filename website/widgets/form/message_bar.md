@@ -13,7 +13,7 @@ Check the full API at [ui.message_bar](/docs/api/ui#message_bar).
 
 ```py
 q.page['form'] = ui.form_card(
-    box='1 1 4 6',
+    box='1 1 4 7',
     items=[
         ui.message_bar(type='blocked', text='This action is blocked.'),
         ui.message_bar(type='error', text='This is an error message'),

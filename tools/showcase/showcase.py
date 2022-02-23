@@ -87,8 +87,8 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, groups: List[s
             raise ValueError(f'Could not generate {img_name}\n{err.decode()}')
         page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle')
 
-        if not is_test:
-            time.sleep(1)
+        # Wait for all the resources to be loaded.
+        time.sleep(1)
 
         groups = os.path.join(*groups)
         path = os.path.join(docs_path, 'docs', 'widgets', groups, 'assets', img_name)

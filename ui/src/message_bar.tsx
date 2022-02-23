@@ -68,6 +68,7 @@ type MessagebarProps = {
   name?: S
   extraStyles?: Fluent.IRawStyle
   onDismiss?: () => void
+  isMultiline?: B
 }
 
 const
@@ -112,18 +113,12 @@ const
       case 'blocked': return Fluent.MessageBarType.blocked
       default: return Fluent.MessageBarType.info
     }
-  },
-  isMessagebarMultiline = (text?: S, buttons?: Component[]) => {
-    const textLength = text?.length || 0
-    const buttonTextLength = buttons?.reduce((prev, curr) => prev + (curr.button?.label?.length || 0) + 15, 0) || 0
-    return textLength + buttonTextLength > 54
   }
 
 export const
-  MessageBar = ({ type, text, buttons, name, extraStyles = {}, onDismiss }: MessagebarProps) => {
+  MessageBar = ({ type, text, buttons, name, extraStyles = {}, onDismiss, isMultiline = false }: MessagebarProps) => {
     const { iconName, color, background } = notificationTypes[type || 'info']
     const btns = buttons?.filter(({ button }) => button)
-    const isMultiline = isMessagebarMultiline(text, btns)
     return (
       text?.length
         ? (
@@ -134,9 +129,7 @@ export const
                 background,
                 color,
                 borderRadius: 4,
-                maxWidth: 500,
                 width: pc(100),
-                animationFillMode: 'forwards',
                 '.ms-Link': { color, fontWeight: 600 },
                 '.ms-Link:hover': { textDecoration: 'none', color },
                 ...extraStyles
