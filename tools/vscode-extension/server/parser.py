@@ -80,8 +80,13 @@ def get_files_to_parse(root: str, py_files: List[str]) -> List[str]:
             py_files.append(f.path)
     return py_files
 
+
 def is_in_ui_obj(node: Any) -> bool:
-    return parso.tree.search_ancestor(node, 'atom_expr').children[0].value == 'ui'
+    try:
+        return parso.tree.search_ancestor(node, 'atom_expr').children[0].value == 'ui'
+    except Exception:
+        return False
+
 
 def fill_deps(tree: Any, file_metadata: FileMetadata) -> None:
     for imp in list(tree.iter_imports()):
