@@ -25,7 +25,8 @@ with open('README.md', 'r') as readme_markdown:
 
 platform = os.getenv('OS', 'darwin')
 version = os.getenv('VERSION', 'DEV')
-base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-amd64')
+arch = os.getenv('ARCH', 'amd64')
+base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-{arch}')
 
 
 def get_data_files():

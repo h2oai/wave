@@ -1,7 +1,8 @@
 OS?=linux
 VERSION ?= $(shell cat VERSION)
+ARCH?=amd64
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
-REL=wave-$(VERSION)-$(OS)-amd64
+REL=wave-$(VERSION)-$(OS)-$(ARCH)
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
@@ -107,17 +108,18 @@ pydocs: ## Generate API docs and copy to website
 	cd tools/showcase && $(MAKE) generate
 
 release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
-	$(MAKE) OS=linux release-os
-	$(MAKE) OS=darwin release-os
-	$(MAKE) OS=windows EXE_EXT=".exe" release-os
+	$(MAKE) OS=linux ARCH=amd64 release-os
+	$(MAKE) OS=darwin ARCH=amd64 release-os
+	$(MAKE) OS=darwin ARCH=arm64 release-os
+	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
 	$(MAKE) website
 	$(MAKE) build-py
-	$(MAKE) publish-release-s3
 
 release-nightly: build-ui ## Prepare nightly release builds. 
-	$(MAKE) OS=linux release-os
-	$(MAKE) OS=darwin release-os
-	$(MAKE) OS=windows EXE_EXT=".exe" release-os
+	$(MAKE) OS=linux ARCH=amd64 release-os
+	$(MAKE) OS=darwin ARCH=amd64 release-os
+	$(MAKE) OS=darwin ARCH=arm64 release-os
+	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
 	$(MAKE) build-py
 
 publish-release-s3:
@@ -134,7 +136,7 @@ release-os:
 	rm -rf test/cypress/screenshots/*.*
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
+	GOOS=$(OS) GOARCH=$(ARCH) go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
 	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
