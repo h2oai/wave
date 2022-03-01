@@ -22,11 +22,13 @@ const
   cell11 = 'Quick brown fox.',
   cell21 = 'Jumps over a dog.',
   cell31 = 'Wooo hooo.',
-  headerRow = 1
+  headerRow = 1,
+  emitMock = jest.fn()
 
 let tableProps: Table
 
 describe('Table.tsx', () => {
+  beforeAll(() => wave.emit = emitMock)
   beforeEach(() => {
     tableProps = {
       name,
@@ -40,7 +42,7 @@ describe('Table.tsx', () => {
         { name: 'rowname3', cells: [cell31, '3'] }
       ]
     }
-    jest.clearAllMocks()
+    emitMock.mockClear()
     wave.args[name] = null
   })
 
@@ -274,6 +276,14 @@ describe('Table.tsx', () => {
       fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe('111')
     })
+
+    it('Fires event when pagination enabled', () => {
+      const { container } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', true)
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('search', () => {
@@ -325,6 +335,14 @@ describe('Table.tsx', () => {
       const { queryByTestId } = render(<XTable model={tableProps} />)
       expect(queryByTestId('search')).not.toBeInTheDocument()
     })
+
+    it('Fires event when pagination enabled', () => {
+      const { getByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+
+      fireEvent.change(getByTestId('search'), { target: { value: cell21.toLowerCase() } })
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'search', true)
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('filter', () => {
@@ -369,6 +387,15 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('1')[1].parentElement!)
       fireEvent.click(getAllByText('2')[0].parentElement!)
       expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+    })
+
+    it('Fires event when pagination enabled', () => {
+      const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('1')[1].parentElement!)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', true)
+      expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -433,6 +460,15 @@ describe('Table.tsx', () => {
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
       expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+    })
+
+    it('Fires event when pagination enabled', () => {
+      const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('TAG1')[1].parentElement!)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', true)
+      expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -674,4 +710,15 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow + groupByRow)
     })
   })
+
+  describe('Table reset', () => {
+
+    it('Fires event when pagination enabled', () => {
+      const { getByText } = render(<XTable model={{ ...tableProps, resettable: true, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      fireEvent.click(getByText('Reset table'))
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'reset', true)
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+  })
+
 })
