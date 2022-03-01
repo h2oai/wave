@@ -1537,6 +1537,28 @@ ui_table_group <- function(
   return(.o)
 }
 
+#' Defines cell content to be rendered instead of a simple text.
+#'
+#' @param total_rows Renders a progress arc with a percentage value in the middle.
+#' @param rows_per_page Renders a progress arc with a percentage value in the middle.
+#' @param trigger_on_scroll If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False.
+#' @return A TablePagination instance.
+#' @export
+ui_table_pagination <- function(
+  total_rows,
+  rows_per_page,
+  trigger_on_scroll = NULL) {
+  .guard_scalar("total_rows", "numeric", total_rows)
+  .guard_scalar("rows_per_page", "numeric", rows_per_page)
+  .guard_scalar("trigger_on_scroll", "logical", trigger_on_scroll)
+  .o <- list(
+    total_rows=total_rows,
+    rows_per_page=rows_per_page,
+    trigger_on_scroll=trigger_on_scroll)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTablePagination"))
+  return(.o)
+}
+
 #' Create an interactive table.
 #' 
 #' This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
@@ -1558,7 +1580,7 @@ ui_table_group <- function(
 #' @param rows The rows in this table. Mutually exclusive with `groups` attr.
 #' @param multiple True to allow multiple rows to be selected.
 #' @param groupable True to allow group by feature. Ignored if `groups` are specified.
-#' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+#' @param downloadable Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
 #' @param width The width of the table, e.g. '100px'. Defaults to '100%'.
@@ -1568,6 +1590,7 @@ ui_table_group <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param groups Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
+#' @param pagination Table pagination. Used when large data is needed to be displayed.
 #' @return A Table instance.
 #' @export
 ui_table <- function(
@@ -1584,7 +1607,8 @@ ui_table <- function(
   checkbox_visibility = NULL,
   visible = NULL,
   tooltip = NULL,
-  groups = NULL) {
+  groups = NULL,
+  pagination = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "WaveTableColumn", columns)
   .guard_vector("rows", "WaveTableRow", rows)
@@ -1599,6 +1623,7 @@ ui_table <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("groups", "WaveTableGroup", groups)
+  .guard_scalar("pagination", "WaveTablePagination", pagination)
   .o <- list(table=list(
     name=name,
     columns=columns,
@@ -1613,7 +1638,8 @@ ui_table <- function(
     checkbox_visibility=checkbox_visibility,
     visible=visible,
     tooltip=tooltip,
-    groups=groups))
+    groups=groups,
+    pagination=pagination))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

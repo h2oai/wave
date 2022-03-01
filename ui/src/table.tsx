@@ -19,8 +19,18 @@ import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
-import { border, cssVar, important, rem } from './theme'
+import { border, cssVar, important, margin, rem } from './theme'
 import { wave } from './ui'
+
+/** Defines cell content to be rendered instead of a simple text. */
+interface TablePagination {
+  /** Renders a progress arc with a percentage value in the middle. */
+  total_rows: U
+  /** Renders a progress arc with a percentage value in the middle. */
+  rows_per_page: U
+  /** If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False. */
+  trigger_on_scroll?: B
+}
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -108,7 +118,7 @@ export interface Table {
   multiple?: B
   /** True to allow group by feature. Ignored if `groups` are specified. */
   groupable?: B
-  /** Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False. */
+  /** Indicates whether the table rows can be downloaded as a CSV file. Defaults to False. */
   downloadable?: B
   /** Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False. */
   resettable?: B
@@ -126,6 +136,8 @@ export interface Table {
   tooltip?: S
   /** Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr. */
   groups?: TableGroup[]
+  /** Table pagination. Used when large data is needed to be displayed. */
+  pagination?: TablePagination
 }
 
 type WaveColumn = Fluent.IColumn & {
@@ -155,6 +167,16 @@ type ContextualMenuProps = {
   listProps: Fluent.IContextualMenuListProps
   selectedFiltersRef: React.MutableRefObject<Dict<S[]> | null>
   setFiltersInBulk: (colKey: S, filters: S[]) => void
+}
+
+type FooterProps = {
+  shouldShowFooter: B
+  isSearchable: B
+  isFilterable: B
+  displayedRows: S
+  contentRef: React.RefObject<Fluent.IScrollablePane | null>
+  m: Table
+  reset: () => void
 }
 
 const
@@ -483,6 +505,98 @@ const
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
       </>
     )
+  },
+  Pagination = ({ pagination, name, contentRef }: { pagination: TablePagination, name: S, contentRef: React.RefObject<Fluent.IScrollablePane | null> }) => {
+    const
+      [currentPage, setCurrentPage] = React.useState(1),
+      lastPage = pagination.total_rows / pagination.rows_per_page,
+      btnStyles: Fluent.IButtonStyles = { rootDisabled: { background: 'transparent' }, root: { marginLeft: -8 } }
+
+    React.useEffect(() => {
+      wave.emit(name, 'page_change', { offset: (currentPage - 1) * pagination.rows_per_page })
+      if (contentRef?.current) {
+        // Scroll table content to top after page change.
+        // @ts-ignore
+        contentRef.current._contentContainer.current.scrollTop = 0
+      }
+    }, [contentRef, currentPage, name, pagination.rows_per_page])
+
+    return (
+      <span>
+        <span style={{ marginRight: 15 }}><b>{((currentPage - 1) * pagination.rows_per_page) + 1}</b> to <b>{currentPage * pagination.rows_per_page}</b> of <b>{pagination.total_rows}</b></span>
+        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronLeft' }} disabled={currentPage === 1} onClick={() => setCurrentPage(1)} styles={btnStyles} title='First page' />
+        <Fluent.IconButton iconProps={{ iconName: 'ChevronLeft' }} disabled={currentPage === 1} onClick={() => setCurrentPage(prevPage => --prevPage)} styles={btnStyles} title='Previous page' />
+        <span style={{ margin: margin(0, 8) }}>Page <b>{currentPage}</b> of <b>{lastPage}</b></span>
+        <Fluent.IconButton iconProps={{ iconName: 'ChevronRight' }} disabled={currentPage === lastPage} onClick={() => setCurrentPage(prevPage => ++prevPage)} styles={btnStyles} title='Next page' />
+        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronRight' }} disabled={currentPage === lastPage} onClick={() => setCurrentPage(lastPage)} styles={btnStyles} title='Last page' />
+      </span>
+    )
+  },
+  Footer = ({ shouldShowFooter, m, isFilterable, isSearchable, displayedRows, reset, contentRef }: FooterProps) => {
+    const
+      footerItems: Fluent.ICommandBarItemProps[] = [],
+      buttonStyles = { root: { background: cssVar('$card') } },
+      download = () => {
+        if (m.pagination) {
+          wave.emit(m.name, 'download', true)
+          return
+        }
+        // TODO: Prompt a dialog for name, encoding, etc.
+        const
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
+          a = document.createElement('a'),
+          blob = new Blob([data], { type: "octet/stream" }),
+          url = window.URL.createObjectURL(blob)
+
+        a.href = url
+        a.download = 'exported_data.csv'
+        a.click()
+
+        window.URL.revokeObjectURL(url)
+      }
+
+    if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
+    if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
+
+    // TODO: Add pagination UI. Raise change-page event on page click.
+    return shouldShowFooter ? (
+      <Fluent.Stack
+        horizontal
+        horizontalAlign='space-between'
+        verticalAlign='center'
+        className='wave-s12'
+        styles={{
+          root: {
+            background: cssVar('$neutralLight'),
+            borderRadius: '0 0 4px 4px',
+            paddingLeft: 12,
+            height: 46,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0
+          }
+        }}>
+        {
+          (!m.pagination && (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER)) && (
+            <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>
+              <b style={{ paddingLeft: 5 }}>{displayedRows}</b>
+            </Fluent.Text>
+          )
+        }
+        {m.pagination && <Pagination pagination={m.pagination} name={m.name} contentRef={contentRef} />}
+        {
+          footerItems.length && (
+            <Fluent.StackItem grow={1}>
+              <Fluent.CommandBar items={footerItems} styles={{
+                root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
+                primarySet: { justifyContent: 'flex-end' }
+              }} />
+            </Fluent.StackItem>
+          )
+        }
+      </Fluent.Stack>
+    ) : null
   }
 
 export const
@@ -513,10 +627,15 @@ export const
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
       expandedRefs = React.useRef<{ [key: S]: B } | null>({}),
       [groupByKey, setGroupByKey] = React.useState('*'),
+      contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
+        if (m.pagination) {
+          wave.emit(m.name, 'filters', selectedFilters)
+          return
+        }
         // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
         setFilteredItems(
           selectedFilters
@@ -525,7 +644,7 @@ export const
             )
             : items
         )
-      }, [items]),
+      }, [items, m.name, m.pagination]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
         const expandedRef = expandedRefs[key]
@@ -594,6 +713,10 @@ export const
       onSearchChange = React.useCallback((_e?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
         setSearchStr(searchStr)
 
+        if (m.pagination) {
+          wave.emit(m.name, 'search', searchStr)
+          return
+        }
         if (!searchStr && !selectedFilters) {
           setFilteredItems(items)
           setGroups(groups => {
@@ -609,9 +732,13 @@ export const
           if (groups) initGroups()
           return groups
         })
-      }, [selectedFilters, filter, search, initGroups, items]),
+      }, [m.pagination, m.name, selectedFilters, filter, search, items, initGroups]),
       onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
+        if (m.pagination) {
+          wave.emit(m.name, 'group_by', true)
+          return
+        }
         reset()
         if (option.key === '*') return
 
@@ -636,7 +763,7 @@ export const
         window.URL.revokeObjectURL(url)
       },
       isFilterable = m.columns.some(c => c.filterable),
-      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER,
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
       Footer = () => {
         if (!shouldShowFooter) return null
 
@@ -704,6 +831,10 @@ export const
       }, [filter, initGroups, search]),
       // TODO: Make filter options in dropdowns dynamic.
       reset = React.useCallback(() => {
+        if (m.pagination) {
+          wave.emit(m.name, 'reset', true)
+          return
+        }
         setSelectedFilters(null)
         setSearchStr('')
 
@@ -714,7 +845,7 @@ export const
 
         filter(null)
         search()
-      }, [m.groups, initGroups, filter, search]),
+      }, [m.pagination, m.groups, m.name, initGroups, filter, search]),
       selection = React.useMemo(() => new Fluent.Selection({ onSelectionChanged: () => { wave.args[m.name] = selection.getSelection().map(item => item.key as S) } }), [m.name]),
       computeHeight = () => {
         if (m.height) return m.height
@@ -733,6 +864,10 @@ export const
         const sortAsc = column.iconName === 'SortDown'
         column.iconName = sortAsc ? 'SortUp' : 'SortDown'
 
+        if (m.pagination) {
+          wave.emit(m.name, 'sort', { asc: sortAsc, col: column.fieldName })
+          return
+        }
         setGroups(groups => {
           if (groups) {
             setFilteredItems(filteredItems => [...groups]
@@ -744,7 +879,7 @@ export const
           else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
         })
-      }, []),
+      }, [m.name, m.pagination]),
       setFiltersInBulk = React.useCallback((colKey: S, filters: S[]) => {
         setSelectedFilters(selectedFilters => {
           const newFilters = {
@@ -799,10 +934,11 @@ export const
           {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
         </Fluent.Stack>
         <Fluent.ScrollablePane
+          componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
             root: { top: groupable || searchableKeys.length ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
-            stickyAbove: { right: important('0px'), border: border(2, 'transparent'), zIndex: 2 },
+            stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
           {
@@ -811,7 +947,15 @@ export const
               : <DataTable {...dataTableProps} />
           }
         </Fluent.ScrollablePane>
-        <Footer />
+        <Footer
+          shouldShowFooter={shouldShowFooter}
+          isSearchable={isSearchable}
+          isFilterable={isFilterable}
+          contentRef={contentRef}
+          displayedRows={`${formatNum(filteredItems.length)} of ${formatNum(items.length)}`}
+          m={m}
+          reset={reset}
+        />
       </div>
     )
   }

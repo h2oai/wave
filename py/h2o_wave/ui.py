@@ -1319,6 +1319,27 @@ def table_group(
     )
 
 
+def table_pagination(
+        total_rows: int,
+        rows_per_page: int,
+        trigger_on_scroll: Optional[bool] = None,
+) -> TablePagination:
+    """Defines cell content to be rendered instead of a simple text.
+
+    Args:
+        total_rows: Renders a progress arc with a percentage value in the middle.
+        rows_per_page: Renders a progress arc with a percentage value in the middle.
+        trigger_on_scroll: If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False.
+    Returns:
+        A `h2o_wave.types.TablePagination` instance.
+    """
+    return TablePagination(
+        total_rows,
+        rows_per_page,
+        trigger_on_scroll,
+    )
+
+
 def table(
         name: str,
         columns: List[TableColumn],
@@ -1334,6 +1355,7 @@ def table(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         groups: Optional[List[TableGroup]] = None,
+        pagination: Optional[TablePagination] = None,
 ) -> Component:
     """Create an interactive table.
 
@@ -1357,7 +1379,7 @@ def table(
         rows: The rows in this table. Mutually exclusive with `groups` attr.
         multiple: True to allow multiple rows to be selected.
         groupable: True to allow group by feature. Ignored if `groups` are specified.
-        downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+        downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.
         width: The width of the table, e.g. '100px'. Defaults to '100%'.
@@ -1366,6 +1388,7 @@ def table(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
+        pagination: Table pagination. Used when large data is needed to be displayed.
     Returns:
         A `h2o_wave.types.Table` instance.
     """
@@ -1384,6 +1407,7 @@ def table(
         visible,
         tooltip,
         groups,
+        pagination,
     ))
 
 
