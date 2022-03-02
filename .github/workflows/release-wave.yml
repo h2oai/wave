@@ -94,16 +94,16 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_x86_64.whl"
-          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_x86_64.whl"
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl"
           asset_content_type: application/gzip
 
       - name: Upload MacOS Monterey M1 Wheel
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_x86_64.whl"
-          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_x86_64.whl"
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl"
           asset_content_type: application/gzip
 
       - name: Upload Windows Wheel
