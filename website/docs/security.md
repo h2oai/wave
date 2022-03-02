@@ -112,6 +112,7 @@ To enable OpenID Connect, pass the following flags when starting the Wave server
 - `-oidc-client-id`: Client ID (refer to your identity provider's documentation).
 - `-oidc-client-secret`:  Client secret (refer to your identity provider's documentation).
 - `-oidc-scopes`: Comma-separated scopes that will override defaults (`openid,profile`).
+- `-oidc-skip-login`: Don't show the built-in login form during OIDC authorization. Instead, navigate directly to the identity provider's login form.
 
 Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](api/server#auth) class for details):
 
