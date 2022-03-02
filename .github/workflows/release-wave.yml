@@ -50,6 +50,14 @@ jobs:
           asset_name: "wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
           asset_content_type: application/gzip
 
+      - name: Upload MacOS M1 Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz"
+          asset_name: "wave-${{ env.VERSION }}-darwin-arm64.tar.gz"
+          asset_content_type: application/gzip
+
       - name: Upload Linux Release Asset
         uses: actions/upload-release-asset@v1
         with:
@@ -80,6 +88,22 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl"
           asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl"
+          asset_content_type: application/gzip
+
+      - name: Upload MacOS Big Sur M1 Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl"
+          asset_content_type: application/gzip
+
+      - name: Upload MacOS Monterey M1 Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl"
           asset_content_type: application/gzip
 
       - name: Upload Windows Wheel
