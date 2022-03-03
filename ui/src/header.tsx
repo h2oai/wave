@@ -40,6 +40,7 @@ const css = stylesheet({
     display: 'flex',
     alignItems: 'center',
     cursor: 'default',
+    zIndex: 1
   },
   center: {
     ...centerMixin(),
@@ -138,7 +139,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
             </div>
           </div>
           {secondary_items && <div className={css.center}><XInline model={{ items: secondary_items }} /></div>}
-          {items && <XInline model={{ items }} />}
+          {items && <div style={{ zIndex: 1 }}><XInline model={{ items }} /></div>}
           {nav && <Navigation items={nav} isOpenB={navB} />}
         </div>
       )
