@@ -135,7 +135,7 @@ type WaveColumn = Fluent.IColumn & {
 type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
-  sort: (col: WaveColumn) => void,
+  sort: (col: WaveColumn, sortAsc: B) => void,
   filteredItems: any[]
   selectedFilters: Dict<S[]> | null
   items: any[]
@@ -154,13 +154,20 @@ type ContextualMenuProps = {
 }
 
 type FooterProps = {
+  currentPage: U
+  onPageChange: (newPage: U) => void
   shouldShowFooter: B
   isSearchable: B
   isFilterable: B
   displayedRows: S
-  contentRef: React.RefObject<Fluent.IScrollablePane | null>
   m: Table
   reset: () => void
+}
+
+type PaginationProps = {
+  currentPage: U
+  onPageChange: (newPage: U) => void
+  pagination: TablePagination
 }
 
 const
@@ -212,27 +219,34 @@ const
       return rv
     }, {} as Dict<any>)
   },
-  sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
-    let a = rowA[column.key], b = rowB[column.key]
+  sortingF = (sorts: Map<S, { column: WaveColumn, sortAsc: B }>) => (rowA: any, rowB: any) => {
+    const sortValues = [...sorts.values()]
+    for (let idx = 0; idx < sortValues.length; idx++) {
+      const { column, sortAsc } = sortValues[idx]
 
-    switch (column.dataType) {
-      case 'number':
-        a = +a
-        b = +b
-        return sortAsc ? a - b : b - a
-      case 'time':
-        a = Date.parse(a)
-        b = Date.parse(b)
-        break
-      default:
-        a = a.toLowerCase()
-        b = b.toLowerCase()
-        break
+      let a = rowA[column.key], b = rowB[column.key]
+      if (sortValues.length - 1 > idx && a === b) continue
+
+      switch (column.dataType) {
+        case 'number':
+          a = +a
+          b = +b
+          return sortAsc ? a - b : b - a
+        case 'time':
+          a = Date.parse(a)
+          b = Date.parse(b)
+          break
+        default:
+          a = a.toLowerCase()
+          b = b.toLowerCase()
+          break
+      }
+
+      return sortAsc
+        ? b > a ? -1 : 1
+        : b > a ? 1 : -1
     }
-
-    return sortAsc
-      ? b > a ? -1 : 1
-      : b > a ? 1 : -1
+    return 0
   },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
   toCSV = (data: unknown[][]): S => data.map(row => {
@@ -292,8 +306,12 @@ const
 
         if (isMenuClicked) onColumnContextMenu(column, e)
         else if (column.isSortable) {
-          sort(column)
-          setColumns(columns.map(col => column.key === col.key ? column : col))
+          const sortAsc = column.iconName === 'SortDown'
+          sort(column, sortAsc)
+          setColumns(columns.map(col => {
+            if (column.key === col.key) col.iconName = sortAsc ? 'SortUp' : 'SortDown'
+            return col
+          }))
         }
       },
       [columns, setColumns] = React.useState(m.columns.map((c): WaveColumn => {
@@ -455,33 +473,25 @@ const
       </>
     )
   },
-  Pagination = ({ pagination, name, contentRef }: { pagination: TablePagination, name: S, contentRef: React.RefObject<Fluent.IScrollablePane | null> }) => {
+  Pagination = ({ currentPage, onPageChange, pagination }: PaginationProps) => {
     const
-      [currentPage, setCurrentPage] = React.useState(1),
-      lastPage = pagination.total_rows / pagination.rows_per_page,
-      btnStyles: Fluent.IButtonStyles = { rootDisabled: { background: 'transparent' }, root: { marginLeft: -8 } }
-
-    React.useEffect(() => {
-      wave.emit(name, 'page_change', { offset: (currentPage - 1) * pagination.rows_per_page })
-      if (contentRef?.current) {
-        // Scroll table content to top after page change.
-        // @ts-ignore
-        contentRef.current._contentContainer.current.scrollTop = 0
-      }
-    }, [contentRef, currentPage, name, pagination.rows_per_page])
+      { total_rows, rows_per_page } = pagination,
+      lastPage = Math.ceil(total_rows / rows_per_page),
+      btnStyles: Fluent.IButtonStyles = { rootDisabled: { background: 'transparent' }, root: { marginLeft: -8 } },
+      isLastPage = currentPage === lastPage
 
     return (
       <span>
-        <span style={{ marginRight: 15 }}><b>{((currentPage - 1) * pagination.rows_per_page) + 1}</b> to <b>{currentPage * pagination.rows_per_page}</b> of <b>{pagination.total_rows}</b></span>
-        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronLeft' }} disabled={currentPage === 1} onClick={() => setCurrentPage(1)} styles={btnStyles} title='First page' />
-        <Fluent.IconButton iconProps={{ iconName: 'ChevronLeft' }} disabled={currentPage === 1} onClick={() => setCurrentPage(prevPage => --prevPage)} styles={btnStyles} title='Previous page' />
+        <span style={{ marginRight: 15 }}><b>{((currentPage - 1) * rows_per_page) + 1}</b> to <b>{isLastPage ? total_rows : currentPage * rows_per_page}</b> of <b>{total_rows}</b></span>
+        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronLeft' }} disabled={currentPage === 1} onClick={() => onPageChange(1)} styles={btnStyles} title='First page' />
+        <Fluent.IconButton iconProps={{ iconName: 'ChevronLeft' }} disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} styles={btnStyles} title='Previous page' />
         <span style={{ margin: margin(0, 8) }}>Page <b>{currentPage}</b> of <b>{lastPage}</b></span>
-        <Fluent.IconButton iconProps={{ iconName: 'ChevronRight' }} disabled={currentPage === lastPage} onClick={() => setCurrentPage(prevPage => ++prevPage)} styles={btnStyles} title='Next page' />
-        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronRight' }} disabled={currentPage === lastPage} onClick={() => setCurrentPage(lastPage)} styles={btnStyles} title='Last page' />
+        <Fluent.IconButton iconProps={{ iconName: 'ChevronRight' }} disabled={isLastPage} onClick={() => onPageChange(currentPage + 1)} styles={btnStyles} title='Next page' />
+        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronRight' }} disabled={isLastPage} onClick={() => onPageChange(lastPage)} styles={btnStyles} title='Last page' />
       </span>
     )
   },
-  Footer = ({ shouldShowFooter, m, isFilterable, isSearchable, displayedRows, reset, contentRef }: FooterProps) => {
+  Footer = ({ shouldShowFooter, m, isFilterable, isSearchable, displayedRows, reset, currentPage, onPageChange }: FooterProps) => {
     const
       footerItems: Fluent.ICommandBarItemProps[] = [],
       buttonStyles = { root: { background: cssVar('$card') } },
@@ -533,7 +543,7 @@ const
             </Fluent.Text>
           )
         }
-        {m.pagination && <Pagination pagination={m.pagination} name={m.name} contentRef={contentRef} />}
+        {m.pagination && <Pagination pagination={m.pagination} currentPage={currentPage} onPageChange={onPageChange} />}
         {
           footerItems.length && (
             <Fluent.StackItem grow={1}>
@@ -562,20 +572,18 @@ export const
       }), [m.rows, m.columns]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       [filteredItems, setFilteredItems] = React.useState(items),
+      [currentPage, setCurrentPage] = React.useState(1),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
       [groupByKey, setGroupByKey] = React.useState('*'),
+      [selectedSorts, setSelectedSorts] = React.useState<Map<S, { column: WaveColumn, sortAsc: B }>>(new Map()),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         m.groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, m.groupable]
       ),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
-        if (m.pagination) {
-          wave.emit(m.name, 'filters', selectedFilters)
-          return
-        }
         // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
         setFilteredItems(
           selectedFilters
@@ -584,7 +592,7 @@ export const
             )
             : items
         )
-      }, [items, m.name, m.pagination]),
+      }, [items]),
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
         let prevSum = 0
         const
@@ -637,6 +645,7 @@ export const
 
         if (m.pagination) {
           wave.emit(m.name, 'search', searchStr)
+          setCurrentPage(1)
           return
         }
         if (!searchStr && !selectedFilters) {
@@ -659,6 +668,7 @@ export const
         if (!option) return
         if (m.pagination) {
           wave.emit(m.name, 'group_by', true)
+          setCurrentPage(1)
           return
         }
         reset()
@@ -667,10 +677,20 @@ export const
         setGroupByKey(option.key as S)
         initGroups()
       },
+      onPageChange = React.useCallback((newPage: U) => {
+        if (m.pagination) {
+          setCurrentPage(newPage)
+          wave.emit(m.name, 'page_change', { offset: (newPage - 1) * m.pagination.rows_per_page })
+          if (contentRef?.current) {
+            // Scroll table content to top after page change.
+            // @ts-ignore
+            contentRef.current._contentContainer.current.scrollTop = 0
+          }
+        }
+      }, [m.name, m.pagination]),
       isSearchable = !!searchableKeys.length,
       isFilterable = m.columns.some(c => c.filterable),
       shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
-      // TODO: Make it a separate component.
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
           const filters = selectedFilters || {}
@@ -680,27 +700,33 @@ export const
           } else {
             filters[filterKey] = filters[filterKey].filter(f => f !== filterVal)
           }
-
-          filter(filters)
-          search()
-          setGroups(groups => {
-            if (groups) initGroups()
-            return groups
-          })
+          if (m.pagination) {
+            wave.emit(m.name, 'filters', filters)
+            setCurrentPage(1)
+          } else {
+            filter(filters)
+            search()
+            setGroups(groups => {
+              if (groups) initGroups()
+              return groups
+            })
+          }
           return filters
         })
-      }, [filter, initGroups, search]),
+      }, [filter, initGroups, m.name, m.pagination, search]),
       // TODO: Make filter options in dropdowns dynamic.
       reset = React.useCallback(() => {
-        if (m.pagination) {
-          wave.emit(m.name, 'reset', true)
-          return
-        }
         setSelectedFilters(null)
         setSearchStr('')
-
+        setSelectedSorts(new Map())
         setGroups(undefined)
         setGroupByKey('*')
+
+        if (m.pagination) {
+          wave.emit(m.name, 'reset', true)
+          setCurrentPage(1)
+          return
+        }
 
         filter(null)
         search()
@@ -721,24 +747,25 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
-      sort = React.useCallback((column: WaveColumn) => {
-        const sortAsc = column.iconName === 'SortDown'
-        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
+      sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
+        const sorts = selectedSorts.set(column.fieldName || column.name, { column, sortAsc })
+        setSelectedSorts(sorts)
 
         if (m.pagination) {
-          wave.emit(m.name, 'sort', { asc: sortAsc, col: column.fieldName })
+          wave.emit(m.name, 'sort', [...sorts.values()].map(s => ({ [s.column.fieldName || s.column.name]: s.sortAsc })))
+          setCurrentPage(1)
           return
         }
         setGroups(groups => {
           if (groups) {
             setFilteredItems(filteredItems => groups?.reduce((acc, group) =>
-              [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
+              [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(selectedSorts))],
               [] as any[]) || [])
           }
-          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
+          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(selectedSorts)))
           return groups
         })
-      }, [m.name, m.pagination]),
+      }, [m.name, m.pagination, selectedSorts]),
       setFiltersInBulk = React.useCallback((colKey: S, filters: S[]) => {
         setSelectedFilters(selectedFilters => {
           const newFilters = {
@@ -799,12 +826,13 @@ export const
           }
         </Fluent.ScrollablePane>
         <Footer
+          m={m}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
           shouldShowFooter={shouldShowFooter}
           isSearchable={isSearchable}
           isFilterable={isFilterable}
-          contentRef={contentRef}
           displayedRows={`${formatNum(filteredItems.length)} of ${formatNum(items.length)}`}
-          m={m}
           reset={reset}
         />
       </div>
