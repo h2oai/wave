@@ -283,9 +283,13 @@ describe('Table.tsx', () => {
     it('Fires event when pagination enabled', () => {
       const { container } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
 
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', [{ 'colname1': true }])
+      const [sort1, sort2] = container.querySelectorAll('i[class*=sortingIcon]')
+      fireEvent.click(sort1)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', { 'colname1': true })
       expect(emitMock).toHaveBeenCalledTimes(1)
+      emitMock.mockClear()
+      fireEvent.click(sort2)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', { 'colname1': true, 'colname2': true })
     })
 
     it('Sorts by multiple columns', () => {
