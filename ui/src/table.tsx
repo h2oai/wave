@@ -22,14 +22,12 @@ import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
 import { wave } from './ui'
 
-/** Defines cell content to be rendered instead of a simple text. */
+/** Creates a paginated table. Useful for large amounts of data (1M+ rows). */
 interface TablePagination {
   /** Renders a progress arc with a percentage value in the middle. */
   total_rows: U
   /** Renders a progress arc with a percentage value in the middle. */
   rows_per_page: U
-  /** If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False. */
-  trigger_on_scroll?: B
 }
 
 /** Defines cell content to be rendered instead of a simple text. */

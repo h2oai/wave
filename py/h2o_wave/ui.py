@@ -1322,21 +1322,18 @@ def table_group(
 def table_pagination(
         total_rows: int,
         rows_per_page: int,
-        trigger_on_scroll: Optional[bool] = None,
 ) -> TablePagination:
-    """Defines cell content to be rendered instead of a simple text.
+    """Creates a paginated table. Useful for large amounts of data (1M+ rows).
 
     Args:
         total_rows: Renders a progress arc with a percentage value in the middle.
         rows_per_page: Renders a progress arc with a percentage value in the middle.
-        trigger_on_scroll: If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False.
     Returns:
         A `h2o_wave.types.TablePagination` instance.
     """
     return TablePagination(
         total_rows,
         rows_per_page,
-        trigger_on_scroll,
     )
 
 

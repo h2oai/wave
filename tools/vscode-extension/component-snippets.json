@@ -1514,7 +1514,7 @@
   "Wave Full TablePagination": {
     "prefix": "w_full_table_pagination",
     "body": [
-      "ui.table_pagination(total_rows=${1:None}, rows_per_page=${2:None}, trigger_on_scroll=${3:False}),$0"
+      "ui.table_pagination(total_rows=${1:None}, rows_per_page=${2:None}),$0"
     ],
     "description": "Create a full Wave TablePagination."
   },

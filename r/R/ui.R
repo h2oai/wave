@@ -1537,24 +1537,20 @@ ui_table_group <- function(
   return(.o)
 }
 
-#' Defines cell content to be rendered instead of a simple text.
+#' Creates a paginated table. Useful for large amounts of data (1M+ rows).
 #'
 #' @param total_rows Renders a progress arc with a percentage value in the middle.
 #' @param rows_per_page Renders a progress arc with a percentage value in the middle.
-#' @param trigger_on_scroll If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False.
 #' @return A TablePagination instance.
 #' @export
 ui_table_pagination <- function(
   total_rows,
-  rows_per_page,
-  trigger_on_scroll = NULL) {
+  rows_per_page) {
   .guard_scalar("total_rows", "numeric", total_rows)
   .guard_scalar("rows_per_page", "numeric", rows_per_page)
-  .guard_scalar("trigger_on_scroll", "logical", trigger_on_scroll)
   .o <- list(
     total_rows=total_rows,
-    rows_per_page=rows_per_page,
-    trigger_on_scroll=trigger_on_scroll)
+    rows_per_page=rows_per_page)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTablePagination"))
   return(.o)
 }

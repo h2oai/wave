@@ -2070,10 +2070,9 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_table_pagination" value="ui.table_pagination(total_rows=$total_rows$,rows_per_page=$rows_per_page$,trigger_on_scroll=$trigger_on_scroll$),$END$" description="Create Wave TablePagination with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_table_pagination" value="ui.table_pagination(total_rows=$total_rows$,rows_per_page=$rows_per_page$),$END$" description="Create Wave TablePagination with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="total_rows" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="rows_per_page" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="trigger_on_scroll" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
