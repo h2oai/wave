@@ -578,6 +578,10 @@ describe('Table.tsx', () => {
     it('Renders alphabetically sorted group by list - dates', () => {
       tableProps = {
         ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'time' },
+          { name: 'colname2', label: 'Col2', sortable: true, filterable: true },
+        ],
         rows: [
           { name: 'rowname1', cells: ['1994-04-19T23:56:40', 'Group1'] },
           { name: 'rowname2', cells: ['2012-09-14T18:26:01', 'Group1'] },
@@ -593,6 +597,26 @@ describe('Table.tsx', () => {
       expect(groupHeaders[0]).toHaveTextContent(`${new Date('1970-04-30T18:02:01').toLocaleString()}(1)`)
       expect(groupHeaders[1]).toHaveTextContent(`${new Date('1994-04-19T23:56:40').toLocaleString()}(1)`)
       expect(groupHeaders[2]).toHaveTextContent(`${new Date('2012-09-14T18:26:01').toLocaleString()}(1)`)
+    })
+
+    it('Does not format dates during group by if data_type != time', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: ['1994-04-19T23:56:40', 'Group1'] },
+          { name: 'rowname2', cells: ['2012-09-14T18:26:01', 'Group1'] },
+          { name: 'rowname3', cells: ['1970-04-30T18:02:01', 'Group2'] }
+        ]
+      }
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent('1970-04-30T18:02:01(1)')
+      expect(groupHeaders[1]).toHaveTextContent('1994-04-19T23:56:40(1)')
+      expect(groupHeaders[2]).toHaveTextContent('2012-09-14T18:26:01(1)')
     })
 
     it('Sorts grouped list', () => {

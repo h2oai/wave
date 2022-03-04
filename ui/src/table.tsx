@@ -453,15 +453,14 @@ export const
         const
           groupedBy = groupByF(filteredItems, groupByKey),
           groupedByKeys = Object.keys(groupedBy),
+          groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type,
           groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
 
-            let name = key
-            if (isNaN(Number(key)) && !isNaN(Date.parse(key))) name = new Date(key).toLocaleString()
-
+            const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
             return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
           })
 
