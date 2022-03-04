@@ -1513,24 +1513,20 @@ ui_table_row <- function(
   return(.o)
 }
 
-#' Defines cell content to be rendered instead of a simple text.
+#' Creates a paginated table. Useful for large amounts of data (1M+ rows).
 #'
 #' @param total_rows Renders a progress arc with a percentage value in the middle.
 #' @param rows_per_page Renders a progress arc with a percentage value in the middle.
-#' @param trigger_on_scroll If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False.
 #' @return A TablePagination instance.
 #' @export
 ui_table_pagination <- function(
   total_rows,
-  rows_per_page,
-  trigger_on_scroll = NULL) {
+  rows_per_page) {
   .guard_scalar("total_rows", "numeric", total_rows)
   .guard_scalar("rows_per_page", "numeric", rows_per_page)
-  .guard_scalar("trigger_on_scroll", "logical", trigger_on_scroll)
   .o <- list(
     total_rows=total_rows,
-    rows_per_page=rows_per_page,
-    trigger_on_scroll=trigger_on_scroll)
+    rows_per_page=rows_per_page)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTablePagination"))
   return(.o)
 }
@@ -1566,7 +1562,6 @@ ui_table_pagination <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param pagination Table pagination. Used when large data is needed to be displayed.
-#' @param events The events to capture on this table. Need to be handled when pagination is set.
 #' @return A Table instance.
 #' @export
 ui_table <- function(
@@ -1583,8 +1578,7 @@ ui_table <- function(
   checkbox_visibility = NULL,
   visible = NULL,
   tooltip = NULL,
-  pagination = NULL,
-  events = NULL) {
+  pagination = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "WaveTableColumn", columns)
   .guard_vector("rows", "WaveTableRow", rows)
@@ -1599,7 +1593,6 @@ ui_table <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("pagination", "WaveTablePagination", pagination)
-  .guard_vector("events", "character", events)
   .o <- list(table=list(
     name=name,
     columns=columns,
@@ -1614,8 +1607,7 @@ ui_table <- function(
     checkbox_visibility=checkbox_visibility,
     visible=visible,
     tooltip=tooltip,
-    pagination=pagination,
-    events=events))
+    pagination=pagination))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

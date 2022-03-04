@@ -3386,33 +3386,27 @@ class TableRow:
 
 
 class TablePagination:
-    """Defines cell content to be rendered instead of a simple text.
+    """Creates a paginated table. Useful for large amounts of data (1M+ rows).
     """
     def __init__(
             self,
             total_rows: int,
             rows_per_page: int,
-            trigger_on_scroll: Optional[bool] = None,
     ):
         _guard_scalar('TablePagination.total_rows', total_rows, (int,), False, False, False)
         _guard_scalar('TablePagination.rows_per_page', rows_per_page, (int,), False, False, False)
-        _guard_scalar('TablePagination.trigger_on_scroll', trigger_on_scroll, (bool,), False, True, False)
         self.total_rows = total_rows
         """Renders a progress arc with a percentage value in the middle."""
         self.rows_per_page = rows_per_page
         """Renders a progress arc with a percentage value in the middle."""
-        self.trigger_on_scroll = trigger_on_scroll
-        """If specified, regular pagination will not be displayed and replaced with infinite scroll instead. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TablePagination.total_rows', self.total_rows, (int,), False, False, False)
         _guard_scalar('TablePagination.rows_per_page', self.rows_per_page, (int,), False, False, False)
-        _guard_scalar('TablePagination.trigger_on_scroll', self.trigger_on_scroll, (bool,), False, True, False)
         return _dump(
             total_rows=self.total_rows,
             rows_per_page=self.rows_per_page,
-            trigger_on_scroll=self.trigger_on_scroll,
         )
 
     @staticmethod
@@ -3422,15 +3416,11 @@ class TablePagination:
         _guard_scalar('TablePagination.total_rows', __d_total_rows, (int,), False, False, False)
         __d_rows_per_page: Any = __d.get('rows_per_page')
         _guard_scalar('TablePagination.rows_per_page', __d_rows_per_page, (int,), False, False, False)
-        __d_trigger_on_scroll: Any = __d.get('trigger_on_scroll')
-        _guard_scalar('TablePagination.trigger_on_scroll', __d_trigger_on_scroll, (bool,), False, True, False)
         total_rows: int = __d_total_rows
         rows_per_page: int = __d_rows_per_page
-        trigger_on_scroll: Optional[bool] = __d_trigger_on_scroll
         return TablePagination(
             total_rows,
             rows_per_page,
-            trigger_on_scroll,
         )
 
 
@@ -3476,7 +3466,6 @@ class Table:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             pagination: Optional[TablePagination] = None,
-            events: Optional[List[str]] = None,
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
@@ -3492,7 +3481,6 @@ class Table:
         _guard_scalar('Table.visible', visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Table.pagination', pagination, (TablePagination,), False, True, False)
-        _guard_vector('Table.events', events, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
@@ -3521,8 +3509,6 @@ class Table:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.pagination = pagination
         """Table pagination. Used when large data is needed to be displayed."""
-        self.events = events
-        """The events to capture on this table. Need to be handled when pagination is set."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3540,7 +3526,6 @@ class Table:
         _guard_scalar('Table.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Table.pagination', self.pagination, (TablePagination,), False, True, False)
-        _guard_vector('Table.events', self.events, (str,), False, True, False)
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
@@ -3556,7 +3541,6 @@ class Table:
             visible=self.visible,
             tooltip=self.tooltip,
             pagination=None if self.pagination is None else self.pagination.dump(),
-            events=self.events,
         )
 
     @staticmethod
@@ -3590,8 +3574,6 @@ class Table:
         _guard_scalar('Table.tooltip', __d_tooltip, (str,), False, True, False)
         __d_pagination: Any = __d.get('pagination')
         _guard_scalar('Table.pagination', __d_pagination, (dict,), False, True, False)
-        __d_events: Any = __d.get('events')
-        _guard_vector('Table.events', __d_events, (str,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
@@ -3606,7 +3588,6 @@ class Table:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         pagination: Optional[TablePagination] = None if __d_pagination is None else TablePagination.load(__d_pagination)
-        events: Optional[List[str]] = __d_events
         return Table(
             name,
             columns,
@@ -3622,7 +3603,6 @@ class Table:
             visible,
             tooltip,
             pagination,
-            events,
         )
 
 
