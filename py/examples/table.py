@@ -29,17 +29,13 @@ class Issue:
 # Create some issues
 issues = [
     Issue(
-        text=str(i + 1),
+        text=fake.sentence(),
         status=('Closed' if i % 2 == 0 else 'Open'),
         progress=random.random(),
         icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
         state=('RUNNING' if random.random() > 0.5 else 'DONE,SUCCESS'),
         created=fake.iso8601()) for i in range(100)
 ]
-rows = [ui.table_row(name=issue.id, cells=[issue.text, issue.status, issue.icon, str(issue.views), str(issue.progress),
-                    issue.state, issue.created]) for issue in issues]
-
-rows_per_page = 10
 
 # Create columns for our issue table.
 columns = [
@@ -60,24 +56,19 @@ columns = [
 
 @app('/demo')
 async def serve(q: Q):
-    if not q.client.initialized:
-        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
-            ui.table(
-                name='issues',
-                columns=columns,
-                rows=[],
-                groupable=True,
-                downloadable=True,
-                resettable=True,
-                height='800px',
-                pagination=ui.table_pagination(total_rows=len(rows), rows_per_page=rows_per_page)
-            )
-        ])
-        q.client.initialized = True
-
-    if q.events.issues and q.events.issues.page_change is not None:
-        rows_offset = q.events.issues.page_change['offset']
-        q.page['form'].items[0].table.rows = rows[rows_offset:rows_offset + rows_per_page]
-
-    q.page['nonexist'].items = []
+    q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.icon, str(issue.views), str(issue.progress),
+                       issue.state, issue.created]
+            ) for issue in issues],
+            groupable=True,
+            downloadable=True,
+            resettable=True,
+            height='800px'
+        )
+    ])
     await q.page.save()

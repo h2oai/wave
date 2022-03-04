@@ -284,8 +284,57 @@ describe('Table.tsx', () => {
       const { container } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
 
       fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', true)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', [{ 'colname1': true }])
       expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Sorts by multiple columns', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: '2', cells: ['bb', 'open'] },
+          { name: '3', cells: ['cc', 'closed'] },
+          { name: '1', cells: ['aa', 'closed'] },
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', sortable: true },
+        ],
+      }
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      const [sortCol1, sortCol2] = container.querySelectorAll('i[class*=sortingIcon]')
+      expect(getAllByRole('gridcell')[0].textContent).toBe('bb')
+      fireEvent.click(sortCol2)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('cc')
+      fireEvent.click(sortCol1)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('aa')
+    })
+
+    it('Displays corect sort icons during multiple column sort', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: '2', cells: ['bb', 'open'] },
+          { name: '3', cells: ['cc', 'closed'] },
+          { name: '1', cells: ['aa', 'closed'] },
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', sortable: true },
+        ],
+      }
+      const { container } = render(<XTable model={tableProps} />)
+
+      const [sortCol1, sortCol2] = container.querySelectorAll('i[class*=sortingIcon]')
+      expect(container.querySelectorAll('i[data-icon-name="SortDown"]')).toHaveLength(2)
+      expect(container.querySelectorAll('i[data-icon-name="SortUp"]')).toHaveLength(0)
+      fireEvent.click(sortCol2)
+      expect(container.querySelectorAll('i[data-icon-name="SortDown"]')).toHaveLength(1)
+      expect(container.querySelectorAll('i[data-icon-name="SortUp"]')).toHaveLength(1)
+      fireEvent.click(sortCol1)
+      expect(container.querySelectorAll('i[data-icon-name="SortDown"]')).toHaveLength(0)
+      expect(container.querySelectorAll('i[data-icon-name="SortUp"]')).toHaveLength(2)
     })
   })
 
@@ -343,7 +392,7 @@ describe('Table.tsx', () => {
       const { getByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toLowerCase() } })
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'search', true)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'search', cell21.toLowerCase())
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
@@ -395,9 +444,10 @@ describe('Table.tsx', () => {
     it('Fires event when pagination enabled', () => {
       const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', true)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLDivElement)
+      fireEvent.click(getAllByText('1')[3].parentElement as HTMLDivElement)
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filters', { 'colname2': ['1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
@@ -470,7 +520,7 @@ describe('Table.tsx', () => {
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', true)
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filters', { 'colname2': ['TAG1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
@@ -901,7 +951,7 @@ describe('Table.tsx', () => {
     })
   })
 
-  describe('Table reset', () => {
+  describe('Reset', () => {
 
     it('Fires event when pagination enabled', () => {
       const { getByText } = render(<XTable model={{ ...tableProps, resettable: true, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
@@ -911,4 +961,13 @@ describe('Table.tsx', () => {
     })
   })
 
+  describe('Download', () => {
+
+    it('Fires event when pagination enabled', () => {
+      const { getByText } = render(<XTable model={{ ...tableProps, downloadable: true, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      fireEvent.click(getByText('Download data'))
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'download', true)
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+  })
 })
