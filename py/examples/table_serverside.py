@@ -20,7 +20,8 @@ rows_per_page = 10
 def get_table_rows(q: Q):
     rows = deepcopy(all_issues)
     if q.client.sort:
-        rows.sort(key=lambda i: getattr(i, q.client.sort['col']), reverse=q.client.sort['asc'])
+        for col, sortAsc in q.client.sort.items():
+            rows.sort(key=lambda i: getattr(i, col), reverse=sortAsc)
     if q.client.search:
         rows = [i for i in rows if q.client.search in str(i.text)]
     if q.client.filters:

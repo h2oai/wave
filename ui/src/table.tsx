@@ -752,7 +752,10 @@ export const
         setSelectedSorts(sorts)
 
         if (m.pagination) {
-          wave.emit(m.name, 'sort', [...sorts.values()].map(s => ({ [s.column.fieldName || s.column.name]: s.sortAsc })))
+          wave.emit(m.name, 'sort', [...sorts.values()].reverse().reduce((acc, { column, sortAsc }) => {
+            acc[column.fieldName || column.name] = sortAsc
+            return acc
+          }, {} as { [key: string]: B }))
           setCurrentPage(1)
           return
         }
