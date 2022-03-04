@@ -56,7 +56,7 @@ async def serve(q: Q):
                 name='table',
                 columns=[
                     ui.table_column(name='text', label='Text', sortable=True, searchable=True),
-                    ui.table_column(name='status', label='Status', sortable=True),
+                    ui.table_column(name='status', label='Status', filterable=True),
                 ],
                 rows=get_table_rows(q),
                 resettable=True,
