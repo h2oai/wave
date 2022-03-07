@@ -6,3 +6,9 @@ formatting:
     continuationIndentSize: 8
   ParameterListWrapping:
     indentSize: 8
+output-reports:
+  active: true
+  exclude:
+   - 'TxtOutputReport'
+   - 'XmlOutputReport'
+   - 'HtmlOutputReport'
