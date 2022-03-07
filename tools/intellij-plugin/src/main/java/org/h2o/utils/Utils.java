@@ -8,7 +8,6 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.ReflectionUtil;
 import com.jetbrains.python.PyTokenTypes;
 import com.jetbrains.python.PythonLanguage;
 import com.jetbrains.python.psi.*;
@@ -50,12 +49,6 @@ public class Utils {
                 && isSimpleString(el.getFirstChild())
                 && Objects.equals(((PyKeywordArgument) el).getKeyword(), keyword)
                 && findFirstParent(el, e -> e.getText().startsWith(containingEl != null ? containingEl : "ui")) != null;
-    }
-
-    public static boolean isValidZoneString(PsiElement el) {
-        return !(el.getParent() instanceof PyKeywordArgument)
-                && isSimpleString(el)
-                && findFirstParent(el, e -> e.getText().startsWith("ui.zone")) != null;
     }
 
     public static boolean shouldBeScanned(String name, String requirementsContent) {

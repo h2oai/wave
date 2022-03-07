@@ -71,20 +71,20 @@ public class WaveCompletionContributor extends CompletionContributor {
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
                         PsiElement position = parameters.getPosition();
                         Function f = (file) -> {
-                            findChildrenOfType(file, PyKeywordArgument.class)
+                            if (!file.getContainingFile().getText().contains("ui.layout")) return;
+
+                            findChildrenOfType(file, PyCallExpression.class)
                                     .stream()
-                                    .filter(arg -> isValidKeywordArg(arg, "name", "ui.zone"))
-                                    .forEach(arg -> {
-                                        PsiElement str = arg.getChildren()[0];
-                                        if (str instanceof PyStringLiteralExpression) {
-                                            addToCompletion(result, ((PyStringLiteralExpression) str).getStringValue(), "");
+                                    .filter(expr -> expr.getText().startsWith("ui.zone"))
+                                    .forEach(expr -> {
+                                        PsiElement zoneName = expr.getArguments()[0].getLastChild();
+                                        if (!(zoneName instanceof PyFormattedStringElement) && zoneName.getParent() instanceof PyStringLiteralExpression) {
+                                            zoneName = zoneName.getParent();
+                                        }
+                                        if (zoneName instanceof PyStringLiteralExpression) {
+                                            addToCompletion(result, ((PyStringLiteralExpression) zoneName).getStringValue(), "");
                                         }
                                     });
-
-                            findChildrenOfType(file, PyStringLiteralExpression.class)
-                                    .stream()
-                                    .filter(Utils::isValidZoneString)
-                                    .forEach(arg -> addToCompletion(result, arg.getStringValue(), ""));
                         };
                         fillCompletions(position.getContainingFile(), RequirementsSingleton.getRequirementsText(position.getProject()), new HashMap<>(), f);
                     }
@@ -174,13 +174,18 @@ public class WaveCompletionContributor extends CompletionContributor {
     }
 
     private void fillStateCompletions(CompletionResultSet result, PsiElement position, String stateType) {
-        Function f = (file) -> findChildrenOfAnyType(file, PyTargetExpression.class, PyReferenceExpression.class)
-                .stream()
-                .filter(el -> isStateExpr(el, stateType))
-                .forEach(el -> {
-                    String name = el.getName();
-                    if (name != null && !name.equals("IntellijIdeaRulezzz")) addToCompletion(result, name, "Expando");
-                });
+        Function f = file -> {
+            if (!file.getText().contains(stateType)) return;
+
+            findChildrenOfAnyType(file, PyTargetExpression.class, PyReferenceExpression.class)
+                    .stream()
+                    .filter(el -> isStateExpr(el, stateType))
+                    .forEach(el -> {
+                        String name = el.getName();
+                        if (name != null && !name.equals("IntellijIdeaRulezzz"))
+                            addToCompletion(result, name, "Expando");
+                    });
+        };
         fillCompletions(position.getContainingFile(), RequirementsSingleton.getRequirementsText(position.getProject()), new HashMap<>(), f);
     }
 }
