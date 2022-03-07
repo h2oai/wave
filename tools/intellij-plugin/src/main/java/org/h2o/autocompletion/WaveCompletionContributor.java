@@ -8,6 +8,7 @@ import com.intellij.util.ProcessingContext;
 import com.jetbrains.python.PyTokenTypes;
 import com.jetbrains.python.PythonLanguage;
 import com.jetbrains.python.psi.*;
+import com.jetbrains.python.psi.impl.PyStringLiteralExpressionImpl;
 import org.h2o.utils.RequirementsSingleton;
 import org.h2o.utils.Utils;
 import org.h2o.utils.UtilsResources;
@@ -93,23 +94,54 @@ public class WaveCompletionContributor extends CompletionContributor {
 
         extend(
                 CompletionType.BASIC,
+                psiElement(PyTokenTypes.IDENTIFIER)
+                        .withParent(psiElement(PyReferenceExpression.class)
+                                .withFirstChild(psiElement(PyReferenceExpression.class)
+                                        .withFirstChild(psiElement(PyReferenceExpression.class).withText("q.events"))
+                                )
+                        )
+                        .withLanguage(PythonLanguage.INSTANCE),
+                new CompletionProvider<CompletionParameters>() {
+                    @Override
+                    protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
+                        PsiElement position = parameters.getPosition();
+                        Function f = file -> findChildrenOfType(file, PyCallExpression.class)
+                                .stream()
+                                .filter(expr -> expr.getText().startsWith("ui."))
+                                .forEach(expr -> {
+                                    PyExpression eventsArg = expr.getKeywordArgument("events");
+                                    if (eventsArg instanceof PyListLiteralExpression) {
+                                        Arrays.stream(((PyListLiteralExpression) eventsArg).getElements()).forEach(event -> {
+                                            if (event instanceof PyStringLiteralExpression && !(event.getFirstChild() instanceof PyFormattedStringElement)) {
+                                                addToCompletion(result, ((PyStringLiteralExpression) event).getStringValue(), "");
+                                            }
+                                        });
+                                    }
+                                });
+                        fillCompletions(position.getContainingFile(), RequirementsSingleton.getRequirementsText(position.getProject()), new HashMap<>(), f);
+                    }
+                }
+        );
+        extend(
+                CompletionType.BASIC,
                 getExpressionAutocompletePatterns("q.events"),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
                         PsiElement position = parameters.getPosition();
-                        Function f = (file) -> findChildrenOfType(file, PyKeywordArgument.class)
+                        Function f = (file) -> findChildrenOfType(file, PyCallExpression.class)
                                 .stream()
-                                .filter(arg -> isValidKeywordArg(arg, "events", null))
-                                .forEach(arg -> Arrays.stream(arg.getChildren()).forEach(argChild -> {
-                                    if (argChild instanceof PyListLiteralExpression) {
-                                        Arrays.stream(((PyListLiteralExpression) argChild).getElements()).forEach(argElement -> {
-                                            if (argElement instanceof PyStringLiteralExpression && isSimpleString(argElement)) {
-                                                addToCompletion(result, ((PyStringLiteralExpression) argElement).getStringValue(), "");
-                                            }
-                                        });
+                                .filter(expr -> expr.getText().startsWith("ui.") && (expr.getKeywordArgument("events") != null || expr.getKeywordArgument("pagination") != null))
+                                .forEach(expr -> {
+                                    PyExpression nameArg = expr.getKeywordArgument("name");
+                                    if (nameArg == null) {
+                                        nameArg = expr.getArgument(0, PyStringLiteralExpression.class);
                                     }
-                                }));
+                                    if (nameArg != null) {
+                                        addToCompletion(result, ((PyStringLiteralExpressionImpl) nameArg).getStringValue(), "");
+                                    }
+//                                        TODO: Handle edgecase when name not present?
+                                });
                         fillCompletions(position.getContainingFile(), RequirementsSingleton.getRequirementsText(position.getProject()), new HashMap<>(), f);
                     }
                 }

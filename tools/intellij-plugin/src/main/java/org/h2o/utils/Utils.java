@@ -44,13 +44,6 @@ public class Utils {
                 && keywordParent != null && Objects.equals(keywordParent.getKeyword(), "name");
     }
 
-    public static boolean isValidKeywordArg(PsiElement el, String keyword, String containingEl) {
-        return el instanceof PyKeywordArgument
-                && isSimpleString(el.getFirstChild())
-                && Objects.equals(((PyKeywordArgument) el).getKeyword(), keyword)
-                && findFirstParent(el, e -> e.getText().startsWith(containingEl != null ? containingEl : "ui")) != null;
-    }
-
     public static boolean shouldBeScanned(String name, String requirementsContent) {
         return name != null && !name.equals("h2o_wave") && (requirementsContent == null || !requirementsContent.contains(name));
     }
@@ -68,7 +61,8 @@ public class Utils {
     }
 
     public static @NotNull ElementPattern<PsiElement> getExpressionAutocompletePatterns(String expr) {
-        return PlatformPatterns.or(psiElement(PyTokenTypes.IDENTIFIER)
+        return PlatformPatterns.or(
+                psiElement(PyTokenTypes.IDENTIFIER)
                         .withParent(psiElement(PyReferenceExpression.class)
                                 .withFirstChild(psiElement(PyReferenceExpression.class).withText(expr))
                         )
