@@ -263,7 +263,7 @@ const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
       onColumnClick = (e: React.MouseEvent<HTMLElement>, column: WaveColumn) => {
-        const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
+        const isMenuClicked = (e.target as HTMLElement).closest('[data-icon-name="ChevronDown"]')
 
         if (isMenuClicked) onColumnContextMenu(column, e)
         else if (column.isSortable) {
