@@ -36,8 +36,11 @@ async def serve(q: Q):
 
     # These should not be included in completions.
     q.client
+    q.client[q.client.aa]
     q.app
+    q.app[q.app.aa]
     q.user
+    q.user[q.user.aa]
     ui.plot_card(events=[f'dont_include'])
     ui.zone(name=f'dont_include')
     ui.button(name=f'dont_include')

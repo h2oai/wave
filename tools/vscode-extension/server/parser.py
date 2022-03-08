@@ -8,6 +8,7 @@ class FileMetadata():
     files_to_parse: Dict[str, str] = {}
 
     def __init__(self) -> None:
+        # TODO: Consider using Set instead of List.
         self.args: List[str] = []
         self.events: List[str] = []
         self.zones: List[str] = []
@@ -17,10 +18,10 @@ class FileMetadata():
         self.deps: Set[str] = set()
 
     def add_completion(self, node: Any, completion_type: str) -> None:
-        if node.type == 'string' or completion_type not in ['zones', 'args', 'events']:
+        if (node.type == 'string' or node.type == 'name'):
             val = node.value.replace("'", '').replace('"', '')
-            if completion_type != 'args' or not val.startswith('#'):
-                getattr(self, completion_type).append(val) if val else None
+            if val and (completion_type != 'args' or not val.startswith('#')):
+                getattr(self, completion_type).append(val)
 
     @staticmethod
     def set_files_to_parse(files: List[str]) -> None:
@@ -38,6 +39,7 @@ def read_file(file: str) -> str:
         return f.read()
 
 
+# TODO: Refactor to pure function into one with side effects.
 def fill_metadata(node: Any, file_metadata: FileMetadata) -> None:
     completion_found = False
     if node.type == 'argument':
@@ -96,6 +98,7 @@ def fill_deps(tree: Any, file_metadata: FileMetadata) -> None:
             for path in list(itertools.chain.from_iterable(imp.get_paths())):
                 file_metadata.add_dep(path.value)
 
+
 def fill_completion(file_content: str, should_fill_deps=True, metadata: Optional[FileMetadata]=None) -> FileMetadata:
     tree = parso.parse(file_content)
     file_metadata = metadata or FileMetadata()
@@ -103,6 +106,7 @@ def fill_completion(file_content: str, should_fill_deps=True, metadata: Optional
     if should_fill_deps:
         fill_deps(tree, file_metadata)
     return file_metadata
+
 
 def get_initial_completions(root: str) -> Dict[str, FileMetadata]:
     store: Dict[str, FileMetadata] = {}

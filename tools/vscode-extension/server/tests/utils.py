@@ -13,7 +13,7 @@ class BaseTestCase(unittest.TestCase):
     def __init__(self, methodName: str) -> None:
         super().__init__(methodName=methodName)
         self.server = FakeServer()
-        init(self.server)
+        init(self.server, None)
 
     def get_completions(self, fake_content: str, inline=True, doc_uri=None, typing_offset=0) -> List[str]:
         fake_document = Document('fake_uri', fake_content)

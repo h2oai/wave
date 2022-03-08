@@ -26,19 +26,23 @@ from pygls.server import LanguageServer
 from .parser import FileMetadata, fill_completion, get_completion_type, get_initial_completions
 from .utils import fluent_icons, themes
 
+
 class WaveLanguageServer(LanguageServer):
     def __init__(self):
         super().__init__()
         self.store = {}
 
+
 server = WaveLanguageServer()
+
 
 def get_completions_from_deps(ls: WaveLanguageServer, file: FileMetadata, completion_type: str, completions: Set[str], visited: List[str]) -> None:
     completions.update(getattr(file, completion_type))
     for dep in file.deps:
-        if not dep in visited:
+        if dep not in visited:
             visited.append(dep)
             get_completions_from_deps(ls, ls.store.get(dep), completion_type, completions, visited)
+
 
 @server.feature(COMPLETION, CompletionOptions(trigger_characters=['.', '\'', '"']))
 def completions(ls: WaveLanguageServer, params: Optional[CompletionParams] = None) -> CompletionList:
@@ -60,15 +64,18 @@ def completions(ls: WaveLanguageServer, params: Optional[CompletionParams] = Non
 
     return CompletionList(is_incomplete=False, items=items)
 
+
+# Unused params cannot be removed otherwise the init method callback not called for some reason.
 @server.feature(INITIALIZED)
-def init(ls: WaveLanguageServer):
+def init(ls: WaveLanguageServer, params: Optional[InitializedParams]):
     ls.store = get_initial_completions(ls.workspace.root_path)
+
 
 @server.feature(TEXT_DOCUMENT_DID_SAVE, TextDocumentSaveRegistrationOptions(include_text=True))
 def did_save(ls: WaveLanguageServer, params: DidSaveTextDocumentParams):
     if params.text:
         document_uri = params.text_document.uri.replace('file://', '')
-        orig_file = ls.store[document_uri] 
+        orig_file = ls.store[document_uri]
         updated_file = fill_completion(params.text)
         # Remove parent dependencies if imports removed.
         for dep in orig_file.deps.difference(updated_file.deps):
@@ -76,4 +83,4 @@ def did_save(ls: WaveLanguageServer, params: DidSaveTextDocumentParams):
         # Add parent dependencies if imports added.
         for dep in updated_file.deps.difference(orig_file.deps):
             ls.store[dep].deps.add(document_uri)
-        ls.store[document_uri] = updated_file 
+        ls.store[document_uri] = updated_file
