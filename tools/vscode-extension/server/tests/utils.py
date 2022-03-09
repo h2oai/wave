@@ -27,26 +27,41 @@ class BaseTestCase(unittest.TestCase):
     def assert_zones(self, type_text: str, inline=True) -> None:
         completions = self.get_completions(type_text, inline)
         self.assertEqual(len(completions), 5)
-        self.assertTrue('current_file' in completions)
-        self.assertTrue('positional_arg' in completions)
-        self.assertTrue('from_import' in completions)
-        self.assertTrue('regular_import' in completions)
-        self.assertTrue('with_comment' in completions)
+        self.assertIn('current_file', completions)
+        self.assertIn('positional_arg', completions)
+        self.assertIn('from_import', completions)
+        self.assertIn('regular_import', completions)
+        self.assertIn('with_comment', completions)
 
     def assert_state(self, type_text: str, inline=True, doc_uri: Optional[str] = None) -> None:
         completions = self.get_completions(type_text, inline, doc_uri)
         self.assertEqual(len(completions), 4)
-        self.assertTrue('current_file' in completions)
-        self.assertTrue('from_import' in completions)
-        self.assertTrue('regular_import' in completions)
-        self.assertTrue('str_key' in completions)
+        self.assertIn('current_file', completions)
+        self.assertIn('from_import', completions)
+        self.assertIn('regular_import', completions)
+        self.assertIn('str_key', completions)
 
     def assert_interaction(self, type_text: str, inline=True) -> None:
         completions = self.get_completions(type_text, inline)
         self.assertEqual(len(completions), 3)
-        self.assertTrue('current_file' in completions)
-        self.assertTrue('from_import' in completions)
-        self.assertTrue('regular_import' in completions)
+        self.assertIn('current_file', completions)
+        self.assertIn('from_import', completions)
+        self.assertIn('regular_import', completions)
+
+    def assert_events(self, type_text: str, inline=True) -> None:
+        completions = self.get_completions(type_text, inline)
+        self.assertEqual(len(completions), 3)
+        self.assertIn('current_file', completions)
+        self.assertIn('from_import', completions)
+        self.assertIn('regular_import', completions)
+
+    def assert_event_widgets(self, type_text: str, inline=True) -> None:
+        completions = self.get_completions(type_text, inline)
+        self.assertEqual(len(completions), 4)
+        self.assertIn('current_file_name', completions)
+        self.assertIn('current_file_name_multi_events', completions)
+        self.assertIn('from_import_name', completions)
+        self.assertIn('regular_import_name', completions)
 
 
 class FakeServer():

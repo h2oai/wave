@@ -36,12 +36,19 @@ class WaveLanguageServer(LanguageServer):
 server = WaveLanguageServer()
 
 
-def get_completions_from_deps(ls: WaveLanguageServer, file: FileMetadata, completion_type: str, completions: Set[str], visited: List[str]) -> None:
-    completions.update(getattr(file, completion_type))
+def get_completions_from_deps(ls: WaveLanguageServer, file: FileMetadata, completion_type: str, completions: Set[str], visited: List[str], leaf_val: Optional[str]) -> None:
+    completion_items = []
+    if completion_type == 'events' and leaf_val:
+        completion_items = list(getattr(file, completion_type).get(leaf_val, []))
+    elif completion_type == 'events' and leaf_val is None:
+        completion_items = list(getattr(file, completion_type).keys())
+    elif leaf_val is None:
+        completion_items = getattr(file, completion_type)
+    completions.update(completion_items)
     for dep in file.deps:
         if dep not in visited:
             visited.append(dep)
-            get_completions_from_deps(ls, ls.store.get(dep), completion_type, completions, visited)
+            get_completions_from_deps(ls, ls.store.get(dep), completion_type, completions, visited, leaf_val)
 
 
 @server.feature(COMPLETION, CompletionOptions(trigger_characters=['.', '\'', '"']))
@@ -49,13 +56,13 @@ def completions(ls: WaveLanguageServer, params: Optional[CompletionParams] = Non
     items = []
     if params:
         file_content = ls.workspace.get_document(params.text_document.uri).source
-        completion_type = get_completion_type(params.position.line, params.position.character, file_content)
+        completion_type, prev_val = get_completion_type(params.position.line, params.position.character, file_content)
         if completion_type and hasattr(FileMetadata(), completion_type):
             completions: Set[str] = set()
             document_uri = params.text_document.uri.replace('file://', '')
             visited = [document_uri]
             ls.store[document_uri] = fill_completion(file_content, False, ls.store.get(document_uri))
-            get_completions_from_deps(ls, ls.store.get(document_uri), completion_type, completions, visited)
+            get_completions_from_deps(ls, ls.store.get(document_uri), completion_type, completions, visited, prev_val)
             items = [CompletionItem(label=label, kind=CompletionItemKind.Variable, sort_text='0') for label in completions]
         elif completion_type == 'icons':
             items = [CompletionItem(label=icon, kind=CompletionItemKind.Enum, sort_text='0') for icon in fluent_icons]
