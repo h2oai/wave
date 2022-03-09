@@ -9858,7 +9858,7 @@ class PreviewCard:
         self.items = items
         """Mini buttons displayed at the top-right corner"""
         self.caption = caption
-        """The card's caption, displayed bellow the title."""
+        """The card's caption, displayed below the title."""
         self.label = label
         """Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore."""
         self.commands = commands
@@ -11546,6 +11546,7 @@ class WideArticlePreviewCard:
             aux_value: Optional[str] = None,
             caption: Optional[str] = None,
             items: Optional[List[Component]] = None,
+            content: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WideArticlePreviewCard.box', box, (str,), False, False, False)
@@ -11556,6 +11557,7 @@ class WideArticlePreviewCard:
         _guard_scalar('WideArticlePreviewCard.aux_value', aux_value, (str,), False, True, False)
         _guard_scalar('WideArticlePreviewCard.caption', caption, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.items', items, (Component,), False, True, False)
+        _guard_scalar('WideArticlePreviewCard.content', content, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -11570,9 +11572,11 @@ class WideArticlePreviewCard:
         self.aux_value = aux_value
         """The card's auxiliary text, displayed on the right-hand side of the header."""
         self.caption = caption
-        """The card's caption, displayed below the title on the right-hand side."""
+        """DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side."""
         self.items = items
         """The card's buttons, displayed under the caption."""
+        self.content = content
+        """The card's markdown content, displayed below the title on the right-hand side."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -11586,6 +11590,7 @@ class WideArticlePreviewCard:
         _guard_scalar('WideArticlePreviewCard.aux_value', self.aux_value, (str,), False, True, False)
         _guard_scalar('WideArticlePreviewCard.caption', self.caption, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.items', self.items, (Component,), False, True, False)
+        _guard_scalar('WideArticlePreviewCard.content', self.content, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_article_preview',
@@ -11597,6 +11602,7 @@ class WideArticlePreviewCard:
             aux_value=self.aux_value,
             caption=self.caption,
             items=None if self.items is None else [__e.dump() for __e in self.items],
+            content=self.content,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -11619,6 +11625,8 @@ class WideArticlePreviewCard:
         _guard_scalar('WideArticlePreviewCard.caption', __d_caption, (str,), False, True, False)
         __d_items: Any = __d.get('items')
         _guard_vector('WideArticlePreviewCard.items', __d_items, (dict,), False, True, False)
+        __d_content: Any = __d.get('content')
+        _guard_scalar('WideArticlePreviewCard.content', __d_content, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WideArticlePreviewCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -11629,6 +11637,7 @@ class WideArticlePreviewCard:
         aux_value: Optional[str] = __d_aux_value
         caption: Optional[str] = __d_caption
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        content: Optional[str] = __d_content
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideArticlePreviewCard(
             box,
@@ -11639,6 +11648,7 @@ class WideArticlePreviewCard:
             aux_value,
             caption,
             items,
+            content,
             commands,
         )
 

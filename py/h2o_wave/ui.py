@@ -3511,7 +3511,7 @@ def preview_card(
         image: The card’s image.
         title: The card's title
         items: Mini buttons displayed at the top-right corner
-        caption: The card's caption, displayed bellow the title.
+        caption: The card's caption, displayed below the title.
         label: Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore.
         commands: Contextual menu commands for this component.
     Returns:
@@ -4128,6 +4128,7 @@ def wide_article_preview_card(
         aux_value: Optional[str] = None,
         caption: Optional[str] = None,
         items: Optional[List[Component]] = None,
+        content: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideArticlePreviewCard:
     """Create a wide article preview card displaying a persona, image, title, caption, and optional buttons.
@@ -4139,12 +4140,15 @@ def wide_article_preview_card(
         title: The card's title on the right-hand side
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         aux_value: The card's auxiliary text, displayed on the right-hand side of the header.
-        caption: The card's caption, displayed below the title on the right-hand side.
+        caption: DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side.
         items: The card's buttons, displayed under the caption.
+        content: The card's markdown content, displayed below the title on the right-hand side.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideArticlePreviewCard` instance.
     """
+    if caption is not None:
+        warnings.warn('The caption argument is deprecated.')
     return WideArticlePreviewCard(
         box,
         persona,
@@ -4154,6 +4158,7 @@ def wide_article_preview_card(
         aux_value,
         caption,
         items,
+        content,
         commands,
     )
 

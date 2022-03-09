@@ -28,7 +28,7 @@ q.page['example'] = ui.wide_article_preview_card(
     aux_value='2h ago',
     image='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
     title='Jasmine Grand',
-    caption='''
+    content='''
 Duis porttitor tincidunt justo ac semper. Vestibulum et molestie lectus. Proin vel eros a ex condimentum aliquam.
 Sed accumsan tellus sit amet nulla ullamcorper. Suspendisse bibendum tristique sem, quis lacinia ex pulvinar quis.
 Nam elementum accumsan porta. Sed eget aliquam elit, sed luctus lorem. Nulla gravida malesuada purus eu eleifend.

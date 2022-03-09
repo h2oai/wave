@@ -20,6 +20,7 @@ import { cards } from './layout'
 import { clas, cssVar, important, px } from './theme'
 import { bond, wave } from './ui'
 import { XPersona } from './persona'
+import { Markdown } from './markdown'
 
 const css = stylesheet({
   card: {
@@ -102,24 +103,27 @@ export interface State {
   name?: S
   /** The card's auxiliary text, displayed on the right-hand side of the header. */
   aux_value?: S
-  /** The card's caption, displayed below the title on the right-hand side. */
+  /** DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side. */
   caption?: S
   /** The card's buttons, displayed under the caption. */
   items?: Component[]
+  /** The card's markdown content, displayed below the title on the right-hand side. */
+  content?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const render = () => {
-    const { persona, aux_value, name: stateName, image, title, caption, items } = state,
-    onClick = () => {
-      if (!stateName) return
-      if (stateName.startsWith('#')) {
-        window.location.hash = stateName.substr(1)
-        return
+    const
+      { persona, aux_value, name: stateName, image, title, caption, items, content } = state,
+      onClick = () => {
+        if (!stateName) return
+        if (stateName.startsWith('#')) {
+          window.location.hash = stateName.substr(1)
+          return
+        }
+        wave.args[stateName] = stateName
+        wave.push()
       }
-      wave.args[stateName] = stateName
-      wave.push()
-    }
     if (persona.persona) persona.persona.size = 'xs'
     return (
       <div
@@ -136,7 +140,11 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
           <div className={css.rhs}>
             <div>
               {title && <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>}
-              {caption && <div style={{ marginBottom: items ? 24 : 0 }} className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
+              {(content || caption) && (
+                <div style={{ marginBottom: items ? 24 : 0 }} className='wave-s14 wave-w4 wave-t7'>
+                  {content ? <Markdown source={content} /> : caption}
+                </div>
+              )}
             </div>
             {items && <div className={css.items}><XComponents items={items} /></div>}
           </div>

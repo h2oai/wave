@@ -29,9 +29,9 @@ async def serve(q: Q):
             aux_value='2h ago',
             image='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
             title='Jasmine Grand',
-            caption='''
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum sed odio porro veniam dolorum velit doloremque neque aliquam quisquam rem officiis, eius facilis iste quam, minus repellat magni iure eaque!
-                Veniam pariatur itaque nisi, a nam consequuntur. Aliquam nulla sequi, nihil soluta quaerat vitae inventore magni vero voluptates officiis dolorem alias incidunt iure in sapiente doloribus, quos distinctio? Illo, ullam?
+            content='''
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum sed odio porro veniam dolorum velit doloremque neque aliquam quisquam rem officiis, eius facilis iste quam, minus repellat magni iure eaque!
+Veniam pariatur itaque nisi, a nam consequuntur. Aliquam nulla sequi, nihil soluta quaerat vitae inventore magni vero voluptates officiis dolorem alias incidunt iure in sapiente doloribus, quos distinctio? Illo, ullam?
             ''',
             items=[
                 ui.inline(justify='end', items=[

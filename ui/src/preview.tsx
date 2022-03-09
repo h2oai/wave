@@ -65,7 +65,7 @@ export interface State {
   title?: S
   /** Mini buttons displayed at the top-right corner */
   items?: Component[]
-  /** The card's caption, displayed bellow the title. */
+  /** The card's caption, displayed below the title. */
   caption?: S
   /** Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore. */
   label?: S
@@ -74,13 +74,13 @@ export interface State {
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const render = () => {
     const { image, title, name: stateName, label, caption, items } = state,
-    onClick = () => {
-      if (stateName.startsWith('#')) {
-        window.location.hash = stateName.substr(1)
-        return
-      }
-      wave.args[stateName] = stateName
-      wave.push()
+      onClick = () => {
+        if (stateName.startsWith('#')) {
+          window.location.hash = stateName.substr(1)
+          return
+        }
+        wave.args[stateName] = stateName
+        wave.push()
       }
 
     return (
@@ -90,7 +90,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         className={clas(css.card, stateName && !label ? css.clickable : '')}
         style={{ backgroundImage: `url('${image}')` }}
       >
-        <div className={css.content} style={{ background: cssVar('$card7'), boxShadow: `0px 6px 30px 30px ${cssVar('$card7')}`  }}>
+        <div className={css.content} style={{ background: cssVar('$card7'), boxShadow: `0px 6px 30px 30px ${cssVar('$card7')}` }}>
           <div className={css.header}>
             {title && <div className='wave-s20 wave-w6'>{title}</div>}
             {items && <div className={css.items}><XComponents items={items} /></div>}

@@ -4063,7 +4063,7 @@ ui_post_card <- function(
 #' @param image The card’s image.
 #' @param title The card's title
 #' @param items Mini buttons displayed at the top-right corner
-#' @param caption The card's caption, displayed bellow the title.
+#' @param caption The card's caption, displayed below the title.
 #' @param label Label of a button rendered at the bottom of the card. If specified, the whole card is not clickable anymore.
 #' @param commands Contextual menu commands for this component.
 #' @return A PreviewCard instance.
@@ -4792,8 +4792,9 @@ ui_vega_card <- function(
 #' @param title The card's title on the right-hand side
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param aux_value The card's auxiliary text, displayed on the right-hand side of the header.
-#' @param caption The card's caption, displayed below the title on the right-hand side.
+#' @param caption DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side.
 #' @param items The card's buttons, displayed under the caption.
+#' @param content The card's markdown content, displayed below the title on the right-hand side.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideArticlePreviewCard instance.
 #' @export
@@ -4806,6 +4807,7 @@ ui_wide_article_preview_card <- function(
   aux_value = NULL,
   caption = NULL,
   items = NULL,
+  content = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("persona", "WaveComponent", persona)
@@ -4815,6 +4817,7 @@ ui_wide_article_preview_card <- function(
   .guard_scalar("aux_value", "character", aux_value)
   .guard_scalar("caption", "character", caption)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("content", "character", content)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4825,6 +4828,7 @@ ui_wide_article_preview_card <- function(
     aux_value=aux_value,
     caption=caption,
     items=items,
+    content=content,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideArticlePreviewCard"))
   return(.o)
