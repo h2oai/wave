@@ -98,6 +98,23 @@ import { Downloads } from '@site/src/components/downloads'
 
 <Downloads />
 
+## Early adopters
+
+For people who simply cannot wait until next release and would like to try the new cool feature merged just a day ago, we also provide so-called "**nightly builds**". These are builds that are released daily (over night).
+
+We highly encourage using nightly builds as they allow catching possible regressions ahead of an official release. So please, if you spot something weird that is not happening in the latest release,
+[file an issue](https://github.com/h2oai/wave/issues/new?labels=bug&template=bug_report.md).
+
+To use nightly: 
+
+* Go to [nightly release page](https://github.com/h2oai/wave/releases/tag/nightly).
+* Download the appropriate `.whl` file for your OS.
+* Run `pip install <downloaded-nightly>.whl` (this is an alternative to `pip install h2o-wave` with official releases).
+
+:::tip
+It's possible to include the local `.whl` file directly within your `requirements.txt` if needed.
+:::
+
 ## Wrapping up
 
 In this section, we installed Wave and then launched `tour.py` to experience the tour. In general, this is how you'd typically launch any app, including your own. There is nothing special about `tour.py`. In fact, to run any example, all you need to do is repeat the steps above in a new terminal window. For example, to run `todo.py`, simply run:
