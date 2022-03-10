@@ -28,7 +28,7 @@ async def serve(q: Q):
         ))
     if q.args.top_center:
         q.page['meta'] = ui.meta_card(box='', notification_bar=ui.notification_bar(
-            text='Error notification that should hopefully span at least two lines',
+            text='Error notification message that should hopefully span at least two lines.',
             type='error',
             position='top-center',
             buttons=[

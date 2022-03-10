@@ -91,7 +91,7 @@ async def serve(q: Q):
                 zones=[
                     ui.zone('header'),
                     ui.zone('content', direction=ui.ZoneDirection.ROW, zones=[
-                        ui.zone('colors', size='340px'),
+                        ui.zone('colors', size='400px'),
                         ui.zone('preview')
                     ]),
                     ui.zone('footer')
@@ -153,7 +153,7 @@ async def serve(q: Q):
                     columns=[
                         ui.table_column(name='name', label='Name', min_width='80px'),
                         ui.table_column(name='surname', label='Surname', filterable=True),
-                        ui.table_column(name='age', label='Age', sortable=True),
+                        ui.table_column(name='age', label='Age', sortable=True, max_width='80px'),
                         ui.table_column(name='progress', label='Progress',
                                         cell_type=ui.progress_table_cell_type(color='$themePrimary')),
                     ],

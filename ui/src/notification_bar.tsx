@@ -18,6 +18,7 @@ import React from 'react'
 import { Component } from './form'
 import { grid } from './layout'
 import { MessageBar } from "./message_bar"
+import { pc } from './theme'
 import { bond } from './ui'
 
 /**
@@ -88,6 +89,7 @@ export const
             animationDuration: '0.5s',
             animationFillMode: 'forwards',
             maxWidth: 500,
+            width: pc(100),
             ...getPosition(currentModel?.position, shouldBeOpen)
           },
           buttons = currentModel?.buttons?.filter(({ button }) => button),

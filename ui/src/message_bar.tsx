@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { Markdown } from './markdown'
-import { important, margin, pc, px } from './theme'
+import { important, px } from './theme'
 
 /**
  * Create a message bar.
@@ -129,19 +129,20 @@ export const
                 background,
                 color,
                 borderRadius: 4,
-                width: pc(100),
+                width: 'auto',
                 '.ms-Link': { color, fontWeight: 600 },
                 '.ms-Link:hover': { textDecoration: 'none', color },
+                padding: 16,
                 ...extraStyles
               },
               content: { alignItems: isMultiline ? 'start' : 'center' },
-              icon: { fontSize: 24, color },
-              iconContainer: { margin: margin(16, 16, 16, 24), display: 'flex', alignItems: 'center' },
-              text: { margin: margin(16, 0) },
+              icon: { fontSize: 24, color, display: 'inline-flex' },
+              iconContainer: { margin: 0, marginRight: 16, display: 'flex', alignItems: 'center' },
+              text: { margin: 0 },
               innerText: { whiteSpace: important('initial') },
-              dismissal: { fontSize: 16, height: 'auto', margin: margin(16, 16, 16, 0), padding: 0, '.ms-Button-flexContainer': { display: 'block' } },
+              dismissal: { fontSize: 16, height: 'auto', marginLeft: 16, padding: 0, '.ms-Button-flexContainer': { display: 'block' } },
               dismissSingleLine: { display: 'flex' },
-              actions: { margin: 16, marginTop: isMultiline ? 0 : undefined }
+              actions: { margin: 0, marginTop: isMultiline ? 12 : undefined }
             }}
             messageBarType={toMessageBarType(type)}
             onDismiss={onDismiss}
