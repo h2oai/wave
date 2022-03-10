@@ -30,18 +30,16 @@ public class Utils {
         return el.getText().startsWith(stateType) && el.getFirstChild().getText().equals(stateType);
     }
 
-    public static boolean isSimpleString(PsiElement el) {
-        return !(el.getFirstChild() instanceof PyFormattedStringElement)
-                && !(el.getParent() instanceof PyBinaryExpression);
-    }
+    public static boolean isValidNameArg(PyCallExpression callExpression) {
+        PyExpression nameArg = callExpression.getKeywordArgument("name");
 
-    public static boolean isValidNameArg(PsiElement el) {
-        PyCallExpression callExprParent = getParentOfType(el, PyCallExpression.class);
-        String exprText = callExprParent != null ? callExprParent.getText() : null;
-        PyKeywordArgument keywordParent = getParentOfType(el, PyKeywordArgument.class);
-        return isSimpleString(el)
-                && exprText != null && exprText.startsWith("ui") && !exprText.startsWith("ui.zone")
-                && keywordParent != null && Objects.equals(keywordParent.getKeyword(), "name");
+        boolean excludeFromCompletion = !(nameArg instanceof PyStringLiteralExpression)
+                || callExpression.getKeywordArgument("events") != null
+                || nameArg.getFirstChild() instanceof PyFormattedStringElement;
+        if (excludeFromCompletion) return false;
+
+        String exprText = callExpression.getText();
+        return exprText != null && exprText.startsWith("ui.") && !exprText.startsWith("ui.zone");
     }
 
     public static boolean shouldBeScanned(String name, String requirementsContent) {

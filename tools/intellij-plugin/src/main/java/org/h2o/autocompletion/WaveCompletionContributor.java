@@ -154,10 +154,11 @@ public class WaveCompletionContributor extends CompletionContributor {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
                         PsiElement position = parameters.getPosition();
-                        Function f = (file) -> findChildrenOfType(file, PyStringLiteralExpression.class)
+                        Function f = file -> findChildrenOfType(file, PyCallExpression.class)
                                 .stream()
                                 .filter(Utils::isValidNameArg)
-                                .forEach(name -> addToCompletion(result, name.getStringValue(), ""));
+                                .map(expr -> ((PyStringLiteralExpression)expr.getKeywordArgument("name")))
+                                .forEach(nameArg -> addToCompletion(result, nameArg.getStringValue(), ""));
                         fillCompletions(position.getContainingFile(), RequirementsSingleton.getRequirementsText(position.getProject()), new HashMap<>(), f);
                     }
                 }

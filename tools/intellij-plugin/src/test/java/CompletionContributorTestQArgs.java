@@ -110,4 +110,11 @@ public class CompletionContributorTestQArgs extends LightPlatformCodeInsightFixt
         myFixture.type("q.args.btn1.");
         assert myFixture.completeBasic().length == 0;
     }
+
+    @Test
+    public void noArgsAutocompleteForEventWidgets() {
+        myFixture.configureByText("test.py", "ui.dialog(name='dialog', events=['dismissed'])");
+        myFixture.type("q.args.");
+        assert myFixture.completeBasic().length == 0;
+    }
 }
