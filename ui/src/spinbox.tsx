@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, Id, S, U } from 'h2o-wave'
 import React from 'react'
+import { useControlledComponent } from './hooks'
 import { wave } from './ui'
 
 /**
@@ -65,9 +66,10 @@ const
     return -groups[1]?.length || groups[2]?.length || 0
   }
 export const
-  XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
+  XSpinbox = (props: { model: Spinbox }) => {
     const
-      [val, setVal] = React.useState<S>(String(value)),
+      { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } = props.model,
+      [val, setVal] = useControlledComponent(props, String(value)),
       precision = Math.max(calculatePrecision(step), 0),
       parseValue = React.useCallback((v: F) => {
         const x = precisionRound(v, precision)

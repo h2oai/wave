@@ -17,6 +17,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
+import { useControlledComponent } from './hooks'
 import { fuzzysearch } from './parts/utils'
 import { clas, cssVar, pc } from './theme'
 import { wave } from './ui'
@@ -81,11 +82,13 @@ const
       marginTop: 16
     }
   }),
-  BaseDropdown = ({ name, label, required, disabled, value, values, choices, trigger, placeholder }: Dropdown) => {
+  BaseDropdown = (props: Dropdown) => {
     const
+      { name, label, required, disabled, value, values, choices, trigger, placeholder } = props,
       isMultivalued = !!values,
       selection = React.useMemo(() => isMultivalued ? new Set<S>(values) : null, [isMultivalued, values]),
-      [selectedOptions, setSelectedOptions] = React.useState(Array.from(selection || [])),
+      [selected, setSelected] = useControlledComponent(props, value),
+      [selectedOptions, setSelectedOptions] = useControlledComponent(props, values),
       options = (choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
@@ -97,6 +100,7 @@ const
             wave.args[name] = selectedOpts
             setSelectedOptions(selectedOpts)
           } else {
+            setSelected(String(option.key))
             wave.args[name] = optionKey
           }
         }
@@ -134,7 +138,7 @@ const
           required={required}
           disabled={disabled}
           multiSelect={isMultivalued || undefined}
-          defaultSelectedKey={!isMultivalued ? value : undefined}
+          selectedKey={!isMultivalued ? selected : undefined}
           selectedKeys={isMultivalued ? selectedOptions : undefined}
           onChange={onChange}
         />
@@ -151,8 +155,9 @@ const
   },
   ROW_HEIGHT = 44,
   PAGE_SIZE = 40,
-  DialogDropdown = ({ name, choices, values, value, disabled, required, trigger, placeholder, label }: Dropdown) => {
+  DialogDropdown = (props: Dropdown) => {
     const
+      { name, choices, values, value, disabled, required, trigger, placeholder, label } = props,
       isMultivalued = !!values,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       initialSelectedMap = React.useMemo(() => {
@@ -162,14 +167,15 @@ const
       }, [value, values]),
       items = React.useMemo<DropdownItem[]>(() => choices?.map(({ name, label }, idx) => ({ name, text: label || name, idx, checked: initialSelectedMap.has(name) })) || [], [initialSelectedMap, choices]),
       [filteredItems, setFilteredItems] = React.useState(items),
-      [textValue, setTextValue] = React.useState(() => {
+      getInitialTextValue = () => {
         if (!values?.length && !value) return
 
         const itemsMap = new Map<S, S>(items.map(({ name, text }) => [name, text]))
 
         if (values?.length) return values.map(v => itemsMap.get(v) || '').filter(Boolean).join(', ')
         if (value) return itemsMap.get(value)
-      }),
+      },
+      [textValue, setTextValue] = useControlledComponent(props, getInitialTextValue()),
       toggleDialog = React.useCallback(() => setIsDialogHidden(!isDialogHidden), [isDialogHidden]),
       cancelDialog = React.useCallback(() => {
         toggleDialog()
@@ -184,7 +190,7 @@ const
         initialSelectedMap.clear()
         result.forEach(({ name }) => initialSelectedMap.set(name, true))
         cancelDialog()
-      }, [cancelDialog, initialSelectedMap, items, name, trigger]),
+      }, [cancelDialog, initialSelectedMap, items, name, trigger, setTextValue]),
       selectAll = (checked = true) => () => setFilteredItems(filteredItems.map(i => { i.checked = checked; return i })),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setFilteredItems(newVal ? items.filter(({ text }) => fuzzysearch(text, newVal)) : items),
       onChecked = React.useCallback((idx: U) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
@@ -203,6 +209,18 @@ const
           checked={item.checked} />
         : null, [onChecked]),
       getPageSpecification = React.useCallback(() => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE, } as Fluent.IPageSpecification), [])
+    
+    React.useEffect(() => {
+      setFilteredItems(items => {
+        return items.map(i => {
+          if (isMultivalued ? props?.values?.includes(i.name) : i.name === props.value) {
+            return ({ ...i, checked: true})
+          } else {
+            return ({ ...i, checked: false })
+          }
+        })
+      })
+    }, [props, initialSelectedMap, isMultivalued])
 
     return (
       <>

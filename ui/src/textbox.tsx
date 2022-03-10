@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
+import { useControlledComponent } from './hooks'
 import { debounce, wave } from './ui'
 
 /**
@@ -69,13 +70,17 @@ export interface Textbox {
 
 const DEBOUNCE_TIMEOUT = 500
 export const
-  XTextbox = ({ model: m }: { model: Textbox }) => {
-    const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
-      v = v || (target as HTMLInputElement).value
+  XTextbox = (props: { model: Textbox }) => {
+    const
+      m = props.model,
+      onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
+        v = v || (target as HTMLInputElement).value
 
-      wave.args[m.name] = v ?? (m.value || '')
-      if (m.trigger) wave.push()
-    }
+        wave.args[m.name] = v ?? (m.value || '')
+        setValue(v)
+        if (m.trigger) wave.push()
+      },
+      [value, setValue] = useControlledComponent(props, props.model.value)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m.value || '' }, [])
@@ -85,7 +90,7 @@ export const
         <Fluent.MaskedTextField
           data-test={m.name}
           label={m.label}
-          defaultValue={m.value}
+          value={value}
           mask={m.mask}
           errorMessage={m.error}
           required={m.required}
@@ -103,7 +108,7 @@ export const
           iconProps={{ iconName: m.icon }}
           prefix={m.prefix}
           suffix={m.suffix}
-          defaultValue={m.value}
+          value={value}
           errorMessage={m.error}
           required={m.required}
           disabled={m.disabled}

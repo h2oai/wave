@@ -17,6 +17,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
+import { useControlledComponent } from './hooks'
 import { clas, margin } from './theme'
 import { wave } from './ui'
 
@@ -74,13 +75,13 @@ export const
     const
       defaultSelection = React.useMemo(() => new Set<S>(m.values), [m.values]),
       getMappedChoices = React.useCallback(() => m.choices?.map(c => ({ c, selected: defaultSelection.has(c.name) })) || [], [defaultSelection, m.choices]),
-      [choices, setChoices] = React.useState(getMappedChoices()),
+      [choices, setChoices] = useControlledComponent(m, getMappedChoices()),
       capture = (choices: { c: Choice, selected: B }[]) => {
         wave.args[m.name] = choices.filter(({ selected }) => selected).map(({ c }) => c.name)
         if (m.trigger) wave.push()
       },
       select = (value: B) => {
-        const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
+        const _choices = choices.map(({ c, selected }: { c: Choice, selected: B}) => ({ c, selected: c.disabled ? selected : value }))
         setChoices(_choices)
         capture(_choices)
       },
@@ -92,7 +93,7 @@ export const
         setChoices(_choices)
         capture(_choices)
       },
-      items = choices.map(({ c, selected }, i) => (
+      items = choices.map(({ c, selected }: { c: Choice, selected: B}, i: number) => (
         <Fluent.Checkbox
           key={i}
           data-test={`checkbox-${i + 1}`}
@@ -106,7 +107,7 @@ export const
       ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m.values || [] }, [])
-    React.useEffect(() => { setChoices(getMappedChoices()) }, [getMappedChoices, m.choices])
+    React.useEffect(() => { setChoices(getMappedChoices()) }, [getMappedChoices, m.choices, setChoices])
     return (
       <div data-test={m.name}>
         <Fluent.Label>{m.label}</Fluent.Label>

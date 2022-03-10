@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
+import { useControlledComponent } from './hooks'
 import { wave } from './ui'
 
 /**
@@ -57,9 +58,10 @@ export interface Combobox {
 
 
 export const
-  XCombobox = ({ model: m }: { model: Combobox }) => {
+  XCombobox = (props: { model: Combobox }) => {
     const
-      [text, setText] = React.useState(m.value),
+      m = props.model,
+      [text, setText] = useControlledComponent(props, m.value),
       options = (m.choices || []).map((text, i): Fluent.IComboBoxOption => ({ key: `${i}`, text })),
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: string) => {
         const v = option?.text || value || ''

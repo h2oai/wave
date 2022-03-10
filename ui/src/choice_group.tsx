@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
+import { useControlledComponent } from './hooks'
 import { wave } from './ui'
 
 /**
@@ -65,25 +66,28 @@ export interface ChoiceGroup {
 }
 
 export const
-  XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
+  XChoiceGroup = (props: { model: ChoiceGroup }) => {
     const
+      { name, label, required, trigger } = props.model,
+      [value, setValue] = useControlledComponent(props, props.model.value),
       optionStyles = { choiceFieldWrapper: { marginRight: 15 } },
-      options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled, styles: optionStyles })),
+      options = (props.model.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled, styles: optionStyles })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
-        if (option) wave.args[m.name] = option.key
-        if (m.trigger) wave.push()
+        setValue(option?.key)
+        if (option) wave.args[name] = option.key
+        if (trigger) wave.push()
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
+    React.useEffect(() => { wave.args[name] = value || null }, [])
 
     return (
       <Fluent.ChoiceGroup
         styles={{ flexContainer: { display: 'flex', flexWrap: 'wrap' } }}
-        data-test={m.name}
-        label={m.label}
-        required={m.required}
-        defaultSelectedKey={m.value}
+        data-test={name}
+        label={label}
+        required={required}
+        selectedKey={value}
         options={options}
         onChange={onChange}
       />

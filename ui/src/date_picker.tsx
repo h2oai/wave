@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
+import { useControlledComponent } from './hooks'
 import { wave } from './ui'
 
 /**
@@ -56,19 +57,19 @@ const
     if (ss.length !== 3) return undefined
     const ymd = ss.map(s => parseInt(s, 10)).filter(n => !isNaN(n))
     if (ymd.length !== 3) return undefined
-    return new Date(ymd[0], ymd[1] - 1, ymd[2])
+    return new Date(ymd[0], ymd[1] - 1, ymd[2], 0, 0, 0)
   }
 
 export const
-  XDatePicker = ({ model: m }: { model: DatePicker }) => {
+  XDatePicker = (props: { model: DatePicker }) => {
     const
+      m = props.model,
       defaultVal = m.value || null,
-      parsedVal = defaultVal ? parseDate(defaultVal) : null,
-      [value, setValue] = React.useState<Date | undefined>(parsedVal ? new Date(parsedVal) : undefined),
+      [value, setValue] = useControlledComponent(props, m.value),
       onSelectDate = (d: Date | null | undefined) => {
-        const val = (d === null || d === undefined) ? defaultVal : formatDate(d)
+        const val = !d ? defaultVal : formatDate(d)
         wave.args[m.name] = val
-        setValue(val ? new Date(`${val} 00:00:00`) : undefined)
+        setValue(val) 
         if (m.trigger) wave.push()
       }
 
@@ -79,7 +80,7 @@ export const
       <Fluent.DatePicker
         data-test={m.name}
         label={m.label}
-        value={value}
+        value={parseDate(value)}
         placeholder={m.placeholder}
         disabled={m.disabled}
         onSelectDate={onSelectDate}

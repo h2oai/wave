@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
+import { useControlledComponent } from './hooks'
 import { wave } from './ui'
 
 /**
@@ -53,10 +54,12 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
   noResultsFoundText: 'No results found',
 }
 
-export const XPicker = ({ model: m }: { model: Picker }) => {
+export const XPicker = (props: { model: Picker }) => {
   const
+    { model: m } = props,
     tags: Fluent.ITag[] = React.useMemo(() => m.choices.map(({ name, label }) => ({ key: name, name: label || name })), [m.choices]),
-    [selectedTags, setSelectedTags] = React.useState<Fluent.ITag[]>(tags.filter(({ key }) => m.values?.includes(key as S))),
+
+    [selectedTags, setSelectedTags] = useControlledComponent(props, tags.filter(({ key }) => m.values?.includes(key as S))),
     filterSuggestedTags = (filterText: S, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
       const isStringMatch = (name: S) => name.toLowerCase().includes(filterText.toLowerCase())

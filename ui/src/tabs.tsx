@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { useControlledComponent } from './hooks'
 import { wave } from './ui'
 
 /**
@@ -61,18 +62,21 @@ const
   })
 
 export const
-  XTabs = ({ model: m }: { model: Tabs }) => {
+  XTabs = (props: { model: Tabs }) => {
     const
+      { name, items, link, value } = props.model,
+      [val, setVal] = useControlledComponent(props, value),
       onLinkClick = (item?: Fluent.PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
+        setVal(name)
         if (name.startsWith('#')) {
           window.location.hash = name.substr(1)
           return
         }
-        if (m.name) {
-          if (name !== wave.args[m.name]) {
-            wave.args[m.name] = name
+        if (name) {
+          if (name !== wave.args[name]) {
+            wave.args[name] = name
             wave.push()
           }
         } else {
@@ -80,14 +84,14 @@ export const
           wave.push()
         }
       },
-      tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
+      tabs = items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
     return (
       <div className={css.pivot}>
         <Fluent.Pivot
-          data-test={m.name}
-          className={m.link ? 'w-tabs-link' : 'w-tabs'} //HACK: Marker classes.
-          defaultSelectedKey={m.value}
-          linkFormat={m.link ? 'links' : 'tabs'}
+          data-test={name}
+          className={link ? 'w-tabs-link' : 'w-tabs'} //HACK: Marker classes.
+          selectedKey={val}
+          linkFormat={link ? 'links' : 'tabs'}
           onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
       </div>
     )

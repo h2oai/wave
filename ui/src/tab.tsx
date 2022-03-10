@@ -43,34 +43,51 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Model<State>) => {
+  XTab = (props: State) => {
     const
+      [value, setValue] = React.useState(props.value),
+      ref = React.useRef(false),
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
+        setValue(name)
+        ref.current = true
         if (name.startsWith('#')) {
           window.location.hash = name.substr(1)
           return
         }
-        if (state.name) {
-          wave.args[state.name] = name
+        if (name) {
+          wave.args[String(props.name)] = name
         } else {
-          wave.args[name] = true
+          wave.args[String(props.name)] = true
         }
         wave.push()
       },
-      render = () => {
-        const
-          linkFormat = state.link ? 'links' : 'tabs',
-          items = state.items.map(({ name, label, icon }) => (
-            <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
-          ))
-        return (
-          <div data-test={name} className={css.card}>
-            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
-          </div>
-        )
+      linkFormat = props.link ? 'links' : 'tabs',
+      items = props.items.map(({ name, label, icon }) => (
+        <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
+      ))
+    
+    React.useEffect(() => console.log('created'), [])
+    React.useLayoutEffect(() => {
+      if (!ref.current) {
+        setValue(props.value)
+      } else {
+        ref.current = false
       }
+    }, [props])
+
+    return (
+      <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={value}>{items}</Pivot>
+    )
+  },
+  
+  View = bond(({ name, state, changed }: Model<State>) => {
+    const render = () => (
+      <div data-test={name} className={css.card}>
+        <XTab {...state} />
+      </div>
+    )
     return { render, changed }
   })
 
