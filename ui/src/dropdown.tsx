@@ -214,7 +214,7 @@ const
           label={label}
           disabled={disabled}
           required={required}
-          styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: Fluent.getTheme().palette.neutralSecondary } }}
+          styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
           value={textValue || ''} />
         <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={cancelDialog} minWidth={600} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
@@ -253,12 +253,12 @@ const
 export const XDropdown = ({ model: m }: { model: Dropdown }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => { wave.args[m.name] = m.values ? (m.values || []) : (m.value || null) }, [])
-  
+
   return m.popup === 'always'
-      ? <DialogDropdown {...m} />
-      : m.popup === 'never'
-          ? <BaseDropdown {...m} />
-          : (m.choices?.length || 0) > 100
-              ? <DialogDropdown {...m} />
-              : <BaseDropdown {...m} />
+    ? <DialogDropdown {...m} />
+    : m.popup === 'never'
+      ? <BaseDropdown {...m} />
+      : (m.choices?.length || 0) > 100
+        ? <DialogDropdown {...m} />
+        : <BaseDropdown {...m} />
 }
