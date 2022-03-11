@@ -89,6 +89,10 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			s.get(w, r)
 		default: // static/public assets
+			if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+				Gzip(s, w, r)
+				return
+			}
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
