@@ -4,12 +4,9 @@
 from h2o_wave import Q, ui, main, app, cypress, Cypress
 
 
-
 @app('/demo')
 async def serve(q: Q):
-    if (
-            not q.client.initialized
-    ):  # First visit, create an empty form card for our wizard
+    if not q.client.initialized:  # First visit, create an empty form card for our wizard
         q.page['wizard'] = ui.form_card(box='1 1 2 4', items=[])
         q.client.initialized = True
 
