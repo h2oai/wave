@@ -37,14 +37,16 @@ func (w *gzipResponseWriter) Write(b []byte) (int, error) {
 	return w.Writer.Write(b)
 }
 
-func Gzip(s *WebServer, w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Encoding", "gzip")
+func GzipHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Encoding", "gzip")
 
-	gz := gzPool.Get().(*gzip.Writer)
-	defer gzPool.Put(gz)
+		gz := gzPool.Get().(*gzip.Writer)
+		defer gzPool.Put(gz)
 
-	gz.Reset(w)
-	defer gz.Close()
+		gz.Reset(w)
+		defer gz.Close()
 
-	s.fs.ServeHTTP(&gzipResponseWriter{ResponseWriter: w, Writer: gz}, r)
+		h.ServeHTTP(&gzipResponseWriter{ResponseWriter: w, Writer: gz}, r)
+	})
 }
