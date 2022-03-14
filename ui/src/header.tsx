@@ -139,7 +139,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
             </div>
           </div>
           {secondary_items && <div className={css.center}><XInline model={{ items: secondary_items }} /></div>}
-          {items && <div style={{ zIndex: 1 }}><XInline model={{ items }} /></div>}
+          {items && <div style={{ zIndex: 1, marginRight: state.commands ? 30 : undefined }}><XInline model={{ items }} /></div>}
           {nav && <Navigation items={nav} isOpenB={navB} />}
         </div>
       )

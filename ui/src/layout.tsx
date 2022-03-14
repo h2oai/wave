@@ -326,6 +326,9 @@ const css = stylesheet({
             color: cssVar('$text')
           }
         }
+      },
+      '& + div.w-card-menu i': {
+        color: cssVar('$card')
       }
     }
   },

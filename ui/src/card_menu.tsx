@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
+import { B, box, Box, S } from 'h2o-wave'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'
-import { B, box, Box, S } from 'h2o-wave'
+import { clas, cssVar } from './theme'
 import { Command } from './toolbar'
 import { bond, wave } from './ui'
-import { cssVar } from './theme'
 
 const
   css = stylesheet({
@@ -100,7 +100,8 @@ export const
           hidden = hiddenB(),
           items = cmds.map(toContextMenuItem)
         return items.length ? (
-          <div className={css.menu} data-test={name}>
+          // `w-card-menu` is a marker class.
+          <div className={clas(css.menu, 'w-card-menu')} data-test={name}>
             <div className={css.target} ref={target} onClick={show}>
               <Icon className={css.icon} iconName='MoreVertical' />
             </div>
