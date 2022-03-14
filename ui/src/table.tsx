@@ -145,7 +145,7 @@ type DataTable = {
   selection: Fluent.Selection
   isMultiple: B
   groups?: Fluent.IGroup[]
-  isCollapsedRef: React.MutableRefObject<{ [key: string]: boolean }>
+  isCollapsedRef: React.MutableRefObject<{ [key: string]: boolean } | null>
   setFiltersInBulk: (colKey: S, filters: S[]) => void
 }
 
@@ -381,11 +381,10 @@ const
         )
       }, []),
       onToggleCollapseAll = (isAllCollapsed: boolean) => {
-        groups?.forEach(({ key }) => {
-          isCollapsedRef.current[key] = isAllCollapsed
-        })
+        isCollapsedRef.current = isAllCollapsed ? null : {}
       },
       onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
+        if (isCollapsedRef.current === null) isCollapsedRef.current = {}
         isCollapsedRef.current[key] = !isCollapsed
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
@@ -509,7 +508,7 @@ export const
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
-      isCollapsedRef = React.useRef<{ [key: string]: boolean }>({}),
+      isCollapsedRef = React.useRef<{ [key: string]: boolean } | null>(null),
       [groupByKey, setGroupByKey] = React.useState(m.groups ? 'group' : '*'),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
@@ -530,24 +529,27 @@ export const
           groupedBy = groupByF(filteredItems, groupByKey),
           groupedByKeys = Object.keys(groupedBy),
           groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type,
-          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
+          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => { // TODO
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
 
             const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
-            if (isCollapsedRef.current[key] === undefined) isCollapsedRef.current[key] = groupable || groupedBy[key][0].collapsed
+            if (groupedBy[key][0].collapsed === false) {
+              if (isCollapsedRef.current === null) isCollapsedRef.current = {}
+              isCollapsedRef.current[key] = false
+            }
             return {
               key,
               name,
               startIndex: prevSum,
               count: groupedBy[key].length,
-              isCollapsed: isCollapsedRef.current[key],
+              isCollapsed: isCollapsedRef.current === null || isCollapsedRef.current[key] === undefined,
             }
           })
 
-        if (groupByKey !== 'group') {
+        if (m.groups) {
           groups.sort(({ name: name1 }, { name: name2 }) => {
             const numName1 = Number(name1), numName2 = Number(name2)
             if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
@@ -560,7 +562,7 @@ export const
         }
 
         return { groupedBy, groups }
-      }, [groupable, m.columns]),
+      }, [m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
@@ -605,13 +607,15 @@ export const
         if (option.key === '*') return
 
         setGroupByKey(option.key as S)
+        isCollapsedRef.current = null
         initGroups()
       },
       isSearchable = !!searchableKeys.length,
       download = () => {
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...items.map(({ cells }) => cells)]),
+          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
           blob = new Blob([data], { type: "octet/stream" }),
           url = window.URL.createObjectURL(blob)
