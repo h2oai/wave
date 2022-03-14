@@ -145,7 +145,7 @@ type DataTable = {
   selection: Fluent.Selection
   isMultiple: B
   groups?: Fluent.IGroup[]
-  isCollapsedRef: React.MutableRefObject<{ [key: string]: boolean } | null>
+  isCollapsedRef: React.MutableRefObject<{ [key: S]: B } | null>
   setFiltersInBulk: (colKey: S, filters: S[]) => void
 }
 
@@ -380,9 +380,7 @@ const
             }} />
         )
       }, []),
-      onToggleCollapseAll = (isAllCollapsed: boolean) => {
-        isCollapsedRef.current = isAllCollapsed ? null : {}
-      },
+      onToggleCollapseAll = (isAllCollapsed: boolean) => isCollapsedRef.current = isAllCollapsed ? null : {},
       onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
         if (isCollapsedRef.current === null) isCollapsedRef.current = {}
         isCollapsedRef.current[key] = !isCollapsed
@@ -465,7 +463,7 @@ const
             onToggleCollapseAll,
             onRenderHeader: onRenderGroupHeader,
             headerProps: { onToggleCollapse },
-            isAllGroupsCollapsed: !m.groups?.some(({ collapsed }) => collapsed !== undefined && !collapsed)
+            isAllGroupsCollapsed: m.groups?.every(({ collapsed = true }) => collapsed)
           }}
           getGroupHeight={getGroupHeight}
           selection={selection}
@@ -499,7 +497,7 @@ export const
           ? m.groups.reduce((acc, { rows, label, collapsed = true }) => {
             acc.push(...rows.map(r => ({ ...getItem(r), group: label, collapsed })))
             return acc
-          }, [] as (Fluent.IObjectWithKey & Dict<any> & { group?: S, collapsed?: B })[])
+          }, [] as (Fluent.IObjectWithKey & { group?: S, collapsed?: B })[])
           : (m.rows || []).map(getItem)
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
@@ -508,7 +506,7 @@ export const
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
-      isCollapsedRef = React.useRef<{ [key: string]: boolean } | null>(null),
+      isCollapsedRef = React.useRef<{ [key: S]: B } | null>(null),
       [groupByKey, setGroupByKey] = React.useState(m.groups ? 'group' : '*'),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
