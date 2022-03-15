@@ -127,31 +127,29 @@ def generate_screenshots(files: List[DocFile], pool_idx: int, is_test: bool):
                     code = []
                     file_idx = 0
                     for line in f.readlines():
-                        if is_code and not line.startswith('```'):
+                        if line.startswith('```py') and 'ignore' not in line:
+                            is_code = True
+                        elif line.replace(' ', '').replace('\n', '') == '```' and is_code:
+                            screenshot_name = f"{file.name}-{file_idx}.png"
+                            make_snippet_screenshot(code, screenshot_name, page, file.groups, pool_idx, is_test, b)
+                            file_idx = file_idx + 1
+                            code = []
+                            is_code = False
+                        elif is_code:
                             code.append(line)
-                        if line.startswith('```'):
-                            if is_code:
-                                screenshot_name = f"{file.name}-{file_idx}.png"
-                                make_snippet_screenshot(code, screenshot_name, page, file.groups, pool_idx, is_test, b)
-                                file_idx = file_idx + 1
-                                code = []
-                            is_code = not is_code
             browser.close()
 
 
 def append_images(files: List[DocFile]):
     for file in files:
         img_lines = []
-        is_code = False
         with open(os.path.join(docs_path, file.path), 'r') as f:
             idx = 0
             for line in f.readlines():
-                if line.startswith('```'):
-                    if not is_code:
-                        screenshot_name = f"{file.name}-{idx}"
-                        img_lines.append(f'![{screenshot_name}](assets/{screenshot_name}.png)\n\n')
-                        idx = idx + 1
-                    is_code = not is_code
+                if line.startswith('```py') and 'ignore' not in line:
+                    screenshot_name = f"{file.name}-{idx}"
+                    img_lines.append(f'![{screenshot_name}](assets/{screenshot_name}.png)\n\n')
+                    idx = idx + 1
                 img_lines.append(line)
         file_path = os.path.join(docs_path, 'docs', file.path)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -221,12 +219,12 @@ def main():
         else:
             generate_diff_view()
             print('Testing finished, run \033[92mmake test-result\033[0m to see the results.')
-
     finally:
         if os.path.exists(example_file_path):
             shutil.rmtree(example_file_path, ignore_errors=True)
         if wave_server:
             os.killpg(os.getpgid(wave_server.pid), signal.SIGTERM)
+        print('Done')
 
 
 if __name__ == '__main__':

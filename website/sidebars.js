@@ -139,6 +139,16 @@ module.exports = {
           "widgets/form/visualization"
         ]
       },
+      {
+        "type": "category",
+        "label": "Overlays",
+        "items": [
+          "widgets/overlays/dialog",
+          "widgets/overlays/side_panel",
+          "widgets/overlays/notification_bar",
+          "widgets/overlays/notification",
+        ]
+      },
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [
