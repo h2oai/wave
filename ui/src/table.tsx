@@ -330,7 +330,6 @@ const
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
             <Fluent.DetailsHeader
               {...props}
-              onColumnContextMenu={onColumnContextMenu}
               styles={{
                 ...props.styles,
                 root: {
