@@ -36,6 +36,10 @@ const
       textAlign: 'left',
       marginLeft: '0.5em',
       cursor: 'pointer'
+    },
+    preventOverflow: {
+      minWidth: 0,
+      flex: '1 1 0'
     }
   })
 
@@ -58,7 +62,7 @@ export const
           showIcon === undefined || showIcon
             ? (
               <>
-                <div className={expand === undefined || expand ? css.element : ''}>{children}</div>
+                <div className={expand === undefined || expand ? css.element : css.preventOverflow }>{children}</div>
                 <Fluent.TooltipHost tooltipProps={tooltipProps}>
                   <Fluent.FontIcon className={css.icon} iconName='Info' />
                 </Fluent.TooltipHost>
