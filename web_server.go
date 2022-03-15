@@ -91,7 +91,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		default: // static/public assets
 			h := s.fs
 			if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
-				h = Gzip(s.fs)
+				h = gzipContent(s.fs)
 			}
 			h.ServeHTTP(w, r)
 		}
