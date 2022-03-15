@@ -507,7 +507,7 @@ export const
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
       isCollapsedRef = React.useRef<{ [key: S]: B } | null>(null),
-      [groupByKey, setGroupByKey] = React.useState(m.groups ? 'group' : '*'),
+      [groupByKey, setGroupByKey] = React.useState('*'),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
@@ -522,19 +522,44 @@ export const
         )
       }, [items]),
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
-        let prevSum = 0
-        const
-          groupedBy = groupByF(filteredItems, groupByKey),
-          groupedByKeys = Object.keys(groupedBy),
-          groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type,
-          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => { // TODO
+        let
+          groups: Fluent.IGroup[],
+          groupedBy: Dict<any> = []
+
+        if (m.groups) {
+          groups = filteredItems.reduce((acc, { group }, idx) => {
+            const prevGroup = acc[acc.length - 1]
+            if (group.collapsed === false) {
+              if (isCollapsedRef.current === null) isCollapsedRef.current = {}
+              isCollapsedRef.current[group] = false
+            }
+            if (prevGroup?.key === group) {
+              prevGroup.count++
+            } else {
+              acc.push({
+                key: group,
+                name: group,
+                startIndex: idx,
+                count: 1,
+                isCollapsed: isCollapsedRef.current === null || isCollapsedRef.current[group] === undefined
+              })
+            }
+            return acc
+          }, [] as any)
+        } else {
+          groupedBy = groupByF(filteredItems, groupByKey)
+          let prevSum = 0
+          const
+            groupedByKeys = Object.keys(groupedBy),
+            groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
+          groups = groupedByKeys.map((key, i) => {
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
 
             const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
-            if (groupedBy[key][0].collapsed === false) {
+            if (groupedBy[key][0].collapsed === false) { // TODO: reuse existing logic from above
               if (isCollapsedRef.current === null) isCollapsedRef.current = {}
               isCollapsedRef.current[key] = false
             }
@@ -543,11 +568,10 @@ export const
               name,
               startIndex: prevSum,
               count: groupedBy[key].length,
-              isCollapsed: isCollapsedRef.current === null || isCollapsedRef.current[key] === undefined,
+              isCollapsed: isCollapsedRef.current === null || isCollapsedRef.current[key] === undefined
             }
           })
 
-        if (m.groups) {
           groups.sort(({ name: name1 }, { name: name2 }) => {
             const numName1 = Number(name1), numName2 = Number(name2)
             if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
@@ -566,11 +590,11 @@ export const
           setFilteredItems(filteredItems => {
             const { groupedBy, groups } = makeGroups(groupByKey, filteredItems)
             setGroups(groups)
-            return Object.values(groupedBy).flatMap(arr => arr)
+            return m.groups ? filteredItems : Object.values(groupedBy).flatMap(arr => arr)
           })
           return groupByKey
         })
-      }, [makeGroups]),
+      }, [m.groups, makeGroups]),
       search = React.useCallback(() => {
         setSearchStr(searchString => {
           const _searchStr = searchString.toLowerCase()
