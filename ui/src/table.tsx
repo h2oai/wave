@@ -347,7 +347,7 @@ const
             />
           </Fluent.Sticky>
         )
-      }, [groups, onColumnContextMenu]),
+      }, [groups]),
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
         ? <Fluent.DetailsRow {...props} styles={{
           cell: { alignSelf: 'center', fontSize: 14, lineHeight: 20, color: cssVar('$text9') },
