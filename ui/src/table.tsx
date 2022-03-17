@@ -119,7 +119,7 @@ export interface Table {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
-  /** Table pagination. Used when large data is needed to be displayed. */
+  /** Display a pagination control at the bottom of the table. Set this value using table_pagination(). */
   pagination?: TablePagination
 }
 
