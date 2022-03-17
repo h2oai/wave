@@ -15,6 +15,7 @@ class Issue:
 
 all_issues = [Issue(text=i + 1, status=('Closed' if i % 2 == 0 else 'Open')) for i in range(100)]
 rows_per_page = 10
+total_rows = len(all_issues)
 
 
 def get_table_rows(q: Q):
@@ -29,7 +30,7 @@ def get_table_rows(q: Q):
             rows = [row for row in rows if not filters or any(f in getattr(row, col) for f in filters)]
 
     if q.client.search is not None or q.client.filters:
-        q.page['form'].items[0].table.pagination = ui.table_pagination(total_rows=len(rows), rows_per_page=rows_per_page)
+        q.page['form'].items[0].table.pagination = ui.table_pagination(len(rows), rows_per_page)
 
     offset = q.client.page_offset or 0
     rows = rows[offset:offset + rows_per_page]
@@ -61,7 +62,8 @@ async def serve(q: Q):
                 rows=get_table_rows(q),
                 resettable=True,
                 downloadable=True,
-                pagination=ui.table_pagination(total_rows=len(all_issues), rows_per_page=rows_per_page)
+                pagination=ui.table_pagination(total_rows=len(all_issues), rows_per_page=rows_per_page),
+                events=['sort', 'filter', 'search', 'page_change', 'download', 'reset']
             )
         ])
         q.client.initialized = True
@@ -69,8 +71,8 @@ async def serve(q: Q):
     if q.events.table:
         if q.events.table.sort:
             q.client.sort = q.events.table.sort
-        if q.events.table.filters:
-            q.client.filters = q.events.table.filters
+        if q.events.table.filter:
+            q.client.filters = q.events.table.filter
             q.client.page_offset = 0
         if q.events.table.search is not None:
             q.client.search = q.events.table.search
@@ -82,6 +84,7 @@ async def serve(q: Q):
             q.client.sort = None
             q.client.filters = None
             q.client.page_offset = 0
+            q.page['form'].items[0].table.pagination = ui.table_pagination(total_rows, rows_per_page)
         if q.events.table.download:
             q.page['meta'].script = ui.inline_script(f'window.open("{q.app.data_download}")')
 

@@ -1323,7 +1323,7 @@ def table_pagination(
         total_rows: int,
         rows_per_page: int,
 ) -> TablePagination:
-    """Creates a paginated table. Useful for large amounts of data (1M+ rows).
+    """Configure table pagination. Use as `pagination` parameter to `ui.table()`
 
     Args:
         total_rows: Renders a progress arc with a percentage value in the middle.
@@ -1353,6 +1353,7 @@ def table(
         tooltip: Optional[str] = None,
         groups: Optional[List[TableGroup]] = None,
         pagination: Optional[TablePagination] = None,
+        events: Optional[List[str]] = None,
 ) -> Component:
     """Create an interactive table.
 
@@ -1370,12 +1371,15 @@ def table(
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
 
+    If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+    none of these features will work automatically like in non-paginated table.
+
     Args:
         name: An identifying name for this component.
         columns: The columns in this table.
         rows: The rows in this table. Mutually exclusive with `groups` attr.
         multiple: True to allow multiple rows to be selected.
-        groupable: True to allow group by feature. Ignored if `groups` are specified.
+        groupable: True to allow group by feature. Not applicable when `pagination` is set.
         downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.
@@ -1385,7 +1389,8 @@ def table(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
-        pagination: Table pagination. Used when large data is needed to be displayed.
+        pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
+        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
     Returns:
         A `h2o_wave.types.Table` instance.
     """
@@ -1405,6 +1410,7 @@ def table(
         tooltip,
         groups,
         pagination,
+        events,
     ))
 
 

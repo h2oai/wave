@@ -281,7 +281,7 @@ describe('Table.tsx', () => {
     })
 
     it('Fires event when pagination enabled', () => {
-      const { container } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      const { container } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['sort'] }} />)
 
       const [sort1, sort2] = container.querySelectorAll('i[class*=sortingIcon]')
       fireEvent.click(sort1)
@@ -393,7 +393,7 @@ describe('Table.tsx', () => {
     })
 
     it('Fires event when pagination enabled', () => {
-      const { getByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      const { getByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['search'] }} />)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toLowerCase() } })
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'search', cell21.toLowerCase())
@@ -446,12 +446,12 @@ describe('Table.tsx', () => {
     })
 
     it('Fires event when pagination enabled', () => {
-      const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['filter'] }} />)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLDivElement)
       fireEvent.click(getAllByText('1')[3].parentElement as HTMLDivElement)
 
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filters', { 'colname2': ['1'] })
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': ['1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
@@ -520,11 +520,11 @@ describe('Table.tsx', () => {
     })
 
     it('Fires event when pagination enabled', () => {
-      const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['filter'] }} />)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filters', { 'colname2': ['TAG1'] })
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': ['TAG1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
@@ -642,6 +642,11 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col1')[1]!)
 
       expect(getAllByRole('row')).toHaveLength(headerRow + tableProps.rows!.length)
+    })
+
+    it('Does not render group by dropdown when pagination is set', () => {
+      const { queryByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      expect(queryByTestId('groupby')).not.toBeInTheDocument()
     })
 
     it('Renders alphabetically sorted group by list - strings', () => {
@@ -958,7 +963,7 @@ describe('Table.tsx', () => {
   describe('Reset', () => {
 
     it('Fires event when pagination enabled', () => {
-      const { getByText } = render(<XTable model={{ ...tableProps, resettable: true, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      const { getByText } = render(<XTable model={{ ...tableProps, resettable: true, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['reset'] }} />)
       fireEvent.click(getByText('Reset table'))
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'reset', true)
       expect(emitMock).toHaveBeenCalledTimes(1)
@@ -968,7 +973,7 @@ describe('Table.tsx', () => {
   describe('Download', () => {
 
     it('Fires event when pagination enabled', () => {
-      const { getByText } = render(<XTable model={{ ...tableProps, downloadable: true, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+      const { getByText } = render(<XTable model={{ ...tableProps, downloadable: true, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['download'] }} />)
       fireEvent.click(getByText('Download data'))
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'download', true)
       expect(emitMock).toHaveBeenCalledTimes(1)
