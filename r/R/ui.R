@@ -1513,7 +1513,7 @@ ui_table_row <- function(
   return(.o)
 }
 
-#' Creates a paginated table. Useful for large amounts of data (1M+ rows).
+#' Configure table pagination. Use as `pagination` parameter to `ui.table()`
 #'
 #' @param total_rows Renders a progress arc with a percentage value in the middle.
 #' @param rows_per_page Renders a progress arc with a percentage value in the middle.
@@ -1546,12 +1546,15 @@ ui_table_pagination <- function(
 #' and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
 #' set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
 #' submission.
+#' 
+#' If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+#' none of these features will work automatically like in non-paginated table.
 #'
 #' @param name An identifying name for this component.
 #' @param columns The columns in this table.
 #' @param rows The rows in this table.
 #' @param multiple True to allow multiple rows to be selected.
-#' @param groupable True to allow group by feature.
+#' @param groupable True to allow group by feature. Not applicable when `pagination` is set.
 #' @param downloadable Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
@@ -1561,7 +1564,8 @@ ui_table_pagination <- function(
 #'   One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-#' @param pagination Table pagination. Used when large data is needed to be displayed.
+#' @param pagination Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
+#' @param events The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
 #' @return A Table instance.
 #' @export
 ui_table <- function(
@@ -1578,7 +1582,8 @@ ui_table <- function(
   checkbox_visibility = NULL,
   visible = NULL,
   tooltip = NULL,
-  pagination = NULL) {
+  pagination = NULL,
+  events = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "WaveTableColumn", columns)
   .guard_vector("rows", "WaveTableRow", rows)
@@ -1593,6 +1598,7 @@ ui_table <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("pagination", "WaveTablePagination", pagination)
+  .guard_vector("events", "character", events)
   .o <- list(table=list(
     name=name,
     columns=columns,
@@ -1607,7 +1613,8 @@ ui_table <- function(
     checkbox_visibility=checkbox_visibility,
     visible=visible,
     tooltip=tooltip,
-    pagination=pagination))
+    pagination=pagination,
+    events=events))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

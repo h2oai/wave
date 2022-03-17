@@ -3386,7 +3386,7 @@ class TableRow:
 
 
 class TablePagination:
-    """Creates a paginated table. Useful for large amounts of data (1M+ rows).
+    """Configure table pagination. Use as `pagination` parameter to `ui.table()`
     """
     def __init__(
             self,
@@ -3449,6 +3449,9 @@ class Table:
     and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
+
+    If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+    none of these features will work automatically like in non-paginated table.
     """
     def __init__(
             self,
@@ -3466,6 +3469,7 @@ class Table:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             pagination: Optional[TablePagination] = None,
+            events: Optional[List[str]] = None,
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
@@ -3481,6 +3485,7 @@ class Table:
         _guard_scalar('Table.visible', visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Table.pagination', pagination, (TablePagination,), False, True, False)
+        _guard_vector('Table.events', events, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
@@ -3490,7 +3495,7 @@ class Table:
         self.multiple = multiple
         """True to allow multiple rows to be selected."""
         self.groupable = groupable
-        """True to allow group by feature."""
+        """True to allow group by feature. Not applicable when `pagination` is set."""
         self.downloadable = downloadable
         """Indicates whether the table rows can be downloaded as a CSV file. Defaults to False."""
         self.resettable = resettable
@@ -3508,7 +3513,9 @@ class Table:
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.pagination = pagination
-        """Table pagination. Used when large data is needed to be displayed."""
+        """Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`."""
+        self.events = events
+        """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3526,6 +3533,7 @@ class Table:
         _guard_scalar('Table.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Table.pagination', self.pagination, (TablePagination,), False, True, False)
+        _guard_vector('Table.events', self.events, (str,), False, True, False)
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
@@ -3541,6 +3549,7 @@ class Table:
             visible=self.visible,
             tooltip=self.tooltip,
             pagination=None if self.pagination is None else self.pagination.dump(),
+            events=self.events,
         )
 
     @staticmethod
@@ -3574,6 +3583,8 @@ class Table:
         _guard_scalar('Table.tooltip', __d_tooltip, (str,), False, True, False)
         __d_pagination: Any = __d.get('pagination')
         _guard_scalar('Table.pagination', __d_pagination, (dict,), False, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('Table.events', __d_events, (str,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
@@ -3588,6 +3599,7 @@ class Table:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         pagination: Optional[TablePagination] = None if __d_pagination is None else TablePagination.load(__d_pagination)
+        events: Optional[List[str]] = __d_events
         return Table(
             name,
             columns,
@@ -3603,6 +3615,7 @@ class Table:
             visible,
             tooltip,
             pagination,
+            events,
         )
 
 
