@@ -788,15 +788,21 @@ export const
             ...selectedFilters,
             [colKey]: filters
           }
-          filter(newFilters)
-          search()
-          setGroups(groups => {
-            if (groups) initGroups()
-            return groups
-          })
+          if (m.pagination && m.events?.includes('filter')) {
+            wave.emit(m.name, 'filter', newFilters)
+            setCurrentPage(1)
+          }
+          else {
+            filter(newFilters)
+            search()
+            setGroups(groups => {
+              if (groups) initGroups()
+              return groups
+            })
+          }
           return newFilters
         })
-      }, [filter, search, initGroups])
+      }, [m.pagination, m.events, m.name, filter, search, initGroups])
 
     React.useEffect(() => {
       wave.args[m.name] = []
