@@ -22,7 +22,7 @@ import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
 import { wave } from './ui'
 
-/** Creates a paginated table. Useful for large amounts of data (1M+ rows). */
+/** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
 interface TablePagination {
   /** Renders a progress arc with a percentage value in the middle. */
   total_rows: U
