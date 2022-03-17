@@ -134,7 +134,7 @@ export interface Table {
   tooltip?: S
   /** Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr. */
   groups?: TableGroup[]
-  /** Table pagination. Used when large data is needed to be displayed. */
+  /** Display a pagination control at the bottom of the table. Set this value using table_pagination(). */
   pagination?: TablePagination
 }
 
