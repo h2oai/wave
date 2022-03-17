@@ -412,6 +412,28 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(1 + headerRow)
     })
 
+    it('Filters correctly - select all', () => {
+      const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('1')[1].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      fireEvent.click(getByText('Select All'))
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+    })
+
+    it('Filters correctly - deselect all', () => {
+      const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('1')[1].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      fireEvent.click(getByText('Deselect All'))
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+    })
+
     it('Filters correctly - multiple options', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
@@ -452,6 +474,26 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('1')[3].parentElement as HTMLDivElement)
 
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': ['1'] })
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Fires event when pagination enabled - select all', () => {
+      const { container, getByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['filter'] }} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLDivElement)
+      fireEvent.click(getByText('Select All'))
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': ['2', '1', '3'] })
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Fires event when pagination enabled - deselect all', () => {
+      const { container, getByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['filter'] }} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLDivElement)
+      fireEvent.click(getByText('Deselect All'))
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': [] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
