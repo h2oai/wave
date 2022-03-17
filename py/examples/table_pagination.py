@@ -1,5 +1,6 @@
-# Table / Serverside
-# Use a serverside #table to display large (100k+ rows) tabular data.
+# Table / Pagination
+# Use a paginated #table to display large (100k+ rows) tabular data.
+# #form #table #pagination
 # ---
 
 from h2o_wave import main, app, Q, ui
@@ -7,6 +8,7 @@ from copy import deepcopy
 import csv
 
 
+# Create a dummy data blueprint.
 class Issue:
     def __init__(self, text: str, status: str):
         self.text = text
@@ -19,16 +21,22 @@ total_rows = len(all_issues)
 
 
 def get_table_rows(q: Q):
+    # Make a deep copy in order to not mutate the original `all_issues` which serves as our baseline.
     rows = deepcopy(all_issues)
     if q.client.sort:
-        for col, sortAsc in q.client.sort.items():
-            rows.sort(key=lambda i: getattr(i, col), reverse=sortAsc)
+        # Sort by multiple columns.
+        for col, reverse in q.client.sort.items():
+            rows.sort(key=lambda i: getattr(i, col), reverse=reverse)
+    # Filter out all rows that do not contain searched string in `text` cell.
+    # You can adjust searched cells as you see fit.
     if q.client.search:
         rows = [i for i in rows if q.client.search in str(i.text)]
+    # Filter out rows that do not contain filtered column value.
     if q.client.filters:
         for col, filters in q.client.filters.items():
             rows = [row for row in rows if not filters or any(f in getattr(row, col) for f in filters)]
 
+    # Update table pagination according to the new row count.
     if q.client.search is not None or q.client.filters:
         q.page['form'].items[0].table.pagination = ui.table_pagination(len(rows), rows_per_page)
 
@@ -63,11 +71,16 @@ async def serve(q: Q):
                 resettable=True,
                 downloadable=True,
                 pagination=ui.table_pagination(total_rows=len(all_issues), rows_per_page=rows_per_page),
+                # Make sure to register the necessary events for the feature you want to support, e.g. sorting.
+                # All the registered events have to be handled by the developer.
+                # `page_change` event is required to be handled for pagination to work.
                 events=['sort', 'filter', 'search', 'page_change', 'download', 'reset']
             )
         ])
         q.client.initialized = True
 
+    # Check if user trigger any table action and save it to local state for allowing multiple
+    # actions to be performed on the data at the same time, e.g. sort the filtered data etc.
     if q.events.table:
         if q.events.table.sort:
             q.client.sort = q.events.table.sort
