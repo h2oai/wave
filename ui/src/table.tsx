@@ -300,7 +300,7 @@ const
       </div>
     )
   },
-  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, sort, setFiltersInBulk }: DataTable) => {
+  DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, sort, setFiltersInBulk }: DataTable, ref) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
@@ -453,6 +453,14 @@ const
     // HACK: React stale closures - https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
     // TODO: Find a reasonable way of doing this.
     React.useEffect(() => { { selectedFiltersRef.current = selectedFilters } }, [selectedFilters])
+    React.useImperativeHandle(ref, () => ({
+      resetSortIcons: () => {
+        setColumns(columns.map(col => {
+          if (col.iconName) col.iconName = 'SortDown'
+          return col
+        }))
+      }
+    }))
 
     return (
       <>
@@ -475,7 +483,7 @@ const
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
       </>
     )
-  },
+  }),
   Pagination = ({ currentPage, onPageChange, pagination }: PaginationProps) => {
     const
       { total_rows, rows_per_page } = pagination,
@@ -583,6 +591,7 @@ export const
       [groupByKey, setGroupByKey] = React.useState('*'),
       [selectedSorts, setSelectedSorts] = React.useState<Map<S, { column: WaveColumn, sortAsc: B }>>(new Map()),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
+      tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         m.groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, m.groupable]
       ),
@@ -724,6 +733,7 @@ export const
         setSelectedSorts(new Map())
         setGroups(undefined)
         setGroupByKey('*')
+        tableRef.current?.resetSortIcons()
 
         if (m.pagination && m.events?.includes('reset')) {
           wave.emit(m.name, 'reset', true)
@@ -827,8 +837,8 @@ export const
           }}>
           {
             isMultiple
-              ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
-              : <DataTable {...dataTableProps} />
+              ? <Fluent.MarqueeSelection selection={selection}><DataTable ref={tableRef} {...dataTableProps} /></Fluent.MarqueeSelection>
+              : <DataTable ref={tableRef} {...dataTableProps} />
           }
         </Fluent.ScrollablePane>
         <Footer
