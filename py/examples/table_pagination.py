@@ -79,7 +79,7 @@ async def serve(q: Q):
         ])
         q.client.initialized = True
 
-    # Check if user trigger any table action and save it to local state for allowing multiple
+    # Check if user triggered any table action and save it to local state for allowing multiple
     # actions to be performed on the data at the same time, e.g. sort the filtered data etc.
     if q.events.table:
         if q.events.table.sort:
