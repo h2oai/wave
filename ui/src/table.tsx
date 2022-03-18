@@ -495,7 +495,7 @@ export const
       items = React.useMemo(() =>
         m.groups
           ? m.groups.reduce((acc, { rows, label, collapsed = true }) => {
-            acc.push(...rows.map(r => ({ ...getItem(r), group: label, collapsed })))
+            acc.push(...rows.map(r => ({ ...getItem(r), group: label, collapsed: collapsed })))
             return acc
           }, [] as (Fluent.IObjectWithKey & { group?: S, collapsed?: B })[])
           : (m.rows || []).map(getItem)
@@ -506,7 +506,7 @@ export const
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
-      isCollapsedRef = React.useRef<{ [key: S]: B } | null>(null),
+      isCollapsedRef = React.useRef<{ [key: S]: B } | null | undefined>(m.groups ? undefined : null),
       [groupByKey, setGroupByKey] = React.useState('*'),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
@@ -526,32 +526,31 @@ export const
           groups: Fluent.IGroup[],
           groupedBy: Dict<any> = []
 
+        const getIsCollapsed = (key: S) => {
+          if (isCollapsedRef.current === undefined) return true
+          if (isCollapsedRef.current === null) return true
+          if (Object.keys(isCollapsedRef.current).length === 0) return false
+          if (isCollapsedRef.current[key] !== undefined) return isCollapsedRef.current[key]
+          return true
+        }
+
         if (m.groups) {
-          groups = filteredItems.reduce((acc, { group }, idx) => {
+          groups = filteredItems.reduce((acc, { group, collapsed }, idx) => {
+            if (isCollapsedRef.current === undefined && collapsed === false) isCollapsedRef.current = { [group]: collapsed }
             const prevGroup = acc[acc.length - 1]
-            if (group.collapsed === false) {
-              if (isCollapsedRef.current === null) isCollapsedRef.current = {}
-              isCollapsedRef.current[group] = false
-            }
-            if (prevGroup?.key === group) {
-              prevGroup.count++
-            } else {
-              acc.push({
-                key: group,
-                name: group,
-                startIndex: idx,
-                count: 1,
-                isCollapsed: isCollapsedRef.current === null || isCollapsedRef.current[group] === undefined
-              })
-            }
+            prevGroup?.key === group
+              ? prevGroup.count++
+              : acc.push({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group) })
             return acc
-          }, [] as any)
+          }, [] as Fluent.IGroup[])
+          if (isCollapsedRef.current === undefined) isCollapsedRef.current = null
         } else {
           groupedBy = groupByF(filteredItems, groupByKey)
           let prevSum = 0
           const
             groupedByKeys = Object.keys(groupedBy),
             groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
+
           groups = groupedByKeys.map((key, i) => {
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
@@ -559,20 +558,8 @@ export const
             }
 
             const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
-            if (groupedBy[key][0].collapsed === false) { // TODO: reuse existing logic from above
-              if (isCollapsedRef.current === null) isCollapsedRef.current = {}
-              isCollapsedRef.current[key] = false
-            }
-            return {
-              key,
-              name,
-              startIndex: prevSum,
-              count: groupedBy[key].length,
-              isCollapsed: isCollapsedRef.current === null || isCollapsedRef.current[key] === undefined
-            }
-          })
-
-          groups.sort(({ name: name1 }, { name: name2 }) => {
+            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key) }
+          }).sort(({ name: name1 }, { name: name2 }) => {
             const numName1 = Number(name1), numName2 = Number(name2)
             if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
 
@@ -722,11 +709,12 @@ export const
 
         setGroups(undefined)
         if (m.groups) initGroups()
+        isCollapsedRef.current = undefined
         setGroupByKey(m.groups ? 'group' : '*')
 
         filter(null)
         search()
-      }, [filter, search, initGroups, m.groups]),
+      }, [m.groups, initGroups, filter, search]),
       selection = React.useMemo(() => new Fluent.Selection({ onSelectionChanged: () => { wave.args[m.name] = selection.getSelection().map(item => item.key as S) } }), [m.name]),
       computeHeight = () => {
         if (m.height) return m.height
