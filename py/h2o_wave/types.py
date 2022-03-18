@@ -3396,9 +3396,9 @@ class TablePagination:
         _guard_scalar('TablePagination.total_rows', total_rows, (int,), False, False, False)
         _guard_scalar('TablePagination.rows_per_page', rows_per_page, (int,), False, False, False)
         self.total_rows = total_rows
-        """Renders a progress arc with a percentage value in the middle."""
+        """Total count of all the rows in your dataset."""
         self.rows_per_page = rows_per_page
-        """Renders a progress arc with a percentage value in the middle."""
+        """The maximum amount of rows to be displayed in a single page."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

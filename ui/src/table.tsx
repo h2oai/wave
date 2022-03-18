@@ -24,9 +24,9 @@ import { wave } from './ui'
 
 /** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
 interface TablePagination {
-  /** Renders a progress arc with a percentage value in the middle. */
+  /** Total count of all the rows in your dataset. */
   total_rows: U
-  /** Renders a progress arc with a percentage value in the middle. */
+  /** The maximum amount of rows to be displayed in a single page. */
   rows_per_page: U
 }
 

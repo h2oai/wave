@@ -1515,8 +1515,8 @@ ui_table_row <- function(
 
 #' Configure table pagination. Use as `pagination` parameter to `ui.table()`
 #'
-#' @param total_rows Renders a progress arc with a percentage value in the middle.
-#' @param rows_per_page Renders a progress arc with a percentage value in the middle.
+#' @param total_rows Total count of all the rows in your dataset.
+#' @param rows_per_page The maximum amount of rows to be displayed in a single page.
 #' @return A TablePagination instance.
 #' @export
 ui_table_pagination <- function(
