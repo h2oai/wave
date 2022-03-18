@@ -1326,8 +1326,8 @@ def table_pagination(
     """Configure table pagination. Use as `pagination` parameter to `ui.table()`
 
     Args:
-        total_rows: Renders a progress arc with a percentage value in the middle.
-        rows_per_page: Renders a progress arc with a percentage value in the middle.
+        total_rows: Total count of all the rows in your dataset.
+        rows_per_page: The maximum amount of rows to be displayed in a single page.
     Returns:
         A `h2o_wave.types.TablePagination` instance.
     """
