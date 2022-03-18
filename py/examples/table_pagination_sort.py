@@ -19,7 +19,7 @@ rows_per_page = 10
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
+        q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.table(
                 name='table',
                 columns=[ui.table_column(name='text', label='Text', sortable=True)],

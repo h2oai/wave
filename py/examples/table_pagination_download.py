@@ -24,7 +24,7 @@ async def serve(q: Q):
 
     if not q.client.initialized:
         q.page['meta'] = ui.meta_card(box='')
-        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
+        q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.table(
                 name='table',
                 columns=[ui.table_column(name='text', label='Text')],
