@@ -528,7 +528,6 @@ const
     if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
     if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
 
-    // TODO: Add pagination UI. Raise change-page event on page click.
     return shouldShowFooter ? (
       <Fluent.Stack
         horizontal
