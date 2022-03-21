@@ -141,6 +141,17 @@ module.exports = {
       },
       {
         "type": "category",
+        "label": "Plots",
+        "items": [
+          "widgets/plots/point",
+          "widgets/plots/interval",
+          "widgets/plots/line",
+          "widgets/plots/area",
+          "widgets/plots/path",
+        ]
+      },
+      {
+        "type": "category",
         "label": "Overlays",
         "items": [
           "widgets/overlays/dialog",

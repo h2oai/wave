@@ -776,6 +776,12 @@ const
           },
           interval: {
             rect: {
+              default: {
+                // TODO: Check if this stroke is not settable in polar charts.
+                style: {
+                  stroke: cssVar('$card'),
+                },
+              },
               selected: {
                 style: {
                   stroke: cssVar('$text'),
