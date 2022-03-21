@@ -186,7 +186,7 @@ q.page['example'] = ui.plot_card(
         ('Jul', 37.4),
         ('Aug', 42.4),
     ]),
-    plot=ui.plot([ui.mark(coord='polar', type='interval', x='=month', y='=rainfall', y_min=0)])
+    plot=ui.plot([ui.mark(coord='polar', type='interval', x='=month', y='=rainfall', y_min=0, stroke_color='$card')])
 )
 ```
 
@@ -226,7 +226,8 @@ q.page['example'] = ui.plot_card(
             y='=rainfall',
             color='=city',
             stack='auto',
-            y_min=0
+            y_min=0,
+            stroke_color='$card'
         )
     ])
 )
