@@ -382,8 +382,18 @@ const
       }, []),
       onToggleCollapseAll = (isAllCollapsed: B) => collapsedRefs.current = isAllCollapsed ? null : {},
       onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
-        if (collapsedRefs.current === undefined || collapsedRefs.current === null) collapsedRefs.current = {}
-        collapsedRefs.current[key] = !isCollapsed
+        if (collapsedRefs.current === undefined || collapsedRefs.current === null) {
+          collapsedRefs.current = {}
+          if (isCollapsed) {
+            collapsedRefs.current = groups?.reduce((acc, group) => {
+              if (group.name !== key) acc[group.name] = true
+              return acc
+            }, {} as { [key: S]: B })
+          }
+        }
+        !isCollapsed
+          ? collapsedRefs.current![key] = true
+          : delete collapsedRefs.current![key]
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
         ? <Fluent.DetailsRow {...props} styles={{
@@ -527,16 +537,19 @@ export const
           groupedBy: Dict<any> = []
 
         const getIsCollapsed = (key: S) => {
-          if (collapsedRefs.current === undefined) return true
-          if (collapsedRefs.current === null) return true
+          if (collapsedRefs.current === undefined || collapsedRefs.current === null) return true
           if (Object.keys(collapsedRefs.current).length === 0) return false
-          if (collapsedRefs.current[key] !== undefined) return collapsedRefs.current[key]
-          return true
+          return collapsedRefs.current[key]
         }
 
         if (m.groups) {
           groups = filteredItems.reduce((acc, { group, collapsed }, idx) => {
-            if (collapsedRefs.current === undefined && collapsed === false) collapsedRefs.current = { [group]: collapsed }
+            if (collapsedRefs.current === undefined && collapsed === false) {
+              collapsedRefs.current = m.groups!.reduce((acc, g) => {
+                if (group !== g.label) acc[group] = true
+                return acc
+              }, {} as { [key: S]: B })
+            }
             const prevGroup = acc[acc.length - 1]
             prevGroup?.key === group
               ? prevGroup.count++
@@ -545,8 +558,8 @@ export const
           }, [] as Fluent.IGroup[])
           if (collapsedRefs.current === undefined) collapsedRefs.current = null
         } else {
-          groupedBy = groupByF(filteredItems, groupByKey)
           let prevSum = 0
+          groupedBy = groupByF(filteredItems, groupByKey)
           const
             groupedByKeys = Object.keys(groupedBy),
             groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
