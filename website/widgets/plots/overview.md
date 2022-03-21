@@ -22,19 +22,19 @@ from h2o_wave import data
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
     title='Point',
-    data=data('price performance', 10, rows=[
-        (0.1, 0.6),
-        (0.2, 0.5),
-        (0.3, 0.3),
-        (0.4, 0.2),
-        (0.4, 0.5),
-        (0.2, 0.2),
-        (0.8, 0.5),
-        (0.3, 0.3),
-        (0.2, 0.4),
-        (0.1, 0.0),
+    data=data('height weight', 10, rows=[
+        (170, 59),
+        (159.1, 47.6),
+        (166, 69.8),
+        (176.2, 66.8),
+        (160.2, 75.2),
+        (180.3, 76.4),
+        (164.5, 63.2),
+        (173, 60.9),
+        (183.5, 74.8),
+        (175.5, 70),
     ]),
-    plot=ui.plot([ui.mark(type='point', x='=price', y='=performance')])
+    plot=ui.plot([ui.mark(type='point', x='=weight', y='=height')])
 )
 ```
 
@@ -51,20 +51,20 @@ from h2o_wave import data
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
     title='Numeric-Numeric',
-    data=data('price performance', pack=True, rows=[
-        (0.1, 0.6),
-        (0.2, 0.5),
-        (0.3, 0.3),
-        (0.4, 0.2),
-        (0.4, 0.5),
-        (0.2, 0.2),
-        (0.8, 0.5),
-        (0.3, 0.3),
-        (0.2, 0.4),
-        (0.1, 0.0),
+    data=data('height weight', 10, rows=[
+        (170, 59),
+        (159.1, 47.6),
+        (166, 69.8),
+        (176.2, 66.8),
+        (160.2, 75.2),
+        (180.3, 76.4),
+        (164.5, 63.2),
+        (173, 60.9),
+        (183.5, 74.8),
+        (175.5, 70),
     ]),
     plot=ui.plot([
-        ui.mark(type='point', x='=price', y='=performance', x_min=0, x_max=100, y_min=0, y_max=100),  # the plot
+        ui.mark(type='point', x='=weight', y='=height', x_min=0, x_max=100, y_min=0, y_max=100),  # the plot
         ui.mark(x=50, y=50, label='point'),  # A single reference point
         ui.mark(x=40, label='vertical line'),
         ui.mark(y=40, label='horizontal line'),
@@ -93,20 +93,15 @@ from h2o_wave import data
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
     title='Interval, range',
-    data=data('product low high', 10, rows=[
-        ('P1', 22, 124),
-        ('P1', 51, 580),
-        ('P1', 69, 528),
-        ('P1', 23, 361),
-        ('P1', 44, 228),
-        ('P2', 69, 418),
-        ('P2', 96, 824),
-        ('P2', 81, 539),
-        ('P2', 85, 712),
-        ('P2', 18, 213),
+    data=data('profession salary', 5, rows=[
+        ('medicine', 33000),
+        ('fire fighting', 18000),
+        ('pedagogy', 24000),
+        ('psychology', 22500),
+        ('computer science', 36000),
     ]),
     events=['select_marks'],
-    plot=ui.plot([ui.mark(type='interval', x='=product', y0='=low', y='=high')])
+    plot=ui.plot([ui.mark(type='interval', x='=salary', y='=profession', y_min=0)])
 )
 ```
 
@@ -120,21 +115,22 @@ from h2o_wave import data
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
     title='Line title',
-    data=data('date price', 10, rows=[
-        ('2020-03-20', 124),
-        ('2020-05-18', 580),
-        ('2020-08-24', 528),
-        ('2020-02-12', 361),
-        ('2020-03-11', 228),
-        ('2020-09-26', 418),
-        ('2020-11-12', 824),
-        ('2020-12-21', 539),
-        ('2020-03-18', 712),
-        ('2020-07-11', 213),
+    data=data('month price', 12, rows=[
+        ('Jan', 51),
+        ('Feb', 91),
+        ('Mar', 34),
+        ('Apr', 47),
+        ('May', 63),
+        ('June', 58),
+        ('July', 56),
+        ('Aug', 77),
+        ('Sep', 99),
+        ('Oct', 106),
+        ('Nov', 88),
+        ('Dec', 56),
     ]),
     plot=ui.plot([
-        ui.mark(type='line', x_scale='time', x='=date', y='=price',
-                y_min=0, x_title='Date', y_title='Price')
+        ui.mark(type='line', x='=month', y='=price', y_min=0, x_title='Month', y_title='Price')
     ])
 )
 ```
@@ -153,19 +149,14 @@ q.page['example'] = ui.wide_plot_card(
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia aliquam maxime quos facere
     necessitatibus tempore eum odio, qui illum. Repellat modi dolor facilis odio ex possimus
     ''',
-    data=data('product price', 10, rows=[
-        ('P1', 124),
-        ('P2', 580),
-        ('P3', 528),
-        ('P1', 361),
-        ('P2', 228),
-        ('P3', 418),
-        ('P1', 824),
-        ('P2', 539),
-        ('P3', 712),
-        ('P1', 213),
+    data=data('profession salary', 5, rows=[
+        ('medicine', 23000),
+        ('fire fighting', 18000),
+        ('pedagogy', 24000),
+        ('psychology', 22500),
+        ('computer science', 36000),
     ]),
-    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)])
+    plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)])
 )
 ```
 
