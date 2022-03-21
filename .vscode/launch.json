@@ -38,7 +38,7 @@
       "request": "launch",
       "runtimeExecutable": "node",
       "args": [
-        "scripts/test.js",
+        "node_modules/jest/bin/jest.js",
         "--runInBand",
         "--no-cache",
         "--env=jsdom"
