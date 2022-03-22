@@ -385,7 +385,7 @@ const
         if (!collapsedRefs.current) {
           collapsedRefs.current = isCollapsed
             ? groups?.reduce((acc, group) => {
-              if (group.key !== key) acc[key] = true
+              if (group.key !== key) acc[group.key] = true
               return acc
             }, {} as { [key: S]: B })
             : {}
@@ -546,7 +546,7 @@ export const
           groups = filteredItems.reduce((acc, { group, collapsed }, idx) => {
             if (collapsedRefs.current === undefined && collapsed === false) {
               collapsedRefs.current = m.groups?.reduce((acc, { label }) => {
-                if (label !== group) acc[group] = true
+                if (label !== group) acc[label] = true
                 return acc
               }, {} as { [key: S]: B })
             }
