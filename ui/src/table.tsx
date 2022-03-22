@@ -382,18 +382,18 @@ const
       }, []),
       onToggleCollapseAll = (isAllCollapsed: B) => collapsedRefs.current = isAllCollapsed ? null : {},
       onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
-        if (collapsedRefs.current === undefined || collapsedRefs.current === null) {
-          collapsedRefs.current = {}
-          if (isCollapsed) {
-            collapsedRefs.current = groups?.reduce((acc, group) => {
-              if (group.name !== key) acc[group.name] = true
+        if (!collapsedRefs.current) {
+          collapsedRefs.current = isCollapsed
+            ? groups?.reduce((acc, group) => {
+              if (group.key !== key) acc[key] = true
               return acc
             }, {} as { [key: S]: B })
-          }
+            : {}
+        } else {
+          !isCollapsed
+            ? collapsedRefs.current[key] = true
+            : delete collapsedRefs.current[key]
         }
-        !isCollapsed
-          ? collapsedRefs.current![key] = true
-          : delete collapsedRefs.current![key]
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
         ? <Fluent.DetailsRow {...props} styles={{
@@ -545,8 +545,8 @@ export const
         if (m.groups) {
           groups = filteredItems.reduce((acc, { group, collapsed }, idx) => {
             if (collapsedRefs.current === undefined && collapsed === false) {
-              collapsedRefs.current = m.groups!.reduce((acc, g) => {
-                if (group !== g.label) acc[group] = true
+              collapsedRefs.current = m.groups?.reduce((acc, { label }) => {
+                if (label !== group) acc[group] = true
                 return acc
               }, {} as { [key: S]: B })
             }
