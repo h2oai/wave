@@ -47,8 +47,6 @@ def get_table_rows(q: Q):
 
 @app('/demo')
 async def serve(q: Q):
-    global issues
-
     if not q.app.initialized:
         # Create and upload a CSV file for downloads.
         with open('data_download.csv', 'w') as csvfile:
@@ -84,6 +82,7 @@ async def serve(q: Q):
     if q.events.table:
         if q.events.table.sort:
             q.client.sort = q.events.table.sort
+            q.client.page_offset = 0
         if q.events.table.filter:
             q.client.filters = q.events.table.filter
             q.client.page_offset = 0
