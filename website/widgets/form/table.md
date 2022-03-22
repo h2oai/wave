@@ -248,7 +248,7 @@ By default, text that does not fit into the table cell is signaled to users with
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ui.table(name='table', columns=[
         ui.table_column(name='name', label='Name'),
-        ui.table_column(name='about', label='About', overflow='wrap'),
+        ui.table_column(name='about', label='About', cell_overflow='wrap'),
     ], rows=[
         ui.table_row(
             name='row1', 

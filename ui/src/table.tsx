@@ -54,8 +54,8 @@ interface TableColumn {
   data_type?: 'string' | 'number' | 'time'
   /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType
-  /** Defines how to handle the long text that does not fit into the cell. */
-  overflow?: 'tooltip' | 'wrap'
+  /** Defines what to do with a cell's contents in case it does not fit inside the cell. */
+  cell_overflow?: 'tooltip' | 'wrap'
 }
 
 /** Create a table row. */
@@ -117,7 +117,7 @@ type WaveColumn = Fluent.IColumn & {
   dataType?: 'string' | 'number' | 'time'
   cellType?: TableCellType
   isSortable?: B
-  overflow?: 'tooltip' | 'wrap'
+  cellOverflow?: 'tooltip' | 'wrap'
 }
 
 type DataTable = {
@@ -300,10 +300,10 @@ const
           cellType: c.cell_type,
           dataType: c.data_type,
           isSortable: c.sortable,
-          overflow: c.overflow,
+          cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: c.overflow === 'wrap'
+          isMultiline: c.cell_overflow === 'wrap'
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
@@ -378,7 +378,7 @@ const
         if (!item || !col) return <span />
 
         const TooltipWrapper = ({ children }: { children: S }) => {
-          if (col.overflow === 'tooltip') return (
+          if (col.cellOverflow === 'tooltip') return (
             <Fluent.TooltipHost
               id={item.key as S}
               // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
