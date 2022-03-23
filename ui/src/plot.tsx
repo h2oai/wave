@@ -295,7 +295,8 @@ const
     for (const d of ds) {
       if (d) {
         const s = d[f]
-        if (s && isS(s)) d[f] = new Date(s) // must be ISO string
+        // Must be ISO string. If just date specified, add time.
+        if (s && isS(s)) d[f] = new Date(s.includes('T') ? s : `${s}T00:00:00`)
       }
     }
   },
