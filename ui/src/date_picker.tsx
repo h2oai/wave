@@ -68,7 +68,7 @@ export const
       onSelectDate = (d: Date | null | undefined) => {
         const val = (d === null || d === undefined) ? defaultVal : formatDate(d)
         wave.args[m.name] = val
-        setValue(val ? new Date(`${val} 00:00:00`) : undefined)
+        setValue(val ? new Date(`${val}T00:00:00`) : undefined)
         if (m.trigger) wave.push()
       }
 
