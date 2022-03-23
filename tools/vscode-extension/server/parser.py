@@ -171,14 +171,18 @@ def get_completion_type(row: int, col: int, file_content: str) -> Optional[str]:
         if len(grand_parent.children) <= 3 and expr_leaf.type == 'name' and expr_leaf.value == 'q':
             return leaf.parent.get_previous_sibling().children[1].value, None
 
-        # Particular event (q.events.widget_name.*).
-        if len(grand_parent.children) == 4 and grand_parent.get_code(False).startswith('q.events.'):
-            return 'events', leaf.value if leaf.type == 'name' else None
-
         # Particular event bracket notation (q.events.['widget_name']['']).
         if len(grand_parent.children) == 4 and grand_parent.get_code(False).startswith('q.events['):
             event_name = grand_parent.children[2].children[1]
             return 'events', strip_quotes(event_name.value) if event_name.type == 'string' else None
+
+        # Particular event (q.events.widget_name.*).
+        children = [child for child in grand_parent.children if child.type in ['name', 'trailer', 'operator']]
+        if len(children) == 4:
+            child1 = children[0]
+            child2 = children[1]
+            if child1.type == 'name' and child1.value == 'q' and child2.children[1].value == 'events':
+                return 'events', leaf.value if leaf.type == 'name' else None
 
         # Zones.
         expr_leaf = parso.tree.search_ancestor(leaf, 'atom_expr')

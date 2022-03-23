@@ -26,12 +26,17 @@ class TestEventCompletions(BaseTestCase):
         self.assertEqual(len(self.get_completions('q.events.events.')), 0)
 
     def test_autocomplete_stop_bracket(self):
+        self.assertEqual(len(self.get_completions('q.events["current_file_name"][""][""]')), 0)
         self.assertEqual(len(self.get_completions('q.events[""][""]')), 0)
 
     def test_autocomplete_if_statement(self):
         self.assertEqual(len(self.get_completions('if q.events.')), 4)
         self.assertEqual(len(self.get_completions('if q.events[""]')), 4)
         self.assertEqual(len(self.get_completions("if q.events['']")), 4)
+
+        completions = self.get_completions('if q.events.current_file_name.')
+        self.assertEqual(len(completions), 1)
+        self.assertIn('current_file', completions)
 
     def test_in_function_call(self):
         self.assertEqual(len(self.get_completions('print(q.events.)', typing_offset=1)), 4)
