@@ -329,7 +329,10 @@ const css = stylesheet({
       },
       '& + div.w-card-menu i': {
         color: cssVar('$card')
-      }
+      },
+      '.ms-Label': {
+        color: cssVar('$card')
+      },
     }
   },
   transparent: {
