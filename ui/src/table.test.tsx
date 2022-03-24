@@ -22,9 +22,9 @@ const
   cell11 = 'Quick brown fox.',
   cell21 = 'Jumps over a dog.',
   cell31 = 'Wooo hooo.',
-  headerRow = 1,
+  tableHeaderRow = 1,
   groupHeaderRow = 1,
-  groupAllHeaderRows = 2,
+  groupHeaderRowsCount = 2,
   filteredItem = 1
 
 let tableProps: Table
@@ -282,39 +282,39 @@ describe('Table.tsx', () => {
   describe('search', () => {
     it('Searches correctly', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
 
     it('Searches correctly - no match', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
-      expect(getAllByRole('row')).toHaveLength(headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow)
     })
 
     it('Searches correctly - clear search', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
-      expect(getAllByRole('row')).toHaveLength(headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: '' } })
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
     })
 
     it('Searches correctly - search uppercase, contain lowercase', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toUpperCase() } })
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
 
     it('Searches correctly - search lowercase, contain uppercase', () => {
       const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toLowerCase() } })
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
 
     it('Does not render search when no col is searchable', () => {
@@ -335,20 +335,20 @@ describe('Table.tsx', () => {
     it('Filters correctly - single option', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
 
     it('Filters correctly - multiple options', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
       fireEvent.click(getAllByText('2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
     })
 
     it('Filters correctly - multiple filters', () => {
@@ -367,11 +367,11 @@ describe('Table.tsx', () => {
       }
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
       fireEvent.click(getAllByText('2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
     })
   })
 
@@ -422,20 +422,20 @@ describe('Table.tsx', () => {
     it('Filters correctly - tags - multiple filters', () => {
       const { container, getAllByText, getByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
       fireEvent.click(getByText('TAG3').parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
     })
 
     it('Filters correctly - tags - single', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
   })
 
@@ -458,68 +458,68 @@ describe('Table.tsx', () => {
     it('Filter -> search', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
 
     it('Filter -> search - no search match', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell11 } })
-      expect(getAllByRole('row')).toHaveLength(headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow)
     })
 
     it('Filter -> search clear', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
       fireEvent.change(getByTestId('search'), { target: { value: '' } })
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
     })
 
     it('Search -> filter', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: 'w' } })
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
     })
 
     it('Search -> filter clear', () => {
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + tableHeaderRow)
 
       fireEvent.change(getByTestId('search'), { target: { value: 'w' } })
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(1 + tableHeaderRow)
       fireEvent.click(getAllByText('1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(2 + tableHeaderRow)
     })
   })
 
@@ -543,6 +543,15 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col1')[1]!)
 
       expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(tableProps.rows!.length)
+    })
+
+    it('Checks if grouped list is collapsed after selection', () => {
+      const { getAllByRole, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + tableProps.rows!.length)
     })
 
     it('Renders alphabetically sorted group by list - strings', () => {
@@ -628,13 +637,11 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
 
-      let gridcell1 = getAllByRole('gridcell')[3]
-      expect(gridcell1.textContent).toBe(cell11)
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
 
-      gridcell1 = getAllByRole('gridcell')[3]
-      expect(gridcell1.textContent).toBe(cell21)
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
     })
 
     it('Searches grouped list', () => {
@@ -644,9 +651,9 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
 
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + tableProps.rows!.length)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + tableProps.rows!.length)
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRow + filteredItem)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
     })
 
     it('Filters grouped list - single option', () => {
@@ -656,10 +663,10 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
 
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + tableProps.rows!.length)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + tableProps.rows!.length)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group2')[2].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRow + filteredItem)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
     })
 
     it('Filters grouped list - multiple options', () => {
@@ -669,11 +676,11 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
 
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + tableProps.rows!.length)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + tableProps.rows!.length)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group1')[1].parentElement!)
       fireEvent.click(getAllByText('Group2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + tableProps.rows!.length)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + tableProps.rows!.length)
     })
   })
 
@@ -693,62 +700,159 @@ describe('Table.tsx', () => {
               { name: 'rowname1', cells: [cell11, 'Group2'] },
               { name: 'rowname2', cells: [cell21, 'Group1'] },
             ],
+            collapsed: false
           },
           {
             label: "GroupB",
             rows: [
               { name: 'rowname3', cells: [cell31, 'Group2'] }
             ],
+            collapsed: false
           }
         ]
       }
     })
 
-    it('Searches grouped list - user specified groups', () => {
-      const { container, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+    it('Renders groups', () => {
+      const { getAllByRole } = render(<XTable model={tableProps} />)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
-
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + items)
-      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRow + filteredItem)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + items)
     })
 
-    it('Sorts grouped list - user specified groups', () => {
+
+    it('Searches grouped list', () => {
+      const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
+    })
+
+    it('Sorts grouped list', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
-
-      let gridcell1 = getAllByRole('gridcell')[3]
-      expect(gridcell1.textContent).toBe(cell11)
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
-
-      gridcell1 = getAllByRole('gridcell')[3]
-      expect(gridcell1.textContent).toBe(cell21)
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
     })
 
-    it('Filters grouped list - single option - user specified groups', () => {
+    it('Filters grouped list - single option', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
-
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + items)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group1')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRow + filteredItem)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
     })
 
-    it('Filters grouped list - multiple options - user specified groups', () => {
+    it('Filters grouped list - multiple options', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
-
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + items)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group1')[1].parentElement!)
       fireEvent.click(getAllByText('Group2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupAllHeaderRows + items)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + items)
+    })
+
+    it('Collapses all groups', () => {
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount)
+    })
+
+    it('Expands all groups', () => {
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.doubleClick(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + items)
+    })
+
+    it('Collapses group', () => {
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + filteredItem)
+    })
+
+    it('Expands group', () => {
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + items - filteredItem)
+    })
+
+    it('Checks if expanded state is preserved after sort', () => {
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + items)
+    })
+
+    it('Checks if collapsed state is preserved after filter', () => {
+      const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + filteredItem)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('Group1')[0].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow)
+
+      fireEvent.click(getAllByText('Group1')[0].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + filteredItem)
+    })
+
+    it('Checks if expanded state is preserved during search', () => {
+      const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
+    })
+
+    it('Checks if expanded state is preserved after search', () => {
+      const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + items)
+    })
+
+    it('Checks if collapsed state is preserved during search', () => {
+      const { container, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow)
+    })
+
+    it('Checks if collapsed state is preserved after search', () => {
+      const { container, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount)
+    })
+
+    it("Checks if group collapsed in middle of search preserves collapsed state after search", () => {
+      const { container, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + filteredItem)
+    })
+
+    it("Checks if group expanded in middle of search preserves expanded state after search", () => {
+      const { container, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+      fireEvent.change(getByTestId('search'), { target: { value: cell31 } })
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+      expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRowsCount + filteredItem)
     })
   })
 })
