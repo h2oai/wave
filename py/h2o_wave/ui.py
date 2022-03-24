@@ -1962,6 +1962,7 @@ def visualization(
         name: Optional[str] = None,
         visible: Optional[bool] = None,
         events: Optional[List[str]] = None,
+        interactions: Optional[List[str]] = None,
 ) -> Component:
     """Create a visualization for display inside a form.
 
@@ -1972,7 +1973,8 @@ def visualization(
         height: The hight of the visualization. Defaults to '300px'.
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to True.
-        events: The events to capture on this visualization.
+        events: The events to capture on this visualization. One of 'select_marks'.
+        interactions: The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'.
     Returns:
         A `h2o_wave.types.Visualization` instance.
     """
@@ -1984,6 +1986,7 @@ def visualization(
         name,
         visible,
         events,
+        interactions,
     ))
 
 
@@ -3436,6 +3439,7 @@ def plot_card(
         data: PackedRecord,
         plot: Plot,
         events: Optional[List[str]] = None,
+        interactions: Optional[List[str]] = None,
         commands: Optional[List[Command]] = None,
 ) -> PlotCard:
     """Create a card displaying a plot.
@@ -3445,7 +3449,8 @@ def plot_card(
         title: The title for this card.
         data: Data for this card.
         plot: The plot to be displayed in this card.
-        events: The events to capture on this card.
+        events: The events to capture on this card. One of 'select_marks'.
+        interactions: The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PlotCard` instance.
@@ -3456,6 +3461,7 @@ def plot_card(
         data,
         plot,
         events,
+        interactions,
         commands,
     )
 

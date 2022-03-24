@@ -263,6 +263,51 @@ export interface Plot {
     processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: { wait: 100, leading: true, trailing: false } }],
     end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }],
   })
+  const isWheelDown = (event: any) => {
+    event.gEvent.preventDefault()
+    return event.gEvent.originalEvent.deltaY > 0
+  }
+  registerInteraction('scale-zoom', {
+    start: [
+      {
+        trigger: 'plot:mousewheel',
+        isEnable: context => isWheelDown(context.event),
+        action: 'scale-zoom:zoomOut',
+        throttle: { wait: 100, leading: true, trailing: false },
+      },
+      {
+        trigger: 'plot:mousewheel',
+        isEnable: context => !isWheelDown(context.event),
+        action: 'scale-zoom:zoomIn',
+        throttle: { wait: 100, leading: true, trailing: false },
+      },
+    ],
+  })
+  registerInteraction('brush', {
+    showEnable: [
+      { trigger: 'plot:mouseenter', action: 'cursor:crosshair' },
+      { trigger: 'plot:mouseleave', action: 'cursor:default' },
+    ],
+    start: [
+      {
+        trigger: 'plot:mousedown',
+        action: ['brush:start', 'rect-mask:start', 'rect-mask:show'],
+      },
+    ],
+    processing: [
+      {
+        trigger: 'plot:mousemove',
+        action: ['rect-mask:resize'],
+      },
+    ],
+    end: [
+      {
+        trigger: 'plot:mouseup',
+        action: ['brush:filter', 'brush:end', 'rect-mask:end', 'rect-mask:hide'],
+      },
+    ],
+    rollback: [{ trigger: 'dblclick', action: ['brush:reset'] }],
+  })
 })()
 
 // TODO not in use
@@ -751,7 +796,7 @@ const
 
     return [geometries, annotations]
   },
-  makeChart = (el: HTMLElement, space: SpaceT, marks: Mark[]): ChartCfg => {
+  makeChart = (el: HTMLElement, space: SpaceT, marks: Mark[], interactions: S[]): ChartCfg => {
     // WARNING: makeCoord() must be called before other functions.
     const
       coordinate = makeCoord(space, marks), // WARNING: this call may transpose x/y in-place.
@@ -858,9 +903,8 @@ const
         axes,
         geometries,
         annotations,
-        interactions: [
-          { type: 'drag-move' }, // custom
-        ],
+        // Custom interactions.
+        interactions: interactions.map(type => ({ type })),
         tooltip: {
           showCrosshairs: true,
           crosshairs: { type: 'xy' }
@@ -882,6 +926,8 @@ const
       display: 'flex',
     },
     plot: {
+      userSelect: 'none',
+      "-webkit-user-select": 'none',
       $nest: {
         'svg': {
           position: 'absolute',
@@ -912,8 +958,10 @@ export interface Visualization {
   name?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
-  /** The events to capture on this visualization. */
+  /** The events to capture on this visualization. One of 'select_marks'. */
   events?: S[]
+  /** The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'. */
+  interactions?: S[]
 }
 
 export const
@@ -945,7 +993,7 @@ export const
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
-          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
+          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
         currentPlot.current = plot
         if (chart) {
           currentChart.current = chart
@@ -1000,20 +1048,22 @@ interface State {
   data: Rec
   /** The plot to be displayed in this card. */
   plot: Plot
-  /** The events to capture on this card. */
+  /** The events to capture on this card. One of 'select_marks'. */
   events?: S[]
+  /** The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'. */
+  interactions?: S[]
 }
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
-        const { title = 'Untitled', plot, data, events } = state
+        const { title = 'Untitled', plot, data, events, interactions } = state
         return (
           <div className={css.card}>
             <div className='wave-s12 wave-w6'>{title}</div>
             <div className={css.body}>
-              <XVisualization model={{ name, plot, data, events }} />
+              <XVisualization model={{ name, plot, data, events, interactions }} />
             </div>
           </div>
         )

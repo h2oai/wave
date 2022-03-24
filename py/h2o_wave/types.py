@@ -5265,6 +5265,7 @@ class Visualization:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
             events: Optional[List[str]] = None,
+            interactions: Optional[List[str]] = None,
     ):
         _guard_scalar('Visualization.plot', plot, (Plot,), False, False, False)
         _guard_scalar('Visualization.width', width, (str,), False, True, False)
@@ -5272,6 +5273,7 @@ class Visualization:
         _guard_scalar('Visualization.name', name, (str,), False, True, False)
         _guard_scalar('Visualization.visible', visible, (bool,), False, True, False)
         _guard_vector('Visualization.events', events, (str,), False, True, False)
+        _guard_vector('Visualization.interactions', interactions, (str,), False, True, False)
         self.plot = plot
         """The plot to be rendered in this visualization."""
         self.data = data
@@ -5285,7 +5287,9 @@ class Visualization:
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
         self.events = events
-        """The events to capture on this visualization."""
+        """The events to capture on this visualization. One of 'select_marks'."""
+        self.interactions = interactions
+        """The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5295,6 +5299,7 @@ class Visualization:
         _guard_scalar('Visualization.name', self.name, (str,), False, True, False)
         _guard_scalar('Visualization.visible', self.visible, (bool,), False, True, False)
         _guard_vector('Visualization.events', self.events, (str,), False, True, False)
+        _guard_vector('Visualization.interactions', self.interactions, (str,), False, True, False)
         return _dump(
             plot=self.plot.dump(),
             data=self.data,
@@ -5303,6 +5308,7 @@ class Visualization:
             name=self.name,
             visible=self.visible,
             events=self.events,
+            interactions=self.interactions,
         )
 
     @staticmethod
@@ -5321,6 +5327,8 @@ class Visualization:
         _guard_scalar('Visualization.visible', __d_visible, (bool,), False, True, False)
         __d_events: Any = __d.get('events')
         _guard_vector('Visualization.events', __d_events, (str,), False, True, False)
+        __d_interactions: Any = __d.get('interactions')
+        _guard_vector('Visualization.interactions', __d_interactions, (str,), False, True, False)
         plot: Plot = Plot.load(__d_plot)
         data: PackedRecord = __d_data
         width: Optional[str] = __d_width
@@ -5328,6 +5336,7 @@ class Visualization:
         name: Optional[str] = __d_name
         visible: Optional[bool] = __d_visible
         events: Optional[List[str]] = __d_events
+        interactions: Optional[List[str]] = __d_interactions
         return Visualization(
             plot,
             data,
@@ -5336,6 +5345,7 @@ class Visualization:
             name,
             visible,
             events,
+            interactions,
         )
 
 
@@ -9668,12 +9678,14 @@ class PlotCard:
             data: PackedRecord,
             plot: Plot,
             events: Optional[List[str]] = None,
+            interactions: Optional[List[str]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('PlotCard.box', box, (str,), False, False, False)
         _guard_scalar('PlotCard.title', title, (str,), False, False, False)
         _guard_scalar('PlotCard.plot', plot, (Plot,), False, False, False)
         _guard_vector('PlotCard.events', events, (str,), False, True, False)
+        _guard_vector('PlotCard.interactions', interactions, (str,), False, True, False)
         _guard_vector('PlotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9684,7 +9696,9 @@ class PlotCard:
         self.plot = plot
         """The plot to be displayed in this card."""
         self.events = events
-        """The events to capture on this card."""
+        """The events to capture on this card. One of 'select_marks'."""
+        self.interactions = interactions
+        """The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9694,6 +9708,7 @@ class PlotCard:
         _guard_scalar('PlotCard.title', self.title, (str,), False, False, False)
         _guard_scalar('PlotCard.plot', self.plot, (Plot,), False, False, False)
         _guard_vector('PlotCard.events', self.events, (str,), False, True, False)
+        _guard_vector('PlotCard.interactions', self.interactions, (str,), False, True, False)
         _guard_vector('PlotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='plot',
@@ -9702,6 +9717,7 @@ class PlotCard:
             data=self.data,
             plot=self.plot.dump(),
             events=self.events,
+            interactions=self.interactions,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9717,6 +9733,8 @@ class PlotCard:
         _guard_scalar('PlotCard.plot', __d_plot, (dict,), False, False, False)
         __d_events: Any = __d.get('events')
         _guard_vector('PlotCard.events', __d_events, (str,), False, True, False)
+        __d_interactions: Any = __d.get('interactions')
+        _guard_vector('PlotCard.interactions', __d_interactions, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('PlotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9724,6 +9742,7 @@ class PlotCard:
         data: PackedRecord = __d_data
         plot: Plot = Plot.load(__d_plot)
         events: Optional[List[str]] = __d_events
+        interactions: Optional[List[str]] = __d_interactions
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PlotCard(
             box,
@@ -9731,6 +9750,7 @@ class PlotCard:
             data,
             plot,
             events,
+            interactions,
             commands,
         )
 
