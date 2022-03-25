@@ -237,7 +237,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-## Text overflow
+## With text overflow
 
 By default, text that does not fit into the table cell is signaled to users with ellipsis (...). However, you can change this with an `overflow` prop. Available options are:
 
