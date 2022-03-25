@@ -54,6 +54,8 @@ interface TableColumn {
   data_type?: 'string' | 'number' | 'time'
   /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType
+  /** Defines what to do with a cell's contents in case it does not fit inside the cell. */
+  cell_overflow?: 'tooltip' | 'wrap'
 }
 
 /** Create a table row. */
@@ -112,9 +114,10 @@ export interface Table {
 }
 
 type WaveColumn = Fluent.IColumn & {
-  dataType?: S
+  dataType?: 'string' | 'number' | 'time'
   cellType?: TableCellType
   isSortable?: B
+  cellOverflow?: 'tooltip' | 'wrap'
 }
 
 type DataTable = {
@@ -297,8 +300,10 @@ const
           cellType: c.cell_type,
           dataType: c.data_type,
           isSortable: c.sortable,
+          cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
+          isMultiline: c.cell_overflow === 'wrap'
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
@@ -372,6 +377,20 @@ const
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
+        const TooltipWrapper = ({ children }: { children: S }) => {
+          if (col.cellOverflow === 'tooltip') return (
+            <Fluent.TooltipHost
+              id={item.key as S}
+              // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
+              styles={{ root: { '::after': { content: '', display: 'block' } } }}
+              content={children}
+              overflowMode={Fluent.TooltipOverflowMode.Parent}
+              title={children}
+            >{children}</Fluent.TooltipHost>
+          )
+          return <>{children}</>
+        }
+
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
@@ -382,10 +401,10 @@ const
             wave.args[m.name] = [item.key as S]
             wave.push()
           }
-          return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
+          return <Fluent.Link onClick={onClick}><TooltipWrapper>{v}</TooltipWrapper></Fluent.Link>
         }
 
-        return v
+        return <TooltipWrapper>{v}</TooltipWrapper>
       }
 
     // HACK: React stale closures - https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function

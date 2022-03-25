@@ -219,19 +219,49 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
         name='table', 
         columns=[
             ui.table_column(name='text', label='Process'),
-            ui.table_column(name='tag', label='Status', cell_type=ui.tag_table_cell_type(
-                name='tags',
-                tags=[
-                    ui.tag(label='FAIL', color='$red'),
-                    ui.tag(label='DONE', color='#D2E3F8', label_color='#053975'),
-                    ui.tag(label='SUCCESS', color='$mint'),
-                ]
-            ))
+            ui.table_column(name='tag', label='Status', 
+                cell_type=ui.tag_table_cell_type(
+                    name='tags',
+                    tags=[
+                        ui.tag(label='FAIL', color='$red'),
+                        ui.tag(label='DONE', color='#D2E3F8', label_color='#053975'),
+                        ui.tag(label='SUCCESS', color='$mint'),
+                    ]
+                ))
         ],
         rows=[
             ui.table_row(name='row1', cells=['Process1', 'FAIL']),
             ui.table_row(name='row2', cells=['Process2', 'SUCCESS,DONE']),
             ui.table_row(name='row3', cells=['Process3', 'DONE']),
         ])
+])
+```
+
+## With text overflow
+
+By default, text that does not fit into the table cell is signaled to users with ellipsis (...). However, you can change this with an `overflow` prop. Available options are:
+
+- `'tooltip'`: shows the whole text in a tooltip when hovering over it
+- `'wrap'`: wraps the long text on multiple lines
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
+    ui.table(name='table', columns=[
+        ui.table_column(name='name', label='Name'),
+        ui.table_column(name='about', label='About', cell_overflow='wrap'),
+    ], rows=[
+        ui.table_row(
+            name='row1', 
+            cells=['John', 'John is the former employee of the year.']
+        ),
+        ui.table_row(
+            name='row2', 
+            cells=['Alice', 'Alice is an ambicious newcommer.']
+        ),
+        ui.table_row(
+            name='row3', 
+            cells=['Bob', 'Bob is in our company for almost 35 years']
+        ),
+    ])
 ])
 ```
