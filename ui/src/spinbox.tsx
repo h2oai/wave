@@ -107,7 +107,7 @@ export const
         }
         else setVal(String(newValue))
         return newValue
-      }, [max, min, parseValue, precision]),
+      }, [max, min, parseValue, precision, setVal]),
       handleOnInput = React.useCallback((val: U) => {
         wave.args[name] = val
         if (trigger) wave.push()
