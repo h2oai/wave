@@ -644,6 +644,20 @@ describe('Table.tsx', () => {
       expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
     })
 
+    it('Checks if groups contain rows after sort is applied', () => {
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
+    })
+
     it('Searches grouped list', () => {
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
