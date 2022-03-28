@@ -29,9 +29,11 @@ def get_rows(q: Q):
     if q.client.sort:
         for col, reverse in q.client.sort.items():
             rows.sort(key=lambda i: getattr(i, col), reverse=reverse)
-    # Filter out all rows that do not contain searched string in `text` cell.
+    # Filter out all rows that do not contain searched string.
     if q.client.search:
-        rows = [i for i in rows if q.client.search in str(i.text)]
+        search_val = q.client.search['value'].lower()
+        cols = q.client.search['cols']
+        rows = [row for row in rows if any(search_val in str(getattr(row, col)).lower() for col in cols)]
     # Filter out rows that do not contain filtered column value.
     if q.client.filters:
         for col, filters in q.client.filters.items():
