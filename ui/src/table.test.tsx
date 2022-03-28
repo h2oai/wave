@@ -28,7 +28,10 @@ const
 let tableProps: Table
 
 describe('Table.tsx', () => {
-  beforeAll(() => wave.emit = emitMock)
+  beforeAll(() => {
+    wave.debounce = jest.fn((_t, f) => (...args: any[]) => f(...args))
+    wave.emit = emitMock
+  })
   beforeEach(() => {
     tableProps = {
       name,
@@ -393,7 +396,7 @@ describe('Table.tsx', () => {
       const { getByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['search'] }} />)
 
       fireEvent.change(getByTestId('search'), { target: { value: cell21.toLowerCase() } })
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'search', cell21.toLowerCase())
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'search', { value: cell21.toLowerCase(), cols: ['colname1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })

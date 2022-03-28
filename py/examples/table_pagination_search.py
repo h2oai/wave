@@ -35,8 +35,9 @@ async def serve(q: Q):
         searched = None
         search = q.events.table.search if q.events.table.search is not None else q.client.search
         if search is not None:
+            search_val = search['value'].lower()
+            searched = [i for i in issues if any(search_val in str(getattr(i, col)).lower() for col in search['cols'])]
             q.client.search = search
-            searched = [i for i in issues if search in i.text]
         if q.events.table.page_change:
             offset = q.events.table.page_change.get('offset', 0)
 

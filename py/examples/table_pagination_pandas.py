@@ -31,7 +31,10 @@ def get_df(q: Q):
         df = df.sort_values(by=list(q.client.sort.keys()), ascending=ascending)
     # Filter out all rows that do not contain searched string in `text` cell.
     if q.client.search:
-        df = df[df.text.apply(str).str.contains(q.client.search)]
+        search_val = q.client.search['value'].lower()
+        cols = q.client.search['cols']
+        # Filter dataframe by search value case insensitive.
+        df = df[df.apply(lambda r: any(search_val in str(r[col]).lower() for col in cols), axis=1)]
     # Filter out rows that do not contain filtered column value.
     if q.client.filters:
         # We want only rows that have no filters applied or their col value matches active filters.

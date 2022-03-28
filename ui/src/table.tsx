@@ -493,10 +493,16 @@ const
 
     return (
       <span>
-        <span style={{ marginRight: 15 }}><b>{((currentPage - 1) * rows_per_page) + 1}</b> to <b>{isLastPage ? total_rows : currentPage * rows_per_page}</b> of <b>{total_rows}</b></span>
+        <span style={{ marginRight: 15 }}>
+          {
+            total_rows
+              ? <><b>{((currentPage - 1) * rows_per_page) + 1}</b> to <b>{isLastPage ? total_rows : currentPage * rows_per_page}</b> of <b>{total_rows}</b></>
+              : <><b>0</b> to <b>0</b> of <b>0</b></>
+          }
+        </span>
         <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronLeft' }} disabled={currentPage === 1} onClick={() => onPageChange(1)} styles={btnStyles} title='First page' />
         <Fluent.IconButton iconProps={{ iconName: 'ChevronLeft' }} disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} styles={btnStyles} title='Previous page' />
-        <span style={{ margin: margin(0, 8) }}>Page <b>{currentPage}</b> of <b>{lastPage}</b></span>
+        <span style={{ margin: margin(0, 8) }}>Page <b>{currentPage}</b> of <b>{lastPage || 1}</b></span>
         <Fluent.IconButton iconProps={{ iconName: 'ChevronRight' }} disabled={isLastPage} onClick={() => onPageChange(currentPage + 1)} styles={btnStyles} title='Next page' />
         <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronRight' }} disabled={isLastPage} onClick={() => onPageChange(lastPage)} styles={btnStyles} title='Last page' />
       </span>
@@ -651,12 +657,16 @@ export const
           return searchString || ''
         })
       }, [searchableKeys]),
+      fireSearchEvent = (searchStr: S) => {
+        wave.emit(m.name, 'search', { value: searchStr, cols: searchableKeys })
+        setCurrentPage(1)
+      },
+      debouncedFireSearchEvent = React.useRef(wave.debounce(500, fireSearchEvent)),
       onSearchChange = React.useCallback((_e?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
         setSearchStr(searchStr)
 
         if (m.pagination && m.events?.includes('search')) {
-          wave.emit(m.name, 'search', searchStr)
-          setCurrentPage(1)
+          debouncedFireSearchEvent.current(searchStr)
           return
         }
         if (!searchStr && !selectedFilters) {
@@ -674,7 +684,7 @@ export const
           if (groups) initGroups()
           return groups
         })
-      }, [m.pagination, m.events, m.name, selectedFilters, filter, search, items, initGroups]),
+      }, [m.pagination, m.events, selectedFilters, filter, search, items, initGroups]),
       onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
         if (m.pagination) {
