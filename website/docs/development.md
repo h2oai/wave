@@ -56,12 +56,34 @@ To debug Wave apps, set your IDE or editor's configuration to execute the comman
 The command `wave run --no-reload foo` is equivalent to `python -m h2o_wave run --no-reload foo`.
 :::
 
-### Using PyCharm
+### Debug in PyCharm
 
 - Open the "Run/Debug Configurations" dialog for your script.
 - Under "Configuration", change the "Script path" dropdown to "Module name".
 - Set "Module name" to `h2o_wave`.
 - Set "Parameters" to `run foo` (assuming your app's source code is in `foo.py`)
+
+### Debug in Visual Studio Code
+
+- Run "Open launch.json" command (cmd + shift + P).
+- Add the configuration listed below.
+- Go to Debug pane, select your newly added config and run it to start debugging.
+
+```json
+{
+  "name": "Debug Wave App",
+  "type": "python",
+  "request": "launch",
+  // Path to your wave installation, usually inside virtual env.
+  "program": "${workspaceFolder}/venv/bin/wave",
+  // Path to python you are using, usually inside virtual env.
+  "python": "${workspaceFolder}/venv/bin/python",
+  "args": [
+    "run",
+    "app"
+  ]
+}
+```
 
 ## Using OpenID Connect
 
