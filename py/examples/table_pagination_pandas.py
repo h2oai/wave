@@ -3,6 +3,8 @@
 # #form #table #pagination #pandas
 # ---
 
+import os
+from typing import List
 from h2o_wave import main, app, Q, ui
 import pandas as pd
 
@@ -15,7 +17,11 @@ rows_per_page = 10
 total_rows = len(all_issues_df)
 
 
-def get_table_rows(q: Q):
+def df_to_table_rows(df: pd.DataFrame) -> List[ui.TableRow]:
+    return [ui.table_row(name=str(r[0]), cells=[str(r[0]), r[1]]) for r in df.itertuples(index=False)]
+
+
+def get_df(q: Q):
     # Make a deep copy in order to not mutate the original df which serves as our baseline.
     df = all_issues_df.copy()
 
@@ -32,33 +38,21 @@ def get_table_rows(q: Q):
         query = ' & '.join([f'({not bool(filters)} | {col} in {filters})' for col, filters in q.client.filters.items()])
         df = df.query(query)
 
-    # Update table pagination according to the new row count.
-    if q.client.search is not None or q.client.filters:
-        q.page['form'].items[0].table.pagination = ui.table_pagination(len(df), rows_per_page)
-
-    offset = q.client.page_offset or 0
-    df = df[offset:offset + rows_per_page]
-    return [ui.table_row(name=str(r[0]), cells=[str(r[0]), r[1]]) for r in df.itertuples(index=False)]
+    return df
 
 
 @app('/demo')
 async def serve(q: Q):
-    if not q.app.initialized:
-        # Create and upload a CSV file for downloads.
-        all_issues_df.to_csv('data_download.csv')
-        q.app.data_download, = await q.site.upload(['data_download.csv'])
-        q.app.initialized = True
-
     if not q.client.initialized:
         q.page['meta'] = ui.meta_card(box='')
         q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.table(
                 name='table',
                 columns=[
-                    ui.table_column(name='text', label='Text', sortable=True, searchable=True),
+                    ui.table_column(name='text', label='Text', sortable=True, searchable=True, link=False),
                     ui.table_column(name='status', label='Status', filterable=True),
                 ],
-                rows=get_table_rows(q),
+                rows=df_to_table_rows(get_df(q)[0:rows_per_page]),
                 resettable=True,
                 downloadable=True,
                 pagination=ui.table_pagination(total_rows, rows_per_page),
@@ -73,6 +67,7 @@ async def serve(q: Q):
     # Check if user triggered any table action and save it to local state for allowing multiple
     # actions to be performed on the data at the same time, e.g. sort the filtered data etc.
     if q.events.table:
+        table = q.page['form'].items[0].table
         if q.events.table.sort:
             q.client.sort = q.events.table.sort
             q.client.page_offset = 0
@@ -89,10 +84,23 @@ async def serve(q: Q):
             q.client.sort = None
             q.client.filters = None
             q.client.page_offset = 0
-            q.page['form'].items[0].table.pagination = ui.table_pagination(total_rows, rows_per_page)
-        if q.events.table.download:
-            q.page['meta'].script = ui.inline_script(f'window.open("{q.app.data_download}")')
+            table.pagination = ui.table_pagination(total_rows, rows_per_page)
 
-        q.page['form'].items[0].table.rows = get_table_rows(q)
+        offset = q.client.page_offset or 0
+        df = get_df(q)
+
+        if q.events.table.download:
+            # Create and upload a CSV file for downloads.
+            df.to_csv('data_download.csv')
+            download_url, = await q.site.upload(['data_download.csv'])
+            # Clean up.
+            os.remove('data_download.csv')
+            q.page['meta'].script = ui.inline_script(f'window.open("{download_url}")')
+
+        # Update table pagination according to the new row count.
+        if q.client.search is not None or q.client.filters:
+            table.pagination = ui.table_pagination(len(df), rows_per_page)
+
+        table.rows = df_to_table_rows(df[offset:offset + rows_per_page])
 
     await q.page.save()

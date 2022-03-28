@@ -23,7 +23,7 @@ async def serve(q: Q):
             ui.table(
                 name='table',
                 columns=[
-                    ui.table_column(name='text', label='Text'),
+                    ui.table_column(name='text', label='Text', link=False),
                     ui.table_column(name='status', label='Status', filterable=True)
                 ],
                 rows=[ui.table_row(name=i.text, cells=[i.text, i.status]) for i in issues[0:rows_per_page]],

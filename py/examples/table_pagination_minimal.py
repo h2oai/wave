@@ -16,7 +16,7 @@ async def serve(q: Q):
         q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.table(
                 name='table',
-                columns=[ui.table_column(name='text', label='Text')],
+                columns=[ui.table_column(name='text', label='Text', link=False)],
                 rows=[ui.table_row(name=r, cells=[r]) for r in rows[0:rows_per_page]],
                 pagination=ui.table_pagination(total_rows=len(rows), rows_per_page=rows_per_page),
                 height='580px',

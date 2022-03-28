@@ -14,6 +14,7 @@ rows_per_page = 10
 @app('/demo')
 async def serve(q: Q):
     if not q.app.initialized:
+        # Allow downloading all data since no filters/search/sort is allowed.
         # Create and upload a CSV file for downloads.
         with open('data_download.csv', 'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',')
@@ -27,7 +28,7 @@ async def serve(q: Q):
         q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.table(
                 name='table',
-                columns=[ui.table_column(name='text', label='Text')],
+                columns=[ui.table_column(name='text', label='Text', link=False)],
                 rows=[ui.table_row(name=r, cells=[r]) for r in rows[0:rows_per_page]],
                 pagination=ui.table_pagination(total_rows=len(rows), rows_per_page=rows_per_page),
                 height='580px',
