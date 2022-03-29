@@ -68,7 +68,6 @@ export const
         <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
       ))
     
-    React.useEffect(() => console.log('created'), [])
     React.useLayoutEffect(() => {
       if (!ref.current) {
         setValue(props.value)
