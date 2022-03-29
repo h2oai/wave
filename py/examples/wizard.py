@@ -10,7 +10,6 @@ async def serve(q: Q):
         q.page['wizard'] = ui.form_card(box='1 1 2 4', items=[])
         q.client.initialized = True
 
-    ui.button(name='default'),
     wizard = q.page['wizard']  # Get a reference to the wizard form
     if q.args.step1:
         wizard.items = [
