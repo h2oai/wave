@@ -32,8 +32,8 @@ async def serve(q: Q):
 
     if q.events.table:
         offset = 0
-        searched = None
-        search = q.events.table.search if q.events.table.search is not None else q.client.search
+        searched = issues
+        search = q.events.table.search or q.client.search
         if search is not None:
             search_val = search['value'].lower()
             searched = [i for i in issues if any(search_val in str(getattr(i, col)).lower() for col in search['cols'])]
@@ -41,10 +41,8 @@ async def serve(q: Q):
         if q.events.table.page_change:
             offset = q.events.table.page_change.get('offset', 0)
 
-        next_issues = searched[offset:offset + rows_per_page] if searched else issues[offset:offset + rows_per_page]
-
         table = q.page['form'].items[0].table
-        table.rows = [ui.table_row(name=i.text, cells=[i.text]) for i in next_issues]
-        table.pagination = ui.table_pagination(len(searched) if searched else len(issues), rows_per_page)
+        table.rows = [ui.table_row(name=i.text, cells=[i.text]) for i in searched[offset:offset + rows_per_page]]
+        table.pagination = ui.table_pagination(len(searched), rows_per_page)
 
     await q.page.save()
