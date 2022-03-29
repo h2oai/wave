@@ -4,7 +4,7 @@
 # ---
 
 import os
-from typing import List
+from typing import Dict, List
 from h2o_wave import main, app, Q, ui
 import pandas as pd
 
@@ -21,24 +21,23 @@ def df_to_table_rows(df: pd.DataFrame) -> List[ui.TableRow]:
     return [ui.table_row(name=str(r[0]), cells=[str(r[0]), r[1]]) for r in df.itertuples(index=False)]
 
 
-def get_df(q: Q):
+def get_df(base: pd.DataFrame, sort: Dict[str, bool] = None, search: Dict = None, filters: Dict[str, List[str]] = None) -> pd.DataFrame:
     # Make a deep copy in order to not mutate the original df which serves as our baseline.
-    df = all_issues_df.copy()
+    df = base.copy()
 
-    if q.client.sort:
+    if sort:
         # Reverse values since default sort of Wave table is different from Pandas.
-        ascending = [not v for v in list(q.client.sort.values())]
-        df = df.sort_values(by=list(q.client.sort.keys()), ascending=ascending)
+        ascending = [not v for v in list(sort.values())]
+        df = df.sort_values(by=list(sort.keys()), ascending=ascending)
     # Filter out all rows that do not contain searched string in `text` cell.
-    if q.client.search:
-        search_val = q.client.search['value'].lower()
-        cols = q.client.search['cols']
+    if search:
+        search_val = search['value'].lower()
         # Filter dataframe by search value case insensitive.
-        df = df[df.apply(lambda r: any(search_val in str(r[col]).lower() for col in cols), axis=1)]
+        df = df[df.apply(lambda r: any(search_val in str(r[col]).lower() for col in search['cols']), axis=1)]
     # Filter out rows that do not contain filtered column value.
-    if q.client.filters:
+    if filters:
         # We want only rows that have no filters applied or their col value matches active filters.
-        query = ' & '.join([f'({not bool(filters)} | {col} in {filters})' for col, filters in q.client.filters.items()])
+        query = ' & '.join([f'({not bool(filters)} | {col} in {filters})' for col, filters in filters.items()])
         df = df.query(query)
 
     return df
@@ -55,7 +54,7 @@ async def serve(q: Q):
                     ui.table_column(name='text', label='Text', sortable=True, searchable=True, link=False),
                     ui.table_column(name='status', label='Status', filterable=True),
                 ],
-                rows=df_to_table_rows(get_df(q)[0:rows_per_page]),
+                rows=df_to_table_rows(get_df(all_issues_df)[0:rows_per_page]),
                 resettable=True,
                 downloadable=True,
                 pagination=ui.table_pagination(total_rows, rows_per_page),
@@ -90,7 +89,7 @@ async def serve(q: Q):
             table.pagination = ui.table_pagination(total_rows, rows_per_page)
 
         offset = q.client.page_offset or 0
-        df = get_df(q)
+        df = get_df(all_issues_df, q.client.sort, q.client.search, q.client.filters)
 
         if q.events.table.download:
             # Create and upload a CSV file for downloads.
