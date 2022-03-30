@@ -36,7 +36,7 @@ export interface SidePanel {
   closable?: B
   /** An identifying name for this component. */
   name?: Id
-  /** The events to capture on this side panel. */
+  /** The events to capture on this side panel. One of 'dismissed'. */
   events?: S[]
   /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
   blocking?: B

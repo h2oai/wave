@@ -40,7 +40,7 @@ export interface Dialog {
   primary?: B
   /** An identifying name for this component. */
   name?: Id
-  /** The events to capture on this dialog. */
+  /** The events to capture on this dialog. One of 'dismissed'. */
   events?: S[]
 }
 
