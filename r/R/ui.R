@@ -3637,7 +3637,7 @@ ui_layout <- function(
 #' @param blocking True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False.
 #' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
 #' @param name An identifying name for this component.
-#' @param events The events to capture on this dialog.
+#' @param events The events to capture on this dialog. One of 'dismissed'.
 #' @return A Dialog instance.
 #' @export
 ui_dialog <- function(
@@ -3679,7 +3679,7 @@ ui_dialog <- function(
 #' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param closable True if the side panel should have a closing 'X' button at the top right corner.
 #' @param name An identifying name for this component.
-#' @param events The events to capture on this side panel.
+#' @param events The events to capture on this side panel. One of 'dismissed'.
 #' @param blocking True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
 #' @return A SidePanel instance.
 #' @export

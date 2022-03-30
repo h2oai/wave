@@ -3138,7 +3138,7 @@ def dialog(
         blocking: True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False.
         primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
         name: An identifying name for this component.
-        events: The events to capture on this dialog.
+        events: The events to capture on this dialog. One of 'dismissed'.
     Returns:
         A `h2o_wave.types.Dialog` instance.
     """
@@ -3173,7 +3173,7 @@ def side_panel(
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         closable: True if the side panel should have a closing 'X' button at the top right corner.
         name: An identifying name for this component.
-        events: The events to capture on this side panel.
+        events: The events to capture on this side panel. One of 'dismissed'.
         blocking: True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
     Returns:
         A `h2o_wave.types.SidePanel` instance.
