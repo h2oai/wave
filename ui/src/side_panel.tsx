@@ -34,12 +34,12 @@ export interface SidePanel {
   width?: S
   /** True if the side panel should have a closing 'X' button at the top right corner. */
   closable?: B
+  /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
+  blocking?: B
   /** An identifying name for this component. */
   name?: Id
   /** The events to capture on this side panel. One of 'dismissed'. */
   events?: S[]
-  /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
-  blocking?: B
 }
 
 export default bond(() => {
