@@ -93,6 +93,7 @@ async def serve(q: Q):
 
         if q.events.table.download:
             # Create and upload a CSV file for downloads.
+            # For multi-user apps, the tmp file name should be unique for each user, not hardcoded.
             df.to_csv('data_download.csv')
             download_url, = await q.site.upload(['data_download.csv'])
             # Clean up.

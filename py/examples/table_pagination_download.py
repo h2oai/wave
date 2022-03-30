@@ -16,6 +16,7 @@ async def serve(q: Q):
     if not q.app.initialized:
         # Allow downloading all data since no filters/search/sort is allowed.
         # Create and upload a CSV file for downloads.
+        # For multi-user apps, the tmp file name should be unique for each user, not hardcoded.
         with open('data_download.csv', 'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',')
             for r in rows:

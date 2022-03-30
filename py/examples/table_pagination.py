@@ -97,6 +97,7 @@ async def serve(q: Q):
             table.pagination = ui.table_pagination(len(rows), rows_per_page)
 
         if q.events.table.download:
+            # For multi-user apps, the tmp file name should be unique for each user, not hardcoded.
             with open('data_download.csv', 'w') as csvfile:
                 csv_writer = csv.writer(csvfile, delimiter=',')
                 for r in rows:
