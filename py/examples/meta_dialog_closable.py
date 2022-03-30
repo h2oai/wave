@@ -9,14 +9,14 @@ async def serve(q: Q):
     if not q.client.initialized:
         # Create an empty meta_card to hold the dialog
         q.page['meta'] = ui.meta_card(box='')
-        # Display a button to launch dialog dialog
+        # Display a button to launch dialog
         q.page['example'] = ui.form_card(box='1 1 2 1', items=[
-            ui.button(name='launch_dialog', label='Launch dialog', primary=True)
+            ui.button(name='show_dialog', label='Open dialog', primary=True)
         ])
         q.client.initialized = True
 
-    # Was the launch_dialog button clicked?
-    if q.args.launch_dialog:
+    # Was the show_dialog button clicked?
+    if q.args.show_dialog:
         # Create a dialog with a close button
         q.page['meta'].dialog = ui.dialog(
             title='Hello!',

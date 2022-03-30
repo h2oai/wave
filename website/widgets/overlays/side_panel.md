@@ -24,12 +24,12 @@ if not q.client.initialized:
     q.page['meta'] = ui.meta_card(box='')
     # Render a button that will open the side panel.
     q.page['example'] = ui.form_card(box='1 1 2 1', items=[
-        ui.button(name='show_panel', label='Open side panel', primary=True)
+        ui.button(name='show_side_panel', label='Open side panel', primary=True)
     ])
     q.client.initialized = True
 else:
     # Handle button click and open the side panel.
-    if q.args.show_panel:
+    if q.args.show_side_panel:
         q.page['meta'].side_panel = ui.side_panel(title='Order Donuts', items=[
             ui.text('Donuts cost $1.99. Proceed?'),
             ui.buttons([
@@ -59,16 +59,18 @@ if not q.client.initialized:
     q.page['meta'] = ui.meta_card(box='')
     # Render a button that will open the side panel.
     q.page['example'] = ui.form_card(box='1 1 2 1', items=[
-        ui.button(name='show_panel', label='Order donuts', primary=True)
+        ui.button(name='show_side_panel', label='Order donuts', primary=True)
     ])
     q.client.initialized = True
 else:
     # Handle button click by opening the side panel.
-    if q.args.show_panel:
+    if q.args.show_side_panel:
         q.page['meta'].side_panel = ui.side_panel(
             title='Order Donuts',
             # Name for q.events entry.
-            name='my_panel',
+            name='my_side_panel',
+            # Enable a close button (displayed at the top-right of the side panel).
+            closable=True,
             # Get notified when the side panel is dismissed.
             events=['dismissed'],
             items=[
@@ -78,9 +80,9 @@ else:
         )
 
     # Did we get events from the side panel?
-    if q.events.my_panel:
+    if q.events.my_side_panel:
         # Was the side panel dismissed?
-        if q.events.my_panel.dismissed:
+        if q.events.my_side_panel.dismissed:
             # Close the side panel.
             q.page['meta'].side_panel = None
 ```

@@ -3158,6 +3158,7 @@ def side_panel(
         title: str,
         items: List[Component],
         width: Optional[str] = None,
+        closable: Optional[bool] = None,
         name: Optional[str] = None,
         events: Optional[List[str]] = None,
         blocking: Optional[bool] = None,
@@ -3170,6 +3171,7 @@ def side_panel(
         title: The side panel's title.
         items: The components displayed in this side panel.
         width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
+        closable: True if the side panel should have a closing 'X' button at the top right corner.
         name: An identifying name for this component.
         events: The events to capture on this side panel.
         blocking: True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
@@ -3180,6 +3182,7 @@ def side_panel(
         title,
         items,
         width,
+        closable,
         name,
         events,
         blocking,

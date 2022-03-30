@@ -32,6 +32,8 @@ export interface SidePanel {
   items: Component[]
   /** The width of the dialog, e.g. '400px'. Defaults to '600px'. */
   width?: S
+  /** True if the side panel should have a closing 'X' button at the top right corner. */
+  closable?: B
   /** An identifying name for this component. */
   name?: Id
   /** The events to capture on this side panel. */
@@ -44,14 +46,14 @@ export default bond(() => {
   const
     onDismiss = () => {
       const
-        { blocking, name, events } = sidePanelB() || {},
+        { closable, blocking, name, events } = sidePanelB() || {},
         ev = events?.find(e => e === 'dismissed')
 
-      if (!blocking && ev && name) wave.emit(name, ev, true)
+      if ((closable || !blocking) && ev && name) wave.emit(name, ev, true)
       sidePanelB(null)
     },
     render = () => {
-      const { title, width = '600px', items = [], blocking = false } = sidePanelB() || {}
+      const { title, width = '600px', items = [], closable = false, blocking = false } = sidePanelB() || {}
       return (
         <Fluent.Panel
           isOpen={!!sidePanelB()}
@@ -59,6 +61,7 @@ export default bond(() => {
           type={Fluent.PanelType.custom}
           customWidth={width}
           onDismiss={onDismiss}
+          hasCloseButton={closable}
           overlayProps={blocking ? { style: { cursor: 'default' } } : undefined}
           isBlocking
           isLightDismiss={!blocking}>

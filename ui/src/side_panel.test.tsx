@@ -42,19 +42,26 @@ describe('SidePanel.tsx', () => {
     await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
+  it('should not render X closing button', () => {
+    const { container } = render(<SidePanel />)
+    expect(container.parentElement?.querySelector('.ms-Panel-closeButton')).not.toBeInTheDocument()
+  })
+
   it('should render X closing button when specified', () => {
+    sidePanelB({ ...sidePanelProps, closable: true })
     const { container } = render(<SidePanel />)
     expect(container.parentElement?.querySelector('.ms-Panel-closeButton')).toBeInTheDocument()
   })
 
   it('should close side panel when clicking on X', async () => {
+    sidePanelB({ ...sidePanelProps, closable: true })
     const { container, queryByRole } = render(<SidePanel />)
     fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as HTMLDivElement)
     await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should fire event if specified when clicking on X', () => {
-    sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
+    sidePanelB({ ...sidePanelProps, closable: true, events: ['dismissed'] })
     const { container } = render(<SidePanel />)
     fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as HTMLDivElement)
     expect(emitMock).toHaveBeenCalled()
