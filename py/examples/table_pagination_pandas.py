@@ -52,7 +52,7 @@ async def serve(q: Q):
                 name='table',
                 columns=[
                     ui.table_column(name='text', label='Text', sortable=True, searchable=True, link=False),
-                    ui.table_column(name='status', label='Status', filterable=True),
+                    ui.table_column(name='status', label='Status', filterable=True, filters=['Open', 'Closed']),
                 ],
                 rows=df_to_table_rows(get_df(all_issues_df)[0:rows_per_page]),
                 resettable=True,

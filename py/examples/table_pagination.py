@@ -52,7 +52,7 @@ async def serve(q: Q):
                 name='table',
                 columns=[
                     ui.table_column(name='text', label='Text', sortable=True, searchable=True, link=False),
-                    ui.table_column(name='status', label='Status', filterable=True),
+                    ui.table_column(name='status', label='Status', filterable=True, filters=['Open', 'Closed']),
                 ],
                 rows=[ui.table_row(str(r.text), [str(r.text), r.status]) for r in get_rows(all_rows)[0:rows_per_page]],
                 resettable=True,

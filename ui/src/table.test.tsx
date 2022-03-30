@@ -406,6 +406,24 @@ describe('Table.tsx', () => {
 
   describe('filter', () => {
 
+    it('Renders correct filters when explicitly specified', () => {
+      tableProps = {
+        ...tableProps,
+        pagination: { total_rows: 10, rows_per_page: 5 },
+        columns: [{ name: 'colname1', label: 'Col1', filterable: true, filters: ['foo', 'bar'] }],
+        rows: [
+          { name: 'rowname1', cells: [cell11] },
+          { name: 'rowname2', cells: [cell21] },
+          { name: 'rowname3', cells: [cell31] }
+        ]
+      }
+      const { container, getByText, getAllByText } = render(<XTable model={tableProps} />)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+      fireEvent.click(getAllByText('1')[1].parentElement as HTMLDivElement)
+      expect(getByText('foo')).toBeInTheDocument()
+      expect(getByText('bar')).toBeInTheDocument()
+    })
+
     it('Filters correctly - single option', () => {
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 

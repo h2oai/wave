@@ -64,6 +64,8 @@ interface TableColumn {
   cell_type?: TableCellType
   /** Defines what to do with a cell's contents in case it does not fit inside the cell. */
   cell_overflow?: 'tooltip' | 'wrap'
+  /** List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns. */
+  filters?: S[]
 }
 
 /** Create a table row. */
@@ -148,6 +150,7 @@ type WaveColumn = Fluent.IColumn & {
   cellType?: TableCellType
   isSortable?: B
   cellOverflow?: 'tooltip' | 'wrap'
+  filters?: S[]
 }
 
 type DataTable = {
@@ -353,7 +356,8 @@ const
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: c.cell_overflow === 'wrap'
+          isMultiline: c.cell_overflow === 'wrap',
+          filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
@@ -368,8 +372,9 @@ const
           /> : null
       }, [onFilterChange, setFiltersInBulk]),
       onColumnContextMenu = React.useCallback((col: WaveColumn, e: React.MouseEvent<HTMLElement>) => {
+        const menuFilters = col.filters || items.map(i => i[col.fieldName || col.key])
         setColContextMenuList({
-          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
+          items: Array.from(new Set(menuFilters)).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
           target: e.target as HTMLElement,
           directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
           gapSpace: 10,
