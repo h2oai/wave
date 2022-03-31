@@ -32,12 +32,12 @@ export interface SidePanel {
   items: Component[]
   /** The width of the dialog, e.g. '400px'. Defaults to '600px'. */
   width?: S
-  /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
-  blocking?: B
   /** An identifying name for this component. */
   name?: Id
   /** The events to capture on this side panel. One of 'dismissed'. */
   events?: S[]
+  /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
+  blocking?: B
   /** True if the side panel should have a closing 'X' button at the top right corner. */
   closable?: B
 }
