@@ -17,7 +17,7 @@ import { B, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Markdown } from './markdown'
-import { cssVar } from './theme'
+import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
@@ -26,7 +26,7 @@ const
       alignItems: 'flex-start',
       alignContent: 'flex-start'
     },
-    element: {
+    expand: {
       flexGrow: 1
     },
     icon: {
@@ -39,8 +39,7 @@ const
       cursor: 'pointer'
     },
     preventOverflow: {
-      minWidth: 0,
-      flex: '1 1 0'
+      minWidth: 0
     }
   })
 
@@ -60,7 +59,7 @@ export const
           showIcon
             ? (
               <>
-                <div className={expand ? css.element : css.preventOverflow}>{children}</div>
+                <div className={clas(css.preventOverflow, expand ? css.expand : '')}>{children}</div>
                 <Fluent.TooltipHost tooltipProps={tooltipProps}>
                   <Fluent.FontIcon className={css.icon} iconName='Info' />
                 </Fluent.TooltipHost>
