@@ -51,7 +51,7 @@ page['header3'] = ui.header_card(
     title='Primary color header',
     subtitle='And now for something completely different!',
     icon='Cycling',
-    icon_color='$violet',
+    icon_color='$card',
     items=[ui.menu(icon='Add', items=commands)],
     secondary_items=[
         ui.tabs(name='menu', value='email', link=True, items=[

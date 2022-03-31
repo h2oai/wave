@@ -64,7 +64,6 @@ body,
   --azure: #03a9f4;
   --blue: #2196f3;
   --brown: #795548;
-  --card: #ffffff;
   --cyan: #00bcd4;
   --gray: #9e9e9e;
   --green: #8bc34a;
@@ -95,6 +94,7 @@ body,
   --text9: rgba(50, 49, 48, 0.9);
 
   /* Primary color tones. */
+  --primary: #000000;
   --primary0: rgba(50, 49, 48, 0.05);
   --primary1: rgba(50, 49, 48, 0.1);
   --primary2: rgba(50, 49, 48, 0.2);
@@ -105,9 +105,9 @@ body,
   --primary7: rgba(50, 49, 48, 0.7);
   --primary8: rgba(50, 49, 48, 0.8);
   --primary9: rgba(50, 49, 48, 0.9);
-  --saturatedPrimary: hsl(0, 20%, 0%);
 
   /* Card color tones. */
+  --card: #ffffff;
   --card0: rgba(255, 255, 255, 0.05);
   --card1: rgba(255, 255, 255, 0.1);
   --card2: rgba(255, 255, 255, 0.2);

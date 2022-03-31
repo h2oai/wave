@@ -153,10 +153,6 @@ q.page['header'] = ui.header_card(
 )
 ```
 
-:::warning
-If `primary` option is chosen, the header background color is slightly saturated/desaturated in contrast to the actual primary color to achieve better design synergy.
-:::
-
 ```py
 q.page['header'] = ui.header_card(
     box='1 1 5 1',

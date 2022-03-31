@@ -589,6 +589,7 @@ const
       theme = themes[themeName] ?? themes[defaultThemeName],
       { palette, fluentPalette } = theme,
       updateTones = (key: S, color: S) => {
+        document.body.style.setProperty(`--${key}`, color)
         const [r, g, b] = rgb(color)
         let alpha = 0.05
         for (let i = 0; i < 10; i++) {
@@ -610,8 +611,6 @@ const
       const fluentPrimary = Fluent.getColorFromString(fluentPalette.themePrimary)
       if (fluentPrimary) {
         const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
-        document.body.style.setProperty(`--saturatedPrimary`, `hsl(${primaryHsl.h}, ${primaryHsl.s > 50 ? primaryHsl.s - 30 : primaryHsl.s + 30}%, ${primaryHsl.l}%)`)
-
         Object.keys(spectrum).forEach(spectrumColor => {
           const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
           const spectrumHsl = Fluent.hsv2hsl(h, s, v)
