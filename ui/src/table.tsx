@@ -794,21 +794,6 @@ export const
         }
       }, [m.events, m.name, m.pagination]),
       isSearchable = !!searchableKeys.length,
-      download = () => {
-        // TODO: Prompt a dialog for name, encoding, etc.
-        const
-          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
-          a = document.createElement('a'),
-          blob = new Blob([data], { type: "octet/stream" }),
-          url = window.URL.createObjectURL(blob)
-
-        a.href = url
-        a.download = 'exported_data.csv'
-        a.click()
-
-        window.URL.revokeObjectURL(url)
-      },
       isFilterable = m.columns.some(c => c.filterable),
       shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
