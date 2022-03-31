@@ -47,8 +47,8 @@ export interface Dialog {
 export default bond(() => {
   const
     onDismiss = () => {
-      const { closable, blocking, name, events } = dialogB() || {}
-      if ((closable || !blocking) && name) {
+      const { name, events } = dialogB() || {}
+      if (name) {
         events?.forEach(e => {
           if (e === 'dismissed') wave.emit(name, e, true)
         })
