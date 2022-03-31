@@ -138,7 +138,7 @@ async def serve(q: Q):
             q.client.page_offset = 0
             q.client.total_rows = len(q.app.h2o_df)
 
-        # Update the rows on in our UI
+        # Update the rows in our UI
         # TODO: if you change where your table is located, this needs updating
         q.page["table_card"].items[0].table.rows = get_table_rows(q)
         q.page["table_card"].items[0].table.pagination.total_rows = q.client.total_rows
