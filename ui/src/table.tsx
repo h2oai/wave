@@ -178,7 +178,6 @@ type ContextualMenuProps = {
 type FooterProps = {
   currentPage: U
   onPageChange: (newPage: U) => void
-  shouldShowFooter: B
   isSearchable: B
   isFilterable: B
   displayedRows: S
@@ -564,7 +563,7 @@ const
       </span>
     )
   },
-  Footer = ({ shouldShowFooter, m, isFilterable, isSearchable, displayedRows, reset, currentPage, onPageChange }: FooterProps) => {
+  Footer = ({ m, isFilterable, isSearchable, displayedRows, reset, currentPage, onPageChange }: FooterProps) => {
     const
       footerItems: Fluent.ICommandBarItemProps[] = [],
       buttonStyles = { root: { background: cssVar('$card') } },
@@ -575,7 +574,8 @@ const
         }
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
+          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
           blob = new Blob([data], { type: "octet/stream" }),
           url = window.URL.createObjectURL(blob)
@@ -590,7 +590,7 @@ const
     if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
     if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
 
-    return shouldShowFooter ? (
+    return (
       <Fluent.Stack
         horizontal
         horizontalAlign='space-between'
@@ -609,7 +609,7 @@ const
           }
         }}>
         {
-          (!m.pagination && (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER)) && (
+          !m.pagination && (isFilterable || isSearchable) && (
             <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>
               <b style={{ paddingLeft: 5 }}>{displayedRows}</b>
             </Fluent.Text>
@@ -627,7 +627,7 @@ const
           )
         }
       </Fluent.Stack>
-    ) : null
+    )
   }
 
 export const
@@ -795,7 +795,7 @@ export const
       }, [m.events, m.name, m.pagination]),
       isSearchable = !!searchableKeys.length,
       isFilterable = m.columns.some(c => c.filterable),
-      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
           const filters = selectedFilters || {}
@@ -950,16 +950,17 @@ export const
               : <DataTable ref={tableRef} {...dataTableProps} />
           }
         </Fluent.ScrollablePane>
-        <Footer
-          m={m}
-          currentPage={currentPage}
-          onPageChange={onPageChange}
-          shouldShowFooter={shouldShowFooter}
-          isSearchable={isSearchable}
-          isFilterable={isFilterable}
-          displayedRows={`${formatNum(filteredItems.length)} of ${formatNum(items.length)}`}
-          reset={reset}
-        />
+        {shouldShowFooter && (
+          <Footer
+            m={m}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+            isSearchable={isSearchable}
+            isFilterable={isFilterable}
+            displayedRows={`${formatNum(filteredItems.length)} of ${formatNum(items.length)}`}
+            reset={reset}
+          />
+        )}
       </div >
     )
   }
