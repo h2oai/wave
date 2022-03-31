@@ -3450,7 +3450,7 @@ def plot_card(
         data: Data for this card.
         plot: The plot to be displayed in this card.
         events: The events to capture on this card. One of 'select_marks'.
-        interactions: The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'.
+        interactions: The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PlotCard` instance.

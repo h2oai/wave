@@ -3995,7 +3995,7 @@ ui_pixel_art_card <- function(
 #' @param data Data for this card.
 #' @param plot The plot to be displayed in this card.
 #' @param events The events to capture on this card. One of 'select_marks'.
-#' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'.
+#' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
 #' @export
