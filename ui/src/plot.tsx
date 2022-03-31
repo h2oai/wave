@@ -1050,7 +1050,7 @@ interface State {
   plot: Plot
   /** The events to capture on this card. One of 'select_marks'. */
   events?: S[]
-  /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. */
+  /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
 }
 
