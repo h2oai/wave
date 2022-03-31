@@ -2308,7 +2308,7 @@ ui_plot <- function(
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param events The events to capture on this visualization. One of 'select_marks'.
-#' @param interactions The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'.
+#' @param interactions The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing.
 #' @return A Visualization instance.
 #' @export
 ui_visualization <- function(
@@ -3995,7 +3995,7 @@ ui_pixel_art_card <- function(
 #' @param data Data for this card.
 #' @param plot The plot to be displayed in this card.
 #' @param events The events to capture on this card. One of 'select_marks'.
-#' @param interactions The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'.
+#' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
 #' @export

@@ -258,7 +258,7 @@ export interface Plot {
 
 (async () => {
   const { registerInteraction } = await import('@antv/g2')
-  registerInteraction('drag-move', {
+  registerInteraction('drag_move', {
     start: [{ trigger: 'plot:mousedown', action: 'scale-translate:start' }],
     processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: { wait: 100, leading: true, trailing: false } }],
     end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }],
@@ -267,7 +267,7 @@ export interface Plot {
     event.gEvent.preventDefault()
     return event.gEvent.originalEvent.deltaY > 0
   }
-  registerInteraction('scale-zoom', {
+  registerInteraction('scale_zoom', {
     start: [
       {
         trigger: 'plot:mousewheel',
@@ -960,7 +960,7 @@ export interface Visualization {
   visible?: B
   /** The events to capture on this visualization. One of 'select_marks'. */
   events?: S[]
-  /** The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'. */
+  /** The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing. */
   interactions?: S[]
 }
 
@@ -1050,7 +1050,7 @@ interface State {
   plot: Plot
   /** The events to capture on this card. One of 'select_marks'. */
   events?: S[]
-  /** The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'. */
+  /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. */
   interactions?: S[]
 }
 

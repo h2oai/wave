@@ -22,7 +22,7 @@ async def serve(q: Q):
             (183.5, 74.8),
             (175.5, 70),
         ]),
-        interactions=['scale-zoom'],
+        interactions=['scale_zoom'],
         plot=ui.plot([ui.mark(type='point', x='=weight', y='=height')])
     )
     await q.page.save()

@@ -1974,7 +1974,7 @@ def visualization(
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to True.
         events: The events to capture on this visualization. One of 'select_marks'.
-        interactions: The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'.
+        interactions: The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing.
     Returns:
         A `h2o_wave.types.Visualization` instance.
     """
@@ -3450,7 +3450,7 @@ def plot_card(
         data: Data for this card.
         plot: The plot to be displayed in this card.
         events: The events to capture on this card. One of 'select_marks'.
-        interactions: The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'.
+        interactions: The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PlotCard` instance.

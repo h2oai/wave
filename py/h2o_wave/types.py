@@ -5289,7 +5289,7 @@ class Visualization:
         self.events = events
         """The events to capture on this visualization. One of 'select_marks'."""
         self.interactions = interactions
-        """The interactions to be allowed for this plot. One of 'drag-move' | 'scale-zoom' | 'brush'."""
+        """The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -9698,7 +9698,7 @@ class PlotCard:
         self.events = events
         """The events to capture on this card. One of 'select_marks'."""
         self.interactions = interactions
-        """The interactions to be allowed for this card. One of 'drag-move' | 'scale-zoom' | 'brush'."""
+        """The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
