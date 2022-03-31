@@ -29,11 +29,7 @@ q.page['example'] = ui.plot_card(
 
 Check the full API at [ui.plot_card](/docs/api/ui#plot_card).
 
-## Curve
-
-Don't like default sharp edges? Play around with `curve` attribute!
-
-### Smooth
+## Smooth
 
 ```py
 from h2o_wave import data
@@ -54,78 +50,6 @@ q.page['example'] = ui.plot_card(
         (0.1, 0.0),
     ]),
     plot=ui.plot([ui.mark(type='path', x='=price', y='=performance', curve='smooth')])
-)
-```
-
-### Step
-
-```py
-from h2o_wave import data
-
-q.page['example'] = ui.plot_card(
-    box='1 1 4 5',
-    title='Path, step',
-    data=data('price performance', 10, rows=[
-        (0.1, 0.6),
-        (0.2, 0.5),
-        (0.3, 0.3),
-        (0.4, 0.2),
-        (0.4, 0.5),
-        (0.2, 0.2),
-        (0.8, 0.5),
-        (0.3, 0.3),
-        (0.2, 0.4),
-        (0.1, 0.0),
-    ]),
-    plot=ui.plot([ui.mark(type='path', x='=price', y='=performance', curve='step')])
-)
-```
-
-### Step before
-
-```py
-from h2o_wave import data
-
-q.page['example'] = ui.plot_card(
-    box='1 1 4 5',
-    title='Path, step-before',
-    data=data('price performance', 10, rows=[
-        (0.1, 0.6),
-        (0.2, 0.5),
-        (0.3, 0.3),
-        (0.4, 0.2),
-        (0.4, 0.5),
-        (0.2, 0.2),
-        (0.8, 0.5),
-        (0.3, 0.3),
-        (0.2, 0.4),
-        (0.1, 0.0),
-    ]),
-    plot=ui.plot([ui.mark(type='path', x='=price', y='=performance', curve='step-before')])
-)
-```
-
-### Step after
-
-```py
-from h2o_wave import data
-
-q.page['example'] = ui.plot_card(
-    box='1 1 4 5',
-    title='Path, step-after',
-    data=data('price performance', 10, rows=[
-        (0.1, 0.6),
-        (0.2, 0.5),
-        (0.3, 0.3),
-        (0.4, 0.2),
-        (0.4, 0.5),
-        (0.2, 0.2),
-        (0.8, 0.5),
-        (0.3, 0.3),
-        (0.2, 0.4),
-        (0.1, 0.0),
-    ]),
-    plot=ui.plot([ui.mark(type='path', x='=price', y='=performance', curve='step-after')])
 )
 ```
 

@@ -141,6 +141,30 @@ module.exports = {
       },
       {
         "type": "category",
+        "label": "Plots",
+        "items": [
+          "widgets/plots/overview",
+          "widgets/plots/point",
+          "widgets/plots/interval",
+          "widgets/plots/line",
+          "widgets/plots/area",
+          "widgets/plots/path",
+          {
+            "type": "category",
+            "label": "Third Party Plots",
+            "items": [
+              "widgets/plots/third-party/altair",
+              "widgets/plots/third-party/bokeh",
+              "widgets/plots/third-party/d3",
+              "widgets/plots/third-party/matplotlib",
+              "widgets/plots/third-party/plotly",
+              "widgets/plots/third-party/vegalite",
+            ]
+          }
+        ]
+      },
+      {
+        "type": "category",
         "label": "Overlays",
         "items": [
           "widgets/overlays/dialog",
