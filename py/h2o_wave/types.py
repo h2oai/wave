@@ -8871,7 +8871,7 @@ class Dialog:
         self.name = name
         """An identifying name for this component."""
         self.events = events
-        """The events to capture on this dialog."""
+        """The events to capture on this dialog. One of 'dismissed'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8946,6 +8946,7 @@ class SidePanel:
             name: Optional[str] = None,
             events: Optional[List[str]] = None,
             blocking: Optional[bool] = None,
+            closable: Optional[bool] = None,
     ):
         _guard_scalar('SidePanel.title', title, (str,), False, False, False)
         _guard_vector('SidePanel.items', items, (Component,), False, False, False)
@@ -8953,6 +8954,7 @@ class SidePanel:
         _guard_scalar('SidePanel.name', name, (str,), True, True, False)
         _guard_vector('SidePanel.events', events, (str,), False, True, False)
         _guard_scalar('SidePanel.blocking', blocking, (bool,), False, True, False)
+        _guard_scalar('SidePanel.closable', closable, (bool,), False, True, False)
         self.title = title
         """The side panel's title."""
         self.items = items
@@ -8962,9 +8964,11 @@ class SidePanel:
         self.name = name
         """An identifying name for this component."""
         self.events = events
-        """The events to capture on this side panel."""
+        """The events to capture on this side panel. One of 'dismissed'."""
         self.blocking = blocking
         """True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False."""
+        self.closable = closable
+        """True if the side panel should have a closing 'X' button at the top right corner."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8974,6 +8978,7 @@ class SidePanel:
         _guard_scalar('SidePanel.name', self.name, (str,), True, True, False)
         _guard_vector('SidePanel.events', self.events, (str,), False, True, False)
         _guard_scalar('SidePanel.blocking', self.blocking, (bool,), False, True, False)
+        _guard_scalar('SidePanel.closable', self.closable, (bool,), False, True, False)
         return _dump(
             title=self.title,
             items=[__e.dump() for __e in self.items],
@@ -8981,6 +8986,7 @@ class SidePanel:
             name=self.name,
             events=self.events,
             blocking=self.blocking,
+            closable=self.closable,
         )
 
     @staticmethod
@@ -8998,12 +9004,15 @@ class SidePanel:
         _guard_vector('SidePanel.events', __d_events, (str,), False, True, False)
         __d_blocking: Any = __d.get('blocking')
         _guard_scalar('SidePanel.blocking', __d_blocking, (bool,), False, True, False)
+        __d_closable: Any = __d.get('closable')
+        _guard_scalar('SidePanel.closable', __d_closable, (bool,), False, True, False)
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
         name: Optional[str] = __d_name
         events: Optional[List[str]] = __d_events
         blocking: Optional[bool] = __d_blocking
+        closable: Optional[bool] = __d_closable
         return SidePanel(
             title,
             items,
@@ -9011,6 +9020,7 @@ class SidePanel:
             name,
             events,
             blocking,
+            closable,
         )
 
 

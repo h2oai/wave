@@ -34,24 +34,26 @@ export interface SidePanel {
   width?: S
   /** An identifying name for this component. */
   name?: Id
-  /** The events to capture on this side panel. */
+  /** The events to capture on this side panel. One of 'dismissed'. */
   events?: S[]
   /** True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False. */
   blocking?: B
+  /** True if the side panel should have a closing 'X' button at the top right corner. */
+  closable?: B
 }
 
 export default bond(() => {
   const
     onDismiss = () => {
       const
-        { blocking, name, events } = sidePanelB() || {},
+        { name, events } = sidePanelB() || {},
         ev = events?.find(e => e === 'dismissed')
 
-      if (!blocking && ev && name) wave.emit(name, ev, true)
+      if (ev && name) wave.emit(name, ev, true)
       sidePanelB(null)
     },
     render = () => {
-      const { title, width = '600px', items = [], blocking = false } = sidePanelB() || {}
+      const { title, width = '600px', items = [], closable = false, blocking = false } = sidePanelB() || {}
       return (
         <Fluent.Panel
           isOpen={!!sidePanelB()}
@@ -59,6 +61,7 @@ export default bond(() => {
           type={Fluent.PanelType.custom}
           customWidth={width}
           onDismiss={onDismiss}
+          hasCloseButton={closable}
           overlayProps={blocking ? { style: { cursor: 'default' } } : undefined}
           isBlocking
           isLightDismiss={!blocking}>

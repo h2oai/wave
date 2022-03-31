@@ -3637,7 +3637,7 @@ ui_layout <- function(
 #' @param blocking True to prevent closing when clicking or tapping outside the dialog. Prevents interacting with the page behind the dialog. Defaults to False.
 #' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to False.
 #' @param name An identifying name for this component.
-#' @param events The events to capture on this dialog.
+#' @param events The events to capture on this dialog. One of 'dismissed'.
 #' @return A Dialog instance.
 #' @export
 ui_dialog <- function(
@@ -3678,8 +3678,9 @@ ui_dialog <- function(
 #' @param items The components displayed in this side panel.
 #' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param name An identifying name for this component.
-#' @param events The events to capture on this side panel.
+#' @param events The events to capture on this side panel. One of 'dismissed'.
 #' @param blocking True to prevent closing when clicking or tapping outside the side panel. Prevents interacting with the page behind the side panel. Defaults to False.
+#' @param closable True if the side panel should have a closing 'X' button at the top right corner.
 #' @return A SidePanel instance.
 #' @export
 ui_side_panel <- function(
@@ -3688,20 +3689,23 @@ ui_side_panel <- function(
   width = NULL,
   name = NULL,
   events = NULL,
-  blocking = NULL) {
+  blocking = NULL,
+  closable = NULL) {
   .guard_scalar("title", "character", title)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("width", "character", width)
   .guard_scalar("name", "character", name)
   .guard_vector("events", "character", events)
   .guard_scalar("blocking", "logical", blocking)
+  .guard_scalar("closable", "logical", closable)
   .o <- list(
     title=title,
     items=items,
     width=width,
     name=name,
     events=events,
-    blocking=blocking)
+    blocking=blocking,
+    closable=closable)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSidePanel"))
   return(.o)
 }
