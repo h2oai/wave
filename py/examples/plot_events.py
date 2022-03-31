@@ -17,8 +17,7 @@ async def serve(q: Q):
                 ['ham', 1.99],
             ], pack=True),
             plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
-            events=['select_marks'],
-            interactions=['brush']
+            events=['select_marks']
         )
         q.page['details'] = ui.markdown_card(
             box='1 6 4 2',
