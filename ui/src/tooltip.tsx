@@ -17,6 +17,7 @@ import { B, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Markdown } from './markdown'
+import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
@@ -25,22 +26,25 @@ const
       alignItems: 'flex-start',
       alignContent: 'flex-start'
     },
-    element: {
+    expand: {
       flexGrow: 1
     },
     icon: {
-      color: '#323130',
+      color: cssVar('$text'),
       fontWeight: 400,
       fontSize: '14px',
       userSelect: 'none',
       textAlign: 'left',
       marginLeft: '0.5em',
       cursor: 'pointer'
+    },
+    preventOverflow: {
+      minWidth: 0
     }
   })
 
 export const
-  XToolTip = ({ children, content, showIcon, expand }: {
+  XToolTip = ({ children, content, showIcon = true, expand = true }: {
     children: React.ReactChild,
     content?: S,
     showIcon?: B,
@@ -48,17 +52,14 @@ export const
   }) => {
     if (!content) return <>{children}</>
 
-    const
-      tooltipProps: Fluent.ITooltipProps = {
-        onRenderContent: () => (<div><Markdown source={content} /></div>)
-      }
+    const tooltipProps: Fluent.ITooltipProps = { onRenderContent: () => <div><Markdown source={content} /></div> }
     return (
       <div className={css.container} data-test='tooltip'>
         {
-          showIcon === undefined || showIcon
+          showIcon
             ? (
               <>
-                <div className={expand === undefined || expand ? css.element : ''}>{children}</div>
+                <div className={clas(css.preventOverflow, expand ? css.expand : '')}>{children}</div>
                 <Fluent.TooltipHost tooltipProps={tooltipProps}>
                   <Fluent.FontIcon className={css.icon} iconName='Info' />
                 </Fluent.TooltipHost>
