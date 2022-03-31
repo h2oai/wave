@@ -1311,14 +1311,14 @@
   "Wave Full Visualization": {
     "prefix": "w_full_visualization",
     "body": [
-      "ui.visualization(plot=$1, data=$2, width='${3:100%'}', height='${4:300px'}', name='$5', visible=${6:True}, events=[\n\t\t$7\t\t\n]),$0"
+      "ui.visualization(plot=$1, data=$2, width='${3:100%'}', height='${4:300px'}', name='$5', visible=${6:True}, events=[\n\t\t$7\t\t\n], interactions=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave Visualization."
   },
   "Wave Full PlotCard": {
     "prefix": "w_full_plot_card",
     "body": [
-      "ui.plot_card(box='$1', title='$2', data=$3, plot=$4, events=[\n\t\t$5\t\t\n], commands=[\n\t\t$6\t\t\n])$0"
+      "ui.plot_card(box='$1', title='$2', data=$3, plot=$4, events=[\n\t\t$5\t\t\n], interactions=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
     ],
     "description": "Create a full Wave PlotCard."
   },

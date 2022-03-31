@@ -2312,7 +2312,8 @@ ui_plot <- function(
 #' @param height The hight of the visualization. Defaults to '300px'.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to True.
-#' @param events The events to capture on this visualization.
+#' @param events The events to capture on this visualization. One of 'select_marks'.
+#' @param interactions The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
 #' @return A Visualization instance.
 #' @export
 ui_visualization <- function(
@@ -2322,7 +2323,8 @@ ui_visualization <- function(
   height = NULL,
   name = NULL,
   visible = NULL,
-  events = NULL) {
+  events = NULL,
+  interactions = NULL) {
   .guard_scalar("plot", "WavePlot", plot)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
@@ -2330,6 +2332,7 @@ ui_visualization <- function(
   .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
   .guard_vector("events", "character", events)
+  .guard_vector("interactions", "character", interactions)
   .o <- list(visualization=list(
     plot=plot,
     data=data,
@@ -2337,7 +2340,8 @@ ui_visualization <- function(
     height=height,
     name=name,
     visible=visible,
-    events=events))
+    events=events,
+    interactions=interactions))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3995,7 +3999,8 @@ ui_pixel_art_card <- function(
 #' @param title The title for this card.
 #' @param data Data for this card.
 #' @param plot The plot to be displayed in this card.
-#' @param events The events to capture on this card.
+#' @param events The events to capture on this card. One of 'select_marks'.
+#' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
 #' @export
@@ -4005,12 +4010,14 @@ ui_plot_card <- function(
   data,
   plot,
   events = NULL,
+  interactions = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
   .guard_scalar("plot", "WavePlot", plot)
   .guard_vector("events", "character", events)
+  .guard_vector("interactions", "character", interactions)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4018,6 +4025,7 @@ ui_plot_card <- function(
     data=data,
     plot=plot,
     events=events,
+    interactions=interactions,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WavePlotCard"))
   return(.o)
