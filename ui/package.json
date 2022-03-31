@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@antv/g2": "4.1.0",
+    "@antv/g2": "^4.1.49",
     "@fluentui/react": "^8.49.0",
     "@fluentui/react-icons-mdl2": "^1.2.12",
     "d3": "^5.15.0",
