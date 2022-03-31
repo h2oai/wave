@@ -2308,7 +2308,7 @@ ui_plot <- function(
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param events The events to capture on this visualization. One of 'select_marks'.
-#' @param interactions The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing.
+#' @param interactions The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
 #' @return A Visualization instance.
 #' @export
 ui_visualization <- function(

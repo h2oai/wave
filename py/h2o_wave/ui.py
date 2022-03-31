@@ -1974,7 +1974,7 @@ def visualization(
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to True.
         events: The events to capture on this visualization. One of 'select_marks'.
-        interactions: The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing.
+        interactions: The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
     Returns:
         A `h2o_wave.types.Visualization` instance.
     """

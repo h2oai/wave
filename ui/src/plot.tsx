@@ -960,7 +960,7 @@ export interface Visualization {
   visible?: B
   /** The events to capture on this visualization. One of 'select_marks'. */
   events?: S[]
-  /** The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `select_marks` event is not fired during brushing. */
+  /** The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
 }
 
