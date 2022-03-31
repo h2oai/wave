@@ -743,7 +743,9 @@ const
   makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
     const
       scale: ScaleOption = {},
-      axis: AxisOption = { label: { autoHide: false } } // Bug in G2? `autoHide` should be set to false by default (it is not).
+      // Bug in G2? `autoHide` should be set to false by default (it is not).
+      // Manually set title to null to avoid the title being automatically displayed in v4.1.49+.
+      axis: AxisOption = { label: { autoHide: false }, title: null }
     if (isS(typ)) scale.type = fixScaleType(typ) as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
@@ -810,6 +812,11 @@ const
       renderer: 'svg', // Use SVG to allow use of CSS vars which don't work with canvas.
       theme: { // Referrence: https://theme-set.antv.vision/  https://g2.antv.vision/en/docs/api/advanced/register-theme
         defaultColor: cssVar('$themePrimary'),
+        labels: {
+          style: {
+            fill: cssVar('$text'),
+          }
+        },
         geometries: {
           point: {
             'hollow-circle': {
@@ -854,7 +861,17 @@ const
           },
           legend: {
             common: {
+              itemName: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
               pageNavigator: {
+                text: {
+                  style: {
+                    fill: cssVar('$text'),
+                  }
+                },
                 marker: {
                   style: {
                     fill: cssVar('$themePrimary'),
@@ -864,6 +881,11 @@ const
               }
             },
             continuous: {
+              label: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
               handler: {
                 style: {
                   fill: cssVar('$neutralPrimaryAlt'),
@@ -872,7 +894,54 @@ const
             }
           },
           axis: {
+            top: {
+              title: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            },
+            right: {
+              title: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            },
+            bottom: {
+              title: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            },
+            left: {
+              title: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            },
+            circle: {
+              label: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            },
+            radius: {
+              label: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            },
             common: {
+              label: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
               grid: {
                 line: {
                   style: {
@@ -938,9 +1007,6 @@ const
           bottom: 0,
           overflow: 'visible'
         },
-        'text': {
-          fill: `${cssVar('$text')} !important`
-        }
       }
     }
   })
