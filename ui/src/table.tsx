@@ -66,6 +66,19 @@ interface TableRow {
   cells: S[]
 }
 
+/**
+ * Make rows within the table collapsible/expandable.
+ *
+ * This type of table is best used for cases when your data makes sense to be presented in chunks rather than a single flat list.
+ */
+interface TableGroup {
+  /** The title of the group. */
+  label: S
+  /** The rows in this group. */
+  rows: TableRow[]
+  /** Indicates whether the table group should be collapsed by default. Defaults to True. */
+  collapsed?: B
+}
 
 /**
  * Create an interactive table.
@@ -89,11 +102,11 @@ export interface Table {
   name: Id
   /** The columns in this table. */
   columns: TableColumn[]
-  /** The rows in this table. */
-  rows: TableRow[]
+  /** The rows in this table. Mutually exclusive with `groups` attr. */
+  rows?: TableRow[]
   /** True to allow multiple rows to be selected. */
   multiple?: B
-  /** True to allow group by feature. */
+  /** True to allow group by feature. Ignored if `groups` are specified. */
   groupable?: B
   /** Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False. */
   downloadable?: B
@@ -111,6 +124,8 @@ export interface Table {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr. */
+  groups?: TableGroup[]
 }
 
 type WaveColumn = Fluent.IColumn & {
@@ -130,6 +145,7 @@ type DataTable = {
   selection: Fluent.Selection
   isMultiple: B
   groups?: Fluent.IGroup[]
+  expandedRefs: React.MutableRefObject<{ [key: S]: B } | null>
   setFiltersInBulk: (colKey: S, filters: S[]) => void
 }
 
@@ -160,21 +176,12 @@ const
       position: 'absolute',
       top: -2,
       right: -5
-    },
-    // HACK: incorrect width recalculated after changing to "group by mode" - collapse icon in header
-    // causes horizontal overflow for whole table.
-    hideCellGroupCollapse: {
-      $nest: {
-        'div[class*="cellIsGroupExpander"]': {
-          visibility: 'hidden'
-        }
-      }
     }
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
     contentWrapper: {
       borderTop: 'none',
-      '.ms-List-page:first-child .ms-List-cell:first-child .ms-DetailsRow': {
+      '.ms-List-page:first-child .ms-List-cell:first-child > .ms-DetailsRow': {
         borderTop: border(2, 'transparent'),
       },
     }
@@ -261,7 +268,7 @@ const
       </div>
     )
   },
-  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, sort, setFiltersInBulk }: DataTable) => {
+  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, expandedRefs, sort, setFiltersInBulk }: DataTable) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
@@ -335,6 +342,7 @@ const
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
             <Fluent.DetailsHeader
               {...props}
+              isAllCollapsed={groups?.every(group => group.isCollapsed)}
               styles={{
                 ...props.styles,
                 root: {
@@ -346,13 +354,42 @@ const
                 },
                 cellSizerEnd: {
                   marginLeft: -8,
+                },
+                cellIsGroupExpander: {
+                  // HACK: fixed size of expand/collapse button in column header
+                  height: 48
                 }
               }}
-              className={groups ? css.hideCellGroupCollapse : ''}
             />
           </Fluent.Sticky>
         )
       }, [groups]),
+      onRenderGroupHeader = React.useCallback((props?: Fluent.IDetailsGroupDividerProps) => {
+        if (!props) return <span />
+
+        return (
+          <Fluent.GroupHeader
+            {...props}
+            styles={{
+              root: {
+                position: 'sticky',
+                top: 48,
+                backgroundColor: cssVar('$card'),
+                zIndex: 1
+              }
+            }} />
+        )
+      }, []),
+      onToggleCollapseAll = (isAllCollapsed: B) => expandedRefs.current = isAllCollapsed ? {} : null,
+      onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
+        if (expandedRefs.current) {
+          isCollapsed
+            ? expandedRefs.current[key] = false
+            : delete expandedRefs.current[key]
+        } else {
+          expandedRefs.current = { [key]: false }
+        }
+      },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
         ? <Fluent.DetailsRow {...props} styles={{
           cell: { alignSelf: 'center', fontSize: 14, lineHeight: 20, color: cssVar('$text9') },
@@ -405,6 +442,13 @@ const
         }
 
         return <TooltipWrapper>{v}</TooltipWrapper>
+      },
+      // HACK: fixed jumping scrollbar issue when scrolling into the end of list with all groups expanded - https://github.com/microsoft/fluentui/pull/5204 
+      getGroupHeight = (group: Fluent.IGroup) => {
+        const
+          rowHeight = m.columns.some(c => c.cell_type?.progress) ? 76 : 48,
+          groupHeaderHeight = 48
+        return groupHeaderHeight + (group.isCollapsed ? 0 : rowHeight * group.count)
       }
 
     // HACK: React stale closures - https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
@@ -420,6 +464,13 @@ const
           constrainMode={Fluent.ConstrainMode.unconstrained}
           layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
           groups={groups}
+          groupProps={{
+            onToggleCollapseAll,
+            onRenderHeader: onRenderGroupHeader,
+            headerProps: { onToggleCollapse },
+            isAllGroupsCollapsed: m.groups?.every(({ collapsed = true }) => collapsed)
+          }}
+          getGroupHeight={getGroupHeight}
           selection={selection}
           selectionMode={isMultiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
           selectionPreservedOnEmptyClick
@@ -434,27 +485,36 @@ const
     )
   }
 
-
 export const
   XTable = ({ model: m }: { model: Table }) => {
     const
-      items = React.useMemo(() => m.rows.map(r => {
+      groupable = !m.groups && m.groupable,
+      getItem = React.useCallback((r: TableRow) => {
         const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
         for (let i = 0, n = r.cells.length; i < n; i++) {
           const col = m.columns[i]
           item[col.name] = r.cells[i]
         }
         return item
-      }), [m.rows, m.columns]),
+      }, [m.columns]),
+      items = React.useMemo(() =>
+        m.groups
+          ? m.groups.reduce((acc, { rows, label, collapsed = true }) => {
+            acc.push(...rows.map(r => ({ ...getItem(r), group: label, collapsed })))
+            return acc
+          }, [] as (Fluent.IObjectWithKey & { group?: S, collapsed?: B })[])
+          : (m.rows || []).map(getItem)
+        , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       [filteredItems, setFilteredItems] = React.useState(items),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
+      expandedRefs = React.useRef<{ [key: S]: B } | null>({}),
       [groupByKey, setGroupByKey] = React.useState('*'),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
-        m.groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, m.groupable]
+        groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
         // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
@@ -466,44 +526,62 @@ export const
             : items
         )
       }, [items]),
+      getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
+        if (expandedRefs === null) return false
+        const expandedRef = expandedRefs[key]
+        return expandedRef === undefined || expandedRef
+      },
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
-        let prevSum = 0
-        const
-          groupedBy = groupByF(filteredItems, groupByKey),
-          groupedByKeys = Object.keys(groupedBy),
-          groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type,
-          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
+        let
+          groups: Fluent.IGroup[],
+          groupedBy: Dict<any> = []
+
+        if (m.groups) {
+          groups = filteredItems.reduce((acc, { group }, idx) => {
+            const prevGroup = acc[acc.length - 1]
+            prevGroup?.key === group
+              ? prevGroup.count++
+              : acc.push({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group, expandedRefs.current) })
+            return acc
+          }, [] as Fluent.IGroup[])
+        } else {
+          let prevSum = 0
+          groupedBy = groupByF(filteredItems, groupByKey)
+          const
+            groupedByKeys = Object.keys(groupedBy),
+            groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
+
+          groups = groupedByKeys.map((key, i) => {
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
 
             const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
-            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
+            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
+          }).sort(({ name: name1 }, { name: name2 }) => {
+            const numName1 = Number(name1), numName2 = Number(name2)
+            if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
+
+            const dateName1 = Date.parse(name1), dateName2 = Date.parse(name2)
+            if (!isNaN(dateName1) && !isNaN(dateName2)) return dateName1 - dateName2
+
+            return name2 < name1 ? 1 : -1
           })
-
-        groups.sort(({ name: name1 }, { name: name2 }) => {
-          const numName1 = Number(name1), numName2 = Number(name2)
-          if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
-
-          const dateName1 = Date.parse(name1), dateName2 = Date.parse(name2)
-          if (!isNaN(dateName1) && !isNaN(dateName2)) return dateName1 - dateName2
-
-          return name2 < name1 ? 1 : -1
-        })
+        }
 
         return { groupedBy, groups }
-      }, [m.columns]),
+      }, [m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
             const { groupedBy, groups } = makeGroups(groupByKey, filteredItems)
             setGroups(groups)
-            return Object.values(groupedBy).flatMap(arr => arr)
+            return m.groups ? filteredItems : Object.values(groupedBy).flatMap(arr => arr)
           })
           return groupByKey
         })
-      }, [makeGroups]),
+      }, [m.groups, makeGroups]),
       search = React.useCallback(() => {
         setSearchStr(searchString => {
           const _searchStr = searchString.toLowerCase()
@@ -538,13 +616,15 @@ export const
         if (option.key === '*') return
 
         setGroupByKey(option.key as S)
+        expandedRefs.current = {}
         initGroups()
       },
       isSearchable = !!searchableKeys.length,
       download = () => {
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
+          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
           blob = new Blob([data], { type: "octet/stream" }),
           url = window.URL.createObjectURL(blob)
@@ -556,7 +636,7 @@ export const
         window.URL.revokeObjectURL(url)
       },
       isFilterable = m.columns.some(c => c.filterable),
-      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER,
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER,
       Footer = () => {
         if (!shouldShowFooter) return null
 
@@ -584,7 +664,7 @@ export const
               }
             }}>
             {
-              (isFilterable || isSearchable || m.rows.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
+              (isFilterable || isSearchable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
                 <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
                   <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
                 </Fluent.Text>
@@ -628,22 +708,22 @@ export const
         setSearchStr('')
 
         setGroups(undefined)
+        if (m.groups) initGroups()
+        expandedRefs.current = {}
         setGroupByKey('*')
 
         filter(null)
         search()
-      }, [filter, search]),
+      }, [m.groups, initGroups, filter, search]),
       selection = React.useMemo(() => new Fluent.Selection({ onSelectionChanged: () => { wave.args[m.name] = selection.getSelection().map(item => item.key as S) } }), [m.name]),
       computeHeight = () => {
         if (m.height) return m.height
         if (items.length > 10) return 500
 
         const
-          topToolbarHeight = searchableKeys.length || m.groupable ? 80 : 0,
+          topToolbarHeight = searchableKeys.length || groupable ? 80 : 0,
           headerHeight = 50,
-          rowHeight = m.columns.some(c => c.cell_type)
-            ? m.columns.some(c => c.cell_type?.progress) ? 76 : 48
-            : 48,
+          rowHeight = m.columns.some(c => c.cell_type?.progress) ? 76 : 48,
           footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 46 : 0,
           bottomBorder = 2
 
@@ -685,6 +765,13 @@ export const
         m.values.forEach(v => selection.setKeySelected(v, true, false))
         wave.args[m.name] = m.values
       }
+      if (m.groups) {
+        expandedRefs.current = m.groups?.reduce((acc, { label, collapsed = true }) => {
+          if (!collapsed) acc[label] = false
+          return acc
+        }, {} as { [key: S]: B })
+        initGroups()
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     React.useEffect(() => setFilteredItems(items), [items])
@@ -696,23 +783,24 @@ export const
       filteredItems,
       selectedFilters,
       groups,
+      expandedRefs,
       selection,
       sort,
       isMultiple,
       setFiltersInBulk
-    }), [filteredItems, groups, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
+    }), [filteredItems, groups, expandedRefs, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
         <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
-          {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
+          {groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
           {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
         </Fluent.Stack>
         <Fluent.ScrollablePane
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
-            root: { top: m.groupable || searchableKeys.length ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
-            stickyAbove: { right: important('0px'), border: border(2, 'transparent') },
+            root: { top: groupable || searchableKeys.length ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
+            stickyAbove: { right: important('0px'), border: border(2, 'transparent'), zIndex: 2 },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
           {

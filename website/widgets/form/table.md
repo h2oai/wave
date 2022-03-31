@@ -265,3 +265,55 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
     ])
 ])
 ```
+
+## With groups
+
+If [groupable](#with-group-by) prop does not suit your needs, you can specify your custom groups with `groups` prop.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
+    ui.table(
+        name='table', 
+        columns=[
+            ui.table_column(name='task', label='Task'),
+            ui.table_column(name='priority', label='Priority')
+        ],
+        groups=[
+            ui.table_group("Assigned to Bob", [
+                ui.table_row(name='row1', cells=['Task1', 'Moderate']),
+                ui.table_row(name='row2', cells=['Task2', 'High'])
+            ]), 
+            ui.table_group("Assigned to John", [
+                ui.table_row(name='row3', cells=['Task3', 'High']),
+                ui.table_row(name='row4', cells=['Task4', 'Low']),
+                ui.table_row(name='row5', cells=['Task5', 'Very High'])
+            ])
+        ])
+])
+```
+
+### With collapsed groups
+
+Groups are shown in collapsed state by default. With `collapsed` attribute you can change this behavior.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
+    ui.table(
+        name='table', 
+        columns=[
+            ui.table_column(name='task', label='Task'),
+            ui.table_column(name='priority', label='Priority')
+        ],
+        groups=[
+            ui.table_group("Assigned to Bob", [
+                ui.table_row(name='row1', cells=['Task1', 'Moderate']),
+                ui.table_row(name='row2', cells=['Task2', 'High'])
+            ], collapsed=False), 
+            ui.table_group("Assigned to John", [
+                ui.table_row(name='row3', cells=['Task3', 'High']),
+                ui.table_row(name='row4', cells=['Task4', 'Low']),
+                ui.table_row(name='row5', cells=['Task5', 'Very High'])
+            ])
+        ])
+])
+```

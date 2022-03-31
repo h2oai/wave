@@ -1296,10 +1296,33 @@ def table_row(
     )
 
 
+def table_group(
+        label: str,
+        rows: List[TableRow],
+        collapsed: Optional[bool] = None,
+) -> TableGroup:
+    """Make rows within the table collapsible/expandable.
+
+    This type of table is best used for cases when your data makes sense to be presented in chunks rather than a single flat list.
+
+    Args:
+        label: The title of the group.
+        rows: The rows in this group.
+        collapsed: Indicates whether the table group should be collapsed by default. Defaults to True.
+    Returns:
+        A `h2o_wave.types.TableGroup` instance.
+    """
+    return TableGroup(
+        label,
+        rows,
+        collapsed,
+    )
+
+
 def table(
         name: str,
         columns: List[TableColumn],
-        rows: List[TableRow],
+        rows: Optional[List[TableRow]] = None,
         multiple: Optional[bool] = None,
         groupable: Optional[bool] = None,
         downloadable: Optional[bool] = None,
@@ -1310,6 +1333,7 @@ def table(
         checkbox_visibility: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        groups: Optional[List[TableGroup]] = None,
 ) -> Component:
     """Create an interactive table.
 
@@ -1330,9 +1354,9 @@ def table(
     Args:
         name: An identifying name for this component.
         columns: The columns in this table.
-        rows: The rows in this table.
+        rows: The rows in this table. Mutually exclusive with `groups` attr.
         multiple: True to allow multiple rows to be selected.
-        groupable: True to allow group by feature.
+        groupable: True to allow group by feature. Ignored if `groups` are specified.
         downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.
@@ -1341,6 +1365,7 @@ def table(
         checkbox_visibility: Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
     Returns:
         A `h2o_wave.types.Table` instance.
     """
@@ -1358,6 +1383,7 @@ def table(
         checkbox_visibility,
         visible,
         tooltip,
+        groups,
     ))
 
 

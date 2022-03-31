@@ -3385,6 +3385,57 @@ class TableRow:
         )
 
 
+class TableGroup:
+    """Make rows within the table collapsible/expandable.
+
+    This type of table is best used for cases when your data makes sense to be presented in chunks rather than a single flat list.
+    """
+    def __init__(
+            self,
+            label: str,
+            rows: List[TableRow],
+            collapsed: Optional[bool] = None,
+    ):
+        _guard_scalar('TableGroup.label', label, (str,), False, False, False)
+        _guard_vector('TableGroup.rows', rows, (TableRow,), False, False, False)
+        _guard_scalar('TableGroup.collapsed', collapsed, (bool,), False, True, False)
+        self.label = label
+        """The title of the group."""
+        self.rows = rows
+        """The rows in this group."""
+        self.collapsed = collapsed
+        """Indicates whether the table group should be collapsed by default. Defaults to True."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TableGroup.label', self.label, (str,), False, False, False)
+        _guard_vector('TableGroup.rows', self.rows, (TableRow,), False, False, False)
+        _guard_scalar('TableGroup.collapsed', self.collapsed, (bool,), False, True, False)
+        return _dump(
+            label=self.label,
+            rows=[__e.dump() for __e in self.rows],
+            collapsed=self.collapsed,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TableGroup':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        _guard_scalar('TableGroup.label', __d_label, (str,), False, False, False)
+        __d_rows: Any = __d.get('rows')
+        _guard_vector('TableGroup.rows', __d_rows, (dict,), False, False, False)
+        __d_collapsed: Any = __d.get('collapsed')
+        _guard_scalar('TableGroup.collapsed', __d_collapsed, (bool,), False, True, False)
+        label: str = __d_label
+        rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
+        collapsed: Optional[bool] = __d_collapsed
+        return TableGroup(
+            label,
+            rows,
+            collapsed,
+        )
+
+
 _TableCheckboxVisibility = ['always', 'on-hover', 'hidden']
 
 
@@ -3415,7 +3466,7 @@ class Table:
             self,
             name: str,
             columns: List[TableColumn],
-            rows: List[TableRow],
+            rows: Optional[List[TableRow]] = None,
             multiple: Optional[bool] = None,
             groupable: Optional[bool] = None,
             downloadable: Optional[bool] = None,
@@ -3426,10 +3477,11 @@ class Table:
             checkbox_visibility: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            groups: Optional[List[TableGroup]] = None,
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
-        _guard_vector('Table.rows', rows, (TableRow,), False, False, False)
+        _guard_vector('Table.rows', rows, (TableRow,), False, True, False)
         _guard_scalar('Table.multiple', multiple, (bool,), False, True, False)
         _guard_scalar('Table.groupable', groupable, (bool,), False, True, False)
         _guard_scalar('Table.downloadable', downloadable, (bool,), False, True, False)
@@ -3440,16 +3492,17 @@ class Table:
         _guard_enum('Table.checkbox_visibility', checkbox_visibility, _TableCheckboxVisibility, True)
         _guard_scalar('Table.visible', visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', tooltip, (str,), False, True, False)
+        _guard_vector('Table.groups', groups, (TableGroup,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
         """The columns in this table."""
         self.rows = rows
-        """The rows in this table."""
+        """The rows in this table. Mutually exclusive with `groups` attr."""
         self.multiple = multiple
         """True to allow multiple rows to be selected."""
         self.groupable = groupable
-        """True to allow group by feature."""
+        """True to allow group by feature. Ignored if `groups` are specified."""
         self.downloadable = downloadable
         """Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False."""
         self.resettable = resettable
@@ -3466,12 +3519,14 @@ class Table:
         """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.groups = groups
+        """Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Table.name', self.name, (str,), True, False, False)
         _guard_vector('Table.columns', self.columns, (TableColumn,), False, False, False)
-        _guard_vector('Table.rows', self.rows, (TableRow,), False, False, False)
+        _guard_vector('Table.rows', self.rows, (TableRow,), False, True, False)
         _guard_scalar('Table.multiple', self.multiple, (bool,), False, True, False)
         _guard_scalar('Table.groupable', self.groupable, (bool,), False, True, False)
         _guard_scalar('Table.downloadable', self.downloadable, (bool,), False, True, False)
@@ -3482,10 +3537,11 @@ class Table:
         _guard_enum('Table.checkbox_visibility', self.checkbox_visibility, _TableCheckboxVisibility, True)
         _guard_scalar('Table.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_vector('Table.groups', self.groups, (TableGroup,), False, True, False)
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
-            rows=[__e.dump() for __e in self.rows],
+            rows=None if self.rows is None else [__e.dump() for __e in self.rows],
             multiple=self.multiple,
             groupable=self.groupable,
             downloadable=self.downloadable,
@@ -3496,6 +3552,7 @@ class Table:
             checkbox_visibility=self.checkbox_visibility,
             visible=self.visible,
             tooltip=self.tooltip,
+            groups=None if self.groups is None else [__e.dump() for __e in self.groups],
         )
 
     @staticmethod
@@ -3506,7 +3563,7 @@ class Table:
         __d_columns: Any = __d.get('columns')
         _guard_vector('Table.columns', __d_columns, (dict,), False, False, False)
         __d_rows: Any = __d.get('rows')
-        _guard_vector('Table.rows', __d_rows, (dict,), False, False, False)
+        _guard_vector('Table.rows', __d_rows, (dict,), False, True, False)
         __d_multiple: Any = __d.get('multiple')
         _guard_scalar('Table.multiple', __d_multiple, (bool,), False, True, False)
         __d_groupable: Any = __d.get('groupable')
@@ -3527,9 +3584,11 @@ class Table:
         _guard_scalar('Table.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Table.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_groups: Any = __d.get('groups')
+        _guard_vector('Table.groups', __d_groups, (dict,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
-        rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
+        rows: Optional[List[TableRow]] = None if __d_rows is None else [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
         groupable: Optional[bool] = __d_groupable
         downloadable: Optional[bool] = __d_downloadable
@@ -3540,6 +3599,7 @@ class Table:
         checkbox_visibility: Optional[str] = __d_checkbox_visibility
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        groups: Optional[List[TableGroup]] = None if __d_groups is None else [TableGroup.load(__e) for __e in __d_groups]
         return Table(
             name,
             columns,
@@ -3554,6 +3614,7 @@ class Table:
             checkbox_visibility,
             visible,
             tooltip,
+            groups,
         )
 
 
