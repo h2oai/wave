@@ -1263,6 +1263,21 @@ def menu_table_cell_type(
     ))
 
 
+def markdown_table_cell_type(
+        name: Optional[str] = None,
+) -> TableCellType:
+    """Create a cell type that renders Markdown content.
+
+    Args:
+        name: An identifying name for this component.
+    Returns:
+        A `h2o_wave.types.MarkdownTableCellType` instance.
+    """
+    return TableCellType(markdown=MarkdownTableCellType(
+        name,
+    ))
+
+
 def table_column(
         name: str,
         label: str,
