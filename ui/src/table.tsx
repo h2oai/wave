@@ -735,7 +735,7 @@ export const
 
         setGroups(groups => {
           if (groups) {
-            setFilteredItems(filteredItems => groups?.reduce((acc, group) =>
+            setFilteredItems(filteredItems => [...groups].sort((group1, group2) => group1.startIndex - group2.startIndex).reduce((acc, group) =>
               [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
               [] as any[]) || [])
           }

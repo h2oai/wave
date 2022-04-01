@@ -630,7 +630,21 @@ describe('Table.tsx', () => {
       expect(groupHeaders[2]).toHaveTextContent('2012-09-14T18:26:01(1)')
     })
 
-    it('Sorts grouped list', () => {
+    it('Checks if groups contain rows after sort is applied', () => {
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
+    })
+
+    it('Sorts rows inside the group of the grouped list', () => {
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
       fireEvent.click(getByTestId('groupby'))
@@ -642,20 +656,6 @@ describe('Table.tsx', () => {
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
 
       expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
-    })
-
-    it('Checks if groups contain rows after sort is applied', () => {
-      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-
-      fireEvent.click(getByTestId('groupby'))
-      fireEvent.click(getAllByText('Col1')[1]!)
-      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
-
-      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
-
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
-
-      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
     })
 
     it('Searches grouped list', () => {
@@ -741,7 +741,7 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
     })
 
-    it('Sorts grouped list', () => {
+    it('Sorts rows inside the group of the grouped list', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
