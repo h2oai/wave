@@ -735,9 +735,11 @@ export const
 
         setGroups(groups => {
           if (groups) {
-            setFilteredItems(filteredItems => [...groups].sort((group1, group2) => group1.startIndex - group2.startIndex).reduce((acc, group) =>
-              [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
-              [] as any[]) || [])
+            setFilteredItems(filteredItems => [...groups]
+              // sorts groups by startIndex to match its order in filteredItems
+              .sort((group1, group2) => group1.startIndex - group2.startIndex)
+              .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
+                [] as any[]) || [])
           }
           else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
