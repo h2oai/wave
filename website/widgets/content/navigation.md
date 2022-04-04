@@ -146,7 +146,3 @@ q.page['nav'] = ui.nav_card(
     ]
 )
 ```
-
-:::warning
-If `primary` option is chosen, the header background color is slightly saturated/desaturated in contrast to the actual primary color to achieve better design synergy.
-:::
