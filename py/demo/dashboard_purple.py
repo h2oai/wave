@@ -268,8 +268,8 @@ async def show_purple_dashboard(q: Q):
                              color_range='$purple $red')]),
                 data=data(
                     fields=['site', 'date', 'sales'],
-                    rows=[('Online', next(sales_days_1), next(sales_amounts_1)) for i in range(15)] + [
-                        ('In-store', next(sales_days_2), next(sales_amounts_2)) for i in range(15)],
+                    rows=[('Online', next(sales_days_1), next(sales_amounts_1)) for i in range(2)] + [
+                        ('In-store', next(sales_days_2), next(sales_amounts_2)) for i in range(2)],
                     pack=True
                 ),
             )
@@ -304,8 +304,8 @@ async def show_purple_dashboard(q: Q):
                 ]),
                 data=data(
                     fields=['site', 'date', 'visitors'],
-                    rows=[('Online', next(audience_days1), next(audience_hits1)) for i in range(60)] + [
-                        ('In-store', next(audience_days2), next(audience_hits2)) for i in range(60)],
+                    rows=[('Online', next(audience_days1), next(audience_hits1)) for i in range(10)] + [
+                        ('In-store', next(audience_days2), next(audience_hits2)) for i in range(10)],
                     pack=True
                 ),
             )

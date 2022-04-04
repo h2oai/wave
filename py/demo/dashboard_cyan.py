@@ -74,7 +74,7 @@ async def show_cyan_dashboard(q: Q):
                 ]),
                 data=data(
                     fields=['date', 'price'],
-                    rows=[(next(trend_date), next(trend_price)) for i in range(120)],
+                    rows=[(next(trend_date), next(trend_price)) for i in range(10)],
                     pack=True
                 ),
                 height='150px',
