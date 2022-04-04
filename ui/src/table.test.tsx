@@ -630,18 +630,27 @@ describe('Table.tsx', () => {
       expect(groupHeaders[2]).toHaveTextContent('2012-09-14T18:26:01(1)')
     })
 
-    it('Sorts grouped list', () => {
+    it('Sorts rows inside the group of the grouped list', () => {
+      // test with non-alphabetical groups order to check whether group alphabetical sorting on groupby is considered
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'Group2'] },
+          { name: 'rowname2', cells: [cell21, 'Group2'] },
+          { name: 'rowname3', cells: [cell31, 'Group1'] }
+        ]
+      }
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
       fireEvent.click(getByTestId('groupby'))
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
 
-      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
+      expect(getAllByRole('gridcell')[8].textContent).toBe(cell11)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
 
-      expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
+      expect(getAllByRole('gridcell')[8].textContent).toBe(cell21)
     })
 
     it('Searches grouped list', () => {
@@ -727,7 +736,7 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(tableHeaderRow + groupHeaderRow + filteredItem)
     })
 
-    it('Sorts grouped list', () => {
+    it('Sorts rows inside the group of the grouped list', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
