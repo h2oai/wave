@@ -50,7 +50,7 @@ export interface NavGroup {
 export interface State {
   /** The navigation groups contained in this pane. */
   items: NavGroup[]
-  /** The name of the initially active (highlighted) navigation item. */
+  /** The name of the active (highlighted) navigation item. */
   value?: S
   /** The card's title. */
   title?: S
@@ -136,7 +136,7 @@ export const
         }
       }))
     }))
-    return <Fluent.Nav groups={groups} initialSelectedKey={value} />
+    return <Fluent.Nav groups={groups} selectedKey={value} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {

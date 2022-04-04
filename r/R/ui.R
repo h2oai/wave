@@ -3941,7 +3941,7 @@ ui_meta_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
-#' @param value The name of the initially active (highlighted) navigation item.
+#' @param value The name of the active (highlighted) navigation item.
 #' @param title The card's title.
 #' @param subtitle The card's subtitle.
 #' @param icon The icon, displayed to the left. *
