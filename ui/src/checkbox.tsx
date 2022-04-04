@@ -68,6 +68,7 @@ export const
       <Fluent.Checkbox
         data-test={m.name}
         inputProps={{ 'data-test': m.name } as React.ButtonHTMLAttributes<HTMLButtonElement>}
+        styles={{ checkmark: { display: 'flex' } }} // Fix: Center the checkmark in the checkbox.
         label={m.label}
         defaultIndeterminate={m.indeterminate}
         defaultChecked={m.value}
