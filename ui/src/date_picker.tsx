@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
+import { important } from './theme'
 import { wave } from './ui'
 
 /**
@@ -78,6 +79,7 @@ export const
     return (
       <Fluent.DatePicker
         data-test={m.name}
+        styles={{ icon: { bottom: 2 }, readOnlyTextField: { paddingRight: important('32px') } }}
         label={m.label}
         value={value}
         placeholder={m.placeholder}
