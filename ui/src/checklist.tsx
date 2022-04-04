@@ -101,7 +101,7 @@ export const
           checked={selected}
           onChange={onChange(i)}
           disabled={!!c.disabled}
-          styles={{ root: { marginBottom: 4 } }}
+          styles={{ root: { marginBottom: 4 }, checkmark: { display: 'flex' } }} // Fix: Center the checkmark in the checkbox.
         />
       ))
     // eslint-disable-next-line react-hooks/exhaustive-deps

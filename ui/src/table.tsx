@@ -260,7 +260,7 @@ const
               label={key}
               checked={checked}
               onChange={getOnFilterChangeHandler(data, key)}
-              styles={{ root: { marginBottom: 5 } }}
+              styles={{ root: { marginBottom: 5 }, checkmark: { display: 'flex' } }}
             />
           )
           )

@@ -197,7 +197,11 @@ const
       onRenderCell = React.useCallback((item?: DropdownItem) => item
         ? <Fluent.Checkbox
           label={item.text}
-          styles={{ root: { minHeight: ROW_HEIGHT, alignItems: 'center' }, label: { width: pc(100), padding: 12, wordBreak: 'break-word' } }}
+          styles={{
+            root: { minHeight: ROW_HEIGHT, alignItems: 'center' },
+            label: { width: pc(100), padding: 12, wordBreak: 'break-word' },
+            checkmark: { display: 'flex' }
+          }}
           onChange={onChecked(item.idx)}
           className={item.checked ? css.dialogCheckedRow : ''}
           checked={item.checked} />
