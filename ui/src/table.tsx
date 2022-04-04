@@ -231,34 +231,27 @@ const
       return rv
     }, {} as Dict<any>)
   },
-  sortingF = (sorts: Map<S, { column: WaveColumn, sortAsc: B }>) => (rowA: any, rowB: any) => {
-    const sortValues = [...sorts.values()]
-    for (let idx = 0; idx < sortValues.length; idx++) {
-      const { column, sortAsc } = sortValues[idx]
+  sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
+    let a = rowA[column.key], b = rowB[column.key]
 
-      let a = rowA[column.key], b = rowB[column.key]
-      if (sortValues.length - 1 > idx && a === b) continue
-
-      switch (column.dataType) {
-        case 'number':
-          a = +a
-          b = +b
-          return sortAsc ? a - b : b - a
-        case 'time':
-          a = Date.parse(a)
-          b = Date.parse(b)
-          break
-        default:
-          a = a.toLowerCase()
-          b = b.toLowerCase()
-          break
-      }
-
-      return sortAsc
-        ? b > a ? -1 : 1
-        : b > a ? 1 : -1
+    switch (column.dataType) {
+      case 'number':
+        a = +a
+        b = +b
+        return sortAsc ? a - b : b - a
+      case 'time':
+        a = Date.parse(a)
+        b = Date.parse(b)
+        break
+      default:
+        a = a.toLowerCase()
+        b = b.toLowerCase()
+        break
     }
-    return 0
+
+    return sortAsc
+      ? b > a ? -1 : 1
+      : b > a ? 1 : -1
   },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
   toCSV = (data: unknown[][]): S => data.map(row => {
@@ -659,7 +652,6 @@ export const
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
       expandedRefs = React.useRef<{ [key: S]: B } | null>({}),
       [groupByKey, setGroupByKey] = React.useState('*'),
-      [selectedSorts, setSelectedSorts] = React.useState<Map<S, { column: WaveColumn, sortAsc: B }>>(new Map()),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
@@ -823,7 +815,6 @@ export const
       reset = React.useCallback(() => {
         setSelectedFilters(null)
         setSearchStr('')
-        setSelectedSorts(new Map())
         setGroups(undefined)
         if (m.groups) initGroups()
         expandedRefs.current = {}
@@ -854,14 +845,8 @@ export const
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
       sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
-        const sorts = selectedSorts.set(column.fieldName || column.name, { column, sortAsc })
-        setSelectedSorts(sorts)
-
         if (m.pagination && m.events?.includes('sort')) {
-          wave.emit(m.name, 'sort', [...sorts.values()].reverse().reduce((acc, { column, sortAsc }) => {
-            acc[column.fieldName || column.name] = sortAsc
-            return acc
-          }, {} as { [key: string]: B }))
+          wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
           setCurrentPage(1)
           return
         }
@@ -873,10 +858,10 @@ export const
               .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
                 [] as any[]) || [])
           }
-          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(selectedSorts)))
+          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
         })
-      }, [m.events, m.name, m.pagination, selectedSorts]),
+      }, [m.events, m.name, m.pagination]),
       setFiltersInBulk = React.useCallback((colKey: S, filters: S[]) => {
         setSelectedFilters(selectedFilters => {
           const newFilters = {
