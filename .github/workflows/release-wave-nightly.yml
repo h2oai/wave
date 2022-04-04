@@ -2,12 +2,17 @@ name: Release Wave Nightly
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'
+        default: 'nightly'
+        required: false
   schedule:
     - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
 
 env:
-  VERSION: nightly
-  TAG: nightly
+  VERSION: "${{ github.event.inputs.version }}"
+  TAG: "${{ github.event.inputs.version }}"
 
 jobs:
   release:
