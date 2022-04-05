@@ -5,12 +5,11 @@
 
 from h2o_wave import main, app, Q, ui
 
-
-groups = [ui.table_group(f"Group-{i+1}", [
-                    ui.table_row(name=f"row{i*3+1}", cells=[f"Item-{i*3+1}"]),
-                    ui.table_row(name=f"row{i*3+2}", cells=[f"Item-{i*3+2}"]),
-                    ui.table_row(name=f"row{i*3+3}", cells=[f"Item-{i*3+3}"]),
-                ]) for i in range(100)]
+groups = [ui.table_group(f"Group-{i + 1}", [
+    ui.table_row(name=f"row{i * 3 + 1}", cells=[f"Item-{i * 3 + 1}"]),
+    ui.table_row(name=f"row{i * 3 + 2}", cells=[f"Item-{i * 3 + 2}"]),
+    ui.table_row(name=f"row{i * 3 + 3}", cells=[f"Item-{i * 3 + 3}"]),
+]) for i in range(100)]
 groups_per_page = 10
 
 
