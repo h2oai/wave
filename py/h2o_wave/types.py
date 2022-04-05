@@ -3233,6 +3233,7 @@ class TableColumn:
             data_type: Optional[str] = None,
             cell_type: Optional[TableCellType] = None,
             cell_overflow: Optional[str] = None,
+            filters: Optional[List[str]] = None,
     ):
         _guard_scalar('TableColumn.name', name, (str,), True, False, False)
         _guard_scalar('TableColumn.label', label, (str,), False, False, False)
@@ -3245,6 +3246,7 @@ class TableColumn:
         _guard_enum('TableColumn.data_type', data_type, _TableColumnDataType, True)
         _guard_scalar('TableColumn.cell_type', cell_type, (TableCellType,), False, True, False)
         _guard_enum('TableColumn.cell_overflow', cell_overflow, _TableColumnCellOverflow, True)
+        _guard_vector('TableColumn.filters', filters, (str,), False, True, False)
         self.name = name
         """An identifying name for this column."""
         self.label = label
@@ -3267,6 +3269,8 @@ class TableColumn:
         """Defines how to render each cell in this column. Renders as plain text by default."""
         self.cell_overflow = cell_overflow
         """Defines what to do with a cell's contents in case it does not fit inside the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow."""
+        self.filters = filters
+        """List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3281,6 +3285,7 @@ class TableColumn:
         _guard_enum('TableColumn.data_type', self.data_type, _TableColumnDataType, True)
         _guard_scalar('TableColumn.cell_type', self.cell_type, (TableCellType,), False, True, False)
         _guard_enum('TableColumn.cell_overflow', self.cell_overflow, _TableColumnCellOverflow, True)
+        _guard_vector('TableColumn.filters', self.filters, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -3293,6 +3298,7 @@ class TableColumn:
             data_type=self.data_type,
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
             cell_overflow=self.cell_overflow,
+            filters=self.filters,
         )
 
     @staticmethod
@@ -3320,6 +3326,8 @@ class TableColumn:
         _guard_scalar('TableColumn.cell_type', __d_cell_type, (dict,), False, True, False)
         __d_cell_overflow: Any = __d.get('cell_overflow')
         _guard_enum('TableColumn.cell_overflow', __d_cell_overflow, _TableColumnCellOverflow, True)
+        __d_filters: Any = __d.get('filters')
+        _guard_vector('TableColumn.filters', __d_filters, (str,), False, True, False)
         name: str = __d_name
         label: str = __d_label
         min_width: Optional[str] = __d_min_width
@@ -3331,6 +3339,7 @@ class TableColumn:
         data_type: Optional[str] = __d_data_type
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         cell_overflow: Optional[str] = __d_cell_overflow
+        filters: Optional[List[str]] = __d_filters
         return TableColumn(
             name,
             label,
@@ -3343,6 +3352,7 @@ class TableColumn:
             data_type,
             cell_type,
             cell_overflow,
+            filters,
         )
 
 
@@ -3436,6 +3446,45 @@ class TableGroup:
         )
 
 
+class TablePagination:
+    """Configure table pagination. Use as `pagination` parameter to `ui.table()`
+    """
+    def __init__(
+            self,
+            total_rows: int,
+            rows_per_page: int,
+    ):
+        _guard_scalar('TablePagination.total_rows', total_rows, (int,), False, False, False)
+        _guard_scalar('TablePagination.rows_per_page', rows_per_page, (int,), False, False, False)
+        self.total_rows = total_rows
+        """Total count of all the rows in your dataset."""
+        self.rows_per_page = rows_per_page
+        """The maximum amount of rows to be displayed in a single page."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TablePagination.total_rows', self.total_rows, (int,), False, False, False)
+        _guard_scalar('TablePagination.rows_per_page', self.rows_per_page, (int,), False, False, False)
+        return _dump(
+            total_rows=self.total_rows,
+            rows_per_page=self.rows_per_page,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TablePagination':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_total_rows: Any = __d.get('total_rows')
+        _guard_scalar('TablePagination.total_rows', __d_total_rows, (int,), False, False, False)
+        __d_rows_per_page: Any = __d.get('rows_per_page')
+        _guard_scalar('TablePagination.rows_per_page', __d_rows_per_page, (int,), False, False, False)
+        total_rows: int = __d_total_rows
+        rows_per_page: int = __d_rows_per_page
+        return TablePagination(
+            total_rows,
+            rows_per_page,
+        )
+
+
 _TableCheckboxVisibility = ['always', 'on-hover', 'hidden']
 
 
@@ -3461,6 +3510,9 @@ class Table:
     and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
+
+    If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+    none of these features will work automatically like in non-paginated table.
     """
     def __init__(
             self,
@@ -3478,6 +3530,8 @@ class Table:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             groups: Optional[List[TableGroup]] = None,
+            pagination: Optional[TablePagination] = None,
+            events: Optional[List[str]] = None,
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
@@ -3493,6 +3547,8 @@ class Table:
         _guard_scalar('Table.visible', visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', tooltip, (str,), False, True, False)
         _guard_vector('Table.groups', groups, (TableGroup,), False, True, False)
+        _guard_scalar('Table.pagination', pagination, (TablePagination,), False, True, False)
+        _guard_vector('Table.events', events, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
@@ -3502,9 +3558,9 @@ class Table:
         self.multiple = multiple
         """True to allow multiple rows to be selected."""
         self.groupable = groupable
-        """True to allow group by feature. Ignored if `groups` are specified."""
+        """True to allow group by feature. Not applicable when `pagination` is set."""
         self.downloadable = downloadable
-        """Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False."""
+        """Indicates whether the table rows can be downloaded as a CSV file. Defaults to False."""
         self.resettable = resettable
         """Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False."""
         self.height = height
@@ -3521,6 +3577,10 @@ class Table:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.groups = groups
         """Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr."""
+        self.pagination = pagination
+        """Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`."""
+        self.events = events
+        """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3538,6 +3598,8 @@ class Table:
         _guard_scalar('Table.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', self.tooltip, (str,), False, True, False)
         _guard_vector('Table.groups', self.groups, (TableGroup,), False, True, False)
+        _guard_scalar('Table.pagination', self.pagination, (TablePagination,), False, True, False)
+        _guard_vector('Table.events', self.events, (str,), False, True, False)
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
@@ -3553,6 +3615,8 @@ class Table:
             visible=self.visible,
             tooltip=self.tooltip,
             groups=None if self.groups is None else [__e.dump() for __e in self.groups],
+            pagination=None if self.pagination is None else self.pagination.dump(),
+            events=self.events,
         )
 
     @staticmethod
@@ -3586,6 +3650,10 @@ class Table:
         _guard_scalar('Table.tooltip', __d_tooltip, (str,), False, True, False)
         __d_groups: Any = __d.get('groups')
         _guard_vector('Table.groups', __d_groups, (dict,), False, True, False)
+        __d_pagination: Any = __d.get('pagination')
+        _guard_scalar('Table.pagination', __d_pagination, (dict,), False, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('Table.events', __d_events, (str,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: Optional[List[TableRow]] = None if __d_rows is None else [TableRow.load(__e) for __e in __d_rows]
@@ -3600,6 +3668,8 @@ class Table:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         groups: Optional[List[TableGroup]] = None if __d_groups is None else [TableGroup.load(__e) for __e in __d_groups]
+        pagination: Optional[TablePagination] = None if __d_pagination is None else TablePagination.load(__d_pagination)
+        events: Optional[List[str]] = __d_events
         return Table(
             name,
             columns,
@@ -3615,6 +3685,8 @@ class Table:
             visible,
             tooltip,
             groups,
+            pagination,
+            events,
         )
 
 

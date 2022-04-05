@@ -580,6 +580,13 @@
     ],
     "description": "Create a minimal Wave TabCard."
   },
+  "Wave TablePagination": {
+    "prefix": "w_table_pagination",
+    "body": [
+      "ui.table_pagination(total_rows=${1:None}, rows_per_page=${2:None}),$0"
+    ],
+    "description": "Create a minimal Wave TablePagination."
+  },
   "Wave TableColumn": {
     "prefix": "w_table_column",
     "body": [
@@ -1504,6 +1511,13 @@
     ],
     "description": "Create a full Wave TabCard."
   },
+  "Wave Full TablePagination": {
+    "prefix": "w_full_table_pagination",
+    "body": [
+      "ui.table_pagination(total_rows=${1:None}, rows_per_page=${2:None}),$0"
+    ],
+    "description": "Create a full Wave TablePagination."
+  },
   "Wave Full TableCellType": {
     "prefix": "w_full_table_cell_type",
     "body": [
@@ -1514,7 +1528,7 @@
   "Wave Full TableColumn": {
     "prefix": "w_full_table_column",
     "body": [
-      "ui.table_column(name='$1', label='$2', min_width='$3', max_width='$4', sortable=${5:False}, searchable=${6:False}, filterable=${7:False}, link=${8:False}, data_type='${9:string`}', cell_type=$10, cell_overflow='$11'),$0"
+      "ui.table_column(name='$1', label='$2', min_width='$3', max_width='$4', sortable=${5:False}, searchable=${6:False}, filterable=${7:False}, link=${8:False}, data_type='${9:string`}', cell_type=$10, cell_overflow='$11', filters=[\n\t\t$12\t\t\n]),$0"
     ],
     "description": "Create a full Wave TableColumn."
   },
@@ -1535,7 +1549,7 @@
   "Wave Full Table": {
     "prefix": "w_full_table",
     "body": [
-      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%'}', checkbox_visibility='${8:on-hover'}', visible=${9:True}, tooltip='$10', columns=[\n\t\t$11\t\t\n], rows=[\n\t\t$12\t\t\n], values=[\n\t\t$13\t\t\n], groups=[\n\t\t$14\t\t\n]),$0"
+      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%'}', checkbox_visibility='${8:on-hover'}', visible=${9:True}, tooltip='$10', pagination=$11, columns=[\n\t\t$12\t\t\n], rows=[\n\t\t$13\t\t\n], values=[\n\t\t$14\t\t\n], groups=[\n\t\t$15\t\t\n], events=[\n\t\t$16\t\t\n]),$0"
     ],
     "description": "Create a full Wave Table."
   },

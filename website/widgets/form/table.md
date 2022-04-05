@@ -18,14 +18,18 @@ You can see the API for [ui.table](/docs/api/ui#table) or check the interactive 
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
-    ui.table(name='table', columns=[
-        ui.table_column(name='name', label='Name'),
-        ui.table_column(name='surname', label='Surname'),
-    ], rows=[
-        ui.table_row(name='row1', cells=['John', 'Doe']),
-        ui.table_row(name='row2', cells=['Alice', 'Smith']),
-        ui.table_row(name='row3', cells=['Bob', 'Adams']),
-    ])
+    ui.table(
+        name='table',
+        columns=[
+            ui.table_column(name='name', label='Name'),
+            ui.table_column(name='surname', label='Surname'),
+        ], 
+        rows=[
+            ui.table_row(name='row1', cells=['John', 'Doe']),
+            ui.table_row(name='row2', cells=['Alice', 'Smith']),
+            ui.table_row(name='row3', cells=['Bob', 'Adams']),
+        ]
+    )
 ])
 ```
 
@@ -237,7 +241,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-## With text overflow
+## With text-overflow
 
 By default, text that does not fit into the table cell is signaled to users with ellipsis (...). However, you can change this with an `overflow` prop. Available options are:
 
@@ -268,7 +272,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 
 ## With groups
 
-If [groupable](#with-group-by) prop does not suit your needs, you can specify your custom groups with `groups` prop.
+If [groupable](#with-group-by) prop does not suit your needs, you can specify your custom groups with the `groups` attribute.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
@@ -294,7 +298,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 
 ### With collapsed groups
 
-Groups are shown in collapsed state by default. With `collapsed` attribute you can change this behavior.
+Groups are shown in a collapsed state by default. With the `collapsed` attribute you can change this behavior.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
@@ -317,3 +321,34 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
         ])
 ])
 ```
+
+## With pagination
+
+Paginated table differs from regular [table](/docs/widgets/form/table) in its ability to handle large amounts of data (100k+ rows). Instead of sending all the rows at once, pagination allows you to send just a specific chunk of data needed for the current page. The size of this chunk is defined as `rows_per_page`.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 6', items=[
+    ui.table(
+        name='table',
+        columns=[ui.table_column(name='name', label='Name')],
+        rows=[
+            ui.table_row(name='row1', cells=['John']),
+            ui.table_row(name='row2', cells=['Alice']),
+            ui.table_row(name='row3', cells=['Bob']),
+            ui.table_row(name='row4', cells=['John']),
+            ui.table_row(name='row5', cells=['Alice']),
+            ui.table_row(name='row6', cells=['Bob']),
+            ui.table_row(name='row7', cells=['John']),
+            ui.table_row(name='row8', cells=['Alice']),
+            ui.table_row(name='row9', cells=['Bob']),
+            ui.table_row(name='row10', cells=['John']),
+        ],
+        # Add pagination attribute to make your table paginated.
+        pagination=ui.table_pagination(total_rows=20, rows_per_page=10),
+        # Register events to listen, all of these have to be handled by developer.
+        events=['page_change']
+    )
+])
+```
+
+Check the [complete example](/docs/examples/table-pagination) with all the supported features like sort/filter/search/download/reset.

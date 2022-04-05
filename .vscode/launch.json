@@ -24,6 +24,17 @@
       ]
     },
     {
+      "name": "Debug PY App",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/py/venv/bin/wave",
+      "python": "${workspaceFolder}/py/venv/bin/python",
+      "args": [
+        "run",
+        "examples.table_pagination_search"
+      ],
+    },
+    {
       "name": "Debug Showcase",
       "type": "python",
       "request": "launch",
@@ -37,8 +48,9 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "node",
+      "program": "${workspaceRoot}/ui/node_modules/jest/bin/jest.js",
       "args": [
-        "node_modules/jest/bin/jest.js",
+        "--watch",
         "--runInBand",
         "--no-cache",
         "--env=jsdom"

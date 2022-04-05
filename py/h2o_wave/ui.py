@@ -1245,6 +1245,7 @@ def table_column(
         data_type: Optional[str] = None,
         cell_type: Optional[TableCellType] = None,
         cell_overflow: Optional[str] = None,
+        filters: Optional[List[str]] = None,
 ) -> TableColumn:
     """Create a table column.
 
@@ -1260,6 +1261,7 @@ def table_column(
         data_type: Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
         cell_type: Defines how to render each cell in this column. Renders as plain text by default.
         cell_overflow: Defines what to do with a cell's contents in case it does not fit inside the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
+        filters: List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
     Returns:
         A `h2o_wave.types.TableColumn` instance.
     """
@@ -1275,6 +1277,7 @@ def table_column(
         data_type,
         cell_type,
         cell_overflow,
+        filters,
     )
 
 
@@ -1319,6 +1322,24 @@ def table_group(
     )
 
 
+def table_pagination(
+        total_rows: int,
+        rows_per_page: int,
+) -> TablePagination:
+    """Configure table pagination. Use as `pagination` parameter to `ui.table()`
+
+    Args:
+        total_rows: Total count of all the rows in your dataset.
+        rows_per_page: The maximum amount of rows to be displayed in a single page.
+    Returns:
+        A `h2o_wave.types.TablePagination` instance.
+    """
+    return TablePagination(
+        total_rows,
+        rows_per_page,
+    )
+
+
 def table(
         name: str,
         columns: List[TableColumn],
@@ -1334,6 +1355,8 @@ def table(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         groups: Optional[List[TableGroup]] = None,
+        pagination: Optional[TablePagination] = None,
+        events: Optional[List[str]] = None,
 ) -> Component:
     """Create an interactive table.
 
@@ -1351,13 +1374,16 @@ def table(
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
 
+    If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+    none of these features will work automatically like in non-paginated table.
+
     Args:
         name: An identifying name for this component.
         columns: The columns in this table.
         rows: The rows in this table. Mutually exclusive with `groups` attr.
         multiple: True to allow multiple rows to be selected.
-        groupable: True to allow group by feature. Ignored if `groups` are specified.
-        downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+        groupable: True to allow group by feature. Not applicable when `pagination` is set.
+        downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.
         width: The width of the table, e.g. '100px'. Defaults to '100%'.
@@ -1366,6 +1392,8 @@ def table(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
+        pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
+        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
     Returns:
         A `h2o_wave.types.Table` instance.
     """
@@ -1384,6 +1412,8 @@ def table(
         visible,
         tooltip,
         groups,
+        pagination,
+        events,
     ))
 
 

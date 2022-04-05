@@ -19,8 +19,16 @@ import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
-import { border, cssVar, important, rem } from './theme'
+import { border, cssVar, important, margin, rem } from './theme'
 import { wave } from './ui'
+
+/** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
+interface TablePagination {
+  /** Total count of all the rows in your dataset. */
+  total_rows: U
+  /** The maximum amount of rows to be displayed in a single page. */
+  rows_per_page: U
+}
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -56,6 +64,8 @@ interface TableColumn {
   cell_type?: TableCellType
   /** Defines what to do with a cell's contents in case it does not fit inside the cell. */
   cell_overflow?: 'tooltip' | 'wrap'
+  /** List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns. */
+  filters?: S[]
 }
 
 /** Create a table row. */
@@ -96,6 +106,9 @@ interface TableGroup {
  * and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
  * set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
  * submission.
+ * 
+ * If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+ * none of these features will work automatically like in non-paginated table.
  */
 export interface Table {
   /** An identifying name for this component. */
@@ -106,9 +119,9 @@ export interface Table {
   rows?: TableRow[]
   /** True to allow multiple rows to be selected. */
   multiple?: B
-  /** True to allow group by feature. Ignored if `groups` are specified. */
+  /** True to allow group by feature. Not applicable when `pagination` is set. */
   groupable?: B
-  /** Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False. */
+  /** Indicates whether the table rows can be downloaded as a CSV file. Defaults to False. */
   downloadable?: B
   /** Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False. */
   resettable?: B
@@ -126,6 +139,10 @@ export interface Table {
   tooltip?: S
   /** Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr. */
   groups?: TableGroup[]
+  /** Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`. */
+  pagination?: TablePagination
+  /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'. */
+  events?: S[]
 }
 
 type WaveColumn = Fluent.IColumn & {
@@ -133,12 +150,13 @@ type WaveColumn = Fluent.IColumn & {
   cellType?: TableCellType
   isSortable?: B
   cellOverflow?: 'tooltip' | 'wrap'
+  filters?: S[]
 }
 
 type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
-  sort: (col: WaveColumn) => void,
+  sort: (col: WaveColumn, sortAsc: B) => void,
   filteredItems: any[]
   selectedFilters: Dict<S[]> | null
   items: any[]
@@ -155,6 +173,22 @@ type ContextualMenuProps = {
   listProps: Fluent.IContextualMenuListProps
   selectedFiltersRef: React.MutableRefObject<Dict<S[]> | null>
   setFiltersInBulk: (colKey: S, filters: S[]) => void
+}
+
+type FooterProps = {
+  currentPage: U
+  onPageChange: (newPage: U) => void
+  isSearchable: B
+  isFilterable: B
+  displayedRows: S
+  m: Table
+  reset: () => void
+}
+
+type PaginationProps = {
+  currentPage: U
+  onPageChange: (newPage: U) => void
+  pagination: TablePagination
 }
 
 const
@@ -268,7 +302,7 @@ const
       </div>
     )
   },
-  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, expandedRefs, sort, setFiltersInBulk }: DataTable) => {
+  DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, expandedRefs, sort, setFiltersInBulk }: DataTable, ref) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
@@ -277,8 +311,12 @@ const
 
         if (isMenuClicked) onColumnContextMenu(column, e)
         else if (column.isSortable) {
-          sort(column)
-          setColumns(columns.map(col => column.key === col.key ? column : col))
+          const sortAsc = column.iconName === 'SortDown'
+          sort(column, sortAsc)
+          setColumns(columns.map(col => {
+            if (column.key === col.key) col.iconName = sortAsc ? 'SortUp' : 'SortDown'
+            return col
+          }))
         }
       },
       [columns, setColumns] = React.useState(m.columns.map((c): WaveColumn => {
@@ -310,7 +348,8 @@ const
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: c.cell_overflow === 'wrap'
+          isMultiline: c.cell_overflow === 'wrap',
+          filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
@@ -325,8 +364,9 @@ const
           /> : null
       }, [onFilterChange, setFiltersInBulk]),
       onColumnContextMenu = React.useCallback((col: WaveColumn, e: React.MouseEvent<HTMLElement>) => {
+        const menuFilters = col.filters || items.map(i => i[col.fieldName || col.key])
         setColContextMenuList({
-          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
+          items: Array.from(new Set(menuFilters)).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
           target: e.target as HTMLElement,
           directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
           gapSpace: 10,
@@ -454,6 +494,14 @@ const
     // HACK: React stale closures - https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
     // TODO: Find a reasonable way of doing this.
     React.useEffect(() => { { selectedFiltersRef.current = selectedFilters } }, [selectedFilters])
+    React.useImperativeHandle(ref, () => ({
+      resetSortIcons: () => {
+        setColumns(columns.map(col => {
+          if (col.iconName) col.iconName = 'SortDown'
+          return col
+        }))
+      }
+    }))
 
     return (
       <>
@@ -483,6 +531,96 @@ const
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
       </>
     )
+  }),
+  Pagination = ({ currentPage, onPageChange, pagination }: PaginationProps) => {
+    const
+      { total_rows, rows_per_page } = pagination,
+      lastPage = Math.ceil(total_rows / rows_per_page),
+      btnStyles: Fluent.IButtonStyles = { rootDisabled: { background: 'transparent' }, root: { marginLeft: -8 } },
+      isLastPage = currentPage === lastPage || lastPage === 0
+
+    return (
+      <span>
+        <span style={{ marginRight: 15 }}>
+          {
+            total_rows
+              ? <><b>{((currentPage - 1) * rows_per_page) + 1}</b> to <b>{isLastPage ? total_rows : currentPage * rows_per_page}</b> of <b>{total_rows}</b></>
+              : <><b>0</b> to <b>0</b> of <b>0</b></>
+          }
+        </span>
+        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronLeft' }} disabled={currentPage === 1} onClick={() => onPageChange(1)} styles={btnStyles} title='First page' />
+        <Fluent.IconButton iconProps={{ iconName: 'ChevronLeft' }} disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} styles={btnStyles} title='Previous page' />
+        <span style={{ margin: margin(0, 8) }}>Page <b>{currentPage}</b> of <b>{lastPage || 1}</b></span>
+        <Fluent.IconButton iconProps={{ iconName: 'ChevronRight' }} disabled={isLastPage} onClick={() => onPageChange(currentPage + 1)} styles={btnStyles} title='Next page' />
+        <Fluent.IconButton iconProps={{ iconName: 'DoubleChevronRight' }} disabled={isLastPage} onClick={() => onPageChange(lastPage)} styles={btnStyles} title='Last page' />
+      </span>
+    )
+  },
+  Footer = ({ m, isFilterable, isSearchable, displayedRows, reset, currentPage, onPageChange }: FooterProps) => {
+    const
+      footerItems: Fluent.ICommandBarItemProps[] = [],
+      buttonStyles = { root: { background: cssVar('$card') } },
+      download = () => {
+        if (m.pagination && m.events?.includes('download')) {
+          wave.emit(m.name, 'download', true)
+          return
+        }
+        // TODO: Prompt a dialog for name, encoding, etc.
+        const
+          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
+          a = document.createElement('a'),
+          blob = new Blob([data], { type: "octet/stream" }),
+          url = window.URL.createObjectURL(blob)
+
+        a.href = url
+        a.download = 'exported_data.csv'
+        a.click()
+
+        window.URL.revokeObjectURL(url)
+      }
+
+    if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
+    if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
+
+    return (
+      <Fluent.Stack
+        horizontal
+        horizontalAlign='space-between'
+        verticalAlign='center'
+        className='wave-s12'
+        styles={{
+          root: {
+            background: cssVar('$neutralLight'),
+            borderRadius: '0 0 4px 4px',
+            paddingLeft: 12,
+            height: 46,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0
+          }
+        }}>
+        {
+          !m.pagination && (isFilterable || isSearchable) && (
+            <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>
+              <b style={{ paddingLeft: 5 }}>{displayedRows}</b>
+            </Fluent.Text>
+          )
+        }
+        {m.pagination && <Pagination pagination={m.pagination} currentPage={currentPage} onPageChange={onPageChange} />}
+        {
+          footerItems.length && (
+            <Fluent.StackItem grow={1}>
+              <Fluent.CommandBar items={footerItems} styles={{
+                root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
+                primarySet: { justifyContent: 'flex-end' }
+              }} />
+            </Fluent.StackItem>
+          )
+        }
+      </Fluent.Stack>
+    )
   }
 
 export const
@@ -507,12 +645,15 @@ export const
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       [filteredItems, setFilteredItems] = React.useState(items),
+      [currentPage, setCurrentPage] = React.useState(1),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
       expandedRefs = React.useRef<{ [key: S]: B } | null>({}),
       [groupByKey, setGroupByKey] = React.useState('*'),
+      contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
+      tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
@@ -591,9 +732,18 @@ export const
           return searchString || ''
         })
       }, [searchableKeys]),
+      fireSearchEvent = (searchStr: S) => {
+        wave.emit(m.name, 'search', { value: searchStr, cols: searchableKeys })
+        setCurrentPage(1)
+      },
+      debouncedFireSearchEvent = React.useRef(wave.debounce(500, fireSearchEvent)),
       onSearchChange = React.useCallback((_e?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
         setSearchStr(searchStr)
 
+        if (m.pagination && m.events?.includes('search')) {
+          debouncedFireSearchEvent.current(searchStr)
+          return
+        }
         if (!searchStr && !selectedFilters) {
           setFilteredItems(items)
           setGroups(groups => {
@@ -609,9 +759,14 @@ export const
           if (groups) initGroups()
           return groups
         })
-      }, [selectedFilters, filter, search, initGroups, items]),
+      }, [m.pagination, m.events, selectedFilters, filter, search, items, initGroups]),
       onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
+        if (m.pagination) {
+          wave.emit(m.name, 'group_by', true)
+          setCurrentPage(1)
+          return
+        }
         reset()
         if (option.key === '*') return
 
@@ -619,70 +774,20 @@ export const
         expandedRefs.current = {}
         initGroups()
       },
+      onPageChange = React.useCallback((newPage: U) => {
+        if (m.pagination && m.events?.includes('page_change')) {
+          setCurrentPage(newPage)
+          wave.emit(m.name, 'page_change', { offset: (newPage - 1) * m.pagination.rows_per_page })
+          if (contentRef?.current) {
+            // Scroll table content to top after page change.
+            // @ts-ignore
+            contentRef.current._contentContainer.current.scrollTop = 0
+          }
+        }
+      }, [m.events, m.name, m.pagination]),
       isSearchable = !!searchableKeys.length,
-      download = () => {
-        // TODO: Prompt a dialog for name, encoding, etc.
-        const
-          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
-          a = document.createElement('a'),
-          blob = new Blob([data], { type: "octet/stream" }),
-          url = window.URL.createObjectURL(blob)
-
-        a.href = url
-        a.download = 'exported_data.csv'
-        a.click()
-
-        window.URL.revokeObjectURL(url)
-      },
       isFilterable = m.columns.some(c => c.filterable),
-      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER,
-      Footer = () => {
-        if (!shouldShowFooter) return null
-
-        const
-          footerItems: Fluent.ICommandBarItemProps[] = [],
-          buttonStyles = { root: { background: cssVar('$card') } }
-        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
-        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
-
-        return (
-          <Fluent.Stack
-            horizontal
-            horizontalAlign='space-between'
-            verticalAlign='center'
-            styles={{
-              root: {
-                background: cssVar('$neutralLight'),
-                borderRadius: '0 0 4px 4px',
-                paddingLeft: 12,
-                height: 46,
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0
-              }
-            }}>
-            {
-              (isFilterable || isSearchable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER) && (
-                <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
-                  <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
-                </Fluent.Text>
-              )
-            }
-            {
-              footerItems.length && (
-                <Fluent.StackItem grow={1}>
-                  <Fluent.CommandBar items={footerItems} styles={{
-                    root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
-                    primarySet: { justifyContent: 'flex-end' }
-                  }} />
-                </Fluent.StackItem>
-              )
-            }
-          </Fluent.Stack>
-        )
-      },
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
           const filters = selectedFilters || {}
@@ -692,29 +797,39 @@ export const
           } else {
             filters[filterKey] = filters[filterKey].filter(f => f !== filterVal)
           }
-
-          filter(filters)
-          search()
-          setGroups(groups => {
-            if (groups) initGroups()
-            return groups
-          })
+          if (m.pagination && m.events?.includes('filter')) {
+            wave.emit(m.name, 'filter', filters)
+            setCurrentPage(1)
+          } else {
+            filter(filters)
+            search()
+            setGroups(groups => {
+              if (groups) initGroups()
+              return groups
+            })
+          }
           return filters
         })
-      }, [filter, initGroups, search]),
+      }, [filter, initGroups, m.events, m.name, m.pagination, search]),
       // TODO: Make filter options in dropdowns dynamic.
       reset = React.useCallback(() => {
         setSelectedFilters(null)
         setSearchStr('')
-
         setGroups(undefined)
         if (m.groups) initGroups()
         expandedRefs.current = {}
         setGroupByKey('*')
+        tableRef.current?.resetSortIcons()
+
+        if (m.pagination && m.events?.includes('reset')) {
+          wave.emit(m.name, 'reset', true)
+          setCurrentPage(1)
+          return
+        }
 
         filter(null)
         search()
-      }, [m.groups, initGroups, filter, search]),
+      }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
       selection = React.useMemo(() => new Fluent.Selection({ onSelectionChanged: () => { wave.args[m.name] = selection.getSelection().map(item => item.key as S) } }), [m.name]),
       computeHeight = () => {
         if (m.height) return m.height
@@ -729,10 +844,12 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
-      sort = React.useCallback((column: WaveColumn) => {
-        const sortAsc = column.iconName === 'SortDown'
-        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
-
+      sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
+        if (m.pagination && m.events?.includes('sort')) {
+          wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
+          setCurrentPage(1)
+          return
+        }
         setGroups(groups => {
           if (groups) {
             setFilteredItems(filteredItems => [...groups]
@@ -744,22 +861,28 @@ export const
           else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
         })
-      }, []),
+      }, [m.events, m.name, m.pagination]),
       setFiltersInBulk = React.useCallback((colKey: S, filters: S[]) => {
         setSelectedFilters(selectedFilters => {
           const newFilters = {
             ...selectedFilters,
             [colKey]: filters
           }
-          filter(newFilters)
-          search()
-          setGroups(groups => {
-            if (groups) initGroups()
-            return groups
-          })
+          if (m.pagination && m.events?.includes('filter')) {
+            wave.emit(m.name, 'filter', newFilters)
+            setCurrentPage(1)
+          }
+          else {
+            filter(newFilters)
+            search()
+            setGroups(groups => {
+              if (groups) initGroups()
+              return groups
+            })
+          }
           return newFilters
         })
-      }, [filter, search, initGroups])
+      }, [m.pagination, m.events, m.name, filter, search, initGroups])
 
     React.useEffect(() => {
       wave.args[m.name] = []
@@ -795,23 +918,34 @@ export const
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
         <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
-          {groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
+          {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
           {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
-        </Fluent.Stack>
+        </Fluent.Stack >
         <Fluent.ScrollablePane
+          componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
             root: { top: groupable || searchableKeys.length ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
-            stickyAbove: { right: important('0px'), border: border(2, 'transparent'), zIndex: 2 },
+            stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
           {
             isMultiple
-              ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
-              : <DataTable {...dataTableProps} />
+              ? <Fluent.MarqueeSelection selection={selection}><DataTable ref={tableRef} {...dataTableProps} /></Fluent.MarqueeSelection>
+              : <DataTable ref={tableRef} {...dataTableProps} />
           }
         </Fluent.ScrollablePane>
-        <Footer />
-      </div>
+        {shouldShowFooter && (
+          <Footer
+            m={m}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+            isSearchable={isSearchable}
+            isFilterable={isFilterable}
+            displayedRows={`${formatNum(filteredItems.length)} of ${formatNum(items.length)}`}
+            reset={reset}
+          />
+        )}
+      </div >
     )
   }
