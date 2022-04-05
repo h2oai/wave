@@ -890,6 +890,11 @@ export const
         m.values.forEach(v => selection.setKeySelected(v, true, false))
         wave.args[m.name] = m.values
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    React.useEffect(() => setFilteredItems(items), [items])
+
+    React.useEffect(() => {
       if (m.groups) {
         expandedRefs.current = m.groups?.reduce((acc, { label, collapsed = true }) => {
           if (!collapsed) acc[label] = false
@@ -897,9 +902,7 @@ export const
         }, {} as { [key: S]: B })
         initGroups()
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-    React.useEffect(() => setFilteredItems(items), [items])
+    }, [initGroups, m.groups])
 
     const dataTableProps: DataTable = React.useMemo(() => ({
       model: m,
