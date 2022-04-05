@@ -39,6 +39,8 @@ export interface Combobox {
   placeholder?: S
   /** The name of the selected choice. */
   value?: S
+  /** The names of the selected choices. */
+  values?: S[]
   /** The choices to be presented. */
   choices?: S[]
   /** Text to be displayed as an error below the text box. */
@@ -57,20 +59,46 @@ export interface Combobox {
   required?: B
 }
 
+let newId = 1
 
 export const
   XCombobox = ({ model: m }: { model: Combobox }) => {
     const
+      allowFreeform = true,
+      isMultiValued = !!m.values,
       [text, setText] = React.useState(m.value),
-      options = (m.choices || []).map((text, i): Fluent.IComboBoxOption => ({ key: `${i}`, text })),
-      onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: string) => {
+      [options, setOptions] = React.useState((m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: `${newId++}`, text }))),
+      getInitialSelected = () => 
+        (m.values || []).reduce((acc: Fluent.IComboBoxOption[], cur: S) => {
+          const found = options.find(option => option.text === cur)
+          return found ? [...acc, found] : acc
+        }, []),
+      [selected, setSelected] = React.useState(getInitialSelected()),
+      onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: S) => {
+        let selected = option?.selected
         const v = option?.text || value || ''
-        wave.args[m.name] = v
-        setText(v)
+        
+        if (allowFreeform && !option && value) {
+          selected = true
+          option = { key: `${newId++}`, text: value }
+          setOptions((prevOptions = []) => [...prevOptions, option!])
+        }
+
+        if (option && isMultiValued) {
+          setSelected(items => {
+            const result = selected ? [...items, option as Fluent.IComboBoxOption] : items.filter(item => item.key !== option!.key)
+            wave.args[m.name] = result.map(item => item!.text)
+            return result
+          })
+        } else {
+          wave.args[m.name] = v
+          setText(v)
+        }
+        
         if (m.trigger) wave.push()
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
+    React.useEffect(() => { wave.args[m.name] = m?.value || m?.values || null }, [])
 
     return (
       <Fluent.ComboBox
@@ -79,11 +107,13 @@ export const
         placeholder={m.placeholder}
         options={options}
         required={m.required}
+        multiSelect={isMultiValued}
+        selectedKey={isMultiValued ? selected.map(s => s.key as S) : undefined}
+        text={isMultiValued ? undefined : text}
+        allowFreeform={allowFreeform}
         disabled={m.disabled}
         autoComplete="on"
-        allowFreeform={true}
         errorMessage={m.error}
-        text={text}
         onChange={onChange}
       />
     )

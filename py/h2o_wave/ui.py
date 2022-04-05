@@ -729,6 +729,7 @@ def combobox(
         label: Optional[str] = None,
         placeholder: Optional[str] = None,
         value: Optional[str] = None,
+        values: Optional[List[str]] = None,
         choices: Optional[List[str]] = None,
         error: Optional[str] = None,
         disabled: Optional[bool] = None,
@@ -755,6 +756,7 @@ def combobox(
         label: Text to be displayed alongside the component.
         placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
         value: The name of the selected choice.
+        values: The names of the selected choices.
         choices: The choices to be presented.
         error: Text to be displayed as an error below the text box.
         disabled: True if this field is disabled.
@@ -771,6 +773,7 @@ def combobox(
         label,
         placeholder,
         value,
+        values,
         choices,
         error,
         disabled,

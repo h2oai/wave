@@ -79,3 +79,14 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
         choices=['Cyan', 'Magenta', 'Yellow', 'Black']),
 ])
 ```
+
+## Multi select
+
+You can select multiple values by using `values` instead of `value`.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.combobox(name='combobox', label='Combobox',
+        choices=['Cyan', 'Magenta', 'Yellow', 'Black'], values=['Black', 'Yellow']),
+])
+```
