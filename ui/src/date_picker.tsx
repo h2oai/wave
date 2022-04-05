@@ -79,7 +79,7 @@ export const
     return (
       <Fluent.DatePicker
         data-test={m.name}
-        styles={{ icon: { bottom: 2 }, readOnlyTextField: { paddingRight: important('32px') } }}
+        styles={{ icon: { bottom: 2 }, readOnlyTextField: { paddingRight: important('32px') }, statusMessage: { marginTop: 0 } }}
         label={m.label}
         value={value}
         placeholder={m.placeholder}
