@@ -537,7 +537,7 @@ const
       { total_rows, rows_per_page } = pagination,
       lastPage = Math.ceil(total_rows / rows_per_page),
       btnStyles: Fluent.IButtonStyles = { rootDisabled: { background: 'transparent' }, root: { marginLeft: -8 } },
-      isLastPage = currentPage === lastPage
+      isLastPage = currentPage === lastPage || lastPage === 0
 
     return (
       <span>
