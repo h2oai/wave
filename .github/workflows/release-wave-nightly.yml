@@ -11,8 +11,9 @@ on:
     - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
 
 env:
-  VERSION: "${{ github.event.inputs.version }}"
-  TAG: "${{ github.event.inputs.version }}"
+  INPUT_VERSION: "${{ github.event.inputs.version }}"
+  VERSION: "${INPUT_VERSION:-'nightly'}"
+  TAG: "v${INPUT_VERSION:-'nightly'}"
 
 jobs:
   release:
