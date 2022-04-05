@@ -12,8 +12,8 @@ on:
 
 env:
   INPUT_VERSION: "${{ github.event.inputs.version }}"
-  VERSION: "${INPUT_VERSION:-'nightly'}"
-  TAG: "v${INPUT_VERSION:-'nightly'}"
+  VERSION: "${{${INPUT_VERSION:-'nightly'}}}"
+  TAG: "${{v${INPUT_VERSION:-'nightly'}}}"
 
 jobs:
   release:
