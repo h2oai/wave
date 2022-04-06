@@ -19,7 +19,7 @@ jobs:
         run: |
           INPUT_VERSION=${{ github.event.inputs.version }}
           echo "VERSION=${INPUT_VERSION:-'nightly'}" >> $GITHUB_ENV
-          if [ "${INPUT_VERSION}" ]; then echo "v${INPUT_VERSION}"; else echo "nightly"; fi >> $GITHUB_ENV
+          if [ "${INPUT_VERSION}" ]; then echo "TAG=v${INPUT_VERSION}"; else echo "TAG=nightly"; fi >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
