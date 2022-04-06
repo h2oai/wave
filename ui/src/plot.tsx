@@ -1060,9 +1060,11 @@ export const
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
+          tooltipCfg = Object.keys(data[0]).join('*'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
         currentPlot.current = plot
         if (chart) {
+          chart.line().position(tooltipCfg).tooltip(tooltipCfg)
           currentChart.current = chart
           chart.data(data)
           if (model.events) {
