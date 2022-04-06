@@ -149,6 +149,7 @@ module.exports = {
           "widgets/plots/line",
           "widgets/plots/area",
           "widgets/plots/path",
+          "widgets/plots/interactions",
           {
             "type": "category",
             "label": "Third Party Plots",
