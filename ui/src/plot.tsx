@@ -1064,7 +1064,39 @@ export const
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
         currentPlot.current = plot
         if (chart) {
-          chart.line().position(tooltipCfg).tooltip(tooltipCfg)
+          marks.forEach(({ type }) => {
+            switch (type) {
+              case 'interval':
+                chart.interval().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'line':
+                chart.line().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'path':
+                chart.path().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'point':
+                chart.point().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'area':
+                chart.area().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'polygon':
+                chart.polygon().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'schema':
+                chart.schema().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'edge':
+                chart.edge().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              case 'heatmap':
+                chart.heatmap().position(tooltipCfg).tooltip(tooltipCfg)
+                break
+              default:
+                break
+            }
+          })
           currentChart.current = chart
           chart.data(data)
           if (model.events) {
@@ -1072,11 +1104,16 @@ export const
               switch (event) {
                 case 'select_marks': {
                   chart.interaction('element-single-selected')
-                  chart.on('element:statechange', (ev: any) => {
-                    const e = ev.gEvent.originalEvent
-                    if (e.stateStatus && e.state === 'selected') {
-                      if (model.name) wave.emit(model.name, event, [e.element?.data])
-                    }
+                  chart.on('element:click', (ev: any) => {
+                    const
+                      { x, data: eventData } = ev,
+                      { points, data, shape } = eventData,
+                      selectedElements = chart.getElementsBy(el => el.getStates().includes('selected')),
+                      dataInterval = shape === 'line' ? data.filter((item: any, idx: number) => {
+                        if (idx !== points.length - 1 && x >= points[idx].x && x <= points[idx + 1].x) return true
+                        if (idx !== 0 && x <= points[idx].x && x >= points[idx - 1].x) return true
+                      }) : data
+                    if (selectedElements.length && model.name) wave.emit(model.name, event, [dataInterval])
                   })
                 }
               }
@@ -1097,7 +1134,7 @@ export const
       const
         raw_data = unpack<any[]>(model.data),
         data = refactorData(raw_data, currentPlot.current.marks)
-      currentChart.current.changeData(data)
+      currentChart.current.changeData(data) // TODO: init tooltip again?
 
     }, [currentChart, currentPlot, model])
 
