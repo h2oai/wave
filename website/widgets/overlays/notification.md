@@ -28,13 +28,13 @@ UX tips:
 if not q.client.initialized:
     # Create a meta card for future interactions.
     q.page['meta'] = ui.meta_card(box='')
-    # Render a button that will open the side panel.
+    # Render a button that will open the notification.
     q.page['example'] = ui.form_card(box='1 1 2 1', items=[
         ui.button(name='show_notification', label='Show notification', primary=True)
     ])
     q.client.initialized = True
 else:
-    # Handle button click by opening the side panel.
+    # Handle button click by opening the notification.
     if q.args.show_notification:
         q.page['meta'].notification = 'And now for something completely different!'
 ```

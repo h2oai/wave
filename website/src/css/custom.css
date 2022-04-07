@@ -188,7 +188,6 @@ html[data-theme="dark"] .DocSearch {
 
 .icons__iconSet {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 
