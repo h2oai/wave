@@ -192,7 +192,6 @@ type PaginationProps = {
 }
 
 const
-  MIN_ROWS_TO_DISPLAY_FOOTER = 20,
   // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
     // HACK: Put sorting icon on right (same as filter).
@@ -610,7 +609,7 @@ const
         }
         {m.pagination && <Pagination pagination={m.pagination} currentPage={currentPage} onPageChange={onPageChange} />}
         {
-          footerItems.length && (
+          !!footerItems.length && (
             <Fluent.StackItem grow={1}>
               <Fluent.CommandBar items={footerItems} styles={{
                 root: { background: cssVar('$neutralLight'), '.ms-Button--commandBar': { background: 'transparent' } },
@@ -787,7 +786,7 @@ export const
       }, [m.events, m.name, m.pagination]),
       isSearchable = !!searchableKeys.length,
       isFilterable = m.columns.some(c => c.filterable),
-      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || items.length > MIN_ROWS_TO_DISPLAY_FOOTER || !!m.pagination,
+      shouldShowFooter = m.downloadable || m.resettable || isSearchable || isFilterable || !!m.pagination,
       onFilterChange = React.useCallback((filterKey: S, filterVal: S, checked?: B) => {
         setSelectedFilters(selectedFilters => {
           const filters = selectedFilters || {}
