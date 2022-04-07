@@ -977,7 +977,8 @@ const
         interactions: interactions.map(type => ({ type })),
         tooltip: {
           showCrosshairs: true,
-          crosshairs: { type: 'xy' }
+          crosshairs: { type: 'xy' },
+          showTitle: false
           // XXX pass container element
         }
       }
@@ -1045,6 +1046,9 @@ export const
           init()
         }
       },
+      setChartTooltip = (chart: any, tooltipCfg: any) => {
+        chart.position(tooltipCfg).tooltip(tooltipCfg)
+      },
       init = async () => {
         // Map CSS var colors to their hex values.
         cat10 = cat10.map(cssVarValue)
@@ -1067,33 +1071,31 @@ export const
           marks.forEach(({ type }) => {
             switch (type) {
               case 'interval':
-                chart.interval().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.interval(), tooltipCfg)
                 break
               case 'line':
-                chart.line().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.line(), tooltipCfg)
                 break
               case 'path':
-                chart.path().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.path(), tooltipCfg)
                 break
               case 'point':
-                chart.point().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.point(), tooltipCfg)
                 break
               case 'area':
-                chart.area().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.area(), tooltipCfg)
                 break
               case 'polygon':
-                chart.polygon().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.polygon(), tooltipCfg)
                 break
               case 'schema':
-                chart.schema().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.schema(), tooltipCfg)
                 break
               case 'edge':
-                chart.edge().position(tooltipCfg).tooltip(tooltipCfg)
+                setChartTooltip(chart.edge(), tooltipCfg)
                 break
               case 'heatmap':
-                chart.heatmap().position(tooltipCfg).tooltip(tooltipCfg)
-                break
-              default:
+                setChartTooltip(chart.heatmap(), tooltipCfg)
                 break
             }
           })
@@ -1104,16 +1106,11 @@ export const
               switch (event) {
                 case 'select_marks': {
                   chart.interaction('element-single-selected')
-                  chart.on('element:click', (ev: any) => {
-                    const
-                      { x, data: eventData } = ev,
-                      { points, data, shape } = eventData,
-                      selectedElements = chart.getElementsBy(el => el.getStates().includes('selected')),
-                      dataInterval = shape === 'line' ? data.filter((item: any, idx: number) => {
-                        if (idx !== points.length - 1 && x >= points[idx].x && x <= points[idx + 1].x) return true
-                        if (idx !== 0 && x <= points[idx].x && x >= points[idx - 1].x) return true
-                      }) : data
-                    if (selectedElements.length && model.name) wave.emit(model.name, event, [dataInterval])
+                  chart.on('element:statechange', (ev: any) => {
+                    const e = ev.gEvent.originalEvent
+                    if (e.stateStatus && e.state === 'selected') {
+                      if (model.name) wave.emit(model.name, event, [e.element?.data])
+                    }
                   })
                 }
               }
@@ -1134,7 +1131,7 @@ export const
       const
         raw_data = unpack<any[]>(model.data),
         data = refactorData(raw_data, currentPlot.current.marks)
-      currentChart.current.changeData(data) // TODO: init tooltip again?
+      currentChart.current.changeData(data)
 
     }, [currentChart, currentPlot, model])
 
