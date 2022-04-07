@@ -603,7 +603,7 @@ const
         }}>
         {
           !m.pagination && (isFilterable || isSearchable) && (
-            <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>
+            <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap', color: cssVar('$text') } }}>
               <b style={{ paddingLeft: 5 }}>{displayedRows}</b>
             </Fluent.Text>
           )
