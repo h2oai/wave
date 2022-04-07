@@ -1100,11 +1100,16 @@ export const
               switch (event) {
                 case 'select_marks': {
                   chart.interaction('element-single-selected')
-                  chart.on('element:statechange', (ev: any) => {
-                    const e = ev.gEvent.originalEvent
-                    if (e.stateStatus && e.state === 'selected') {
-                      if (model.name) wave.emit(model.name, event, [e.element?.data])
-                    }
+                  chart.on('element:click', (ev: any) => {
+                    const
+                      { x, data: eventData } = ev,
+                      { points, data, shape } = eventData,
+                      selectedElements = chart.getElementsBy(el => el.getStates().includes('selected')),
+                      dataInterval = shape === 'line' ? data.filter((item: any, idx: number) => {
+                        if (idx !== points.length - 1 && x >= points[idx].x && x <= points[idx + 1].x) return true
+                        if (idx !== 0 && x <= points[idx].x && x >= points[idx - 1].x) return true
+                      }) : data
+                    if (selectedElements.length && model.name) wave.emit(model.name, event, [dataInterval])
                   })
                 }
               }
