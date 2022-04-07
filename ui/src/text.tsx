@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { Markdown } from './markdown'
-import { margin } from './theme'
+import { cssVar, margin } from './theme'
 import { Command } from './toolbar'
 
 /** Create text content. */
@@ -137,7 +137,7 @@ export const
     const menuName = name ? `${name}-menu` : name
     return (
       <div className={css.text}>
-        <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
+        <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block styles={{ root: { color: cssVar('$text'), } }}>
           <Markdown source={content} />
         </Fluent.Text>
         {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
