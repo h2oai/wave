@@ -352,3 +352,22 @@ q.page['example'] = ui.form_card(box='1 1 3 6', items=[
 ```
 
 Check the [complete example](/docs/examples/table-pagination) with all the supported features like sort/filter/search/download/reset.
+
+## With actions
+
+You can group multiple actions in a context menu for each row by setting `cell_type` to `ui.command_table_cell_type` and providing the commands you want.
+
+```py
+commands = [
+    ui.command(name='details', label='Details'),
+    ui.command(name='delete', label='Delete'),
+]
+
+q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+    ui.table(
+        name='table',
+        columns=[ui.table_column(name='actions', label='Actions', cell_type=ui.command_table_cell_type(name='commands', items=commands))],
+        rows=[ui.table_row(name='first_row', cells=[])]
+    )
+])
+```

@@ -1239,6 +1239,27 @@ def tag_table_cell_type(
     ))
 
 
+def command_table_cell_type(
+        items: List[Command],
+        name: Optional[str] = None,
+) -> TableCellType:
+    """Create a cell type that renders command menu.
+
+    Commands are typically displayed as context menu items. Useful when you need to provide
+    multiple actions within a single row.
+
+    Args:
+        items: Items to render.
+        name: An identifying name for this component.
+    Returns:
+        A `h2o_wave.types.CommandTableCellType` instance.
+    """
+    return TableCellType(command=CommandTableCellType(
+        items,
+        name,
+    ))
+
+
 def table_column(
         name: str,
         label: str,

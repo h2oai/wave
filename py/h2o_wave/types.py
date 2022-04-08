@@ -3171,6 +3171,48 @@ class TagTableCellType:
         )
 
 
+class CommandTableCellType:
+    """Create a cell type that renders command menu.
+
+    Commands are typically displayed as context menu items. Useful when you need to provide
+    multiple actions within a single row.
+    """
+    def __init__(
+            self,
+            items: List[Command],
+            name: Optional[str] = None,
+    ):
+        _guard_vector('CommandTableCellType.items', items, (Command,), False, False, False)
+        _guard_scalar('CommandTableCellType.name', name, (str,), False, True, False)
+        self.items = items
+        """Items to render."""
+        self.name = name
+        """An identifying name for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('CommandTableCellType.items', self.items, (Command,), False, False, False)
+        _guard_scalar('CommandTableCellType.name', self.name, (str,), False, True, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            name=self.name,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'CommandTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('CommandTableCellType.items', __d_items, (dict,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('CommandTableCellType.name', __d_name, (str,), False, True, False)
+        items: List[Command] = [Command.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
+        return CommandTableCellType(
+            items,
+            name,
+        )
+
+
 class TableCellType:
     """Defines cell content to be rendered instead of a simple text.
     """
@@ -3179,26 +3221,32 @@ class TableCellType:
             progress: Optional[ProgressTableCellType] = None,
             icon: Optional[IconTableCellType] = None,
             tag: Optional[TagTableCellType] = None,
+            command: Optional[CommandTableCellType] = None,
     ):
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
         _guard_scalar('TableCellType.tag', tag, (TagTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.command', command, (CommandTableCellType,), False, True, False)
         self.progress = progress
         """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
         """Renders an icon."""
         self.tag = tag
         """Renders one or more tags."""
+        self.command = command
+        """Renders a command menu."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TableCellType.progress', self.progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', self.icon, (IconTableCellType,), False, True, False)
         _guard_scalar('TableCellType.tag', self.tag, (TagTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.command', self.command, (CommandTableCellType,), False, True, False)
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
             icon=None if self.icon is None else self.icon.dump(),
             tag=None if self.tag is None else self.tag.dump(),
+            command=None if self.command is None else self.command.dump(),
         )
 
     @staticmethod
@@ -3210,13 +3258,17 @@ class TableCellType:
         _guard_scalar('TableCellType.icon', __d_icon, (dict,), False, True, False)
         __d_tag: Any = __d.get('tag')
         _guard_scalar('TableCellType.tag', __d_tag, (dict,), False, True, False)
+        __d_command: Any = __d.get('command')
+        _guard_scalar('TableCellType.command', __d_command, (dict,), False, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
         tag: Optional[TagTableCellType] = None if __d_tag is None else TagTableCellType.load(__d_tag)
+        command: Optional[CommandTableCellType] = None if __d_command is None else CommandTableCellType.load(__d_command)
         return TableCellType(
             progress,
             icon,
             tag,
+            command,
         )
 
 

@@ -104,6 +104,13 @@
     ],
     "description": "Create a minimal Wave Combobox."
   },
+  "Wave CommandTableCellType": {
+    "prefix": "w_command_table_cell_type",
+    "body": [
+      "ui.command_table_cell_type(items=[\n\t\t$1\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave CommandTableCellType."
+  },
   "Wave CopyableText": {
     "prefix": "w_copyable_text",
     "body": [
@@ -972,6 +979,13 @@
     ],
     "description": "Create a full Wave Combobox."
   },
+  "Wave Full CommandTableCellType": {
+    "prefix": "w_full_command_table_cell_type",
+    "body": [
+      "ui.command_table_cell_type(name='$1', items=[\n\t\t$2\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave CommandTableCellType."
+  },
   "Wave Full CopyableText": {
     "prefix": "w_full_copyable_text",
     "body": [
@@ -1521,7 +1535,7 @@
   "Wave Full TableCellType": {
     "prefix": "w_full_table_cell_type",
     "body": [
-      "ui.table_cell_type(progress=$1, icon=$2, tag=$3),$0"
+      "ui.table_cell_type(progress=$1, icon=$2, tag=$3, command=$4),$0"
     ],
     "description": "Create a full Wave TableCellType."
   },

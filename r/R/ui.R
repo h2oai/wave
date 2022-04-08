@@ -1447,6 +1447,27 @@ ui_tag_table_cell_type <- function(
   return(.o)
 }
 
+#' Create a cell type that renders command menu.
+#' 
+#' Commands are typically displayed as context menu items. Useful when you need to provide
+#' multiple actions within a single row.
+#'
+#' @param items Items to render.
+#' @param name An identifying name for this component.
+#' @return A CommandTableCellType instance.
+#' @export
+ui_command_table_cell_type <- function(
+  items,
+  name = NULL) {
+  .guard_vector("items", "WaveCommand", items)
+  .guard_scalar("name", "character", name)
+  .o <- list(command=list(
+    items=items,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
+  return(.o)
+}
+
 #' Create a table column.
 #'
 #' @param name An identifying name for this column.

@@ -99,6 +99,12 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_command_table_cell_type" value="ui.command_table_cell_type(items=[&#10;	$items$	&#10;]),$END$" description="Create a minimal Wave CommandTableCellType." toReformat="true" toShortenFQNames="true">
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_copyable_text" value="ui.copyable_text(value='$value$',label='$label$'),$END$" description="Create a minimal Wave CopyableText." toReformat="true" toShortenFQNames="true">
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1061,6 +1067,13 @@
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="choices" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_command_table_cell_type" value="ui.command_table_cell_type(name='$name$',items=[&#10;	$items$	&#10;]),$END$" description="Create Wave CommandTableCellType with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -2080,10 +2093,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_table_cell_type" value="ui.table_cell_type(progress=$progress$,icon=$icon$,tag=$tag$),$END$" description="Create Wave TableCellType with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_table_cell_type" value="ui.table_cell_type(progress=$progress$,icon=$icon$,tag=$tag$,command=$command$),$END$" description="Create Wave TableCellType with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="progress" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="tag" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="command" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

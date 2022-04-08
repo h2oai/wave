@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { Id, S } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { border, clas, cssVar } from './theme'
@@ -38,9 +38,9 @@ export interface Menu {
   name?: Id
 }
 
-export const XMenu = ({ model }: { model: Menu }) => {
+export const XMenu = ({ model }: { model: Menu & {hideCaret?: B } }) => {
   const
-    { name, items, icon, image } = model,
+    { name, items, icon, image, hideCaret } = model,
     ref = React.useRef<HTMLDivElement>(null),
     [isMenuHidden, setIsMenuHidden] = React.useState(true),
     toggleMenu = () => setIsMenuHidden(isHidden => !isHidden)
@@ -60,7 +60,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
         styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')) } }}
       />
-      <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />
+      {!hideCaret && <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />}
     </div>
   )
 }
