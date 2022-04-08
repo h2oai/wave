@@ -91,6 +91,7 @@ ui.plot([
 - [Step, After](examples/plot-step-after): Make a line plot with a step-after curve.
 - [Step, Before](examples/plot-step-before): Make a line plot with a step-before curve.
 - [Labels](examples/plot-line-labels): Add labels to a line plot.
+- [Labels, Custom](examples/plot-line-labels-custom): Add customized labels to a line plot.
 - [Labels, Stroked](examples/plot-line-labels-stroked): Customize label rendering: add a subtle outline to labels to improve readability.
 - [Labels, Occlusion](examples/plot-line-labels-no-overlap): Make a line plot with non-overlapping labels.
 - [Annotation](examples/plot-line-annotation): Add annotations to a line plot.

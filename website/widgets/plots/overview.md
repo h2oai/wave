@@ -205,6 +205,7 @@ q.page['example'] = ui.wide_plot_card(
 - [Step, After](/docs/examples/plot-step-after): Make a line plot with a step-after curve.
 - [Step, Before](/docs/examples/plot-step-before): Make a line plot with a step-before curve.
 - [Labels](/docs/examples/plot-line-labels): Add labels to a line plot.
+- [Labels, Custom](examples/plot-line-labels-custom): Add customized labels to a line plot.
 - [Labels, Stroked](/docs/examples/plot-line-labels-stroked): Customize label rendering: add a subtle outline to labels to improve readability.
 - [Labels, Occlusion](/docs/examples/plot-line-labels-no-overlap): Make a line plot with non-overlapping labels.
 - [Annotation](/docs/examples/plot-line-annotation): Add annotations to a line plot.

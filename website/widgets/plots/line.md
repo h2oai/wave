@@ -10,7 +10,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
-    title='Line, groups',
+    title='Line',
     data=data('year value', 8, rows=[
         ('1991', 3),
         ('1992', 4),
@@ -37,7 +37,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
-    title='Line',
+    title='Line, groups',
     data=data('month city temperature', 24, rows=[
         ('Jan', 'Tokyo', 7),
         ('Jan', 'London', 3.9),
@@ -222,7 +222,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
-    title='Line, labels',
+    title='Line, labels, custom',
     data=data('year price', 9, rows=[
         ('1991', 3),
         ('1992', 4),
