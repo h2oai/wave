@@ -68,6 +68,7 @@ ui.plot([
 - [Stacked, Grouped](examples/plot-interval-stacked-grouped): Make a column plot with both stacked and grouped bars.
 - [Annotation](examples/plot-interval-annotation): Add annotations to a column plot.
 - [Theta](examples/plot-interval-theta): Make a "racetrack" plot (a column plot in polar coordinates).
+- [Theta, Stacked](examples/plot-interval-theta-stacked): Make a stacked "racetrack" plot.
 
 ### Bars
 

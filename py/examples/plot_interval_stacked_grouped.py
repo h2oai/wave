@@ -1,25 +1,38 @@
 # Plot / Interval / Stacked / Grouped
 # Make a column #plot with both #stacked and grouped bars. #interval
 # ---
-from synth import FakeMultiCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 5
-k = 5
-f1 = FakeMultiCategoricalSeries(groups=k)
-f2 = FakeMultiCategoricalSeries(groups=k)
-v = page.add('example', ui.plot_card(
+page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Intervals, stacked and dodged',
-    data=data('category country product price', n * k * 2),
+    data=data('day type time gender', 12, rows=[
+        ('Mon.','series1', 2800, 'male'),
+        ('Mon.','series1', 1800, 'female'),
+        ('Mon.','series2', 2260, 'female'),
+        ('Mon.','series2', 710, 'male'),
+        ('Tues.','series1', 1800, 'male'),
+        ('Tues.','series1', 290, 'female'),
+        ('Tues.','series2', 1300, 'female'),
+        ('Tues.','series2', 960, 'male'),
+        ('Wed.','series1', 950, 'male'),
+        ('Wed.','series1', 2730, 'female'),
+        ('Wed.','series2', 1390, 'male'),
+        ('Wed.','series2', 900, 'female'),
+    ]),
     plot=ui.plot([
-        ui.mark(type='interval', x='=product', y='=price', color='=country', stack='auto', dodge='=category', y_min=0)])
+        ui.mark(
+            type='interval',
+            x='=day',
+            y='=time',
+            color='=type',
+            stack='auto',
+            dodge='=gender',
+            y_min=0
+        )
+    ])
 ))
-
-data1 = [('A', g, t, x) for x in [f1.next() for _ in range(n)] for g, t, x, _ in x]
-data2 = [('B', g, t, x) for x in [f2.next() for _ in range(n)] for g, t, x, _ in x]
-v.data = data1 + data2
 
 page.save()
