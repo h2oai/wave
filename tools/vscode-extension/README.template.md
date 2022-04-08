@@ -15,7 +15,7 @@ Makes H2O Wave App development easier by providing:
 from scanning.
   * Autocomplete does not incorporate semantics, meaning it can suggest a value that is to be initialized
 later in the code execution.
-  * Icon autocomplete includes all the icons from <https://uifabricicons.azurewebsites.net/>.
+  * Icon autocomplete includes all the icons from <https://wave.h2o.ai/docs/icons>.
 
 ## Installation
 
