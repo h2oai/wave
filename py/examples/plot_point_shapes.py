@@ -2,24 +2,26 @@
 # Make a scatterplot with categories encoded as mark shapes.
 # #plot
 # ---
-from synth import FakeScatter
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-
-def create_fake_row(g, f, n):
-    return [(g, x, y) for x, y in [f.next() for _ in range(n)]]
-
-
-n = 30
-f1, f2 = FakeScatter(), FakeScatter()
-v = page.add('example', ui.plot_card(
+page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Point, shapes',
-    data=data('product price performance', n * 2),
-    plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', shape='=product', shape_range='circle square')])
+    data=data('gender height weight', 10, rows=[
+        ('female', 170, 59),
+        ('female', 159.1, 47.6),
+        ('female', 166, 69.8),
+        ('female', 176.2, 66.8),
+        ('female', 160.2, 75.2),
+        ('male', 180.3, 76.4),
+        ('male', 164.5, 63.2),
+        ('male', 173, 60.9),
+        ('male', 183.5, 74.8),
+        ('male', 175.5, 70),
+    ]),
+    plot=ui.plot([ui.mark(type='point', x='=weight', y='=height', shape='=gender')])
 ))
-v.data = create_fake_row('G1', f1, n) + create_fake_row('G2', f1, n)
 
 page.save()
