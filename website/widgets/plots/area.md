@@ -14,7 +14,7 @@ Check the full API at [ui.plot_card](/docs/api/ui#plot_card).
 from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
-    box='1 1 4 5',
+    box='1 1 5 5',
     title='Area',
     data=data('year price', 9, rows=[
         ('1991', 15468),
@@ -40,7 +40,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
-    title='Area, stacked',
+    title='Area, groups',
     data=data('month city temperature', 24, rows=[
         ('Jan', 'Tokyo', 7),
         ('Jan', 'London', 3.9),
@@ -174,7 +174,7 @@ Make an area plot showing positive and negative values.
 from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
-    box='1 1 4 5',
+    box='1 1 5 5',
     title='Area, negative values',
     data=data('year value', 20, rows=[
         ('1996', 322),
@@ -211,7 +211,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
-    title='Area, negative values',
+    title='Area, smooth',
     data=data('year price', 9, rows=[
         ('1991', 15468),
         ('1992', 16100),
