@@ -39,6 +39,8 @@ export interface TextAnnotator {
   items: TextAnnotatorItem[]
   /** True if the form should be submitted when the annotator value changes. */
   trigger?: B
+  /** True to prevent user interaction with annotator component. */
+  readonly?: B
 }
 
 const css = stylesheet({
@@ -55,7 +57,6 @@ const css = stylesheet({
     padding: padding(4, 16),
     textAlign: 'center',
     borderRadius: 4,
-    cursor: 'pointer',
   },
   tagWrapper: {
     marginRight: 4,
@@ -188,12 +189,12 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         isLast = tokens[idx + 1]?.tag !== tag
       return (
         <mark
-          onMouseOver={onMarkHover(idx)}
-          onMouseOut={onMarkMouseOut}
+          onMouseOver={model.readonly ? undefined : onMarkHover(idx)}
+          onMouseOut={model.readonly ? undefined : onMarkMouseOut}
           className={clas(css.mark, isFirst ? css.firstMark : '', isLast ? css.lastMark : '')}
           style={{ backgroundColor: cssVar(color), color: getContrast(color) }}>
           {text}
-          <Fluent.Icon iconName='CircleAdditionSolid' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
+          <Fluent.Icon iconName='CircleAdditionSolid' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={model.readonly ? undefined : removeAnnotation(idx)} />
           {/* HACK: Put color underlay under remove icon because its glyph is transparent and doesn't look good on tags. */}
           <span style={removeIconStyle as React.CSSProperties} className={css.iconUnderlay}></span>
         </mark>
@@ -204,6 +205,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         tag: {
           background: cssVar(color),
           color: getContrast(color),
+          cursor: model.readonly ? 'default' : 'pointer',
         },
         activeTag: {
           border: border(2, cssVar('$themePrimary')),
@@ -212,7 +214,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
       })
       return (
         <div key={name} data-test={name} className={clas(css.tagWrapper, activeTag === name ? style.activeTag : '')}>
-          <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={activateTag(name)}>{label}</div>
+          <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={model.readonly ? undefined : activateTag(name)}>{label}</div>
         </div>
       )
     })
@@ -226,7 +228,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
       <div className={css.tags}>{tags}</div>
       <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
         tokens.map(({ text, tag }, idx) => (
-          <span key={idx} onMouseDown={updateStartIdx(idx)} onMouseUp={annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
+          <span key={idx} onMouseDown={model.readonly ? undefined : updateStartIdx(idx)} onMouseUp={model.readonly ? undefined : annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
         ))
       }
       </div>
