@@ -2730,6 +2730,98 @@ ui_text_annotator <- function(
   return(.o)
 }
 
+#' Create a tag.
+#'
+#' @param name An identifying name for this component.
+#' @param label Text to be displayed for this tag.
+#' @param color HEX or RGB color string used as background for highlighted phrases.
+#' @return A ImageAnnotatorTag instance.
+#' @export
+ui_image_annotator_tag <- function(
+  name,
+  label,
+  color) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .o <- list(
+    name=name,
+    label=label,
+    color=color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorTag"))
+  return(.o)
+}
+
+#' Create an annotator item with initial selected tags or no tag for plaintext.
+#'
+#' @param x_min Minimum X dimension.
+#' @param x_max Maximum X dimension.
+#' @param y_min Minimum Y dimension.
+#' @param y_max Maximum Y dimension.
+#' @param tag Tag connected to the highlighted section.
+#' @return A ImageAnnotatorItem instance.
+#' @export
+ui_image_annotator_item <- function(
+  x_min,
+  x_max,
+  y_min,
+  y_max,
+  tag) {
+  .guard_scalar("x_min", "numeric", x_min)
+  .guard_scalar("x_max", "numeric", x_max)
+  .guard_scalar("y_min", "numeric", y_min)
+  .guard_scalar("y_max", "numeric", y_max)
+  .guard_scalar("tag", "character", tag)
+  .o <- list(
+    x_min=x_min,
+    x_max=x_max,
+    y_min=y_min,
+    y_max=y_max,
+    tag=tag)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorItem"))
+  return(.o)
+}
+
+#' Create an image annotator component.
+#' 
+#' The image annotator component enables user to manually annotate parts of an image.
+#'
+#' @param name An identifying name for this component.
+#' @param image The image to annotate.
+#' @param title The text annotator's title.
+#' @param tags List of tags the user can annotate with.
+#' @param items Existing annotations if any.
+#' @param trigger True if the form should be submitted when the annotator value changes.
+#' @param image_height The card’s image height. Intrinsic image size is used by default.
+#' @return A ImageAnnotator instance.
+#' @export
+ui_image_annotator <- function(
+  name,
+  image,
+  title,
+  tags,
+  items = NULL,
+  trigger = NULL,
+  image_height = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("title", "character", title)
+  .guard_vector("tags", "WaveImageAnnotatorTag", tags)
+  .guard_vector("items", "WaveImageAnnotatorItem", items)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("image_height", "character", image_height)
+  .o <- list(image_annotator=list(
+    name=name,
+    image=image,
+    title=title,
+    tags=tags,
+    items=items,
+    trigger=trigger,
+    image_height=image_height))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
 #' Often this control is used when sharing who has access to a specific view or file.
 #'

@@ -6275,6 +6275,215 @@ class TextAnnotator:
         )
 
 
+class ImageAnnotatorTag:
+    """Create a tag.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            color: str,
+    ):
+        _guard_scalar('ImageAnnotatorTag.name', name, (str,), True, False, False)
+        _guard_scalar('ImageAnnotatorTag.label', label, (str,), False, False, False)
+        _guard_scalar('ImageAnnotatorTag.color', color, (str,), False, False, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.label = label
+        """Text to be displayed for this tag."""
+        self.color = color
+        """HEX or RGB color string used as background for highlighted phrases."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ImageAnnotatorTag.name', self.name, (str,), True, False, False)
+        _guard_scalar('ImageAnnotatorTag.label', self.label, (str,), False, False, False)
+        _guard_scalar('ImageAnnotatorTag.color', self.color, (str,), False, False, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageAnnotatorTag':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('ImageAnnotatorTag.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('ImageAnnotatorTag.label', __d_label, (str,), False, False, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('ImageAnnotatorTag.color', __d_color, (str,), False, False, False)
+        name: str = __d_name
+        label: str = __d_label
+        color: str = __d_color
+        return ImageAnnotatorTag(
+            name,
+            label,
+            color,
+        )
+
+
+class ImageAnnotatorItem:
+    """Create an annotator item with initial selected tags or no tag for plaintext.
+    """
+    def __init__(
+            self,
+            x_min: int,
+            x_max: int,
+            y_min: int,
+            y_max: int,
+            tag: str,
+    ):
+        _guard_scalar('ImageAnnotatorItem.x_min', x_min, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.x_max', x_max, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y_min', y_min, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y_max', y_max, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.tag', tag, (str,), False, False, False)
+        self.x_min = x_min
+        """Minimum X dimension."""
+        self.x_max = x_max
+        """Maximum X dimension."""
+        self.y_min = y_min
+        """Minimum Y dimension."""
+        self.y_max = y_max
+        """Maximum Y dimension."""
+        self.tag = tag
+        """Tag connected to the highlighted section."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ImageAnnotatorItem.x_min', self.x_min, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.x_max', self.x_max, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y_min', self.y_min, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y_max', self.y_max, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.tag', self.tag, (str,), False, False, False)
+        return _dump(
+            x_min=self.x_min,
+            x_max=self.x_max,
+            y_min=self.y_min,
+            y_max=self.y_max,
+            tag=self.tag,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageAnnotatorItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_x_min: Any = __d.get('x_min')
+        _guard_scalar('ImageAnnotatorItem.x_min', __d_x_min, (int,), False, False, False)
+        __d_x_max: Any = __d.get('x_max')
+        _guard_scalar('ImageAnnotatorItem.x_max', __d_x_max, (int,), False, False, False)
+        __d_y_min: Any = __d.get('y_min')
+        _guard_scalar('ImageAnnotatorItem.y_min', __d_y_min, (int,), False, False, False)
+        __d_y_max: Any = __d.get('y_max')
+        _guard_scalar('ImageAnnotatorItem.y_max', __d_y_max, (int,), False, False, False)
+        __d_tag: Any = __d.get('tag')
+        _guard_scalar('ImageAnnotatorItem.tag', __d_tag, (str,), False, False, False)
+        x_min: int = __d_x_min
+        x_max: int = __d_x_max
+        y_min: int = __d_y_min
+        y_max: int = __d_y_max
+        tag: str = __d_tag
+        return ImageAnnotatorItem(
+            x_min,
+            x_max,
+            y_min,
+            y_max,
+            tag,
+        )
+
+
+class ImageAnnotator:
+    """Create an image annotator component.
+
+    The image annotator component enables user to manually annotate parts of an image.
+    """
+    def __init__(
+            self,
+            name: str,
+            image: str,
+            title: str,
+            tags: List[ImageAnnotatorTag],
+            items: Optional[List[ImageAnnotatorItem]] = None,
+            trigger: Optional[bool] = None,
+            image_height: Optional[str] = None,
+    ):
+        _guard_scalar('ImageAnnotator.name', name, (str,), True, False, False)
+        _guard_scalar('ImageAnnotator.image', image, (str,), False, False, False)
+        _guard_scalar('ImageAnnotator.title', title, (str,), False, False, False)
+        _guard_vector('ImageAnnotator.tags', tags, (ImageAnnotatorTag,), False, False, False)
+        _guard_vector('ImageAnnotator.items', items, (ImageAnnotatorItem,), False, True, False)
+        _guard_scalar('ImageAnnotator.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('ImageAnnotator.image_height', image_height, (str,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.image = image
+        """The image to annotate."""
+        self.title = title
+        """The text annotator's title."""
+        self.tags = tags
+        """List of tags the user can annotate with."""
+        self.items = items
+        """Existing annotations if any."""
+        self.trigger = trigger
+        """True if the form should be submitted when the annotator value changes."""
+        self.image_height = image_height
+        """The card’s image height. Intrinsic image size is used by default."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ImageAnnotator.name', self.name, (str,), True, False, False)
+        _guard_scalar('ImageAnnotator.image', self.image, (str,), False, False, False)
+        _guard_scalar('ImageAnnotator.title', self.title, (str,), False, False, False)
+        _guard_vector('ImageAnnotator.tags', self.tags, (ImageAnnotatorTag,), False, False, False)
+        _guard_vector('ImageAnnotator.items', self.items, (ImageAnnotatorItem,), False, True, False)
+        _guard_scalar('ImageAnnotator.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('ImageAnnotator.image_height', self.image_height, (str,), False, True, False)
+        return _dump(
+            name=self.name,
+            image=self.image,
+            title=self.title,
+            tags=[__e.dump() for __e in self.tags],
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            trigger=self.trigger,
+            image_height=self.image_height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageAnnotator':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('ImageAnnotator.name', __d_name, (str,), True, False, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('ImageAnnotator.image', __d_image, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('ImageAnnotator.title', __d_title, (str,), False, False, False)
+        __d_tags: Any = __d.get('tags')
+        _guard_vector('ImageAnnotator.tags', __d_tags, (dict,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('ImageAnnotator.items', __d_items, (dict,), False, True, False)
+        __d_trigger: Any = __d.get('trigger')
+        _guard_scalar('ImageAnnotator.trigger', __d_trigger, (bool,), False, True, False)
+        __d_image_height: Any = __d.get('image_height')
+        _guard_scalar('ImageAnnotator.image_height', __d_image_height, (str,), False, True, False)
+        name: str = __d_name
+        image: str = __d_image
+        title: str = __d_title
+        tags: List[ImageAnnotatorTag] = [ImageAnnotatorTag.load(__e) for __e in __d_tags]
+        items: Optional[List[ImageAnnotatorItem]] = None if __d_items is None else [ImageAnnotatorItem.load(__e) for __e in __d_items]
+        trigger: Optional[bool] = __d_trigger
+        image_height: Optional[str] = __d_image_height
+        return ImageAnnotator(
+            name,
+            image,
+            title,
+            tags,
+            items,
+            trigger,
+            image_height,
+        )
+
+
 class Facepile:
     """A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
     Often this control is used when sharing who has access to a specific view or file.
@@ -6532,6 +6741,7 @@ class Component:
             image: Optional[Image] = None,
             persona: Optional[Persona] = None,
             text_annotator: Optional[TextAnnotator] = None,
+            image_annotator: Optional[ImageAnnotator] = None,
             facepile: Optional[Facepile] = None,
             copyable_text: Optional[CopyableText] = None,
             menu: Optional[Menu] = None,
@@ -6581,6 +6791,7 @@ class Component:
         _guard_scalar('Component.image', image, (Image,), False, True, False)
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
+        _guard_scalar('Component.image_annotator', image_annotator, (ImageAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
@@ -6672,7 +6883,9 @@ class Component:
         self.persona = persona
         """Persona."""
         self.text_annotator = text_annotator
-        """Annotator."""
+        """Text annotator."""
+        self.image_annotator = image_annotator
+        """Image annotator."""
         self.facepile = facepile
         """Facepile."""
         self.copyable_text = copyable_text
@@ -6728,6 +6941,7 @@ class Component:
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
+        _guard_scalar('Component.image_annotator', self.image_annotator, (ImageAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
@@ -6777,6 +6991,7 @@ class Component:
             image=None if self.image is None else self.image.dump(),
             persona=None if self.persona is None else self.persona.dump(),
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
+            image_annotator=None if self.image_annotator is None else self.image_annotator.dump(),
             facepile=None if self.facepile is None else self.facepile.dump(),
             copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
             menu=None if self.menu is None else self.menu.dump(),
@@ -6874,6 +7089,8 @@ class Component:
         _guard_scalar('Component.persona', __d_persona, (dict,), False, True, False)
         __d_text_annotator: Any = __d.get('text_annotator')
         _guard_scalar('Component.text_annotator', __d_text_annotator, (dict,), False, True, False)
+        __d_image_annotator: Any = __d.get('image_annotator')
+        _guard_scalar('Component.image_annotator', __d_image_annotator, (dict,), False, True, False)
         __d_facepile: Any = __d.get('facepile')
         _guard_scalar('Component.facepile', __d_facepile, (dict,), False, True, False)
         __d_copyable_text: Any = __d.get('copyable_text')
@@ -6926,6 +7143,7 @@ class Component:
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
+        image_annotator: Optional[ImageAnnotator] = None if __d_image_annotator is None else ImageAnnotator.load(__d_image_annotator)
         facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
         copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
         menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
@@ -6975,6 +7193,7 @@ class Component:
             image,
             persona,
             text_annotator,
+            image_annotator,
             facepile,
             copyable_text,
             menu,

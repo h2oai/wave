@@ -2340,6 +2340,89 @@ def text_annotator(
     ))
 
 
+def image_annotator_tag(
+        name: str,
+        label: str,
+        color: str,
+) -> ImageAnnotatorTag:
+    """Create a tag.
+
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed for this tag.
+        color: HEX or RGB color string used as background for highlighted phrases.
+    Returns:
+        A `h2o_wave.types.ImageAnnotatorTag` instance.
+    """
+    return ImageAnnotatorTag(
+        name,
+        label,
+        color,
+    )
+
+
+def image_annotator_item(
+        x_min: int,
+        x_max: int,
+        y_min: int,
+        y_max: int,
+        tag: str,
+) -> ImageAnnotatorItem:
+    """Create an annotator item with initial selected tags or no tag for plaintext.
+
+    Args:
+        x_min: Minimum X dimension.
+        x_max: Maximum X dimension.
+        y_min: Minimum Y dimension.
+        y_max: Maximum Y dimension.
+        tag: Tag connected to the highlighted section.
+    Returns:
+        A `h2o_wave.types.ImageAnnotatorItem` instance.
+    """
+    return ImageAnnotatorItem(
+        x_min,
+        x_max,
+        y_min,
+        y_max,
+        tag,
+    )
+
+
+def image_annotator(
+        name: str,
+        image: str,
+        title: str,
+        tags: List[ImageAnnotatorTag],
+        items: Optional[List[ImageAnnotatorItem]] = None,
+        trigger: Optional[bool] = None,
+        image_height: Optional[str] = None,
+) -> Component:
+    """Create an image annotator component.
+
+    The image annotator component enables user to manually annotate parts of an image.
+
+    Args:
+        name: An identifying name for this component.
+        image: The image to annotate.
+        title: The text annotator's title.
+        tags: List of tags the user can annotate with.
+        items: Existing annotations if any.
+        trigger: True if the form should be submitted when the annotator value changes.
+        image_height: The card’s image height. Intrinsic image size is used by default.
+    Returns:
+        A `h2o_wave.types.ImageAnnotator` instance.
+    """
+    return Component(image_annotator=ImageAnnotator(
+        name,
+        image,
+        title,
+        tags,
+        items,
+        trigger,
+        image_height,
+    ))
+
+
 def facepile(
         items: List[Component],
         name: Optional[str] = None,

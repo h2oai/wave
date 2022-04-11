@@ -230,6 +230,27 @@
     ],
     "description": "Create a minimal Wave Image."
   },
+  "Wave ImageAnnotatorTag": {
+    "prefix": "w_image_annotator_tag",
+    "body": [
+      "ui.image_annotator_tag(name='$1', label='$2', color='$3'),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorTag."
+  },
+  "Wave ImageAnnotatorItem": {
+    "prefix": "w_image_annotator_item",
+    "body": [
+      "ui.image_annotator_item(x_min=${1:None}, x_max=${2:None}, y_min=${3:None}, y_max=${4:None}, tag='$5'),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorItem."
+  },
+  "Wave ImageAnnotator": {
+    "prefix": "w_image_annotator",
+    "body": [
+      "ui.image_annotator(name='$1', image='$2', title='$3', tags=[\n\t\t$4\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotator."
+  },
   "Wave Label": {
     "prefix": "w_label",
     "body": [
@@ -1052,7 +1073,7 @@
   "Wave Full Component": {
     "prefix": "w_full_component",
     "body": [
-      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, facepile=$45, copyable_text=$46, menu=$47, tags=$48),$0"
+      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, image_annotator=$45, facepile=$46, copyable_text=$47, menu=$48, tags=$49),$0"
     ],
     "description": "Create a full Wave Component."
   },
@@ -1125,6 +1146,27 @@
       "ui.image(title='$1', type='$2', image='$3', path='$4', width='$5', visible=${6:true}),$0"
     ],
     "description": "Create a full Wave Image."
+  },
+  "Wave Full ImageAnnotatorTag": {
+    "prefix": "w_full_image_annotator_tag",
+    "body": [
+      "ui.image_annotator_tag(name='$1', label='$2', color='$3'),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorTag."
+  },
+  "Wave Full ImageAnnotatorItem": {
+    "prefix": "w_full_image_annotator_item",
+    "body": [
+      "ui.image_annotator_item(x_min=${1:None}, x_max=${2:None}, y_min=${3:None}, y_max=${4:None}, tag='$5'),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorItem."
+  },
+  "Wave Full ImageAnnotator": {
+    "prefix": "w_full_image_annotator",
+    "body": [
+      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotator."
   },
   "Wave Full Label": {
     "prefix": "w_full_label",

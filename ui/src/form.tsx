@@ -51,6 +51,7 @@ import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
 import { TextAnnotator, XTextAnnotator } from './text_annotator'
+import { ImageAnnotator, XImageAnnotator } from './image_annotator'
 import { clas, cssVar, justifications, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
@@ -147,8 +148,10 @@ export interface Component {
   image?: Image
   /** Persona. */
   persona?: Persona
-  /** Annotator. */
+  /** Text annotator. */
   text_annotator?: TextAnnotator
+  /** Image annotator. */
+  image_annotator?: ImageAnnotator
   /** Facepile. */
   facepile?: Facepile
   /** Copyable text. */
@@ -284,6 +287,7 @@ const
     if (m.image) return <XImage model={m.image} />
     if (m.persona) return <XPersona model={m.persona} />
     if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
+    if (m.image_annotator) return <XImageAnnotator model={m.image_annotator} />
     if (m.mini_button) return <XMiniButton model={m.mini_button} />
     if (m.mini_buttons) return <XMiniButtons model={m.mini_buttons} />
     if (m.facepile) return <XFacepile model={m.facepile} />
