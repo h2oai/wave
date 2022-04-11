@@ -1,0 +1,10 @@
+[App]
+Name = "ai.h2o.wave.tour"
+Version = "{{VERSION}}"
+Title = "H2O Wave Tour"
+Description = "Visual and code examples of what's possible with H2O Wave."
+Tags = ["APP_DEV"]
+LongDescription = "about.md"
+
+[Runtime]
+Module = "examples.tour"

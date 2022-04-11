@@ -37,6 +37,17 @@ build-ide: ## Build IDE
 	rm -rf ui/build/_ide
 	mv ide/dist ui/build/_ide
 
+build-apps: ## Prepare apps for HAC upload.
+	mkdir -p build py/tmp
+	cp -r py/apps/ py/tmp/
+	find py/tmp -type f -name '*.toml' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
+	find py/tmp -type f -name 'requirements.txt' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
+	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	rsync -a py/demo py/tmp/dashboards --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	cd py/tmp && zip -r ../../build/tour.wave tour -x "*.idea*" "*__pycache__*" "*.mypy_cache*"
+	cd py/tmp && zip -r ../../build/dashboards.wave dashboards -x "*.idea*" "*__pycache__*" "*.mypy_cache*"
+	rm -rf py/tmp
+
 generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
 
