@@ -6,9 +6,10 @@ import { wave } from './ui'
 const
   name = 'textAnnotator',
   items = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }],
-  annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
   getSelectionMock = jest.fn(),
   pushMock = jest.fn()
+
+let annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items }
 
 describe('TextAnnotator.tsx', () => {
   beforeAll(() => {
@@ -92,5 +93,71 @@ describe('TextAnnotator.tsx', () => {
     const mark2 = getByText('Pretty')
     fireEvent.mouseOver(mark2)
     expect(removeIcon).toBeVisible()
+  })
+
+  describe('readonly', () => {
+    beforeEach(() => {
+      annotatorProps = {
+        ...annotatorProps,
+        readonly: true
+      }
+    })
+
+    it('Does not change args on remove', () => {
+      const { container } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.mouseUp(container.querySelector('i')!)
+      expect(wave.args[name]).toMatchObject(items)
+    })
+
+    it('Does not change args on annotate', () => {
+      const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('Hello'))
+      fireEvent.mouseUp(getByText('there'))
+
+      expect(wave.args[name]).toMatchObject(items)
+    })
+
+    it('Does not remove browser text selection highlight after annotate', () => {
+      const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('Hello'))
+      fireEvent.mouseUp(getByText('there'))
+
+      expect(getSelectionMock).not.toHaveBeenCalled()
+    })
+
+    it('Does not call sync on remove if trigger specified', () => {
+      const { container } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
+
+      fireEvent.mouseUp(container.querySelector('i')!)
+      expect(pushMock).not.toHaveBeenCalled()
+    })
+
+    it('Does not call sync on annotate if trigger specified', () => {
+      const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
+
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('Hello'))
+      fireEvent.mouseUp(getByText('there'))
+
+      expect(pushMock).not.toHaveBeenCalled()
+    })
+
+    it('Does not show remove icon on hover', () => {
+      const { container, getByText } = render(<XTextAnnotator model={annotatorProps} />)
+
+      const removeIcon = container.querySelector('i')
+      expect(removeIcon).not.toBeVisible()
+      fireEvent.mouseOver(getByText('good'))
+      expect(removeIcon).not.toBeVisible()
+      fireEvent.mouseOut(getByText('good'))
+      expect(removeIcon).not.toBeVisible()
+      fireEvent.mouseOver(getByText('Pretty'))
+      expect(removeIcon).not.toBeVisible()
+    })
   })
 })
