@@ -39,7 +39,7 @@ export interface TextAnnotator {
   items: TextAnnotatorItem[]
   /** True if the form should be submitted when the annotator value changes. */
   trigger?: B
-  /** True to prevent user interaction with annotator component. */
+  /** True to prevent user interaction with the annotator component. */
   readonly?: B
 }
 
