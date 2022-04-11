@@ -137,6 +137,9 @@ publish-release-s3:
 	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 	aws s3 sync py/dist/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.whl"
 
+publish-apps-s3:
+	aws s3 sync build $(HAC_S3_BUCKET) --exclude "*" --include "*.wave"
+
 release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)
