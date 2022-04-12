@@ -110,7 +110,7 @@ export const
         multiSelect={isMultiValued}
         selectedKey={isMultiValued ? selected.map(s => s.key as S) : undefined}
         text={isMultiValued ? undefined : text}
-        allowFreeform={allowFreeform}
+        allowFreeform
         disabled={m.disabled}
         autoComplete="on"
         errorMessage={m.error}
