@@ -39,7 +39,7 @@ export interface Combobox {
   placeholder?: S
   /** The name of the selected choice. */
   value?: S
-  /** The names of the selected choices. */
+  /** The names of the selected choices. If set, multiple selections will be allowed. */
   values?: S[]
   /** The choices to be presented. */
   choices?: S[]
