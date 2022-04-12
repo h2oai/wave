@@ -10,8 +10,10 @@ import h2o
 from h2o_wave import Q, app, main, ui
 from loguru import logger
 
+# This example requires H2O-3 to be running.
 
-@app("/")
+
+@app("/demo")
 async def serve(q: Q):
     logger.info(q.args)
     logger.info(q.events)
@@ -20,9 +22,17 @@ async def serve(q: Q):
         # This is called the first time our app runs
         # Variables created here will be the same of all users of the app
         # Save a direct link to our H2O Dataframe for all users to use throughout the app
-        h2o.connect(url="http://127.0.0.1:54321")
+        try:
+            h2o.connect(url="http://127.0.0.1:54321")
+        except:
+            q.page['err'] = ui.form_card(box='1 1 4 2', items=[
+                ui.message_bar(type='error', text='Could not connect to H2O3. Please ensure H2O3 is running.'),
+            ])
+            await q.page.save()
+            logger.error("H2O-3 is not running")
+            return
         q.app.h2o_df = h2o.get_frame("py_6_sid_aff3")
-        
+
         # EXAMPLE OF CREATING A LARGE DATAFRAME
         # h2o_df = h2o.create_frame(
         #     rows=1000000,
@@ -35,7 +45,7 @@ async def serve(q: Q):
         #     missing_fraction=0,
         #     seed=1234,
         # )
-        
+
         q.app.rows_per_page = 10  # TODO: How many rows do you want to show users at a time
 
         # A list of booleans for if a column is sortable or not, by default
@@ -69,7 +79,7 @@ async def serve(q: Q):
         # Create the default UI for this user
         q.page["meta"] = ui.meta_card(box="")
         q.page["table_card"] = ui.form_card(
-            box="1 1 -1 -1", 
+            box="1 1 -1 -1",
             items=[
                 ui.table(
                     name="h2o_table",  # TODO: if you change this, you need to remember to update the serve function
@@ -155,7 +165,7 @@ def get_table_rows(q: Q):
 
     # Bring our limited UI rows locally to pandas to prepare for our ui.table
     local_df = working_frame[
-        q.client.page_offset : q.client.page_offset + q.app.rows_per_page, :
+        q.client.page_offset:q.client.page_offset + q.app.rows_per_page, :
     ].as_data_frame()
     q.client.total_rows = len(working_frame)
 

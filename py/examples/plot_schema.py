@@ -6,7 +6,7 @@ from h2o_wave import site, data, ui
 page = site['/demo']
 
 page.add('example', ui.plot_card(
-    box='1 1 4 5',
+    box='1 1 6 5',
     title='Box plot',
     data=data(
         fields=['region', 'low', 'q1', 'q2', 'q3', 'high'],
