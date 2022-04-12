@@ -44,8 +44,10 @@ build-apps: ## Prepare apps for HAC upload.
 	find py/tmp -type f -name 'requirements.txt' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/demo py/tmp/dashboards --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	cd py/tmp && zip -r ../../build/tour.wave tour -x "*.idea*" "*__pycache__*" "*.mypy_cache*"
-	cd py/tmp && zip -r ../../build/dashboards.wave dashboards -x "*.idea*" "*__pycache__*" "*.mypy_cache*"
+	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	cd py/tmp && zip -r ../../build/tour.wave tour
+	cd py/tmp && zip -r ../../build/dashboards.wave dashboards
+	cd py/tmp && zip -r ../../build/theme-generator.wave theme-generator
 	rm -rf py/tmp
 
 generator: ## Build driver generator
