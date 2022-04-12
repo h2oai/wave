@@ -10,3 +10,4 @@ vega-datasets
 scikit-learn
 opencv-python
 h2o_wave[ml]
+loguru 
