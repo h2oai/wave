@@ -3,7 +3,6 @@ altair
 bokeh
 h2o_wave[ml]
 loguru
-loguru 
 matplotlib
 numpy
 opencv-python
