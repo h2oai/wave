@@ -21,6 +21,7 @@ async def serve(q: Q):
             ui.text(f'primary_caption_disabled_button={q.args.primary_caption_disabled_button}'),
             ui.text(f'button_with_icon={q.args.button_with_icon}'),
             ui.text(f'icon_button={q.args.icon_button}'),
+            ui.text(f'external_path_button={q.args.external_path_button}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
@@ -39,5 +40,6 @@ async def serve(q: Q):
                       primary=True, disabled=True),
             ui.button(name='button_with_icon', label='Button with an icon', icon='Search'),
             ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
+            ui.button(name='external_path_button', label='External', path='https://h2o.ai/'),
         ])
     await q.page.save()

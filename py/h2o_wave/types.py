@@ -2564,6 +2564,7 @@ class Button:
             width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            path: Optional[str] = None,
     ):
         _guard_scalar('Button.name', name, (str,), True, False, False)
         _guard_scalar('Button.label', label, (str,), False, True, False)
@@ -2576,6 +2577,7 @@ class Button:
         _guard_scalar('Button.width', width, (str,), False, True, False)
         _guard_scalar('Button.visible', visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', tooltip, (str,), False, True, False)
+        _guard_scalar('Button.path', path, (str,), False, True, False)
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
         self.label = label
@@ -2598,6 +2600,8 @@ class Button:
         """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.path = path
+        """The path or URL to link to."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2612,6 +2616,7 @@ class Button:
         _guard_scalar('Button.width', self.width, (str,), False, True, False)
         _guard_scalar('Button.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_scalar('Button.path', self.path, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -2624,6 +2629,7 @@ class Button:
             width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
+            path=self.path,
         )
 
     @staticmethod
@@ -2651,6 +2657,8 @@ class Button:
         _guard_scalar('Button.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Button.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Button.path', __d_path, (str,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
@@ -2662,6 +2670,7 @@ class Button:
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        path: Optional[str] = __d_path
         return Button(
             name,
             label,
@@ -2674,6 +2683,7 @@ class Button:
             width,
             visible,
             tooltip,
+            path,
         )
 
 

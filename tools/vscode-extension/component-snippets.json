@@ -891,7 +891,7 @@
   "Wave Full Button": {
     "prefix": "w_full_button",
     "body": [
-      "ui.button(name='$1', label='$2', caption='$3', value='$4', primary=${5:False}, disabled=${6:False}, link=${7:False}, icon='$8', width='$9', visible=${10:True}, tooltip='$11'),$0"
+      "ui.button(name='$1', label='$2', caption='$3', value='$4', primary=${5:False}, disabled=${6:False}, link=${7:False}, icon='$8', width='$9', visible=${10:True}, tooltip='$11', path='$12'),$0"
     ],
     "description": "Create a full Wave Button."
   },

@@ -988,6 +988,7 @@ def button(
         width: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        path: Optional[str] = None,
 ) -> Component:
     """Create a button.
 
@@ -1018,6 +1019,7 @@ def button(
         width: The width of the button, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        path: The path or URL to link to.
     Returns:
         A `h2o_wave.types.Button` instance.
     """
@@ -1033,6 +1035,7 @@ def button(
         width,
         visible,
         tooltip,
+        path,
     ))
 
 
