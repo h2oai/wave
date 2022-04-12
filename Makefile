@@ -38,16 +38,16 @@ build-ide: ## Build IDE
 	mv ide/dist ui/build/_ide
 
 build-apps: ## Prepare apps for HAC upload.
-	mkdir -p build py/tmp
+	mkdir -p build/wave-dashboard build/wave-theme-generator build/wave-tour py/tmp
 	cp -r py/apps/ py/tmp/
 	find py/tmp -type f -name '*.toml' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	find py/tmp -type f -name 'requirements.txt' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	rsync -a py/demo py/tmp/dashboards --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	cd py/tmp && zip -r ../../build/tour.wave tour
-	cd py/tmp && zip -r ../../build/dashboards.wave dashboards
-	cd py/tmp && zip -r ../../build/theme-generator.wave theme-generator
+	cd py/tmp && zip -r ../../build/wave-tour/tour.wave tour
+	cd py/tmp && zip -r ../../build/wave-dashboard/dashboard.wave dashboard
+	cd py/tmp && zip -r ../../build/wave-theme-generator/theme-generator.wave theme-generator
 	rm -rf py/tmp
 
 generator: ## Build driver generator
@@ -140,7 +140,9 @@ publish-release-s3:
 	aws s3 sync py/dist/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.whl"
 
 publish-apps-s3:
-	aws s3 sync build $(HAC_S3_BUCKET) --exclude "*" --include "*.wave"
+	aws s3 sync build/wave-dashboard $(MC_S3_BUCKET)/wave-dashboard
+	aws s3 sync build/wave-theme-generator $(MC_S3_BUCKET)/wave-theme-generator
+	aws s3 sync build/wave-tour $(MC_S3_BUCKET)/wave-tour
 
 release-os:
 	rm -rf build/$(REL)

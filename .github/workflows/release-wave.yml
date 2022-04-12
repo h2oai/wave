@@ -167,9 +167,9 @@ jobs:
           ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
           ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
-      - name: Publish apps
-        run: |
-          make build-apps
-          make publish-apps-s3
+      - name: Publish apps for Managed Cloud
+        run: make build-apps publish-apps-s3
         env:
-          HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
+          MC_S3_BUCKET : ${{ secrets.MC_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY : ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
