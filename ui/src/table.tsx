@@ -310,10 +310,14 @@ const
 
         if (isMenuClicked) onColumnContextMenu(column, e)
         else if (column.isSortable) {
-          const sortAsc = column.iconName === 'SortDown'
+          const sortAsc = column.iconName === 'SortDown' || !column.iconName
           sort(column, sortAsc)
           setColumns(columns.map(col => {
-            if (column.key === col.key) col.iconName = sortAsc ? 'SortUp' : 'SortDown'
+            if (column.key === col.key) {
+              col.iconName = sortAsc ? 'SortUp' : 'SortDown'
+            } else {
+              col.iconName = undefined
+            }
             return col
           }))
         }
@@ -338,7 +342,6 @@ const
           maxWidth,
           headerClassName: c.sortable ? css.sortableHeader : undefined,
           iconClassName: c.sortable ? css.sortingIcon : undefined,
-          iconName: c.sortable ? 'SortDown' : undefined,
           onColumnClick,
           columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
           cellType: c.cell_type,
@@ -496,7 +499,7 @@ const
     React.useImperativeHandle(ref, () => ({
       resetSortIcons: () => {
         setColumns(columns.map(col => {
-          if (col.iconName) col.iconName = 'SortDown'
+          if (col.iconName) col.iconName = undefined
           return col
         }))
       }
