@@ -74,7 +74,7 @@ export const
           return found ? [...acc, found] : acc
         }, []),
       [selected, setSelected] = React.useState(getInitialSelected()),
-      onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: S) => {
+      onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: U, value?: S) => {
         let selected = option?.selected
         const v = option?.text || value || ''
         
