@@ -885,6 +885,7 @@ ui_dropdown <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
+#' @param required True if this is a required field.
 #' @return A Combobox instance.
 #' @export
 ui_combobox <- function(
@@ -898,7 +899,8 @@ ui_combobox <- function(
   width = NULL,
   visible = NULL,
   tooltip = NULL,
-  trigger = NULL) {
+  trigger = NULL,
+  required = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -910,6 +912,7 @@ ui_combobox <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("required", "logical", required)
   .o <- list(combobox=list(
     name=name,
     label=label,
@@ -921,7 +924,8 @@ ui_combobox <- function(
     width=width,
     visible=visible,
     tooltip=tooltip,
-    trigger=trigger))
+    trigger=trigger,
+    required=required))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
