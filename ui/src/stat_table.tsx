@@ -43,6 +43,8 @@ export interface StatTableItem {
   label: S
   /** The values displayed in the row. */
   values: S[]
+  /** List of font colors used for each value in values ordered respectively. Defaults to theme text color if not specified. */
+  value_colors?: S[]
   /** An optional name for this row (required only if this row is clickable). */
   name?: S
   /** The caption for the metric, displayed below the label. */
@@ -135,10 +137,10 @@ export const
           header = columns.map((label, i) => (
             <th key={`${i}:${label}`}>{label}</th>
           )),
-          rows = items.map(({ name: rowName, label, values, caption, icon, icon_color }, i) => {
+          rows = items.map(({ name: rowName, label, values, caption, icon, icon_color, value_colors: colors }, i) => {
             const
               onClick = rowName ? () => jump(tableName, rowName) : undefined,
-              cells = values.map((value, j) => (<td key={`${j}:${value}`}>{value}</td>))
+              cells = values.map((value, j) => (<td key={`${j}:${value}`} style={colors && colors[j] ? { color: colors[j] } : undefined }>{value}</td>))
 
             return (
               <tr key={rowName ?? `${i}:${label}`} className={onClick ? css.clickable : undefined} onClick={onClick}>

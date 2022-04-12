@@ -4444,6 +4444,7 @@ ui_stat_list_card <- function(
 #'
 #' @param label The label for the row.
 #' @param values The values displayed in the row.
+#' @param value_colors List of font colors used for each value in values ordered respectively. Defaults to theme text color if not specified.
 #' @param name An optional name for this row (required only if this row is clickable).
 #' @param caption The caption for the metric, displayed below the label.
 #' @param icon An optional icon, displayed next to the label.
@@ -4453,12 +4454,14 @@ ui_stat_list_card <- function(
 ui_stat_table_item <- function(
   label,
   values,
+  value_colors = NULL,
   name = NULL,
   caption = NULL,
   icon = NULL,
   icon_color = NULL) {
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
+  .guard_vector("value_colors", "character", value_colors)
   .guard_scalar("name", "character", name)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
@@ -4466,6 +4469,7 @@ ui_stat_table_item <- function(
   .o <- list(
     label=label,
     values=values,
+    value_colors=value_colors,
     name=name,
     caption=caption,
     icon=icon,

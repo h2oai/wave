@@ -3827,6 +3827,7 @@ def stat_list_card(
 def stat_table_item(
         label: str,
         values: List[str],
+        value_colors: Optional[List[str]] = None,
         name: Optional[str] = None,
         caption: Optional[str] = None,
         icon: Optional[str] = None,
@@ -3837,6 +3838,7 @@ def stat_table_item(
     Args:
         label: The label for the row.
         values: The values displayed in the row.
+        value_colors: List of font colors used for each value in values ordered respectively. Defaults to theme text color if not specified.
         name: An optional name for this row (required only if this row is clickable).
         caption: The caption for the metric, displayed below the label.
         icon: An optional icon, displayed next to the label.
@@ -3847,6 +3849,7 @@ def stat_table_item(
     return StatTableItem(
         label,
         values,
+        value_colors,
         name,
         caption,
         icon,

@@ -2010,13 +2010,14 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_stat_table_item" value="ui.stat_table_item(label='$label$',name='$name$',caption='$caption$',icon='$icon$',icon_color='$icon_color$',values=[&#10;	$values$	&#10;]),$END$" description="Create Wave StatTableItem with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_stat_table_item" value="ui.stat_table_item(label='$label$',name='$name$',caption='$caption$',icon='$icon$',icon_color='$icon_color$',values=[&#10;	$values$	&#10;],value_colors=[&#10;	$value_colors$	&#10;]),$END$" description="Create Wave StatTableItem with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="values" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="value_colors" expression="" defaultValue="&quot;theme text color if not specified&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
