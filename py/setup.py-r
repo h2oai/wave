@@ -25,7 +25,8 @@ with open('README.md', 'r') as readme_markdown:
 
 platform = os.getenv('OS', 'darwin')
 version = os.getenv('VERSION', 'DEV')
-base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-amd64')
+arch = os.getenv('ARCH', 'amd64')
+base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-{arch}')
 
 
 def get_data_files():
@@ -69,13 +70,12 @@ setuptools.setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: System :: Distributed Computing',
     ],
-    python_requires='>=3.6.1',
+    python_requires='>=3.7.1',
     install_requires=[
-        'certifi',  # Workaround for urllib.error.URLError SSL: CERTIFICATE_VERIFY_FAILED on OSX
         'Click',
         'httpx==0.16.1',
         'starlette==0.13.8',
-        'uvicorn==0.12.2',
+        'uvicorn==0.17.6',
     ],
     entry_points=dict(
         console_scripts=["wave = h2o_wave.cli:main"]
