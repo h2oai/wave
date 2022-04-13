@@ -1,0 +1,28 @@
+name: Publish Conda
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'
+        required: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: "${{ github.event.inputs.version }}"
+
+jobs:
+  release:
+    name: Release Wave
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Publish to Conda
+        uses: amauryval/publish_conda_package_action@1.1.0
+        with:
+          CondaDir: 'py/conda'
+          CondaUsername: ${{ secrets.CONDA_USERNAME }}
+          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
