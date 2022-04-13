@@ -23,6 +23,10 @@ The above snippet makes the app log a warning every time it is accessed. This is
 2010-12-12 11:41:42,612 WARNING All your base are belong to us
 ```
 
+:::tip
+To better see your log messages, you might want to turn off Wave server logging by setting the `H2O_WAVE_NO_LOG` environment variable to `1`.
+:::
+
 :::info
 See [Python's logging module](https://docs.python.org/3/howto/logging.html) for more information.
 :::
