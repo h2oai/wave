@@ -219,11 +219,11 @@ const
           disabled={disabled}
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
-          value={textValue || ''} />
+          value={textValue || placeholder || ';'} />
         <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={cancelDialog} minWidth={600} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.Label>Search</Fluent.Label>
-            <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} placeholder={placeholder} autoFocus />
+            <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
             {
               isMultivalued && (
                 <div className={clas('wave-s14', css.dialogControls)}>
