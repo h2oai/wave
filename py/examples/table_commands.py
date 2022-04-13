@@ -7,63 +7,58 @@ from faker import Faker
 
 fake = Faker()
 
-_id = 0
-
 
 class TableRow:
+    _id = 0
+
     def __init__(self):
-        global _id
-        _id += 1
-        self.id = f'row_{_id}'
+        TableRow._id += 1
+        self.id = f'row_{TableRow._id}'
         self.name = f'{fake.first_name()} {fake.last_name()}'
         self.details = fake.sentence()
 
 
-rows = [TableRow() for _ in range(50)]
-
-commands = [
-    ui.command(name='details', label='Details'),
-    ui.command(name='delete', label='Delete'),
-]
-
-
-@app('/demo')
-async def serve(q: Q):
-    if q.args.delete:
-        await delete_row(q)
-    elif q.args.details:
-        await show_details(q)
-    else:
-        await show_table(q)
-
-
-async def delete_row(q):
-    global rows
-    rows = [TableRow() for row in rows if str(row.id) != q.args.delete]
-    q.page['example'].items[0].table.rows = [ui.table_row(
-        name=str(row.name), cells=[str(row.name)]) for row in rows]
-    await show_table(q)
-
-
-async def show_table(q):
+def show_table(q) -> None:
     q.page['example'] = ui.form_card(box='1 1 4 -1', items=[
         ui.table(
             name='table',
             columns=[
                 ui.table_column(name='name', label='Name'),
-                ui.table_column(name='actions', label='Actions',
-                                cell_type=ui.command_table_cell_type(name='commands', items=commands))],
-            rows=[ui.table_row(name=str(row.id), cells=[str(row.name)]) for row in rows]
+                ui.table_column(
+                    name='actions', label='Actions',
+                    cell_type=ui.command_table_cell_type(name='commands', items=[
+                        ui.command(name='details', label='Details'),
+                        ui.command(name='delete', label='Delete'),
+                    ])
+                )
+            ],
+            rows=[ui.table_row(name=r.id, cells=[r.name]) for r in q.client.rows]
         )
     ])
+
+
+@app('/demo')
+async def serve(q: Q):
+    if not q.app.initialized:
+        q.app.rows = [TableRow() for _ in range(3)]
+        q.app.initialized = True
+    if not q.client.initialized:
+        q.client.rows = q.app.rows
+        show_table(q)
+        q.client.initialized = True
+
+    if q.args.delete:
+        q.client.rows = [row for row in q.client.rows if row.id != q.args.delete]
+        q.page['example'].items[0].table.rows = [ui.table_row(name=r.id, cells=[r.name]) for r in q.client.rows]
+    if q.args.details:
+        for row in q.client.rows:
+            if row.id == q.args.details:
+                q.page['example'] = ui.form_card(box='1 1 4 4', items=[
+                    ui.text(name='details', content=row.details),
+                    ui.button(name='back', label='Back')
+                ])
+                break
+    if q.args.back:
+        show_table(q)
+
     await q.page.save()
-
-
-async def show_details(q):
-    for row in rows:
-        if str(row.id) == q.args.details:
-            q.page['example'] = ui.form_card(box='1 1 4 4', items=[
-                ui.text(name='details', content=row.details),
-                ui.button(name='back', label='Back')
-            ])
-            await q.page.save()
