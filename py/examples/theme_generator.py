@@ -4,7 +4,6 @@
 # ---
 from typing import Tuple
 from h2o_wave import main, app, Q, ui, data
-from .synth import FakeCategoricalSeries
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
@@ -80,7 +79,6 @@ ui.theme(
 async def serve(q: Q):
     if not q.client.initialized:
         image = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&h=750&w=1260'
-        f = FakeCategoricalSeries()
         q.client.primary = '#000000'
         q.client.page = '#e2e2e2'
         q.client.card = '#ffffff'
@@ -166,8 +164,14 @@ async def serve(q: Q):
                 ),
                 ui.visualization(
                     width='50%',
-                    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
-                    data=data(fields='product price', rows=[(c, x) for c, x, _ in [f.next() for _ in range(20)]], pack=True),
+                    data=data('profession salary', 5, rows=[
+                        ('medicine', 23000),
+                        ('fire fighting', 18000),
+                        ('pedagogy', 24000),
+                        ('psychology', 22500),
+                        ('computer science', 36000),
+                    ], pack=True),
+                    plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)])
                 ),
             ]),
             ui.buttons([

@@ -37,6 +37,19 @@ build-ide: ## Build IDE
 	rm -rf ui/build/_ide
 	mv ide/dist ui/build/_ide
 
+build-apps: ## Prepare apps for HAC upload.
+	mkdir -p py/tmp
+	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
+	cp -r py/apps/ py/tmp/
+	find py/tmp -type f -name '*.toml' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
+	find py/tmp -type f -name 'requirements.txt' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
+	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	find py/tmp -type f -name '*.py' -exec sed -i '' -e "s#^@app\(.*\)#@app('/')#g" {} \;
+	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`.wave * && cd -; done
+	rm -rf py/tmp
+
 generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
 
@@ -125,6 +138,9 @@ release-nightly: build-ui ## Prepare nightly release builds.
 publish-release-s3:
 	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 	aws s3 sync py/dist/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.whl"
+
+publish-apps-s3:
+	for app in build/apps/*; do aws s3 sync $$app $(MC_S3_BUCKET)/`basename $$app`; done
 
 release-os:
 	rm -rf build/$(REL)

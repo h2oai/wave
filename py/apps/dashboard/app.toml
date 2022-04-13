@@ -1,0 +1,15 @@
+[App]
+Name = "ai.h2o.wave.dashboard"
+Version = "{{VERSION}}"
+Title = "H2O Wave Dashboards"
+Description = "Visual examples of what's possible with H2O Wave."
+Tags = ["APP_DEV"]
+Keywords = ["demo"]
+LongDescription = "about.md"
+
+[Runtime]
+Module = "demo.app"
+
+[[Env]]
+Name = "TRACKER_ID"
+Value = "G-9R4KN4H9Q0"

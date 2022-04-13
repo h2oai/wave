@@ -1,0 +1,10 @@
+[App]
+Name = "ai.h2o.wave.theme-generator"
+Version = "{{VERSION}}"
+Title = "Theme Generator"
+Description = "Create custom color themes for your apps!"
+Tags = ["H2O_Tools"]
+LongDescription = "about.md"
+
+[Runtime]
+Module = "theme_generator"
