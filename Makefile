@@ -46,6 +46,7 @@ build-apps: ## Prepare apps for HAC upload.
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	find py/tmp -type f -name '*.py' -exec sed -i '' -e "s#^@app\(.*\)#@app('/')#g" {} \;
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`.wave * && cd -; done
 	rm -rf py/tmp
 
