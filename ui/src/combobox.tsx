@@ -53,7 +53,7 @@ export interface Combobox {
   tooltip?: S
   /** True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes. */
   trigger?: B
-  /** True if this is a required field. */
+  /** True if this is a required field. Defaults to false. */
   required?: B
 }
 
