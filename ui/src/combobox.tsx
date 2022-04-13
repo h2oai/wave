@@ -64,7 +64,6 @@ let newId = 1
 export const
   XCombobox = ({ model: m }: { model: Combobox }) => {
     const
-      allowFreeform = true,
       isMultiValued = !!m.values,
       [text, setText] = React.useState(m.value),
       [options, setOptions] = React.useState((m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: `${newId++}`, text }))),
@@ -78,7 +77,7 @@ export const
         let selected = option?.selected
         const v = option?.text || value || ''
         
-        if (allowFreeform && !option && value) {
+        if (!option && value) {
           selected = true
           option = { key: `${newId++}`, text: value }
           setOptions((prevOptions = []) => [...prevOptions, option!])
@@ -110,7 +109,7 @@ export const
         multiSelect={isMultiValued}
         selectedKey={isMultiValued ? selected.map(s => s.key as S) : undefined}
         text={isMultiValued ? undefined : text}
-        allowFreeform
+        allowFreeform={true}
         disabled={m.disabled}
         autoComplete="on"
         errorMessage={m.error}
