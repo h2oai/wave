@@ -26,7 +26,7 @@ import { wave } from './ui'
 export interface FileUpload {
   /** An identifying name for this component. */
   name: Id
-  /** Text to be displayed in the bottom button. Defaults to "Upload". */
+  /** Text to be displayed in the bottom button (or as a component title when the component is displayed compactly). Defaults to "Upload". */
   label?: S
   /** True if the component should allow multiple files to be uploaded. */
   multiple?: B
@@ -113,15 +113,18 @@ export const
       maxFileSizeBytes = max_file_size ? convertMegabytesToBytes(max_file_size) : 0,
       maxSizeBytes = max_size ? convertMegabytesToBytes(max_size) : 0,
       fileExtensions = file_extensions ? file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
+      xhrRef = React.useRef<XMLHttpRequest>(),
       upload = async (uploadFiles = files) => {
         const formData = new FormData()
         uploadFiles.forEach((f: File) => formData.append('files', f))
 
         try {
           const { responseText } = await new Promise<XMLHttpRequest>((resolve, reject) => {
-            const xhr = new XMLHttpRequest()
+            const xhr = xhrRef.current = new XMLHttpRequest()
             xhr.open("POST", wave.uploadURL)
-            xhr.upload.onprogress = e => setPercentComplete(e.loaded / e.total)
+            xhr.upload.onprogress = e => {
+              setPercentComplete(e.loaded / e.total)
+            }
             xhr.send(formData)
             xhr.onreadystatechange = () => {
               if (xhr.readyState !== XMLHttpRequest.DONE) return
@@ -215,6 +218,10 @@ export const
         setSuccessMsg('')
         setPercentComplete(0)
       },
+      onUploadCancel = () => {
+        xhrRef.current?.abort()
+        setPercentComplete(0)
+      },
       removeFile = (index: U) => () => {
         files.splice(index, 1)
         setFiles([...files])
@@ -248,12 +255,15 @@ export const
           <Fluent.Text styles={{ root: { pointerEvents: 'none' } }}>Drop files anywhere within the box.</Fluent.Text>
         )
         else if (percentComplete) return (
-          <Fluent.ProgressIndicator
-            styles={{ root: { width: '80%' } }}
-            data-test='progress' // TODO: Does not work.
-            description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`}
-            percentComplete={percentComplete}
-          />
+          <>
+            <Fluent.ProgressIndicator
+              styles={{ root: { width: '80%' } }}
+              data-test='progress' // TODO: Does not work.
+              description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`}
+              percentComplete={percentComplete}
+            />
+            <Fluent.DefaultButton styles={{ root: { marginTop: 12 } }} text={'Cancel'} onClick={() => onUploadCancel()} />
+          </>
         )
         else if (files.length) return (
           <>
@@ -294,16 +304,28 @@ export const
       },
       getCompactFileUpload = () => (
         <>
-          {label && <Fluent.Label>{label}</Fluent.Label>}
           {
             percentComplete
-              ? <Fluent.ProgressIndicator description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`} percentComplete={percentComplete} />
-              : (
-                <div className={css.compact}>
-                  <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} />
-                  <input id={name} data-test={name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={multiple} />
-                  <label htmlFor={name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
+              ? (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Fluent.ProgressIndicator
+                    label={label ? <Fluent.Label>{label}</Fluent.Label> : undefined}
+                    description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`}
+                    percentComplete={percentComplete}
+                    styles={{ root: { flex: 1 }, itemName: { padding: 0 }, itemProgress: { paddingTop: 5, paddingBottom: 5 } }}
+                  />
+                  <Fluent.IconButton iconProps={{ iconName: 'cancel' }} title="Cancel" onClick={() => onUploadCancel()} styles={{ root: { padding: 16, marginTop: 11, marginLeft: 6 } }} />
                 </div>
+              )
+              : (
+                <>
+                  {label && <Fluent.Label style={{ paddingTop: 6 }}>{label}</Fluent.Label>}
+                  <div className={css.compact}>
+                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} />
+                    <input id={name} data-test={name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={multiple} />
+                    <label htmlFor={name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
+                  </div>
+                </>
               )
           }
         </>
