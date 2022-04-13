@@ -10728,25 +10728,23 @@ class StatTableItem:
             self,
             label: str,
             values: List[str],
-            value_colors: Optional[List[str]] = None,
             name: Optional[str] = None,
             caption: Optional[str] = None,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
+            colors: Optional[List[str]] = None,
     ):
         _guard_scalar('StatTableItem.label', label, (str,), False, False, False)
         _guard_vector('StatTableItem.values', values, (str,), False, False, False)
-        _guard_vector('StatTableItem.value_colors', value_colors, (str,), False, True, False)
         _guard_scalar('StatTableItem.name', name, (str,), False, True, False)
         _guard_scalar('StatTableItem.caption', caption, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon', icon, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon_color', icon_color, (str,), False, True, False)
+        _guard_vector('StatTableItem.colors', colors, (str,), False, True, False)
         self.label = label
         """The label for the row."""
         self.values = values
         """The values displayed in the row."""
-        self.value_colors = value_colors
-        """List of font colors used for each value in values ordered respectively. Defaults to theme text color if not specified."""
         self.name = name
         """An optional name for this row (required only if this row is clickable)."""
         self.caption = caption
@@ -10755,24 +10753,26 @@ class StatTableItem:
         """An optional icon, displayed next to the label."""
         self.icon_color = icon_color
         """The color of the icon."""
+        self.colors = colors
+        """List of colors used for each value in values ordered respectively."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('StatTableItem.label', self.label, (str,), False, False, False)
         _guard_vector('StatTableItem.values', self.values, (str,), False, False, False)
-        _guard_vector('StatTableItem.value_colors', self.value_colors, (str,), False, True, False)
         _guard_scalar('StatTableItem.name', self.name, (str,), False, True, False)
         _guard_scalar('StatTableItem.caption', self.caption, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon', self.icon, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon_color', self.icon_color, (str,), False, True, False)
+        _guard_vector('StatTableItem.colors', self.colors, (str,), False, True, False)
         return _dump(
             label=self.label,
             values=self.values,
-            value_colors=self.value_colors,
             name=self.name,
             caption=self.caption,
             icon=self.icon,
             icon_color=self.icon_color,
+            colors=self.colors,
         )
 
     @staticmethod
@@ -10782,8 +10782,6 @@ class StatTableItem:
         _guard_scalar('StatTableItem.label', __d_label, (str,), False, False, False)
         __d_values: Any = __d.get('values')
         _guard_vector('StatTableItem.values', __d_values, (str,), False, False, False)
-        __d_value_colors: Any = __d.get('value_colors')
-        _guard_vector('StatTableItem.value_colors', __d_value_colors, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatTableItem.name', __d_name, (str,), False, True, False)
         __d_caption: Any = __d.get('caption')
@@ -10792,21 +10790,23 @@ class StatTableItem:
         _guard_scalar('StatTableItem.icon', __d_icon, (str,), False, True, False)
         __d_icon_color: Any = __d.get('icon_color')
         _guard_scalar('StatTableItem.icon_color', __d_icon_color, (str,), False, True, False)
+        __d_colors: Any = __d.get('colors')
+        _guard_vector('StatTableItem.colors', __d_colors, (str,), False, True, False)
         label: str = __d_label
         values: List[str] = __d_values
-        value_colors: Optional[List[str]] = __d_value_colors
         name: Optional[str] = __d_name
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
+        colors: Optional[List[str]] = __d_colors
         return StatTableItem(
             label,
             values,
-            value_colors,
             name,
             caption,
             icon,
             icon_color,
+            colors,
         )
 
 
