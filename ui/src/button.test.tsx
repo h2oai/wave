@@ -85,8 +85,7 @@ describe('Button.tsx', () => {
     it('Does redirect if path is specified', () => {
       const
         windowOpenMock = jest.fn(),
-        btnPathProps: Buttons = { items: [{ button: { name, label: name, path: 'https://h2o.ai/' } }] },
-        { getByTestId } = render(<XButtons model={btnPathProps} />)
+        { getByTestId } = render(<XButtons model={{ items: [{ button: { name, label: name, path: 'https://h2o.ai/' } }] }} />)
 
       window.open = windowOpenMock
       fireEvent.click(getByTestId(name))
