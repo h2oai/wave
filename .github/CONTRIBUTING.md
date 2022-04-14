@@ -56,7 +56,7 @@ If you discover a security vulnerability within H2O Wave, please send an email t
 
 :warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) is recommended.
 
-You will need [Go](https://golang.org/) 1.13+, [Node.js](http://nodejs.org) 10+, [Python](https://www.python.org/) 3.6+. You should already have Python 3.6+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
+You will need [Go](https://golang.org/) 1.13+, [Node.js](http://nodejs.org) 10+, [Python](https://www.python.org/) 3.7+. You should already have Python 3.7+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
 
 ### Getting started
 
@@ -78,7 +78,7 @@ Try running the Wave tour to verify if your setup is functional:
 cd py && ./venv/bin/wave run examples.tour
 ```
 
-You should now see the Wave Tour at http://localhost:10101/tour, and examples running at http://localhost:10101/demo.
+You should now see the Wave Tour at <http://localhost:10101/tour>, and examples running at <http://localhost:10101/demo>.
 
 For front-end development, you'll also need to start the Webpack dev server:
 
@@ -86,9 +86,9 @@ For front-end development, you'll also need to start the Webpack dev server:
 make run-ui
 ```
 
-You should now see the Wave Tour at http://localhost:3000/tour, and examples running at http://localhost:3000/demo.
+You should now see the Wave Tour at <http://localhost:3000/tour>, and examples running at <http://localhost:3000/demo>.
 
-Once you have the Webpack dev server running, you should be able to visualize any changes to `./ui` in real time. 
+Once you have the Webpack dev server running, you should be able to visualize any changes to `./ui` in real time.
 
 Happy hacking!
 

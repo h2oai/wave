@@ -57,7 +57,7 @@ setuptools.setup(
     data_files=None if platform == 'any' else [('', glob(os.path.join(base_path, 'waved*')))] + get_data_files(),
     classifiers=[
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Operating System :: OS Independent',
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
