@@ -155,6 +155,11 @@ jobs:
           JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
         run: make publish-pycharm
 
+      - name: Publish VSCode extension
+        run: make publish-vsc-extension
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
       - name: Publish to S3
         run: make publish-release-s3
 

@@ -17,5 +17,8 @@ run-client:
 test:
 	./venv/bin/python -m server.tests
 
+publish:
+	npm run publish
+
 clean:
 	rm -rf venv

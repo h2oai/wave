@@ -166,8 +166,11 @@ preview-website: ## Preview website
 publish-website: ## Publish website
 	aws s3 sync website/build s3://wave.h2o.ai --delete
 
-publish-pycharm: ## Publish website
+publish-pycharm: ## Publish PyCharm plugin
 	cd tools/intellij-plugin && $(MAKE) publish
+	
+publish-vsc-extension: ## Publish VS Code extension
+	cd tools/vscode-extension && $(MAKE) setup && $(MAKE) test && $(MAKE) publish
 	
 .PHONY: tag
 tag: ## Bump version and tag
