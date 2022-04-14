@@ -220,7 +220,7 @@ const
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
           placeholder={placeholder}
-          value={textValue || ';'} />
+          value={textValue || ''} />
         <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={cancelDialog} minWidth={600} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.Label>Search</Fluent.Label>
