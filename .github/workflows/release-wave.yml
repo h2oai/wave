@@ -122,18 +122,18 @@ jobs:
           asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl"
           asset_content_type: application/gzip
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          packages_dir: py/dist
-          password: ${{ secrets.PYPI_API_TOKEN }}
-
       - name: Publish to Conda
         uses: amauryval/publish_conda_package_action@1.1.0
         with:
           CondaDir: 'py/conda'
           CondaUsername: ${{ secrets.CONDA_USERNAME }}
           CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/dist
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Publish Docs
         run: |
