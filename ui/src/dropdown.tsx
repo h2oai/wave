@@ -180,7 +180,7 @@ const
         wave.args[name] = result.length === 1 ? result[0].name : result.map(({ name }) => name)
 
         if (trigger) wave.push()
-        setTextValue(result.length ? result.map(({ text }) => text).join(', ') : 'Select ...')
+        setTextValue(result.length ? result.map(({ text }) => text).join(', ') : '')
         initialSelectedMap.clear()
         result.forEach(({ name }) => initialSelectedMap.set(name, true))
         cancelDialog()
@@ -219,11 +219,12 @@ const
           disabled={disabled}
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
+          placeholder={placeholder}
           value={textValue || ''} />
         <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={cancelDialog} minWidth={600} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.Label>Search</Fluent.Label>
-            <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} placeholder={placeholder} autoFocus />
+            <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
             {
               isMultivalued && (
                 <div className={clas('wave-s14', css.dialogControls)}>
