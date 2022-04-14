@@ -180,7 +180,7 @@ const
         wave.args[name] = result.length === 1 ? result[0].name : result.map(({ name }) => name)
 
         if (trigger) wave.push()
-        setTextValue(result.length ? result.map(({ text }) => text).join(', ') : 'Select ...')
+        setTextValue(result.length ? result.map(({ text }) => text).join(', ') : '')
         initialSelectedMap.clear()
         result.forEach(({ name }) => initialSelectedMap.set(name, true))
         cancelDialog()
