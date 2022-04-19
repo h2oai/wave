@@ -53,6 +53,8 @@ export interface Combobox {
   tooltip?: S
   /** True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes. */
   trigger?: B
+  /** True if this is a required field. Defaults to False. */
+  required?: B
 }
 
 
@@ -76,6 +78,7 @@ export const
         label={m.label}
         placeholder={m.placeholder}
         options={options}
+        required={m.required}
         disabled={m.disabled}
         autoComplete="on"
         allowFreeform={true}

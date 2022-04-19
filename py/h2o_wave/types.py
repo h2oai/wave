@@ -1894,6 +1894,7 @@ class Combobox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             trigger: Optional[bool] = None,
+            required: Optional[bool] = None,
     ):
         _guard_scalar('Combobox.name', name, (str,), True, False, False)
         _guard_scalar('Combobox.label', label, (str,), False, True, False)
@@ -1906,6 +1907,7 @@ class Combobox:
         _guard_scalar('Combobox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Combobox.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Combobox.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('Combobox.required', required, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1928,6 +1930,8 @@ class Combobox:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.trigger = trigger
         """True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes."""
+        self.required = required
+        """True if this is a required field. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1942,6 +1946,7 @@ class Combobox:
         _guard_scalar('Combobox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Combobox.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Combobox.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('Combobox.required', self.required, (bool,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -1954,6 +1959,7 @@ class Combobox:
             visible=self.visible,
             tooltip=self.tooltip,
             trigger=self.trigger,
+            required=self.required,
         )
 
     @staticmethod
@@ -1981,6 +1987,8 @@ class Combobox:
         _guard_scalar('Combobox.tooltip', __d_tooltip, (str,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Combobox.trigger', __d_trigger, (bool,), False, True, False)
+        __d_required: Any = __d.get('required')
+        _guard_scalar('Combobox.required', __d_required, (bool,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -1992,6 +2000,7 @@ class Combobox:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         trigger: Optional[bool] = __d_trigger
+        required: Optional[bool] = __d_required
         return Combobox(
             name,
             label,
@@ -2004,6 +2013,7 @@ class Combobox:
             visible,
             tooltip,
             trigger,
+            required,
         )
 
 

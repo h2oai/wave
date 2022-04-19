@@ -968,7 +968,7 @@
   "Wave Full Combobox": {
     "prefix": "w_full_combobox",
     "body": [
-      "ui.combobox(name='$1', label='$2', placeholder='$3', value='$4', error='$5', disabled=${6:False}, width='${7:100%'}', visible=${8:True}, tooltip='$9', trigger=${10:False}, choices=[\n\t\t$11\t\t\n]),$0"
+      "ui.combobox(name='$1', label='$2', placeholder='$3', value='$4', error='$5', disabled=${6:False}, width='${7:100%'}', visible=${8:True}, tooltip='$9', trigger=${10:False}, required=${11:False}, choices=[\n\t\t$12\t\t\n]),$0"
     ],
     "description": "Create a full Wave Combobox."
   },

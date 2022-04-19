@@ -12,6 +12,7 @@ async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'combobox={q.args.combobox}'),
+            ui.text(f'combobox_required={q.args.combobox_required}'),
             ui.text(f'combobox_disabled={q.args.combobox_disabled}'),
             ui.text(f'combobox_error={q.args.combobox_error}'),
             ui.button(name='show_form', label='Back', primary=True),
@@ -20,6 +21,8 @@ async def serve(q: Q):
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
             ui.combobox(name='combobox', label='Enter or choose a color', placeholder='Color...', value='Blue',
                         choices=combobox_choices),
+            ui.combobox(name='combobox_required', label='Enter or choose a color', placeholder='Color...', value='Blue',
+                        choices=combobox_choices, required=True),
             ui.combobox(name='combobox_disabled', label='Enter or choose a color', placeholder='Color...', value='Blue',
                         choices=combobox_choices, disabled=True),
             ui.combobox(name='combobox_error', label='Enter or choose a color', placeholder='Color...', value='Blue',

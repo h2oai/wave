@@ -736,6 +736,7 @@ def combobox(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         trigger: Optional[bool] = None,
+        required: Optional[bool] = None,
 ) -> Component:
     """Create a combobox.
 
@@ -761,6 +762,7 @@ def combobox(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         trigger: True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
+        required: True if this is a required field. Defaults to False.
     Returns:
         A `h2o_wave.types.Combobox` instance.
     """
@@ -776,6 +778,7 @@ def combobox(
         visible,
         tooltip,
         trigger,
+        required,
     ))
 
 
