@@ -48,6 +48,10 @@ To make Wave app development easier, we suggest installing our [PyCharm plugin](
 5. Write some code (see sample below).
 6. Hit `Ctrl+F5` to run, or `F5` to debug.
 
+:::tip
+To make Wave app development easier, we suggest installing our [VSCode extension](https://marketplace.visualstudio.com/items?itemName=h2oai.h2o-wave). If you want to learn more about all of its features check out [this blog post](https://wave.h2o.ai/blog/h2o-wave-vscode-extension).
+:::
+
 ## Debugging Apps
 
 To debug Wave apps, set your IDE or editor's configuration to execute the command `python -m h2o_wave run --no-reload foo` instead of `python foo.py`.
