@@ -62,7 +62,7 @@ export interface Button {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
-  /** The path or URL to link to. */
+  /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
 }
 
