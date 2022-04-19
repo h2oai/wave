@@ -9,7 +9,7 @@ from faker import Faker
 
 fake = Faker()
 
-page = site['/demooo']
+page = site['/demo']
 
 page.add('example', ui.stat_table_card(
     box='1 1 4 7',
