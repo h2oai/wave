@@ -1931,7 +1931,7 @@ class Combobox:
         self.trigger = trigger
         """True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes."""
         self.required = required
-        """True if this is a required field."""
+        """True if this is a required field. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

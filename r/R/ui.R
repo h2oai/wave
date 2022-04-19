@@ -885,7 +885,7 @@ ui_dropdown <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
-#' @param required True if this is a required field.
+#' @param required True if this is a required field. Defaults to False.
 #' @return A Combobox instance.
 #' @export
 ui_combobox <- function(
