@@ -5867,6 +5867,66 @@ class Inline:
         )
 
 
+_ColumnJustify = ['start', 'end', 'center', 'between', 'around']
+
+
+class ColumnJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+class Column:
+    """Creates a container to lay out components in the vertical.
+    """
+    def __init__(
+            self,
+            items: List['Component'],
+            justify: Optional[str] = None,
+            inset: Optional[bool] = None,
+    ):
+        _guard_vector('Column.items', items, (Component,), False, False, False)
+        _guard_enum('Column.justify', justify, _ColumnJustify, True)
+        _guard_scalar('Column.inset', inset, (bool,), False, True, False)
+        self.items = items
+        """The components laid out inline."""
+        self.justify = justify
+        """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ColumnJustify."""
+        self.inset = inset
+        """Whether to display the components inset from the parent form, with a contrasting background."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('Column.items', self.items, (Component,), False, False, False)
+        _guard_enum('Column.justify', self.justify, _ColumnJustify, True)
+        _guard_scalar('Column.inset', self.inset, (bool,), False, True, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            justify=self.justify,
+            inset=self.inset,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Column':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('Column.items', __d_items, (dict,), False, False, False)
+        __d_justify: Any = __d.get('justify')
+        _guard_enum('Column.justify', __d_justify, _ColumnJustify, True)
+        __d_inset: Any = __d.get('inset')
+        _guard_scalar('Column.inset', __d_inset, (bool,), False, True, False)
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        justify: Optional[str] = __d_justify
+        inset: Optional[bool] = __d_inset
+        return Column(
+            items,
+            justify,
+            inset,
+        )
+
+
 class Image:
     """Create an image.
     """
@@ -6480,6 +6540,7 @@ class Component:
             vega_visualization: Optional[VegaVisualization] = None,
             stats: Optional[Stats] = None,
             inline: Optional[Inline] = None,
+            column: Optional[Column] = None,
             image: Optional[Image] = None,
             persona: Optional[Persona] = None,
             text_annotator: Optional[TextAnnotator] = None,
@@ -6529,6 +6590,7 @@ class Component:
         _guard_scalar('Component.vega_visualization', vega_visualization, (VegaVisualization,), False, True, False)
         _guard_scalar('Component.stats', stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
+        _guard_scalar('Component.column', column, (Column,), False, True, False)
         _guard_scalar('Component.image', image, (Image,), False, True, False)
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
@@ -6618,6 +6680,8 @@ class Component:
         """Stats."""
         self.inline = inline
         """Inline components."""
+        self.column = column
+        """Vertical."""
         self.image = image
         """Image"""
         self.persona = persona
@@ -6676,6 +6740,7 @@ class Component:
         _guard_scalar('Component.vega_visualization', self.vega_visualization, (VegaVisualization,), False, True, False)
         _guard_scalar('Component.stats', self.stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
+        _guard_scalar('Component.column', self.column, (Column,), False, True, False)
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
@@ -6725,6 +6790,7 @@ class Component:
             vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
             stats=None if self.stats is None else self.stats.dump(),
             inline=None if self.inline is None else self.inline.dump(),
+            column=None if self.column is None else self.column.dump(),
             image=None if self.image is None else self.image.dump(),
             persona=None if self.persona is None else self.persona.dump(),
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
@@ -6819,6 +6885,8 @@ class Component:
         _guard_scalar('Component.stats', __d_stats, (dict,), False, True, False)
         __d_inline: Any = __d.get('inline')
         _guard_scalar('Component.inline', __d_inline, (dict,), False, True, False)
+        __d_column: Any = __d.get('column')
+        _guard_scalar('Component.column', __d_column, (dict,), False, True, False)
         __d_image: Any = __d.get('image')
         _guard_scalar('Component.image', __d_image, (dict,), False, True, False)
         __d_persona: Any = __d.get('persona')
@@ -6874,6 +6942,7 @@ class Component:
         vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
+        column: Optional[Column] = None if __d_column is None else Column.load(__d_column)
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
@@ -6923,6 +6992,7 @@ class Component:
             vega_visualization,
             stats,
             inline,
+            column,
             image,
             persona,
             text_annotator,
@@ -7518,6 +7588,25 @@ class FooterCard:
         )
 
 
+_FormCardJustify = ['start', 'center', 'end', 'around']
+
+
+class FormCardJustify:
+    START = 'start'
+    CENTER = 'center'
+    END = 'end'
+    AROUND = 'around'
+
+
+_FormCardAlign = ['start', 'center', 'end']
+
+
+class FormCardAlign:
+    START = 'start'
+    CENTER = 'center'
+    END = 'end'
+
+
 class FormCard:
     """Create a form.
     """
@@ -7526,11 +7615,15 @@ class FormCard:
             box: str,
             items: Union[List[Component], str],
             title: Optional[str] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('FormCard.box', box, (str,), False, False, False)
         _guard_vector('FormCard.items', items, (Component,), False, False, True)
         _guard_scalar('FormCard.title', title, (str,), False, True, False)
+        _guard_enum('FormCard.justify', justify, _FormCardJustify, True)
+        _guard_enum('FormCard.align', align, _FormCardAlign, True)
         _guard_vector('FormCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7538,6 +7631,10 @@ class FormCard:
         """The components in this form."""
         self.title = title
         """The title for this card."""
+        self.justify = justify
+        """Defines the alignment along the horizontal axis. One of 'start', 'center', 'end', 'around'. See enum h2o_wave.ui.FormCardJustify."""
+        self.align = align
+        """Defines the alignment along the vertical axis. One of 'start', 'center', 'end'. See enum h2o_wave.ui.FormCardAlign."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7546,12 +7643,16 @@ class FormCard:
         _guard_scalar('FormCard.box', self.box, (str,), False, False, False)
         _guard_vector('FormCard.items', self.items, (Component,), False, False, True)
         _guard_scalar('FormCard.title', self.title, (str,), False, True, False)
+        _guard_enum('FormCard.justify', self.justify, _FormCardJustify, True)
+        _guard_enum('FormCard.align', self.align, _FormCardAlign, True)
         _guard_vector('FormCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='form',
             box=self.box,
             items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
             title=self.title,
+            justify=self.justify,
+            align=self.align,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7564,16 +7665,24 @@ class FormCard:
         _guard_vector('FormCard.items', __d_items, (dict,), False, False, True)
         __d_title: Any = __d.get('title')
         _guard_scalar('FormCard.title', __d_title, (str,), False, True, False)
+        __d_justify: Any = __d.get('justify')
+        _guard_enum('FormCard.justify', __d_justify, _FormCardJustify, True)
+        __d_align: Any = __d.get('align')
+        _guard_enum('FormCard.align', __d_align, _FormCardAlign, True)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FormCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
         title: Optional[str] = __d_title
+        justify: Optional[str] = __d_justify
+        align: Optional[str] = __d_align
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FormCard(
             box,
             items,
             title,
+            justify,
+            align,
             commands,
         )
 

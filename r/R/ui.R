@@ -2558,6 +2558,29 @@ ui_inline <- function(
   return(.o)
 }
 
+#' Creates a container to lay out components in the vertical.
+#'
+#' @param items The components laid out inline.
+#' @param justify Specifies how to lay out the individual components. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ColumnJustify.
+#' @param inset Whether to display the components inset from the parent form, with a contrasting background.
+#' @return A Column instance.
+#' @export
+ui_column <- function(
+  items,
+  justify = NULL,
+  inset = NULL) {
+  .guard_vector("items", "WaveComponent", items)
+  # TODO Validate justify
+  .guard_scalar("inset", "logical", inset)
+  .o <- list(column=list(
+    items=items,
+    justify=justify,
+    inset=inset))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an image.
 #'
 #' @param title The image title, typically displayed as a tooltip.
@@ -3062,6 +3085,10 @@ ui_footer_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param items The components in this form.
 #' @param title The title for this card.
+#' @param justify Defines the alignment along the horizontal axis.
+#'   One of 'start', 'center', 'end', 'around'. See enum h2o_wave.ui.FormCardJustify.
+#' @param align Defines the alignment along the vertical axis.
+#'   One of 'start', 'center', 'end'. See enum h2o_wave.ui.FormCardAlign.
 #' @param commands Contextual menu commands for this component.
 #' @return A FormCard instance.
 #' @export
@@ -3069,15 +3096,21 @@ ui_form_card <- function(
   box,
   items,
   title = NULL,
+  justify = NULL,
+  align = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("title", "character", title)
+  # TODO Validate justify
+  # TODO Validate align
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     title=title,
+    justify=justify,
+    align=align,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFormCard"))
   return(.o)

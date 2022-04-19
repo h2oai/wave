@@ -143,6 +143,8 @@ export interface Component {
   stats?: Stats
   /** Inline components. */
   inline?: Inline
+  /** Align components vertically in a column. */
+  column?: Column
   /** Image */
   image?: Image
   /** Persona. */
@@ -169,24 +171,40 @@ interface Inline {
   inset?: B
 }
 
+/** Creates a container to lay out components along the vertical axis. */
+interface Column {
+  /** The components laid out inline. */
+  items: Component[]
+  /** Specifies how to lay out the individual components. Defaults to 'start'. */
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
+  /** Whether to display the components inset from the parent form, with a contrasting background. */
+  inset?: B
+}
+
 /** Create a form. */
 interface State {
   /** The components in this form. */
   items: Packed<Component[]>
   /** The title for this card. */
   title?: S
+  /** Justify all components along the horizontal axis. */
+  justify?: 'start' | 'center' | 'end' | 'around'
+  /** Align all components along the vertical axis. */
+  align?: 'start' | 'center' | 'end'
 }
 
 const
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
     card: {
+      display: 'flex',
+      flexDirection: 'column',
       padding: 15,
     },
     vertical: {
       display: 'flex',
       flexDirection: 'column',
-      flexGrow: 1,
+      flex: 1,
       $nest: {
         '> [data-visible="true"] ~ div': {
           marginTop: 10
@@ -196,6 +214,7 @@ const
     horizontal: {
       display: 'flex',
       alignItems: 'center',
+      flex: 1,
       $nest: {
         '> [data-visible="true"] ~ div': {
           marginLeft: 8
@@ -211,7 +230,7 @@ const
 type XComponentAlignment = 'start' | 'end' | 'center' | 'between' | 'around'
 
 export const
-  XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
+  XComponents = ({ items, justify, align, inset, direction = 'column'}: { items: Component[], justify?: XComponentAlignment, align?: XComponentAlignment, inset?: B, direction?: 'row' | 'column' }) => {
     const
       components = items.map((m: any, i) => {
         const
@@ -224,20 +243,40 @@ export const
 
         return (
           // Recreate only if name or position within form items changed, update otherwise.
-          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width, alignSelf }}>
+          <div
+            key={name || `${componentKey}-${i}`}
+            data-visible={visible}
+            style={{ ...visibleStyles, width, alignSelf, display: 'flex', flexDirection: direction, justifyContent: justify, alignItems: align, flex: componentKey === 'column' ? 1 : 0 }}
+          >
             <XComponent model={m} />
           </div>
         )
       })
-    return <div className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '')} style={{ justifyContent: justifications[alignment || ''] }}>{components}</div>
+    return (
+      <div
+        data-name={`XComponents ${direction}`}
+        className={clas(direction === 'row' ? css.horizontal : css.vertical, inset ? css.inset : '')}
+        style={{ justifyContent: justifications[justify || ''] }}
+      >
+        {components}
+      </div>
+    )
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify || 'start'}
+      justify={m.justify || 'start'}
       inset={m.inset}
+      direction='row'
     />
-  )
+  ),
+  XColumn = ({ model: m }: { model: Column}) => {
+    return <XComponents
+      items={m.items}
+      justify={m.justify || 'start'}
+      direction='column'
+    />
+  }
 
 
 const
@@ -281,6 +320,7 @@ const
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
     if (m.stats) return <XStats model={m.stats} />
     if (m.inline) return <XInline model={m.inline} />
+    if (m.column) return <XColumn model={m.column} />
     if (m.image) return <XImage model={m.image} />
     if (m.persona) return <XPersona model={m.persona} />
     if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
@@ -305,7 +345,7 @@ export const
         return (
           <div data-test={name} className={css.card}>
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
-            <XComponents items={items} />
+            <XComponents items={items} justify={s.justify} align={s.align}/>
           </div>
         )
       }

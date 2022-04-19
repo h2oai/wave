@@ -2184,6 +2184,27 @@ def inline(
     ))
 
 
+def column(
+        items: List[Component],
+        justify: Optional[str] = None,
+        inset: Optional[bool] = None,
+) -> Component:
+    """Creates a container to lay out components in the vertical.
+
+    Args:
+        items: The components laid out inline.
+        justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ColumnJustify.
+        inset: Whether to display the components inset from the parent form, with a contrasting background.
+    Returns:
+        A `h2o_wave.types.Column` instance.
+    """
+    return Component(column=Column(
+        items,
+        justify,
+        inset,
+    ))
+
+
 def image(
         title: str,
         type: Optional[str] = None,
@@ -2640,6 +2661,8 @@ def form_card(
         box: str,
         items: Union[List[Component], str],
         title: Optional[str] = None,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FormCard:
     """Create a form.
@@ -2648,6 +2671,8 @@ def form_card(
         box: A string indicating how to place this component on the page.
         items: The components in this form.
         title: The title for this card.
+        justify: Defines the alignment along the horizontal axis. One of 'start', 'center', 'end', 'around'. See enum h2o_wave.ui.FormCardJustify.
+        align: Defines the alignment along the vertical axis. One of 'start', 'center', 'end'. See enum h2o_wave.ui.FormCardAlign.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FormCard` instance.
@@ -2656,6 +2681,8 @@ def form_card(
         box,
         items,
         title,
+        justify,
+        align,
         commands,
     )
 
