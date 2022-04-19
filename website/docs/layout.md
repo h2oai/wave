@@ -78,7 +78,7 @@ q.page['meta'] = ui.meta_card(box='', layouts=[
 ])
 
 q.page['tab_card'] = ui.tab_card(
-    box=ui.box(zone='zone1', size='0'),
+    box=ui.box(zone='zone1'),
     items=[ui.tab(name='tab1', label='tab')]
 )
 
