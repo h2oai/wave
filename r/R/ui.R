@@ -1190,6 +1190,7 @@ ui_color_picker <- function(
 #' @param width The width of the button, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
 #' @return A Button instance.
 #' @export
 ui_button <- function(
@@ -1203,7 +1204,8 @@ ui_button <- function(
   icon = NULL,
   width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  path = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
@@ -1215,6 +1217,7 @@ ui_button <- function(
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("path", "character", path)
   .o <- list(button=list(
     name=name,
     label=label,
@@ -1226,7 +1229,8 @@ ui_button <- function(
     icon=icon,
     width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    path=path))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

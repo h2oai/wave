@@ -15,7 +15,6 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Buttons, MiniButtons, XButtons, XMiniButtons } from './button'
-import { Component } from './form'
 import { wave } from './ui'
 
 const
@@ -81,6 +80,16 @@ describe('Button.tsx', () => {
       const { queryByTestId } = render(<XButtons model={btnProps} />)
 
       expect(queryByTestId(name)).not.toHaveClass('ms-Link')
+    })
+
+    it('Does redirect if path is specified', () => {
+      const
+        windowOpenMock = jest.fn(),
+        { getByTestId } = render(<XButtons model={{ items: [{ button: { name, label: name, path: 'https://h2o.ai/' } }] }} />)
+
+      window.open = windowOpenMock
+      fireEvent.click(getByTestId(name))
+      expect(windowOpenMock).toHaveBeenCalled()
     })
   })
 

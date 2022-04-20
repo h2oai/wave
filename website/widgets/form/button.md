@@ -113,3 +113,16 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
     ui.button(name='button', label='Button', disabled=True)
 ])
 ```
+
+## With path
+
+Use a `path` attribute when you want your button to redirect to internal or external hyperlink.
+
+- Internal hyperlinks have paths that begin with a `/` and point to URLs within the Wave UI
+- All other kinds of paths are treated as external hyperlinks (e.g. <https://h2o.ai/>)
+
+```py
+q.page['form'] = ui.form_card(box='1 1 1 1', items=[
+    ui.button(name='external_path_button', label='External', path='https://h2o.ai/')
+])
+```

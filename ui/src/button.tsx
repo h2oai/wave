@@ -62,6 +62,8 @@ export interface Button {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
+  path?: S
 }
 
 /** Create a set of buttons laid out horizontally. */
@@ -112,16 +114,16 @@ const
   }
 
 const
-  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width } }: { model: Button }) => {
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path } }: { model: Button }) => {
     const
       onClick = (ev: any) => {
         ev.stopPropagation()
-        if (name.startsWith('#')) {
-          window.location.hash = name.substr(1)
-          return
+        if (path) window.open(path, "_blank")
+        else if (name.startsWith('#')) window.location.hash = name.substr(1)
+        else {
+          wave.args[name] = value === undefined || value
+          wave.push()
         }
-        wave.args[name] = value === undefined || value
-        wave.push()
       },
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
