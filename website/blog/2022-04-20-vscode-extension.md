@@ -48,6 +48,8 @@ Have you ever wanted to handle that button click in Wave, but didn't remember th
 
 The plugin is part of public [VScode marketplace](https://marketplace.visualstudio.com/items?itemName=h2oai.h2o-wave) and can be installed directly from the web (if you have your VSCode currently open) or within VSCode via `Extensions` pane.
 
+Once installed, set `python.pythonPath` or `python.defaultInterpreterPath` configuration options to a python3.7+ installation (e.g. `python3` for a global, system-wide python).
+
 ## Not a VSCode user?
 
 If you do not use VSCode, but still would like to enjoy an improved dev experience we also support [PyCharm plugin](https://plugins.jetbrains.com/plugin/18530-h2o-wave). See [blog post](https://wave.h2o.ai/blog/h2o-wave-pycharm-plugin) to learn more.
