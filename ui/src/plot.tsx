@@ -1046,9 +1046,6 @@ export const
           init()
         }
       },
-      setChartTooltip = (chart: any, tooltipCfg: any) => {
-        chart.position(tooltipCfg).tooltip(tooltipCfg)
-      },
       init = async () => {
         // Map CSS var colors to their hex values.
         cat10 = cat10.map(cssVarValue)
@@ -1069,35 +1066,7 @@ export const
         currentPlot.current = plot
         if (chart) {
           marks.forEach(({ type }) => {
-            switch (type) {
-              case 'interval':
-                setChartTooltip(chart.interval(), tooltipCfg)
-                break
-              case 'line':
-                setChartTooltip(chart.line(), tooltipCfg)
-                break
-              case 'path':
-                setChartTooltip(chart.path(), tooltipCfg)
-                break
-              case 'point':
-                setChartTooltip(chart.point(), tooltipCfg)
-                break
-              case 'area':
-                setChartTooltip(chart.area(), tooltipCfg)
-                break
-              case 'polygon':
-                setChartTooltip(chart.polygon(), tooltipCfg)
-                break
-              case 'schema':
-                setChartTooltip(chart.schema(), tooltipCfg)
-                break
-              case 'edge':
-                setChartTooltip(chart.edge(), tooltipCfg)
-                break
-              case 'heatmap':
-                setChartTooltip(chart.heatmap(), tooltipCfg)
-                break
-            }
+            if (type) chart[type]().position(tooltipCfg).tooltip(tooltipCfg)
           })
           currentChart.current = chart
           chart.data(data)
