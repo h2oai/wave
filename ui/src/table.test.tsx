@@ -211,8 +211,8 @@ describe('Table.tsx', () => {
     it('Does not render sort arrow on sortable columns by default', () => {
       const { container } = render(<XTable model={tableProps} />)
 
-      // the sortingIcon class is present even if sort icon is not rendered, therefore we check for its child presence
-      expect(container.querySelector('i[class*=sortingIcon]')!.firstChild).not.toBeTruthy()
+      expect(container.querySelector("[data-icon-name='SortUp']")!).not.toBeInTheDocument()
+      expect(container.querySelector("[data-icon-name='SortDown']")!).not.toBeInTheDocument()
     })
 
     it('Renders sort arrow after clicking on sortable column header', () => {
@@ -226,10 +226,10 @@ describe('Table.tsx', () => {
       const { container } = render(<XTable model={tableProps} />)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
-      expect(container.querySelector('i[class*=sortingIcon]')!.firstChild).toBeTruthy()
+      expect(container.querySelectorAll("[data-icon-name='SortUp']")!).toHaveLength(1)
 
       fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[1])
-      expect(container.querySelector('i[class*=sortingIcon]')!.firstChild).not.toBeTruthy()
+      expect(container.querySelectorAll("[data-icon-name='SortUp']")!).toHaveLength(1)
     })
 
     it('Sorts by column - string', () => {
