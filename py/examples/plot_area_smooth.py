@@ -8,7 +8,7 @@ page = site['/demo']
 page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Area, smooth',
-        data=data('year price', 9, rows=[
+    data=data('year price', 9, rows=[
         ('1991', 15468),
         ('1992', 16100),
         ('1993', 15900),

@@ -8,7 +8,7 @@ page = site['/demo']
 page.add('example', ui.plot_card(
     box='1 1 5 5',
     title='Path',
-        data=data('price performance', 10, rows=[
+    data=data('price performance', 10, rows=[
         (0.1, 0.6),
         (0.2, 0.5),
         (0.3, 0.3),
