@@ -93,4 +93,12 @@ describe('TextAnnotator.tsx', () => {
     fireEvent.mouseOver(mark2)
     expect(removeIcon).toBeVisible()
   })
+
+  describe('readonly', () => {
+    it('Does not contain the active tag', () => {
+      const { container } = render(<XTextAnnotator model={{ ...annotatorProps, readonly: true }} />)
+
+      expect(container.querySelector('[class*=activeTag]')).not.toBeInTheDocument()
+    })
+  })
 })

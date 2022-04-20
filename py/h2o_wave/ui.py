@@ -2272,6 +2272,7 @@ def text_annotator(
         tags: List[TextAnnotatorTag],
         items: List[TextAnnotatorItem],
         trigger: Optional[bool] = None,
+        readonly: Optional[bool] = None,
 ) -> Component:
     """Create a text annotator component.
 
@@ -2283,6 +2284,7 @@ def text_annotator(
         tags: List of tags the user can annotate with.
         items: Pretagged parts of text content.
         trigger: True if the form should be submitted when the annotator value changes.
+        readonly: True to prevent user interaction with the annotator component. Defaults to False.
     Returns:
         A `h2o_wave.types.TextAnnotator` instance.
     """
@@ -2292,6 +2294,7 @@ def text_annotator(
         tags,
         items,
         trigger,
+        readonly,
     ))
 
 

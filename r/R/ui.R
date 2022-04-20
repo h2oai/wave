@@ -2660,6 +2660,7 @@ ui_text_annotator_item <- function(
 #' @param tags List of tags the user can annotate with.
 #' @param items Pretagged parts of text content.
 #' @param trigger True if the form should be submitted when the annotator value changes.
+#' @param readonly True to prevent user interaction with the annotator component. Defaults to False.
 #' @return A TextAnnotator instance.
 #' @export
 ui_text_annotator <- function(
@@ -2667,18 +2668,21 @@ ui_text_annotator <- function(
   title,
   tags,
   items,
-  trigger = NULL) {
+  trigger = NULL,
+  readonly = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("title", "character", title)
   .guard_vector("tags", "WaveTextAnnotatorTag", tags)
   .guard_vector("items", "WaveTextAnnotatorItem", items)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("readonly", "logical", readonly)
   .o <- list(text_annotator=list(
     name=name,
     title=title,
     tags=tags,
     items=items,
-    trigger=trigger))
+    trigger=trigger,
+    readonly=readonly))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

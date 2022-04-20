@@ -39,6 +39,8 @@ export interface TextAnnotator {
   items: TextAnnotatorItem[]
   /** True if the form should be submitted when the annotator value changes. */
   trigger?: B
+  /** True to prevent user interaction with the annotator component. Defaults to False. */
+  readonly?: B
 }
 
 const css = stylesheet({
@@ -55,7 +57,6 @@ const css = stylesheet({
     padding: padding(4, 16),
     textAlign: 'center',
     borderRadius: 4,
-    cursor: 'pointer',
   },
   tagWrapper: {
     marginRight: 4,
@@ -100,13 +101,14 @@ const css = stylesheet({
     left: -5,
     top: -3,
     background: cssVar('$card')
-  }
+  },
+  readonly: { pointerEvents: 'none' }
 })
 
 export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
   const
     [startIdx, setStartIdx] = React.useState<U | null>(null),
-    [activeTag, setActiveTag] = React.useState<S | undefined>(model.tags[0]?.name),
+    [activeTag, setActiveTag] = React.useState<S | undefined>(model.readonly ? undefined : model.tags[0]?.name),
     [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
     tagColorMap = model.tags.reduce((map, t) => {
       map.set(t.name, t.color)
@@ -204,6 +206,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         tag: {
           background: cssVar(color),
           color: getContrast(color),
+          cursor: model.readonly ? 'default' : 'pointer',
         },
         activeTag: {
           border: border(2, cssVar('$themePrimary')),
@@ -221,7 +224,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
   React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] }, [])
 
   return (
-    <div data-test={model.name}>
+    <div data-test={model.name} className={model.readonly ? css.readonly : ''}>
       <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
       <div className={css.tags}>{tags}</div>
       <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
