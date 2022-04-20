@@ -67,6 +67,41 @@ Zones can have other zones nested inside them.
 
 In the above example, the `content` and `sidebar` zones are laid out horizontally inside the `body`, with the `content` zone taking up 75% of the available width, and the sidebar taking up 25%.
 
+Cards will take up an equal amount of space inside the zone, not shrinking to fit their content. To prevent a card from expanding provide a `ui.box` with `size='0'`.
+
+```py
+q.page['meta'] = ui.meta_card(box='', layouts=[
+    ui.layout(
+        breakpoint='xs',
+        zones=[ui.zone(name='zone1', direction=ui.ZoneDirection.COLUMN, size='100%')]
+    )
+])
+
+q.page['tab_card'] = ui.tab_card(
+    box=ui.box(zone='zone1'),
+    items=[ui.tab(name='tab1', label='tab')]
+)
+
+q.page['form_card'] = ui.form_card(box='zone1', items=[
+    ui.text(content='my form card')
+])
+```
+
+Default behavior:
+
+![zone card expand](assets/zone-card-expand.png)
+
+Using `size='0'`:
+
+```py
+q.page['tab_card'] = ui.tab_card(
+    box=ui.box(zone='zone1', size='0'),
+    items=[ui.tab(name='tab1', label='tab')]
+)
+```
+
+![zone card shrink](assets/zone-card-shrink.png)
+
 ### Responsive Layout
 
 To make your page adapt to multiple viewport sizes, define multiple layouts using `ui.layout()`.
