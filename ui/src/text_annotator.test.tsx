@@ -96,15 +96,8 @@ describe('TextAnnotator.tsx', () => {
   })
 
   describe('readonly', () => {
-    beforeEach(() => {
-      annotatorProps = {
-        ...annotatorProps,
-        readonly: true
-      }
-    })
-
     it('Does not contain the active tag', () => {
-      const { container } = render(<XTextAnnotator model={annotatorProps} />)
+      const { container } = render(<XTextAnnotator model={{ ...annotatorProps, readonly: true }} />)
 
       expect(container.querySelector('[class*=activeTag]')).not.toBeInTheDocument()
     })
