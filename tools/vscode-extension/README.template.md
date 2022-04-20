@@ -19,7 +19,7 @@ later in the code execution.
 
 ## Installation
 
-This extension requires `python.pythonPath` to be correctly set to a python3.7+ installation.
+This extension requires `python.pythonPath` or `python.defaultInterpreterPath` to be correctly set to a python3.7+ installation.
 
 ## Tips
 

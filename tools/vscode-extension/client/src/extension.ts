@@ -42,8 +42,11 @@ export function activate(context: ExtensionContext): void {
   } else {
     // Production - Client is going to run the server (for use within `.vsix` package)
     const cwd = path.join(__dirname, '..', '..')
-    const pythonPath = workspace.getConfiguration('python').get<string>('pythonPath')
-    if (!pythonPath) throw new Error('`python.pythonPath` is not set')
+    let pythonPath = workspace.getConfiguration('python').get<string>('pythonPath')
+    if (!pythonPath) {
+      pythonPath = workspace.getConfiguration('python').get<string>('defaultInterpreterPath')
+    }
+    if (!pythonPath) throw new Error('Neither `python.pythonPath` nor `python.defaultInterpreterPath` is set.')
 
     client = new LanguageClient(pythonPath, { args: ['-m', 'server'], command: pythonPath, options: { cwd } }, clientOptions)
   }
