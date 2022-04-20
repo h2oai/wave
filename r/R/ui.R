@@ -2660,7 +2660,7 @@ ui_text_annotator_item <- function(
 #' @param tags List of tags the user can annotate with.
 #' @param items Pretagged parts of text content.
 #' @param trigger True if the form should be submitted when the annotator value changes.
-#' @param readonly True to prevent user interaction with the annotator component.
+#' @param readonly True to prevent user interaction with the annotator component. Defaults to False.
 #' @return A TextAnnotator instance.
 #' @export
 ui_text_annotator <- function(

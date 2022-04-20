@@ -6114,7 +6114,7 @@ class TextAnnotator:
         self.trigger = trigger
         """True if the form should be submitted when the annotator value changes."""
         self.readonly = readonly
-        """True to prevent user interaction with the annotator component."""
+        """True to prevent user interaction with the annotator component. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

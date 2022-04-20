@@ -39,7 +39,7 @@ export interface TextAnnotator {
   items: TextAnnotatorItem[]
   /** True if the form should be submitted when the annotator value changes. */
   trigger?: B
-  /** True to prevent user interaction with the annotator component. */
+  /** True to prevent user interaction with the annotator component. Defaults to False. */
   readonly?: B
 }
 
@@ -101,13 +101,14 @@ const css = stylesheet({
     left: -5,
     top: -3,
     background: cssVar('$card')
-  }
+  },
+  readonly: { pointerEvents: 'none' }
 })
 
 export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
   const
     [startIdx, setStartIdx] = React.useState<U | null>(null),
-    [activeTag, setActiveTag] = React.useState<S | undefined>(model.tags[0]?.name),
+    [activeTag, setActiveTag] = React.useState<S | undefined>(model.readonly ? undefined : model.tags[0]?.name),
     [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
     tagColorMap = model.tags.reduce((map, t) => {
       map.set(t.name, t.color)
@@ -189,12 +190,12 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         isLast = tokens[idx + 1]?.tag !== tag
       return (
         <mark
-          onMouseOver={model.readonly ? undefined : onMarkHover(idx)}
-          onMouseOut={model.readonly ? undefined : onMarkMouseOut}
+          onMouseOver={onMarkHover(idx)}
+          onMouseOut={onMarkMouseOut}
           className={clas(css.mark, isFirst ? css.firstMark : '', isLast ? css.lastMark : '')}
           style={{ backgroundColor: cssVar(color), color: getContrast(color) }}>
           {text}
-          <Fluent.Icon iconName='CircleAdditionSolid' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={model.readonly ? undefined : removeAnnotation(idx)} />
+          <Fluent.Icon iconName='CircleAdditionSolid' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
           {/* HACK: Put color underlay under remove icon because its glyph is transparent and doesn't look good on tags. */}
           <span style={removeIconStyle as React.CSSProperties} className={css.iconUnderlay}></span>
         </mark>
@@ -214,7 +215,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
       })
       return (
         <div key={name} data-test={name} className={clas(css.tagWrapper, activeTag === name ? style.activeTag : '')}>
-          <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={model.readonly ? undefined : activateTag(name)}>{label}</div>
+          <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={activateTag(name)}>{label}</div>
         </div>
       )
     })
@@ -223,12 +224,12 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
   React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] }, [])
 
   return (
-    <div data-test={model.name}>
+    <div data-test={model.name} className={model.readonly ? css.readonly : ''}>
       <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
       <div className={css.tags}>{tags}</div>
       <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
         tokens.map(({ text, tag }, idx) => (
-          <span key={idx} onMouseDown={model.readonly ? undefined : updateStartIdx(idx)} onMouseUp={model.readonly ? undefined : annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
+          <span key={idx} onMouseDown={updateStartIdx(idx)} onMouseUp={annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
         ))
       }
       </div>
