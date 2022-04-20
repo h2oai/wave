@@ -6,10 +6,9 @@ import { wave } from './ui'
 const
   name = 'textAnnotator',
   items = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }],
+  annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
   getSelectionMock = jest.fn(),
   pushMock = jest.fn()
-
-let annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items }
 
 describe('TextAnnotator.tsx', () => {
   beforeAll(() => {
