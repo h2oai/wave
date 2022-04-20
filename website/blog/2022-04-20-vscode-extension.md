@@ -48,6 +48,10 @@ Have you ever wanted to handle that button click in Wave, but didn't remember th
 
 The plugin is part of public [VScode marketplace](https://marketplace.visualstudio.com/items?itemName=h2oai.h2o-wave) and can be installed directly from the web (if you have your VSCode currently open) or within VSCode via `Extensions` pane.
 
+## Not a VSCode user?
+
+If you do not use VSCode, but still would like to enjoy an improved dev experience we also support [PyCharm plugin](https://plugins.jetbrains.com/plugin/18530-h2o-wave). See [blog post](https://wave.h2o.ai/blog/h2o-wave-pycharm-plugin) to learn more.
+
 ## Feedback
 
 We are eager to hear your feature requests, bugfixes or just general feedback in our [discussions](https://github.com/h2oai/wave/discussions) and [issues](https://github.com/h2oai/wave/issues) sections.
