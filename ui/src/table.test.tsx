@@ -208,13 +208,37 @@ describe('Table.tsx', () => {
   })
 
   describe('sort', () => {
+    it('Does not render sort arrow on sortable columns by default', () => {
+      const { container } = render(<XTable model={tableProps} />)
+
+      expect(container.querySelector("[data-icon-name='SortUp']")!).not.toBeInTheDocument()
+      expect(container.querySelector("[data-icon-name='SortDown']")!).not.toBeInTheDocument()
+    })
+
+    it('Renders sort arrow after clicking on sortable column header', () => {
+      const { container } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
+      expect(container.querySelector("[data-icon-name='SortUp']")!).toBeInTheDocument()
+    })
+
+    it('Checks if sort arrow disappears after clicking on another sortable column header', () => {
+      const { container } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
+      expect(container.querySelectorAll("[data-icon-name='SortUp']")!).toHaveLength(1)
+
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[1])
+      expect(container.querySelectorAll("[data-icon-name='SortUp']")!).toHaveLength(1)
+    })
+
     it('Sorts by column - string', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('gridcell')[0].textContent).toBe(cell11)
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe(cell21)
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe(cell31)
     })
 
@@ -232,9 +256,9 @@ describe('Table.tsx', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('gridcell')[0].textContent).toBe('3/28/2001, 3:09:31 AM')
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe('7/8/1971, 11:09:33 PM')
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe('3/28/2001, 3:09:31 AM')
     })
 
@@ -255,9 +279,9 @@ describe('Table.tsx', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe(xIcon)
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe(checkIcon)
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe(xIcon)
     })
 
@@ -277,16 +301,16 @@ describe('Table.tsx', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('gridcell')[0].textContent).toBe('111')
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe('9')
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[0].textContent).toBe('111')
     })
 
     it('Fires event when pagination enabled', () => {
       const { container } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['sort'] }} />)
 
-      fireEvent.click(container.querySelector('i[class*=sortingIcon]') as HTMLElement)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'sort', { 'colname1': true })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
@@ -306,38 +330,12 @@ describe('Table.tsx', () => {
       }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      const [sortCol1, sortCol2] = container.querySelectorAll('i[class*=sortingIcon]')
+      const [sortCol1, sortCol2] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
       expect(getAllByRole('gridcell')[0].textContent).toBe('bb')
       fireEvent.click(sortCol2)
       expect(getAllByRole('gridcell')[0].textContent).toBe('cc')
       fireEvent.click(sortCol1)
       expect(getAllByRole('gridcell')[0].textContent).toBe('aa')
-    })
-
-    it('Displays corect sort icons during multiple column sort', () => {
-      tableProps = {
-        ...tableProps,
-        rows: [
-          { name: '2', cells: ['bb', 'open'] },
-          { name: '3', cells: ['cc', 'closed'] },
-          { name: '1', cells: ['aa', 'closed'] },
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', sortable: true },
-        ],
-      }
-      const { container } = render(<XTable model={tableProps} />)
-
-      const [sortCol1, sortCol2] = container.querySelectorAll('i[class*=sortingIcon]')
-      expect(container.querySelectorAll('i[data-icon-name="SortDown"]')).toHaveLength(2)
-      expect(container.querySelectorAll('i[data-icon-name="SortUp"]')).toHaveLength(0)
-      fireEvent.click(sortCol2)
-      expect(container.querySelectorAll('i[data-icon-name="SortDown"]')).toHaveLength(1)
-      expect(container.querySelectorAll('i[data-icon-name="SortUp"]')).toHaveLength(1)
-      fireEvent.click(sortCol1)
-      expect(container.querySelectorAll('i[data-icon-name="SortDown"]')).toHaveLength(0)
-      expect(container.querySelectorAll('i[data-icon-name="SortUp"]')).toHaveLength(2)
     })
   })
 
@@ -432,23 +430,23 @@ describe('Table.tsx', () => {
     it('Filters correctly - select all', () => {
       const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
       expect(getAllByRole('row')).toHaveLength(1 + headerRow)
       fireEvent.click(getByText('Select All'))
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
     })
 
     it('Filters correctly - deselect all', () => {
       const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('1')[1].parentElement!)
       expect(getAllByRole('row')).toHaveLength(1 + headerRow)
       fireEvent.click(getByText('Deselect All'))
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
     })
 
     it('Filters correctly - multiple options', () => {
@@ -802,7 +800,7 @@ describe('Table.tsx', () => {
 
       expect(getAllByRole('gridcell')[8].textContent).toBe(cell11)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
 
       expect(getAllByRole('gridcell')[8].textContent).toBe(cell21)
     })
@@ -895,7 +893,7 @@ describe('Table.tsx', () => {
 
       expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
     })
 
@@ -948,7 +946,7 @@ describe('Table.tsx', () => {
     it('Checks if expanded state is preserved after sort', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + items)
     })
 
@@ -1026,6 +1024,14 @@ describe('Table.tsx', () => {
       fireEvent.click(getByText('Reset table'))
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'reset', true)
       expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Removes sort arrow after reset', () => {
+      const { container, getByText } = render(<XTable model={{ ...tableProps, resettable: true }} />)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
+      fireEvent.click(getByText('Reset table'))
+      expect(container.querySelector("[data-icon-name='SortUp']")!).not.toBeInTheDocument()
     })
   })
 
