@@ -2601,7 +2601,7 @@ class Button:
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.path = path
-        """The path or URL to link to."""
+        """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
