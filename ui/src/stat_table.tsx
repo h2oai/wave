@@ -51,6 +51,8 @@ export interface StatTableItem {
   icon?: S
   /** The color of the icon. */
   icon_color?: S
+  /** List of colors used for each value in values ordered respectively. */
+  colors?: S[]
 }
 
 const
@@ -135,10 +137,10 @@ export const
           header = columns.map((label, i) => (
             <th key={`${i}:${label}`}>{label}</th>
           )),
-          rows = items.map(({ name: rowName, label, values, caption, icon, icon_color }, i) => {
+          rows = items.map(({ name: rowName, label, values, caption, icon, icon_color, colors }, i) => {
             const
               onClick = rowName ? () => jump(tableName, rowName) : undefined,
-              cells = values.map((value, j) => (<td key={`${j}:${value}`}>{value}</td>))
+              cells = values.map((value, j) => (<td key={`${j}:${value}`} style={colors && colors[j] ? { color: cssVar(colors[j]) } : undefined }>{value}</td>))
 
             return (
               <tr key={rowName ?? `${i}:${label}`} className={onClick ? css.clickable : undefined} onClick={onClick}>

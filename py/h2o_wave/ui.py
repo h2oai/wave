@@ -3837,6 +3837,7 @@ def stat_table_item(
         caption: Optional[str] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+        colors: Optional[List[str]] = None,
 ) -> StatTableItem:
     """Create a stat item (a label and a set of values) for stat_table_card.
 
@@ -3847,6 +3848,7 @@ def stat_table_item(
         caption: The caption for the metric, displayed below the label.
         icon: An optional icon, displayed next to the label.
         icon_color: The color of the icon.
+        colors: List of colors used for each value in values ordered respectively.
     Returns:
         A `h2o_wave.types.StatTableItem` instance.
     """
@@ -3857,6 +3859,7 @@ def stat_table_item(
         caption,
         icon,
         icon_color,
+        colors,
     )
 
 

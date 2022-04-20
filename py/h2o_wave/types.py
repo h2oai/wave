@@ -10752,6 +10752,7 @@ class StatTableItem:
             caption: Optional[str] = None,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
+            colors: Optional[List[str]] = None,
     ):
         _guard_scalar('StatTableItem.label', label, (str,), False, False, False)
         _guard_vector('StatTableItem.values', values, (str,), False, False, False)
@@ -10759,6 +10760,7 @@ class StatTableItem:
         _guard_scalar('StatTableItem.caption', caption, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon', icon, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon_color', icon_color, (str,), False, True, False)
+        _guard_vector('StatTableItem.colors', colors, (str,), False, True, False)
         self.label = label
         """The label for the row."""
         self.values = values
@@ -10771,6 +10773,8 @@ class StatTableItem:
         """An optional icon, displayed next to the label."""
         self.icon_color = icon_color
         """The color of the icon."""
+        self.colors = colors
+        """List of colors used for each value in values ordered respectively."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -10780,6 +10784,7 @@ class StatTableItem:
         _guard_scalar('StatTableItem.caption', self.caption, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon', self.icon, (str,), False, True, False)
         _guard_scalar('StatTableItem.icon_color', self.icon_color, (str,), False, True, False)
+        _guard_vector('StatTableItem.colors', self.colors, (str,), False, True, False)
         return _dump(
             label=self.label,
             values=self.values,
@@ -10787,6 +10792,7 @@ class StatTableItem:
             caption=self.caption,
             icon=self.icon,
             icon_color=self.icon_color,
+            colors=self.colors,
         )
 
     @staticmethod
@@ -10804,12 +10810,15 @@ class StatTableItem:
         _guard_scalar('StatTableItem.icon', __d_icon, (str,), False, True, False)
         __d_icon_color: Any = __d.get('icon_color')
         _guard_scalar('StatTableItem.icon_color', __d_icon_color, (str,), False, True, False)
+        __d_colors: Any = __d.get('colors')
+        _guard_vector('StatTableItem.colors', __d_colors, (str,), False, True, False)
         label: str = __d_label
         values: List[str] = __d_values
         name: Optional[str] = __d_name
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
+        colors: Optional[List[str]] = __d_colors
         return StatTableItem(
             label,
             values,
@@ -10817,6 +10826,7 @@ class StatTableItem:
             caption,
             icon,
             icon_color,
+            colors,
         )
 
 
