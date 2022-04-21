@@ -2,7 +2,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AnnotatorTags } from './text_annotator'
-import { clas, cssVar, px } from './theme'
+import { clas, cssVar, cssVarValue, px } from './theme'
 
 /** Create a tag. */
 interface ImageAnnotatorTag {
@@ -73,6 +73,7 @@ const css = stylesheet({
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
+    colorsMap = new Map<S, S>(model.tags.map(tag => [tag.name, cssVarValue(tag.color)])),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
@@ -83,7 +84,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
     drawShape = (ctx: CanvasRenderingContext2D, item: ImageAnnotatorItem) => {
       ctx.beginPath()
-      ctx.strokeStyle = 'red'
+      ctx.strokeStyle = colorsMap.get(item.tag) || cssVar('$red')
       ctx.lineWidth = 5
       ctx.rect(item.x_min, item.y_min, item.x_max, item.y_max)
       ctx.stroke()

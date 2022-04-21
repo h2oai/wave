@@ -20,8 +20,8 @@ async def serve(q: Q):
                 image='https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 image_height='700px',
                 tags=[
-                    ui.image_annotator_tag(name='p', label='Person', color='#F1CBCB'),
-                    ui.image_annotator_tag(name='f', label='Food', color='#CAEACA'),
+                    ui.image_annotator_tag(name='p', label='Person', color='$cyan'),
+                    ui.image_annotator_tag(name='f', label='Food', color='$blue'),
                 ],
                 items=[],
             ),
