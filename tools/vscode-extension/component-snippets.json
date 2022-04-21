@@ -104,13 +104,6 @@
     ],
     "description": "Create a minimal Wave Combobox."
   },
-  "Wave CommandTableCellType": {
-    "prefix": "w_command_table_cell_type",
-    "body": [
-      "ui.command_table_cell_type(items=[\n\t\t$1\t\t\n]),$0"
-    ],
-    "description": "Create a minimal Wave CommandTableCellType."
-  },
   "Wave CopyableText": {
     "prefix": "w_copyable_text",
     "body": [
@@ -306,6 +299,13 @@
       "ui.menu(items=[\n\t\t$1\t\t\n]),$0"
     ],
     "description": "Create a minimal Wave Menu."
+  },
+  "Wave MenuTableCellType": {
+    "prefix": "w_menu_table_cell_type",
+    "body": [
+      "ui.menu_table_cell_type(commands=[\n\t\t$1\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave MenuTableCellType."
   },
   "Wave InlineStylesheet": {
     "prefix": "w_inline_stylesheet",
@@ -979,13 +979,6 @@
     ],
     "description": "Create a full Wave Combobox."
   },
-  "Wave Full CommandTableCellType": {
-    "prefix": "w_full_command_table_cell_type",
-    "body": [
-      "ui.command_table_cell_type(name='$1', items=[\n\t\t$2\t\t\n]),$0"
-    ],
-    "description": "Create a full Wave CommandTableCellType."
-  },
   "Wave Full CopyableText": {
     "prefix": "w_full_copyable_text",
     "body": [
@@ -1209,6 +1202,13 @@
       "ui.menu(icon='$1', image='$2', name='$3', items=[\n\t\t$4\t\t\n]),$0"
     ],
     "description": "Create a full Wave Menu."
+  },
+  "Wave Full MenuTableCellType": {
+    "prefix": "w_full_menu_table_cell_type",
+    "body": [
+      "ui.menu_table_cell_type(name='$1', commands=[\n\t\t$2\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave MenuTableCellType."
   },
   "Wave Full MessageBar": {
     "prefix": "w_full_message_bar",
@@ -1535,7 +1535,7 @@
   "Wave Full TableCellType": {
     "prefix": "w_full_table_cell_type",
     "body": [
-      "ui.table_cell_type(progress=$1, icon=$2, tag=$3, command=$4),$0"
+      "ui.table_cell_type(progress=$1, icon=$2, tag=$3, menu=$4),$0"
     ],
     "description": "Create a full Wave TableCellType."
   },

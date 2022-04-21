@@ -19,14 +19,14 @@ class TableRow:
 
 
 def show_table(q) -> None:
-    q.page['example'] = ui.form_card(box='1 1 4 -1', items=[
+    q.page['example'] = ui.form_card(box='1 1 4 4', items=[
         ui.table(
             name='table',
             columns=[
                 ui.table_column(name='name', label='Name'),
                 ui.table_column(
                     name='actions', label='Actions',
-                    cell_type=ui.command_table_cell_type(name='commands', items=[
+                    cell_type=ui.menu_table_cell_type(name='commands', commands=[
                         ui.command(name='details', label='Details'),
                         ui.command(name='delete', label='Delete'),
                     ])

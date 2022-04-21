@@ -1239,8 +1239,8 @@ def tag_table_cell_type(
     ))
 
 
-def command_table_cell_type(
-        items: List[Command],
+def menu_table_cell_type(
+        commands: List[Command],
         name: Optional[str] = None,
 ) -> TableCellType:
     """Create a cell type that renders command menu.
@@ -1249,13 +1249,13 @@ def command_table_cell_type(
     multiple actions within a single row.
 
     Args:
-        items: Items to render.
+        commands: Items to render.
         name: An identifying name for this component.
     Returns:
-        A `h2o_wave.types.CommandTableCellType` instance.
+        A `h2o_wave.types.MenuTableCellType` instance.
     """
-    return TableCellType(command=CommandTableCellType(
-        items,
+    return TableCellType(menu=MenuTableCellType(
+        commands,
         name,
     ))
 

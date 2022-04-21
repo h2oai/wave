@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { CommandTableCellType, XCommandTableCellType } from './command_table_cell_type'
+import { MenuTableCellType as MenuTableCellType, XMenuTableCellType } from './menu_table_cell_type'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
@@ -40,7 +40,7 @@ interface TableCellType {
   /** Renders one or more tags. */
   tag?: TagTableCellType
   /** Renders a command menu. */
-  command?: CommandTableCellType
+  menu?: MenuTableCellType
 }
 
 /** Create a table column. */
@@ -477,7 +477,7 @@ const
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
-        if (col.cellType?.command) return <XCommandTableCellType model={{...col.cellType.command, rowId: String(item.key)}} />
+        if (col.cellType?.menu) return <XMenuTableCellType model={{...col.cellType.menu, rowId: String(item.key)}} />
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
