@@ -28,7 +28,7 @@ def make_markdown_row(values):
 def make_markdown_table(fields, rows):
     return '\n'.join([
         make_markdown_row(fields),
-        make_markdown_row('---' * len(fields)),
+        make_markdown_row('-' * len(fields)),
         '\n'.join([make_markdown_row(row) for row in rows]),
     ])
 
