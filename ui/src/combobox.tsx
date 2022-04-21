@@ -62,10 +62,9 @@ export interface Combobox {
 export const
   XCombobox = ({ model: m }: { model: Combobox }) => {
     const
-      id = React.useRef((m.choices ?? []).length),
       isMultiValued = !!m.values,
       [text, setText] = React.useState(m.value),
-      [options, setOptions] = React.useState((m.choices || []).map((text, idx): Fluent.IComboBoxOption => ({ key: `${idx + 1}`, text }))),
+      [options, setOptions] = React.useState((m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text }))),
       getInitialSelected = () => 
         (m.values || []).reduce((acc: Fluent.IComboBoxOption[], cur: S) => {
           const found = options.find(option => option.text === cur)
@@ -78,7 +77,7 @@ export const
         
         if (!option && value) {
           selected = true
-          option = { key: `${++id.current}`, text: value }
+          option = { key: value, text: value }
           setOptions((prevOptions = []) => [...prevOptions, option!])
         }
 

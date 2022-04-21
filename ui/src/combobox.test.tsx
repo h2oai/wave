@@ -18,7 +18,7 @@ import { Combobox, XCombobox } from './combobox'
 import { wave } from './ui'
 
 const name = 'combobox'
-const comboboxProps: Combobox = { name }
+const comboboxProps: Combobox = { name, choices: ['Choice1', 'Choice2', 'Choice3'] }
 describe('Combobox.tsx', () => {
   beforeEach(() => { wave.args[name] = null })
 
@@ -37,17 +37,36 @@ describe('Combobox.tsx', () => {
   })
 
   it('Sets args - selection', () => {
-    const { container, getByText } = render(<XCombobox model={{ ...comboboxProps, choices: ['Choice1', 'Choice2', 'Choice3'] }} />)
+    const { container, getByText } = render(<XCombobox model={{ ...comboboxProps }} />)
     fireEvent.click(container.querySelector('button')!)
     fireEvent.click(getByText('Choice1'))
 
     expect(wave.args[name]).toBe('Choice1')
   })
 
+  it('Sets args - multiple selection', () => {
+    const { container, getByText } = render(<XCombobox model={{ ...comboboxProps , values: [] }} />)
+    fireEvent.click(container.querySelector('button')!)
+    fireEvent.click(getByText('Choice1'))
+    fireEvent.click(getByText('Choice2'))
+
+    expect(wave.args[name]).toEqual(['Choice1', 'Choice2'])
+  })
+
+  it('Adds new user-typed option', () => {
+    const { getByRole } = render(<XCombobox model={{ ...comboboxProps, values: [] }} />)
+    const combobox = getByRole('combobox') as HTMLInputElement
+
+    fireEvent.click(combobox)
+    fireEvent.keyDown(combobox, { key: 'A', code: 'KeyA' })
+    fireEvent.keyDown(combobox, { key: 'Enter', code: 'Enter'})
+    expect(combobox.getAttribute('value')).toEqual(['A'])
+  })
+
   it('Calls sync when trigger is on', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
-    const { container, getByText } = render(<XCombobox model={{ ...comboboxProps, trigger: true, choices: ['Choice1', 'Choice2', 'Choice3'] }} />)
+    const { container, getByText } = render(<XCombobox model={{ ...comboboxProps, trigger: true }} />)
 
     fireEvent.click(container.querySelector('button')!)
     fireEvent.click(getByText('Choice1'))
