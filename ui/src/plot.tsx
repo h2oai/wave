@@ -975,12 +975,6 @@ const
         annotations,
         // Custom interactions.
         interactions: interactions.map(type => ({ type })),
-        tooltip: {
-          showCrosshairs: true,
-          crosshairs: { type: 'xy' },
-          showTitle: false
-          // XXX pass container element
-        }
       }
     }
   }
@@ -1061,12 +1055,30 @@ export const
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
-          tooltipCfg = Object.keys(data[0]).join('*'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
         currentPlot.current = plot
         if (chart) {
-          marks.forEach(({ type }) => {
-            if (type) chart[type]().position(tooltipCfg).tooltip(tooltipCfg)
+          chart.tooltip({
+            showCrosshairs: true,
+            crosshairs: { type: 'xy' },
+            // XXX pass container element
+            customContent: (name, items) => {
+              const container = document.createElement('div')
+              container.className = 'g2-tooltip'
+              let listItem = ''
+              items.forEach(({ data, name, mappingData, color }) => {
+                Object.keys(data).forEach(item => {
+                  listItem += `<li class="g2-tooltip-list-item" data-index={index} style="margin-bottom:4px;display:flex;align-items: center;">
+                      <span style="background-color:${(item === name || data[item] === name) && (mappingData?.color || color)};" class="g2-tooltip-marker"></span>
+                      <span style="display:inline-flex;flex:1;justify-content:space-between">
+                      <span style="margin-right: 16px;">${item}:</span><span>${data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
+                      </span>
+                    </li>`
+                })
+              })
+              container.innerHTML = listItem
+              return container
+            }
           })
           currentChart.current = chart
           chart.data(data)
