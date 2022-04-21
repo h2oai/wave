@@ -73,26 +73,63 @@ const css = stylesheet({
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
-    [activeTag, setActiveTag] = React.useState<S | undefined>(model.tags[0]?.name),
+    [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     aspectRatioRef = React.useRef(1),
+    startPosition = React.useRef<{ x: U, y: U } | undefined>(undefined),
+    ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
+    drawnShapes = React.useRef<ImageAnnotatorItem[]>(model.items || []),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
-    onDrag = (event: React.DragEvent) => {
-      // Draw a rectangle on the canvas based on the mouse position.
-      const canvas = imgRef.current
-      if (canvas) {
+    drawShape = (ctx: CanvasRenderingContext2D, item: ImageAnnotatorItem) => {
+      ctx.beginPath()
+      ctx.strokeStyle = 'red'
+      ctx.lineWidth = 5
+      ctx.rect(item.x_min, item.y_min, item.x_max, item.y_max)
+      ctx.stroke()
+      ctx.closePath()
+    },
+    redrawExistingShapes = () => {
+      const canvas = canvasRef.current
+      const ctx = ctxRef.current
+      if (!ctx || !canvas) return
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      drawnShapes.current.forEach(item => drawShape(ctx, item))
+    },
+    onMouseDown = (e: React.MouseEvent) => {
+      e.preventDefault()
+      redrawExistingShapes()
+      startPosition.current = { x: e.clientX, y: e.clientY }
+    },
+    onMouseUp = ({ clientX, clientY }: React.MouseEvent) => {
+      const
+        canvas = canvasRef.current,
+        start = startPosition.current
+      if (!start || !canvas) return
+
+      const
+        { x, y } = start,
+        rect = canvas.getBoundingClientRect()
+
+      drawnShapes.current.push({ x_min: x - rect.left, x_max: clientX - x, y_min: y - rect.top, y_max: clientY - y, tag: activeTag })
+      startPosition.current = undefined
+    },
+    onMouseMove = (event: React.MouseEvent) => {
+      const
+        canvas = canvasRef.current,
+        ctx = ctxRef.current,
+        start = startPosition.current
+
+      if (canvas && ctx && start) {
+        redrawExistingShapes()
         const
           rect = canvas.getBoundingClientRect(),
-          x = event.clientX - rect.left,
-          y = event.clientY - rect.top,
-          ctx = canvas.getContext('2d')
-        if (ctx) {
-          ctx.beginPath()
-          ctx.fillStyle = "#FF0000"
-          ctx.fillRect(x, y, 10, 10)
-          ctx.stroke()
-        }
+          { x, y } = start,
+          x_max = event.clientX - x,
+          y_max = event.clientY - y
+
+        drawShape(ctx, { x_min: x - rect.left, y_min: y - rect.top, x_max: x_max, y_max: y_max, tag: activeTag })
       }
     }
 
@@ -103,6 +140,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const imgCanvas = imgRef.current
       const canvas = canvasRef.current
       if (!imgCanvas || !canvas) return
+      ctxRef.current = canvas.getContext('2d')
 
       const ctx = imgCanvas.getContext('2d')
       if (!ctx) return
@@ -127,7 +165,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
-        <canvas draggable ref={canvasRef} className={css.canvas} onDrag={onDrag} />
+        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} />
       </div>
     </div >
   )
