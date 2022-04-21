@@ -1910,6 +1910,7 @@ def mark(
         ref_stroke_opacity: Optional[float] = None,
         ref_stroke_size: Optional[float] = None,
         ref_stroke_dash: Optional[str] = None,
+        interactive: Optional[bool] = None,
 ) -> Mark:
     """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
     A plot can contain multiple such layers of marks.
@@ -1977,6 +1978,7 @@ def mark(
         ref_stroke_opacity: Reference line stroke opacity.
         ref_stroke_size: Reference line stroke size (line width or pen thickness).
         ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+        interactive: Defines whether to raise events on interactions with the mark. Defaults to True.
     Returns:
         A `h2o_wave.types.Mark` instance.
     """
@@ -2043,6 +2045,7 @@ def mark(
         ref_stroke_opacity,
         ref_stroke_size,
         ref_stroke_dash,
+        interactive,
     )
 
 

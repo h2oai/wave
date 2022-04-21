@@ -171,6 +171,8 @@ interface Mark {
   ref_stroke_size?: F
   /** Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
   ref_stroke_dash?: S
+  /** Defines whether to raise events on interactions with the mark. Defaults to True. */
+  interactive?: B
 }
 
 /** Extended mark attributes. Not exposed to API. */
@@ -1100,16 +1102,11 @@ export const
               switch (event) {
                 case 'select_marks': {
                   chart.interaction('element-single-selected')
-                  chart.on('element:click', (ev: any) => {
-                    const
-                      { x, data: eventData } = ev,
-                      { points, data, shape } = eventData,
-                      selectedElements = chart.getElementsBy(el => el.getStates().includes('selected')),
-                      dataInterval = shape === 'line' ? data.filter((item: any, idx: number) => {
-                        if (idx !== points.length - 1 && x >= points[idx].x && x <= points[idx + 1].x) return true
-                        if (idx !== 0 && x <= points[idx].x && x >= points[idx - 1].x) return true
-                      }) : data
-                    if (selectedElements.length && model.name) wave.emit(model.name, event, [dataInterval])
+                  chart.on('element:statechange', (ev: any) => {
+                    const e = ev.gEvent.originalEvent
+                    if (e.stateStatus && e.state === 'selected') {
+                      if (model.name) wave.emit(model.name, event, [e.element?.data])
+                    }
                   })
                 }
               }
