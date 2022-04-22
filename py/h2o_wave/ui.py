@@ -756,7 +756,7 @@ def combobox(
         label: Text to be displayed alongside the component.
         placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
         value: The name of the selected choice.
-        values: The names of the selected choices.
+        values: The names of the selected choices. If set, multiple selections will be allowed.
         choices: The choices to be presented.
         error: Text to be displayed as an error below the text box.
         disabled: True if this field is disabled.

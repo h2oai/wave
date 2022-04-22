@@ -878,7 +878,7 @@ ui_dropdown <- function(
 #' @param label Text to be displayed alongside the component.
 #' @param placeholder A string that provides a brief hint to the user as to what kind of information is expected in the field.
 #' @param value The name of the selected choice.
-#' @param values The names of the selected choices.
+#' @param values The names of the selected choices. If set, multiple selections will be allowed.
 #' @param choices The choices to be presented.
 #' @param error Text to be displayed as an error below the text box.
 #' @param disabled True if this field is disabled.

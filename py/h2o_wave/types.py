@@ -1919,7 +1919,7 @@ class Combobox:
         self.value = value
         """The name of the selected choice."""
         self.values = values
-        """The names of the selected choices."""
+        """The names of the selected choices. If set, multiple selections will be allowed."""
         self.choices = choices
         """The choices to be presented."""
         self.error = error
