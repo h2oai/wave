@@ -17,7 +17,7 @@ import { Command, toCommands } from "./toolbar"
 import React from 'react'
 import { stylesheet } from "typestyle"
 import * as Fluent from '@fluentui/react'
-import { border, clas, cssVar } from "./theme"
+import { border, cssVar } from "./theme"
 
 /**
  * Create a cell type that renders command menu.
@@ -34,11 +34,10 @@ import { border, clas, cssVar } from "./theme"
 
 const css = stylesheet({
   container: {
-    display: 'inline-flex',
-    alignItems: 'center',
+    display: 'inline',
     cursor: 'pointer',
   },
-   icon: {
+  icon: {
     fontSize: 18
   }
 })
@@ -51,7 +50,7 @@ export const XMenuTableCellType = ({ model }: { model: MenuTableCellType & { row
     close = () => setIsMenuHidden(true)
 
   return (
-    <div data-test={model.name} className={clas(css.container, 'w-menu')} ref={ref} onClick={open}>
+    <div data-test={model.name} className={css.container} ref={ref} onClick={open}>
       <Fluent.FontIcon className={css.icon} iconName="MoreVertical" />
       <Fluent.ContextualMenu
         items={toCommands(model.commands.map(i => ({...i, value: model.rowId })))}
@@ -59,7 +58,7 @@ export const XMenuTableCellType = ({ model }: { model: MenuTableCellType & { row
         hidden={isMenuHidden}
         onDismiss={close}
         isBeakVisible
-        directionalHint={Fluent.DirectionalHint.bottomRightEdge}
+        directionalHint={Fluent.DirectionalHint.bottomCenter}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
         styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')) } }}
       />
