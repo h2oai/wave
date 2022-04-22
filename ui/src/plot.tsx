@@ -1065,10 +1065,10 @@ export const
             customContent: (title, items) => {
               const container = document.createElement('div')
               container.className = 'g2-tooltip'
-              container.innerHTML = items.map(({ data, name, mappingData, color }) =>
+              container.innerHTML = items.map(({ data, mappingData, color }) =>
                 Object.keys(data).map(item =>
                   `<li class="g2-tooltip-list-item" data-index={index} style="margin-bottom:4px;display:flex;align-items: center;">
-                    <span style="background-color:${(item === name || data[item] === name) && (mappingData?.color || color)};" class="g2-tooltip-marker"></span>
+                    <span style="background-color:${mappingData?.color || color};" class="g2-tooltip-marker"></span>
                     <span style="display:inline-flex;flex:1;justify-content:space-between">
                     <span style="margin-right: 16px;">${item}:</span><span>${data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
                     </span>
