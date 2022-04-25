@@ -81,7 +81,6 @@ const
       margin: 8
     }
   }),
-  mouseEventToRect = ({ clientX, clientY }: React.MouseEvent, { x, y }: Position, rect: DOMRect) => ({ x1: x, x2: clientX - rect.left, y1: y, y2: clientY - rect.top }),
   isIntersecting = (cursor_x: U, cursor_y: U) => ({ x2, x1, y2, y1 }: ImageAnnotatorItem) => cursor_x > x1 && cursor_x < x2 && cursor_y > y1 && cursor_y < y2,
   eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
   drawCircle = (ctx: CanvasRenderingContext2D, x: U, y: U, fillColor: S) => {
@@ -109,8 +108,6 @@ const
       drawCircle(ctx, x1, y2, strokeColor)
     }
   }
-
-
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
@@ -149,14 +146,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         start = startPosition.current
       if (!start || !canvas) return
 
-
       const
         focused = drawnShapes.find(item => item.isFocused),
         rect = canvas.getBoundingClientRect(),
         { cursor_x, cursor_y } = eventToCursor(e, rect)
 
       if (!focused || !isIntersecting(cursor_x, cursor_y)(focused)) {
-        const { x1, x2, y1, y2 } = mouseEventToRect(e, start, rect)
+        const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
         if (x2 !== x1 && y2 !== y1) setDrawnShapes(shapes => [{ x1, x2, y1, y2, tag: activeTag }, ...shapes])
       }
 
@@ -170,9 +166,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       if (!canvas || !ctx) return
 
-      const
-        rect = canvas.getBoundingClientRect(),
-        { cursor_x, cursor_y } = eventToCursor(e, rect)
+      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
       if (start) {
         const focused = drawnShapes.find(shape => shape.isFocused)
         if (focused && isIntersecting(cursor_x, cursor_y)(focused)) {
@@ -188,20 +182,18 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         } else {
           setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
-          drawRect(ctx, { ...mouseEventToRect(e, start, rect), tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
+          drawRect(ctx, { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y, tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
         }
       } else {
         canvas.style.cursor = drawnShapes.some(isIntersecting(cursor_x, cursor_y)) ? 'pointer' : 'crosshair'
       }
     },
     onClick = (e: React.MouseEvent) => {
-      const
-        canvas = canvasRef.current,
-        ctx = ctxRef.current
-      if (!ctx || !canvas) return
+      const canvas = canvasRef.current
+      if (!canvas) return
 
-      const rect = canvas.getBoundingClientRect()
-      setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: isIntersecting(e.clientX - rect.left, e.clientY - rect.top)(shape) })))
+      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
+      setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: isIntersecting(cursor_x, cursor_y)(shape) })))
       redrawExistingShapes()
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
