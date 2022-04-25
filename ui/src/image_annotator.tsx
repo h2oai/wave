@@ -18,13 +18,13 @@ interface ImageAnnotatorTag {
 /** Create an annotator item with initial selected tags or no tag for plaintext. */
 interface ImageAnnotatorItem {
   /** Minimum X dimension. */
-  x_min: U
+  x1: U
   /** Maximum X dimension. */
-  x_max: U
+  x2: U
   /** Minimum Y dimension. */
-  y_min: U
+  y1: U
   /** Maximum Y dimension. */
-  y_max: U
+  y2: U
   /** Tag connected to the highlighted section. */
   tag: S
 }
@@ -81,8 +81,9 @@ const
       margin: 8
     }
   }),
-  mouseEventToRect = ({ clientX, clientY }: React.MouseEvent, { x, y }: Position, rect: DOMRect) => ({ x_min: x, x_max: clientX - rect.left, y_min: y, y_max: clientY - rect.top }),
-  isIntersecting = (cursor_x: U, cursor_y: U) => ({ x_max, x_min, y_max, y_min }: ImageAnnotatorItem) => cursor_x > x_min && cursor_x < x_max && cursor_y > y_min && cursor_y < y_max,
+  mouseEventToRect = ({ clientX, clientY }: React.MouseEvent, { x, y }: Position, rect: DOMRect) => ({ x1: x, x2: clientX - rect.left, y1: y, y2: clientY - rect.top }),
+  isIntersecting = (cursor_x: U, cursor_y: U) => ({ x2, x1, y2, y1 }: ImageAnnotatorItem) => cursor_x > x1 && cursor_x < x2 && cursor_y > y1 && cursor_y < y2,
+  eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
   drawCircle = (ctx: CanvasRenderingContext2D, x: U, y: U, fillColor: S) => {
     ctx.beginPath()
     ctx.fillStyle = fillColor
@@ -91,21 +92,21 @@ const
     path.closePath()
     ctx.fill(path)
   },
-  drawRect = (ctx: CanvasRenderingContext2D, { x_min, x_max, y_min, y_max, isFocused }: DrawnShape, strokeColor: S) => {
+  drawRect = (ctx: CanvasRenderingContext2D, { x1, x2, y1, y2, isFocused }: DrawnShape, strokeColor: S) => {
     ctx.beginPath()
     ctx.lineWidth = 6
     ctx.strokeStyle = strokeColor
-    ctx.strokeRect(x_min, y_min, x_max - x_min, y_max - y_min)
+    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
     ctx.closePath()
     if (isFocused) {
       ctx.beginPath()
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
-      ctx.fillRect(x_min, y_min, x_max - x_min, y_max - y_min)
+      ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
       ctx.closePath()
-      drawCircle(ctx, x_min, y_min, strokeColor)
-      drawCircle(ctx, x_max, y_min, strokeColor)
-      drawCircle(ctx, x_max, y_max, strokeColor)
-      drawCircle(ctx, x_min, y_max, strokeColor)
+      drawCircle(ctx, x1, y1, strokeColor)
+      drawCircle(ctx, x2, y1, strokeColor)
+      drawCircle(ctx, x2, y2, strokeColor)
+      drawCircle(ctx, x1, y2, strokeColor)
     }
   }
 
@@ -139,8 +140,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const canvas = canvasRef.current
       if (!canvas) return
 
-      const rect = canvas.getBoundingClientRect()
-      startPosition.current = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
+      startPosition.current = { x: cursor_x, y: cursor_y }
     },
     onMouseUp = (e: React.MouseEvent) => {
       const
@@ -148,8 +149,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         start = startPosition.current
       if (!start || !canvas) return
 
-      const shape = mouseEventToRect(e, start, canvas.getBoundingClientRect())
-      if (shape.x_max !== shape.x_min && shape.y_max !== shape.y_min) setDrawnShapes(shapes => [{ ...shape, tag: activeTag }, ...shapes])
+
+      const
+        focused = drawnShapes.find(item => item.isFocused),
+        rect = canvas.getBoundingClientRect(),
+        { cursor_x, cursor_y } = eventToCursor(e, rect)
+
+      if (!focused || !isIntersecting(cursor_x, cursor_y)(focused)) {
+        const { x1, x2, y1, y2 } = mouseEventToRect(e, start, rect)
+        if (x2 !== x1 && y2 !== y1) setDrawnShapes(shapes => [{ x1, x2, y1, y2, tag: activeTag }, ...shapes])
+      }
+
       startPosition.current = undefined
     },
     onMouseMove = (e: React.MouseEvent) => {
@@ -158,17 +168,31 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         ctx = ctxRef.current,
         start = startPosition.current
 
-      if (canvas && ctx) {
-        const rect = canvas.getBoundingClientRect()
-        if (start) {
+      if (!canvas || !ctx) return
+
+      const
+        rect = canvas.getBoundingClientRect(),
+        { cursor_x, cursor_y } = eventToCursor(e, rect)
+      if (start) {
+        const focused = drawnShapes.find(shape => shape.isFocused)
+        if (focused && isIntersecting(cursor_x, cursor_y)(focused)) {
+          canvas.style.cursor = 'move'
+          focused.x1 += cursor_x - start.x
+          focused.x2 += cursor_x - start.x
+          focused.y1 += cursor_y - start.y
+          focused.y2 += cursor_y - start.y
+          // TODO: A bit ugly, try to find a better way.
+          startPosition.current = { x: cursor_x, y: cursor_y }
+          setDrawnShapes(shapes => shapes.map(shape => shape.isFocused ? focused : shape))
+          redrawExistingShapes()
+        } else {
+          setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
           drawRect(ctx, { ...mouseEventToRect(e, start, rect), tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
         }
-        else {
-          canvas.style.cursor = drawnShapes.some(isIntersecting(e.clientX - rect.left, e.clientY - rect.top)) ? 'pointer' : 'crosshair'
-        }
+      } else {
+        canvas.style.cursor = drawnShapes.some(isIntersecting(cursor_x, cursor_y)) ? 'pointer' : 'crosshair'
       }
-
     },
     onClick = (e: React.MouseEvent) => {
       const
