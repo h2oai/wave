@@ -68,7 +68,7 @@ export const
       [selected, setSelected] = React.useState<Fluent.IComboBoxOption[]>((m.values || []).map(text => ({ key: text, text }))),
       selectOpt = (option: Fluent.IComboBoxOption) => {
         setSelected(items => {
-          const result = option.selected ? [...items, option] : items.filter(item => item.key !== option!.key)
+          const result = option.selected ? [...items, option] : items.filter(item => item.key !== option.key)
           wave.args[m.name] = result.map(item => item.text)
           return result
         })
