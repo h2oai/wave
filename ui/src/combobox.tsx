@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, S } from 'h2o-wave'
+import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { wave } from './ui'
 
@@ -65,33 +65,28 @@ export const
       isMultiValued = !!m.values,
       [text, setText] = React.useState(m.value),
       [options, setOptions] = React.useState((m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text }))),
-      getInitialSelected = () => 
-        (m.values || []).reduce((acc: Fluent.IComboBoxOption[], cur: S) => {
-          const found = options.find(option => option.text === cur)
-          return found ? [...acc, found] : acc
-        }, []),
-      [selected, setSelected] = React.useState(getInitialSelected()),
+      [selected, setSelected] = React.useState<Fluent.IComboBoxOption[]>((m.values || []).map(text => ({ key: text, text }))),
+      selectOpt = (option: Fluent.IComboBoxOption) => {
+        setSelected(items => {
+          const result = option.selected ? [...items, option] : items.filter(item => item.key !== option!.key)
+          wave.args[m.name] = result.map(item => item.text)
+          return result
+        })
+      },
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: U, value?: S) => {
-        let selected = option?.selected
-        const v = option?.text || value || ''
-        
         if (!option && value) {
-          selected = true
-          option = { key: value, text: value }
-          setOptions((prevOptions = []) => [...prevOptions, option!])
+          const opt: Fluent.IComboBoxOption = { key: value, text: value, selected: true }
+          setOptions((prevOptions = []) => [...prevOptions, opt])
+          selectOpt(opt)
         }
-
         if (option && isMultiValued) {
-          setSelected(items => {
-            const result = selected ? [...items, option as Fluent.IComboBoxOption] : items.filter(item => item.key !== option!.key)
-            wave.args[m.name] = result.map(item => item!.text)
-            return result
-          })
-        } else {
+          selectOpt(option)
+        }
+        else {
+          const v = option?.text || value || ''
           wave.args[m.name] = v
           setText(v)
         }
-        
         if (m.trigger) wave.push()
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,7 +102,7 @@ export const
         multiSelect={isMultiValued}
         selectedKey={isMultiValued ? selected.map(s => s.key as S) : undefined}
         text={isMultiValued ? undefined : text}
-        allowFreeform={true}
+        allowFreeform
         disabled={m.disabled}
         autoComplete="on"
         errorMessage={m.error}
