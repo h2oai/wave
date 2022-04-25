@@ -1054,7 +1054,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_combobox" value="ui.combobox(name='$name$',label='$label$',placeholder='$placeholder$',value='$value$',error='$error$',disabled=$disabled$,width='$width$',visible=$visible$,tooltip='$tooltip$',trigger=$trigger$,required=$required$,choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave Combobox with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_combobox" value="ui.combobox(name='$name$',label='$label$',placeholder='$placeholder$',value='$value$',error='$error$',disabled=$disabled$,width='$width$',visible=$visible$,tooltip='$tooltip$',trigger=$trigger$,required=$required$,values=[&#10;	$values$	&#10;],choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave Combobox with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1066,6 +1066,7 @@
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="values" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="choices" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

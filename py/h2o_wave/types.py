@@ -1887,6 +1887,7 @@ class Combobox:
             label: Optional[str] = None,
             placeholder: Optional[str] = None,
             value: Optional[str] = None,
+            values: Optional[List[str]] = None,
             choices: Optional[List[str]] = None,
             error: Optional[str] = None,
             disabled: Optional[bool] = None,
@@ -1900,6 +1901,7 @@ class Combobox:
         _guard_scalar('Combobox.label', label, (str,), False, True, False)
         _guard_scalar('Combobox.placeholder', placeholder, (str,), False, True, False)
         _guard_scalar('Combobox.value', value, (str,), False, True, False)
+        _guard_vector('Combobox.values', values, (str,), False, True, False)
         _guard_vector('Combobox.choices', choices, (str,), False, True, False)
         _guard_scalar('Combobox.error', error, (str,), False, True, False)
         _guard_scalar('Combobox.disabled', disabled, (bool,), False, True, False)
@@ -1916,6 +1918,8 @@ class Combobox:
         """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
         """The name of the selected choice."""
+        self.values = values
+        """The names of the selected choices. If set, multiple selections will be allowed."""
         self.choices = choices
         """The choices to be presented."""
         self.error = error
@@ -1939,6 +1943,7 @@ class Combobox:
         _guard_scalar('Combobox.label', self.label, (str,), False, True, False)
         _guard_scalar('Combobox.placeholder', self.placeholder, (str,), False, True, False)
         _guard_scalar('Combobox.value', self.value, (str,), False, True, False)
+        _guard_vector('Combobox.values', self.values, (str,), False, True, False)
         _guard_vector('Combobox.choices', self.choices, (str,), False, True, False)
         _guard_scalar('Combobox.error', self.error, (str,), False, True, False)
         _guard_scalar('Combobox.disabled', self.disabled, (bool,), False, True, False)
@@ -1952,6 +1957,7 @@ class Combobox:
             label=self.label,
             placeholder=self.placeholder,
             value=self.value,
+            values=self.values,
             choices=self.choices,
             error=self.error,
             disabled=self.disabled,
@@ -1973,6 +1979,8 @@ class Combobox:
         _guard_scalar('Combobox.placeholder', __d_placeholder, (str,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Combobox.value', __d_value, (str,), False, True, False)
+        __d_values: Any = __d.get('values')
+        _guard_vector('Combobox.values', __d_values, (str,), False, True, False)
         __d_choices: Any = __d.get('choices')
         _guard_vector('Combobox.choices', __d_choices, (str,), False, True, False)
         __d_error: Any = __d.get('error')
@@ -1993,6 +2001,7 @@ class Combobox:
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
         value: Optional[str] = __d_value
+        values: Optional[List[str]] = __d_values
         choices: Optional[List[str]] = __d_choices
         error: Optional[str] = __d_error
         disabled: Optional[bool] = __d_disabled
@@ -2006,6 +2015,7 @@ class Combobox:
             label,
             placeholder,
             value,
+            values,
             choices,
             error,
             disabled,
