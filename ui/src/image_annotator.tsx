@@ -1,3 +1,4 @@
+import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -114,12 +115,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
     colorsMap = new Map<S, S>(model.tags.map(tag => [tag.name, cssVarValue(tag.color)])),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
+    [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>(model.items || []),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     aspectRatioRef = React.useRef(1),
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
-    drawnShapes = React.useRef<DrawnShape[]>(model.items || []),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
     redrawExistingShapes = () => {
       const canvas = canvasRef.current
@@ -127,7 +128,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!ctx || !canvas) return
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      drawnShapes.current.forEach(item => drawRect(ctx, item, colorsMap.get(item.tag) || cssVarValue('$red')))
+      setDrawnShapes(shapes => {
+        shapes.forEach(item => drawRect(ctx, item, colorsMap.get(item.tag) || cssVarValue('$red')))
+        return shapes
+      })
     },
     onMouseDown = (e: React.MouseEvent) => {
       e.preventDefault()
@@ -145,7 +149,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!start || !canvas) return
 
       const shape = mouseEventToRect(e, start, canvas.getBoundingClientRect())
-      if (shape.x_max !== shape.x_min && shape.y_max !== shape.y_min) drawnShapes.current.push({ ...shape, tag: activeTag })
+      if (shape.x_max !== shape.x_min && shape.y_max !== shape.y_min) setDrawnShapes(shapes => [{ ...shape, tag: activeTag }, ...shapes])
       startPosition.current = undefined
     },
     onMouseMove = (e: React.MouseEvent) => {
@@ -161,7 +165,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           drawRect(ctx, { ...mouseEventToRect(e, start, rect), tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
         }
         else {
-          canvas.style.cursor = drawnShapes.current.some(isIntersecting(e.clientX - rect.left, e.clientY - rect.top)) ? 'pointer' : 'crosshair'
+          canvas.style.cursor = drawnShapes.some(isIntersecting(e.clientX - rect.left, e.clientY - rect.top)) ? 'pointer' : 'crosshair'
         }
       }
 
@@ -173,7 +177,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!ctx || !canvas) return
 
       const rect = canvas.getBoundingClientRect()
-      drawnShapes.current.forEach(shape => shape.isFocused = isIntersecting(e.clientX - rect.left, e.clientY - rect.top)(shape))
+      setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: isIntersecting(e.clientX - rect.left, e.clientY - rect.top)(shape) })))
+      redrawExistingShapes()
+    },
+    remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
+      if (!item) return
+      setDrawnShapes(shapes => item.key === 'remove-selected' ? shapes.filter(s => !s.isFocused) : [])
       redrawExistingShapes()
     }
 
@@ -207,6 +216,22 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     <div data-test={model.name}>
       <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
       <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
+      <Fluent.CommandBar styles={{ root: { padding: 0 } }} items={[
+        {
+          key: 'remove-selected',
+          text: 'Remove selection',
+          onClick: remove,
+          disabled: drawnShapes.every(s => !s.isFocused),
+          iconProps: { iconName: 'RemoveContent', styles: { root: { fontSize: 20 } } },
+        },
+        {
+          key: 'remove-all',
+          text: 'Remove all',
+          onClick: remove,
+          disabled: drawnShapes.length === 0,
+          iconProps: { iconName: 'DependencyRemove', styles: { root: { fontSize: 20 } } },
+        },
+      ]} />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
         <canvas
