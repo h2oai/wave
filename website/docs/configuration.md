@@ -199,6 +199,10 @@ The checkpoint file is named `h2o_wave.checkpoint`, and is serialized using Pyth
 
 Disable/enable Wave server boot during `wave run`. Defaults to `false`. Available values: `1`, `t`, `true` to disable autostart; `0`, `f`, `false` to enable autostart (case insensitive). Same as calling `wave run --no-autostart`.
 
+### H2O_WAVE_BASE_URL
+
+The base URL (path prefix) to be used for resolving relative URLs (e.g. /foo/ or /foo/bar/, without the host (default "/"). If you run your Wave server (waved) and Wave app separately, it's necessary to set this env variable for both.
+
 ## Web Analytics
 
 You can configure your app's web pages to send basic usage information to a third-party web analytics or tracking site. This lets you measure and analyze how users are interacting with various parts of your app.
