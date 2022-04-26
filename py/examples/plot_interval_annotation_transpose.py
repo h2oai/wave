@@ -1,26 +1,28 @@
 # Plot / Interval / Annotation / Transpose
 # Add annotations to a bar #plot. #annotation #interval
 # ---
-from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 20
-f = FakeCategoricalSeries()
-v = page.add('example', ui.plot_card(
+page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Categorical-Numeric',
-    data=data('product price', n),
+    data=data('profession salary', 5, rows=[
+        ('medicine', 23000),
+        ('fire fighting', 18000),
+        ('pedagogy', 24000),
+        ('psychology', 22500),
+        ('computer science', 36000),
+    ]),
     plot=ui.plot([
-        ui.mark(type='interval', y='=product', x='=price', x_min=0, x_max=100),
-        ui.mark(y='C10', x=80, label='point'),
-        ui.mark(y='C13', label='vertical line'),
-        ui.mark(x=40, label='horizontal line'),
-        ui.mark(y='C6', y0='C3', label='vertical region'),
-        ui.mark(x=70, x0=60, label='horizontal region')
+        ui.mark(type='interval', x='=salary', y='=profession'),
+        ui.mark(y='fire fighting', x=23000, label='point'),
+        ui.mark(y='pedagogy', label='vertical line'),
+        ui.mark(x=27000, label='horizontal line'),
+        ui.mark(y='computer science', y0='psychology', label='horizontal region'),
+        ui.mark(x=35000, x0=30000, label='vertical region')
     ])
 ))
-v.data = [(c, x) for c, x, dx in [f.next() for _ in range(n)]]
 
 page.save()

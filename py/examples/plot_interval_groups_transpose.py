@@ -1,21 +1,27 @@
 # Plot / Interval / Groups / Transpose
 # Make a grouped bar #plot. #interval
 # ---
-from synth import FakeMultiCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 10
-k = 3
-f = FakeMultiCategoricalSeries(groups=k)
-v = page.add('example', ui.plot_card(
+page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Intervals, groups',
-    data=data('country product price', n * k),
-    plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', color='=country', dodge='auto', y_min=0)])
+    data=data('day type time', 10, rows=[
+        ('Mon.','series1', 2800),
+        ('Mon.','series2', 2260),
+        ('Tues.','series1', 1800),
+        ('Tues.','series2', 1300),
+        ('Wed.','series1', 950),
+        ('Wed.','series2', 900),
+        ('Thur.','series1', 500),
+        ('Thur.','series2', 390),
+        ('Fri.','series1', 170),
+        ('Fri.','series2', 100),
+    ]),
+    plot=ui.plot([ui.mark(type='interval', y='=day', x='=time', color='=type', dodge='auto', x_min=0)])
 ))
 
-v.data = [(g, t, x) for x in [f.next() for _ in range(n)] for g, t, x, dx in x]
-
 page.save()
+

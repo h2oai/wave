@@ -1,21 +1,21 @@
-# Plot / Interval / Range / Transpose
-# Make a bar #plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
+# Plot / Interval / Transpose
+# Make a bar #plot. #interval
 # ---
-import random
-
-from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 20
-f = FakeCategoricalSeries()
-v = page.add('example', ui.plot_card(
+page.add('example', ui.plot_card(
     box='1 1 4 5',
-    title='Interval, range',
-    data=data('product low high', n),
-    plot=ui.plot([ui.mark(type='interval', x0='=low', x='=high', y='=product', )])
+    title='Interval range transposed',
+    data=data('profession max min', 5, rows=[
+        ('medicine', 110000, 23000),
+        ('fire fighting', 120000, 18000),
+        ('pedagogy', 125000, 24000),
+        ('psychology', 130000, 22500),
+        ('computer science', 151000, 36000),
+    ]),
+    plot=ui.plot([ui.mark(type='interval', x='=max', x0='=min', y='=profession')]),
 ))
-v.data = [(c, x - random.randint(3, 10), x + random.randint(3, 10)) for c, x, dx in [f.next() for _ in range(n)]]
 
 page.save()
