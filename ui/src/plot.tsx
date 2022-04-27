@@ -1061,6 +1061,12 @@ export const
           chart.tooltip({
             showCrosshairs: true,
             crosshairs: { type: 'xy' },
+            domStyles: {
+              'g2-tooltip': {
+                backgroundColor: cssVar('$card'),
+                color: cssVar('$text')
+              },
+            },
             // XXX pass container element
             customContent: (title, items) => {
               const container = document.createElement('div')
