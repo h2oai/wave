@@ -81,15 +81,16 @@ const
       margin: 8
     }
   }),
+  ARC_RADIUS = 8,
   isIntersecting = (cursor_x: U, cursor_y: U) => ({ x2, x1, y2, y1 }: ImageAnnotatorItem) => cursor_x > x1 && cursor_x < x2 && cursor_y > y1 && cursor_y < y2,
   eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
   drawCircle = (ctx: CanvasRenderingContext2D, x: U, y: U, fillColor: S) => {
     ctx.beginPath()
     ctx.fillStyle = fillColor
     const path = new Path2D()
-    path.arc(x, y, 8, 0, 2 * Math.PI)
-    path.closePath()
+    path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
     ctx.fill(path)
+    ctx.closePath()
   },
   drawRect = (ctx: CanvasRenderingContext2D, { x1, x2, y1, y2, isFocused }: DrawnShape, strokeColor: S) => {
     ctx.beginPath()
@@ -158,34 +159,49 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       startPosition.current = undefined
     },
+    getCornerCursor = ({ x1, x2, y1, y2 }: DrawnShape, cursor_x: U, cursor_y: U) => {
+      const
+        isTopLeft = cursor_x > x1 - ARC_RADIUS && cursor_x < x1 + ARC_RADIUS && cursor_y > y1 - ARC_RADIUS && cursor_y < y1 + ARC_RADIUS,
+        isBottomLeft = cursor_x > x1 - ARC_RADIUS && cursor_x < x1 + ARC_RADIUS && cursor_y > y2 - ARC_RADIUS && cursor_y < y2 + ARC_RADIUS,
+        isTopRight = cursor_x > x2 - ARC_RADIUS && cursor_x < x2 + ARC_RADIUS && cursor_y > y1 - ARC_RADIUS && cursor_y < y1 + ARC_RADIUS,
+        isBottomRight = cursor_x > x2 - ARC_RADIUS && cursor_x < x2 + ARC_RADIUS && cursor_y > y2 - ARC_RADIUS && cursor_y < y2 + ARC_RADIUS
+
+      if (isTopLeft || isBottomRight) return 'nwse-resize'
+      if (isBottomLeft || isTopRight) return 'nesw-resize'
+    },
     onMouseMove = (e: React.MouseEvent) => {
       const
         canvas = canvasRef.current,
         ctx = ctxRef.current,
-        start = startPosition.current
+        clickStartPosition = startPosition.current
 
       if (!canvas || !ctx) return
 
-      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
-      if (start) {
-        const focused = drawnShapes.find(shape => shape.isFocused)
+      const
+        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
+        focused = drawnShapes.find(shape => shape.isFocused)
+      if (clickStartPosition) {
         if (focused && isIntersecting(cursor_x, cursor_y)(focused)) {
           canvas.style.cursor = 'move'
-          focused.x1 += cursor_x - start.x
-          focused.x2 += cursor_x - start.x
-          focused.y1 += cursor_y - start.y
-          focused.y2 += cursor_y - start.y
-          // TODO: A bit ugly, try to find a better way.
+          focused.x1 += cursor_x - clickStartPosition.x
+          focused.x2 += cursor_x - clickStartPosition.x
+          focused.y1 += cursor_y - clickStartPosition.y
+          focused.y2 += cursor_y - clickStartPosition.y
           startPosition.current = { x: cursor_x, y: cursor_y }
-          setDrawnShapes(shapes => shapes.map(shape => shape.isFocused ? focused : shape))
           redrawExistingShapes()
+        } else if (focused) {
+          getCornerCursor(focused, cursor_x, cursor_y)
         } else {
           setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
-          drawRect(ctx, { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y, tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
+          drawRect(ctx, { x1: clickStartPosition.x, x2: cursor_x, y1: clickStartPosition.y, y2: cursor_y, tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
         }
       } else {
-        canvas.style.cursor = drawnShapes.some(isIntersecting(cursor_x, cursor_y)) ? 'pointer' : 'crosshair'
+        const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
+        if (intersected && intersected.isFocused) canvas.style.cursor = getCornerCursor(intersected, cursor_x, cursor_y) || 'move'
+        else if (intersected) canvas.style.cursor = 'pointer'
+        else if (focused) canvas.style.cursor = getCornerCursor(focused, cursor_x, cursor_y) || 'crosshair'
+        else canvas.style.cursor = 'crosshair'
       }
     },
     onClick = (e: React.MouseEvent) => {
