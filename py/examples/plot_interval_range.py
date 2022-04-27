@@ -2,21 +2,21 @@
 # Make a column #plot with each bar representing high/low (or start/end) values.
 # Transposing this produces a gantt plot. #interval #range
 # ---
-import random
-
-from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 20
-f = FakeCategoricalSeries()
-v = page.add('example', ui.plot_card(
+page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Interval, range',
-    data=data('product low high', n),
-    plot=ui.plot([ui.mark(type='interval', x='=product', y0='=low', y='=high')])
+    data=data('profession max min', 5, rows=[
+        ('medicine', 110000, 23000),
+        ('fire fighting', 120000, 18000),
+        ('pedagogy', 125000, 24000),
+        ('psychology', 130000, 22500),
+        ('computer science', 151000, 36000),
+    ]),
+    plot=ui.plot([ui.mark(type='interval', x='=profession', y0='=min', y='=max')])
 ))
-v.data = [(c, x - random.randint(3, 10), x + random.randint(3, 10)) for c, x, dx in [f.next() for _ in range(n)]]
 
 page.save()

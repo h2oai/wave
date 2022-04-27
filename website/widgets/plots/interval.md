@@ -242,7 +242,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
     box='1 1 4 5',
-    title='Intervals, theta, stacked',
+    title='Intervals, theta',
     data=data('question percent', 8, rows=[
         ('Question 1', 0.21),
         ('Question 2', 0.4),

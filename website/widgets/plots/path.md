@@ -9,7 +9,7 @@ Use this type of plot to show the deflection of many data points at the same tim
 from h2o_wave import data
 
 q.page['example'] = ui.plot_card(
-    box='1 1 4 5',
+    box='1 1 5 5',
     title='Path',
     data=data('price performance', 10, rows=[
         (0.1, 0.6),

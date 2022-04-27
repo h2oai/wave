@@ -182,6 +182,7 @@ q.page['example'] = ui.wide_plot_card(
 - [Stacked, Grouped](/docs/examples/plot-interval-stacked-grouped): Make a column plot with both stacked and grouped bars.
 - [Annotation](/docs/examples/plot-interval-annotation): Add annotations to a column plot.
 - [Theta](/docs/examples/plot-interval-theta): Make a "racetrack" plot (a column plot in polar coordinates).
+- [Theta, Stacked](/docs/examples/plot-interval-theta-stacked): Make a stacked "racetrack" plot.
 
 ### Bars
 
@@ -204,6 +205,7 @@ q.page['example'] = ui.wide_plot_card(
 - [Step, After](/docs/examples/plot-step-after): Make a line plot with a step-after curve.
 - [Step, Before](/docs/examples/plot-step-before): Make a line plot with a step-before curve.
 - [Labels](/docs/examples/plot-line-labels): Add labels to a line plot.
+- [Labels, Custom](/docs/examples/plot-line-labels-custom): Add customized labels to a line plot.
 - [Labels, Stroked](/docs/examples/plot-line-labels-stroked): Customize label rendering: add a subtle outline to labels to improve readability.
 - [Labels, Occlusion](/docs/examples/plot-line-labels-no-overlap): Make a line plot with non-overlapping labels.
 - [Annotation](/docs/examples/plot-line-annotation): Add annotations to a line plot.
