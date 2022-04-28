@@ -1475,13 +1475,17 @@ ui_menu_table_cell_type <- function(
 #' Create a cell type that renders Markdown content.
 #'
 #' @param name An identifying name for this component.
+#' @param target Where to display the link. Setting this to '_blank'` opens the link in a new tab or window.
 #' @return A MarkdownTableCellType instance.
 #' @export
 ui_markdown_table_cell_type <- function(
-  name = NULL) {
+  name = NULL,
+  target = NULL) {
   .guard_scalar("name", "character", name)
+  .guard_scalar("target", "character", target)
   .o <- list(markdown=list(
-    name=name))
+    name=name,
+    target=target))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
   return(.o)
 }

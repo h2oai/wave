@@ -1265,16 +1265,19 @@ def menu_table_cell_type(
 
 def markdown_table_cell_type(
         name: Optional[str] = None,
+        target: Optional[str] = None,
 ) -> TableCellType:
     """Create a cell type that renders Markdown content.
 
     Args:
         name: An identifying name for this component.
+        target: Where to display the link. Setting this to '_blank'` opens the link in a new tab or window.
     Returns:
         A `h2o_wave.types.MarkdownTableCellType` instance.
     """
     return TableCellType(markdown=MarkdownTableCellType(
         name,
+        target,
     ))
 
 

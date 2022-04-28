@@ -481,7 +481,7 @@ const
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.cellType?.menu) return <XMenuTableCellType model={{...col.cellType.menu, rowId: String(item.key)}} />
-        if (col.cellType?.markdown) return <XMarkdownTableCellType content={item[col.key]} />
+        if (col.cellType?.markdown) return <XMarkdownTableCellType model={{...col.cellType.markdown, content: item[col.key]}}/>
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {

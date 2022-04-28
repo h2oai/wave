@@ -14,7 +14,6 @@
 
 import { S } from 'h2o-wave'
 import React from 'react'
-import { XLink } from './link'
 import { Markdown } from './markdown'
 
 /**
@@ -23,14 +22,21 @@ import { Markdown } from './markdown'
 export interface MarkdownTableCellType {
   /** An identifying name for this component. */
   name?: S
+  /** Where to display the link. Setting this to '_blank'` opens the link in a new tab or window. */
+  target?: S
 }
 
-export const XMarkdownTableCellType = ({ content }: { content: S}) => {
-  const [, label, path] = /\[(.*)\]\((.+)\)/.exec(content) || []
-  if (path) {
-    const isPathAbsolute = /https*:\/\//.exec(path)
-    return <XLink model={{ label, path, target: isPathAbsolute ? '_blank' : undefined }} />
-  } else {
-    return <Markdown source={content} />
-  }
+export const XMarkdownTableCellType = ({ model: m }: { model: MarkdownTableCellType & { content: S}} ) => {
+  const ref = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const anchors = document.querySelectorAll<HTMLAnchorElement>('a')
+    anchors?.forEach(a => {if (m.target) a.target = m.target})
+  }, [m.target])
+
+  return (
+    <div data-test={m.name} ref={ref}>
+      <Markdown source={m.content} />
+    </div>
+  )
 }

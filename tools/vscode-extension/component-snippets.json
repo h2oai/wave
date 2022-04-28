@@ -1185,7 +1185,7 @@
   "Wave Full MarkdownTableCellType": {
     "prefix": "w_full_markdown_table_cell_type",
     "body": [
-      "ui.markdown_table_cell_type(name='$1'),$0"
+      "ui.markdown_table_cell_type(name='$1', target='$2'),$0"
     ],
     "description": "Create a full Wave MarkdownTableCellType."
   },

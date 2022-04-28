@@ -3229,16 +3229,22 @@ class MarkdownTableCellType:
     def __init__(
             self,
             name: Optional[str] = None,
+            target: Optional[str] = None,
     ):
         _guard_scalar('MarkdownTableCellType.name', name, (str,), False, True, False)
+        _guard_scalar('MarkdownTableCellType.target', target, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
+        self.target = target
+        """Where to display the link. Setting this to '_blank'` opens the link in a new tab or window."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('MarkdownTableCellType.name', self.name, (str,), False, True, False)
+        _guard_scalar('MarkdownTableCellType.target', self.target, (str,), False, True, False)
         return _dump(
             name=self.name,
+            target=self.target,
         )
 
     @staticmethod
@@ -3246,9 +3252,13 @@ class MarkdownTableCellType:
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         _guard_scalar('MarkdownTableCellType.name', __d_name, (str,), False, True, False)
+        __d_target: Any = __d.get('target')
+        _guard_scalar('MarkdownTableCellType.target', __d_target, (str,), False, True, False)
         name: Optional[str] = __d_name
+        target: Optional[str] = __d_target
         return MarkdownTableCellType(
             name,
+            target,
         )
 
 

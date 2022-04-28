@@ -16,29 +16,19 @@ import { render } from '@testing-library/react'
 import React from 'react'
 import { XMarkdownTableCellType } from './markdown_table_cell_type'
 
+const
+  label = 'wave',
+  link = `[${label}](https://wave.h2o.ai)`
+
 describe('MarkdownTableCellType.tsx', () => {
 
-  const
-    label = 'wave',
-    url = 'https://wave.h2o.ai',
-    absoluteLink = `[${label}](${url})`,
-    relativeLink = `[${label}](/wave)`
-
-  it('Renders link with label', () => {
-    const { queryByText } = render(<XMarkdownTableCellType content={absoluteLink} />)
-    expect(queryByText(label)).toBeInTheDocument()
-    expect(queryByText(url)).not.toBeInTheDocument()
+  it('Opens link in same tab', () => {
+    const { getByText } = render(<XMarkdownTableCellType model={{content: link}} />)
+    expect(getByText(label).getAttribute('target')).toBeNull()
   })
-
-  it('Opens absolute links in new tab', () => {
-    const { container } = render(<XMarkdownTableCellType content={absoluteLink} />)
-    const anchor = container.querySelector(`a[href="${url}"]`) as HTMLAnchorElement
-    expect(anchor?.target).toBe('_blank')
-  })
-
-  it('Opens relative links in same tab', () => {
-    const { container } = render(<XMarkdownTableCellType content={relativeLink} />)
-    const anchor = container.querySelector(`a[href="${url}"]`) as HTMLAnchorElement
-    expect(anchor?.target).toBeUndefined()
+  
+  it('Opens link in new tab', () => {
+    const { getByText } = render(<XMarkdownTableCellType model={{ target: '_blank', content: link }} />)
+    expect(getByText(label).getAttribute('target')).toBe('_blank')
   })
 })
