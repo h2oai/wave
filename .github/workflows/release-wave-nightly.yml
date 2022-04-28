@@ -2,24 +2,18 @@ name: Release Wave Nightly
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version'
-        default: 'nightly'
-        required: false
   schedule:
     - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
+
+env:
+  VERSION: "nightly"
+  TAG: "nightly"
 
 jobs:
   release:
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
-      - name: Set ENV vars
-        run: |
-          INPUT_VERSION=${{ github.event.inputs.version }}
-          echo "VERSION=${INPUT_VERSION:-nightly}" >> $GITHUB_ENV
-          if [ "${INPUT_VERSION}" ]; then echo "TAG=v${INPUT_VERSION}"; else echo "TAG=nightly"; fi >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
