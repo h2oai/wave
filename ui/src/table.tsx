@@ -356,7 +356,7 @@ const
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: c.cell_overflow === 'wrap',
+          isMultiline: c.cell_type?.markdown || c.cell_overflow === 'wrap',
           filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
