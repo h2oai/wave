@@ -108,6 +108,14 @@ const
       drawCircle(ctx, x2, y2, strokeColor)
       drawCircle(ctx, x1, y2, strokeColor)
     }
+  },
+  isTopLeftCorner = (x: U, y: U, { x1, y1 }: DrawnShape) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
+  isTopRightCorner = (x: U, y: U, { x1, y2 }: DrawnShape) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
+  isBottomLeftCorner = (x: U, y: U, { x2, y1 }: DrawnShape) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
+  isBottomRightCorner = (x: U, y: U, { x2, y2 }: DrawnShape) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
+  getCornerCursor = (shape: DrawnShape, cursor_x: U, cursor_y: U) => {
+    if (isTopLeftCorner(cursor_x, cursor_y, shape) || isBottomRightCorner(cursor_x, cursor_y, shape)) return 'nwse-resize'
+    if (isBottomLeftCorner(cursor_x, cursor_y, shape) || isTopRightCorner(cursor_x, cursor_y, shape)) return 'nwse-resize'
   }
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
@@ -159,38 +167,32 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       startPosition.current = undefined
     },
-    getCornerCursor = ({ x1, x2, y1, y2 }: DrawnShape, cursor_x: U, cursor_y: U) => {
-      const
-        isTopLeft = cursor_x > x1 - ARC_RADIUS && cursor_x < x1 + ARC_RADIUS && cursor_y > y1 - ARC_RADIUS && cursor_y < y1 + ARC_RADIUS,
-        isBottomLeft = cursor_x > x1 - ARC_RADIUS && cursor_x < x1 + ARC_RADIUS && cursor_y > y2 - ARC_RADIUS && cursor_y < y2 + ARC_RADIUS,
-        isTopRight = cursor_x > x2 - ARC_RADIUS && cursor_x < x2 + ARC_RADIUS && cursor_y > y1 - ARC_RADIUS && cursor_y < y1 + ARC_RADIUS,
-        isBottomRight = cursor_x > x2 - ARC_RADIUS && cursor_x < x2 + ARC_RADIUS && cursor_y > y2 - ARC_RADIUS && cursor_y < y2 + ARC_RADIUS
-
-      if (isTopLeft || isBottomRight) return 'nwse-resize'
-      if (isBottomLeft || isTopRight) return 'nesw-resize'
-    },
     onMouseMove = (e: React.MouseEvent) => {
       const
         canvas = canvasRef.current,
         ctx = ctxRef.current,
         clickStartPosition = startPosition.current
-
       if (!canvas || !ctx) return
 
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
-        focused = drawnShapes.find(shape => shape.isFocused)
+        focused = drawnShapes.find(({ isFocused }) => isFocused)
       if (clickStartPosition) {
-        if (focused && isIntersecting(cursor_x, cursor_y)(focused)) {
+        const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
+        if (intersected?.isFocused) {
           canvas.style.cursor = 'move'
-          focused.x1 += cursor_x - clickStartPosition.x
-          focused.x2 += cursor_x - clickStartPosition.x
-          focused.y1 += cursor_y - clickStartPosition.y
-          focused.y2 += cursor_y - clickStartPosition.y
+          intersected.x1 += cursor_x - clickStartPosition.x
+          intersected.x2 += cursor_x - clickStartPosition.x
+          intersected.y1 += cursor_y - clickStartPosition.y
+          intersected.y2 += cursor_y - clickStartPosition.y
           startPosition.current = { x: cursor_x, y: cursor_y }
           redrawExistingShapes()
-        } else if (focused) {
-          getCornerCursor(focused, cursor_x, cursor_y)
+        } else if (focused && getCornerCursor(focused, cursor_x, cursor_y)) {
+          if (isTopLeftCorner(cursor_x, cursor_y, focused)) {
+            focused.x1 += cursor_x - clickStartPosition.x
+            focused.y1 += cursor_y - clickStartPosition.y
+            startPosition.current = { x: cursor_x, y: cursor_y }
+          }
         } else {
           setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
