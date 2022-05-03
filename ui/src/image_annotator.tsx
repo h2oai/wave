@@ -180,9 +180,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
         if (x2 !== x1 && y2 !== y1) setDrawnShapes(shapes => [{ x1, x2, y1, y2, tag: activeTag }, ...shapes])
       }
-
-      startPosition.current = undefined
-      resizedCornerRef.current = ''
     },
     onMouseMove = (e: React.MouseEvent) => {
       const
@@ -239,13 +236,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const canvas = canvasRef.current
       if (!canvas) return
 
+      startPosition.current = undefined
       setDrawnShapes(drawnShapes => {
-        const
-          { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
-          shapes = drawnShapes.map(shape => ({ ...shape, isFocused: isIntersecting(cursor_x, cursor_y)(shape) })),
-          focused = shapes.find(({ isFocused }) => isFocused)
-        canvas.style.cursor = getCorrectCursor(shapes, cursor_x, cursor_y, focused)
-        return shapes
+        const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
+
+        if (!resizedCornerRef.current) {
+          drawnShapes = drawnShapes.map(shape => ({ ...shape, isFocused: isIntersecting(cursor_x, cursor_y)(shape) }))
+        }
+
+        resizedCornerRef.current = ''
+        canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused))
+        return drawnShapes
       })
       redrawExistingShapes()
     },
