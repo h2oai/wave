@@ -240,7 +240,7 @@
   "Wave ImageAnnotatorItem": {
     "prefix": "w_image_annotator_item",
     "body": [
-      "ui.image_annotator_item(x_min=${1:None}, x_max=${2:None}, y_min=${3:None}, y_max=${4:None}, tag='$5'),$0"
+      "ui.image_annotator_item(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}, tag='$5'),$0"
     ],
     "description": "Create a minimal Wave ImageAnnotatorItem."
   },
@@ -1157,7 +1157,7 @@
   "Wave Full ImageAnnotatorItem": {
     "prefix": "w_full_image_annotator_item",
     "body": [
-      "ui.image_annotator_item(x_min=${1:None}, x_max=${2:None}, y_min=${3:None}, y_max=${4:None}, tag='$5'),$0"
+      "ui.image_annotator_item(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}, tag='$5'),$0"
     ],
     "description": "Create a full Wave ImageAnnotatorItem."
   },

@@ -2362,28 +2362,28 @@ def image_annotator_tag(
 
 
 def image_annotator_item(
-        x_min: int,
-        x_max: int,
-        y_min: int,
-        y_max: int,
+        x1: int,
+        x2: int,
+        y1: int,
+        y2: int,
         tag: str,
 ) -> ImageAnnotatorItem:
     """Create an annotator item with initial selected tags or no tag for plaintext.
 
     Args:
-        x_min: Minimum X dimension.
-        x_max: Maximum X dimension.
-        y_min: Minimum Y dimension.
-        y_max: Maximum Y dimension.
+        x1: Start X dimension.
+        x2: End X dimension.
+        y1: Start Y dimension.
+        y2: End Y dimension.
         tag: Tag connected to the highlighted section.
     Returns:
         A `h2o_wave.types.ImageAnnotatorItem` instance.
     """
     return ImageAnnotatorItem(
-        x_min,
-        x_max,
-        y_min,
-        y_max,
+        x1,
+        x2,
+        y1,
+        y2,
         tag,
     )
 

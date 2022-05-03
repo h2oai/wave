@@ -17,13 +17,13 @@ interface ImageAnnotatorTag {
 
 /** Create an annotator item with initial selected tags or no tag for plaintext. */
 interface ImageAnnotatorItem {
-  /** Minimum X dimension. */
+  /** Start X dimension. */
   x1: U
-  /** Maximum X dimension. */
+  /** End X dimension. */
   x2: U
-  /** Minimum Y dimension. */
+  /** Start Y dimension. */
   y1: U
-  /** Maximum Y dimension. */
+  /** End Y dimension. */
   y2: U
   /** Tag connected to the highlighted section. */
   tag: S
@@ -115,7 +115,14 @@ const
   isBottomRightCorner = (x: U, y: U, { x2, y2 }: DrawnShape) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
   getCornerCursor = (shape: DrawnShape, cursor_x: U, cursor_y: U) => {
     if (isTopLeftCorner(cursor_x, cursor_y, shape) || isBottomRightCorner(cursor_x, cursor_y, shape)) return 'nwse-resize'
-    if (isBottomLeftCorner(cursor_x, cursor_y, shape) || isTopRightCorner(cursor_x, cursor_y, shape)) return 'nwse-resize'
+    if (isBottomLeftCorner(cursor_x, cursor_y, shape) || isTopRightCorner(cursor_x, cursor_y, shape)) return 'nesw-resize'
+  },
+  getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape) => {
+    const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
+    if (intersected && intersected.isFocused) return getCornerCursor(intersected, cursor_x, cursor_y) || 'move'
+    else if (intersected) return 'pointer'
+    else if (focused) return getCornerCursor(focused, cursor_x, cursor_y) || 'crosshair'
+    return 'crosshair'
   }
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
@@ -128,6 +135,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     aspectRatioRef = React.useRef(1),
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
+    resizedCornerRef = React.useRef<S>(''),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
     redrawExistingShapes = () => {
       const canvas = canvasRef.current
@@ -146,7 +154,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const canvas = canvasRef.current
       if (!canvas) return
 
-      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
+      const
+        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
+        focused = drawnShapes.find(({ isFocused }) => isFocused)
+      if (focused) {
+        if (isTopLeftCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'topLeft'
+        if (isTopRightCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'topRight'
+        if (isBottomLeftCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'bottomLeft'
+        if (isBottomRightCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'bottomRight'
+      }
       startPosition.current = { x: cursor_x, y: cursor_y }
     },
     onMouseUp = (e: React.MouseEvent) => {
@@ -166,6 +182,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
 
       startPosition.current = undefined
+      resizedCornerRef.current = ''
     },
     onMouseMove = (e: React.MouseEvent) => {
       const
@@ -179,7 +196,27 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         focused = drawnShapes.find(({ isFocused }) => isFocused)
       if (clickStartPosition) {
         const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
-        if (intersected?.isFocused) {
+        if (focused && resizedCornerRef.current) {
+          if (resizedCornerRef.current === 'topLeft') {
+            focused.x1 += cursor_x - clickStartPosition.x
+            focused.y1 += cursor_y - clickStartPosition.y
+          }
+          else if (resizedCornerRef.current === 'topRight') {
+            focused.x1 += cursor_x - clickStartPosition.x
+            focused.y2 += cursor_y - clickStartPosition.y
+          }
+          else if (resizedCornerRef.current === 'bottomLeft') {
+            focused.x2 += cursor_x - clickStartPosition.x
+            focused.y1 += cursor_y - clickStartPosition.y
+          }
+          else if (resizedCornerRef.current === 'bottomRight') {
+            focused.x2 += cursor_x - clickStartPosition.x
+            focused.y2 += cursor_y - clickStartPosition.y
+          }
+          startPosition.current = { x: cursor_x, y: cursor_y }
+          redrawExistingShapes()
+        }
+        else if (intersected?.isFocused) {
           canvas.style.cursor = 'move'
           intersected.x1 += cursor_x - clickStartPosition.x
           intersected.x2 += cursor_x - clickStartPosition.x
@@ -187,31 +224,29 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           intersected.y2 += cursor_y - clickStartPosition.y
           startPosition.current = { x: cursor_x, y: cursor_y }
           redrawExistingShapes()
-        } else if (focused && getCornerCursor(focused, cursor_x, cursor_y)) {
-          if (isTopLeftCorner(cursor_x, cursor_y, focused)) {
-            focused.x1 += cursor_x - clickStartPosition.x
-            focused.y1 += cursor_y - clickStartPosition.y
-            startPosition.current = { x: cursor_x, y: cursor_y }
-          }
-        } else {
+        }
+        else {
           setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
           drawRect(ctx, { x1: clickStartPosition.x, x2: cursor_x, y1: clickStartPosition.y, y2: cursor_y, tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
         }
-      } else {
-        const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
-        if (intersected && intersected.isFocused) canvas.style.cursor = getCornerCursor(intersected, cursor_x, cursor_y) || 'move'
-        else if (intersected) canvas.style.cursor = 'pointer'
-        else if (focused) canvas.style.cursor = getCornerCursor(focused, cursor_x, cursor_y) || 'crosshair'
-        else canvas.style.cursor = 'crosshair'
+      }
+      else {
+        canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, focused)
       }
     },
     onClick = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
       if (!canvas) return
 
-      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
-      setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: isIntersecting(cursor_x, cursor_y)(shape) })))
+      setDrawnShapes(drawnShapes => {
+        const
+          { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
+          shapes = drawnShapes.map(shape => ({ ...shape, isFocused: isIntersecting(cursor_x, cursor_y)(shape) })),
+          focused = shapes.find(({ isFocused }) => isFocused)
+        canvas.style.cursor = getCorrectCursor(shapes, cursor_x, cursor_y, focused)
+        return shapes
+      })
       redrawExistingShapes()
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {

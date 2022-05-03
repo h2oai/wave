@@ -2754,29 +2754,29 @@ ui_image_annotator_tag <- function(
 
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
-#' @param x_min Minimum X dimension.
-#' @param x_max Maximum X dimension.
-#' @param y_min Minimum Y dimension.
-#' @param y_max Maximum Y dimension.
+#' @param x1 Start X dimension.
+#' @param x2 End X dimension.
+#' @param y1 Start Y dimension.
+#' @param y2 End Y dimension.
 #' @param tag Tag connected to the highlighted section.
 #' @return A ImageAnnotatorItem instance.
 #' @export
 ui_image_annotator_item <- function(
-  x_min,
-  x_max,
-  y_min,
-  y_max,
+  x1,
+  x2,
+  y1,
+  y2,
   tag) {
-  .guard_scalar("x_min", "numeric", x_min)
-  .guard_scalar("x_max", "numeric", x_max)
-  .guard_scalar("y_min", "numeric", y_min)
-  .guard_scalar("y_max", "numeric", y_max)
+  .guard_scalar("x1", "numeric", x1)
+  .guard_scalar("x2", "numeric", x2)
+  .guard_scalar("y1", "numeric", y1)
+  .guard_scalar("y2", "numeric", y2)
   .guard_scalar("tag", "character", tag)
   .o <- list(
-    x_min=x_min,
-    x_max=x_max,
-    y_min=y_min,
-    y_max=y_max,
+    x1=x1,
+    x2=x2,
+    y1=y1,
+    y2=y2,
     tag=tag)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorItem"))
   return(.o)

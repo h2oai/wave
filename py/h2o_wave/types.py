@@ -6329,66 +6329,66 @@ class ImageAnnotatorItem:
     """
     def __init__(
             self,
-            x_min: int,
-            x_max: int,
-            y_min: int,
-            y_max: int,
+            x1: int,
+            x2: int,
+            y1: int,
+            y2: int,
             tag: str,
     ):
-        _guard_scalar('ImageAnnotatorItem.x_min', x_min, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.x_max', x_max, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.y_min', y_min, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.y_max', y_max, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.x1', x1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.x2', x2, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y1', y1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y2', y2, (int,), False, False, False)
         _guard_scalar('ImageAnnotatorItem.tag', tag, (str,), False, False, False)
-        self.x_min = x_min
-        """Minimum X dimension."""
-        self.x_max = x_max
-        """Maximum X dimension."""
-        self.y_min = y_min
-        """Minimum Y dimension."""
-        self.y_max = y_max
-        """Maximum Y dimension."""
+        self.x1 = x1
+        """Start X dimension."""
+        self.x2 = x2
+        """End X dimension."""
+        self.y1 = y1
+        """Start Y dimension."""
+        self.y2 = y2
+        """End Y dimension."""
         self.tag = tag
         """Tag connected to the highlighted section."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ImageAnnotatorItem.x_min', self.x_min, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.x_max', self.x_max, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.y_min', self.y_min, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.y_max', self.y_max, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.x1', self.x1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.x2', self.x2, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y1', self.y1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorItem.y2', self.y2, (int,), False, False, False)
         _guard_scalar('ImageAnnotatorItem.tag', self.tag, (str,), False, False, False)
         return _dump(
-            x_min=self.x_min,
-            x_max=self.x_max,
-            y_min=self.y_min,
-            y_max=self.y_max,
+            x1=self.x1,
+            x2=self.x2,
+            y1=self.y1,
+            y2=self.y2,
             tag=self.tag,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ImageAnnotatorItem':
         """Creates an instance of this class using the contents of a dict."""
-        __d_x_min: Any = __d.get('x_min')
-        _guard_scalar('ImageAnnotatorItem.x_min', __d_x_min, (int,), False, False, False)
-        __d_x_max: Any = __d.get('x_max')
-        _guard_scalar('ImageAnnotatorItem.x_max', __d_x_max, (int,), False, False, False)
-        __d_y_min: Any = __d.get('y_min')
-        _guard_scalar('ImageAnnotatorItem.y_min', __d_y_min, (int,), False, False, False)
-        __d_y_max: Any = __d.get('y_max')
-        _guard_scalar('ImageAnnotatorItem.y_max', __d_y_max, (int,), False, False, False)
+        __d_x1: Any = __d.get('x1')
+        _guard_scalar('ImageAnnotatorItem.x1', __d_x1, (int,), False, False, False)
+        __d_x2: Any = __d.get('x2')
+        _guard_scalar('ImageAnnotatorItem.x2', __d_x2, (int,), False, False, False)
+        __d_y1: Any = __d.get('y1')
+        _guard_scalar('ImageAnnotatorItem.y1', __d_y1, (int,), False, False, False)
+        __d_y2: Any = __d.get('y2')
+        _guard_scalar('ImageAnnotatorItem.y2', __d_y2, (int,), False, False, False)
         __d_tag: Any = __d.get('tag')
         _guard_scalar('ImageAnnotatorItem.tag', __d_tag, (str,), False, False, False)
-        x_min: int = __d_x_min
-        x_max: int = __d_x_max
-        y_min: int = __d_y_min
-        y_max: int = __d_y_max
+        x1: int = __d_x1
+        x2: int = __d_x2
+        y1: int = __d_y1
+        y2: int = __d_y2
         tag: str = __d_tag
         return ImageAnnotatorItem(
-            x_min,
-            x_max,
-            y_min,
-            y_max,
+            x1,
+            x2,
+            y1,
+            y2,
             tag,
         )
 

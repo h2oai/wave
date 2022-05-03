@@ -231,11 +231,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_image_annotator_item" value="ui.image_annotator_item(x_min=$x_min$,x_max=$x_max$,y_min=$y_min$,y_max=$y_max$,tag='$tag$'),$END$" description="Create a minimal Wave ImageAnnotatorItem." toReformat="true" toShortenFQNames="true">
-    <variable name="x_min" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="x_max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="y_min" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="y_max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+  <template name="w_image_annotator_item" value="ui.image_annotator_item(x1=$x1$,x2=$x2$,y1=$y1$,y2=$y2$,tag='$tag$'),$END$" description="Create a minimal Wave ImageAnnotatorItem." toReformat="true" toShortenFQNames="true">
+    <variable name="x1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="x2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="tag" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1390,11 +1390,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_image_annotator_item" value="ui.image_annotator_item(x_min=$x_min$,x_max=$x_max$,y_min=$y_min$,y_max=$y_max$,tag='$tag$'),$END$" description="Create Wave ImageAnnotatorItem with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="x_min" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="x_max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="y_min" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
-    <variable name="y_max" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+  <template name="w_full_image_annotator_item" value="ui.image_annotator_item(x1=$x1$,x2=$x2$,y1=$y1$,y2=$y2$,tag='$tag$'),$END$" description="Create Wave ImageAnnotatorItem with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="x1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="x2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="tag" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
