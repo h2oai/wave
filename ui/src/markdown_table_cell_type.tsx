@@ -30,8 +30,7 @@ export const XMarkdownTableCellType = ({ model: m }: { model: MarkdownTableCellT
   const ref = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    const anchors = document.querySelectorAll<HTMLAnchorElement>('a')
-    anchors?.forEach(a => {if (m.target) a.target = m.target})
+    ref.current!.querySelectorAll<HTMLAnchorElement>('a')?.forEach(a => {if (m.target) a.target = m.target})
   }, [m.target])
 
   return (
