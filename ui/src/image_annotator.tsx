@@ -241,7 +241,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
 
         if (!resizedCornerRef.current) {
-          drawnShapes = drawnShapes.map(shape => ({ ...shape, isFocused: isIntersecting(cursor_x, cursor_y)(shape) }))
+          drawnShapes = drawnShapes.map(shape => ({ ...shape, isFocused: false }))
+          const intersecting = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
+          if (intersecting) intersecting.isFocused = true
         }
 
         resizedCornerRef.current = ''
