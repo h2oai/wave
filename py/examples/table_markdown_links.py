@@ -1,5 +1,5 @@
 # Table / Markdown / Links
-# Creates a table with Markdown link that open in new tab
+# Creates a table with Markdown link that opens in a new tab.
 # #table #markdown #links
 # ---
 
