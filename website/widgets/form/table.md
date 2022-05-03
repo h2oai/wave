@@ -390,8 +390,8 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
                 ui.table_column(name='markdown', label='Link', cell_type=ui.markdown_table_cell_type(target='_blank'))
             ],
             rows=[
-                ui.table_row(name='row1', cells=['Absolute', '[Wave website](http://wave.h2o.ai/)']),
-                ui.table_row(name='row2', cells=['Relative', '[Go to /wave](/wave)']),
+                ui.table_row(name='row1', cells=['Absolute path', '[Wave website](http://wave.h2o.ai/)']),
+                ui.table_row(name='row2', cells=['Relative path', '[Go to /wave](/wave)']),
             ]
         )
     ])
