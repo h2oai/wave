@@ -8,7 +8,6 @@ from h2o_wave import main, Q, ui, app
 
 @app('/demo')
 async def serve(q: Q):
-
     q.page['example'] = ui.form_card(box='1 1 3 3', items=[
         ui.text_xl(content='Table with Markdown links'),
         ui.table(
