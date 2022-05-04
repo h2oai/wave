@@ -1,9 +1,10 @@
 import * as Fluent from '@fluentui/react'
-import { B, Id, S, U } from 'h2o-wave'
+import { B, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
+import { wave } from './ui'
 
 /** Rectangle (box) annotation. */
 interface ImageAnnotatorRect {
@@ -267,6 +268,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(newShapes, cursor_x, cursor_y, newShapes.find(({ isFocused }) => isFocused))
       setDrawnShapes(newShapes)
       redrawExistingShapes()
+      wave.args[model.name] = newShapes as unknown as Rec[]
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
