@@ -83,7 +83,15 @@ const
     }
   }),
   ARC_RADIUS = 8,
-  isIntersecting = (cursor_x: U, cursor_y: U) => ({ x2, x1, y2, y1 }: ImageAnnotatorItem) => cursor_x > x1 && cursor_x < x2 && cursor_y > y1 && cursor_y < y2,
+  isIntersecting = (cursor_x: U, cursor_y: U) => ({ x2, x1, y2, y1 }: ImageAnnotatorItem) => {
+    const
+      x_min = Math.min(x1, x2),
+      x_max = Math.max(x1, x2),
+      y_min = Math.min(y1, y2),
+      y_max = Math.max(y1, y2)
+
+    return cursor_x > x_min && cursor_x < x_max && cursor_y > y_min && cursor_y < y_max
+  },
   eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
   drawCircle = (ctx: CanvasRenderingContext2D, x: U, y: U, fillColor: S) => {
     ctx.beginPath()
