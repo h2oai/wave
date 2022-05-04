@@ -129,13 +129,21 @@ const
       drawCircle(ctx, x1, y2, strokeColor)
     }
   },
-  isTopLeftCorner = (x: U, y: U, { x1, y1 }: ImageAnnotatorRect) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
-  isTopRightCorner = (x: U, y: U, { x1, y2 }: ImageAnnotatorRect) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
-  isBottomLeftCorner = (x: U, y: U, { x2, y1 }: ImageAnnotatorRect) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
-  isBottomRightCorner = (x: U, y: U, { x2, y2 }: ImageAnnotatorRect) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
+  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect, ignoreMaxMin = false) => {
+    const
+      x_min = ignoreMaxMin ? x1 : Math.min(x1, x2),
+      x_max = ignoreMaxMin ? x2 : Math.max(x1, x2),
+      y_min = ignoreMaxMin ? y1 : Math.min(y1, y2),
+      y_max = ignoreMaxMin ? y2 : Math.max(y1, y2)
+    if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'topLeft'
+    else if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'topRight'
+    else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'bottomLeft'
+    else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'bottomRight'
+  },
   getCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
-    if (isTopLeftCorner(cursor_x, cursor_y, shape) || isBottomRightCorner(cursor_x, cursor_y, shape)) return 'nwse-resize'
-    if (isBottomLeftCorner(cursor_x, cursor_y, shape) || isTopRightCorner(cursor_x, cursor_y, shape)) return 'nesw-resize'
+    const corner = getCorner(cursor_x, cursor_y, shape)
+    if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'
+    if (corner === 'bottomLeft' || corner === 'topRight') return 'nesw-resize'
   },
   getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape) => {
     const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
@@ -155,7 +163,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     aspectRatioRef = React.useRef(1),
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
-    resizedCornerRef = React.useRef<S>(''),
+    resizedCornerRef = React.useRef<S | undefined>(undefined),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
     redrawExistingShapes = () => {
       const canvas = canvasRef.current
@@ -177,12 +185,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
         focused = drawnShapes.find(({ isFocused }) => isFocused)
-      if (focused?.shape.rect) {
-        if (isTopLeftCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'topLeft'
-        if (isTopRightCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'topRight'
-        if (isBottomLeftCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'bottomLeft'
-        if (isBottomRightCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'bottomRight'
-      }
+
+      if (focused?.shape.rect) resizedCornerRef.current = getCorner(cursor_x, cursor_y, focused.shape.rect, true)
       startPosition.current = { x: cursor_x, y: cursor_y }
     },
     onMouseMove = (e: React.MouseEvent) => {
@@ -198,8 +202,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (clickStartPosition) {
         clickStartPosition.dragging = true
         const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
-        if (focused && resizedCornerRef.current) {
-          if (resizedCornerRef.current === 'topLeft' && focused.shape.rect) {
+        if (focused?.shape.rect && resizedCornerRef.current) {
+          if (resizedCornerRef.current === 'topLeft') {
             focused.shape.rect.x1 += cursor_x - clickStartPosition.x
             focused.shape.rect.y1 += cursor_y - clickStartPosition.y
           }
