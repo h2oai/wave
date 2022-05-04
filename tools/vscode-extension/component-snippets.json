@@ -230,6 +230,20 @@
     ],
     "description": "Create a minimal Wave Image."
   },
+  "Wave ImageAnnotatorRect": {
+    "prefix": "w_image_annotator_rect",
+    "body": [
+      "ui.image_annotator_rect(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorRect."
+  },
+  "Wave ImageAnnotatorShape": {
+    "prefix": "w_image_annotator_shape",
+    "body": [
+      "ui.image_annotator_shape(rect=$1),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorShape."
+  },
   "Wave ImageAnnotatorTag": {
     "prefix": "w_image_annotator_tag",
     "body": [
@@ -240,7 +254,7 @@
   "Wave ImageAnnotatorItem": {
     "prefix": "w_image_annotator_item",
     "body": [
-      "ui.image_annotator_item(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}, tag='$5'),$0"
+      "ui.image_annotator_item(shape=$1, tag='$2'),$0"
     ],
     "description": "Create a minimal Wave ImageAnnotatorItem."
   },
@@ -1147,6 +1161,20 @@
     ],
     "description": "Create a full Wave Image."
   },
+  "Wave Full ImageAnnotatorRect": {
+    "prefix": "w_full_image_annotator_rect",
+    "body": [
+      "ui.image_annotator_rect(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorRect."
+  },
+  "Wave Full ImageAnnotatorShape": {
+    "prefix": "w_full_image_annotator_shape",
+    "body": [
+      "ui.image_annotator_shape(rect=$1),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorShape."
+  },
   "Wave Full ImageAnnotatorTag": {
     "prefix": "w_full_image_annotator_tag",
     "body": [
@@ -1157,7 +1185,7 @@
   "Wave Full ImageAnnotatorItem": {
     "prefix": "w_full_image_annotator_item",
     "body": [
-      "ui.image_annotator_item(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}, tag='$5'),$0"
+      "ui.image_annotator_item(shape=$1, tag='$2'),$0"
     ],
     "description": "Create a full Wave ImageAnnotatorItem."
   },

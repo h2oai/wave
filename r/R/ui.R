@@ -2730,10 +2730,10 @@ ui_text_annotator <- function(
   return(.o)
 }
 
-#' Create a tag.
+#' Image annotator tag.
 #'
-#' @param name An identifying name for this component.
-#' @param label Text to be displayed for this tag.
+#' @param name An identifying name for this tag.
+#' @param label Text to be displayed.
 #' @param color HEX or RGB color string used as background for highlighted phrases.
 #' @return A ImageAnnotatorTag instance.
 #' @export
@@ -2752,31 +2752,59 @@ ui_image_annotator_tag <- function(
   return(.o)
 }
 
-#' Create an annotator item with initial selected tags or no tag for plaintext.
+#' Rectangle (box) annotation.
 #'
 #' @param x1 Start X dimension.
 #' @param x2 End X dimension.
 #' @param y1 Start Y dimension.
 #' @param y2 End Y dimension.
-#' @param tag Tag connected to the highlighted section.
-#' @return A ImageAnnotatorItem instance.
+#' @return A ImageAnnotatorRect instance.
 #' @export
-ui_image_annotator_item <- function(
+ui_image_annotator_rect <- function(
   x1,
   x2,
   y1,
-  y2,
-  tag) {
+  y2) {
   .guard_scalar("x1", "numeric", x1)
   .guard_scalar("x2", "numeric", x2)
   .guard_scalar("y1", "numeric", y1)
   .guard_scalar("y2", "numeric", y2)
-  .guard_scalar("tag", "character", tag)
   .o <- list(
     x1=x1,
     x2=x2,
     y1=y1,
-    y2=y2,
+    y2=y2)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorRect"))
+  return(.o)
+}
+
+#' Defines a particular shape to be used for the annotation.
+#'
+#' @param rect No documentation available.
+#' @return A ImageAnnotatorShape instance.
+#' @export
+ui_image_annotator_shape <- function(
+  rect) {
+  .guard_scalar("rect", "WaveImageAnnotatorRect", rect)
+  .o <- list(
+    rect=rect)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
+  return(.o)
+}
+
+#' Create an annotator item with initial selected tags or no tag for plaintext.
+#'
+#' @param shape The annotation shape.
+#' @param tag Tag connected to the highlighted section.
+#' @return A ImageAnnotatorItem instance.
+#' @export
+ui_image_annotator_item <- function(
+  shape,
+  tag) {
+  .guard_scalar("shape", "WaveImageAnnotatorShape", shape)
+  .guard_scalar("tag", "character", tag)
+  .o <- list(
+    shape=shape,
     tag=tag)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorItem"))
   return(.o)

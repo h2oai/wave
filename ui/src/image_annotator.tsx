@@ -5,18 +5,8 @@ import { stylesheet } from 'typestyle'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 
-/** Create a tag. */
-interface ImageAnnotatorTag {
-  /** An identifying name for this component. */
-  name: Id
-  /** Text to be displayed for this tag. */
-  label: S
-  /** HEX or RGB color string used as background for highlighted phrases. */
-  color: S
-}
-
-/** Create an annotator item with initial selected tags or no tag for plaintext. */
-interface ImageAnnotatorItem {
+/** Rectangle (box) annotation. */
+interface ImageAnnotatorRect {
   /** Start X dimension. */
   x1: U
   /** End X dimension. */
@@ -25,6 +15,27 @@ interface ImageAnnotatorItem {
   y1: U
   /** End Y dimension. */
   y2: U
+}
+
+/** Defines a particular shape to be used for the annotation. */
+interface ImageAnnotatorShape {
+  rect: ImageAnnotatorRect
+}
+
+/** Image annotator tag. */
+interface ImageAnnotatorTag {
+  /** An identifying name for this tag. */
+  name: Id
+  /** Text to be displayed. */
+  label: S
+  /** HEX or RGB color string used as background for highlighted phrases. */
+  color: S
+}
+
+/** Create an annotator item with initial selected tags or no tag for plaintext. */
+interface ImageAnnotatorItem {
+  /** The annotation shape. */
+  shape: ImageAnnotatorShape
   /** Tag connected to the highlighted section. */
   tag: S
 }
@@ -83,7 +94,7 @@ const
     }
   }),
   ARC_RADIUS = 8,
-  isIntersecting = (cursor_x: U, cursor_y: U) => ({ x2, x1, y2, y1 }: ImageAnnotatorItem) => {
+  isIntersectingRect = (cursor_x: U, cursor_y: U, { x2, x1, y2, y1 }: ImageAnnotatorRect) => {
     const
       x_min = Math.min(x1, x2),
       x_max = Math.max(x1, x2),
@@ -101,7 +112,7 @@ const
     ctx.fill(path)
     ctx.closePath()
   },
-  drawRect = (ctx: CanvasRenderingContext2D, { x1, x2, y1, y2, isFocused }: DrawnShape, strokeColor: S) => {
+  drawRect = (ctx: CanvasRenderingContext2D, { x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
     ctx.beginPath()
     ctx.lineWidth = 6
     ctx.strokeStyle = strokeColor
@@ -118,18 +129,18 @@ const
       drawCircle(ctx, x1, y2, strokeColor)
     }
   },
-  isTopLeftCorner = (x: U, y: U, { x1, y1 }: DrawnShape) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
-  isTopRightCorner = (x: U, y: U, { x1, y2 }: DrawnShape) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
-  isBottomLeftCorner = (x: U, y: U, { x2, y1 }: DrawnShape) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
-  isBottomRightCorner = (x: U, y: U, { x2, y2 }: DrawnShape) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
-  getCornerCursor = (shape: DrawnShape, cursor_x: U, cursor_y: U) => {
+  isTopLeftCorner = (x: U, y: U, { x1, y1 }: ImageAnnotatorRect) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
+  isTopRightCorner = (x: U, y: U, { x1, y2 }: ImageAnnotatorRect) => x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
+  isBottomLeftCorner = (x: U, y: U, { x2, y1 }: ImageAnnotatorRect) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS,
+  isBottomRightCorner = (x: U, y: U, { x2, y2 }: ImageAnnotatorRect) => x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS,
+  getCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
     if (isTopLeftCorner(cursor_x, cursor_y, shape) || isBottomRightCorner(cursor_x, cursor_y, shape)) return 'nwse-resize'
     if (isBottomLeftCorner(cursor_x, cursor_y, shape) || isTopRightCorner(cursor_x, cursor_y, shape)) return 'nesw-resize'
   },
   getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape) => {
-    const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
-    if (intersected && intersected.isFocused) return getCornerCursor(intersected, cursor_x, cursor_y) || 'move'
-    else if (focused) return getCornerCursor(focused, cursor_x, cursor_y) || 'crosshair'
+    const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
+    if (intersected?.isFocused && intersected.shape.rect) return getCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
+    else if (focused?.shape.rect) return getCornerCursor(focused.shape.rect, cursor_x, cursor_y) || 'crosshair'
     else if (intersected) return 'pointer'
     return 'crosshair'
   }
@@ -153,7 +164,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       setDrawnShapes(shapes => {
-        shapes.forEach(item => drawRect(ctx, item, colorsMap.get(item.tag) || cssVarValue('$red')))
+        shapes.forEach(item => {
+          if (item.shape.rect) drawRect(ctx, item.shape.rect, colorsMap.get(item.tag) || cssVarValue('$red'), item.isFocused)
+        })
         return shapes
       })
     },
@@ -164,11 +177,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
         focused = drawnShapes.find(({ isFocused }) => isFocused)
-      if (focused) {
-        if (isTopLeftCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'topLeft'
-        if (isTopRightCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'topRight'
-        if (isBottomLeftCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'bottomLeft'
-        if (isBottomRightCorner(cursor_x, cursor_y, focused)) resizedCornerRef.current = 'bottomRight'
+      if (focused?.shape.rect) {
+        if (isTopLeftCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'topLeft'
+        if (isTopRightCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'topRight'
+        if (isBottomLeftCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'bottomLeft'
+        if (isBottomRightCorner(cursor_x, cursor_y, focused.shape.rect)) resizedCornerRef.current = 'bottomRight'
       }
       startPosition.current = { x: cursor_x, y: cursor_y }
     },
@@ -184,40 +197,40 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         clickStartPosition = startPosition.current
       if (clickStartPosition) {
         clickStartPosition.dragging = true
-        const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
+        const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
         if (focused && resizedCornerRef.current) {
-          if (resizedCornerRef.current === 'topLeft') {
-            focused.x1 += cursor_x - clickStartPosition.x
-            focused.y1 += cursor_y - clickStartPosition.y
+          if (resizedCornerRef.current === 'topLeft' && focused.shape.rect) {
+            focused.shape.rect.x1 += cursor_x - clickStartPosition.x
+            focused.shape.rect.y1 += cursor_y - clickStartPosition.y
           }
           else if (resizedCornerRef.current === 'topRight') {
-            focused.x1 += cursor_x - clickStartPosition.x
-            focused.y2 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x1 += cursor_x - clickStartPosition.x
+            focused.shape.rect.y2 += cursor_y - clickStartPosition.y
           }
           else if (resizedCornerRef.current === 'bottomLeft') {
-            focused.x2 += cursor_x - clickStartPosition.x
-            focused.y1 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x2 += cursor_x - clickStartPosition.x
+            focused.shape.rect.y1 += cursor_y - clickStartPosition.y
           }
           else if (resizedCornerRef.current === 'bottomRight') {
-            focused.x2 += cursor_x - clickStartPosition.x
-            focused.y2 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x2 += cursor_x - clickStartPosition.x
+            focused.shape.rect.y2 += cursor_y - clickStartPosition.y
           }
           startPosition.current = { x: cursor_x, y: cursor_y }
           redrawExistingShapes()
         }
-        else if (intersected?.isFocused) {
+        else if (intersected?.isFocused && intersected.shape.rect) {
           canvas.style.cursor = 'move'
-          intersected.x1 += cursor_x - clickStartPosition.x
-          intersected.x2 += cursor_x - clickStartPosition.x
-          intersected.y1 += cursor_y - clickStartPosition.y
-          intersected.y2 += cursor_y - clickStartPosition.y
+          intersected.shape.rect.x1 += cursor_x - clickStartPosition.x
+          intersected.shape.rect.x2 += cursor_x - clickStartPosition.x
+          intersected.shape.rect.y1 += cursor_y - clickStartPosition.y
+          intersected.shape.rect.y2 += cursor_y - clickStartPosition.y
           startPosition.current = { x: cursor_x, y: cursor_y }
           redrawExistingShapes()
         }
         else {
           setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
-          drawRect(ctx, { x1: clickStartPosition.x, x2: cursor_x, y1: clickStartPosition.y, y2: cursor_y, tag: activeTag }, colorsMap.get(activeTag) || cssVarValue('$red'))
+          drawRect(ctx, { x1: clickStartPosition.x, x2: cursor_x, y1: clickStartPosition.y, y2: cursor_y, }, colorsMap.get(activeTag) || cssVarValue('$red'))
         }
       }
       else {
@@ -236,12 +249,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       if (start) {
         const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
-        if (x2 !== x1 && y2 !== y1) newShapes.unshift({ x1, x2, y1, y2, tag: activeTag })
+        if (x2 !== x1 && y2 !== y1) newShapes.unshift({ shape: { rect: { x1, x2, y1, y2 } }, tag: activeTag })
       }
 
       if (!resizedCornerRef.current && !start?.dragging) {
         newShapes.forEach(shape => shape.isFocused = false)
-        const intersecting = newShapes.find(isIntersecting(cursor_x, cursor_y))
+        const intersecting = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
         if (intersecting) intersecting.isFocused = true
       }
 

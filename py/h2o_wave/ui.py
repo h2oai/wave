@@ -2345,11 +2345,11 @@ def image_annotator_tag(
         label: str,
         color: str,
 ) -> ImageAnnotatorTag:
-    """Create a tag.
+    """Image annotator tag.
 
     Args:
-        name: An identifying name for this component.
-        label: Text to be displayed for this tag.
+        name: An identifying name for this tag.
+        label: Text to be displayed.
         color: HEX or RGB color string used as background for highlighted phrases.
     Returns:
         A `h2o_wave.types.ImageAnnotatorTag` instance.
@@ -2361,29 +2361,59 @@ def image_annotator_tag(
     )
 
 
-def image_annotator_item(
+def image_annotator_rect(
         x1: int,
         x2: int,
         y1: int,
         y2: int,
-        tag: str,
-) -> ImageAnnotatorItem:
-    """Create an annotator item with initial selected tags or no tag for plaintext.
+) -> ImageAnnotatorRect:
+    """Rectangle (box) annotation.
 
     Args:
         x1: Start X dimension.
         x2: End X dimension.
         y1: Start Y dimension.
         y2: End Y dimension.
+    Returns:
+        A `h2o_wave.types.ImageAnnotatorRect` instance.
+    """
+    return ImageAnnotatorRect(
+        x1,
+        x2,
+        y1,
+        y2,
+    )
+
+
+def image_annotator_shape(
+        rect: ImageAnnotatorRect,
+) -> ImageAnnotatorShape:
+    """Defines a particular shape to be used for the annotation.
+
+    Args:
+        rect: No documentation available.
+    Returns:
+        A `h2o_wave.types.ImageAnnotatorShape` instance.
+    """
+    return ImageAnnotatorShape(
+        rect,
+    )
+
+
+def image_annotator_item(
+        shape: ImageAnnotatorShape,
+        tag: str,
+) -> ImageAnnotatorItem:
+    """Create an annotator item with initial selected tags or no tag for plaintext.
+
+    Args:
+        shape: The annotation shape.
         tag: Tag connected to the highlighted section.
     Returns:
         A `h2o_wave.types.ImageAnnotatorItem` instance.
     """
     return ImageAnnotatorItem(
-        x1,
-        x2,
-        y1,
-        y2,
+        shape,
         tag,
     )
 
