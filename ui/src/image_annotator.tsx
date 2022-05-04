@@ -121,8 +121,8 @@ const
   getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape) => {
     const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
     if (intersected && intersected.isFocused) return getCornerCursor(intersected, cursor_x, cursor_y) || 'move'
-    else if (intersected) return 'pointer'
     else if (focused) return getCornerCursor(focused, cursor_x, cursor_y) || 'crosshair'
+    else if (intersected) return 'pointer'
     return 'crosshair'
   }
 
@@ -167,13 +167,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onMouseMove = (e: React.MouseEvent) => {
       const
         canvas = canvasRef.current,
-        ctx = ctxRef.current,
-        clickStartPosition = startPosition.current
+        ctx = ctxRef.current
       if (!canvas || !ctx) return
 
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
-        focused = drawnShapes.find(({ isFocused }) => isFocused)
+        focused = drawnShapes.find(({ isFocused }) => isFocused),
+        clickStartPosition = startPosition.current
       if (clickStartPosition) {
         clickStartPosition.dragging = true
         const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
@@ -222,12 +222,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       const
         start = startPosition.current,
-        focused = drawnShapes.find(item => item.isFocused),
         rect = canvas.getBoundingClientRect(),
         { cursor_x, cursor_y } = eventToCursor(e, rect),
         newShapes = [...drawnShapes]
 
-      if (start && (!focused || !isIntersecting(cursor_x, cursor_y)(focused))) {
+      if (start) {
         const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
         if (x2 !== x1 && y2 !== y1) newShapes.unshift({ x1, x2, y1, y2, tag: activeTag })
       }
@@ -298,13 +297,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       ]} />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
-        <canvas
-          ref={canvasRef}
-          className={css.canvas}
-          onMouseMove={onMouseMove}
-          onMouseDown={onMouseDown}
-          onClick={onClick}
-        />
+        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onClick={onClick} />
       </div>
     </div >
   )
