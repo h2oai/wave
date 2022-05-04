@@ -1,8 +1,8 @@
 Package: h2owave
 Title: R Driver for H2O Wave Realtime Apps Framework
-Version: 0.19.0
-Date: 2021-03-24
-Authors@R:c( 
+Version: 0.18.0
+Date: 2022-05-03
+Authors@R: c( 
     person(given = "Ashrith",
            family = "Barthur",
            role = c("aut", "cre"),
@@ -21,8 +21,10 @@ LazyData: true
 Depends: 
     R(>= 3.5),
     jsonlite,
+    devtools,
     httr,
     stringr,
+    httpuv,
     R6(>= 2.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9000
+RoxygenNote: 7.1.2

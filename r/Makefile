@@ -13,6 +13,10 @@ package: preinstall doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
 
+package0: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
+$(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
+	R CMD build .
+
 check: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 	R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
@@ -21,7 +25,7 @@ doc:
 
 preinstall: 
 	mkdir -p ~/R_LIBS
-	R -e 'install.packages(c("roxygen2","devtools"), repos="http://cran.us.r-project.org",lib="~/R_LIBS")'
+	R -e 'install.packages(c("roxygen2","devtools","httr","stringr"), repos="http://cran.us.r-project.org")'
 
 install: 
 	R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz

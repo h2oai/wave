@@ -21,14 +21,15 @@ fig <- fig %>% add_trace(y = ~trace_2, name = 'trace 2', mode = 'markers')
 saveWidget(fig, "/tmp/fig.html", selfcontained = T)
 rawHTML <- paste(readLines("/tmp/fig.html"), collapse="\n")
 
-page <- Site("/demo")
+serve <- function(qo){
 
-page$add_card("plotly_render",
+qo$page$add_card("plotly_render",
                     ui_form_card(
                         box= '1 1 -1 -1'
                         ,items = list(
                             ui_frame(content=rawHTML,height='800px',width='1500px')
                         )
                     ))
-page$save()
-
+qo$page$save()
+}
+app("/demo")
