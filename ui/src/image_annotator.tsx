@@ -54,6 +54,7 @@ export interface ImageAnnotator {
 type Position = {
   x: U
   y: U
+  dragging?: B
 }
 
 type DrawnShape = ImageAnnotatorItem & {
@@ -149,8 +150,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       })
     },
     onMouseDown = (e: React.MouseEvent) => {
-      e.preventDefault()
-
       const canvas = canvasRef.current
       if (!canvas) return
 
@@ -165,22 +164,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
       startPosition.current = { x: cursor_x, y: cursor_y }
     },
-    onMouseUp = (e: React.MouseEvent) => {
-      const
-        canvas = canvasRef.current,
-        start = startPosition.current
-      if (!start || !canvas) return
-
-      const
-        focused = drawnShapes.find(item => item.isFocused),
-        rect = canvas.getBoundingClientRect(),
-        { cursor_x, cursor_y } = eventToCursor(e, rect)
-
-      if (!focused || !isIntersecting(cursor_x, cursor_y)(focused)) {
-        const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
-        if (x2 !== x1 && y2 !== y1) setDrawnShapes(shapes => [{ x1, x2, y1, y2, tag: activeTag }, ...shapes])
-      }
-    },
     onMouseMove = (e: React.MouseEvent) => {
       const
         canvas = canvasRef.current,
@@ -192,6 +175,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
         focused = drawnShapes.find(({ isFocused }) => isFocused)
       if (clickStartPosition) {
+        clickStartPosition.dragging = true
         const intersected = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
         if (focused && resizedCornerRef.current) {
           if (resizedCornerRef.current === 'topLeft') {
@@ -236,20 +220,28 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const canvas = canvasRef.current
       if (!canvas) return
 
+      const
+        start = startPosition.current,
+        focused = drawnShapes.find(item => item.isFocused),
+        rect = canvas.getBoundingClientRect(),
+        { cursor_x, cursor_y } = eventToCursor(e, rect),
+        newShapes = [...drawnShapes]
+
+      if (start && (!focused || !isIntersecting(cursor_x, cursor_y)(focused))) {
+        const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
+        if (x2 !== x1 && y2 !== y1) newShapes.unshift({ x1, x2, y1, y2, tag: activeTag })
+      }
+
+      if (!resizedCornerRef.current && !start?.dragging) {
+        newShapes.forEach(shape => shape.isFocused = false)
+        const intersecting = newShapes.find(isIntersecting(cursor_x, cursor_y))
+        if (intersecting) intersecting.isFocused = true
+      }
+
       startPosition.current = undefined
-      setDrawnShapes(drawnShapes => {
-        const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
-
-        if (!resizedCornerRef.current) {
-          drawnShapes = drawnShapes.map(shape => ({ ...shape, isFocused: false }))
-          const intersecting = drawnShapes.find(isIntersecting(cursor_x, cursor_y))
-          if (intersecting) intersecting.isFocused = true
-        }
-
-        resizedCornerRef.current = ''
-        canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused))
-        return drawnShapes
-      })
+      resizedCornerRef.current = ''
+      canvas.style.cursor = getCorrectCursor(newShapes, cursor_x, cursor_y, newShapes.find(({ isFocused }) => isFocused))
+      setDrawnShapes(newShapes)
       redrawExistingShapes()
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
@@ -311,7 +303,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           className={css.canvas}
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
           onClick={onClick}
         />
       </div>
