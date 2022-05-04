@@ -584,7 +584,7 @@ const
     fill_color, fill_opacity, stroke_color, stroke_opacity, stroke_dash, stroke_size,
     label_field, label_format, label_offset, label_offset_x, label_offset_y, label_rotation, label_position, label_overlap,
     label_fill_color, label_fill_opacity, label_stroke_color, label_stroke_opacity, label_stroke_size,
-    label_font_size, label_font_weight, label_line_height, label_align,
+    label_font_size, label_font_weight, label_line_height, label_align
   }: MarkExt): GeometryOption => {
     const o: GeometryOption = {}
     if (isS(type)) o.type = type
@@ -1097,6 +1097,7 @@ export const
           })
           currentChart.current = chart
           chart.data(data)
+          model.plot.marks.forEach(({ interactive = true }, idx) => chart.geometries[idx].customInfo({ interactive }))
           if (model.events) {
             for (const event of model.events) {
               switch (event) {
@@ -1105,7 +1106,7 @@ export const
                   chart.on('element:statechange', (ev: any) => {
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected') {
-                      if (model.name) wave.emit(model.name, event, [e.element?.data])
+                      if (model.name && e.element.geometry.customOption.interactive) wave.emit(model.name, event, [e.element?.data])
                     }
                   })
                 }
