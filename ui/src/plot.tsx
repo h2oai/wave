@@ -16,6 +16,7 @@ import { Chart } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
 import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
@@ -1071,16 +1072,20 @@ export const
             customContent: (title, items) => {
               const container = document.createElement('div')
               container.className = 'g2-tooltip'
-              container.innerHTML = items.map(({ data, mappingData, color }) =>
-                Object.keys(data).map(item =>
-                  `<li class="g2-tooltip-list-item" data-index={index} style="margin-bottom:4px;display:flex;align-items: center;">
-                    <span style="background-color:${mappingData?.color || color};" class="g2-tooltip-marker"></span>
-                    <span style="display:inline-flex;flex:1;justify-content:space-between">
-                    <span style="margin-right: 16px;">${item}:</span><span>${data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
-                    </span>
-                  </li>`
-                ).join('')
-              ).join('')
+              const ContainerContent = () => <>
+                {items.map(({ data, mappingData, color }) =>
+                  Object.keys(data).map((item, idx) =>
+                    <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+                      <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
+                      <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
+                        <span style={{ marginRight: 16 }}>{item}:</span>
+                        <span>{data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
+                      </span>
+                    </li>
+                  )
+                )}
+              </>
+              ReactDOM.render(<ContainerContent />, container)
               return container
             }
           })
