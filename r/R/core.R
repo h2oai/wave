@@ -13,36 +13,6 @@
 # limitations under the License.
 
 
-`%notin%` <- Negate(`%in%`)
-
-
-#' @title Fetch Environment Variable
-#' 
-#' @param object An environment variable object string
-#' 
-#' @description Fetches the value associated with an environment variable. 
-#' The associated value is obtained when the user passes the specific environment
-#' object string. 
-#' 
-#' @return The \code{var} value that was found/associated with the provided
-#' environment variable object string. 
-#' 
-#' @examples
-#' .get_env_var("INTERNAL_ADDRESS")
-#' 
-.get_env_var <- function(object) {
-        var <- Sys.getenv(paste0("H2O_WAVE_", object[1]))
-        ifelse(var != "", return(var), return(object[2]))
-}
-
-
-#' @title Default Internal Address
-#' 
-#' @description The default internal address used by \code{waved}
-#' 
-.default_internal_address = 'ws://localhost:10101'
-
-
 #' @title Create Data Buffer
 #' 
 #' @param fields  One long string, or a list of fields that need to store data
@@ -188,7 +158,7 @@ data <- function(fields
                                        bufs = list()
 
                                        for (i in names(o)) {
-                                               if (class(o[[i]]) == "h2o_wave_data") {
+                                               if ("h2o_wave_data" %in% class(o[[i]])) {
                                                        data[[i]] <- length(bufs)
                                                        class(o[[i]]) <- NULL
                                                        bufs[[length(bufs) + 1]] <- o[[i]]
@@ -262,7 +232,7 @@ data <- function(fields
                                        non_eval_string[[length(non_eval_string)]] =  
                                        eval(parse(text=non_eval_string[[length(non_eval_string)]]),parent.frame())
                                        base_string <- paste0(base_string,' = \"%s\"')
-                                       parsed_out_string <- parse(text = do.call(sprintf, c(fmt = base_string, non_eval_string)))
+                                       parsed_out_string <- parse(text = do.call(sprintf, c(fmt = base_string, non_eval_string),quote=TRUE))
                                        eval(parsed_out_string)
                                        class(self$cards) <- c("h2o_wave_delta_data", class(self$cards))
                                },

@@ -27,13 +27,18 @@
 #' 
 .seth2owaveoptions <- function(){
         .config <- list()
-        .config$internal_address <- .get_env_var(c("INTERNAL_ADDRESS",.default_internal_address))
+        .config$hub_port <- .get_env_var(c("PORT",'10101'))
+        .config$hub_domain <- .get_env_var(c("DOMAIN",'http://localhost'))
+        .config$default_internal_address <- paste0(.config$hub_domain,":",.config$hub_port)
+        .config$internal_address <- .get_env_var(c("INTERNAL_ADDRESS",.config$default_internal_address))
         .config$external_address <- .get_env_var(c("EXTERNAL_ADDRESS",.config$internal_address))
-        .config$hub_address <- .get_env_var(c("ADDRESS",'http://localhost:10101'))
+        .config$hub_address <- .get_env_var(c("ADDRESS",.config$default_internal_address))
         .config$hub_access_key_id <- .get_env_var(c('ACCESS_KEY_ID', 'access_key_id'))
         .config$hub_access_key_secret <- .get_env_var(c('ACCESS_KEY_SECRET','access_key_secret'))
         .config$shutdown_timeout <- as.integer(.get_env_var(c('SHUTDOWN_TIMEOUT','3')))
         .config$app_mode <- .get_env_var(c('APP_MODE',UNICAST))
+        .config$checkpoint_dir <- .get_env_var(c('CHECKPOINT_DIR',""))
+        print(.config$checkpoint_dir)
         if(any(is.null(.config))) stop("The configurations cannot be NULL.")
         options("h2owave"=.config)
 }

@@ -1,6 +1,5 @@
-#library(h2owave)
+library(h2owave)
 
-app("/demo",mode='broadcast')
 serve <- function(qo)
 {
     qo$app$test <- ifelse(is.null(qo$app$test),0, qo$app$test)
@@ -22,3 +21,4 @@ serve <- function(qo)
     }
     qo$page$save()
 }
+app("/demo",mode='broadcast')
