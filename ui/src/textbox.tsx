@@ -85,7 +85,7 @@ export const
         <Fluent.MaskedTextField
           data-test={m.name}
           label={m.label}
-          defaultValue={m.value}
+          value={m.value}
           mask={m.mask}
           errorMessage={m.error}
           required={m.required}
