@@ -2907,7 +2907,7 @@ class FileUpload:
         self.name = name
         """An identifying name for this component."""
         self.label = label
-        """Text to be displayed in the bottom button. Defaults to "Upload"."""
+        """Text to be displayed in the bottom button (or as a component title when the component is displayed compactly). Defaults to "Upload"."""
         self.multiple = multiple
         """True if the component should allow multiple files to be uploaded."""
         self.file_extensions = file_extensions
