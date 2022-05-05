@@ -107,7 +107,7 @@ q.page['example'] = ui.plot_card(
 
 ### Disable events
 
-If you do not wish to raise wave events on interaction with specific mark, simply specify it `interactive=False` attribute.
+If you do not wish to raise wave events on interaction with a specific mark, simply specify the `interactive=False` attribute.
 
 ```py
 from h2o_wave import data
