@@ -3223,6 +3223,45 @@ class MenuTableCellType:
         )
 
 
+class MarkdownTableCellType:
+    """Create a cell type that renders Markdown content.
+    """
+    def __init__(
+            self,
+            name: Optional[str] = None,
+            target: Optional[str] = None,
+    ):
+        _guard_scalar('MarkdownTableCellType.name', name, (str,), False, True, False)
+        _guard_scalar('MarkdownTableCellType.target', target, (str,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.target = target
+        """Where to display the link. Setting this to '_blank'` opens the link in a new tab or window."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('MarkdownTableCellType.name', self.name, (str,), False, True, False)
+        _guard_scalar('MarkdownTableCellType.target', self.target, (str,), False, True, False)
+        return _dump(
+            name=self.name,
+            target=self.target,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'MarkdownTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('MarkdownTableCellType.name', __d_name, (str,), False, True, False)
+        __d_target: Any = __d.get('target')
+        _guard_scalar('MarkdownTableCellType.target', __d_target, (str,), False, True, False)
+        name: Optional[str] = __d_name
+        target: Optional[str] = __d_target
+        return MarkdownTableCellType(
+            name,
+            target,
+        )
+
+
 class TableCellType:
     """Defines cell content to be rendered instead of a simple text.
     """
@@ -3232,11 +3271,13 @@ class TableCellType:
             icon: Optional[IconTableCellType] = None,
             tag: Optional[TagTableCellType] = None,
             menu: Optional[MenuTableCellType] = None,
+            markdown: Optional[MarkdownTableCellType] = None,
     ):
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
         _guard_scalar('TableCellType.tag', tag, (TagTableCellType,), False, True, False)
         _guard_scalar('TableCellType.menu', menu, (MenuTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.markdown', markdown, (MarkdownTableCellType,), False, True, False)
         self.progress = progress
         """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
@@ -3245,6 +3286,8 @@ class TableCellType:
         """Renders one or more tags."""
         self.menu = menu
         """Renders a command menu."""
+        self.markdown = markdown
+        """Renders text using markdown."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3252,11 +3295,13 @@ class TableCellType:
         _guard_scalar('TableCellType.icon', self.icon, (IconTableCellType,), False, True, False)
         _guard_scalar('TableCellType.tag', self.tag, (TagTableCellType,), False, True, False)
         _guard_scalar('TableCellType.menu', self.menu, (MenuTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.markdown', self.markdown, (MarkdownTableCellType,), False, True, False)
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
             icon=None if self.icon is None else self.icon.dump(),
             tag=None if self.tag is None else self.tag.dump(),
             menu=None if self.menu is None else self.menu.dump(),
+            markdown=None if self.markdown is None else self.markdown.dump(),
         )
 
     @staticmethod
@@ -3270,15 +3315,19 @@ class TableCellType:
         _guard_scalar('TableCellType.tag', __d_tag, (dict,), False, True, False)
         __d_menu: Any = __d.get('menu')
         _guard_scalar('TableCellType.menu', __d_menu, (dict,), False, True, False)
+        __d_markdown: Any = __d.get('markdown')
+        _guard_scalar('TableCellType.markdown', __d_markdown, (dict,), False, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
         tag: Optional[TagTableCellType] = None if __d_tag is None else TagTableCellType.load(__d_tag)
         menu: Optional[MenuTableCellType] = None if __d_menu is None else MenuTableCellType.load(__d_menu)
+        markdown: Optional[MarkdownTableCellType] = None if __d_markdown is None else MarkdownTableCellType.load(__d_markdown)
         return TableCellType(
             progress,
             icon,
             tag,
             menu,
+            markdown,
         )
 
 

@@ -1182,6 +1182,13 @@
     ],
     "description": "Create a full Wave MarkdownCard."
   },
+  "Wave Full MarkdownTableCellType": {
+    "prefix": "w_full_markdown_table_cell_type",
+    "body": [
+      "ui.markdown_table_cell_type(name='$1', target='$2'),$0"
+    ],
+    "description": "Create a full Wave MarkdownTableCellType."
+  },
   "Wave Full Markup": {
     "prefix": "w_full_markup",
     "body": [
@@ -1535,7 +1542,7 @@
   "Wave Full TableCellType": {
     "prefix": "w_full_table_cell_type",
     "body": [
-      "ui.table_cell_type(progress=$1, icon=$2, tag=$3, menu=$4),$0"
+      "ui.table_cell_type(progress=$1, icon=$2, tag=$3, menu=$4, markdown=$5),$0"
     ],
     "description": "Create a full Wave TableCellType."
   },

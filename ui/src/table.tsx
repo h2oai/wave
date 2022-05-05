@@ -18,6 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { MenuTableCellType as MenuTableCellType, XMenuTableCellType } from './menu_table_cell_type'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
+import { MarkdownTableCellType, XMarkdownTableCellType } from './markdown_table_cell_type'
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
@@ -41,6 +42,8 @@ interface TableCellType {
   tag?: TagTableCellType
   /** Renders a command menu. */
   menu?: MenuTableCellType
+  /** Renders text using markdown. */
+  markdown?: MarkdownTableCellType
 }
 
 /** Create a table column. */
@@ -353,7 +356,7 @@ const
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: c.cell_overflow === 'wrap',
+          isMultiline: c.cell_type?.markdown || c.cell_overflow === 'wrap',
           filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
@@ -478,6 +481,7 @@ const
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.cellType?.menu) return <XMenuTableCellType model={{...col.cellType.menu, rowId: String(item.key)}} />
+        if (col.cellType?.markdown) return <XMarkdownTableCellType model={{...col.cellType.markdown, content: item[col.key]}}/>
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {

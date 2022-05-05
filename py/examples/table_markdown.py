@@ -1,47 +1,35 @@
 # Table / Markdown
-# Display a #table using #markdown.
+# Creates a table with Markdown content.
+# #table #markdown
 # ---
-from h2o_wave import site, ui
 
-air_passengers_fields = ['Year', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
-air_passengers_rows = [
-    ['1949', '112', '118', '132', '129', '121', '135'],
-    ['1950', '115', '126', '141', '135', '125', '149'],
-    ['1951', '145', '150', '178', '163', '172', '178'],
-    ['1952', '171', '180', '193', '181', '183', '218'],
-    ['1953', '196', '196', '236', '235', '229', '243'],
-    ['1954', '204', '188', '235', '227', '234', '264'],
-    ['1955', '242', '233', '267', '269', '270', '315'],
-    ['1956', '284', '277', '317', '313', '318', '374'],
-    ['1957', '315', '301', '356', '348', '355', '422'],
-    ['1958', '340', '318', '362', '348', '363', '435'],
-    ['1959', '360', '342', '406', '396', '420', '472'],
-    ['1960', '417', '391', '419', '461', '472', '535'],
-]
+from h2o_wave import main, Q, ui, app
 
 
-def make_markdown_row(values):
-    return f"| {' | '.join([str(x) for x in values])} |"
-
-
-def make_markdown_table(fields, rows):
-    return '\n'.join([
-        make_markdown_row(fields),
-        make_markdown_row('-' * len(fields)),
-        '\n'.join([make_markdown_row(row) for row in rows]),
+@app('/demo')
+async def serve(q: Q):
+    q.page['example'] = ui.form_card(box='1 1 3 6', items=[
+        ui.text_xl(content='Table with Markdown'),
+        ui.table(
+            name='table',
+            columns=[
+                ui.table_column(name='description', label='Description', min_width='200',
+                                cell_type=ui.markdown_table_cell_type(target='_blank')),
+                ui.table_column(name='markdown', label='Markdown',
+                                cell_type=ui.markdown_table_cell_type(target='_blank')),
+            ],
+            height='450px',
+            rows=[
+                ui.table_row(name='row1', cells=['Normal text', 'Hello World!']),
+                ui.table_row(name='row2', cells=['Bold text', 'This is a **bold** text.']),
+                ui.table_row(name='row3', cells=['Italicized text', 'This is a _italicized_ text.']),
+                ui.table_row(name='row4', cells=['Link', '<http://wave.h2o.ai>']),
+                ui.table_row(name='row5', cells=['Absolute link with label', '[Wave website](http://wave.h2o.ai/)']),
+                ui.table_row(name='row6', cells=['Relative link with label', '[Go to /wave](/wave)']),
+                ui.table_row(name='row7', cells=['Email', '<fake@email.com>']),
+                ui.table_row(name='row8', cells=['Code', '``inline code``']),  # change to monospaced font
+            ]
+        )
     ])
 
-
-page = site['/demo']
-
-v = page.add('example', ui.form_card(
-    box='1 1 4 5',
-    items=[
-        ui.text(make_markdown_table(
-            fields=air_passengers_fields,
-            rows=air_passengers_rows,
-        )),
-    ],
-))
-
-page.save()
+    await q.page.save()

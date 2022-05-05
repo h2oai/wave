@@ -1,6 +1,6 @@
-# Table / Commands
+# Table / Menu
 # Allow group of commands with context menu for each row.
-# #table #commands
+# #table #commands #menu
 # ---
 from h2o_wave import main, app, Q, ui
 from faker import Faker
