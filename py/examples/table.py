@@ -56,19 +56,26 @@ columns = [
 
 @app('/demo')
 async def serve(q: Q):
-    q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
-        ui.table(
-            name='issues',
-            columns=columns,
-            rows=[ui.table_row(
-                name=issue.id,
-                cells=[issue.text, issue.status, issue.icon, str(issue.views), str(issue.progress),
-                       issue.state, issue.created]
-            ) for issue in issues],
-            groupable=True,
-            downloadable=True,
-            resettable=True,
-            height='800px'
-        )
-    ])
+    if q.args.issues:
+        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
+            ui.text(f'You clicked on: {q.args.issues}'),
+            ui.button(name='back', label='Back'),
+        ])
+    else:
+        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
+            ui.table(
+                name='issues',
+                columns=columns,
+                rows=[ui.table_row(
+                    name=issue.id,
+                    cells=[issue.text, issue.status, issue.icon, str(issue.views), str(issue.progress),
+                          issue.state, issue.created]
+                ) for issue in issues],
+                groupable=True,
+                downloadable=True,
+                resettable=True,
+                height='800px'
+            )
+        ])
+
     await q.page.save()
