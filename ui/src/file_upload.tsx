@@ -137,7 +137,9 @@ export const
           if (!compact) wave.push()
           setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
         }
-        catch ({ responseText }) { setError(responseText || 'There was an error when uploading file.') }
+        catch ({ responseText, readyState }) {
+          if (readyState !== XMLHttpRequest.UNSENT) setError(responseText || 'There was an error when uploading file.')
+        }
         finally { setFiles([]) }
       },
       isFileTypeAllowed = (fileName: S) => !fileExtensions || fileExtensions.some(ext => fileName.toLowerCase().endsWith(ext.toLowerCase())),
