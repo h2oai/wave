@@ -249,7 +249,13 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: expiration}
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
+
+	var options []oauth2.AuthCodeOption
+	options = append(options, oidc.Nonce(nonce))
+	for _, param := range h.auth.conf.URLParameters {
+		options = append(options, oauth2.SetAuthURLParam(param[0], param[1]))
+	}
+	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, options...), http.StatusFound)
 }
 
 // AuthHandler handles OAuth2 requests
