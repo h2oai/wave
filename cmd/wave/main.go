@@ -73,7 +73,8 @@ func main() {
 		createAccessKey      bool
 		listAccessKeys       bool
 		removeAccessKeyID    string
-		scopes               string
+		rawAuthScopes        string
+		rawAuthURLParams     string
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -110,12 +111,32 @@ func main() {
 	stringVar(&auth.ProviderURL, "oidc-provider-url", "", "OIDC provider URL")
 	stringVar(&auth.RedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
 	stringVar(&auth.EndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
-	stringVar(&scopes, "oidc-scopes", "", "OIDC scopes separated by comma (default \"openid,profile\")")
+	stringVar(&rawAuthScopes, "oidc-scopes", "", "OIDC scopes, comma-separated (default \"openid,profile\")")
+	stringVar(&rawAuthURLParams, "oidc-auth-url-params", "", "additional URL parameters to pass during OIDC authorization, in the format \"key:value\", comma-separated, e.g. \"foo:bar,qux:42\"")
 	boolVar(&auth.SkipLogin, "oidc-skip-login", false, "do not display the login form during OIDC authorization")
 
 	flag.Parse()
 
-	auth.Scopes = strings.Split(scopes, ",")
+	auth.Scopes = strings.Split(rawAuthScopes, ",")
+	if len(rawAuthURLParams) > 0 {
+		rawAuthURLPairs := strings.Split(rawAuthURLParams, ",")
+		for _, rawPair := range rawAuthURLPairs {
+			kv := strings.Split(rawPair, ":")
+			if len(kv) != 2 {
+				panic(fmt.Errorf("bad OIDC authorization url parameter: %v", rawPair))
+			}
+			k, v := kv[0], kv[1]
+			if len(k) == 0 {
+				panic(fmt.Errorf("empty OIDC authorization url parameter key: %v", rawPair))
+			}
+			if len(v) == 0 {
+				panic(fmt.Errorf("empty OIDC authorization url parameter value: %v", rawPair))
+			}
+			auth.URLParameters = append(auth.URLParameters, kv)
+		}
+	}
+
+	fmt.Printf("params: %v", auth.URLParameters)
 
 	if version {
 		fmt.Printf("Wave Daemon\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)

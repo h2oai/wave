@@ -49,6 +49,8 @@ Usage of ./waved:
         disable storage (scripts and multicast/broadcast apps will not work)
   -no-log
         disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)
+  -oidc-auth-url-params string
+        additional URL parameters to pass during OIDC authorization, in the format "key:value", comma-separated, e.g. "foo:bar,qux:42"
   -oidc-client-id string
         OIDC client ID
   -oidc-client-secret string
@@ -102,6 +104,7 @@ H2O_WAVE_MAX_PROXY_RESPONSE_SIZE
 H2O_WAVE_MAX_REQUEST_SIZE
 H2O_WAVE_NO_STORE
 H2O_WAVE_NO_LOG
+H2O_WAVE_OIDC_AUTH_URL_PARAMS
 H2O_WAVE_OIDC_CLIENT_ID
 H2O_WAVE_OIDC_CLIENT_SECRET
 H2O_WAVE_OIDC_END_SESSION_URL
