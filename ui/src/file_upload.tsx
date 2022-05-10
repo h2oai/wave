@@ -145,7 +145,10 @@ export const
           }
           setError(responseText as S || 'There was an error when uploading file.')
         }
-        finally { setFiles([]) }
+        finally {
+          setFiles([])
+          setFileNames('')
+        }
       },
       isFileTypeAllowed = (fileName: S) => !fileExtensions || fileExtensions.some(ext => fileName.toLowerCase().endsWith(ext.toLowerCase())),
       validateFiles = (fileArr: File[]) => {
