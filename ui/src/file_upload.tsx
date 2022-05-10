@@ -26,7 +26,7 @@ import { wave } from './ui'
 export interface FileUpload {
   /** An identifying name for this component. */
   name: Id
-  /** Text to be displayed in the bottom button (or as a component title when the component is displayed compactly). Defaults to "Upload". */
+  /** Text to be displayed in the bottom button or as a component title when the component is displayed compactly. Defaults to "Upload". */
   label?: S
   /** True if the component should allow multiple files to be uploaded. */
   multiple?: B

@@ -1129,7 +1129,7 @@ def file_upload(
 
     Args:
         name: An identifying name for this component.
-        label: Text to be displayed in the bottom button (or as a component title when the component is displayed compactly). Defaults to "Upload".
+        label: Text to be displayed in the bottom button or as a component title when the component is displayed compactly. Defaults to "Upload".
         multiple: True if the component should allow multiple files to be uploaded.
         file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
         max_file_size: Maximum allowed size (Mb) per file. No limit by default.
