@@ -113,6 +113,7 @@ export const
       maxFileSizeBytes = max_file_size ? convertMegabytesToBytes(max_file_size) : 0,
       maxSizeBytes = max_size ? convertMegabytesToBytes(max_size) : 0,
       fileExtensions = file_extensions ? file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
+      isAborted = React.useRef<B>(false),
       xhrRef = React.useRef<XMLHttpRequest>(),
       upload = async (uploadFiles = files) => {
         const formData = new FormData()
@@ -120,7 +121,8 @@ export const
 
         try {
           const { responseText } = await new Promise<XMLHttpRequest>((resolve, reject) => {
-            const xhr = xhrRef.current = new XMLHttpRequest()
+            xhrRef.current = new XMLHttpRequest()
+            const xhr = xhrRef.current
             xhr.open("POST", wave.uploadURL)
             xhr.upload.onprogress = e => setPercentComplete(e.loaded / e.total)
             xhr.send(formData)
@@ -128,6 +130,7 @@ export const
               if (xhr.readyState !== XMLHttpRequest.DONE) return
               xhr.status >= 200 && xhr.status < 300 ? resolve(xhr) : reject(xhr)
             }
+            xhr.onabort = () => isAborted.current = true
           })
           const { files } = JSON.parse(responseText)
           wave.args[name] = files
@@ -135,8 +138,12 @@ export const
           if (!compact) wave.push()
           setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
         }
-        catch ({ responseText, readyState }) {
-          if (readyState !== XMLHttpRequest.UNSENT) setError(responseText || 'There was an error when uploading file.')
+        catch ({ responseText }) {
+          if (isAborted.current) {
+            isAborted.current = false
+            return
+          }
+          setError(responseText as S || 'There was an error when uploading file.')
         }
         finally { setFiles([]) }
       },
