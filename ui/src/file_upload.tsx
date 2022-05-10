@@ -186,11 +186,11 @@ export const
         }
         else {
           setFiles(fileArr)
+          setFileNames(fileArr.map(({ name }) => name).join(', '))
           if (compact) {
             await upload(fileArr)
             setPercentComplete(0)
           }
-          setFileNames(fileArr.map(({ name }) => name).join(', '))
         }
       },
       onIsDragging = (e: React.DragEvent<HTMLFormElement>) => {
