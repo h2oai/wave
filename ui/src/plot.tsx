@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Chart } from '@antv/g2'
-import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
+import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, TooltipItem } from '@antv/g2/lib/interface'
 import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -1030,17 +1030,22 @@ export interface Visualization {
 const tooltipContainer = document.createElement('div')
 tooltipContainer.className = 'g2-tooltip'
 
-const PlotTooltip = ({ items }: any) => items.map(({ data, mappingData, color }: any) =>
-  Object.keys(data).map((item, idx) =>
-    <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-      <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
-      <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
-        <span style={{ marginRight: 16 }}>{item}:</span>
-        <span>{data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
-      </span>
-    </li>
-  )
-)
+const PlotTooltip = ({ items }: { items: TooltipItem[] }) =>
+  <>
+    {items.map(({ data, mappingData, color }: TooltipItem) =>
+      Object.keys(data).map((item, idx) =>
+        <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+          <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
+          <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
+            <span style={{ marginRight: 16 }}>{item}:</span>
+            <span>{data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
+          </span>
+        </li>
+      )
+    )}
+  </>
+
+
 
 export const
   XVisualization = ({ model }: { model: Visualization }) => {
