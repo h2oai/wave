@@ -1,5 +1,4 @@
 library(h2owave)
-options(digits=2)
 
 page <- Site("/demo")
 page$drop()
