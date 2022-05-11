@@ -306,14 +306,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
   React.useEffect(() => {
     const aspectRatio = aspectRatioRef.current
-    wave.args[model.name] = drawnShapes.map(drawnShape => ({
-      tag: drawnShape.tag,
+    wave.args[model.name] = drawnShapes.map(({ tag, shape }) => ({
+      tag: tag,
       shape: {
         rect: {
-          x1: drawnShape.shape.rect.x1 * aspectRatio,
-          x2: drawnShape.shape.rect.x2 * aspectRatio,
-          y1: drawnShape.shape.rect.y1 * aspectRatio,
-          y2: drawnShape.shape.rect.y2 * aspectRatio,
+          x1: shape.rect.x1 * aspectRatio,
+          x2: shape.rect.x2 * aspectRatio,
+          y1: shape.rect.y1 * aspectRatio,
+          y2: shape.rect.y2 * aspectRatio,
         }
       }
     }))
