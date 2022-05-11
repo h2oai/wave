@@ -25,7 +25,7 @@ async def serve(q: Q):
                 ],
                 items=[
                     ui.image_annotator_item(
-                        shape=ui.image_annotator_shape(rect=ui.image_annotator_rect(x1=569, y1=361, x2=364, y2=22)),
+                        shape=ui.image_annotator_shape(rect=ui.image_annotator_rect(x1=649, y1=393, x2=383, y2=25)),
                         tag='p'
                     ),
                 ],
