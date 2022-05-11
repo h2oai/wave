@@ -156,7 +156,7 @@ const
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
-    colorsMap = new Map<S, S>(model.tags.map(tag => [tag.name, cssVarValue(tag.color)])),
+    colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => [tag.name, cssVarValue(tag.color)])), [model.tags]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>(model.items || []),
     imgRef = React.useRef<HTMLCanvasElement>(null),
@@ -166,7 +166,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     resizedCornerRef = React.useRef<S | undefined>(undefined),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
-    redrawExistingShapes = () => {
+    redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
       const ctx = ctxRef.current
       if (!ctx || !canvas) return
@@ -178,7 +178,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         })
         return shapes
       })
-    },
+    }, [colorsMap]),
     onMouseDown = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
       if (!canvas) return
@@ -268,7 +268,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(newShapes, cursor_x, cursor_y, newShapes.find(({ isFocused }) => isFocused))
       setDrawnShapes(newShapes)
       redrawExistingShapes()
-      wave.args[model.name] = newShapes as unknown as Rec[]
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
@@ -299,8 +298,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.parentElement!.style.height = px(height)
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
+      redrawExistingShapes()
     }
-  }, [model.image, model.image_height])
+  }, [model.name, model.image, model.image_height, redrawExistingShapes])
+
+  React.useEffect(() => { wave.args[model.name] = drawnShapes as unknown as Rec[] }, [drawnShapes, model.name])
 
   return (
     <div data-test={model.name}>
