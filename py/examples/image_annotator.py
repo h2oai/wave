@@ -7,7 +7,7 @@ from h2o_wave import main, app, Q, ui
 
 @app('/demo')
 async def serve(q: Q):
-    if q.args.annotator:
+    if q.args.annotator is not None:
         q.page['example'].items = [
             ui.text(f'annotator={q.args.annotator}'),
             ui.button(name='show_form', label='Back', primary=True),

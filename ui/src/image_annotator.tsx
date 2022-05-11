@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { B, Id, Rec, S, U } from 'h2o-wave'
+import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AnnotatorTags } from './text_annotator'
@@ -158,7 +158,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
     colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => [tag.name, cssVarValue(tag.color)])), [model.tags]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
-    [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>(model.items || []),
+    [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     aspectRatioRef = React.useRef(1),
@@ -298,11 +298,26 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.parentElement!.style.height = px(height)
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
+      // Set drawnshapes after aspectRatio is calculated.
+      setDrawnShapes(model.items || [])
       redrawExistingShapes()
     }
-  }, [model.name, model.image, model.image_height, redrawExistingShapes])
+  }, [model.name, model.image, model.image_height, redrawExistingShapes, model.items])
 
-  React.useEffect(() => { wave.args[model.name] = drawnShapes as unknown as Rec[] }, [drawnShapes, model.name])
+  React.useEffect(() => {
+    const aspectRatio = aspectRatioRef.current
+    wave.args[model.name] = drawnShapes.map(drawnShape => ({
+      tag: drawnShape.tag,
+      shape: {
+        rect: {
+          x1: drawnShape.shape.rect.x1 * aspectRatio,
+          x2: drawnShape.shape.rect.x2 * aspectRatio,
+          y1: drawnShape.shape.rect.y1 * aspectRatio,
+          y2: drawnShape.shape.rect.y2 * aspectRatio,
+        }
+      }
+    }))
+  }, [drawnShapes, model.name])
 
   return (
     <div data-test={model.name}>
