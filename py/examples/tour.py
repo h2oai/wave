@@ -2,20 +2,18 @@ import collections
 import os
 import os.path
 import re
+import shutil
 import subprocess
 import sys
 from copy import deepcopy
+import uuid
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
-from pygments import highlight
-from pygments.formatters.html import HtmlFormatter
-from pygments.lexers import get_lexer_by_name
-
-py_lexer = get_lexer_by_name('python')
-html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
+tour_tmp_dir = '_tour_apps_tmp'
 
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
@@ -30,13 +28,12 @@ class Example:
         self.title = title
         self.description = description
         self.source = source
-        self.code = highlight(source, py_lexer, html_formatter)
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
         self.process: Optional[subprocess.Popen] = None
         self.is_app = source.find('@app(') > 0
 
-    async def start(self):
+    async def start(self, filename: str):
         env = os.environ.copy()
         env['H2O_WAVE_BASE_URL'] = _base_url
         env['H2O_WAVE_ADDRESS'] = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
@@ -50,10 +47,10 @@ class Example:
                 sys.executable, '-m', 'uvicorn',
                 '--host', '0.0.0.0',
                 '--port', _app_port,
-                f'examples.{self.name}:main',
+                f'examples.{filename.replace(".py", "")}:main',
             ], env=env)
         else:
-            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
+            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, filename)], env=env)
 
     async def stop(self):
         if self.process and self.process.returncode is None:
@@ -172,16 +169,81 @@ app_title = 'H2O Wave Tour'
 
 
 async def setup_page(q: Q):
-    q.page['meta'] = ui.meta_card(box='', title=app_title, layouts=[
-        ui.layout(breakpoint='xs', zones=[
-            ui.zone('header'),
-            ui.zone('blurb'),
-            ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
-                ui.zone('code'),
-                ui.zone('preview')
+    js_content = '''
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' } })
+
+window.MonacoEnvironment = {
+  getWorkerUrl: function (workerId, label) {
+    return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+      self.MonacoEnvironment = {
+        baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/base/worker/workerMain.js');`
+    )}`
+  }
+}
+
+require(['vs/editor/editor.main'], function () {
+  const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
+    value: ['def x(): ', '\\tprint("Hello world!")'].join('\\n'),
+    language: 'python',
+    minimap: {
+        enabled: false
+    },
+    overviewRulerLanes: 0,
+    hideCursorInOverviewRuler: true,
+    scrollbar: {
+        vertical: 'hidden'
+    },
+    overviewRulerBorder: false,
+  })
+  window.editor = editor
+  window.emit_debounced = window.wave.debounce(2000, window.wave.emit)
+  editor.onDidChangeModelContent(e => {
+    if (e.isFlush) return
+    emit_debounced('editor', 'change', editor.getValue())
+  })
+})
+    '''
+    q.page['meta'] = ui.meta_card(
+        box='',
+        title=app_title,
+        scripts=[ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js')],
+        script=ui.inline_script(content=js_content, requires=['require'], targets=['monaco-editor']),
+        layouts=[
+            ui.layout(breakpoint='xs', zones=[
+                ui.zone('header'),
+                ui.zone('blurb'),
+                ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
+                    ui.zone('code'),
+                    ui.zone('preview')
+                ])
             ])
         ])
-    ])
+    await q.page.save()
+
+    js_content = f'''
+  const toCompletionItem = item => ({{
+    label: item.prefix,
+    kind: monaco.languages.CompletionItemKind.Snippet,
+    documentation: item.description,
+    insertText: item.body,
+  }})
+  monaco.languages.registerCompletionItemProvider('python', {{
+    provideCompletionItems: async () => {{
+      const [snippets1, snippets2] = await Promise.all([
+        fetch('{q.app.snippets1}').then(r => r.json()),
+        fetch('{q.app.snippets2}').then(r => r.json()),
+      ])
+      return {{  suggestions: [
+        ...Object.values(snippets1).map(toCompletionItem),
+        ...Object.values(snippets2).map(toCompletionItem)
+        ]
+      }}
+    }}
+ }})
+'''
+    q.page['meta'].script = ui.inline_script(js_content, requires=['monaco'])
 
     q.page['header'] = ui.header_card(
         box='header',
@@ -199,7 +261,7 @@ async def setup_page(q: Q):
         ]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
-    q.page['code'] = ui.frame_card(box='code', title='', content='')
+    q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', path=f'{_base_url}demo')
 
     await q.page.save()
@@ -225,6 +287,13 @@ async def show_example(q: Q, example: Example):
     demo_page.drop()
     await demo_page.save()
 
+    filename = example.filename
+    if q.events.editor:
+        filename = os.path.join(tour_tmp_dir, f'{q.client.id}.py')
+        with open(filename, 'w') as f:
+            f.write(q.events.editor.change)
+        filename = '.'.join([tour_tmp_dir, str(q.client.id)]) if example.is_app else filename
+
     # Stop active example, if any.
     global active_example
     if active_example:
@@ -232,15 +301,19 @@ async def show_example(q: Q, example: Example):
 
     # Start new example
     active_example = example
-    await active_example.start()
+    await active_example.start(filename)
 
     # Update example blurb
     make_blurb(q, active_example)
 
     # Update code display
-    code_card = q.page['code']
-    code_card.title = active_example.filename
-    code_card.content = active_example.code
+    q.page['code'].title = active_example.filename
+    if not q.events.editor:
+        code = example.source.replace("`", "\\`")
+        q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`);', requires=['editor'])
+        await q.page.save()
+        if q.args['#']:
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 });', requires=['editor'])
 
     preview_card = q.page['preview']
 
@@ -253,9 +326,23 @@ async def show_example(q: Q, example: Example):
     await q.page.save()
 
 
-@app('/tour')
+async def on_startup():
+    os.mkdir(tour_tmp_dir)
+
+
+async def on_shutdown():
+    dirpath = Path(tour_tmp_dir)
+    if dirpath.exists():
+        shutil.rmtree(dirpath)
+
+
+@app('/tour', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
+    if not q.app.initialized:
+        q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
+        q.app.initialized = True
     if not q.client.initialized:
+        q.client.id = uuid.uuid4()
         q.client.initialized = True
         await setup_page(q)
 
@@ -263,7 +350,7 @@ async def serve(q: Q):
     if search:
         q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
-    await show_example(q, catalog[search or q.args['#'] or default_example_name])
+    await show_example(q, catalog[q.args['#'] or default_example_name])
 
 
 example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if

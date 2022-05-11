@@ -31,7 +31,8 @@
       "python": "${workspaceFolder}/py/venv/bin/python",
       "args": [
         "run",
-        "examples.table_pagination_search"
+        "examples.tour",
+        "--no-reload",
       ],
     },
     {
