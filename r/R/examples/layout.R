@@ -6,6 +6,7 @@ library(h2owave)
 
 # Create a new page called "demo". 
 page <- Site("/demo")
+page$drop()
 
 # Number of columns on the page.
 columns = 12

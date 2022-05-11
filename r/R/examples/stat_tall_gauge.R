@@ -8,6 +8,7 @@ sample_crypto_price_percent_change <- runif(1,0,1)
 card_color <- sample(dark_theme_colors,1)
 
 page <- Site("/demo")
+page$drop()
 page$add_card("crypto_tall_gauge",ui_tall_gauge_stat_card(box="1 1 1 2"
                                                                             ,title=sample_crypto_name
                                                                             ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'

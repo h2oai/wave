@@ -18,6 +18,7 @@ caption <- paste0("The card shows the price (in USD) and price percentage change
 
 # Create a new page called "demo". 
 page <- Site("/demo")
+page$drop()
 # Add a new card called "crypto", which is a large stat card on the newly created page "demo".
 # The position of the card is at column 1, and row 1, and the card occupies 2 rows and 2 columns.
 page$add_card("crypto",ui_large_stat_card(box="1 1 2 2"

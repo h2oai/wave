@@ -14,6 +14,7 @@ html = "
 "
 
 page <- Site("/demo")
+page$drop()
 
 page$add_card("example",
                     ui_form_card(
