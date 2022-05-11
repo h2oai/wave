@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { FontIcon } from '@fluentui/react'
+import { Icon } from '@fluentui/react'
 import { B, Dict, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -66,7 +66,8 @@ const
       marginRight: '0.5em',
     },
     icon: {
-      fontSize: 45,
+      height: 45,
+      width: 45,
     },
     statCaption: {
       color: cssVar('$text5')
@@ -97,7 +98,7 @@ export const
         <div key={`${i}:${label}`} className={css.stat} style={statStyle}>
           {icon && (
             <div className={css.lhs} style={icon_color ? { color: cssVar(icon_color) } : undefined}>
-              <FontIcon className={css.icon} iconName={icon} />
+              <Icon className={css.icon} iconName={icon} styles={{ root: { '> span': { height: '100%', width: '100%'}}}}/>
             </div>
           )}
           <div>
