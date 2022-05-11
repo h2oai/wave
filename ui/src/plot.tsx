@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import { Chart } from '@antv/g2'
-import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
+import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, TooltipItem } from '@antv/g2/lib/interface'
 import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
@@ -975,11 +976,6 @@ const
         annotations,
         // Custom interactions.
         interactions: interactions.map(type => ({ type })),
-        tooltip: {
-          showCrosshairs: true,
-          crosshairs: { type: 'xy' }
-          // XXX pass container element
-        }
       }
     }
   }
@@ -1031,6 +1027,26 @@ export interface Visualization {
   interactions?: S[]
 }
 
+const tooltipContainer = document.createElement('div')
+tooltipContainer.className = 'g2-tooltip'
+
+const PlotTooltip = ({ items }: { items: TooltipItem[] }) =>
+  <>
+    {items.map(({ data, mappingData, color }: TooltipItem) =>
+      Object.keys(data).map((item, idx) =>
+        <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+          <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
+          <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
+            <span style={{ marginRight: 16 }}>{item}:</span>
+            <span>{data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
+          </span>
+        </li>
+      )
+    )}
+  </>
+
+
+
 export const
   XVisualization = ({ model }: { model: Visualization }) => {
     const
@@ -1063,6 +1079,20 @@ export const
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
         currentPlot.current = plot
         if (chart) {
+          chart.tooltip({
+            showCrosshairs: true,
+            crosshairs: { type: 'xy' },
+            domStyles: {
+              'g2-tooltip': {
+                backgroundColor: cssVar('$card'),
+                color: cssVar('$text')
+              },
+            },
+            customContent: (_title, items) => {
+              ReactDOM.render(<PlotTooltip items={items} />, tooltipContainer)
+              return tooltipContainer
+            }
+          })
           currentChart.current = chart
           chart.data(data)
           if (model.events) {
