@@ -58,7 +58,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
         isBeakVisible
         directionalHint={Fluent.DirectionalHint.bottomRightEdge}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
-        styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')) } }}
+        styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')), 'button': { lineHeight: '1em'} } }}
       />
       <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />
     </div>
