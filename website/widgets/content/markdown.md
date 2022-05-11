@@ -49,3 +49,15 @@ q.page['example'] = ui.markdown_card(
     content=sample_markdown
 )
 ```
+
+## Submit values
+
+If you would like your markdown links to behave like Wave buttons and submit `q.args` instead of redirecting to a different URL, use the `?` prefix.
+
+```py
+q.page['example'] = ui.markdown_card(
+    box='1 1 3 2',
+    title='I submit q.args.fox and q.args.dog!',
+    content='The quick brown [fox](?fox) jumps over the lazy [dog](?dog)'
+)
+```
