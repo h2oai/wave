@@ -38,24 +38,24 @@ describe('NotificationBar.tsx', () => {
     expect(queryByRole('region')).toBeInTheDocument()
   })
 
-  it('should not close the notifification bar after timeout if buttons specified', () => {
-    notificationBarB({ ...notificationbarProps, buttons: [{ button: { name: 'btn' } }] })
+  it('should close the notifification bar after timeout', () => {
+    render(<NotificationBar />)
+    jest.runOnlyPendingTimers()
+    expect(notificationBarB()).toBeNull()
+  })
+
+  it('should close the notifification bar after timeout even if buttons are specified', () => {
+    notificationBarB({ ...notificationbarProps, buttons: [{ button: { name: 'btn', label: 'click me' } }] })
+    render(<NotificationBar />)
+    jest.runOnlyPendingTimers()
+    expect(notificationBarB()).toBeNull()
+  })
+
+  it('should not close the notification bar if timeout is -1', () => {
+    notificationBarB({ ...notificationbarProps, timeout: -1 })
     render(<NotificationBar />)
     jest.runOnlyPendingTimers()
     expect(notificationBarB()).not.toBeNull()
-  })
-
-  it('should close the notifification bar after timeout if other components than buttons specified', () => {
-    notificationBarB({ ...notificationbarProps, buttons: [{ text: { content: 'btn' } }] })
-    render(<NotificationBar />)
-    jest.runOnlyPendingTimers()
-    expect(notificationBarB()).toBeNull()
-  })
-
-  it('should close the notifification bar after timeout if no buttons specified', () => {
-    render(<NotificationBar />)
-    jest.runOnlyPendingTimers()
-    expect(notificationBarB()).toBeNull()
   })
 
   it('should close the notifification bar after clicking dismiss', () => {
