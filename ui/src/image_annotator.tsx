@@ -37,7 +37,7 @@ interface ImageAnnotatorTag {
 interface ImageAnnotatorItem {
   /** The annotation shape. */
   shape: ImageAnnotatorShape
-  /** Tag connected to the highlighted section. */
+  /** The `name` of the image annotator tag to refer to for the `label` and `color` of this item. */
   tag: S
 }
 
