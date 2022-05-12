@@ -57,7 +57,7 @@ export interface ImageAnnotator {
   tags: ImageAnnotatorTag[]
   /** Annotations to display on the image, if any. */
   items?: ImageAnnotatorItem[]
-  /** True if the form should be submitted when the annotator value changes. */
+  /** True if the form should be submitted as soon as an annotation is drawn. */
   trigger?: B
   /** The card’s image height. Intrinsic image size is used by default. */
   image_height?: S
