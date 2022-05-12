@@ -29,7 +29,7 @@ interface ImageAnnotatorTag {
   name: Id
   /** Text to be displayed. */
   label: S
-  /** HEX or RGB color string used as background for highlighted phrases. */
+  /** Hex or RGB color string to be used as the background color. */
   color: S
 }
 
