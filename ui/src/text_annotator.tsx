@@ -19,7 +19,7 @@ interface TextAnnotatorTag {
 interface TextAnnotatorItem {
   /** Text to be highlighted. */
   text: S
-  /** The `name` of the text annotator tag to refer to for the `label` and `color` of this item. */
+  /** Tag connected to the highlighted text. */
   tag?: S
 }
 
@@ -41,6 +41,8 @@ export interface TextAnnotator {
   trigger?: B
   /** True to prevent user interaction with the annotator component. Defaults to False. */
   readonly?: B
+  /** If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True. */
+  smart_selection?: B
 }
 
 const css = stylesheet({
@@ -57,13 +59,12 @@ const css = stylesheet({
     padding: padding(4, 16),
     textAlign: 'center',
     borderRadius: 4,
-    cursor: 'pointer'
   },
   tagWrapper: {
     marginRight: 4,
     marginBottom: 4,
     border: border(2, cssVar('$card')),
-    padding: 1
+    padding: 1,
   },
   mark: {
     position: 'relative',
@@ -101,7 +102,7 @@ const css = stylesheet({
     position: 'absolute',
     left: -5,
     top: -3,
-    background: cssVar('$card')
+    background: cssVar('$card'),
   },
   readonly: { pointerEvents: 'none' }
 })
@@ -130,31 +131,33 @@ export
       }
     </div>
   ),
-  XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
+  XTextAnnotator = ({ model: { name, title, tags, items, trigger, readonly, smart_selection = true } }: { model: TextAnnotator }) => {
     const
-      [startIdx, setStartIdx] = React.useState<U | null>(null),
-      [activeTag, setActiveTag] = React.useState<S | undefined>(model.readonly ? undefined : model.tags[0]?.name),
+      [activeTag, setActiveTag] = React.useState<S | undefined>(readonly ? undefined : tags[0]?.name),
       [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
-      tagColorMap = model.tags.reduce((map, t) => {
+      tagColorMap = tags.reduce((map, t) => {
         map.set(t.name, t.color)
         return map
       }, new Map<S, S>()),
-      [tokens, setTokens] = React.useState(model.items.reduce((arr, { text, tag }) => {
-        // Split by any non-letter character.
-        text.split(/(?=[^a-z])/ig).forEach(textItem => {
+      [tokens, setTokens] = React.useState(items.reduce((arr, { text, tag }) => {
+        // If the smart_selection is True, split by any non-letter character.
+        text.split(smart_selection ? /(?=[^a-z0-9])/ig : "").forEach((textItem) => {
+          const
+            start = arr.length === 0 ? 0 : arr[arr.length - 1].end + 1,
+            end = arr.length === 0 ? textItem.length - 1 : arr[arr.length - 1].end + textItem.length
           if (/[^a-z]/i.test(textItem)) {
-            arr.push({ text: textItem.substring(0, 1), tag })
-            arr.push({ text: textItem.substring(1), tag })
+            arr.push({ text: textItem.substring(0, 1), tag, start, end: start })
+            if (textItem.substring(1) !== '') arr.push({ text: textItem.substring(1), tag, start: start + 1, end: end + 1 })
           } else {
-            arr.push({ text: textItem, tag })
+            arr.push({ text: textItem, tag, start, end })
           }
         })
         return arr
-      }, [] as TextAnnotatorItem[])),
+      }, [] as (TextAnnotatorItem & { start: number, end: number })[])),
       submitWaveArgs = () => {
         let currentText = ''
         let currentTag: S | undefined
-        wave.args[model.name] = tokens.reduce((arr, { text, tag }, idx, tokens) => {
+        wave.args[name] = tokens.reduce((arr, { text, tag }, idx, tokens) => {
           if (idx === tokens.length - 1) {
             if (tag !== currentTag) {
               arr.push({ text: currentText, tag: currentTag })
@@ -173,9 +176,9 @@ export
           currentTag = tag
           return arr
         }, [] as TextAnnotatorItem[]) as unknown as Rec[]
-        if (model.trigger) wave.push()
+        if (trigger) wave.push()
       },
-      activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
+      activateTag = (tagName: S) => () => setActiveTag(tagName),
       removeAnnotation = (idx: U) => (ev: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         ev.stopPropagation() // Stop event bubbling so that annotate is not called.
         const tagToRemove = tokens[idx].tag
@@ -183,16 +186,53 @@ export
         setTokens([...tokens])
         submitWaveArgs()
       },
-      updateStartIdx = (startIdx: U) => () => setStartIdx(startIdx),
-      annotate = (end: U) => () => {
-        const start = startIdx
-        if (start === null) return
+      timeoutRef = React.useRef<NodeJS.Timeout | null>(null),
+      mouseDownTimeRef = React.useRef<number>(0),
+      annotate = (target?: EventTarget & HTMLSpanElement) => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        const
+          selectedText = window.getSelection(),
+          startElData = selectedText?.anchorNode?.parentElement?.dataset,
+          endElData = selectedText?.focusNode?.parentElement?.dataset
 
-        const max = Math.max(start, end)
-        for (let i = Math.min(start, end); i <= max; i++) tokens[i].tag = activeTag
+        if (!startElData || !endElData) return
 
+        const
+          selectedTextStr = selectedText.toString(),
+          startTokenIdx = parseInt(smart_selection ? startElData!.key! : startElData!.start!),
+          endTokenIdx = target ? (startTokenIdx + selectedTextStr.length) : parseInt(smart_selection ? endElData!.key! : endElData!.end!),
+          max = Math.max(startTokenIdx, endTokenIdx),
+          min = Math.min(startTokenIdx, endTokenIdx)
+
+        if (target && selectedTextStr.length) {
+          // smart selection on double click
+          const targetDataIdx = parseInt(target.dataset.key!)
+          let strLength = 0 // number of characters right to the selection target; if not 0, we loop to the left direction
+          for (let i = 0; i < selectedTextStr.length; i++) {
+            const tokenIdx = targetDataIdx + (!strLength ? i : (strLength - i))
+            tokens[tokenIdx].tag = activeTag
+            if (/[^a-z0-9]/i.test(tokens[tokenIdx + (!strLength ? 1 : -1)]?.text)) {
+              strLength = i
+            }
+          }
+        } else {
+          // selection by dragging or clicking
+          for (let i = min; i <= max; i++) {
+            // HACK: Ignore accompanying spaces selected by double clicking in Firefox
+            // HACK: Ignore characters returned by Firefox when user hovers over the part of the prev/next character
+            if (!smart_selection && max - min + 1 !== selectedTextStr.length) {
+              if (i === min && selectedTextStr.charAt(0) !== tokens[i].text) continue
+              if (i === max && selectedTextStr.charAt(selectedTextStr.length - 1) !== tokens[i].text) continue
+            }
+            tokens[i].tag = activeTag
+          }
+        }
+
+        setTokens([...tokens])
         submitWaveArgs()
-        setStartIdx(null)
         window.getSelection()?.removeAllRanges()
       },
       onMarkHover = (idx: U) => () => setHoveredTagIdx(idx),
@@ -208,10 +248,8 @@ export
         return false
       },
       getMark = (text: S, idx: U, tag: S) => {
-        const color = tagColorMap.get(tag)
-        // Handle invalid tags entered by user
-        if (!color) return text
         const
+          color = tagColorMap.get(tag)!,
           removeIconStyle = { visibility: shouldShowRemoveIcon(idx, tag) ? 'visible' : 'hidden' },
           isFirst = tokens[idx - 1]?.tag !== tag,
           isLast = tokens[idx + 1]?.tag !== tag
@@ -227,20 +265,57 @@ export
             <span style={removeIconStyle as React.CSSProperties} className={css.iconUnderlay}></span>
           </mark>
         )
-      }
+      },
+      handleOnMouseUp = (ev: React.MouseEvent<HTMLSpanElement>) => {
+        if (smart_selection) annotate()
+        else if (timeoutRef.current) annotate(ev.currentTarget) // double-click
+        else if (new Date().getTime() - mouseDownTimeRef.current > 250) annotate() // dragging (long click)
+        else timeoutRef.current = setTimeout(() => annotate(), 250) // click
+      },
+      Token = ({ idx, tokenProps }: { idx: number, tokenProps: TextAnnotatorItem & { start: number, end: number } }) =>
+        <span
+          data-key={idx}
+          data-start={tokenProps.start}
+          data-end={tokenProps.end}
+          onMouseDown={() => { mouseDownTimeRef.current = new Date().getTime() }}
+          onMouseUp={handleOnMouseUp}
+          onMouseLeave={(ev: React.MouseEvent<HTMLSpanElement>) => {
+            if ((ev.relatedTarget as any)?.nodeName !== 'SPAN') handleOnMouseUp(ev) // nodeName prop is not typed yet
+          }}
+        >
+          {tokenProps.tag ? getMark(tokenProps.text, idx, tokenProps.tag) : tokenProps.text}
+        </span>
+
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] }, [])
+    React.useEffect(() => { wave.args[name] = items as unknown as Rec[] }, [])
+
 
     return (
-      <div data-test={model.name} className={model.readonly ? css.readonly : ''}>
-        <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
-        <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
-        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>
-          {
-            tokens.map(({ text, tag }, idx) => (
-              <span key={idx} onMouseDown={updateStartIdx(idx)} onMouseUp={annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
-            ))
+      <div data-test={name} className={readonly ? css.readonly : ''}>
+        <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>
+        <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
+        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}
+        >{
+            smart_selection
+              ? tokens.map((token, idx) =>
+                <Token key={idx} idx={idx} tokenProps={token} />
+              )
+              : tokens.reduce((acc, token, idx) => {
+                if (token.text === " ") acc.push(<Token key={idx} idx={idx} tokenProps={token} />)
+                else if (!idx || tokens[idx - 1].text === " ") {
+                  const word = []
+                  for (let i = idx; i < tokens.length; i++) {
+                    word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
+                    if (tokens[i].text === " " || i === tokens.length - 1) {
+                      // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
+                      acc.push(<span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>)
+                      break
+                    }
+                  }
+                }
+                return acc
+              }, [] as React.ReactElement[])
           }
         </div>
       </div>

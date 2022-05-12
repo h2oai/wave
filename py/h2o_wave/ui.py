@@ -2321,6 +2321,7 @@ def text_annotator(
         items: List[TextAnnotatorItem],
         trigger: Optional[bool] = None,
         readonly: Optional[bool] = None,
+        smart_selection: Optional[bool] = None,
 ) -> Component:
     """Create a text annotator component.
 
@@ -2333,6 +2334,7 @@ def text_annotator(
         items: Pretagged parts of text content.
         trigger: True if the form should be submitted when the annotator value changes.
         readonly: True to prevent user interaction with the annotator component. Defaults to False.
+        smart_selection: If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True.
     Returns:
         A `h2o_wave.types.TextAnnotator` instance.
     """
@@ -2343,6 +2345,7 @@ def text_annotator(
         items,
         trigger,
         readonly,
+        smart_selection,
     ))
 
 

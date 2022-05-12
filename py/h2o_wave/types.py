@@ -6235,6 +6235,7 @@ class TextAnnotator:
             items: List[TextAnnotatorItem],
             trigger: Optional[bool] = None,
             readonly: Optional[bool] = None,
+            smart_selection: Optional[bool] = None,
     ):
         _guard_scalar('TextAnnotator.name', name, (str,), True, False, False)
         _guard_scalar('TextAnnotator.title', title, (str,), False, False, False)
@@ -6242,6 +6243,7 @@ class TextAnnotator:
         _guard_vector('TextAnnotator.items', items, (TextAnnotatorItem,), False, False, False)
         _guard_scalar('TextAnnotator.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('TextAnnotator.readonly', readonly, (bool,), False, True, False)
+        _guard_scalar('TextAnnotator.smart_selection', smart_selection, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.title = title
@@ -6254,6 +6256,8 @@ class TextAnnotator:
         """True if the form should be submitted when the annotator value changes."""
         self.readonly = readonly
         """True to prevent user interaction with the annotator component. Defaults to False."""
+        self.smart_selection = smart_selection
+        """If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6263,6 +6267,7 @@ class TextAnnotator:
         _guard_vector('TextAnnotator.items', self.items, (TextAnnotatorItem,), False, False, False)
         _guard_scalar('TextAnnotator.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('TextAnnotator.readonly', self.readonly, (bool,), False, True, False)
+        _guard_scalar('TextAnnotator.smart_selection', self.smart_selection, (bool,), False, True, False)
         return _dump(
             name=self.name,
             title=self.title,
@@ -6270,6 +6275,7 @@ class TextAnnotator:
             items=[__e.dump() for __e in self.items],
             trigger=self.trigger,
             readonly=self.readonly,
+            smart_selection=self.smart_selection,
         )
 
     @staticmethod
@@ -6287,12 +6293,15 @@ class TextAnnotator:
         _guard_scalar('TextAnnotator.trigger', __d_trigger, (bool,), False, True, False)
         __d_readonly: Any = __d.get('readonly')
         _guard_scalar('TextAnnotator.readonly', __d_readonly, (bool,), False, True, False)
+        __d_smart_selection: Any = __d.get('smart_selection')
+        _guard_scalar('TextAnnotator.smart_selection', __d_smart_selection, (bool,), False, True, False)
         name: str = __d_name
         title: str = __d_title
         tags: List[TextAnnotatorTag] = [TextAnnotatorTag.load(__e) for __e in __d_tags]
         items: List[TextAnnotatorItem] = [TextAnnotatorItem.load(__e) for __e in __d_items]
         trigger: Optional[bool] = __d_trigger
         readonly: Optional[bool] = __d_readonly
+        smart_selection: Optional[bool] = __d_smart_selection
         return TextAnnotator(
             name,
             title,
@@ -6300,6 +6309,7 @@ class TextAnnotator:
             items,
             trigger,
             readonly,
+            smart_selection,
         )
 
 

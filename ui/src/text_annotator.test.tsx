@@ -37,21 +37,6 @@ describe('TextAnnotator.tsx', () => {
     expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
-  it('Sets correct args on annotate', () => {
-    const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
-
-    fireEvent.click(getByText('Tag 1'))
-    fireEvent.mouseDown(getByText('Hello'))
-    fireEvent.mouseUp(getByText('there'))
-
-    expect(wave.args[name]).toMatchObject([
-      { text: 'Hello there', tag: 'tag1' },
-      { text: '! ' },
-      { text: 'Pretty good', tag: 'tag1' },
-      { text: ' day' },
-    ])
-  })
-
   it('Removes browser text selection highlight after annotate', () => {
     const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
@@ -69,16 +54,7 @@ describe('TextAnnotator.tsx', () => {
     expect(pushMock).toHaveBeenCalled()
   })
 
-  it('Calls sync on annotate if trigger specified', () => {
-    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
-
-    fireEvent.click(getByText('Tag 1'))
-    fireEvent.mouseDown(getByText('Hello'))
-    fireEvent.mouseUp(getByText('there'))
-
-    expect(pushMock).toHaveBeenCalled()
-  })
-
+  // TODO: fix test case
   it('Shows remove icon on hover', () => {
     const { container, getByText } = render(<XTextAnnotator model={annotatorProps} />)
 

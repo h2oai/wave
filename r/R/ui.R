@@ -2713,6 +2713,7 @@ ui_text_annotator_item <- function(
 #' @param items Pretagged parts of text content.
 #' @param trigger True if the form should be submitted when the annotator value changes.
 #' @param readonly True to prevent user interaction with the annotator component. Defaults to False.
+#' @param smart_selection If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True.
 #' @return A TextAnnotator instance.
 #' @export
 ui_text_annotator <- function(
@@ -2721,20 +2722,23 @@ ui_text_annotator <- function(
   tags,
   items,
   trigger = NULL,
-  readonly = NULL) {
+  readonly = NULL,
+  smart_selection = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("title", "character", title)
   .guard_vector("tags", "WaveTextAnnotatorTag", tags)
   .guard_vector("items", "WaveTextAnnotatorItem", items)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("readonly", "logical", readonly)
+  .guard_scalar("smart_selection", "logical", smart_selection)
   .o <- list(text_annotator=list(
     name=name,
     title=title,
     tags=tags,
     items=items,
     trigger=trigger,
-    readonly=readonly))
+    readonly=readonly,
+    smart_selection=smart_selection))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

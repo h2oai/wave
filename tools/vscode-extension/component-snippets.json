@@ -1780,7 +1780,7 @@
   "Wave Full TextAnnotator": {
     "prefix": "w_full_text_annotator",
     "body": [
-      "ui.text_annotator(name='$1', title='$2', trigger=${3:False}, readonly=${4:False}, tags=[\n\t\t$5\t\t\n], items=[\n\t\t$6\t\t\n]),$0"
+      "ui.text_annotator(name='$1', title='$2', trigger=${3:False}, readonly=${4:False}, smart_selection=${5:True}, tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n]),$0"
     ],
     "description": "Create a full Wave TextAnnotator."
   },
