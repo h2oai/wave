@@ -58,7 +58,15 @@ export const XMenu = ({ model }: { model: Menu }) => {
         isBeakVisible
         directionalHint={Fluent.DirectionalHint.bottomRightEdge}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
-        styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')), 'button': { lineHeight: '1em'} } }}
+        styles={
+          {
+            list: {
+              border: border(1, cssVar('$neutralQuaternaryAlt')),
+              '.ms-ContextualMenu-link': { lineHeight: 'unset' },
+              '.ms-ContextualMenu-submenuIcon > span': { height: 'unset' },
+              '.ms-ContextualMenu-submenuIcon > span > svg': { verticalAlign: 'unset' },
+            }
+          }}
       />
       <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />
     </div>
