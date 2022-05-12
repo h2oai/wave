@@ -55,7 +55,7 @@ export interface ImageAnnotator {
   title: S
   /** List of tags the user can annotate with. */
   tags: ImageAnnotatorTag[]
-  /** Existing annotations if any. */
+  /** Annotations to display on the image, if any. */
   items?: ImageAnnotatorItem[]
   /** True if the form should be submitted when the annotator value changes. */
   trigger?: B
