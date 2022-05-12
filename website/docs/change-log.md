@@ -17,7 +17,8 @@ May 11, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.21.1)
 
 - Added 
   - Add `-oidc-auth-url-params` to pass additional parameter to OIDC provider during authorization.
-
+- Fixed
+  - BASE_URL regression.
 
 ## v0.21.0
 April 13, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.21.0)
