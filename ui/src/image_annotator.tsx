@@ -49,7 +49,7 @@ interface ImageAnnotatorItem {
 export interface ImageAnnotator {
   /** An identifying name for this component. */
   name: Id
-  /** The image to annotate. */
+  /** The path or URL of the image to be presented for annotation. */
   image: S
   /** The image annotator's title. */
   title: S
