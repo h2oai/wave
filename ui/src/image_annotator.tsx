@@ -51,7 +51,7 @@ export interface ImageAnnotator {
   name: Id
   /** The image to annotate. */
   image: S
-  /** The text annotator's title. */
+  /** The image annotator's title. */
   title: S
   /** List of tags the user can annotate with. */
   tags: ImageAnnotatorTag[]
