@@ -18,7 +18,7 @@ interface ImageAnnotatorRect {
   y2: U
 }
 
-/** Defines a particular shape to be used for the annotation. */
+/** Create a shape to be rendered as an annotation on an image annotator. */
 interface ImageAnnotatorShape {
   rect: ImageAnnotatorRect
 }
