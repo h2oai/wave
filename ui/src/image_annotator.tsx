@@ -6,7 +6,7 @@ import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
 
-/** Rectangle (box) annotation. */
+/** Create a rectangular annotation shape. */
 interface ImageAnnotatorRect {
   /** Start X dimension. */
   x1: U
