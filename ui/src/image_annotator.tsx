@@ -23,7 +23,7 @@ interface ImageAnnotatorShape {
   rect: ImageAnnotatorRect
 }
 
-/** Image annotator tag. */
+/** Create a unique tag type for use in an image annotator. */
 interface ImageAnnotatorTag {
   /** An identifying name for this tag. */
   name: Id
