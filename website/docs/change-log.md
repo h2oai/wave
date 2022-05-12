@@ -12,6 +12,60 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.21.1
+May 11, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.21.1)
+
+- Added 
+  - Add `-oidc-auth-url-params` to pass additional parameter to OIDC provider during authorization.
+
+
+## v0.21.0
+April 13, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.21.0)
+
+- Added
+  - New: Add tooltip to NavItem.
+  - New: Add select/deselect all to table filter menu.
+  - New: Add tags to form card.
+  - New: Box plots.
+  - New: Notification bar.
+  - New: Use non-branded svg icons instead of font ones.
+  - New: **M1 Mac support** for Wave server.
+  - New: Add `cell_overflow` to table column.
+  - New: Allow plot interactions: `zoom`, `brush`, `drag-move`.
+  - New: Allow specifying custom table groups.
+  - New: Add `closable` prop to `ui.side_panel`.
+  - New: Server-side paginated table.
+  - Docs: Overlay section (dialog, sidepanel, notification bar).
+  - Docs: Plots section.
+  - Docs: VSCode debugging.
+  - Docs: Icons section.
+- Changed
+  - Redesign messagebar.
+  - Side panel is no longer closable by default. Specify `closable=True` if you want to have the X button present.
+  - **Deprecated** wide_article_preview.caption in favor of wide_article_preview.content.
+  - **Python 3.6 support dropped**
+- Fixed
+  - Handle colon in $H2O_WAVE_ISTEN properly. Thanks @swt2c! 
+  - Make header items clickable when secondary items are specified.
+  - Do not format table group by title if cell is a valid date, but data_type is not date.
+  - Provide correct autocomplete in PyCharm for q.events.
+  - Make table filter icon clickable.
+  - Improve dialog color contrast for h2o-dark theme.
+  - Allow using commands in header_card.
+  - Do not expand table filter menu when column right-clicked.
+  - Kill hanging waved process when app fails to start.
+  - Use UTC time for plot time scales.
+  - Fix datepicker in Safari.
+  - Adjust label color for raised cards.
+  - Respect dropdown width when tooltip is set.
+  - Remove header/sidebar primary color saturation.
+  - Allow sorting of grouped by rows.
+- Performance
+  - Lazy load 3rd party JS modules if possible.
+  - Speed up PyCharm plugin autocomplete parsing.
+  - Allow gzip compression for static assets.
+
+
 ## v0.20.0
 January 28, 2022 - [Download](https://github.com/h2oai/wave/releases/tag/v0.20.0)
 - Added
