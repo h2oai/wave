@@ -18,7 +18,7 @@ dev.off()
 image <- jsonlite::base64_enc(readBin("/tmp/lattice.plot.png","raw",file.info("/tmp/lattice.plot.png")[1,"size"]))
 
 page <- Site("/demo")
-
+page$drop()
 page$add_card("lattice",ui_image_card(box="1 1 6 10"
                     ,title="lattice render"
                     ,type='png'

@@ -11,6 +11,7 @@ card_color <- sample(dark_theme_colors,1)
 caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample_crypto_name,".")
 
 page <- Site("/demo")
+page$drop()
 page$add_card("large_bar",ui_large_bar_stat_card(box="1 1 2 2"
                                                                           ,title=sample_crypto_name
                                                                           ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'

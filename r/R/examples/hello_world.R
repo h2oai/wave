@@ -5,6 +5,7 @@
 library(h2owave)
 
 page <- Site("/demo")
+page$drop()
 
 page$add_card("hello",ui_markdown_card(box="1 1 2 2",
                     title="Hello World!"

@@ -2,6 +2,7 @@
 # Render a ggplot artifact created in R thru Wave
 # --
 
+library(h2owave)
 library(ggplot2)
 gg <- ggplot(midwest, aes(x=area, y=poptotal)) + 
   geom_point(aes(col=state), size=3) +  # Set color to vary based on state categories.
@@ -14,6 +15,7 @@ ggsave("/tmp/tmp.plot.png",plot=gg,device="png")
 image <- jsonlite::base64_enc(readBin("/tmp/tmp.plot.png","raw",file.info("/tmp/tmp.plot.png")[1,"size"]))
 
 page <- Site("/demo")
+page$drop()
 
 page$add_card("ggplot2",ui_image_card(box="1 1 6 10"
                     ,title="ggplot render"

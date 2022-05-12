@@ -5,6 +5,7 @@ curves = c('linear','smooth','step','stepAfter','stepBefore')
 crypto_name <- c("ETH","BTC","ZCH","LTC")
 
 page <- Site("/demo")
+page$drop()
 cards = list()
 
 for( i in 1:length(curves))

@@ -1,6 +1,7 @@
 library(h2owave)
 
 page <- Site("/demo")
+page$drop()
 
 dark_theme_colors = c('$red', '$pink', '$blue', '$azure', '$cyan', '$teal', '$mint', '$green', '$lime', '$yellow', '$amber', '$orange' ,'$tangerine')
 curves = c('linear','smooth','step','step-after','step-before')

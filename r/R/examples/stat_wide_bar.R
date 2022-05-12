@@ -15,6 +15,7 @@ sample_crypto_price <- runif(1,1,500)
 sample_crypto_price_percent_change <- runif(1,0,1)
 # Create a new page called "demo". 
 page <- Site("/demo")
+page$drop()
 # Add a new card called "crypto", which is a wide bar stat card on the newly created page "demo".
 # The position of the card is at column 1, and row 1, and the card occupies 2 columns and 1 row. 
 page$add_card("crypto",ui_wide_bar_stat_card(box="1 1 2 1"

@@ -6,6 +6,7 @@ library(h2owave)
 
 # Create a new page called "demo". 
 page <- Site("/demo")
+page$drop()
 
 # A vector of box specifications for cards. Each value encloses, the column and the row number where the card is placed, and the number of columns and rows it occupies.
 boxes <- c("1 1 1 1",

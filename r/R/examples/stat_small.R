@@ -14,6 +14,7 @@ sample_crypto_price <- as.character(round(runif(1,1,500),digits=2))
 
 # Create a new page called "demo". 
 page <- Site("/demo")
+page$drop()
 # Add a new card called "crypto", which is a small stat card on the newly created page "demo".
 # The position of the card is at column 1, and row 1, and the card occupies 1 column and 1 row. 
 page$add_card("crypto",ui_small_stat_card(box="1 1 1 1"

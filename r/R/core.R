@@ -225,14 +225,17 @@ data <- function(fields
                                set = function(card=NULL,...) {
                                        base_string <- paste0("self$cards$",card)
                                        non_eval_string <- as.list(as.character(substitute(c(...)))[-1L])
+                                       uneval_str <- substitute(list(...))# 
+                                       str_eval_outcome <- eval(uneval_str[[length(uneval_str)]],envir=parent.frame())
+                                       if(is.character(str_eval_outcome)){
+                                       non_eval_string[[length(non_eval_string)]] <- paste0("\'",str_eval_outcome,"\'",collapse="")
+                                       }
                                        for(i in 1:(length(non_eval_string)-1)){
                                                if(non_eval_string[[i]] == "-") non_eval_string[[i]] = "_"
                                                base_string <- paste0(base_string,'.%s')
                                        }
-                                       non_eval_string[[length(non_eval_string)]] =  
-                                       eval(parse(text=non_eval_string[[length(non_eval_string)]]),parent.frame())
-                                       base_string <- paste0(base_string,' = \"%s\"')
-                                       parsed_out_string <- parse(text = do.call(sprintf, c(fmt = base_string, non_eval_string),quote=TRUE))
+                                       base_string <- paste0(base_string,' = %s')
+                                       parsed_out_string <- parse(text = do.call(sprintf, c(fmt = base_string, non_eval_string)))
                                        eval(parsed_out_string)
                                        class(self$cards) <- c("h2o_wave_delta_data", class(self$cards))
                                },
