@@ -14,7 +14,7 @@ interface ImageAnnotatorRect {
   x2: U
   /** `y` coordinate of the rectangle's corner. */
   y1: U
-  /** End Y dimension. */
+  /** `y` coordinate of the diagonally opposite corner. */
   y2: U
 }
 
