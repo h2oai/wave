@@ -8,7 +8,7 @@ import { wave } from './ui'
 
 /** Create a rectangular annotation shape. */
 interface ImageAnnotatorRect {
-  /** Start X dimension. */
+  /** `x` coordinate of the rectangle's corner. */
   x1: U
   /** End X dimension. */
   x2: U
