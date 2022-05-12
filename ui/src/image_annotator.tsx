@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { B, Id, S, U } from 'h2o-wave'
+import { B, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AnnotatorTags } from './text_annotator'
@@ -10,17 +10,17 @@ import { wave } from './ui'
 interface ImageAnnotatorRect {
   /** `x` coordinate of the rectangle's corner. */
   x1: U
-  /** `x` coordinate of the diagonally opposite corner. */
-  x2: U
   /** `y` coordinate of the rectangle's corner. */
   y1: U
+  /** `x` coordinate of the diagonally opposite corner. */
+  x2: U
   /** `y` coordinate of the diagonally opposite corner. */
   y2: U
 }
 
 /** Create a shape to be rendered as an annotation on an image annotator. */
 interface ImageAnnotatorShape {
-  rect: ImageAnnotatorRect
+  rect?: ImageAnnotatorRect
 }
 
 /** Create a unique tag type for use in an image annotator. */
@@ -59,7 +59,7 @@ export interface ImageAnnotator {
   items?: ImageAnnotatorItem[]
   /** True if the form should be submitted as soon as an annotation is drawn. */
   trigger?: B
-  /** The card’s image height. Intrinsic image size is used by default. */
+  /** The card’s image height. The actual image size is used by default. */
   image_height?: S
 }
 
@@ -95,8 +95,10 @@ const
     }
   }),
   ARC_RADIUS = 8,
-  isIntersectingRect = (cursor_x: U, cursor_y: U, { x2, x1, y2, y1 }: ImageAnnotatorRect) => {
+  isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect) => {
+    if (!rect) return false
     const
+      { x2, x1, y2, y1 } = rect,
       x_min = Math.min(x1, x2),
       x_max = Math.max(x1, x2),
       y_min = Math.min(y1, y2),
@@ -298,33 +300,39 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.parentElement!.style.height = px(height)
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
-      setDrawnShapes((model.items || []).map(({ tag, shape }) => ({
-        tag: tag,
-        shape: {
-          rect: {
-            x1: shape.rect.x1 * aspectRatio,
-            x2: shape.rect.x2 * aspectRatio,
-            y1: shape.rect.y1 * aspectRatio,
-            y2: shape.rect.y2 * aspectRatio,
+      setDrawnShapes((model.items || []).map(({ tag, shape }) => {
+        if (shape.rect) return {
+          tag,
+          shape: {
+            rect: {
+              x1: shape.rect.x1 * aspectRatio,
+              x2: shape.rect.x2 * aspectRatio,
+              y1: shape.rect.y1 * aspectRatio,
+              y2: shape.rect.y2 * aspectRatio,
+            }
           }
         }
-      })))
+        return { tag, shape }
+      }))
       redrawExistingShapes()
     }
   }, [model.name, model.image, model.image_height, redrawExistingShapes, model.items])
 
   React.useEffect(() => {
-    wave.args[model.name] = drawnShapes.map(({ tag, shape }) => ({
-      tag: tag,
-      shape: {
-        rect: {
-          x1: shape.rect.x1 / aspectRatio,
-          x2: shape.rect.x2 / aspectRatio,
-          y1: shape.rect.y1 / aspectRatio,
-          y2: shape.rect.y2 / aspectRatio,
+    wave.args[model.name] = drawnShapes.map(({ tag, shape }) => {
+      if (shape.rect) return {
+        tag,
+        shape: {
+          rect: {
+            x1: shape.rect.x1 / aspectRatio,
+            x2: shape.rect.x2 / aspectRatio,
+            y1: shape.rect.y1 / aspectRatio,
+            y2: shape.rect.y2 / aspectRatio,
+          }
         }
       }
-    }))
+      return { tag, shape }
+    }) as unknown as Rec[]
   }, [aspectRatio, drawnShapes, model.name])
 
   return (

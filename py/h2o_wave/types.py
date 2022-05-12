@@ -6168,7 +6168,7 @@ class TextAnnotatorItem:
         self.text = text
         """Text to be highlighted."""
         self.tag = tag
-        """Tag connected to the highlighted text."""
+        """The `name` of the image annotator tag to refer to for the `label` and `color` of this item."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6276,7 +6276,7 @@ class TextAnnotator:
 
 
 class ImageAnnotatorTag:
-    """Image annotator tag.
+    """Create a unique tag type for use in an image annotator.
     """
     def __init__(
             self,
@@ -6290,9 +6290,9 @@ class ImageAnnotatorTag:
         self.name = name
         """An identifying name for this tag."""
         self.label = label
-        """Text to be displayed."""
+        """Text to be displayed for the annotation."""
         self.color = color
-        """HEX or RGB color string used as background for highlighted phrases."""
+        """Hex or RGB color string to be used as the background color."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6325,38 +6325,38 @@ class ImageAnnotatorTag:
 
 
 class ImageAnnotatorRect:
-    """Rectangle (box) annotation.
+    """Create a rectangular annotation shape.
     """
     def __init__(
             self,
             x1: int,
-            x2: int,
             y1: int,
+            x2: int,
             y2: int,
     ):
         _guard_scalar('ImageAnnotatorRect.x1', x1, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.x2', x2, (int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y1', y1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x2', x2, (int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y2', y2, (int,), False, False, False)
         self.x1 = x1
-        """Start X dimension."""
-        self.x2 = x2
-        """End X dimension."""
+        """`x` coordinate of the rectangle's corner."""
         self.y1 = y1
-        """Start Y dimension."""
+        """`y` coordinate of the rectangle's corner."""
+        self.x2 = x2
+        """`x` coordinate of the diagonally opposite corner."""
         self.y2 = y2
-        """End Y dimension."""
+        """`y` coordinate of the diagonally opposite corner."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageAnnotatorRect.x1', self.x1, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.x2', self.x2, (int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y1', self.y1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x2', self.x2, (int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y2', self.y2, (int,), False, False, False)
         return _dump(
             x1=self.x1,
-            x2=self.x2,
             y1=self.y1,
+            x2=self.x2,
             y2=self.y2,
         )
 
@@ -6365,48 +6365,48 @@ class ImageAnnotatorRect:
         """Creates an instance of this class using the contents of a dict."""
         __d_x1: Any = __d.get('x1')
         _guard_scalar('ImageAnnotatorRect.x1', __d_x1, (int,), False, False, False)
-        __d_x2: Any = __d.get('x2')
-        _guard_scalar('ImageAnnotatorRect.x2', __d_x2, (int,), False, False, False)
         __d_y1: Any = __d.get('y1')
         _guard_scalar('ImageAnnotatorRect.y1', __d_y1, (int,), False, False, False)
+        __d_x2: Any = __d.get('x2')
+        _guard_scalar('ImageAnnotatorRect.x2', __d_x2, (int,), False, False, False)
         __d_y2: Any = __d.get('y2')
         _guard_scalar('ImageAnnotatorRect.y2', __d_y2, (int,), False, False, False)
         x1: int = __d_x1
-        x2: int = __d_x2
         y1: int = __d_y1
+        x2: int = __d_x2
         y2: int = __d_y2
         return ImageAnnotatorRect(
             x1,
-            x2,
             y1,
+            x2,
             y2,
         )
 
 
 class ImageAnnotatorShape:
-    """Defines a particular shape to be used for the annotation.
+    """Create a shape to be rendered as an annotation on an image annotator.
     """
     def __init__(
             self,
-            rect: ImageAnnotatorRect,
+            rect: Optional[ImageAnnotatorRect] = None,
     ):
-        _guard_scalar('ImageAnnotatorShape.rect', rect, (ImageAnnotatorRect,), False, False, False)
+        _guard_scalar('ImageAnnotatorShape.rect', rect, (ImageAnnotatorRect,), False, True, False)
         self.rect = rect
         """No documentation available."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ImageAnnotatorShape.rect', self.rect, (ImageAnnotatorRect,), False, False, False)
+        _guard_scalar('ImageAnnotatorShape.rect', self.rect, (ImageAnnotatorRect,), False, True, False)
         return _dump(
-            rect=self.rect.dump(),
+            rect=None if self.rect is None else self.rect.dump(),
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ImageAnnotatorShape':
         """Creates an instance of this class using the contents of a dict."""
         __d_rect: Any = __d.get('rect')
-        _guard_scalar('ImageAnnotatorShape.rect', __d_rect, (dict,), False, False, False)
-        rect: ImageAnnotatorRect = ImageAnnotatorRect.load(__d_rect)
+        _guard_scalar('ImageAnnotatorShape.rect', __d_rect, (dict,), False, True, False)
+        rect: Optional[ImageAnnotatorRect] = None if __d_rect is None else ImageAnnotatorRect.load(__d_rect)
         return ImageAnnotatorShape(
             rect,
         )
@@ -6425,7 +6425,7 @@ class ImageAnnotatorItem:
         self.shape = shape
         """The annotation shape."""
         self.tag = tag
-        """Tag connected to the highlighted section."""
+        """The `name` of the image annotator tag to refer to for the `label` and `color` of this item."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6454,7 +6454,7 @@ class ImageAnnotatorItem:
 class ImageAnnotator:
     """Create an image annotator component.
 
-    The image annotator component enables user to manually annotate parts of an image.
+    This component allows annotating and labeling parts of an image by drawing shapes with a pointing device.
     """
     def __init__(
             self,
@@ -6476,17 +6476,17 @@ class ImageAnnotator:
         self.name = name
         """An identifying name for this component."""
         self.image = image
-        """The image to annotate."""
+        """The path or URL of the image to be presented for annotation."""
         self.title = title
-        """The text annotator's title."""
+        """The image annotator's title."""
         self.tags = tags
-        """List of tags the user can annotate with."""
+        """The master list of tags that can be used for annotations."""
         self.items = items
-        """Existing annotations if any."""
+        """Annotations to display on the image, if any."""
         self.trigger = trigger
-        """True if the form should be submitted when the annotator value changes."""
+        """True if the form should be submitted as soon as an annotation is drawn."""
         self.image_height = image_height
-        """The card’s image height. Intrinsic image size is used by default."""
+        """The card’s image height. The actual image size is used by default."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

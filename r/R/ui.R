@@ -2679,7 +2679,7 @@ ui_text_annotator_tag <- function(
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
 #' @param text Text to be highlighted.
-#' @param tag Tag connected to the highlighted text.
+#' @param tag The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
 #' @return A TextAnnotatorItem instance.
 #' @export
 ui_text_annotator_item <- function(
@@ -2730,11 +2730,11 @@ ui_text_annotator <- function(
   return(.o)
 }
 
-#' Image annotator tag.
+#' Create a unique tag type for use in an image annotator.
 #'
 #' @param name An identifying name for this tag.
-#' @param label Text to be displayed.
-#' @param color HEX or RGB color string used as background for highlighted phrases.
+#' @param label Text to be displayed for the annotation.
+#' @param color Hex or RGB color string to be used as the background color.
 #' @return A ImageAnnotatorTag instance.
 #' @export
 ui_image_annotator_tag <- function(
@@ -2752,42 +2752,28 @@ ui_image_annotator_tag <- function(
   return(.o)
 }
 
-#' Rectangle (box) annotation.
+#' Create a rectangular annotation shape.
 #'
-#' @param x1 Start X dimension.
-#' @param x2 End X dimension.
-#' @param y1 Start Y dimension.
-#' @param y2 End Y dimension.
+#' @param x1 `x` coordinate of the rectangle's corner.
+#' @param y1 `y` coordinate of the rectangle's corner.
+#' @param x2 `x` coordinate of the diagonally opposite corner.
+#' @param y2 `y` coordinate of the diagonally opposite corner.
 #' @return A ImageAnnotatorRect instance.
 #' @export
 ui_image_annotator_rect <- function(
   x1,
-  x2,
   y1,
+  x2,
   y2) {
   .guard_scalar("x1", "numeric", x1)
-  .guard_scalar("x2", "numeric", x2)
   .guard_scalar("y1", "numeric", y1)
+  .guard_scalar("x2", "numeric", x2)
   .guard_scalar("y2", "numeric", y2)
-  .o <- list(
+  .o <- list(rect=list(
     x1=x1,
-    x2=x2,
     y1=y1,
-    y2=y2)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorRect"))
-  return(.o)
-}
-
-#' Defines a particular shape to be used for the annotation.
-#'
-#' @param rect No documentation available.
-#' @return A ImageAnnotatorShape instance.
-#' @export
-ui_image_annotator_shape <- function(
-  rect) {
-  .guard_scalar("rect", "WaveImageAnnotatorRect", rect)
-  .o <- list(
-    rect=rect)
+    x2=x2,
+    y2=y2))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
   return(.o)
 }
@@ -2795,7 +2781,7 @@ ui_image_annotator_shape <- function(
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
 #' @param shape The annotation shape.
-#' @param tag Tag connected to the highlighted section.
+#' @param tag The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
 #' @return A ImageAnnotatorItem instance.
 #' @export
 ui_image_annotator_item <- function(
@@ -2812,15 +2798,15 @@ ui_image_annotator_item <- function(
 
 #' Create an image annotator component.
 #' 
-#' The image annotator component enables user to manually annotate parts of an image.
+#' This component allows annotating and labeling parts of an image by drawing shapes with a pointing device.
 #'
 #' @param name An identifying name for this component.
-#' @param image The image to annotate.
-#' @param title The text annotator's title.
-#' @param tags List of tags the user can annotate with.
-#' @param items Existing annotations if any.
-#' @param trigger True if the form should be submitted when the annotator value changes.
-#' @param image_height The card’s image height. Intrinsic image size is used by default.
+#' @param image The path or URL of the image to be presented for annotation.
+#' @param title The image annotator's title.
+#' @param tags The master list of tags that can be used for annotations.
+#' @param items Annotations to display on the image, if any.
+#' @param trigger True if the form should be submitted as soon as an annotation is drawn.
+#' @param image_height The card’s image height. The actual image size is used by default.
 #' @return A ImageAnnotator instance.
 #' @export
 ui_image_annotator <- function(

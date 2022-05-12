@@ -19,7 +19,7 @@ interface TextAnnotatorTag {
 interface TextAnnotatorItem {
   /** Text to be highlighted. */
   text: S
-  /** Tag connected to the highlighted text. */
+  /** The `name` of the image annotator tag to refer to for the `label` and `color` of this item. */
   tag?: S
 }
 

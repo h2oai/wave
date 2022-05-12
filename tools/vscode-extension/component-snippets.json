@@ -233,16 +233,9 @@
   "Wave ImageAnnotatorRect": {
     "prefix": "w_image_annotator_rect",
     "body": [
-      "ui.image_annotator_rect(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}),$0"
+      "ui.image_annotator_rect(x1=${1:None}, y1=${2:None}, x2=${3:None}, y2=${4:None}),$0"
     ],
     "description": "Create a minimal Wave ImageAnnotatorRect."
-  },
-  "Wave ImageAnnotatorShape": {
-    "prefix": "w_image_annotator_shape",
-    "body": [
-      "ui.image_annotator_shape(rect=$1),$0"
-    ],
-    "description": "Create a minimal Wave ImageAnnotatorShape."
   },
   "Wave ImageAnnotatorTag": {
     "prefix": "w_image_annotator_tag",
@@ -1164,7 +1157,7 @@
   "Wave Full ImageAnnotatorRect": {
     "prefix": "w_full_image_annotator_rect",
     "body": [
-      "ui.image_annotator_rect(x1=${1:None}, x2=${2:None}, y1=${3:None}, y2=${4:None}),$0"
+      "ui.image_annotator_rect(x1=${1:None}, y1=${2:None}, x2=${3:None}, y2=${4:None}),$0"
     ],
     "description": "Create a full Wave ImageAnnotatorRect."
   },

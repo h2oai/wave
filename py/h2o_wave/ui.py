@@ -2298,7 +2298,7 @@ def text_annotator_item(
 
     Args:
         text: Text to be highlighted.
-        tag: Tag connected to the highlighted text.
+        tag: The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
     Returns:
         A `h2o_wave.types.TextAnnotatorItem` instance.
     """
@@ -2345,12 +2345,12 @@ def image_annotator_tag(
         label: str,
         color: str,
 ) -> ImageAnnotatorTag:
-    """Image annotator tag.
+    """Create a unique tag type for use in an image annotator.
 
     Args:
         name: An identifying name for this tag.
-        label: Text to be displayed.
-        color: HEX or RGB color string used as background for highlighted phrases.
+        label: Text to be displayed for the annotation.
+        color: Hex or RGB color string to be used as the background color.
     Returns:
         A `h2o_wave.types.ImageAnnotatorTag` instance.
     """
@@ -2363,41 +2363,26 @@ def image_annotator_tag(
 
 def image_annotator_rect(
         x1: int,
-        x2: int,
         y1: int,
+        x2: int,
         y2: int,
-) -> ImageAnnotatorRect:
-    """Rectangle (box) annotation.
+) -> ImageAnnotatorShape:
+    """Create a rectangular annotation shape.
 
     Args:
-        x1: Start X dimension.
-        x2: End X dimension.
-        y1: Start Y dimension.
-        y2: End Y dimension.
+        x1: `x` coordinate of the rectangle's corner.
+        y1: `y` coordinate of the rectangle's corner.
+        x2: `x` coordinate of the diagonally opposite corner.
+        y2: `y` coordinate of the diagonally opposite corner.
     Returns:
         A `h2o_wave.types.ImageAnnotatorRect` instance.
     """
-    return ImageAnnotatorRect(
+    return ImageAnnotatorShape(rect=ImageAnnotatorRect(
         x1,
-        x2,
         y1,
+        x2,
         y2,
-    )
-
-
-def image_annotator_shape(
-        rect: ImageAnnotatorRect,
-) -> ImageAnnotatorShape:
-    """Defines a particular shape to be used for the annotation.
-
-    Args:
-        rect: No documentation available.
-    Returns:
-        A `h2o_wave.types.ImageAnnotatorShape` instance.
-    """
-    return ImageAnnotatorShape(
-        rect,
-    )
+    ))
 
 
 def image_annotator_item(
@@ -2408,7 +2393,7 @@ def image_annotator_item(
 
     Args:
         shape: The annotation shape.
-        tag: Tag connected to the highlighted section.
+        tag: The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
     Returns:
         A `h2o_wave.types.ImageAnnotatorItem` instance.
     """
@@ -2429,16 +2414,16 @@ def image_annotator(
 ) -> Component:
     """Create an image annotator component.
 
-    The image annotator component enables user to manually annotate parts of an image.
+    This component allows annotating and labeling parts of an image by drawing shapes with a pointing device.
 
     Args:
         name: An identifying name for this component.
-        image: The image to annotate.
-        title: The text annotator's title.
-        tags: List of tags the user can annotate with.
-        items: Existing annotations if any.
-        trigger: True if the form should be submitted when the annotator value changes.
-        image_height: The card’s image height. Intrinsic image size is used by default.
+        image: The path or URL of the image to be presented for annotation.
+        title: The image annotator's title.
+        tags: The master list of tags that can be used for annotations.
+        items: Annotations to display on the image, if any.
+        trigger: True if the form should be submitted as soon as an annotation is drawn.
+        image_height: The card’s image height. The actual image size is used by default.
     Returns:
         A `h2o_wave.types.ImageAnnotator` instance.
     """

@@ -24,10 +24,7 @@ async def serve(q: Q):
                     ui.image_annotator_tag(name='f', label='Food', color='$blue'),
                 ],
                 items=[
-                    ui.image_annotator_item(
-                        shape=ui.image_annotator_shape(rect=ui.image_annotator_rect(x1=649, y1=393, x2=383, y2=25)),
-                        tag='p'
-                    ),
+                    ui.image_annotator_item(shape=ui.image_annotator_rect(x1=649, y1=393, x2=383, y2=25), tag='p'),
                 ],
             ),
             ui.button(name='submit', label='Submit', primary=True)
