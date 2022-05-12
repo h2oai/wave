@@ -10,7 +10,7 @@ import { wave } from './ui'
 interface ImageAnnotatorRect {
   /** `x` coordinate of the rectangle's corner. */
   x1: U
-  /** End X dimension. */
+  /** `x` coordinate of the diagonally opposite corner. */
   x2: U
   /** Start Y dimension. */
   y1: U
