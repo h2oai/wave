@@ -27,7 +27,7 @@ interface ImageAnnotatorShape {
 interface ImageAnnotatorTag {
   /** An identifying name for this tag. */
   name: Id
-  /** Text to be displayed. */
+  /** Text to be displayed for the annotation. */
   label: S
   /** Hex or RGB color string to be used as the background color. */
   color: S
