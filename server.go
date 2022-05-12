@@ -30,8 +30,7 @@ const logo = `
 ┌────────────────┐ H2O Wave 
 │  ┐┌┐┐┌─┐┌ ┌┌─┐ │ %s %s
 │  └┘└┘└─└└─┘└── │ © 2021 H2O.ai, Inc.
-└────────────────┘
-`
+└────────────────┘`
 
 // Log represents key-value data for a log message.
 type Log map[string]string
@@ -54,11 +53,31 @@ func resolveURL(path, baseURL string) string {
 	return "/" + strings.TrimPrefix(path, baseURL)
 }
 
+func printLaunchBar(addr, baseURL string, isTLS bool) {
+	if strings.HasPrefix(addr, ":") {
+		addr = "localhost" + addr
+	}
+	if isTLS {
+		addr = "https://" + addr
+	} else {
+		addr = "http://" + addr
+	}
+	message := "Running at " + addr + baseURL
+	bar := strings.Repeat("─", len(message)+4)
+	log.Println("# ┌" + bar + "┐")
+	log.Println("# │  " + message + "  │")
+	log.Println("# └" + bar + "┘")
+}
+
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)
 	}
+
+	isTLS := conf.CertFile != "" && conf.KeyFile != ""
+
+	printLaunchBar(conf.Listen, conf.BaseURL, isTLS)
 
 	site := newSite()
 	if len(conf.Init) > 0 {
@@ -127,7 +146,7 @@ func Run(conf ServerConf) {
 
 	echo(Log{"t": "listen", "address": conf.Listen, "web-dir": conf.WebDir, "base-url": conf.BaseURL})
 
-	if conf.CertFile != "" && conf.KeyFile != "" {
+	if isTLS {
 		if err := http.ListenAndServeTLS(conf.Listen, conf.CertFile, conf.KeyFile, nil); err != nil {
 			echo(Log{"t": "listen_tls", "error": err.Error()})
 		}
