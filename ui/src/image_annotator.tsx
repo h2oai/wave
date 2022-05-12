@@ -44,7 +44,7 @@ interface ImageAnnotatorItem {
 /**
  * Create an image annotator component.
  * 
- * The image annotator component enables user to manually annotate parts of an image.
+ * This component allows annotating and labeling parts of an image by drawing shapes with a pointing device.
  */
 export interface ImageAnnotator {
   /** An identifying name for this component. */
