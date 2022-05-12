@@ -4,21 +4,21 @@ import os.path
 import re
 import subprocess
 import sys
+from copy import deepcopy
+from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
-from typing import List, Optional, Dict, Tuple
 
+from h2o_wave import Q, app, main, ui
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
-
-from h2o_wave import main, app, Q, ui
 
 py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
 
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
-_app_address = urlparse(os.environ.get(f'H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
+_app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
 _app_host, _app_port = _app_address.hostname, '10102'
 default_example_name = 'hello_world'
 
@@ -37,7 +37,9 @@ class Example:
         self.is_app = source.find('@app(') > 0
 
     async def start(self):
-        env = dict(H2O_WAVE_BASE_URL=_base_url)
+        env = deepcopy(os.environ)
+        env['H2O_WAVE_BASE_URL'] = _base_url
+        env['H2O_WAVE_ADDRESS'] = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
         # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
         if sys.platform.lower().startswith('win'):
@@ -48,7 +50,7 @@ class Example:
                 '--host', '0.0.0.0',
                 '--port', _app_port,
                 f'examples.{self.name}:main',
-            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', PATH=os.environ['PATH'], **env))
+            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
         else:
             self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
