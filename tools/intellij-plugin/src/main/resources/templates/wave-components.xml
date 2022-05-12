@@ -1612,11 +1612,12 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_notification_bar" value="ui.notification_bar(text='$text$',type='$type$',timeout=$timeout$,position='$position$',buttons=[&#10;	$buttons$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave NotificationBar with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_notification_bar" value="ui.notification_bar(text='$text$',type='$type$',timeout=$timeout$,position='$position$',name='$name$',buttons=[&#10;	$buttons$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave NotificationBar with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="type" expression="" defaultValue="&quot;info&quot;" alwaysStopAt="true"/>
     <variable name="timeout" expression="" defaultValue="&quot;5&quot;" alwaysStopAt="true"/>
     <variable name="position" expression="" defaultValue="&quot;top-right&quot;" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="buttons" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>

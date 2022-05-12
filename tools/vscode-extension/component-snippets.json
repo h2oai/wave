@@ -1290,7 +1290,7 @@
   "Wave Full NotificationBar": {
     "prefix": "w_full_notification_bar",
     "body": [
-      "ui.notification_bar(text='$1', type='${2:info'}', timeout=${3:5}, position='${4:top-right'}', buttons=[\n\t\t$5\t\t\n], events=[\n\t\t$6\t\t\n]),$0"
+      "ui.notification_bar(text='$1', type='${2:info'}', timeout=${3:5}, position='${4:top-right'}', name='$5', buttons=[\n\t\t$6\t\t\n], events=[\n\t\t$7\t\t\n]),$0"
     ],
     "description": "Create a full Wave NotificationBar."
   },

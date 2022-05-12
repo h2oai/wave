@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, S, U } from 'h2o-wave'
+import { B, Box, box, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Component } from './form'
 import { grid } from './layout'
 import { MessageBar } from "./message_bar"
 import { pc } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a notification bar.
@@ -38,8 +38,10 @@ export interface NotificationBar {
   buttons?: Component[]
   /** Specify the location of notification. Defaults to 'top-right'. */
   position?: 'top-right' | 'bottom-right' | 'bottom-center' | 'bottom-left' | 'top-left' | 'top-center'
-  /** The events to capture on this notification bar. */
+  /** The events to capture on this notification bar. One of 'dismissed'. */
   events?: S[]
+  /** An identifying name for this component. */
+  name?: Id
 }
 
 const
@@ -77,6 +79,9 @@ export const
       onDismiss = () => {
         window.clearTimeout(timeout)
         lastModel = notificationBarB()
+        const { name, events } = lastModel || {},
+          ev = events?.find(e => e === 'dismissed')
+        if (ev && name) wave.emit(name, ev, true)
         notificationBarB(null)
       },
       render = () => {
