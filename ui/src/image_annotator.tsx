@@ -53,7 +53,7 @@ export interface ImageAnnotator {
   image: S
   /** The image annotator's title. */
   title: S
-  /** List of tags the user can annotate with. */
+  /** The master list of tags that can be used for annotations. */
   tags: ImageAnnotatorTag[]
   /** Annotations to display on the image, if any. */
   items?: ImageAnnotatorItem[]
