@@ -3,6 +3,7 @@ import os
 import os.path
 import re
 import shutil
+from string import Template
 import subprocess
 import sys
 from copy import deepcopy
@@ -32,7 +33,7 @@ class Example:
         self.next_example: Optional[Example] = None
         self.process: Optional[subprocess.Popen] = None
 
-    async def start(self, filename: str):
+    async def start(self, filename: str, code: str):
         env = os.environ.copy()
         env['H2O_WAVE_BASE_URL'] = _base_url
         env['H2O_WAVE_ADDRESS'] = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
@@ -40,7 +41,7 @@ class Example:
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
         if sys.platform.lower().startswith('win'):
             env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
-        if self.source.find('@app(') > 0:
+        if code.find('@app(') > 0:
             env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_host}:{_app_port}'
             self.process = subprocess.Popen([
                 sys.executable, '-m', 'uvicorn',
@@ -173,7 +174,7 @@ require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-e
 
 window.MonacoEnvironment = {
   getWorkerUrl: function (workerId, label) {
-    return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+    return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`
       self.MonacoEnvironment = {
         baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/'
       };
@@ -192,15 +193,17 @@ require(['vs/editor/editor.main'], function () {
     })
     monaco.languages.registerCompletionItemProvider('python', {
       provideCompletionItems: async () => {
-        const [snippets1, snippets2] = await Promise.all([
-          fetch('{q.app.snippets1}').then(r => r.json()),
-          fetch('{q.app.snippets2}').then(r => r.json()),
-        ])
-        return { suggestions: [
-          ...Object.values(snippets1).map(toCompletionItem),
-          ...Object.values(snippets2).map(toCompletionItem)
+        if (!window.code_snippets) {
+          const [snippets1, snippets2] = await Promise.all([
+            fetch('$snippets1').then(r => r.json()),
+            fetch('$snippets2').then(r => r.json()),
+          ])
+          window.code_snippets = [
+            ...Object.values(snippets1).map(toCompletionItem),
+            ...Object.values(snippets2).map(toCompletionItem)
           ]
-       }
+        }
+        return { suggestions: window.code_snippets }
       }
   })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
@@ -224,11 +227,12 @@ require(['vs/editor/editor.main'], function () {
   })
 })
     '''
+    template = Template(js_content).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2)
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
         scripts=[ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js')],
-        script=ui.inline_script(content=js_content, requires=['require'], targets=['monaco-editor']),
+        script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -297,7 +301,7 @@ async def show_example(q: Q, example: Example):
         await active_example.stop()
 
     # Start new example
-    await example.start(filename)
+    await example.start(filename, code)
     q.client.active_example = example
 
     # Update example blurb
