@@ -61,7 +61,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 
 ## Compact file upload
 
-When you need just a single file to be uploaded and don't have too much space to waste.
+When you need just a single file to be uploaded and don't have too much space to waste. However. make sure it's accompanied with your own `ui.button` so that it can be submitted.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
