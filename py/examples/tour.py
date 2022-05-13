@@ -171,7 +171,6 @@ app_title = 'H2O Wave Tour'
 async def setup_page(q: Q):
     js_content = '''
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' } })
-
 window.MonacoEnvironment = {
   getWorkerUrl: function (workerId, label) {
     return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`
@@ -182,7 +181,6 @@ window.MonacoEnvironment = {
     )}`
   }
 }
-
 require(['vs/editor/editor.main'], function () {
     const toCompletionItem = item => ({
       label: item.prefix,
@@ -260,7 +258,8 @@ require(['vs/editor/editor.main'], function () {
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
-    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path=f'{_base_url}{q.client.id}')
+    # Put tmp placeholder <div></div> to simulate blank screen.
+    q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
 
     await q.page.save()
 
