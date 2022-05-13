@@ -63,8 +63,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
             list: {
               border: border(1, cssVar('$neutralQuaternaryAlt')),
               '.ms-ContextualMenu-link': { lineHeight: 'unset' },
-              '.ms-ContextualMenu-submenuIcon > span': { height: 'unset' },
-              '.ms-ContextualMenu-submenuIcon > span > svg': { verticalAlign: 'unset' },
+              '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
             }
           }}
       />
