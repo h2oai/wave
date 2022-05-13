@@ -69,6 +69,7 @@ type MessagebarProps = {
   extraStyles?: Fluent.IRawStyle
   onDismiss?: () => void
   isMultiline?: B
+  size?: 'normal' | 'large'
 }
 
 const
@@ -116,7 +117,7 @@ const
   }
 
 export const
-  MessageBar = ({ type, text, buttons, name, extraStyles = {}, onDismiss, isMultiline = false }: MessagebarProps) => {
+  MessageBar = ({ type, text, buttons, name, extraStyles = {}, onDismiss, isMultiline = false, size = 'normal' }: MessagebarProps) => {
     const { iconName, color, background } = notificationTypes[type || 'info']
     const btns = buttons?.filter(({ button }) => button)
     return (
@@ -132,7 +133,8 @@ export const
                 width: 'auto',
                 '.ms-Link': { color, fontWeight: 600 },
                 '.ms-Link:hover': { textDecoration: 'none', color },
-                padding: 16,
+                padding: size === 'normal' ? '8px 16px' : 16,
+                minHeight: 24,
                 ...extraStyles
               },
               content: { alignItems: isMultiline ? 'start' : 'center' },

@@ -102,7 +102,7 @@ export const
 
         if (!buttons?.length && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5) * 1000)
 
-        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={buttons} extraStyles={extraStyles} onDismiss={onDismiss} isMultiline={isMultiline} />
+        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={buttons} extraStyles={extraStyles} onDismiss={onDismiss} isMultiline={isMultiline} size='large'/>
       },
       dispose = () => window.clearTimeout(timeout)
 
