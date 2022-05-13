@@ -31,7 +31,6 @@ class Example:
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
         self.process: Optional[subprocess.Popen] = None
-        self.is_app = source.find('@app(') > 0
 
     async def start(self, filename: str):
         env = os.environ.copy()
@@ -41,7 +40,7 @@ class Example:
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
         if sys.platform.lower().startswith('win'):
             env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
-        if self.is_app:
+        if self.source.find('@app(') > 0:
             env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_host}:{_app_port}'
             self.process = subprocess.Popen([
                 sys.executable, '-m', 'uvicorn',
@@ -184,8 +183,28 @@ window.MonacoEnvironment = {
 }
 
 require(['vs/editor/editor.main'], function () {
+    const toCompletionItem = item => ({
+      label: item.prefix,
+      kind: monaco.languages.CompletionItemKind.Snippet,
+      documentation: item.description,
+      insertText: item.body.join('\\n'),
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+    })
+    monaco.languages.registerCompletionItemProvider('python', {
+      provideCompletionItems: async () => {
+        const [snippets1, snippets2] = await Promise.all([
+          fetch('{q.app.snippets1}').then(r => r.json()),
+          fetch('{q.app.snippets2}').then(r => r.json()),
+        ])
+        return { suggestions: [
+          ...Object.values(snippets1).map(toCompletionItem),
+          ...Object.values(snippets2).map(toCompletionItem)
+          ]
+       }
+      }
+  })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
-    value: ['def x(): ', '\\tprint("Hello world!")'].join('\\n'),
+    value: '',
     language: 'python',
     minimap: {
         enabled: false
@@ -220,31 +239,6 @@ require(['vs/editor/editor.main'], function () {
                 ])
             ])
         ])
-    await q.page.save()
-
-    js_content = f'''
-  const toCompletionItem = item => ({{
-    label: item.prefix,
-    kind: monaco.languages.CompletionItemKind.Snippet,
-    documentation: item.description,
-    insertText: item.body,
-  }})
-  monaco.languages.registerCompletionItemProvider('python', {{
-    provideCompletionItems: async () => {{
-      const [snippets1, snippets2] = await Promise.all([
-        fetch('{q.app.snippets1}').then(r => r.json()),
-        fetch('{q.app.snippets2}').then(r => r.json()),
-      ])
-      return {{  suggestions: [
-        ...Object.values(snippets1).map(toCompletionItem),
-        ...Object.values(snippets2).map(toCompletionItem)
-        ]
-      }}
-    }}
- }})
-'''
-    q.page['meta'].script = ui.inline_script(js_content, requires=['monaco'])
-
     q.page['header'] = ui.header_card(
         box='header',
         title=app_title,
@@ -262,12 +256,13 @@ require(['vs/editor/editor.main'], function () {
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
-    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path=f'{_base_url}demo')
+    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path=f'{_base_url}{q.client.id}')
 
     await q.page.save()
 
 
-def make_blurb(q: Q, example: Example):
+def make_blurb(q: Q):
+    example = q.client.active_example
     blurb_card = q.page['blurb']
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
@@ -283,50 +278,60 @@ def make_blurb(q: Q, example: Example):
 
 async def show_example(q: Q, example: Example):
     # Clear demo page
-    demo_page = q.site['/demo']
+    demo_page = q.site[f'/{q.client.id}']
     demo_page.drop()
     await demo_page.save()
 
-    filename = example.filename
-    if q.events.editor:
-        filename = os.path.join(tour_tmp_dir, f'{q.client.id}.py')
-        with open(filename, 'w') as f:
-            f.write(q.events.editor.change)
-        filename = '.'.join([tour_tmp_dir, str(q.client.id)]) if example.is_app else filename
+    filename = os.path.join(tour_tmp_dir, f'{q.client.id}.py')
+    code = q.events.editor.change if q.events.editor else example.source
+    code = code.replace("`", "\\`")
+    code = re.sub(r'=[ ]?site\[.+\]', f'= site["/{q.client.id}"]', code)
+    code = re.sub(r'@app\(.+\)', f'@app("/{q.client.id}")', code)
+    with open(filename, 'w') as f:
+        f.write(code)
+    filename = '.'.join([tour_tmp_dir, q.client.id]) if code.find('@app(') > 0 else filename
 
     # Stop active example, if any.
-    global active_example
+    active_example = q.client.active_example
     if active_example:
         await active_example.stop()
 
     # Start new example
-    active_example = example
-    await active_example.start(filename)
+    await example.start(filename)
+    q.client.active_example = example
 
     # Update example blurb
-    make_blurb(q, active_example)
+    make_blurb(q)
+
+    preview_card = q.page['preview']
+
+    # Update preview title
+    preview_card.title = f'Preview of {example.filename}'
+    q.page['code'].title = example.filename
+    await q.page.save()
+
+    if q.client.is_first_load:
+        # Make sure all the JS has loaded properly.
+        await q.sleep(1)
+        q.client.is_first_load = False
 
     # Update code display
-    q.page['code'].title = active_example.filename
     if not q.events.editor:
-        code = example.source.replace("`", "\\`")
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`);', requires=['editor'])
         await q.page.save()
         if q.args['#']:
             q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 });', requires=['editor'])
 
-    preview_card = q.page['preview']
-
-    # Update preview title
-    preview_card.title = f'Preview of {active_example.filename}'
     # HACK
     # The ?e= appended to the path forces the frame to reload.
     # The url param is not actually used.
-    preview_card.path = f'{_base_url}demo?e={active_example.name}'
+    preview_card.path = f'{_base_url}{q.client.id}?e={example.name}'
     await q.page.save()
 
 
 async def on_startup():
+    # Clean up previous tmp dir.
+    await on_shutdown()
     os.mkdir(tour_tmp_dir)
 
 
@@ -342,8 +347,9 @@ async def serve(q: Q):
         q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
         q.app.initialized = True
     if not q.client.initialized:
-        q.client.id = uuid.uuid4()
+        q.client.id = str(uuid.uuid4())
         q.client.initialized = True
+        q.client.is_first_load = True
         await setup_page(q)
 
     search = q.args[q.args['#'] or default_example_name]

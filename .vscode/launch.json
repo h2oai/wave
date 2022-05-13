@@ -29,9 +29,10 @@
       "request": "launch",
       "program": "${workspaceFolder}/py/venv/bin/wave",
       "python": "${workspaceFolder}/py/venv/bin/python",
+      "cwd": "${workspaceFolder}/py/examples",
       "args": [
         "run",
-        "examples.tour",
+        "tour",
         "--no-reload",
       ],
     },
