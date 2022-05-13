@@ -105,7 +105,21 @@ export const
             <div className={css.target} ref={target} onClick={show}>
               <Icon className={css.icon} iconName='MoreVertical' />
             </div>
-            <ContextualMenu target={target} items={items} hidden={hidden} onItemClick={hide} onDismiss={hide} />
+            <ContextualMenu
+              target={target}
+              items={items}
+              hidden={hidden}
+              onItemClick={hide}
+              onDismiss={hide}
+              styles={
+                {
+                  list: {
+                    '.ms-ContextualMenu-link': { lineHeight: 'unset' },
+                    '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
+                  }
+                }
+              }
+            />
           </div>
         ) : <></>
       }
