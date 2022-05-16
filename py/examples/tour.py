@@ -3,12 +3,14 @@ import os
 import os.path
 import re
 import shutil
-from string import Template
+import socket
 import subprocess
 import sys
 from copy import deepcopy
 import uuid
+from contextlib import closing
 from pathlib import Path
+from string import Template
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
@@ -18,8 +20,16 @@ tour_tmp_dir = '_tour_apps_tmp'
 
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
-_app_host, _app_port = _app_address.hostname, '10102'
+_app_host = _app_address.hostname
 default_example_name = 'hello_world'
+
+
+def get_free_port(port=10102) -> int:
+    while True:
+        with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+            if sock.connect_ex((_app_host, port)):
+                return port
+        port += 1
 
 
 class Example:
@@ -46,7 +56,7 @@ class Example:
             self.process = subprocess.Popen([
                 sys.executable, '-m', 'uvicorn',
                 '--host', '0.0.0.0',
-                '--port', _app_port,
+                '--port', port,
                 f'examples.{filename.replace(".py", "")}:main',
             ], env=env)
         else:
