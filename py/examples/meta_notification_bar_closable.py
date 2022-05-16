@@ -1,5 +1,5 @@
 # Meta / Notification bar / Closable
-# Display a notification bar #notification_bar and detect when it's closed. #meta
+# Display a #notification_bar and detect when it's closed. #meta
 # ---
 from h2o_wave import main, app, Q, ui
 
