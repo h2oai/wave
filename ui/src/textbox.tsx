@@ -100,7 +100,7 @@ export const
           styles={m.multiline && m.height
             ? {
               field: { height: m.height },
-              fieldGroup: { border: 'none', borderRadius: 0, outline: '1px solid' }
+              fieldGroup: { minHeight: m.height }
             }
             : undefined}
           label={m.label}
