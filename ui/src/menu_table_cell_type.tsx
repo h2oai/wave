@@ -18,6 +18,7 @@ import React from 'react'
 import { stylesheet } from "typestyle"
 import * as Fluent from '@fluentui/react'
 import { border, cssVar } from "./theme"
+import { fixIconScrollbar } from "./menu"
 
 /**
  * Create a cell type that renders command menu.
@@ -60,7 +61,7 @@ export const XMenuTableCellType = ({ model }: { model: MenuTableCellType & { row
         isBeakVisible
         directionalHint={Fluent.DirectionalHint.bottomCenter}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
-        styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')) } }}
+        styles={fixIconScrollbar}
       />
     </div>
   )

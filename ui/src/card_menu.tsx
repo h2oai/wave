@@ -17,7 +17,7 @@ import { B, box, Box, S } from 'h2o-wave'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'
-import { clas, cssVar } from './theme'
+import { border, clas, cssVar } from './theme'
 import { Command } from './toolbar'
 import { bond, wave } from './ui'
 
@@ -51,6 +51,13 @@ const
   })
 
 const
+  fixIconScrollbar = {
+    list: {
+      border: border(1, cssVar('$neutralQuaternaryAlt')),
+      '.ms-ContextualMenu-link': { lineHeight: 'unset' },
+      '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
+    }
+  },
   editCommand = '__edit__',
   deleteCommand = '__delete__',
   toContextMenuItem = (c: Command): IContextualMenuItem => {
@@ -76,7 +83,7 @@ const
       text: c.label || c.name || 'Untitled',
       iconProps: c.icon ? { iconName: c.icon } : undefined,
       title: c.caption || undefined,
-      subMenuProps: c.items ? { items: c.items.map(toContextMenuItem) } : undefined,
+      subMenuProps: c.items ? { items: c.items.map(toContextMenuItem), styles: fixIconScrollbar } : undefined,
       onClick,
     }
   }
@@ -111,14 +118,7 @@ export const
               hidden={hidden}
               onItemClick={hide}
               onDismiss={hide}
-              styles={
-                {
-                  list: {
-                    '.ms-ContextualMenu-link': { lineHeight: 'unset' },
-                    '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
-                  }
-                }
-              }
+              styles={fixIconScrollbar}
             />
           </div>
         ) : <></>

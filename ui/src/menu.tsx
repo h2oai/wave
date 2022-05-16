@@ -38,36 +38,38 @@ export interface Menu {
   name?: Id
 }
 
-export const XMenu = ({ model }: { model: Menu }) => {
-  const
-    { name, items, icon, image } = model,
-    ref = React.useRef<HTMLDivElement>(null),
-    [isMenuHidden, setIsMenuHidden] = React.useState(true),
-    toggleMenu = () => setIsMenuHidden(isHidden => !isHidden)
+export const
+  // Styles to remove unnecessary scrollbar that shows up when icons are used in menu items
+  fixIconScrollbar = {
+    list: {
+      border: border(1, cssVar('$neutralQuaternaryAlt')),
+      '.ms-ContextualMenu-link': { lineHeight: 'unset' },
+      '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
+    }
+  },
+  XMenu = ({ model }: { model: Menu }) => {
+    const
+      { name, items, icon, image } = model,
+      ref = React.useRef<HTMLDivElement>(null),
+      [isMenuHidden, setIsMenuHidden] = React.useState(true),
+      toggleMenu = () => setIsMenuHidden(isHidden => !isHidden)
 
-  return (
-    // HACK: Marker css class.
-    <div data-test={name} className={clas(css.card, 'w-menu')} ref={ref} onClick={toggleMenu}>
-      { image && <Fluent.Persona imageUrl={image} size={Fluent.PersonaSize.size48} styles={{ details: { padding: 0 } }} />}
-      { icon && <Fluent.FontIcon className={css.icon} iconName={icon} />}
-      <Fluent.ContextualMenu
-        items={toCommands(items)}
-        target={ref}
-        hidden={isMenuHidden}
-        onDismiss={toggleMenu}
-        isBeakVisible
-        directionalHint={Fluent.DirectionalHint.bottomRightEdge}
-        calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
-        styles={
-          {
-            list: {
-              border: border(1, cssVar('$neutralQuaternaryAlt')),
-              '.ms-ContextualMenu-link': { lineHeight: 'unset' },
-              '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
-            }
-          }}
-      />
-      <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />
-    </div>
-  )
-}
+    return (
+      // HACK: Marker css class.
+      <div data-test={name} className={clas(css.card, 'w-menu')} ref={ref} onClick={toggleMenu}>
+        { image && <Fluent.Persona imageUrl={image} size={Fluent.PersonaSize.size48} styles={{ details: { padding: 0 } }} />}
+        { icon && <Fluent.FontIcon className={css.icon} iconName={icon} />}
+        <Fluent.ContextualMenu
+          items={toCommands(items)}
+          target={ref}
+          hidden={isMenuHidden}
+          onDismiss={toggleMenu}
+          isBeakVisible
+          directionalHint={Fluent.DirectionalHint.bottomRightEdge}
+          calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
+          styles={fixIconScrollbar}
+        />
+        <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />
+      </div>
+    )
+  }
