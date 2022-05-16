@@ -97,7 +97,7 @@ export const
       : (
         <Fluent.TextField
           data-test={m.name}
-          styles={m.multiline && m.height ? { fieldGroup: { height: m.height } } : undefined}
+          styles={m.multiline && m.height ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } } : undefined}
           label={m.label}
           placeholder={m.placeholder}
           iconProps={{ iconName: m.icon }}
