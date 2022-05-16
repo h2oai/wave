@@ -47,6 +47,8 @@ if q.args.top_right:
 
 If you ever need to know if the notification bar was closed e.g. by clicking "X" button or by elapsed timeout, you can register a `dismissed` event.
 
+![notification bar events gif](/img/widgets/notification_bar_events.gif)
+
 ```py ignore
 if not q.client.initialized:
     # Create an empty meta_card to hold the notification bar
