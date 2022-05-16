@@ -15,13 +15,23 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { NotificationBar, notificationBarB } from './notification_bar'
+import { wave } from './ui'
 
-const notificationbarProps: NotificationBar = { text: 'notification_bar' }
+const
+  name = "notificationbar",
+  notificationbarProps: NotificationBar = { name, text: 'notification_bar' },
+  emitMock = jest.fn()
 
 describe('NotificationBar.tsx', () => {
 
-  beforeAll(() => jest.useFakeTimers())
-  beforeEach(() => notificationBarB(notificationbarProps))
+  beforeAll(() => {
+    jest.useFakeTimers()
+    wave.emit = emitMock
+  })
+  beforeEach(() => {
+    emitMock.mockReset()
+    notificationBarB(notificationbarProps)
+  })
 
   it('should open notification bar when global wave.notificationBarB is set', () => {
     const { queryByRole } = render(<NotificationBar />)
@@ -52,5 +62,19 @@ describe('NotificationBar.tsx', () => {
     const { container } = render(<NotificationBar />)
     fireEvent.click(container.querySelector('.ms-MessageBar-dismissal') as HTMLButtonElement)
     expect(notificationBarB()).toBeNull()
+  })
+
+  it('should fire event if specified when clicking on X', () => {
+    notificationBarB({ ...notificationbarProps, events: ['dismissed'] })
+    const { container } = render(<NotificationBar />)
+    fireEvent.click(container.parentElement!.querySelector('.ms-MessageBar-dismissal') as HTMLButtonElement)
+    expect(emitMock).toHaveBeenCalled()
+  })
+
+  it('should fire event if specified after elapsed timeout', () => {
+    notificationBarB({ ...notificationbarProps, events: ['dismissed'] })
+    render(<NotificationBar />)
+    jest.runOnlyPendingTimers()
+    expect(emitMock).toHaveBeenCalled()
   })
 })

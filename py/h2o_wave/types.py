@@ -8738,6 +8738,7 @@ class NotificationBar:
             buttons: Optional[List[Component]] = None,
             position: Optional[str] = None,
             events: Optional[List[str]] = None,
+            name: Optional[str] = None,
     ):
         _guard_scalar('NotificationBar.text', text, (str,), False, False, False)
         _guard_enum('NotificationBar.type', type, _NotificationBarType, True)
@@ -8745,6 +8746,7 @@ class NotificationBar:
         _guard_vector('NotificationBar.buttons', buttons, (Component,), False, True, False)
         _guard_enum('NotificationBar.position', position, _NotificationBarPosition, True)
         _guard_vector('NotificationBar.events', events, (str,), False, True, False)
+        _guard_scalar('NotificationBar.name', name, (str,), True, True, False)
         self.text = text
         """The text displayed on the notification bar."""
         self.type = type
@@ -8756,7 +8758,9 @@ class NotificationBar:
         self.position = position
         """Specify the location of notification. Defaults to 'top-right'. One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition."""
         self.events = events
-        """The events to capture on this notification bar."""
+        """The events to capture on this notification bar. One of 'dismissed'."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8766,6 +8770,7 @@ class NotificationBar:
         _guard_vector('NotificationBar.buttons', self.buttons, (Component,), False, True, False)
         _guard_enum('NotificationBar.position', self.position, _NotificationBarPosition, True)
         _guard_vector('NotificationBar.events', self.events, (str,), False, True, False)
+        _guard_scalar('NotificationBar.name', self.name, (str,), True, True, False)
         return _dump(
             text=self.text,
             type=self.type,
@@ -8773,6 +8778,7 @@ class NotificationBar:
             buttons=None if self.buttons is None else [__e.dump() for __e in self.buttons],
             position=self.position,
             events=self.events,
+            name=self.name,
         )
 
     @staticmethod
@@ -8790,12 +8796,15 @@ class NotificationBar:
         _guard_enum('NotificationBar.position', __d_position, _NotificationBarPosition, True)
         __d_events: Any = __d.get('events')
         _guard_vector('NotificationBar.events', __d_events, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('NotificationBar.name', __d_name, (str,), True, True, False)
         text: str = __d_text
         type: Optional[str] = __d_type
         timeout: Optional[int] = __d_timeout
         buttons: Optional[List[Component]] = None if __d_buttons is None else [Component.load(__e) for __e in __d_buttons]
         position: Optional[str] = __d_position
         events: Optional[List[str]] = __d_events
+        name: Optional[str] = __d_name
         return NotificationBar(
             text,
             type,
@@ -8803,6 +8812,7 @@ class NotificationBar:
             buttons,
             position,
             events,
+            name,
         )
 
 

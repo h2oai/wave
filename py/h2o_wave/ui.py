@@ -3099,6 +3099,7 @@ def notification_bar(
         buttons: Optional[List[Component]] = None,
         position: Optional[str] = None,
         events: Optional[List[str]] = None,
+        name: Optional[str] = None,
 ) -> NotificationBar:
     """Create a notification bar.
 
@@ -3111,7 +3112,8 @@ def notification_bar(
         timeout: How long the notification stays visible, in seconds. Defaults to 5.
         buttons: Specify one or more action buttons.
         position: Specify the location of notification. Defaults to 'top-right'. One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.
-        events: The events to capture on this notification bar.
+        events: The events to capture on this notification bar. One of 'dismissed'.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.NotificationBar` instance.
     """
@@ -3122,6 +3124,7 @@ def notification_bar(
         buttons,
         position,
         events,
+        name,
     )
 
 

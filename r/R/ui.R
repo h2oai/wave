@@ -3590,7 +3590,8 @@ ui_markup_card <- function(
 #' @param buttons Specify one or more action buttons.
 #' @param position Specify the location of notification. Defaults to 'top-right'.
 #'   One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.
-#' @param events The events to capture on this notification bar.
+#' @param events The events to capture on this notification bar. One of 'dismissed'.
+#' @param name An identifying name for this component.
 #' @return A NotificationBar instance.
 #' @export
 ui_notification_bar <- function(
@@ -3599,20 +3600,23 @@ ui_notification_bar <- function(
   timeout = NULL,
   buttons = NULL,
   position = NULL,
-  events = NULL) {
+  events = NULL,
+  name = NULL) {
   .guard_scalar("text", "character", text)
   # TODO Validate type
   .guard_scalar("timeout", "numeric", timeout)
   .guard_vector("buttons", "WaveComponent", buttons)
   # TODO Validate position
   .guard_vector("events", "character", events)
+  .guard_scalar("name", "character", name)
   .o <- list(
     text=text,
     type=type,
     timeout=timeout,
     buttons=buttons,
     position=position,
-    events=events)
+    events=events,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNotificationBar"))
   return(.o)
 }
