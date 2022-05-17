@@ -18,7 +18,7 @@ import { Id, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { fixIconScrollbar } from './menu'
+import { fixIconScrollbar } from './menu_utils'
 import { bond, wave } from './ui'
 
 /**

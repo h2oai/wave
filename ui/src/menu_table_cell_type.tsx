@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from "typestyle"
 import * as Fluent from '@fluentui/react'
 import { border, cssVar } from "./theme"
-import { fixIconScrollbar } from "./menu"
+import { fixIconScrollbar } from "./menu_utils"
 
 /**
  * Create a cell type that renders command menu.
