@@ -2679,7 +2679,7 @@ ui_text_annotator_tag <- function(
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
 #' @param text Text to be highlighted.
-#' @param tag The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
+#' @param tag The `name` of the text annotator tag to refer to for the `label` and `color` of this item.
 #' @return A TextAnnotatorItem instance.
 #' @export
 ui_text_annotator_item <- function(

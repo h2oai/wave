@@ -10,7 +10,7 @@ async def serve(q: Q):
     if q.args.annotator is not None:
         q.page['example'].items = [
             ui.text(f'annotator={q.args.annotator}'),
-            ui.button(name='show_form', label='Back', primary=True),
+            ui.button(name='back', label='Back', primary=True),
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 9 -1', items=[

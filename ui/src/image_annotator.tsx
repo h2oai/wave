@@ -94,7 +94,7 @@ const
       margin: 8
     }
   }),
-  ARC_RADIUS = 8,
+  ARC_RADIUS = 4,
   isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect) => {
     if (!rect) return false
     const
@@ -117,7 +117,7 @@ const
   },
   drawRect = (ctx: CanvasRenderingContext2D, { x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
     ctx.beginPath()
-    ctx.lineWidth = 6
+    ctx.lineWidth = 3
     ctx.strokeStyle = strokeColor
     ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
     ctx.closePath()

@@ -2298,7 +2298,7 @@ def text_annotator_item(
 
     Args:
         text: Text to be highlighted.
-        tag: The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
+        tag: The `name` of the text annotator tag to refer to for the `label` and `color` of this item.
     Returns:
         A `h2o_wave.types.TextAnnotatorItem` instance.
     """

@@ -19,7 +19,7 @@ interface TextAnnotatorTag {
 interface TextAnnotatorItem {
   /** Text to be highlighted. */
   text: S
-  /** The `name` of the image annotator tag to refer to for the `label` and `color` of this item. */
+  /** The `name` of the text annotator tag to refer to for the `label` and `color` of this item. */
   tag?: S
 }
 
@@ -106,32 +106,29 @@ const css = stylesheet({
 })
 
 export
-  const
-  AnnotatorTags = ({ tags, activateTag, activeTag }: { tags: TextAnnotatorTag[], activateTag: (name: S) => () => void, activeTag?: S }) => {
-    return (
-      <div className={css.tags}>
-        {
-          tags.map(({ name, color, label }) => {
-            const style = stylesheet({
-              tag: {
-                background: cssVar(color),
-                color: getContrast(color),
-              },
-              activeTag: {
-                border: border(2, cssVar('$themePrimary')),
-                borderRadius: 6
-              }
-            })
-            return (
-              <div key={name} data-test={name} className={clas(css.tagWrapper, activeTag === name ? style.activeTag : '')}>
-                <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={activateTag(name)}>{label}</div>
-              </div>
-            )
+  const AnnotatorTags = ({ tags, activateTag, activeTag }: { tags: TextAnnotatorTag[], activateTag: (name: S) => () => void, activeTag?: S }) => (
+    <div className={css.tags}>
+      {
+        tags.map(({ name, color, label }) => {
+          const style = stylesheet({
+            tag: {
+              background: cssVar(color),
+              color: getContrast(color),
+            },
+            activeTag: {
+              border: border(2, cssVar('$themePrimary')),
+              borderRadius: 6
+            }
           })
-        }
-      </div>
-    )
-  },
+          return (
+            <div key={name} data-test={name} className={clas(css.tagWrapper, activeTag === name ? style.activeTag : '')}>
+              <div className={clas(css.tag, style.tag, 'wave-s12')} onClick={activateTag(name)}>{label}</div>
+            </div>
+          )
+        })
+      }
+    </div>
+  ),
   XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
     const
       [startIdx, setStartIdx] = React.useState<U | null>(null),

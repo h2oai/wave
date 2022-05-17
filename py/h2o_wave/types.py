@@ -6168,7 +6168,7 @@ class TextAnnotatorItem:
         self.text = text
         """Text to be highlighted."""
         self.tag = tag
-        """The `name` of the image annotator tag to refer to for the `label` and `color` of this item."""
+        """The `name` of the text annotator tag to refer to for the `label` and `color` of this item."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
