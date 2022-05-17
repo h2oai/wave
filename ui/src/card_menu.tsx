@@ -17,7 +17,7 @@ import { B, box, Box, S } from 'h2o-wave'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'
-import { fixIconScrollbar } from './menu_utils'
+import { fixMenuOverflowStyles } from './parts/utils'
 import { clas, cssVar } from './theme'
 import { Command } from './toolbar'
 import { bond, wave } from './ui'
@@ -77,7 +77,7 @@ const
       text: c.label || c.name || 'Untitled',
       iconProps: c.icon ? { iconName: c.icon } : undefined,
       title: c.caption || undefined,
-      subMenuProps: c.items ? { items: c.items.map(toContextMenuItem), styles: fixIconScrollbar } : undefined,
+      subMenuProps: c.items ? { items: c.items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
       onClick,
     }
   }
@@ -112,7 +112,7 @@ export const
               hidden={hidden}
               onItemClick={hide}
               onDismiss={hide}
-              styles={fixIconScrollbar}
+              styles={fixMenuOverflowStyles}
             />
           </div>
         ) : <></>

@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from "typestyle"
 import * as Fluent from '@fluentui/react'
 import { border, cssVar } from "./theme"
-import { fixIconScrollbar } from "./menu_utils"
+import { fixMenuOverflowStyles } from './parts/utils'
 
 /**
  * Create a cell type that renders command menu.
@@ -26,12 +26,12 @@ import { fixIconScrollbar } from "./menu_utils"
  * Commands are typically displayed as context menu items. Useful when you need to provide
  * multiple actions within a single row.
  */
- export interface MenuTableCellType {
+export interface MenuTableCellType {
   /** Items to render. */
   commands: Command[]
- /** An identifying name for this component. */
+  /** An identifying name for this component. */
   name?: S
- }
+}
 
 const css = stylesheet({
   container: {
@@ -54,14 +54,14 @@ export const XMenuTableCellType = ({ model }: { model: MenuTableCellType & { row
     <div data-test={model.name} className={css.container} ref={ref} onClick={open}>
       <Fluent.FontIcon className={css.icon} iconName="MoreVertical" />
       <Fluent.ContextualMenu
-        items={toCommands(model.commands.map(i => ({...i, value: model.rowId })))}
+        items={toCommands(model.commands.map(i => ({ ...i, value: model.rowId })))}
         target={ref}
         hidden={isMenuHidden}
         onDismiss={close}
         isBeakVisible
         directionalHint={Fluent.DirectionalHint.bottomCenter}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
-        styles={fixIconScrollbar}
+        styles={fixMenuOverflowStyles}
       />
     </div>
   )

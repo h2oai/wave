@@ -18,7 +18,7 @@ import { Id, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { fixIconScrollbar } from './menu_utils'
+import { fixMenuOverflowStyles } from './parts/utils'
 import { bond, wave } from './ui'
 
 /**
@@ -78,7 +78,7 @@ const
       title: caption,
       iconOnly: !label,
       iconProps: icon ? { iconName: icon } : undefined,
-      subMenuProps: items ? { items: toCommands(items), styles: fixIconScrollbar } : undefined,
+      subMenuProps: items ? { items: toCommands(items), styles: fixMenuOverflowStyles } : undefined,
       onClick,
     }
   }
