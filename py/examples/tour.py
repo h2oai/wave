@@ -369,8 +369,8 @@ get_wave_completions(${position.lineNumber - 1}, ${position.column - 1}, \'\'\'$
         box='',
         title=app_title,
         scripts=[
-            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
-            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
+            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js', asynchronous=True),
+            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js', asynchronous=True),
         ],
         script=ui.inline_script(content=template, requires=['require', 'loadPyodide'], targets=['monaco-editor']),
         layouts=[
