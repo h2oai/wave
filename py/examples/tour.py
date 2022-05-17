@@ -466,7 +466,7 @@ async def show_example(q: Q, example: Example):
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
-            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 });', requires=['editor'])
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()', requires=['editor'])
 
     # HACK
     # The ?e= appended to the path forces the frame to reload.
