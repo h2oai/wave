@@ -25,6 +25,7 @@ export function fuzzysearch(haystack: S, needle: S) {
   return true
 }
 
+// https://github.com/h2oai/wave/issues/1395.
 export const fixMenuOverflowStyles: Partial<IContextualMenuStyles> = {
   list: {
     border: border(1, cssVar('$neutralQuaternaryAlt')),
