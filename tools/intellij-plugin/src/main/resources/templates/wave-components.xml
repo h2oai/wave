@@ -223,6 +223,39 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_image_annotator_rect" value="ui.image_annotator_rect(x1=$x1$,y1=$y1$,x2=$x2$,y2=$y2$),$END$" description="Create a minimal Wave ImageAnnotatorRect." toReformat="true" toShortenFQNames="true">
+    <variable name="x1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="x2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_image_annotator_tag" value="ui.image_annotator_tag(name='$name$',label='$label$',color='$color$'),$END$" description="Create a minimal Wave ImageAnnotatorTag." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_image_annotator_item" value="ui.image_annotator_item(shape=$shape$,tag='$tag$'),$END$" description="Create a minimal Wave ImageAnnotatorItem." toReformat="true" toShortenFQNames="true">
+    <variable name="shape" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="tag" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_image_annotator" value="ui.image_annotator(name='$name$',image='$image$',title='$title$',tags=[&#10;	$tags$	&#10;]),$END$" description="Create a minimal Wave ImageAnnotator." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="tags" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_label" value="ui.label(label='$label$'),$END$" description="Create a minimal Wave Label." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1195,7 +1228,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_component" value="ui.component(text=$text$,text_xl=$text_xl$,text_l=$text_l$,text_m=$text_m$,text_s=$text_s$,text_xs=$text_xs$,label=$label$,separator=$separator$,progress=$progress$,message_bar=$message_bar$,textbox=$textbox$,checkbox=$checkbox$,toggle=$toggle$,choice_group=$choice_group$,checklist=$checklist$,dropdown=$dropdown$,combobox=$combobox$,slider=$slider$,spinbox=$spinbox$,date_picker=$date_picker$,color_picker=$color_picker$,button=$button$,buttons=$buttons$,mini_button=$mini_button$,mini_buttons=$mini_buttons$,file_upload=$file_upload$,table=$table$,link=$link$,links=$links$,tabs=$tabs$,expander=$expander$,frame=$frame$,markup=$markup$,template=$template$,picker=$picker$,range_slider=$range_slider$,stepper=$stepper$,visualization=$visualization$,vega_visualization=$vega_visualization$,stats=$stats$,inline=$inline$,image=$image$,persona=$persona$,text_annotator=$text_annotator$,facepile=$facepile$,copyable_text=$copyable_text$,menu=$menu$,tags=$tags$),$END$" description="Create Wave Component with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_component" value="ui.component(text=$text$,text_xl=$text_xl$,text_l=$text_l$,text_m=$text_m$,text_s=$text_s$,text_xs=$text_xs$,label=$label$,separator=$separator$,progress=$progress$,message_bar=$message_bar$,textbox=$textbox$,checkbox=$checkbox$,toggle=$toggle$,choice_group=$choice_group$,checklist=$checklist$,dropdown=$dropdown$,combobox=$combobox$,slider=$slider$,spinbox=$spinbox$,date_picker=$date_picker$,color_picker=$color_picker$,button=$button$,buttons=$buttons$,mini_button=$mini_button$,mini_buttons=$mini_buttons$,file_upload=$file_upload$,table=$table$,link=$link$,links=$links$,tabs=$tabs$,expander=$expander$,frame=$frame$,markup=$markup$,template=$template$,picker=$picker$,range_slider=$range_slider$,stepper=$stepper$,visualization=$visualization$,vega_visualization=$vega_visualization$,stats=$stats$,inline=$inline$,image=$image$,persona=$persona$,text_annotator=$text_annotator$,image_annotator=$image_annotator$,facepile=$facepile$,copyable_text=$copyable_text$,menu=$menu$,tags=$tags$),$END$" description="Create Wave Component with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_xl" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_l" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1240,6 +1273,7 @@
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="persona" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_annotator" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image_annotator" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="facepile" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="copyable_text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="menu" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1350,6 +1384,48 @@
     <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;true&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_annotator_rect" value="ui.image_annotator_rect(x1=$x1$,y1=$y1$,x2=$x2$,y2=$y2$),$END$" description="Create Wave ImageAnnotatorRect with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="x1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y1" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="x2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="y2" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_annotator_shape" value="ui.image_annotator_shape(rect=$rect$),$END$" description="Create Wave ImageAnnotatorShape with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="rect" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_annotator_tag" value="ui.image_annotator_tag(name='$name$',label='$label$',color='$color$'),$END$" description="Create Wave ImageAnnotatorTag with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_annotator_item" value="ui.image_annotator_item(shape=$shape$,tag='$tag$'),$END$" description="Create Wave ImageAnnotatorItem with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="shape" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="tag" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_annotator" value="ui.image_annotator(name='$name$',image='$image$',title='$title$',trigger=$trigger$,image_height='$image_height$',tags=[&#10;	$tags$	&#10;],items=[&#10;	$items$	&#10;]),$END$" description="Create Wave ImageAnnotator with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="image_height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="tags" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

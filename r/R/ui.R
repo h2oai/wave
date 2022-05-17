@@ -2679,7 +2679,7 @@ ui_text_annotator_tag <- function(
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
 #' @param text Text to be highlighted.
-#' @param tag Tag connected to the highlighted text.
+#' @param tag The `name` of the text annotator tag to refer to for the `label` and `color` of this item.
 #' @return A TextAnnotatorItem instance.
 #' @export
 ui_text_annotator_item <- function(
@@ -2726,6 +2726,112 @@ ui_text_annotator <- function(
     items=items,
     trigger=trigger,
     readonly=readonly))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a unique tag type for use in an image annotator.
+#'
+#' @param name An identifying name for this tag.
+#' @param label Text to be displayed for the annotation.
+#' @param color Hex or RGB color string to be used as the background color.
+#' @return A ImageAnnotatorTag instance.
+#' @export
+ui_image_annotator_tag <- function(
+  name,
+  label,
+  color) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .o <- list(
+    name=name,
+    label=label,
+    color=color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorTag"))
+  return(.o)
+}
+
+#' Create a rectangular annotation shape.
+#'
+#' @param x1 `x` coordinate of the rectangle's corner.
+#' @param y1 `y` coordinate of the rectangle's corner.
+#' @param x2 `x` coordinate of the diagonally opposite corner.
+#' @param y2 `y` coordinate of the diagonally opposite corner.
+#' @return A ImageAnnotatorRect instance.
+#' @export
+ui_image_annotator_rect <- function(
+  x1,
+  y1,
+  x2,
+  y2) {
+  .guard_scalar("x1", "numeric", x1)
+  .guard_scalar("y1", "numeric", y1)
+  .guard_scalar("x2", "numeric", x2)
+  .guard_scalar("y2", "numeric", y2)
+  .o <- list(rect=list(
+    x1=x1,
+    y1=y1,
+    x2=x2,
+    y2=y2))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
+  return(.o)
+}
+
+#' Create an annotator item with initial selected tags or no tag for plaintext.
+#'
+#' @param shape The annotation shape.
+#' @param tag The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
+#' @return A ImageAnnotatorItem instance.
+#' @export
+ui_image_annotator_item <- function(
+  shape,
+  tag) {
+  .guard_scalar("shape", "WaveImageAnnotatorShape", shape)
+  .guard_scalar("tag", "character", tag)
+  .o <- list(
+    shape=shape,
+    tag=tag)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorItem"))
+  return(.o)
+}
+
+#' Create an image annotator component.
+#' 
+#' This component allows annotating and labeling parts of an image by drawing shapes with a pointing device.
+#'
+#' @param name An identifying name for this component.
+#' @param image The path or URL of the image to be presented for annotation.
+#' @param title The image annotator's title.
+#' @param tags The master list of tags that can be used for annotations.
+#' @param items Annotations to display on the image, if any.
+#' @param trigger True if the form should be submitted as soon as an annotation is drawn.
+#' @param image_height The card’s image height. The actual image size is used by default.
+#' @return A ImageAnnotator instance.
+#' @export
+ui_image_annotator <- function(
+  name,
+  image,
+  title,
+  tags,
+  items = NULL,
+  trigger = NULL,
+  image_height = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("title", "character", title)
+  .guard_vector("tags", "WaveImageAnnotatorTag", tags)
+  .guard_vector("items", "WaveImageAnnotatorItem", items)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("image_height", "character", image_height)
+  .o <- list(image_annotator=list(
+    name=name,
+    image=image,
+    title=title,
+    tags=tags,
+    items=items,
+    trigger=trigger,
+    image_height=image_height))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
