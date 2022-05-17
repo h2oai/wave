@@ -179,6 +179,188 @@ app_title = 'H2O Wave Tour'
 
 
 async def setup_page(q: Q):
+    py_content = '''
+import parso
+from typing import Dict, List, Any, Optional, Set
+
+themes = [
+    'benext',
+    'default',
+    'ember',
+    'fuchasia',
+    'h2o-dark',
+    'kiwi',
+    'lighting',
+    'monokai',
+    'nature',
+    'neon',
+    'nord',
+    'oceanic',
+    'one-dark-pro',
+    'solarized',
+    'winter-is-coming',
+]
+
+def strip_quotes(val: str) -> str:
+    return val.strip('"').strip("'")
+
+
+def has_events_arg(node: Any) -> bool:
+    for arg in node.parent.children:
+        if arg.type == 'argument' and arg.children[0].type == 'name' and arg.children[0].value == 'events':
+            return True
+    return False
+
+class FileMetadata():
+    files_to_parse: Dict[str, str] = {}
+
+    def __init__(self) -> None:
+        self.args: List[str] = []
+        self.events: Dict[str, List[str]] = {}
+        self.zones: List[str] = []
+        self.client: List[str] = []
+        self.app: List[str] = []
+        self.user: List[str] = []
+        self.deps: Set[str] = set()
+
+    def add_completion(self, node: Any, completion_type: str) -> None:
+        if (node.type == 'string' or node.type == 'name'):
+            val = strip_quotes(node.value)
+            if val and (completion_type != 'args' or not val.startswith('#')):
+                getattr(self, completion_type).append(val)
+
+    def __get_event_names(self, nodes: List[Any]) -> List[str]:
+        return [strip_quotes(node.value) for node in nodes if node.type == 'string']
+
+    def add_event_completion(self, name_arg: Any, events_arg: Any):
+        if name_arg.type == 'string':
+            # Seems like args in events=['event'] and events=['event', 'event2'] are different AST-wise.
+            if events_arg.children[-1].children[1].type == 'testlist_comp':
+                event_nodes = events_arg.children[-1].children[1].children
+            else:
+                event_nodes = events_arg.children[-1].children
+            event_element_name = strip_quotes(name_arg.value)
+            self.events[event_element_name] = self.__get_event_names(event_nodes)
+
+
+def fill_completion(file_content: str) -> FileMetadata:
+    tree = parso.parse(file_content)
+    file_metadata = FileMetadata()
+    fill_metadata(tree, file_metadata)
+    return file_metadata
+
+def fill_metadata(node: Any, file_metadata: FileMetadata) -> None:
+    completion_found = False
+    if node.type == 'argument':
+        arg_name = node.get_first_leaf().value
+        if arg_name == 'name' and is_in_ui_obj(node) and node.children[-1].type != 'arith_expr':
+            completion_found = True
+            completion_type = None
+            if not has_events_arg(node):
+                completion_type = 'args'
+            if node.parent.parent.children[1].get_last_leaf().value == 'zone':
+                completion_type = 'zones'
+            if completion_type:
+                file_metadata.add_completion(node.get_last_leaf(), completion_type)
+        elif arg_name == 'events' and is_in_ui_obj(node):
+            completion_found = True
+            name_arg = next((arg for arg in node.parent.children if arg.type == 'argument' and arg.children[0].value == 'name'), None)
+            if name_arg:
+                file_metadata.add_event_completion(name_arg.children[-1], node)
+    elif node.type == 'atom_expr':
+        str_expr = node.get_code(False)
+        if str_expr.startswith('ui.zone'):
+            if node.children[-1].children[1].type == 'arglist' and node.children[-1].children[1].children[0].type == 'string':
+                file_metadata.add_completion(node.children[-1].children[1].children[0], 'zones')
+            elif node.children[-1].children[1].type == 'string':
+                file_metadata.add_completion(node.children[-1].children[1], 'zones')
+        # Must have 3 children -> q.state.name
+        elif len(node.children) == 3:
+            if str_expr.startswith('q.client'):
+                file_metadata.add_completion(node.children[-1].children[1], 'client')
+                completion_found = True
+            elif str_expr.startswith('q.user'):
+                file_metadata.add_completion(node.children[-1].children[1], 'user')
+                completion_found = True
+            elif str_expr.startswith('q.app'):
+                file_metadata.add_completion(node.children[-1].children[1], 'app')
+                completion_found = True
+    if not completion_found and hasattr(node, 'children'):
+        for child in node.children:
+            fill_metadata(child, file_metadata)
+
+def is_in_ui_obj(node: Any) -> bool:
+    try:
+        return parso.tree.search_ancestor(node, 'atom_expr').children[0].value == 'ui'
+    except Exception:
+        return False
+
+def get_completion_type(row: int, col: int, file_content: str) -> Optional[str]:
+    try:
+        leaf = parso.parse(file_content).get_leaf_for_position((row + 1, col - 1))
+        # Expr statements (q.client, q.events).
+        expr_leaf = leaf.parent.get_previous_sibling()
+        if expr_leaf and expr_leaf.type == 'name' and expr_leaf.value == 'q':
+            return leaf.parent.children[1].value, None
+
+        grand_parent = leaf.parent.parent
+        # Bracket notation for expr statements (q.client[''], q.events['']).
+        expr_leaf = grand_parent.children[0]
+        if len(grand_parent.children) <= 3 and expr_leaf.type == 'name' and expr_leaf.value == 'q':
+            return leaf.parent.get_previous_sibling().children[1].value, None
+
+        # Particular event bracket notation (q.events.['widget_name']['']).
+        if len(grand_parent.children) == 4 and grand_parent.get_code(False).startswith('q.events['):
+            event_name = grand_parent.children[2].children[1]
+            return 'events', strip_quotes(event_name.value) if event_name.type == 'string' else None
+
+        # Particular event (q.events.widget_name.*).
+        children = [child for child in grand_parent.children if child.type in ['name', 'trailer', 'operator']]
+        if len(children) == 4:
+            child1 = children[0]
+            child2 = children[1]
+            if child1.type == 'name' and child1.value == 'q' and child2.children[1].value == 'events':
+                return 'events', leaf.value if leaf.type == 'name' else None
+
+        # Zones.
+        expr_leaf = parso.tree.search_ancestor(leaf, 'atom_expr')
+        code = expr_leaf.get_code(False)
+        if code.startswith('ui.boxes') and leaf.type in ['string', 'operator']:
+            return 'zones', None
+        is_zone_arg = (leaf.parent.type != 'argument' and leaf.get_previous_sibling().value == '(') or leaf.parent.children[0].value == 'zone'
+        if code.startswith('ui.box') and leaf.type in ['string', 'operator'] and is_zone_arg:
+            return 'zones', None
+
+        if leaf.parent and leaf.parent.get_last_leaf().type == 'string' and is_in_ui_obj(leaf):
+            arg_name = leaf.parent.get_first_leaf().value
+            if arg_name in ['box', 'zone']:
+                return 'zones', None
+            elif arg_name == 'icon':
+                return 'icons', None
+            elif arg_name == 'theme':
+                return 'themes', None
+    except:
+        pass
+    return None, None
+
+def get_wave_completions(line, character, file_content):
+    completion_type, leaf_val = get_completion_type(line, character, file_content)
+    if completion_type in ['args', 'events', 'zones', 'client', 'app', 'user']:
+        completion_items = []
+        file_metadata = fill_completion(file_content)
+        if completion_type == 'events' and leaf_val:
+            completion_items = list(getattr(file_metadata, completion_type).get(leaf_val, []))
+        elif completion_type == 'events' and leaf_val is None:
+            completion_items = list(getattr(file_metadata, completion_type).keys())
+        elif leaf_val is None:
+            completion_items = getattr(file_metadata, completion_type)
+        return [{'label': label, 'kind': 6, 'sort_text': '0'} for label in completion_items]
+    elif completion_type == 'themes':
+        return [{'label': theme, 'kind': 13, 'sort_text': '0'} for theme in themes]
+
+get_wave_completions(${position.lineNumber - 1}, ${position.column - 1}, \'\'\'${model.getValue()}\'\'\')
+    '''
+
     js_content = '''
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' } })
 window.MonacoEnvironment = {
@@ -190,41 +372,52 @@ window.MonacoEnvironment = {
       importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/base/worker/workerMain.js');`
     )}`
   }
-}
+};
+
+(async () => {
+  window.pyodide = await loadPyodide()
+  window.pyodide.loadPackage('parso')
+})()
+
 require(['vs/editor/editor.main'], function () {
-    const toCompletionItem = item => ({
+    const snippetToCompletionItem = item => ({
       label: item.prefix,
       kind: monaco.languages.CompletionItemKind.Snippet,
       documentation: item.description,
       insertText: item.body.join('\\n'),
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
     })
+    const completionToCompletionItem = item => ({
+      label: item.get('label'),
+      kind: item.get('kind'),
+      insertText: item.get('label'),
+      sortText: item.get('sort_text'),
+    })
     monaco.languages.registerCompletionItemProvider('python', {
-      provideCompletionItems: async () => {
+      triggerCharacters: ['.', "'", '"'],
+      provideCompletionItems: async (model, position) => {
         if (!window.code_snippets) {
           const [snippets1, snippets2] = await Promise.all([
             fetch('$snippets1').then(r => r.json()),
             fetch('$snippets2').then(r => r.json()),
           ])
           window.code_snippets = [
-            ...Object.values(snippets1).map(toCompletionItem),
-            ...Object.values(snippets2).map(toCompletionItem)
+            ...Object.values(snippets1).map(snippetToCompletionItem),
+            ...Object.values(snippets2).map(snippetToCompletionItem)
           ]
         }
-        return { suggestions: window.code_snippets }
+        const pyRes = window.pyodide.runPython(`$py_content`)
+        const completions = pyRes ? pyRes.toJs().map(completionToCompletionItem) : []
+        return { suggestions: [ ...completions,...window.code_snippets] }
       }
   })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
     value: '',
     language: 'python',
-    minimap: {
-        enabled: false
-    },
+    minimap: { enabled: false },
     overviewRulerLanes: 0,
     hideCursorInOverviewRuler: true,
-    scrollbar: {
-        vertical: 'hidden'
-    },
+    scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
   })
   window.editor = editor
@@ -235,12 +428,15 @@ require(['vs/editor/editor.main'], function () {
   })
 })
     '''
-    template = Template(js_content).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2)
+    template = Template(js_content).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2, py_content=py_content)
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
-        scripts=[ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js')],
-        script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
+        scripts=[
+            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
+            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
+        ],
+        script=ui.inline_script(content=template, requires=['require', 'loadPyodide'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -330,7 +526,8 @@ async def show_example(q: Q, example: Example):
 
     # Update code display
     if not q.events.editor:
-        q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`);', requires=['editor'])
+        code = code.replace('$', '\\$')
+        q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
             q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 });', requires=['editor'])
@@ -346,6 +543,8 @@ async def on_startup():
     # Clean up previous tmp dir.
     await on_shutdown()
     os.mkdir(tour_tmp_dir)
+    shutil.copyfile('synth.py', os.path.join(tour_tmp_dir, 'synth.py'))
+    shutil.copyfile('plot_d3.js', os.path.join(tour_tmp_dir, 'plot_d3.js'))
 
 
 async def on_shutdown():
