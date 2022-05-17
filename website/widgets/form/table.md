@@ -355,12 +355,12 @@ Check the [complete example](/docs/examples/table-pagination) with all the suppo
 
 ## With actions
 
-You can group multiple actions in a context menu for each row by setting `cell_type` to `ui.menu_table_cell_type` and providing the commands you want. Since every cell in the actions column will have the same content (an icon that opens a menu) you can simply specify an empty string as a placeholder so that the cells are provided in the correct order.
+You can group multiple actions in a context menu for each row by setting `cell_type` to `ui.menu_table_cell_type` and providing the commands you want. Use `q.args.<command_name>` to identify which command was clicked. Since every cell in the actions column will have the same content (an icon that opens a menu) you can simply specify an empty string as a placeholder so that the cells are provided in the correct order.
 
 ```py
 commands = [
-    ui.command(name='details', label='Details'),
-    ui.command(name='delete', label='Delete'),
+    ui.command(name='details', label='Details', icon='Info'),
+    ui.command(name='delete', label='Delete', icon='Delete'),
 ]
 
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[

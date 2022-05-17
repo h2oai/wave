@@ -2,6 +2,7 @@ import * as Fluent from '@fluentui/react'
 import { Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { fixMenuOverflowStyles } from './parts/utils'
 import { border, clas, cssVar } from './theme'
 import { Command, toCommands } from "./toolbar"
 
@@ -48,8 +49,8 @@ export const XMenu = ({ model }: { model: Menu }) => {
   return (
     // HACK: Marker css class.
     <div data-test={name} className={clas(css.card, 'w-menu')} ref={ref} onClick={toggleMenu}>
-      { image && <Fluent.Persona imageUrl={image} size={Fluent.PersonaSize.size48} styles={{ details: { padding: 0 } }} />}
-      { icon && <Fluent.FontIcon className={css.icon} iconName={icon} />}
+      {image && <Fluent.Persona imageUrl={image} size={Fluent.PersonaSize.size48} styles={{ details: { padding: 0 } }} />}
+      {icon && <Fluent.FontIcon className={css.icon} iconName={icon} />}
       <Fluent.ContextualMenu
         items={toCommands(items)}
         target={ref}
@@ -58,7 +59,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
         isBeakVisible
         directionalHint={Fluent.DirectionalHint.bottomRightEdge}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
-        styles={{ list: { border: border(1, cssVar('$neutralQuaternaryAlt')) } }}
+        styles={fixMenuOverflowStyles}
       />
       <Fluent.ActionButton iconProps={{ iconName: 'CaretSolidDown', styles: { root: { fontSize: 12 } } }} styles={{ root: { padding: 0 } }} />
     </div>

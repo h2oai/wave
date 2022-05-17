@@ -1,4 +1,6 @@
+import { IContextualMenuStyles } from "@fluentui/react"
 import { S } from "h2o-wave"
+import { border, cssVar } from "../theme"
 
 // https://github.com/bevacqua/fuzzysearch/blob/master/index.js
 export function fuzzysearch(haystack: S, needle: S) {
@@ -21,4 +23,13 @@ export function fuzzysearch(haystack: S, needle: S) {
     return false
   }
   return true
+}
+
+// https://github.com/h2oai/wave/issues/1395.
+export const fixMenuOverflowStyles: Partial<IContextualMenuStyles> = {
+  list: {
+    border: border(1, cssVar('$neutralQuaternaryAlt')),
+    '.ms-ContextualMenu-link': { lineHeight: 'unset' },
+    '.ms-ContextualMenu-submenuIcon': { lineHeight: 'unset', display: 'flex', alignItems: 'center' },
+  }
 }
