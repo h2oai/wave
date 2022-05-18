@@ -15,11 +15,12 @@
 import * as Fluent from '@fluentui/react'
 import { B, Box, box, Id, S, U } from 'h2o-wave'
 import React from 'react'
-import { Component } from './form'
+import { Component, XComponents } from './form'
 import { grid } from './layout'
-import { MessageBar } from "./message_bar"
-import { pc } from './theme'
-import { bond, wave } from './ui'
+import { Markdown } from './markdown'
+import { important, pc } from './theme'
+import { bond } from './ui'
+import { css, notificationTypes, toMessageBarType } from './message_bar'
 
 /**
  * Create a notification bar.
@@ -89,20 +90,52 @@ export const
           model = notificationBarB(),
           shouldBeOpen = !!model,
           currentModel = model || lastModel,
-          extraStyles: Fluent.IRawStyle = {
-            position: 'fixed',
-            animationDuration: '0.5s',
-            animationFillMode: 'forwards',
-            maxWidth: 500,
-            width: pc(100),
-            ...getPosition(currentModel?.position, shouldBeOpen)
-          },
+          { iconName, color, background } = notificationTypes[currentModel?.type || 'info'],
           buttons = currentModel?.buttons?.filter(({ button }) => button),
           isMultiline = isMessagebarMultiline(currentModel?.text, buttons)
 
         if (!buttons?.length && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5) * 1000)
 
-        return <MessageBar type={currentModel?.type} text={currentModel?.text} buttons={buttons} extraStyles={extraStyles} onDismiss={onDismiss} isMultiline={isMultiline} size='large'/>
+        return (
+          currentModel?.text?.length
+          ? 
+            <Fluent.MessageBar
+              messageBarType={toMessageBarType(currentModel?.type)}
+              messageBarIconProps={{ iconName }}
+              actions={buttons?.length ? <XComponents items={buttons || []} alignment='end' /> : undefined}
+              isMultiline={isMultiline}
+              onDismiss={onDismiss}
+              className={css.messageBar}
+              styles={{
+                root: {
+                  background,
+                  color,
+                  borderRadius: 4,
+                  '.ms-Link': { color, fontWeight: 600 },
+                  '.ms-Link:hover': { textDecoration: 'none', color },
+                  padding: 16,
+                  minHeight: 24,
+                  position: 'fixed',
+                  animationDuration: '0.5s',
+                  animationFillMode: 'forwards',
+                  maxWidth: 500,
+                  width: pc(100),
+                  ...getPosition(currentModel?.position, shouldBeOpen)
+                },
+                content: { alignItems: isMultiline ? 'start' : 'center' },
+                icon: { fontSize: 24, color, display: 'inline-flex' },
+                iconContainer: { margin: 0, marginRight: 16, display: 'flex', alignItems: 'center' },
+                text: { margin: 0 },
+                innerText: { whiteSpace: important('initial') },
+                dismissal: { fontSize: 16, height: 'auto', marginLeft: 16, padding: 0, '.ms-Button-flexContainer': { display: 'block' } },
+                dismissSingleLine: { display: 'flex' },
+                actions: { margin: 0, marginTop: isMultiline ? 12 : undefined }
+              }}
+            >
+              <Markdown source={currentModel?.text} />
+            </Fluent.MessageBar>
+            : <></>
+        )
       },
       dispose = () => window.clearTimeout(timeout)
 
