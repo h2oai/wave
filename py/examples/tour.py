@@ -6,7 +6,6 @@ import shutil
 import socket
 import subprocess
 import sys
-from copy import deepcopy
 import uuid
 from contextlib import closing
 from pathlib import Path
@@ -16,7 +15,7 @@ from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
 example_dir = os.path.dirname(os.path.realpath(__file__))
-tour_tmp_dir = '_tour_apps_tmp'
+tour_tmp_dir = os.path.join(example_dir, '_tour_apps_tmp')
 
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
@@ -362,7 +361,7 @@ get_wave_completions(${position.lineNumber - 1}, ${position.column - 1}, \'\'\'$
     '''
 
     js_code = ''
-    with open('tour.js', 'r') as f:
+    with open(os.path.join(example_dir, 'tour.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2, py_content=py_content)
     q.page['meta'] = ui.meta_card(
@@ -434,7 +433,7 @@ async def show_example(q: Q, example: Example):
     code = re.sub(r'@app\(.+\)', f'@app("/{q.client.id}")', code)
     with open(filename, 'w') as f:
         f.write(code)
-    filename = '.'.join([tour_tmp_dir, q.client.id]) if code.find('@app(') > 0 else filename
+    filename = '.'.join([tour_tmp_dir, q.client.id]).split(os.sep)[-1] if code.find('@app(') > 0 else filename
 
     # Stop active example, if any.
     active_example = q.client.active_example
@@ -479,8 +478,8 @@ async def on_startup():
     # Clean up previous tmp dir.
     await on_shutdown()
     os.mkdir(tour_tmp_dir)
-    shutil.copyfile('synth.py', os.path.join(tour_tmp_dir, 'synth.py'))
-    shutil.copyfile('plot_d3.js', os.path.join(tour_tmp_dir, 'plot_d3.js'))
+    shutil.copyfile(os.path.join(example_dir, 'synth.py'), os.path.join(tour_tmp_dir, 'synth.py'))
+    shutil.copyfile(os.path.join(example_dir, 'plot_d3.js'), os.path.join(tour_tmp_dir, 'plot_d3.js'))
 
 
 async def on_shutdown():
@@ -492,7 +491,9 @@ async def on_shutdown():
 @app('/tour', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
-        q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
+        base_snippets = os.path.join(example_dir, 'base-snippets.json')
+        component_snippets = os.path.join(example_dir, 'component-snippets.json')
+        q.app.snippets1, q.app.snippets2, = await q.site.upload([base_snippets, component_snippets])
         q.app.initialized = True
     if not q.client.initialized:
         q.client.id = str(uuid.uuid4())
@@ -501,7 +502,7 @@ async def serve(q: Q):
         await setup_page(q)
 
     search = q.args[q.args['#'] or default_example_name]
-    if search:
+    if search and not q.events.editor:
         q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
     await show_example(q, catalog[q.args['#'] or default_example_name])

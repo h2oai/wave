@@ -20,7 +20,7 @@ require(['vs/editor/editor.main'], function () {
     label: item.prefix,
     kind: monaco.languages.CompletionItemKind.Snippet,
     documentation: item.description,
-    insertText: item.body.join('\\n'),
+    insertText: item.body.join('\n'),
     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
   })
   const completionToCompletionItem = item => ({

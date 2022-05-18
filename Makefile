@@ -46,8 +46,10 @@ build-apps: ## Prepare apps for HAC upload.
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	find py/tmp -type f -name '*tour.py' -exec sed -i '' -e "s#^@app\(.*\)#@app('/')#g" {} \;
-	find py/tmp -type f -name '*theme_generator.py' -exec sed -i '' -e "s#^@app\(.*\)#@app('/')#g" {} \;
+	cp tools/vscode-extension/base-snippets.json py/tmp/tour/examples
+	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples
+	find py/tmp -type f -name '*tour.py' -exec sed -i '' -E "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" {} \;
+	find py/tmp -type f -name '*theme_generator.py' -exec sed -i '' -E "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" {} \;
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
 	rm -rf py/tmp
 
