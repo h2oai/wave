@@ -127,7 +127,7 @@ export const
                 borderRadius: 4,
                 width: 'auto',
                 '.ms-Link': { color, fontWeight: 600 },
-                '.ms-Link:hover': { textDecoration: 'none', color },
+                '.ms-Link:hover': { textDecoration: 'none' },
                 padding: '8px 16px',
                 minHeight: 24,
               },
@@ -136,9 +136,7 @@ export const
               iconContainer: { margin: 0, marginRight: 16, display: 'flex', alignItems: 'center' },
               text: { margin: 0 },
               innerText: { whiteSpace: important('initial') },
-              dismissal: { fontSize: 16, height: 'auto', marginLeft: 16, padding: 0, '.ms-Button-flexContainer': { display: 'block' } },
-              dismissSingleLine: { display: 'flex' },
-              actions: { margin: 0, marginTop: undefined }
+              actions: { margin: 0 }
             }}
             messageBarType={toMessageBarType(type)}
             className={css.messageBar}
