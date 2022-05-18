@@ -364,13 +364,16 @@ get_wave_completions(${position.lineNumber - 1}, ${position.column - 1}, \'\'\'$
     with open(os.path.join(example_dir, 'tour.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2, py_content=py_content)
+    q.page['meta'] = ui.meta_card(box='', scripts=[
+        ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
+        ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
+    ])
+    await q.page.save()
+    # Wait for scripts to load properly.
+    await q.sleep(0.5)
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
-        scripts=[
-            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js', asynchronous=True),
-            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js', asynchronous=True),
-        ],
         script=ui.inline_script(content=template, requires=['require', 'loadPyodide'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
