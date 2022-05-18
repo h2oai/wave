@@ -42,19 +42,6 @@ export interface MessageBar {
   buttons?: Component[]
 }
 
-export const
-  css = stylesheet({
-    messageBar: {
-      $nest: {
-        // Adjust spacing to align with Fluent Messagebar icon.
-        '.wave-markdown > *:first-child': { marginTop: 0 },
-        '.wave-markdown > *:only-child': { marginBottom: 0 },
-        '.wave-markdown p': { fontSize: 14, lineHeight: px(20), letterSpacing: '-0.006em' },
-        '.ms-MessageBar-dismissal .ms-Button-icon': { fontSize: 16 },
-      }
-    }
-  })
-
 export type NotificationType = 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
 export type NotificationStyle = {
   iconName: S
@@ -72,6 +59,17 @@ type MessagebarProps = {
 }
 
 export const
+  css = stylesheet({
+    messageBar: {
+      $nest: {
+        // Adjust spacing to align with Fluent Messagebar icon.
+        '.wave-markdown > *:first-child': { marginTop: 0 },
+        '.wave-markdown > *:only-child': { marginBottom: 0 },
+        '.wave-markdown p': { fontSize: 14, lineHeight: px(20), letterSpacing: '-0.006em' },
+        '.ms-MessageBar-dismissal .ms-Button-icon': { fontSize: 16 },
+      }
+    }
+  }),
   notificationTypes: { [K in NotificationType]: NotificationStyle } = {
     'info': {
       iconName: 'InfoSolid',
@@ -113,9 +111,7 @@ export const
       case 'blocked': return Fluent.MessageBarType.blocked
       default: return Fluent.MessageBarType.info
     }
-  }
-
-export const
+  },
   MessageBar = ({ type, text, buttons, name }: MessagebarProps) => {
     const { iconName, color, background } = notificationTypes[type || 'info']
     const btns = buttons?.filter(({ button }) => button)
