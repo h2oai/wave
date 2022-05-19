@@ -126,6 +126,9 @@ export const
         case WaveEventType.Reset:
           window.location.reload()
           break
+        case WaveEventType.Redirect:
+          window.location.replace(e.url)
+          break
         case WaveEventType.Config:
           config.username = e.username
           config.editable = e.editable

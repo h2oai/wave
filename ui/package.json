@@ -7,7 +7,7 @@
     "@fluentui/react": "^8.49.0",
     "@fluentui/react-icons-mdl2": "^1.2.12",
     "d3": "^5.15.0",
-    "h2o-wave": "^1.0.0",
+    "h2o-wave": "^1.1.0",
     "handlebars": "^4.7.7",
     "markdown-it": "^12.3.2",
     "react": "^17.0.2",
