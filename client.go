@@ -38,9 +38,9 @@ const (
 )
 
 var (
-	newline  = []byte{'\n'}
-	notFound = []byte(`{"e":"not_found"}`)
-	upgrader = websocket.Upgrader{
+	newline     = []byte{'\n'}
+	notFoundMsg = []byte(`{"e":"not_found"}`)
+	upgrader    = websocket.Upgrader{
 		ReadBufferSize:  1024, // TODO review
 		WriteBufferSize: 1024, // TODO review
 	}
@@ -110,6 +110,15 @@ func (c *Client) listen() {
 			echo(Log{"t": "refresh_oauth2_token", "client": c.addr, "err": err.Error()})
 		}
 
+		if c.session != nil && c.auth != nil {
+			if err := c.session.touch(c.auth.conf.InactivityTimeout); err != nil {
+				if msg, err := json.Marshal(OpsD{U: c.baseURL + "_auth/logout"}); err == nil {
+					c.send(msg)
+				}
+				continue
+			}
+		}
+
 		m := parseMsg(msg)
 		m.addr = resolveURL(m.addr, c.baseURL)
 		switch m.t {
@@ -157,7 +166,7 @@ func (c *Client) listen() {
 				}
 			}
 
-			c.send(notFound)
+			c.send(notFoundMsg)
 		}
 	}
 }

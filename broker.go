@@ -203,11 +203,9 @@ func init() {
 func (b *Broker) resetSubscribers(route string) {
 	b.publish <- Pub{route, resetMsg}
 }
-func (b *Broker) resetClients(subjectID string) {
-	b.logout <- Pub{subjectID, resetMsg}
-}
 
-func (b *Broker) notifyAppsAboutLogout(session *Session) {
+func (b *Broker) resetClients(session *Session) {
+	b.logout <- Pub{session.subject, resetMsg}
 	apps := b.getApps()
 	for _, app := range apps {
 		go func(app *App) {

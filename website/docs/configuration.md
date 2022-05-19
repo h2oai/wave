@@ -73,8 +73,10 @@ Usage of ./waved:
         additional directory to serve files from, in the format "[url-path]:[filesystem-path]", e.g. "/public/files/:/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed
   -remove-access-key string
         remove the specified API access key ID from the keychain
-  -session-timeout string
-        session timeout duration (e.g. 1800s or 30m or 0.5h) (default "720h")
+  -session-expiry string
+        session cookie lifetime duration (e.g. 1800s or 30m or 0.5h) (default "720h")
+  -session-inactivity-timeout string
+        session inactivity timeout duration (e.g. 1800s or 30m or 0.5h) (default "30m")
   -tls-cert-file string
         path to certificate file (TLS only)
   -tls-key-file string
@@ -114,7 +116,8 @@ H2O_WAVE_OIDC_PROVIDER_URL
 H2O_WAVE_OIDC_REDIRECT_URL
 H2O_WAVE_OIDC_SCOPES
 H2O_WAVE_OIDC_SKIP_LOGIN [1]
-H2O_WAVE_SESSION_TIMEOUT
+H2O_WAVE_SESSION_EXPIRY
+H2O_WAVE_SESSION_INACTIVITY_TIMEOUT
 H2O_WAVE_PROXY [1]
 H2O_WAVE_PUBLIC_DIR [2]
 H2O_WAVE_PRIVATE_DIR [2]

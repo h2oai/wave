@@ -36,10 +36,10 @@ func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string) 
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	user := anonymous
+	session := anonymous
 	if s.auth != nil {
-		user = s.auth.identify(r)
-		if user == nil {
+		session = s.auth.identify(r)
+		if session == nil {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -51,7 +51,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := newClient(getRemoteAddr(r), s.auth, user, s.broker, conn, s.editable, s.baseURL)
+	client := newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL)
 	go client.flush()
 	go client.listen()
 }

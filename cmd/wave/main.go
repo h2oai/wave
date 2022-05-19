@@ -67,7 +67,8 @@ func main() {
 		maxCacheRequestSize  string
 		maxProxyRequestSize  string
 		maxProxyResponseSize string
-		sessionTimeout       string
+		sessionExpiry        string
+		inactivityTimeout    string
 		accessKeyID          string
 		accessKeySecret      string
 		accessKeyFile        string
@@ -103,7 +104,8 @@ func main() {
 	boolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
 	stringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	stringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
-	stringVar(&sessionTimeout, "session-timeout", "720h", "session timeout duration (e.g. 1800s or 30m or 0.5h)")
+	stringVar(&sessionExpiry, "session-expiry", "720h", "session cookie lifetime duration (e.g. 1800s or 30m or 0.5h)")
+	stringVar(&inactivityTimeout, "session-inactivity-timeout", "30m", "session inactivity timeout duration (e.g. 1800s or 30m or 0.5h)")
 	boolVar(&conf.NoStore, "no-store", false, "disable storage (scripts and multicast/broadcast apps will not work)")
 	boolVar(&conf.NoLog, "no-log", false, "disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)")
 	// TODO enable when IDE is released
@@ -226,7 +228,11 @@ func main() {
 		panic(err)
 	}
 
-	if auth.SessionTimeout, err = time.ParseDuration(sessionTimeout); err != nil {
+	if auth.SessionExpiry, err = time.ParseDuration(sessionExpiry); err != nil {
+		panic(err)
+	}
+
+	if auth.InactivityTimeout, err = time.ParseDuration(inactivityTimeout); err != nil {
 		panic(err)
 	}
 

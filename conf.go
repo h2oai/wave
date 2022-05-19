@@ -64,13 +64,14 @@ type ServerConf struct {
 }
 
 type AuthConf struct {
-	ClientID       string
-	ClientSecret   string
-	ProviderURL    string
-	RedirectURL    string
-	EndSessionURL  string
-	Scopes         []string
-	URLParameters  [][]string
-	SkipLogin      bool
-	SessionTimeout time.Duration
+	ClientID          string
+	ClientSecret      string
+	ProviderURL       string
+	RedirectURL       string
+	EndSessionURL     string
+	Scopes            []string
+	URLParameters     [][]string
+	SkipLogin         bool
+	SessionExpiry     time.Duration
+	InactivityTimeout time.Duration
 }

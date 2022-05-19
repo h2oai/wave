@@ -17,6 +17,7 @@ package wave
 import (
 	"context"
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -55,6 +56,7 @@ func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 
 // Session represents an end-user session
 type Session struct {
+	sync.RWMutex
 	id         string
 	state      string
 	nonce      string
@@ -62,6 +64,31 @@ type Session struct {
 	username   string
 	successURL string
 	token      *oauth2.Token
+	expiry     time.Time
+}
+
+var errInactivityTimeout = errors.New("timed out due to inactivity")
+
+func (s *Session) touch(timeout time.Duration) error {
+	if s == anonymous {
+		return nil
+	}
+
+	now := time.Now()
+
+	s.RLock()
+	expired := s.expiry.Before(now)
+	s.RUnlock()
+
+	if expired {
+		return errInactivityTimeout
+	}
+
+	s.Lock()
+	s.expiry = now.Add(timeout)
+	s.Unlock()
+
+	return nil
 }
 
 const (
@@ -72,6 +99,7 @@ var anonymous = &Session{
 	subject:  anon,
 	username: anon,
 	token:    &oauth2.Token{},
+	expiry:   time.Now().Add(365 * 24 * time.Hour),
 }
 
 // Auth holds authenticated end-user sessions
@@ -79,7 +107,7 @@ type Auth struct {
 	sync.RWMutex
 	conf     *AuthConf
 	oauth    *oauth2.Config
-	sessions map[string]Session
+	sessions map[string]*Session
 	baseURL  string
 	initURL  string
 	loginURL string
@@ -93,21 +121,21 @@ func newAuth(conf *AuthConf, baseURL, initURL, loginURL string) (*Auth, error) {
 	return &Auth{
 		conf:     conf,
 		oauth:    oauth,
-		sessions: make(map[string]Session),
+		sessions: make(map[string]*Session),
 		baseURL:  baseURL,
 		initURL:  initURL,
 		loginURL: loginURL,
 	}, nil
 }
 
-func (auth *Auth) get(key string) (Session, bool) {
+func (auth *Auth) get(key string) (*Session, bool) {
 	auth.RLock()
 	defer auth.RUnlock()
 	session, ok := auth.sessions[key]
 	return session, ok
 }
 
-func (auth *Auth) set(session Session) {
+func (auth *Auth) set(session *Session) {
 	auth.Lock()
 	defer auth.Unlock()
 	auth.sessions[session.id] = session
@@ -129,13 +157,18 @@ func (auth *Auth) identify(r *http.Request) *Session {
 	sessionID := cookie.Value
 	session, ok := auth.get(sessionID)
 	if !ok {
-		echo(Log{"t": "oauth2_session", "error": "invalid session"})
+		echo(Log{"t": "oauth2_session", "error": "invalid session", "session_id": sessionID})
+		return nil
+	}
+
+	if err := session.touch(auth.conf.InactivityTimeout); err != nil {
+		echo(Log{"t": "inactivity_timeout", "subject": session.subject})
 		return nil
 	}
 
 	token, err := auth.ensureValidOAuth2Token(r.Context(), session.token)
 	if err != nil {
-		echo(Log{"t": "oauth2_token_refresh", "error": err.Error()})
+		echo(Log{"t": "oauth2_token_refresh", "error": err.Error(), "subject": session.subject})
 		return nil
 	}
 
@@ -144,7 +177,7 @@ func (auth *Auth) identify(r *http.Request) *Session {
 		auth.set(session)
 	}
 
-	return &session
+	return session
 }
 
 func (auth *Auth) allow(r *http.Request) bool {
@@ -245,9 +278,8 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Session ID stored in cookie.
 	sessionID := uuid.New().String()
 
-	h.auth.set(Session{id: sessionID, state: state, nonce: nonce, successURL: successURL})
-	expiration := time.Now().Add(h.auth.conf.SessionTimeout)
-	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: expiration}
+	h.auth.set(&Session{id: sessionID, state: state, nonce: nonce, successURL: successURL, expiry: time.Now().Add(h.auth.conf.InactivityTimeout)})
+	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: time.Now().Add(h.auth.conf.SessionExpiry)}
 	http.SetCookie(w, &cookie)
 
 	var options []oauth2.AuthCodeOption
@@ -393,8 +425,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if ok {
 		// Reload all of this user's browser tabs
-		h.broker.resetClients(session.subject)
-		h.broker.notifyAppsAboutLogout(&session)
+		h.broker.resetClients(session)
 		idToken, _ = session.token.Extra("id_token").(string) // raw id_token (required by Okta)
 	}
 
