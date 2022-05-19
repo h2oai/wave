@@ -53,9 +53,6 @@ type MessagebarProps = {
   text?: S
   buttons?: Component[]
   name?: S
-  extraStyles?: Fluent.IRawStyle
-  onDismiss?: () => void
-  isMultiline?: B
 }
 
 export const
