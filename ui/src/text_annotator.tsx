@@ -140,9 +140,9 @@ export
       }, new Map<S, S>()),
       [tokens, setTokens] = React.useState(model.items.reduce((arr, { text, tag }) => {
         // Split by any non-letter character.
-        text.split(/(?=[^A-Za-z])/g).forEach(textItem => {
-          if (textItem.startsWith(' ')) {
-            arr.push({ text: ' ', tag })
+        text.split(/(?=[^a-z])/ig).forEach(textItem => {
+          if (/[^a-z]/i.test(textItem)) {
+            arr.push({ text: textItem.substring(0, 1), tag })
             arr.push({ text: textItem.substring(1), tag })
           } else {
             arr.push({ text: textItem, tag })
