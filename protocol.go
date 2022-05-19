@@ -19,6 +19,7 @@ type OpsD struct {
 	P *PageD `json:"p,omitempty"` // page
 	D []OpD  `json:"d,omitempty"` // deltas
 	R int    `json:"r,omitempty"` // reset
+	U string `json:"u,omitempty"` // redirect
 	E string `json:"e,omitempty"` // error
 	M *Meta  `json:"m,omitempty"` // metadata
 }
