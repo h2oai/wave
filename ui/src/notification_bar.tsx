@@ -19,7 +19,7 @@ import { Component, XComponents } from './form'
 import { grid } from './layout'
 import { Markdown } from './markdown'
 import { important, pc } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 import { css, notificationTypes, toMessageBarType } from './message_bar'
 
 /**
