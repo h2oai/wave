@@ -1,5 +1,6 @@
+# Can be only built correctly with python 3.8 set.
 build:
-	npm run build
+	[ -d "venv/lib/python3.8/site-packages" ] && npm run build || echo "venv need to use python 3.8"
 
 setup:
 	npm ci
