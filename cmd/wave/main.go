@@ -28,6 +28,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/h2oai/wave"
 	"github.com/h2oai/wave/pkg/keychain"
@@ -66,6 +67,7 @@ func main() {
 		maxCacheRequestSize  string
 		maxProxyRequestSize  string
 		maxProxyResponseSize string
+		sessionTimeout       string
 		accessKeyID          string
 		accessKeySecret      string
 		accessKeyFile        string
@@ -101,6 +103,7 @@ func main() {
 	boolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
 	stringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	stringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
+	stringVar(&sessionTimeout, "session-timeout", "720h", "session timeout duration (e.g. 1800s or 30m or 0.5h)")
 	boolVar(&conf.NoStore, "no-store", false, "disable storage (scripts and multicast/broadcast apps will not work)")
 	boolVar(&conf.NoLog, "no-log", false, "disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)")
 	// TODO enable when IDE is released
@@ -220,6 +223,10 @@ func main() {
 	}
 
 	if conf.MaxProxyResponseSize, err = parseReadSize("max proxy response size", maxProxyResponseSize); err != nil {
+		panic(err)
+	}
+
+	if auth.SessionTimeout, err = time.ParseDuration(sessionTimeout); err != nil {
 		panic(err)
 	}
 

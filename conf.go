@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/h2oai/wave/pkg/keychain"
 )
@@ -63,12 +64,13 @@ type ServerConf struct {
 }
 
 type AuthConf struct {
-	ClientID      string
-	ClientSecret  string
-	ProviderURL   string
-	RedirectURL   string
-	EndSessionURL string
-	Scopes        []string
-	URLParameters [][]string
-	SkipLogin     bool
+	ClientID       string
+	ClientSecret   string
+	ProviderURL    string
+	RedirectURL    string
+	EndSessionURL  string
+	Scopes         []string
+	URLParameters  [][]string
+	SkipLogin      bool
+	SessionTimeout time.Duration
 }

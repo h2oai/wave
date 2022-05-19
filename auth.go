@@ -122,7 +122,7 @@ func (auth *Auth) remove(key string) {
 func (auth *Auth) identify(r *http.Request) *Session {
 	cookie, err := r.Cookie(authCookieName)
 	if err != nil {
-		echo(Log{"t": "oauth2_cookie_read", "error": err.Error()})
+		echo(Log{"t": "oauth2_cookie_read", "warning": err.Error()})
 		return nil
 	}
 
@@ -246,7 +246,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sessionID := uuid.New().String()
 
 	h.auth.set(Session{id: sessionID, state: state, nonce: nonce, successURL: successURL})
-	expiration := time.Now().Add(365 * 24 * time.Hour)
+	expiration := time.Now().Add(h.auth.conf.SessionTimeout)
 	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: expiration}
 	http.SetCookie(w, &cookie)
 
