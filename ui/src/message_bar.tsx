@@ -42,7 +42,20 @@ export interface MessageBar {
   buttons?: Component[]
 }
 
-const
+export type NotificationType = 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
+export type NotificationStyle = {
+  iconName: S
+  background: S
+  color: S
+}
+type MessagebarProps = {
+  type?: NotificationType
+  text?: S
+  buttons?: Component[]
+  name?: S
+}
+
+export const
   css = stylesheet({
     messageBar: {
       $nest: {
@@ -53,25 +66,7 @@ const
         '.ms-MessageBar-dismissal .ms-Button-icon': { fontSize: 16 },
       }
     }
-  })
-
-type NotificationType = 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
-type NotificationStyle = {
-  iconName: S
-  background: S
-  color: S
-}
-type MessagebarProps = {
-  type?: NotificationType
-  text?: S
-  buttons?: Component[]
-  name?: S
-  extraStyles?: Fluent.IRawStyle
-  onDismiss?: () => void
-  isMultiline?: B
-}
-
-const
+  }),
   notificationTypes: { [K in NotificationType]: NotificationStyle } = {
     'info': {
       iconName: 'InfoSolid',
@@ -113,10 +108,8 @@ const
       case 'blocked': return Fluent.MessageBarType.blocked
       default: return Fluent.MessageBarType.info
     }
-  }
-
-export const
-  MessageBar = ({ type, text, buttons, name, extraStyles = {}, onDismiss, isMultiline = false }: MessagebarProps) => {
+  },
+  MessageBar = ({ type, text, buttons, name }: MessagebarProps) => {
     const { iconName, color, background } = notificationTypes[type || 'info']
     const btns = buttons?.filter(({ button }) => button)
     return (
@@ -131,23 +124,20 @@ export const
                 borderRadius: 4,
                 width: 'auto',
                 '.ms-Link': { color, fontWeight: 600 },
-                '.ms-Link:hover': { textDecoration: 'none', color },
-                padding: 16,
-                ...extraStyles
+                '.ms-Link:hover': { textDecoration: 'none' },
+                padding: '8px 16px',
+                minHeight: 24,
               },
-              content: { alignItems: isMultiline ? 'start' : 'center' },
+              content: { alignItems: 'center' },
               icon: { fontSize: 24, color, display: 'inline-flex' },
               iconContainer: { margin: 0, marginRight: 16, display: 'flex', alignItems: 'center' },
               text: { margin: 0 },
               innerText: { whiteSpace: important('initial') },
-              dismissal: { fontSize: 16, height: 'auto', marginLeft: 16, padding: 0, '.ms-Button-flexContainer': { display: 'block' } },
-              dismissSingleLine: { display: 'flex' },
-              actions: { margin: 0, marginTop: isMultiline ? 12 : undefined }
+              actions: { margin: 0 }
             }}
             messageBarType={toMessageBarType(type)}
-            onDismiss={onDismiss}
             className={css.messageBar}
-            isMultiline={isMultiline}
+            isMultiline={false}
             actions={btns?.length ? <XComponents items={btns || []} alignment='end' /> : undefined}
             messageBarIconProps={{ iconName }}
           >
