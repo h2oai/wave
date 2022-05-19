@@ -207,8 +207,10 @@ export
         return false
       },
       getMark = (text: S, idx: U, tag: S) => {
+        const color = tagColorMap.get(tag)
+        // Handle invalid tags entered by user
+        if (!color) return text
         const
-          color = tagColorMap.get(tag)!,
           removeIconStyle = { visibility: shouldShowRemoveIcon(idx, tag) ? 'visible' : 'hidden' },
           isFirst = tokens[idx - 1]?.tag !== tag,
           isLast = tokens[idx + 1]?.tag !== tag
