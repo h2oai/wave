@@ -79,7 +79,9 @@ const css = stylesheet({
     color: cssVar('$themePrimary')
   },
   icon: {
-    fontSize: 56
+    fontSize: 56,
+    display: 'flex',
+    justifyContent: 'center'
   },
   header: {
     padding: padding(24, 24, 0),
@@ -147,7 +149,7 @@ export const
             {(image || icon) && (
               <div className={css.brand}>
                 {image && <img src={image} className={css.img} />}
-                {icon && !image && <Fluent.FontIcon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
+                {icon && !image && <Fluent.Icon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
               </div>
             )}
             {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}

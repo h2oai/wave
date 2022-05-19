@@ -67,6 +67,7 @@ const css = stylesheet({
   icon: {
     fontSize: 36,
     marginRight: 15,
+    display: 'flex'
   },
   title: {
     color: cssVar('$themePrimary')
@@ -130,9 +131,9 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
       return (
         <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))} style={{ background: color === 'transparent' ? 'transparent' : cssVar(`$${color}`) }}>
           <div className={css.inline}>
-            {nav && <Fluent.FontIcon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
+            {nav && <Fluent.Icon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
-            {icon && !image && <Fluent.FontIcon className={css.icon} iconName={icon} style={{ color: cssVar(icon_color) }} />}
+            {icon && !image && <Fluent.Icon className={css.icon} iconName={icon} style={{ color: cssVar(icon_color) }} />}
             <div className={css.nudgeUp}>
               <div className={clas(color !== 'primary' ? css.title : '', 'wave-s24 wave-w5')}>{title}</div>
               {subtitle && <div className={clas(css.nudgeUp, 'wave-s12')}>{subtitle}</div>}
