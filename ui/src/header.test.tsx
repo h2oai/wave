@@ -43,7 +43,7 @@ describe('Header.tsx', () => {
 
   it('Closes nav on click', () => {
     const { container, queryByText } = render(<View {...headerProps} />)
-    fireEvent.click(container.querySelector('.ms-Icon')!)
+    fireEvent.click(container.querySelector('i[data-icon-name="GlobalNavButton"]') as HTMLLIElement)
 
     const menuItem = queryByText(label)
     expect(menuItem).toBeInTheDocument()
