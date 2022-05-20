@@ -20,7 +20,7 @@ import { bond } from './ui'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar } from './theme'
 
-/** Create a vertical label-value pairs collection. */
+/** Create a vertical label-value pairs collection. Icon in `ui.stat` is not yet supported in this card. */
 export interface State {
   /** The individual stats to be displayed. */
   items: Stat[]

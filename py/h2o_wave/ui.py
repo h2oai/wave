@@ -4245,7 +4245,7 @@ def tall_stats_card(
         items: List[Stat],
         commands: Optional[List[Command]] = None,
 ) -> TallStatsCard:
-    """Create a vertical label-value pairs collection.
+    """Create a vertical label-value pairs collection. Icon in `ui.stat` is not yet supported in this card.
 
     Args:
         box: A string indicating how to place this component on the page.

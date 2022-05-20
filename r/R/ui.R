@@ -4919,7 +4919,7 @@ ui_tall_series_stat_card <- function(
   return(.o)
 }
 
-#' Create a vertical label-value pairs collection.
+#' Create a vertical label-value pairs collection. Icon in `ui.stat` is not yet supported in this card.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The individual stats to be displayed.

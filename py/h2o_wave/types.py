@@ -11899,7 +11899,7 @@ class TallSeriesStatCard:
 
 
 class TallStatsCard:
-    """Create a vertical label-value pairs collection.
+    """Create a vertical label-value pairs collection. Icon in `ui.stat` is not yet supported in this card.
     """
     def __init__(
             self,
