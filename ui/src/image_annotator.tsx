@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { B, Id, Rec, S, U } from 'h2o-wave'
+import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AnnotatorTags } from './text_annotator'
@@ -9,13 +9,13 @@ import { wave } from './ui'
 /** Create a rectangular annotation shape. */
 interface ImageAnnotatorRect {
   /** `x` coordinate of the rectangle's corner. */
-  x1: U
+  x1: F
   /** `y` coordinate of the rectangle's corner. */
-  y1: U
+  y1: F
   /** `x` coordinate of the diagonally opposite corner. */
-  x2: U
+  x2: F
   /** `y` coordinate of the diagonally opposite corner. */
-  y2: U
+  y2: F
 }
 
 /** Create a shape to be rendered as an annotation on an image annotator. */
@@ -95,6 +95,8 @@ const
     }
   }),
   ARC_RADIUS = 4,
+  MIN_RECT_WIDTH = 5,
+  MIN_RECT_HEIGHT = 5,
   isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect) => {
     if (!rect) return false
     const
@@ -154,7 +156,14 @@ const
     else if (focused?.shape.rect) return getCornerCursor(focused.shape.rect, cursor_x, cursor_y) || 'crosshair'
     else if (intersected) return 'pointer'
     return 'crosshair'
-  }
+  },
+  createRect = (x1: F, x2: F, y1: F, y2: F, { width, height }: HTMLCanvasElement) =>
+    Math.abs(x2 - x1) <= MIN_RECT_WIDTH || Math.abs(y2 - y1) <= MIN_RECT_HEIGHT ? undefined : {
+      x1: x1 > width ? width : x1 < 0 ? 0 : x1,
+      x2: x2 > width ? width : x2 < 0 ? 0 : x2,
+      y1: y1 > height ? height : y1 < 0 ? 0 : y1,
+      y2: y2 > height ? height : y2 < 0 ? 0 : y2,
+    }
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
@@ -167,6 +176,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     resizedCornerRef = React.useRef<S | undefined>(undefined),
+    movedShapeRef = React.useRef<DrawnShape | undefined>(undefined),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
     redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
@@ -182,6 +192,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       })
     }, [colorsMap]),
     onMouseDown = (e: React.MouseEvent) => {
+      if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
       if (!canvas) return
 
@@ -202,42 +213,75 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
         focused = drawnShapes.find(({ isFocused }) => isFocused),
         clickStartPosition = startPosition.current
+
       if (clickStartPosition) {
+        const
+          intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect)),
+          x1 = clickStartPosition.x,
+          y1 = clickStartPosition.y
+
         clickStartPosition.dragging = true
-        const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
         if (focused?.shape.rect && resizedCornerRef.current) {
           if (resizedCornerRef.current === 'topLeft') {
-            focused.shape.rect.x1 += cursor_x - clickStartPosition.x
-            focused.shape.rect.y1 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x1 += cursor_x - x1
+            focused.shape.rect.y1 += cursor_y - y1
           }
           else if (resizedCornerRef.current === 'topRight') {
-            focused.shape.rect.x1 += cursor_x - clickStartPosition.x
-            focused.shape.rect.y2 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x1 += cursor_x - x1
+            focused.shape.rect.y2 += cursor_y - y1
           }
           else if (resizedCornerRef.current === 'bottomLeft') {
-            focused.shape.rect.x2 += cursor_x - clickStartPosition.x
-            focused.shape.rect.y1 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x2 += cursor_x - x1
+            focused.shape.rect.y1 += cursor_y - y1
           }
           else if (resizedCornerRef.current === 'bottomRight') {
-            focused.shape.rect.x2 += cursor_x - clickStartPosition.x
-            focused.shape.rect.y2 += cursor_y - clickStartPosition.y
+            focused.shape.rect.x2 += cursor_x - x1
+            focused.shape.rect.y2 += cursor_y - y1
           }
           startPosition.current = { x: cursor_x, y: cursor_y }
           redrawExistingShapes()
         }
-        else if (intersected?.isFocused && intersected.shape.rect) {
+        else if (movedShapeRef.current || intersected?.isFocused) {
+          movedShapeRef.current = movedShapeRef.current || intersected
           canvas.style.cursor = 'move'
-          intersected.shape.rect.x1 += cursor_x - clickStartPosition.x
-          intersected.shape.rect.x2 += cursor_x - clickStartPosition.x
-          intersected.shape.rect.y1 += cursor_y - clickStartPosition.y
-          intersected.shape.rect.y2 += cursor_y - clickStartPosition.y
+          if (!movedShapeRef.current?.shape.rect) return
+
+          const
+            rect = movedShapeRef.current.shape.rect,
+            xIncrement = cursor_x - x1,
+            yIncrement = cursor_y - y1,
+            newX1 = rect.x1 + xIncrement,
+            newX2 = rect.x2 + xIncrement,
+            newY1 = rect.y1 + yIncrement,
+            newY2 = rect.y2 + yIncrement,
+            { width, height } = canvas
+
+          // Prevent moving behind image boundaries.
+          if (newX1 < rect.x1 && newX1 < 0) rect.x1 = Math.max(0, newX1)
+          else if (newX2 < rect.x2 && newX2 < 0) rect.x2 = Math.max(0, newX2)
+          else if (newY1 < rect.y1 && newY1 < 0) rect.y1 = Math.max(0, newY1)
+          else if (newY2 < rect.y2 && newY2 < 0) rect.y2 = Math.max(0, newY2)
+          else if (newX1 > rect.x1 && newX1 > width) rect.x1 = Math.min(newX1, width)
+          else if (newX2 > rect.x2 && newX2 > width) rect.x2 = Math.min(newX2, width)
+          else if (newY1 > rect.y1 && newY1 > height) rect.y1 = Math.min(newY1, height)
+          else if (newY2 > rect.y2 && newY2 > height) rect.y2 = Math.min(newY2, height)
+          else {
+            rect.x1 = newX1
+            rect.x2 = newX2
+            rect.y1 = newY1
+            rect.y2 = newY2
+          }
+
           startPosition.current = { x: cursor_x, y: cursor_y }
           redrawExistingShapes()
         }
         else {
           setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
-          drawRect(ctx, { x1: clickStartPosition.x, x2: cursor_x, y1: clickStartPosition.y, y2: cursor_y, }, colorsMap.get(activeTag) || cssVarValue('$red'))
+          const newRect = createRect(x1, cursor_x, y1, cursor_y, canvas)
+          if (newRect) {
+            drawRect(ctx, newRect, colorsMap.get(activeTag) || cssVarValue('$red'))
+          }
         }
       }
       else {
@@ -255,17 +299,18 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         newShapes = [...drawnShapes]
 
       if (start) {
-        const { x1, x2, y1, y2 } = { x1: start.x, x2: cursor_x, y1: start.y, y2: cursor_y }
-        if (x2 !== x1 && y2 !== y1) newShapes.unshift({ shape: { rect: { x1, x2, y1, y2 } }, tag: activeTag })
+        const newRect = createRect(start.x, cursor_x, start.y, cursor_y, canvas)
+        if (newRect) newShapes.unshift({ shape: { rect: newRect }, tag: activeTag })
       }
 
-      if (!resizedCornerRef.current && !start?.dragging) {
+      if (!resizedCornerRef.current && !start?.dragging && e.type !== 'mouseleave') {
         newShapes.forEach(shape => shape.isFocused = false)
         const intersecting = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
         if (intersecting) intersecting.isFocused = true
       }
 
       startPosition.current = undefined
+      movedShapeRef.current = undefined
       resizedCornerRef.current = ''
       canvas.style.cursor = getCorrectCursor(newShapes, cursor_x, cursor_y, newShapes.find(({ isFocused }) => isFocused))
       setDrawnShapes(newShapes)
@@ -357,7 +402,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       ]} />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
-        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onClick={onClick} />
+        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseLeave={onClick} onClick={onClick} />
       </div>
     </div >
   )
