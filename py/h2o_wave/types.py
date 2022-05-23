@@ -6329,15 +6329,15 @@ class ImageAnnotatorRect:
     """
     def __init__(
             self,
-            x1: int,
-            y1: int,
-            x2: int,
-            y2: int,
+            x1: float,
+            y1: float,
+            x2: float,
+            y2: float,
     ):
-        _guard_scalar('ImageAnnotatorRect.x1', x1, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.y1', y1, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.x2', x2, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.y2', y2, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x1', x1, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.y1', y1, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x2', x2, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.y2', y2, (float, int,), False, False, False)
         self.x1 = x1
         """`x` coordinate of the rectangle's corner."""
         self.y1 = y1
@@ -6349,10 +6349,10 @@ class ImageAnnotatorRect:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ImageAnnotatorRect.x1', self.x1, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.y1', self.y1, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.x2', self.x2, (int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.y2', self.y2, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x1', self.x1, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.y1', self.y1, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x2', self.x2, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.y2', self.y2, (float, int,), False, False, False)
         return _dump(
             x1=self.x1,
             y1=self.y1,
@@ -6364,17 +6364,17 @@ class ImageAnnotatorRect:
     def load(__d: Dict) -> 'ImageAnnotatorRect':
         """Creates an instance of this class using the contents of a dict."""
         __d_x1: Any = __d.get('x1')
-        _guard_scalar('ImageAnnotatorRect.x1', __d_x1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x1', __d_x1, (float, int,), False, False, False)
         __d_y1: Any = __d.get('y1')
-        _guard_scalar('ImageAnnotatorRect.y1', __d_y1, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.y1', __d_y1, (float, int,), False, False, False)
         __d_x2: Any = __d.get('x2')
-        _guard_scalar('ImageAnnotatorRect.x2', __d_x2, (int,), False, False, False)
+        _guard_scalar('ImageAnnotatorRect.x2', __d_x2, (float, int,), False, False, False)
         __d_y2: Any = __d.get('y2')
-        _guard_scalar('ImageAnnotatorRect.y2', __d_y2, (int,), False, False, False)
-        x1: int = __d_x1
-        y1: int = __d_y1
-        x2: int = __d_x2
-        y2: int = __d_y2
+        _guard_scalar('ImageAnnotatorRect.y2', __d_y2, (float, int,), False, False, False)
+        x1: float = __d_x1
+        y1: float = __d_y1
+        x2: float = __d_x2
+        y2: float = __d_y2
         return ImageAnnotatorRect(
             x1,
             y1,
