@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
 import { fuzzysearch } from './parts/utils'
-import { clas, cssVar, pc } from './theme'
+import { clas, cssVar, pc, px } from './theme'
 import { wave } from './ui'
 
 /**
@@ -128,6 +128,7 @@ const
       <>
         <Fluent.Dropdown
           data-test={name}
+          styles={{ caretDownWrapper: { lineHeight: px(26) } }} // Remove unwanted overflow.
           label={label}
           placeholder={placeholder}
           options={options}
