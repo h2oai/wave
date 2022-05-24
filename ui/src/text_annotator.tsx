@@ -57,6 +57,7 @@ const css = stylesheet({
     padding: padding(4, 16),
     textAlign: 'center',
     borderRadius: 4,
+    cursor: 'pointer'
   },
   tagWrapper: {
     marginRight: 4,
