@@ -8,7 +8,7 @@ custom_edit_url: null
 
 For cases when you need to inform the user about an important event like something finished with a success or error code, you can use in-app notifications. These have both color and position configurable and they allow embedding your custom UI components within (buttons/links) to control the UX flow even more. They do not require user consent but do not overuse them to not annoy your users. Note that this kind of notification is not visible to the user if they are not currently viewing the browser tab with your app.
 
-These notifications close automatically after a specified `timeout` (defaults to `5s`) period. However, if `buttons` are set, the `timeout` is ignored and the notification shall be closed by the developer after clicking the action button.
+These notifications close automatically after a specified `timeout` (defaults to `5s`) period. To prevent it from closing automatically set the `timeout` to `-1`.
 
 [Desktop](/docs/widgets/overlays/notification) vs in-app notification:
 

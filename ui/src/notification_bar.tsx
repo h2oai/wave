@@ -13,14 +13,14 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, Id, S, U } from 'h2o-wave'
+import { B, box, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { grid } from './layout'
 import { Markdown } from './markdown'
+import { css, notificationTypes, toMessageBarType } from './message_bar'
 import { important, pc } from './theme'
 import { bond, wave } from './ui'
-import { css, notificationTypes, toMessageBarType } from './message_bar'
 
 /**
  * Create a notification bar.
@@ -33,7 +33,7 @@ export interface NotificationBar {
   text: S
   /** The icon and color of the notification bar. Defaults to 'info'. */
   type?: 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
-  /** How long the notification stays visible, in seconds. Defaults to 5. */
+  /** How long the notification stays visible, in seconds. If set to -1, the notification has to be closed manually. Defaults to 5. */
   timeout?: U
   /** Specify one or more action buttons. */
   buttons?: Component[]
@@ -54,7 +54,7 @@ const
   }
 
 export const
-  notificationBarB: Box<NotificationBar | null> = box(null),
+  notificationBarB = box<NotificationBar | null>(null),
   NotificationBar = bond(() => {
     let
       timeout: U | undefined,
@@ -94,11 +94,11 @@ export const
           buttons = currentModel?.buttons?.filter(({ button }) => button),
           isMultiline = isMessagebarMultiline(currentModel?.text, buttons)
 
-        if (!buttons?.length && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5) * 1000)
+        if (model?.timeout !== -1 && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5) * 1000)
 
         return (
           currentModel?.text?.length
-          ? 
+            ?
             <Fluent.MessageBar
               messageBarType={toMessageBarType(currentModel?.type)}
               messageBarIconProps={{ iconName }}

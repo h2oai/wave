@@ -9029,7 +9029,7 @@ class NotificationBar:
         self.type = type
         """The icon and color of the notification bar. Defaults to 'info'. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType."""
         self.timeout = timeout
-        """How long the notification stays visible, in seconds. Defaults to 5."""
+        """How long the notification stays visible, in seconds. If set to -1, the notification has to be closed manually. Defaults to 5."""
         self.buttons = buttons
         """Specify one or more action buttons."""
         self.position = position
