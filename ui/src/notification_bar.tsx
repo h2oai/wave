@@ -13,14 +13,14 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, Id, S, U } from 'h2o-wave'
+import { B, box, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { grid } from './layout'
 import { Markdown } from './markdown'
+import { css, notificationTypes, toMessageBarType } from './message_bar'
 import { important, pc } from './theme'
 import { bond, wave } from './ui'
-import { css, notificationTypes, toMessageBarType } from './message_bar'
 
 /**
  * Create a notification bar.
@@ -54,7 +54,7 @@ const
   }
 
 export const
-  notificationBarB: Box<NotificationBar | null> = box(null),
+  notificationBarB = box<NotificationBar | null>(null),
   NotificationBar = bond(() => {
     let
       timeout: U | undefined,
@@ -98,7 +98,7 @@ export const
 
         return (
           currentModel?.text?.length
-          ? 
+            ?
             <Fluent.MessageBar
               messageBarType={toMessageBarType(currentModel?.type)}
               messageBarIconProps={{ iconName }}
