@@ -22,7 +22,7 @@ jobs:
       - name: Set ENV vars
         run: |
           echo "VERSION=${{ github.event.inputs.version || env.VERSION }}" >> $GITHUB_ENV
-          if [[ $VERSION == "nightly" ]]; then echo "TAG=nightly"; else echo "TAG=v${VERSION}"; fi>> $GITHUB_ENV
+          if [ $VERSION == "nightly" ]; then echo "TAG=nightly"; else echo "TAG=v${VERSION}"; fi>> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
