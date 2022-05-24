@@ -3207,7 +3207,7 @@ def notification_bar(
     Args:
         text: The text displayed on the notification bar.
         type: The icon and color of the notification bar. Defaults to 'info'. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType.
-        timeout: How long the notification stays visible, in seconds. Defaults to 5.
+        timeout: How long the notification stays visible, in seconds. If set to -1, the notification has to be closed manually. Defaults to 5.
         buttons: Specify one or more action buttons.
         position: Specify the location of notification. Defaults to 'top-right'. One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.
         events: The events to capture on this notification bar. One of 'dismissed'.

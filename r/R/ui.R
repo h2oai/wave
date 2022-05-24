@@ -3692,7 +3692,7 @@ ui_markup_card <- function(
 #' @param text The text displayed on the notification bar.
 #' @param type The icon and color of the notification bar. Defaults to 'info'.
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.NotificationBarType.
-#' @param timeout How long the notification stays visible, in seconds. Defaults to 5.
+#' @param timeout How long the notification stays visible, in seconds. If set to -1, the notification has to be closed manually. Defaults to 5.
 #' @param buttons Specify one or more action buttons.
 #' @param position Specify the location of notification. Defaults to 'top-right'.
 #'   One of 'top-right', 'bottom-right', 'bottom-center', 'bottom-left', 'top-left', 'top-center'. See enum h2o_wave.ui.NotificationBarPosition.

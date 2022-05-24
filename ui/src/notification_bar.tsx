@@ -33,7 +33,7 @@ export interface NotificationBar {
   text: S
   /** The icon and color of the notification bar. Defaults to 'info'. */
   type?: 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
-  /** How long the notification stays visible, in seconds. Defaults to 5. */
+  /** How long the notification stays visible, in seconds. If set to -1, the notification has to be closed manually. Defaults to 5. */
   timeout?: U
   /** Specify one or more action buttons. */
   buttons?: Component[]
