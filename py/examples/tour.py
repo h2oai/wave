@@ -37,7 +37,7 @@ class Example:
         self.is_app = source.find('@app(') > 0
 
     async def start(self):
-        env = deepcopy(os.environ)
+        env = os.environ.copy()
         env['H2O_WAVE_BASE_URL'] = _base_url
         env['H2O_WAVE_ADDRESS'] = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
         # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
@@ -45,12 +45,13 @@ class Example:
         if sys.platform.lower().startswith('win'):
             env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
         if self.is_app:
+            env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_host}:{_app_port}'
             self.process = subprocess.Popen([
                 sys.executable, '-m', 'uvicorn',
                 '--host', '0.0.0.0',
                 '--port', _app_port,
                 f'examples.{self.name}:main',
-            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
+            ], env=env)
         else:
             self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
