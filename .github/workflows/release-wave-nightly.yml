@@ -7,6 +7,10 @@ on:
         description: 'Release Version'
         default: 'nightly'
         required: false
+      tag:
+        description: 'Release Tag'
+        default: 'nightly'
+        required: false
   schedule:
     - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
 
@@ -22,7 +26,7 @@ jobs:
       - name: Set ENV vars
         run: |
           echo "VERSION=${{ github.event.inputs.version || env.VERSION }}" >> $GITHUB_ENV
-          if [ $VERSION == "nightly" ]; then echo "TAG=nightly"; else echo "TAG=v${VERSION}"; fi>> $GITHUB_ENV
+          echo "TAG=${{ github.event.inputs.tag || env.tag }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
