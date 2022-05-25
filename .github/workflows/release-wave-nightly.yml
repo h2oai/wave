@@ -26,7 +26,7 @@ jobs:
       - name: Set ENV vars
         run: |
           echo "VERSION=${{ github.event.inputs.version || env.VERSION }}" >> $GITHUB_ENV
-          echo "TAG=${{ github.event.inputs.tag || env.tag }}" >> $GITHUB_ENV
+          echo "TAG=${{ github.event.inputs.tag || env.TAG }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
