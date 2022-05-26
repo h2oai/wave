@@ -422,8 +422,6 @@ async def show_example(q: Q, example: Example):
     filename = os.path.join(tour_tmp_dir, 'tmp.py')
     code = q.events.editor.change if q.events.editor else example.source
     code = code.replace("`", "\\`")
-    code = re.sub(r'=[ ]?site\[.+\]', '= site["/demo"]', code)
-    code = re.sub(r'@app\(.+\)', '@app("/demo")', code)
     with open(filename, 'w') as f:
         f.write(code)
     filename = '.'.join([tour_tmp_dir, 'tmp.py']).split(os.sep)[-1] if code.find('@app(') > 0 else filename
