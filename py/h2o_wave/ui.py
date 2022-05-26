@@ -2104,6 +2104,7 @@ def vega_visualization(
         height: Optional[str] = None,
         name: Optional[str] = None,
         visible: Optional[bool] = None,
+        grammar: Optional[str] = None,
 ) -> Component:
     """Create a Vega-lite plot for display inside a form.
 
@@ -2114,6 +2115,7 @@ def vega_visualization(
         height: The height of the visualization. Defaults to '300px'.
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to True.
+        grammar: Vega grammar to use. Defaults to 'vega-lite'. One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaVisualizationGrammar.
     Returns:
         A `h2o_wave.types.VegaVisualization` instance.
     """
@@ -2124,6 +2126,7 @@ def vega_visualization(
         height,
         name,
         visible,
+        grammar,
     ))
 
 
@@ -4320,6 +4323,7 @@ def vega_card(
         title: str,
         specification: str,
         data: Optional[PackedRecord] = None,
+        grammar: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> VegaCard:
     """Create a card containing a Vega-lite plot.
@@ -4329,6 +4333,7 @@ def vega_card(
         title: The title of this card.
         specification: The Vega-lite specification.
         data: Data for the plot, if any.
+        grammar: Vega grammar to use. Defaults to 'vega-lite'. One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaCardGrammar.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.VegaCard` instance.
@@ -4338,6 +4343,7 @@ def vega_card(
         title,
         specification,
         data,
+        grammar,
         commands,
     )
 

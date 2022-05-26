@@ -2466,6 +2466,8 @@ ui_visualization <- function(
 #' @param height The height of the visualization. Defaults to '300px'.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param grammar Vega grammar to use. Defaults to 'vega-lite'.
+#'   One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaVisualizationGrammar.
 #' @return A VegaVisualization instance.
 #' @export
 ui_vega_visualization <- function(
@@ -2474,20 +2476,23 @@ ui_vega_visualization <- function(
   width = NULL,
   height = NULL,
   name = NULL,
-  visible = NULL) {
+  visible = NULL,
+  grammar = NULL) {
   .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
   .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate grammar
   .o <- list(vega_visualization=list(
     specification=specification,
     data=data,
     width=width,
     height=height,
     name=name,
-    visible=visible))
+    visible=visible,
+    grammar=grammar))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -5007,6 +5012,8 @@ ui_toolbar_card <- function(
 #' @param title The title of this card.
 #' @param specification The Vega-lite specification.
 #' @param data Data for the plot, if any.
+#' @param grammar Vega grammar to use. Defaults to 'vega-lite'.
+#'   One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaCardGrammar.
 #' @param commands Contextual menu commands for this component.
 #' @return A VegaCard instance.
 #' @export
@@ -5015,17 +5022,20 @@ ui_vega_card <- function(
   title,
   specification,
   data = NULL,
+  grammar = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
+  # TODO Validate grammar
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     specification=specification,
     data=data,
+    grammar=grammar,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveVegaCard"))
   return(.o)

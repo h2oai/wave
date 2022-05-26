@@ -5631,6 +5631,14 @@ class Visualization:
         )
 
 
+_VegaVisualizationGrammar = ['vega-lite', 'vega']
+
+
+class VegaVisualizationGrammar:
+    VEGA_LITE = 'vega-lite'
+    VEGA = 'vega'
+
+
 class VegaVisualization:
     """Create a Vega-lite plot for display inside a form.
     """
@@ -5642,12 +5650,14 @@ class VegaVisualization:
             height: Optional[str] = None,
             name: Optional[str] = None,
             visible: Optional[bool] = None,
+            grammar: Optional[str] = None,
     ):
         _guard_scalar('VegaVisualization.specification', specification, (str,), False, False, False)
         _guard_scalar('VegaVisualization.width', width, (str,), False, True, False)
         _guard_scalar('VegaVisualization.height', height, (str,), False, True, False)
         _guard_scalar('VegaVisualization.name', name, (str,), False, True, False)
         _guard_scalar('VegaVisualization.visible', visible, (bool,), False, True, False)
+        _guard_enum('VegaVisualization.grammar', grammar, _VegaVisualizationGrammar, True)
         self.specification = specification
         """The Vega-lite specification."""
         self.data = data
@@ -5660,6 +5670,8 @@ class VegaVisualization:
         """An identifying name for this component."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.grammar = grammar
+        """Vega grammar to use. Defaults to 'vega-lite'. One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaVisualizationGrammar."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5668,6 +5680,7 @@ class VegaVisualization:
         _guard_scalar('VegaVisualization.height', self.height, (str,), False, True, False)
         _guard_scalar('VegaVisualization.name', self.name, (str,), False, True, False)
         _guard_scalar('VegaVisualization.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('VegaVisualization.grammar', self.grammar, _VegaVisualizationGrammar, True)
         return _dump(
             specification=self.specification,
             data=self.data,
@@ -5675,6 +5688,7 @@ class VegaVisualization:
             height=self.height,
             name=self.name,
             visible=self.visible,
+            grammar=self.grammar,
         )
 
     @staticmethod
@@ -5691,12 +5705,15 @@ class VegaVisualization:
         _guard_scalar('VegaVisualization.name', __d_name, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('VegaVisualization.visible', __d_visible, (bool,), False, True, False)
+        __d_grammar: Any = __d.get('grammar')
+        _guard_enum('VegaVisualization.grammar', __d_grammar, _VegaVisualizationGrammar, True)
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         name: Optional[str] = __d_name
         visible: Optional[bool] = __d_visible
+        grammar: Optional[str] = __d_grammar
         return VegaVisualization(
             specification,
             data,
@@ -5704,6 +5721,7 @@ class VegaVisualization:
             height,
             name,
             visible,
+            grammar,
         )
 
 
@@ -12085,6 +12103,14 @@ class ToolbarCard:
         )
 
 
+_VegaCardGrammar = ['vega-lite', 'vega']
+
+
+class VegaCardGrammar:
+    VEGA_LITE = 'vega-lite'
+    VEGA = 'vega'
+
+
 class VegaCard:
     """Create a card containing a Vega-lite plot.
     """
@@ -12094,11 +12120,13 @@ class VegaCard:
             title: str,
             specification: str,
             data: Optional[PackedRecord] = None,
+            grammar: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('VegaCard.box', box, (str,), False, False, False)
         _guard_scalar('VegaCard.title', title, (str,), False, False, False)
         _guard_scalar('VegaCard.specification', specification, (str,), False, False, False)
+        _guard_enum('VegaCard.grammar', grammar, _VegaCardGrammar, True)
         _guard_vector('VegaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -12108,6 +12136,8 @@ class VegaCard:
         """The Vega-lite specification."""
         self.data = data
         """Data for the plot, if any."""
+        self.grammar = grammar
+        """Vega grammar to use. Defaults to 'vega-lite'. One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaCardGrammar."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -12116,6 +12146,7 @@ class VegaCard:
         _guard_scalar('VegaCard.box', self.box, (str,), False, False, False)
         _guard_scalar('VegaCard.title', self.title, (str,), False, False, False)
         _guard_scalar('VegaCard.specification', self.specification, (str,), False, False, False)
+        _guard_enum('VegaCard.grammar', self.grammar, _VegaCardGrammar, True)
         _guard_vector('VegaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='vega',
@@ -12123,6 +12154,7 @@ class VegaCard:
             title=self.title,
             specification=self.specification,
             data=self.data,
+            grammar=self.grammar,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -12136,18 +12168,22 @@ class VegaCard:
         __d_specification: Any = __d.get('specification')
         _guard_scalar('VegaCard.specification', __d_specification, (str,), False, False, False)
         __d_data: Any = __d.get('data')
+        __d_grammar: Any = __d.get('grammar')
+        _guard_enum('VegaCard.grammar', __d_grammar, _VegaCardGrammar, True)
         __d_commands: Any = __d.get('commands')
         _guard_vector('VegaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
+        grammar: Optional[str] = __d_grammar
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return VegaCard(
             box,
             title,
             specification,
             data,
+            grammar,
             commands,
         )
 

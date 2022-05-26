@@ -3,7 +3,7 @@ title: Vega lite
 custom_edit_url: null
 ---
 
-If you, for some reason, do not want to use native Wave plots, you can use what you already know like Vega for example.
+If you, for some reason, do not want to use native Wave plots, you can use what you already know like Vega-lite for example.
 
 ```py
 spec = '''
