@@ -3,11 +3,8 @@ import os
 import os.path
 import re
 import shutil
-import socket
 import subprocess
 import sys
-import uuid
-from contextlib import closing
 from pathlib import Path
 from string import Template
 from typing import Dict, List, Optional, Tuple
@@ -20,15 +17,8 @@ tour_tmp_dir = os.path.join(example_dir, '_tour_apps_tmp')
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
 _app_host = _app_address.hostname
+_app_port = '10102'
 default_example_name = 'hello_world'
-
-
-def get_free_port(port=10102) -> int:
-    while True:
-        with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-            if sock.connect_ex((_app_host, port)):
-                return port
-        port += 1
 
 
 class Example:
@@ -55,7 +45,7 @@ class Example:
             self.process = subprocess.Popen([
                 sys.executable, '-m', 'uvicorn',
                 '--host', '0.0.0.0',
-                '--port', port,
+                '--port', _app_port,
                 f'examples.{filename.replace(".py", "")}:main',
             ], env=env)
         else:
@@ -425,18 +415,18 @@ def make_blurb(q: Q):
 
 async def show_example(q: Q, example: Example):
     # Clear demo page
-    demo_page = q.site[f'/{q.client.id}']
+    demo_page = q.site['/demo']
     demo_page.drop()
     await demo_page.save()
 
-    filename = os.path.join(tour_tmp_dir, f'{q.client.id}.py')
+    filename = os.path.join(tour_tmp_dir, 'tmp.py')
     code = q.events.editor.change if q.events.editor else example.source
     code = code.replace("`", "\\`")
-    code = re.sub(r'=[ ]?site\[.+\]', f'= site["/{q.client.id}"]', code)
-    code = re.sub(r'@app\(.+\)', f'@app("/{q.client.id}")', code)
+    code = re.sub(r'=[ ]?site\[.+\]', '= site["/demo"]', code)
+    code = re.sub(r'@app\(.+\)', '@app("/demo")', code)
     with open(filename, 'w') as f:
         f.write(code)
-    filename = '.'.join([tour_tmp_dir, q.client.id]).split(os.sep)[-1] if code.find('@app(') > 0 else filename
+    filename = '.'.join([tour_tmp_dir, 'tmp.py']).split(os.sep)[-1] if code.find('@app(') > 0 else filename
 
     # Stop active example, if any.
     active_example = q.client.active_example
@@ -473,7 +463,7 @@ async def show_example(q: Q, example: Example):
     # HACK
     # The ?e= appended to the path forces the frame to reload.
     # The url param is not actually used.
-    preview_card.path = f'{_base_url}{q.client.id}?e={example.name}'
+    preview_card.path = f'{_base_url}demo?e={example.name}'
     await q.page.save()
 
 
@@ -499,7 +489,6 @@ async def serve(q: Q):
         q.app.snippets1, q.app.snippets2, = await q.site.upload([base_snippets, component_snippets])
         q.app.initialized = True
     if not q.client.initialized:
-        q.client.id = str(uuid.uuid4())
         q.client.initialized = True
         q.client.is_first_load = True
         await setup_page(q)
