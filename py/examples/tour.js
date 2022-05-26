@@ -12,10 +12,6 @@ window.MonacoEnvironment = {
 
 (async () => {
   window.pyodide = await loadPyodide()
-  window.pyodide.loadPackage('parso')
-})()
-
-require(['vs/editor/editor.main'], function () {
   const snippetToCompletionItem = item => ({
     label: item.prefix,
     kind: monaco.languages.CompletionItemKind.Snippet,
@@ -23,6 +19,19 @@ require(['vs/editor/editor.main'], function () {
     insertText: item.body.join('\n'),
     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
   })
+  const [snippets1, snippets2] = await Promise.all([
+    fetch('$snippets1').then(r => r.json()),
+    fetch('$snippets2').then(r => r.json()),
+    window.pyodide.loadPackage('parso')
+  ])
+  window.code_snippets = [
+    ...Object.values(snippets1).map(snippetToCompletionItem),
+    ...Object.values(snippets2).map(snippetToCompletionItem)
+  ]
+  await window.pyodide.runPythonAsync(`$py_content`)
+})()
+
+require(['vs/editor/editor.main'], async () => {
   const completionToCompletionItem = item => ({
     label: item.get('label'),
     kind: item.get('kind'),
@@ -32,19 +41,9 @@ require(['vs/editor/editor.main'], function () {
   monaco.languages.registerCompletionItemProvider('python', {
     triggerCharacters: ['.', "'", '"'],
     provideCompletionItems: async (model, position) => {
-      if (!window.code_snippets) {
-        const [snippets1, snippets2] = await Promise.all([
-          fetch('$snippets1').then(r => r.json()),
-          fetch('$snippets2').then(r => r.json()),
-        ])
-        window.code_snippets = [
-          ...Object.values(snippets1).map(snippetToCompletionItem),
-          ...Object.values(snippets2).map(snippetToCompletionItem)
-        ]
-      }
-      const pyRes = window.pyodide.runPython(`$py_content`)
+      const pyRes = await window.pyodide.runPython(`get_wave_completions($${position.lineNumber - 1}, $${position.column - 1}, \'\'\'$${model.getValue()}\'\'\')`)
       const completions = pyRes ? pyRes.toJs().map(completionToCompletionItem) : []
-      return { suggestions: [...completions, ...window.code_snippets] }
+      return { suggestions: [...completions, ...(window.code_snippets || [])] }
     }
   })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
