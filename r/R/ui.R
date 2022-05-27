@@ -2955,7 +2955,8 @@ ui_article_card <- function(
     title=title,
     content=content,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='article')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
   return(.o)
 }
@@ -3001,7 +3002,8 @@ ui_breadcrumbs_card <- function(
   .o <- list(
     box=box,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='breadcrumbs')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
   return(.o)
 }
@@ -3038,7 +3040,8 @@ ui_canvas_card <- function(
     width=width,
     height=height,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='canvas')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveCanvasCard"))
   return(.o)
 }
@@ -3071,7 +3074,8 @@ ui_chat_card <- function(
     title=title,
     data=data,
     capacity=capacity,
-    commands=commands)
+    commands=commands,
+    view='chat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
   return(.o)
 }
@@ -3098,7 +3102,8 @@ ui_editor_card <- function(
   .o <- list(
     box=box,
     mode=mode,
-    commands=commands)
+    commands=commands,
+    view='editor')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveEditorCard"))
   return(.o)
 }
@@ -3149,7 +3154,8 @@ ui_flex_card <- function(
     justify=justify,
     align=align,
     wrap=wrap,
-    commands=commands)
+    commands=commands,
+    view='flex')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFlexCard"))
   return(.o)
 }
@@ -3176,7 +3182,8 @@ ui_footer_card <- function(
     box=box,
     caption=caption,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='footer')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
   return(.o)
 }
@@ -3202,7 +3209,8 @@ ui_form_card <- function(
     box=box,
     items=items,
     title=title,
-    commands=commands)
+    commands=commands,
+    view='form')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFormCard"))
   return(.o)
 }
@@ -3234,7 +3242,8 @@ ui_frame_card <- function(
     title=title,
     path=path,
     content=content,
-    commands=commands)
+    commands=commands,
+    view='frame')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFrameCard"))
   return(.o)
 }
@@ -3277,7 +3286,8 @@ ui_graphics_card <- function(
     scene=scene,
     width=width,
     height=height,
-    commands=commands)
+    commands=commands,
+    view='graphics')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveGraphicsCard"))
   return(.o)
 }
@@ -3307,7 +3317,8 @@ ui_grid_card <- function(
     title=title,
     cells=cells,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='grid')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveGridCard"))
   return(.o)
 }
@@ -3415,7 +3426,8 @@ ui_header_card <- function(
     items=items,
     secondary_items=secondary_items,
     color=color,
-    commands=commands)
+    commands=commands,
+    view='header')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
   return(.o)
 }
@@ -3453,7 +3465,8 @@ ui_image_card <- function(
     image=image,
     data=data,
     path=path,
-    commands=commands)
+    commands=commands,
+    view='image')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))
   return(.o)
 }
@@ -3507,7 +3520,8 @@ ui_large_bar_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='large_bar_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveLargeBarStatCard"))
   return(.o)
 }
@@ -3545,7 +3559,8 @@ ui_large_stat_card <- function(
     aux_value=aux_value,
     caption=caption,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='large_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveLargeStatCard"))
   return(.o)
 }
@@ -3580,7 +3595,8 @@ ui_list_card <- function(
     item_view=item_view,
     item_props=item_props,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='list')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveListCard"))
   return(.o)
 }
@@ -3618,7 +3634,8 @@ ui_list_item1_card <- function(
     value=value,
     aux_value=aux_value,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='list_item1')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveListItem1Card"))
   return(.o)
 }
@@ -3653,7 +3670,8 @@ ui_markdown_card <- function(
     title=title,
     content=content,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='markdown')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkdownCard"))
   return(.o)
 }
@@ -3679,7 +3697,8 @@ ui_markup_card <- function(
     box=box,
     title=title,
     content=content,
-    commands=commands)
+    commands=commands,
+    view='markup')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkupCard"))
   return(.o)
 }
@@ -4130,7 +4149,8 @@ ui_meta_card <- function(
     script=script,
     stylesheet=stylesheet,
     stylesheets=stylesheets,
-    commands=commands)
+    commands=commands,
+    view='meta')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)
 }
@@ -4189,7 +4209,8 @@ ui_nav_card <- function(
     persona=persona,
     secondary_items=secondary_items,
     color=color,
-    commands=commands)
+    commands=commands,
+    view='nav')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNavCard"))
   return(.o)
 }
@@ -4218,7 +4239,8 @@ ui_pixel_art_card <- function(
     box=box,
     title=title,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='pixel_art')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePixelArtCard"))
   return(.o)
 }
@@ -4256,7 +4278,8 @@ ui_plot_card <- function(
     plot=plot,
     events=events,
     interactions=interactions,
-    commands=commands)
+    commands=commands,
+    view='plot')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePlotCard"))
   return(.o)
 }
@@ -4294,7 +4317,8 @@ ui_post_card <- function(
     aux_value=aux_value,
     caption=caption,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='post')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePostCard"))
   return(.o)
 }
@@ -4336,7 +4360,8 @@ ui_preview_card <- function(
     items=items,
     caption=caption,
     label=label,
-    commands=commands)
+    commands=commands,
+    view='preview')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePreviewCard"))
   return(.o)
 }
@@ -4372,7 +4397,8 @@ ui_profile_card <- function(
     image=image,
     items=items,
     height=height,
-    commands=commands)
+    commands=commands,
+    view='profile')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
   return(.o)
 }
@@ -4403,7 +4429,8 @@ ui_repeat_card <- function(
     item_view=item_view,
     item_props=item_props,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='repeat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveRepeatCard"))
   return(.o)
 }
@@ -4434,7 +4461,8 @@ ui_section_card <- function(
     title=title,
     subtitle=subtitle,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='section')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSectionCard"))
   return(.o)
 }
@@ -4494,7 +4522,8 @@ ui_small_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='small_series_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSmallSeriesStatCard"))
   return(.o)
 }
@@ -4524,7 +4553,8 @@ ui_small_stat_card <- function(
     title=title,
     value=value,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='small_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSmallStatCard"))
   return(.o)
 }
@@ -4600,7 +4630,8 @@ ui_stat_list_card <- function(
     items=items,
     name=name,
     subtitle=subtitle,
-    commands=commands)
+    commands=commands,
+    view='stat_list')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveStatListCard"))
   return(.o)
 }
@@ -4676,7 +4707,8 @@ ui_stat_table_card <- function(
     items=items,
     name=name,
     subtitle=subtitle,
-    commands=commands)
+    commands=commands,
+    view='stat_table')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveStatTableCard"))
   return(.o)
 }
@@ -4710,7 +4742,8 @@ ui_tab_card <- function(
     value=value,
     link=link,
     name=name,
-    commands=commands)
+    commands=commands,
+    view='tab')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTabCard"))
   return(.o)
 }
@@ -4758,7 +4791,8 @@ ui_tall_article_preview_card <- function(
     content=content,
     name=name,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='tall_article_preview')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallArticlePreviewCard"))
   return(.o)
 }
@@ -4800,7 +4834,8 @@ ui_tall_gauge_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='tall_gauge_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallGaugeStatCard"))
   return(.o)
 }
@@ -4850,7 +4885,8 @@ ui_tall_info_card <- function(
     image=image,
     image_height=image_height,
     category=category,
-    commands=commands)
+    commands=commands,
+    view='tall_info')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallInfoCard"))
   return(.o)
 }
@@ -4914,7 +4950,8 @@ ui_tall_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='tall_series_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallSeriesStatCard"))
   return(.o)
 }
@@ -4936,7 +4973,8 @@ ui_tall_stats_card <- function(
   .o <- list(
     box=box,
     items=items,
-    commands=commands)
+    commands=commands,
+    view='tall_stats')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallStatsCard"))
   return(.o)
 }
@@ -4966,7 +5004,8 @@ ui_template_card <- function(
     title=title,
     content=content,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='template')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTemplateCard"))
   return(.o)
 }
@@ -4996,7 +5035,8 @@ ui_toolbar_card <- function(
     items=items,
     secondary_items=secondary_items,
     overflow_items=overflow_items,
-    commands=commands)
+    commands=commands,
+    view='toolbar')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveToolbarCard"))
   return(.o)
 }
@@ -5026,7 +5066,8 @@ ui_vega_card <- function(
     title=title,
     specification=specification,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='vega')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveVegaCard"))
   return(.o)
 }
@@ -5076,7 +5117,8 @@ ui_wide_article_preview_card <- function(
     caption=caption,
     items=items,
     content=content,
-    commands=commands)
+    commands=commands,
+    view='wide_article_preview')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideArticlePreviewCard"))
   return(.o)
 }
@@ -5118,7 +5160,8 @@ ui_wide_bar_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='wide_bar_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideBarStatCard"))
   return(.o)
 }
@@ -5160,7 +5203,8 @@ ui_wide_gauge_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='wide_gauge_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideGaugeStatCard"))
   return(.o)
 }
@@ -5215,7 +5259,8 @@ ui_wide_info_card <- function(
     icon=icon,
     image=image,
     category=category,
-    commands=commands)
+    commands=commands,
+    view='wide_info')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
   return(.o)
 }
@@ -5271,7 +5316,8 @@ ui_wide_pie_stat_card <- function(
     box=box,
     title=title,
     pies=pies,
-    commands=commands)
+    commands=commands,
+    view='wide_pie_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePieStatCard"))
   return(.o)
 }
@@ -5305,7 +5351,8 @@ ui_wide_plot_card <- function(
     caption=caption,
     plot=plot,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='wide_plot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePlotCard"))
   return(.o)
 }
@@ -5369,7 +5416,8 @@ ui_wide_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    view='wide_series_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideSeriesStatCard"))
   return(.o)
 }
