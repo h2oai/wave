@@ -8,28 +8,7 @@ window.MonacoEnvironment = {
       importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/base/worker/workerMain.js');`
     )}`
   }
-};
-
-(async () => {
-  window.pyodide = await loadPyodide()
-  const snippetToCompletionItem = item => ({
-    label: item.prefix,
-    kind: monaco.languages.CompletionItemKind.Snippet,
-    documentation: item.description,
-    insertText: item.body.join('\n'),
-    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-  })
-  const [snippets1, snippets2] = await Promise.all([
-    fetch('$snippets1').then(r => r.json()),
-    fetch('$snippets2').then(r => r.json()),
-    window.pyodide.loadPackage('parso')
-  ])
-  window.code_snippets = [
-    ...Object.values(snippets1).map(snippetToCompletionItem),
-    ...Object.values(snippets2).map(snippetToCompletionItem)
-  ]
-  await window.pyodide.runPythonAsync(`$py_content`)
-})()
+}
 
 require(['vs/editor/editor.main'], async () => {
   const completionToCompletionItem = item => ({
@@ -65,4 +44,25 @@ require(['vs/editor/editor.main'], async () => {
     if (e.isFlush) return
     emit_debounced('editor', 'change', editor.getValue())
   })
-})
+});
+
+(async () => {
+  window.pyodide = await loadPyodide()
+  const snippetToCompletionItem = item => ({
+    label: item.prefix,
+    kind: monaco.languages.CompletionItemKind.Snippet,
+    documentation: item.description,
+    insertText: item.body.join('\n'),
+    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+  })
+  const [snippets1, snippets2] = await Promise.all([
+    fetch('$snippets1').then(r => r.json()),
+    fetch('$snippets2').then(r => r.json()),
+    window.pyodide.loadPackage('parso')
+  ])
+  window.code_snippets = [
+    ...Object.values(snippets1).map(snippetToCompletionItem),
+    ...Object.values(snippets2).map(snippetToCompletionItem)
+  ]
+  await window.pyodide.runPythonAsync(`$py_content`)
+})()

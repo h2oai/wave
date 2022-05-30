@@ -203,17 +203,14 @@ def get_wave_completions(line, character, file_content):
     with open(os.path.join(example_dir, 'tour.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2, py_content=py_content)
-    q.page['meta'] = ui.meta_card(box='', scripts=[
-        ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
-        ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
-    ])
-    await q.page.save()
-    # Wait for scripts to load properly.
-    await q.sleep(0.5)
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
-        script=ui.inline_script(content=template, requires=['require', 'loadPyodide'], targets=['monaco-editor']),
+        scripts=[
+            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
+            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
+        ],
+        script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -240,10 +237,9 @@ def get_wave_completions(line, character, file_content):
         ]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
-    q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
     # Put tmp placeholder <div></div> to simulate blank screen.
+    q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
-
     await q.page.save()
 
 
