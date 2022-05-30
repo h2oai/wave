@@ -9,7 +9,6 @@ window.MonacoEnvironment = {
     )}`
   }
 }
-
 const completionToCompletionItem = item => ({
   label: item.get('label'),
   kind: item.get('kind'),
@@ -42,14 +41,10 @@ require(['vs/editor/editor.main'], async () => {
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
     value: '',
     language: 'python',
-    minimap: {
-      enabled: false
-    },
+    minimap: { enabled: false },
     overviewRulerLanes: 0,
     hideCursorInOverviewRuler: true,
-    scrollbar: {
-      vertical: 'hidden'
-    },
+    scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
   })
   window.editor = editor
