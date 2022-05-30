@@ -241,8 +241,8 @@ def get_wave_completions(line, character, file_content):
         ]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
-    # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
+    # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
     await q.page.save()
 
