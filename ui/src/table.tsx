@@ -356,7 +356,7 @@ const
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: c.cell_type?.markdown || c.cell_overflow === 'wrap',
+          isMultiline: !!c.cell_type?.markdown || c.cell_overflow === 'wrap',
           filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
@@ -480,10 +480,10 @@ const
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
-        if (col.cellType?.menu) return <XMenuTableCellType model={{...col.cellType.menu, rowId: String(item.key)}} />
-        if (col.cellType?.markdown) return <XMarkdownTableCellType model={{...col.cellType.markdown, content: item[col.key]}}/>
+        if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
+        if (col.cellType?.markdown) return <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
-        if (col.key === primaryColumnKey && !isMultiple) {
+        if (col.key === primaryColumnKey) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
             wave.push()

@@ -131,3 +131,4 @@ dmypy.json
 
 # Wave ML
 /h2o_wave_ml
+examples/_tour_apps_tmp

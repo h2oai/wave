@@ -58,31 +58,33 @@ export interface VegaVisualization {
   name?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** Vega grammar to use. Defaults to 'vega-lite'. */
+  grammar?: 'vega-lite' | 'vega'
 }
 
 export const
-  XVegaVisualization = ({ model: state }: { model: VegaVisualization }) => {
+  XVegaVisualization = ({ model }: { model: VegaVisualization }) => {
     const
       ref = React.useRef<HTMLDivElement>(null),
       init = React.useCallback(async () => {
         const el = ref.current
         if (!el) return
 
-        const spec = JSON.parse(state.specification)
+        const spec = JSON.parse(model.specification)
         // HACK: Vega calculates dimensions with extra 10px for some reason, increase container for 10px as well.
         if (!isNaN(spec.height)) el.style.height = `${spec.height + 10}px`
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
         else if (el.clientHeight < 30) el.style.height = '300px'
 
         const
-          data = unpack<any[]>(state.data),
+          data = unpack<any[]>(model.data),
           width = el.clientWidth - 10, // HACK: Vega calculates dimensions with extra 10px for some reason.
           height = el.clientHeight - 10 // HACK: Vega calculates dimensions with extra 10px for some reason.
 
         if (data) spec.data = { values: data }
         const { default: vegaEmbed } = await import('vega-embed')
         vegaEmbed(el, spec, {
-          mode: 'vega-lite',
+          mode: model.grammar || 'vega-lite',
           defaultStyle: false,
           renderer: 'canvas',
           actions: false,
@@ -99,14 +101,14 @@ export const
             }
           }
         }).catch(console.error)
-      }, [state.data, state.specification]),
+      }, [model.data, model.grammar, model.specification]),
       onResize = debounce(1000, init),
-      { name, width = 'auto', height = 'auto' } = state,
+      { name, width = 'auto', height = 'auto' } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
         ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
 
-    React.useEffect(() => { init() }, [init, state])
+    React.useEffect(() => { init() }, [init, model])
     React.useEffect(() => {
       init()
       window.addEventListener('resize', onResize)
@@ -125,18 +127,20 @@ interface State {
   specification: S
   /** Data for the plot, if any. */
   data?: Rec
+  /** Vega grammar to use. Defaults to 'vega-lite'. */
+  grammar?: 'vega-lite' | 'vega'
 }
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
-        const { specification, data, title } = state
+        const { specification, data, title, grammar = 'vega-lite' } = state
         return (
           <div data-test={name} className={css.card}>
             <div className='wave-s12 wave-w6'>{title}</div>
             <div className={css.body}>
-              <XVegaVisualization key={xid()} model={{ specification, data }} />
+              <XVegaVisualization key={xid()} model={{ specification, data, grammar }} />
             </div>
           </div>
         )

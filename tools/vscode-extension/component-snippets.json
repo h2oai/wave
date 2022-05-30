@@ -1822,14 +1822,14 @@
   "Wave Full VegaVisualization": {
     "prefix": "w_full_vega_visualization",
     "body": [
-      "ui.vega_visualization(specification='$1', data=$2, width='${3:100%'}', height='${4:300px'}', name='$5', visible=${6:True}),$0"
+      "ui.vega_visualization(specification='$1', data=$2, width='${3:100%'}', height='${4:300px'}', name='$5', visible=${6:True}, grammar='${7:vega-lite'}'),$0"
     ],
     "description": "Create a full Wave VegaVisualization."
   },
   "Wave Full VegaCard": {
     "prefix": "w_full_vega_card",
     "body": [
-      "ui.vega_card(box='$1', title='$2', specification='$3', data=$4, commands=[\n\t\t$5\t\t\n])$0"
+      "ui.vega_card(box='$1', title='$2', specification='$3', data=$4, grammar='${5:vega-lite'}', commands=[\n\t\t$6\t\t\n])$0"
     ],
     "description": "Create a full Wave VegaCard."
   },
