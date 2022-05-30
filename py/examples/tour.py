@@ -170,9 +170,9 @@ app_title = 'H2O Wave Tour'
 async def setup_page(q: Q):
     py_content = ''
     vsc_extension_path = os.path.join('..', '..', 'tools', 'vscode-extension', 'server')
-    # In prod.
     parser_path = os.path.join(example_dir, 'tour_autocomplete_parser.py')
     utils_path = os.path.join(example_dir, 'tour_autocomplete_utils.py')
+    # In prod.
     if os.path.exists(parser_path) and os.path.exists(utils_path):
         with open(parser_path, 'r') as f:
             py_content = f.read()
@@ -200,6 +200,8 @@ def get_wave_completions(line, character, file_content):
         return [{'label': label, 'kind': 6, 'sort_text': '0'} for label in completion_items]
     elif completion_type == 'themes':
         return [{'label': theme, 'kind': 13, 'sort_text': '0'} for theme in themes]
+    elif completion_type == 'icons':
+        return [{'label': icon, 'kind': 13, 'sort_text': '0'} for icon in fluent_icons]
         '''
     js_code = ''
     with open(os.path.join(example_dir, 'tour.js'), 'r') as f:
