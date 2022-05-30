@@ -64,4 +64,4 @@ setTimeout(async () => {
   window.pyodide = await loadPyodide()
   await window.pyodide.loadPackage('parso')
   await window.pyodide.runPythonAsync(`$py_content`)
-})
+}, 100)
