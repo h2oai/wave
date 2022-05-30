@@ -111,6 +111,7 @@ func main() {
 	stringVar(&auth.ProviderURL, "oidc-provider-url", "", "OIDC provider URL")
 	stringVar(&auth.RedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
 	stringVar(&auth.EndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
+	stringVar(&auth.PostRedirectURL, "oidc-end-session-url", "", "OIDC end session URL")
 	stringVar(&rawAuthScopes, "oidc-scopes", "", "OIDC scopes, comma-separated (default \"openid,profile\")")
 	stringVar(&rawAuthURLParams, "oidc-auth-url-params", "", "additional URL parameters to pass during OIDC authorization, in the format \"key:value\", comma-separated, e.g. \"foo:bar,qux:42\"")
 	boolVar(&auth.SkipLogin, "oidc-skip-login", false, "do not display the login form during OIDC authorization")
