@@ -19,6 +19,7 @@ _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1
 _app_host = _app_address.hostname
 _app_port = '10102'
 default_example_name = 'hello_world'
+vsc_extension_path = os.path.join('..', '..', 'tools', 'vscode-extension')
 
 
 class Example:
@@ -169,7 +170,6 @@ app_title = 'H2O Wave Tour'
 
 async def setup_page(q: Q):
     py_content = ''
-    vsc_extension_path = os.path.join('..', '..', 'tools', 'vscode-extension', 'server')
     parser_path = os.path.join(example_dir, 'tour_autocomplete_parser.py')
     utils_path = os.path.join(example_dir, 'tour_autocomplete_utils.py')
     # In prod.
@@ -180,9 +180,9 @@ async def setup_page(q: Q):
             py_content += f.read()
     # When run in development from Wave repo.
     elif os.path.exists(vsc_extension_path):
-        with open(os.path.join(vsc_extension_path, 'parser.py'), 'r') as f:
+        with open(os.path.join(vsc_extension_path, 'server', 'parser.py'), 'r') as f:
             py_content = f.read()
-        with open(os.path.join(vsc_extension_path, 'utils.py'), 'r') as f:
+        with open(os.path.join(vsc_extension_path, 'server', 'utils.py'), 'r') as f:
             py_content += f.read()
     if py_content:
         py_content += '''
@@ -331,9 +331,17 @@ async def on_shutdown():
 @app('/tour', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
-        base_snippets = os.path.join(example_dir, 'base-snippets.json')
-        component_snippets = os.path.join(example_dir, 'component-snippets.json')
-        q.app.snippets1, q.app.snippets2, = await q.site.upload([base_snippets, component_snippets])
+        base_snippets_path = os.path.join(example_dir, 'base-snippets.json')
+        component_snippets_path = os.path.join(example_dir, 'component-snippets.json')
+        # Prod.
+        if os.path.exists(base_snippets_path) and os.path.exists(component_snippets_path):
+            q.app.snippets1, q.app.snippets2, = await q.site.upload([base_snippets_path, component_snippets_path])
+        # When run in development from Wave repo.
+        elif os.path.exists(vsc_extension_path):
+            q.app.snippets1, q.app.snippets2, = await q.site.upload([
+                os.path.join(vsc_extension_path, 'base-snippets.json'),
+                os.path.join(vsc_extension_path, 'component-snippets.json')
+            ])
         q.app.initialized = True
     if not q.client.initialized:
         q.client.initialized = True
