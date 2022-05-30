@@ -10,19 +10,33 @@ window.MonacoEnvironment = {
   }
 }
 
+const completionToCompletionItem = item => ({
+  label: item.get('label'),
+  kind: item.get('kind'),
+  insertText: item.get('label'),
+  sortText: item.get('sort_text'),
+})
+const snippetToCompletionItem = item => ({
+  label: item.prefix,
+  kind: monaco.languages.CompletionItemKind.Snippet,
+  documentation: item.description,
+  insertText: item.body.join('\n'),
+  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+})
 require(['vs/editor/editor.main'], async () => {
-  const completionToCompletionItem = item => ({
-    label: item.get('label'),
-    kind: item.get('kind'),
-    insertText: item.get('label'),
-    sortText: item.get('sort_text'),
-  })
   monaco.languages.registerCompletionItemProvider('python', {
     triggerCharacters: ['.', "'", '"'],
     provideCompletionItems: async (model, position) => {
       const pyRes = await window.pyodide.runPython(`get_wave_completions($${position.lineNumber - 1}, $${position.column - 1}, \'\'\'$${model.getValue()}\'\'\')`)
       const completions = pyRes ? pyRes.toJs().map(completionToCompletionItem) : []
-      return { suggestions: [...completions, ...(window.code_snippets || [])] }
+      // HACK: Fetch on every keystroke due to weird bug in monaco - showing snippets only for first example.
+      let [snippets1, snippets2] = await Promise.all([
+        fetch('$snippets1').then(r => r.json()),
+        fetch('$snippets2').then(r => r.json()),
+      ])
+      snippets1 = Object.values(snippets1).map(snippetToCompletionItem)
+      snippets2 = Object.values(snippets2).map(snippetToCompletionItem)
+      return { suggestions: [...completions, ...snippets1, ...snippets2] }
     }
   })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
@@ -44,25 +58,10 @@ require(['vs/editor/editor.main'], async () => {
     if (e.isFlush) return
     emit_debounced('editor', 'change', editor.getValue())
   })
-});
+})
 
-(async () => {
+setTimeout(async () => {
   window.pyodide = await loadPyodide()
-  const snippetToCompletionItem = item => ({
-    label: item.prefix,
-    kind: monaco.languages.CompletionItemKind.Snippet,
-    documentation: item.description,
-    insertText: item.body.join('\n'),
-    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-  })
-  const [snippets1, snippets2] = await Promise.all([
-    fetch('$snippets1').then(r => r.json()),
-    fetch('$snippets2').then(r => r.json()),
-    window.pyodide.loadPackage('parso')
-  ])
-  window.code_snippets = [
-    ...Object.values(snippets1).map(snippetToCompletionItem),
-    ...Object.values(snippets2).map(snippetToCompletionItem)
-  ]
+  await window.pyodide.loadPackage('parso')
   await window.pyodide.runPythonAsync(`$py_content`)
-})()
+})
