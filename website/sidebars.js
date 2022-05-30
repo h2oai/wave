@@ -160,6 +160,7 @@ module.exports = {
               "widgets/plots/third-party/d3",
               "widgets/plots/third-party/matplotlib",
               "widgets/plots/third-party/plotly",
+              "widgets/plots/third-party/vega",
               "widgets/plots/third-party/vegalite",
             ]
           }
