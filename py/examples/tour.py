@@ -171,10 +171,12 @@ async def setup_page(q: Q):
     py_content = ''
     vsc_extension_path = os.path.join('..', '..', 'tools', 'vscode-extension', 'server')
     # In prod.
-    if os.path.exists('tour_autocomplete_parser.py') and os.path.exists('tour_autocomplete_utils.py'):
-        with open('tour_autocomplete_parser.py', 'r') as f:
+    parser_path = os.path.join(example_dir, 'tour_autocomplete_parser.py')
+    utils_path = os.path.join(example_dir, 'tour_autocomplete_utils.py')
+    if os.path.exists(parser_path) and os.path.exists(utils_path):
+        with open(parser_path, 'r') as f:
             py_content = f.read()
-        with open('tour_autocomplete_utils.py', 'r') as f:
+        with open(utils_path, 'r') as f:
             py_content += f.read()
     # When run in development from Wave repo.
     elif os.path.exists(vsc_extension_path):
