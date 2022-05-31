@@ -61,6 +61,8 @@ Usage of ./waved:
         OIDC provider URL
   -oidc-redirect-url string
         OIDC redirect URL
+  -oidc-post-logout-redirect-url string
+        OIDC post logout redirect URL
   -oidc-scopes
         OIDC scopes separated by comma (default "openid,profile")
   -oidc-skip-login
@@ -114,6 +116,7 @@ H2O_WAVE_OIDC_CLIENT_SECRET
 H2O_WAVE_OIDC_END_SESSION_URL
 H2O_WAVE_OIDC_PROVIDER_URL
 H2O_WAVE_OIDC_REDIRECT_URL
+H2O_WAVE_OIDC_POST_LOGOUT_REDIRECT_URL
 H2O_WAVE_OIDC_SCOPES
 H2O_WAVE_OIDC_SKIP_LOGIN [1]
 H2O_WAVE_SESSION_EXPIRY

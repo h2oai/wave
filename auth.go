@@ -444,8 +444,12 @@ func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken
 		return
 	}
 
+	post_logout_redirect_url := h.auth.conf.PostLogoutRedirectURL
+	if post_logout_redirect_url != "" {
+		post_logout_redirect_url = r.Host
+	}
 	query := redirectURL.Query()
-	query.Set("post_logout_redirect_uri", r.Host)
+	query.Set("post_logout_redirect_uri", post_logout_redirect_url)
 	if len(idToken) > 0 {
 		// required by Okta
 		// https://developer.okta.com/docs/reference/api/oidc/#logout
