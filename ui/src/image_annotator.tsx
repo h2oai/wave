@@ -298,7 +298,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, rect),
         newShapes = [...drawnShapes]
 
-      if (start) {
+      if (start && !resizedCornerRef.current) {
         const newRect = createRect(start.x, cursor_x, start.y, cursor_y, canvas)
         if (newRect) newShapes.unshift({ shape: { rect: newRect }, tag: activeTag })
       }
