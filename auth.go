@@ -433,8 +433,6 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken string) {
-	var post_logout_redirect_url string
-
 	if h.auth.conf.EndSessionURL == "" {
 		http.Redirect(w, r, h.auth.baseURL, http.StatusFound)
 		return
@@ -446,8 +444,8 @@ func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken
 		return
 	}
 
-	post_logout_redirect_url = h.auth.conf.PostLogoutRedirectURL
-	if len(post_logout_redirect_url) == 0 {
+	post_logout_redirect_url := h.auth.conf.PostLogoutRedirectURL
+	if post_logout_redirect_url != "" {
 		post_logout_redirect_url = r.Host
 	}
 	query := redirectURL.Query()
