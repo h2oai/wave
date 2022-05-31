@@ -17,7 +17,7 @@ module.exports = {
   ],
   themeConfig: {
     prism: {
-      additionalLanguages: ['toml'],
+      additionalLanguages: ['toml', 'r'],
     },
     algolia: {
       appId: '1DCIS06TYN',
