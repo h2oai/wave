@@ -1,0 +1,1875 @@
+[
+  {
+    "displayName": "Article Card",
+    "name": "article_card",
+    "parameters": {
+      "box": "",
+      "title": "ArticleCard Title",
+      "content": "ArticleCard content",
+      "items": [],
+      "view": "article"
+    }
+  },
+  {
+    "displayName": "Breadcrumb",
+    "name": "breadcrumb",
+    "parameters": {
+      "name": "breadcrumb",
+      "label": "Breadcrumb"
+    }
+  },
+  {
+    "displayName": "Breadcrumbs Card",
+    "name": "breadcrumbs_card",
+    "parameters": {
+      "box": "",
+      "items": [],
+      "view": "breadcrumbs"
+    }
+  },
+  {
+    "displayName": "Button",
+    "name": "button",
+    "parameters": {
+      "name": "button",
+      "label": "Button",
+      "caption": "",
+      "primary": "",
+      "disabled": "",
+      "link": "",
+      "icon": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "path": ""
+    }
+  },
+  {
+    "displayName": "Buttons",
+    "name": "buttons",
+    "parameters": {
+      "items": [],
+      "justify": "",
+      "name": "buttons",
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Mini Buttons",
+    "name": "mini_buttons",
+    "parameters": {
+      "items": [],
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Mini Button",
+    "name": "mini_button",
+    "parameters": {
+      "name": "minibutton",
+      "label": "MiniButton",
+      "icon": ""
+    }
+  },
+  {
+    "displayName": "Canvas Card",
+    "name": "canvas_card",
+    "parameters": {
+      "box": "",
+      "title": "CanvasCard Title",
+      "width": "",
+      "height": "",
+      "data": "",
+      "items": [],
+      "view": "canvas"
+    }
+  },
+  {
+    "displayName": "Chat Card",
+    "name": "chat_card",
+    "parameters": {
+      "box": "",
+      "title": "ChatCard Title",
+      "data": "",
+      "capacity": "",
+      "items": [],
+      "view": "chat"
+    }
+  },
+  {
+    "displayName": "Checkbox",
+    "name": "checkbox",
+    "parameters": {
+      "name": "checkbox",
+      "label": "Checkbox",
+      "indeterminate": "",
+      "disabled": "",
+      "trigger": "",
+      "width": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Checklist",
+    "name": "checklist",
+    "parameters": {
+      "name": "checklist",
+      "label": "Checklist",
+      "values": "",
+      "items": [],
+      "trigger": "",
+      "inline": "",
+      "width": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Choice",
+    "name": "choice",
+    "parameters": {
+      "name": "choice",
+      "label": "Choice",
+      "disabled": ""
+    }
+  },
+  {
+    "displayName": "Choice Group",
+    "name": "choice_group",
+    "parameters": {
+      "name": "choicegroup",
+      "label": "ChoiceGroup",
+      "items": [],
+      "required": "",
+      "trigger": "",
+      "inline": "",
+      "width": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Color Picker",
+    "name": "color_picker",
+    "parameters": {
+      "name": "colorpicker",
+      "label": "ColorPicker",
+      "items": [],
+      "width": "",
+      "alpha": "",
+      "inline": "",
+      "visible": "",
+      "trigger": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Combobox",
+    "name": "combobox",
+    "parameters": {
+      "name": "combobox",
+      "label": "Combobox",
+      "placeholder": "",
+      "values": "",
+      "items": [],
+      "error": "",
+      "disabled": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "trigger": "",
+      "required": ""
+    }
+  },
+  {
+    "displayName": "Copyable Text",
+    "name": "copyable_text",
+    "parameters": {
+      "label": "CopyableText",
+      "name": "copyabletext",
+      "multiline": ""
+    }
+  },
+  {
+    "displayName": "Date Picker",
+    "name": "date_picker",
+    "parameters": {
+      "name": "datepicker",
+      "label": "DatePicker",
+      "placeholder": "",
+      "disabled": "",
+      "trigger": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "min": "",
+      "max": ""
+    }
+  },
+  {
+    "displayName": "Dialog",
+    "name": "dialog",
+    "parameters": {
+      "title": "",
+      "items": [],
+      "width": "",
+      "closable": "",
+      "blocking": "",
+      "primary": "",
+      "name": "dialog",
+      "events": ""
+    }
+  },
+  {
+    "displayName": "Dropdown",
+    "name": "dropdown",
+    "parameters": {
+      "name": "dropdown",
+      "label": "Dropdown",
+      "placeholder": "",
+      "values": "",
+      "items": [],
+      "required": "",
+      "disabled": "",
+      "trigger": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "popup": ""
+    }
+  },
+  {
+    "displayName": "Editor Card",
+    "name": "editor_card",
+    "parameters": {
+      "box": "",
+      "mode": "",
+      "items": [],
+      "view": "editor"
+    }
+  },
+  {
+    "displayName": "Expander",
+    "name": "expander",
+    "parameters": {
+      "name": "expander",
+      "label": "Expander",
+      "expanded": "",
+      "items": [],
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Facepile",
+    "name": "facepile",
+    "parameters": {
+      "items": [],
+      "name": "facepile",
+      "max": "",
+      "label": "Facepile"
+    }
+  },
+  {
+    "displayName": "File Upload",
+    "name": "file_upload",
+    "parameters": {
+      "name": "fileupload",
+      "label": "FileUpload",
+      "multiple": "",
+      "file_extensions": "",
+      "max_file_size": "",
+      "max_size": "",
+      "height": "",
+      "width": "",
+      "compact": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Flex Card",
+    "name": "flex_card",
+    "parameters": {
+      "box": "",
+      "item_view": "",
+      "item_props": "",
+      "data": "",
+      "direction": "",
+      "justify": "",
+      "align": "",
+      "wrap": "",
+      "items": [],
+      "view": "flex"
+    }
+  },
+  {
+    "displayName": "Footer Card",
+    "name": "footer_card",
+    "parameters": {
+      "box": "",
+      "caption": "",
+      "items": [],
+      "view": "footer"
+    }
+  },
+  {
+    "displayName": "Component",
+    "name": "component",
+    "parameters": {
+      "text": "",
+      "text_xl": "",
+      "text_l": "",
+      "text_m": "",
+      "text_s": "",
+      "text_xs": "",
+      "label": "Component",
+      "separator": "",
+      "progress": "",
+      "message_bar": "",
+      "textbox": "",
+      "checkbox": "",
+      "toggle": "",
+      "choice_group": "",
+      "checklist": "",
+      "dropdown": "",
+      "combobox": "",
+      "slider": "",
+      "spinbox": "",
+      "date_picker": "",
+      "color_picker": "",
+      "button": "",
+      "items": [],
+      "mini_button": "",
+      "mini_buttons": "",
+      "file_upload": "",
+      "table": "",
+      "link": "",
+      "links": "",
+      "tabs": "",
+      "expander": "",
+      "frame": "",
+      "markup": "",
+      "template": "",
+      "picker": "",
+      "range_slider": "",
+      "stepper": "",
+      "visualization": "",
+      "vega_visualization": "",
+      "stats": "",
+      "inline": "",
+      "image": "",
+      "persona": "",
+      "text_annotator": "",
+      "image_annotator": "",
+      "facepile": "",
+      "copyable_text": "",
+      "menu": "",
+      "tags": ""
+    }
+  },
+  {
+    "displayName": "Inline",
+    "name": "inline",
+    "parameters": {
+      "items": [],
+      "justify": "",
+      "inset": ""
+    }
+  },
+  {
+    "displayName": "Form Card",
+    "name": "form_card",
+    "parameters": {
+      "box": "",
+      "items": [],
+      "title": "FormCard Title",
+      "view": "form"
+    }
+  },
+  {
+    "displayName": "Frame",
+    "name": "frame",
+    "parameters": {
+      "path": "",
+      "content": "",
+      "width": "",
+      "height": "",
+      "name": "frame",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Frame Card",
+    "name": "frame_card",
+    "parameters": {
+      "box": "",
+      "title": "FrameCard Title",
+      "path": "",
+      "content": "FrameCard content",
+      "items": [],
+      "view": "frame"
+    }
+  },
+  {
+    "displayName": "Graphics Card",
+    "name": "graphics_card",
+    "parameters": {
+      "box": "",
+      "view_box": "",
+      "stage": "",
+      "scene": "",
+      "width": "",
+      "height": "",
+      "items": [],
+      "view": "graphics"
+    }
+  },
+  {
+    "displayName": "Grid Card",
+    "name": "grid_card",
+    "parameters": {
+      "box": "",
+      "title": "GridCard Title",
+      "cells": "",
+      "data": "",
+      "items": [],
+      "view": "grid"
+    }
+  },
+  {
+    "displayName": "Header Card",
+    "name": "header_card",
+    "parameters": {
+      "box": "",
+      "title": "HeaderCard Title",
+      "subtitle": "",
+      "icon": "",
+      "icon_color": "",
+      "image": "",
+      "nav": "",
+      "items": [],
+      "secondary_items": "",
+      "color": "",
+      "view": "header"
+    }
+  },
+  {
+    "displayName": "Icon Table Cell Type",
+    "name": "icon_table_cell_type",
+    "parameters": {
+      "color": "",
+      "name": "icontablecelltype"
+    }
+  },
+  {
+    "displayName": "Image Card",
+    "name": "image_card",
+    "parameters": {
+      "box": "",
+      "title": "ImageCard Title",
+      "type": "",
+      "image": "",
+      "data": "",
+      "path": "",
+      "items": [],
+      "view": "image"
+    }
+  },
+  {
+    "displayName": "Image",
+    "name": "image",
+    "parameters": {
+      "title": "",
+      "type": "",
+      "image": "",
+      "path": "",
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Image Annotator Rect",
+    "name": "image_annotator_rect",
+    "parameters": {
+      "x1": "",
+      "y1": "",
+      "x2": "",
+      "y2": ""
+    }
+  },
+  {
+    "displayName": "Image Annotator Shape",
+    "name": "image_annotator_shape",
+    "parameters": {
+      "rect": ""
+    }
+  },
+  {
+    "displayName": "Image Annotator Tag",
+    "name": "image_annotator_tag",
+    "parameters": {
+      "name": "imageannotatortag",
+      "label": "ImageAnnotatorTag",
+      "color": ""
+    }
+  },
+  {
+    "displayName": "Image Annotator Item",
+    "name": "image_annotator_item",
+    "parameters": {
+      "shape": "",
+      "tag": ""
+    }
+  },
+  {
+    "displayName": "Image Annotator",
+    "name": "image_annotator",
+    "parameters": {
+      "name": "imageannotator",
+      "image": "",
+      "title": "",
+      "tags": "",
+      "items": [],
+      "trigger": "",
+      "image_height": ""
+    }
+  },
+  {
+    "displayName": "Label",
+    "name": "label",
+    "parameters": {
+      "label": "Label",
+      "required": "",
+      "disabled": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "name": "label"
+    }
+  },
+  {
+    "displayName": "Large Bar Stat Card",
+    "name": "large_bar_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "LargeBarStatCard Title",
+      "caption": "",
+      "label": "LargeBarStatCard",
+      "aux_value": "",
+      "value_caption": "",
+      "aux_value_caption": "",
+      "progress": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "large_bar_stat"
+    }
+  },
+  {
+    "displayName": "Large Stat Card",
+    "name": "large_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "LargeStatCard Title",
+      "label": "LargeStatCard",
+      "aux_value": "",
+      "caption": "",
+      "data": "",
+      "items": [],
+      "view": "large_stat"
+    }
+  },
+  {
+    "displayName": "Link",
+    "name": "link",
+    "parameters": {
+      "label": "Link",
+      "path": "",
+      "disabled": "",
+      "download": "",
+      "button": "",
+      "width": "",
+      "visible": "",
+      "target": "",
+      "tooltip": "",
+      "name": "link"
+    }
+  },
+  {
+    "displayName": "Links",
+    "name": "links",
+    "parameters": {
+      "items": [],
+      "label": "Links",
+      "inline": "",
+      "width": ""
+    }
+  },
+  {
+    "displayName": "List Card",
+    "name": "list_card",
+    "parameters": {
+      "box": "",
+      "title": "ListCard Title",
+      "item_view": "",
+      "item_props": "",
+      "data": "",
+      "items": [],
+      "view": "list"
+    }
+  },
+  {
+    "displayName": "List Item1 Card",
+    "name": "list_item1_card",
+    "parameters": {
+      "box": "",
+      "title": "ListItem1Card Title",
+      "caption": "",
+      "label": "ListItem1Card",
+      "aux_value": "",
+      "data": "",
+      "items": [],
+      "view": "list_item1"
+    }
+  },
+  {
+    "displayName": "Markdown Card",
+    "name": "markdown_card",
+    "parameters": {
+      "box": "",
+      "title": "MarkdownCard Title",
+      "content": "MarkdownCard content",
+      "data": "",
+      "items": [],
+      "view": "markdown"
+    }
+  },
+  {
+    "displayName": "Markdown Table Cell Type",
+    "name": "markdown_table_cell_type",
+    "parameters": {
+      "name": "markdowntablecelltype",
+      "target": ""
+    }
+  },
+  {
+    "displayName": "Markup",
+    "name": "markup",
+    "parameters": {
+      "content": "",
+      "name": "markup",
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Markup Card",
+    "name": "markup_card",
+    "parameters": {
+      "box": "",
+      "title": "MarkupCard Title",
+      "content": "MarkupCard content",
+      "items": [],
+      "view": "markup"
+    }
+  },
+  {
+    "displayName": "Menu",
+    "name": "menu",
+    "parameters": {
+      "items": [],
+      "icon": "",
+      "image": "",
+      "name": "menu"
+    }
+  },
+  {
+    "displayName": "Menu Table Cell Type",
+    "name": "menu_table_cell_type",
+    "parameters": {
+      "items": [],
+      "name": "menutablecelltype"
+    }
+  },
+  {
+    "displayName": "Message Bar",
+    "name": "message_bar",
+    "parameters": {
+      "type": "",
+      "text": "",
+      "name": "messagebar",
+      "width": "",
+      "visible": "",
+      "items": []
+    }
+  },
+  {
+    "displayName": "Inline Stylesheet",
+    "name": "inline_stylesheet",
+    "parameters": {
+      "content": "",
+      "media": ""
+    }
+  },
+  {
+    "displayName": "Stylesheet",
+    "name": "stylesheet",
+    "parameters": {
+      "path": "",
+      "media": "",
+      "cross_origin": ""
+    }
+  },
+  {
+    "displayName": "Layout",
+    "name": "layout",
+    "parameters": {
+      "breakpoint": "",
+      "zones": "",
+      "width": "",
+      "min_width": "",
+      "max_width": "",
+      "height": "",
+      "min_height": "",
+      "max_height": "",
+      "name": "layout"
+    }
+  },
+  {
+    "displayName": "Zone",
+    "name": "zone",
+    "parameters": {
+      "name": "zone",
+      "size": "",
+      "direction": "",
+      "justify": "",
+      "align": "",
+      "wrap": "",
+      "zones": ""
+    }
+  },
+  {
+    "displayName": "Theme",
+    "name": "theme",
+    "parameters": {
+      "name": "theme",
+      "text": "",
+      "card": "",
+      "page": "",
+      "primary": ""
+    }
+  },
+  {
+    "displayName": "Meta Card",
+    "name": "meta_card",
+    "parameters": {
+      "box": "",
+      "title": "MetaCard Title",
+      "refresh": "",
+      "notification": "",
+      "notification_bar": "",
+      "redirect": "",
+      "icon": "",
+      "layouts": "",
+      "dialog": "",
+      "side_panel": "",
+      "theme": "",
+      "themes": "",
+      "tracker": "",
+      "scripts": "",
+      "script": "",
+      "stylesheet": "",
+      "stylesheets": "",
+      "items": [],
+      "view": "meta"
+    }
+  },
+  {
+    "displayName": "Nav Item",
+    "name": "nav_item",
+    "parameters": {
+      "name": "navitem",
+      "label": "NavItem",
+      "icon": "",
+      "disabled": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Nav Group",
+    "name": "nav_group",
+    "parameters": {
+      "label": "NavGroup",
+      "items": [],
+      "collapsed": ""
+    }
+  },
+  {
+    "displayName": "Nav Card",
+    "name": "nav_card",
+    "parameters": {
+      "box": "",
+      "items": [],
+      "label": "NavCard",
+      "title": "NavCard Title",
+      "subtitle": "",
+      "icon": "",
+      "icon_color": "",
+      "image": "",
+      "persona": "",
+      "secondary_items": "",
+      "color": "",
+      "view": "nav"
+    }
+  },
+  {
+    "displayName": "Notification Bar",
+    "name": "notification_bar",
+    "parameters": {
+      "text": "",
+      "type": "",
+      "timeout": "",
+      "items": [],
+      "position": "",
+      "events": "",
+      "name": "notificationbar"
+    }
+  },
+  {
+    "displayName": "Persona",
+    "name": "persona",
+    "parameters": {
+      "title": "",
+      "subtitle": "",
+      "caption": "",
+      "size": "",
+      "image": "",
+      "initials": "",
+      "initials_color": "",
+      "name": "persona"
+    }
+  },
+  {
+    "displayName": "Picker",
+    "name": "picker",
+    "parameters": {
+      "name": "picker",
+      "items": [],
+      "label": "Picker",
+      "values": "",
+      "max_choices": "",
+      "required": "",
+      "disabled": "",
+      "width": "",
+      "visible": "",
+      "trigger": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Pixel Art Card",
+    "name": "pixel_art_card",
+    "parameters": {
+      "box": "",
+      "title": "PixelArtCard Title",
+      "data": "",
+      "items": [],
+      "view": "pixel_art"
+    }
+  },
+  {
+    "displayName": "Pixel",
+    "name": "pixel",
+    "parameters": {
+      "color": ""
+    }
+  },
+  {
+    "displayName": "Mark",
+    "name": "mark",
+    "parameters": {
+      "coord": "",
+      "type": "",
+      "x": "",
+      "x0": "",
+      "x1": "",
+      "x2": "",
+      "x_q1": "",
+      "x_q2": "",
+      "x_q3": "",
+      "x_min": "",
+      "x_max": "",
+      "x_nice": "",
+      "x_scale": "",
+      "x_title": "",
+      "y": "",
+      "y0": "",
+      "y1": "",
+      "y2": "",
+      "y_q1": "",
+      "y_q2": "",
+      "y_q3": "",
+      "y_min": "",
+      "y_max": "",
+      "y_nice": "",
+      "y_scale": "",
+      "y_title": "",
+      "color": "",
+      "color_range": "",
+      "color_domain": "",
+      "shape": "",
+      "shape_range": "",
+      "size": "",
+      "size_range": "",
+      "stack": "",
+      "dodge": "",
+      "curve": "",
+      "fill_color": "",
+      "fill_opacity": "",
+      "stroke_color": "",
+      "stroke_opacity": "",
+      "stroke_size": "",
+      "stroke_dash": "",
+      "label": "Mark",
+      "label_offset": "",
+      "label_offset_x": "",
+      "label_offset_y": "",
+      "label_rotation": "",
+      "label_position": "",
+      "label_overlap": "",
+      "label_fill_color": "",
+      "label_fill_opacity": "",
+      "label_stroke_color": "",
+      "label_stroke_opacity": "",
+      "label_stroke_size": "",
+      "label_font_size": "",
+      "label_font_weight": "",
+      "label_line_height": "",
+      "label_align": "",
+      "ref_stroke_color": "",
+      "ref_stroke_opacity": "",
+      "ref_stroke_size": "",
+      "ref_stroke_dash": ""
+    }
+  },
+  {
+    "displayName": "Mark Ext",
+    "name": "mark_ext",
+    "parameters": {
+      "x_field": "",
+      "x_format": "",
+      "x0_field": "",
+      "x0_format": "",
+      "x1_field": "",
+      "x1_format": "",
+      "x2_field": "",
+      "x2_format": "",
+      "x_q1_field": "",
+      "x_q1_format": "",
+      "x_q2_field": "",
+      "x_q2_format": "",
+      "x_q3_field": "",
+      "x_q3__format": "",
+      "y_field": "",
+      "y_format": "",
+      "y0_field": "",
+      "y0_format": "",
+      "y1_field": "",
+      "y1_format": "",
+      "y2_field": "",
+      "y2_format": "",
+      "y_q1_field": "",
+      "y_q1_format": "",
+      "y_q2_field": "",
+      "y_q2_format": "",
+      "y_q3_field": "",
+      "y_q3__format": "",
+      "color_field": "",
+      "color_format": "",
+      "shape_field": "",
+      "shape_format": "",
+      "size_format": "",
+      "size_field": "",
+      "dodge_field": "",
+      "label_field": "",
+      "label_format": ""
+    }
+  },
+  {
+    "displayName": "Plot",
+    "name": "plot",
+    "parameters": {
+      "marks": ""
+    }
+  },
+  {
+    "displayName": "Visualization",
+    "name": "visualization",
+    "parameters": {
+      "plot": "",
+      "data": "",
+      "width": "",
+      "height": "",
+      "name": "visualization",
+      "visible": "",
+      "events": "",
+      "interactions": ""
+    }
+  },
+  {
+    "displayName": "Plot Card",
+    "name": "plot_card",
+    "parameters": {
+      "box": "",
+      "title": "PlotCard Title",
+      "data": "",
+      "plot": "",
+      "events": "",
+      "interactions": "",
+      "items": [],
+      "view": "plot"
+    }
+  },
+  {
+    "displayName": "Post Card",
+    "name": "post_card",
+    "parameters": {
+      "box": "",
+      "persona": "",
+      "image": "",
+      "aux_value": "",
+      "caption": "",
+      "items": [],
+      "view": "post"
+    }
+  },
+  {
+    "displayName": "Preview Card",
+    "name": "preview_card",
+    "parameters": {
+      "box": "",
+      "name": "previewcard",
+      "image": "",
+      "title": "PreviewCard Title",
+      "items": [],
+      "caption": "",
+      "label": "PreviewCard",
+      "view": "preview"
+    }
+  },
+  {
+    "displayName": "Profile Card",
+    "name": "profile_card",
+    "parameters": {
+      "box": "",
+      "persona": "",
+      "image": "",
+      "items": [],
+      "height": "",
+      "view": "profile"
+    }
+  },
+  {
+    "displayName": "Progress",
+    "name": "progress",
+    "parameters": {
+      "label": "Progress",
+      "caption": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "name": "progress"
+    }
+  },
+  {
+    "displayName": "Progress Table Cell Type",
+    "name": "progress_table_cell_type",
+    "parameters": {
+      "color": "",
+      "name": "progresstablecelltype"
+    }
+  },
+  {
+    "displayName": "Range Slider",
+    "name": "range_slider",
+    "parameters": {
+      "name": "rangeslider",
+      "label": "RangeSlider",
+      "min": "",
+      "max": "",
+      "step": "",
+      "min_value": "",
+      "max_value": "",
+      "disabled": "",
+      "width": "",
+      "trigger": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Repeat Card",
+    "name": "repeat_card",
+    "parameters": {
+      "box": "",
+      "item_view": "",
+      "item_props": "",
+      "data": "",
+      "items": [],
+      "view": "repeat"
+    }
+  },
+  {
+    "displayName": "Script",
+    "name": "script",
+    "parameters": {
+      "path": "",
+      "asynchronous": "",
+      "cross_origin": "",
+      "referrer_policy": "",
+      "integrity": ""
+    }
+  },
+  {
+    "displayName": "Inline Script",
+    "name": "inline_script",
+    "parameters": {
+      "content": "",
+      "requires": "",
+      "targets": ""
+    }
+  },
+  {
+    "displayName": "Section Card",
+    "name": "section_card",
+    "parameters": {
+      "box": "",
+      "title": "SectionCard Title",
+      "subtitle": "",
+      "items": [],
+      "view": "section"
+    }
+  },
+  {
+    "displayName": "Separator",
+    "name": "separator",
+    "parameters": {
+      "label": "Separator",
+      "name": "separator",
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Side Panel",
+    "name": "side_panel",
+    "parameters": {
+      "title": "",
+      "items": [],
+      "width": "",
+      "name": "sidepanel",
+      "events": "",
+      "blocking": "",
+      "closable": ""
+    }
+  },
+  {
+    "displayName": "Slider",
+    "name": "slider",
+    "parameters": {
+      "name": "slider",
+      "label": "Slider",
+      "min": "",
+      "max": "",
+      "step": "",
+      "disabled": "",
+      "trigger": "",
+      "width": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Small Series Stat Card",
+    "name": "small_series_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "SmallSeriesStatCard Title",
+      "label": "SmallSeriesStatCard",
+      "plot_data": "",
+      "plot_value": "",
+      "plot_zero_value": "",
+      "plot_category": "",
+      "plot_type": "",
+      "plot_curve": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "small_series_stat"
+    }
+  },
+  {
+    "displayName": "Small Stat Card",
+    "name": "small_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "SmallStatCard Title",
+      "label": "SmallStatCard",
+      "data": "",
+      "items": [],
+      "view": "small_stat"
+    }
+  },
+  {
+    "displayName": "Spinbox",
+    "name": "spinbox",
+    "parameters": {
+      "name": "spinbox",
+      "label": "Spinbox",
+      "min": "",
+      "max": "",
+      "step": "",
+      "disabled": "",
+      "width": "",
+      "visible": "",
+      "trigger": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Stat List Card",
+    "name": "stat_list_card",
+    "parameters": {
+      "box": "",
+      "title": "StatListCard Title",
+      "items": [],
+      "name": "statlistcard",
+      "subtitle": "",
+      "view": "stat_list"
+    }
+  },
+  {
+    "displayName": "Stat List Item",
+    "name": "stat_list_item",
+    "parameters": {
+      "label": "StatListItem",
+      "name": "statlistitem",
+      "caption": "",
+      "value_color": "",
+      "aux_value": "",
+      "icon": "",
+      "icon_color": ""
+    }
+  },
+  {
+    "displayName": "Stat Table Card",
+    "name": "stat_table_card",
+    "parameters": {
+      "box": "",
+      "title": "StatTableCard Title",
+      "columns": "",
+      "items": [],
+      "name": "stattablecard",
+      "subtitle": "",
+      "view": "stat_table"
+    }
+  },
+  {
+    "displayName": "Stat Table Item",
+    "name": "stat_table_item",
+    "parameters": {
+      "label": "StatTableItem",
+      "values": "",
+      "name": "stattableitem",
+      "caption": "",
+      "icon": "",
+      "icon_color": "",
+      "colors": ""
+    }
+  },
+  {
+    "displayName": "Stats",
+    "name": "stats",
+    "parameters": {
+      "items": [],
+      "justify": "",
+      "inset": "",
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Stat",
+    "name": "stat",
+    "parameters": {
+      "label": "Stat",
+      "caption": "",
+      "icon": "",
+      "icon_color": ""
+    }
+  },
+  {
+    "displayName": "Step",
+    "name": "step",
+    "parameters": {
+      "label": "Step",
+      "icon": "",
+      "done": ""
+    }
+  },
+  {
+    "displayName": "Stepper",
+    "name": "stepper",
+    "parameters": {
+      "name": "stepper",
+      "items": [],
+      "width": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Tab Card",
+    "name": "tab_card",
+    "parameters": {
+      "box": "",
+      "items": [],
+      "label": "TabCard",
+      "link": "",
+      "name": "tabcard",
+      "view": "tab"
+    }
+  },
+  {
+    "displayName": "Table Pagination",
+    "name": "table_pagination",
+    "parameters": {
+      "total_rows": "",
+      "rows_per_page": ""
+    }
+  },
+  {
+    "displayName": "Table Cell Type",
+    "name": "table_cell_type",
+    "parameters": {
+      "progress": "",
+      "icon": "",
+      "tag": "",
+      "menu": "",
+      "markdown": ""
+    }
+  },
+  {
+    "displayName": "Table Column",
+    "name": "table_column",
+    "parameters": {
+      "name": "tablecolumn",
+      "label": "TableColumn",
+      "min_width": "",
+      "max_width": "",
+      "sortable": "",
+      "searchable": "",
+      "filterable": "",
+      "link": "",
+      "data_type": "",
+      "cell_type": "",
+      "cell_overflow": "",
+      "filters": ""
+    }
+  },
+  {
+    "displayName": "Table Row",
+    "name": "table_row",
+    "parameters": {
+      "name": "tablerow",
+      "cells": ""
+    }
+  },
+  {
+    "displayName": "Table Group",
+    "name": "table_group",
+    "parameters": {
+      "label": "TableGroup",
+      "rows": "",
+      "collapsed": ""
+    }
+  },
+  {
+    "displayName": "Table",
+    "name": "table",
+    "parameters": {
+      "name": "table",
+      "columns": "",
+      "rows": "",
+      "multiple": "",
+      "groupable": "",
+      "downloadable": "",
+      "resettable": "",
+      "height": "",
+      "width": "",
+      "values": "",
+      "checkbox_visibility": "",
+      "visible": "",
+      "tooltip": "",
+      "groups": "",
+      "pagination": "",
+      "events": ""
+    }
+  },
+  {
+    "displayName": "Tab",
+    "name": "tab",
+    "parameters": {
+      "name": "tab",
+      "label": "Tab",
+      "icon": ""
+    }
+  },
+  {
+    "displayName": "Tabs",
+    "name": "tabs",
+    "parameters": {
+      "name": "tabs",
+      "label": "Tabs",
+      "items": [],
+      "width": "",
+      "visible": "",
+      "link": ""
+    }
+  },
+  {
+    "displayName": "Tag Table Cell Type",
+    "name": "tag_table_cell_type",
+    "parameters": {
+      "name": "tagtablecelltype",
+      "tags": ""
+    }
+  },
+  {
+    "displayName": "Tag",
+    "name": "tag",
+    "parameters": {
+      "label": "Tag",
+      "color": "",
+      "label_color": ""
+    }
+  },
+  {
+    "displayName": "Tags",
+    "name": "tags",
+    "parameters": {
+      "items": []
+    }
+  },
+  {
+    "displayName": "Tall Article Preview Card",
+    "name": "tall_article_preview_card",
+    "parameters": {
+      "box": "",
+      "title": "TallArticlePreviewCard Title",
+      "image": "",
+      "subtitle": "",
+      "label": "TallArticlePreviewCard",
+      "content": "TallArticlePreviewCard content",
+      "name": "tallarticlepreviewcard",
+      "items": [],
+      "view": "tall_article_preview"
+    }
+  },
+  {
+    "displayName": "Tall Gauge Stat Card",
+    "name": "tall_gauge_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "TallGaugeStatCard Title",
+      "label": "TallGaugeStatCard",
+      "aux_value": "",
+      "progress": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "tall_gauge_stat"
+    }
+  },
+  {
+    "displayName": "Tall Info Card",
+    "name": "tall_info_card",
+    "parameters": {
+      "box": "",
+      "name": "tallinfocard",
+      "title": "TallInfoCard Title",
+      "caption": "",
+      "label": "TallInfoCard",
+      "icon": "",
+      "image": "",
+      "image_height": "",
+      "category": "",
+      "items": [],
+      "view": "tall_info"
+    }
+  },
+  {
+    "displayName": "Tall Series Stat Card",
+    "name": "tall_series_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "TallSeriesStatCard Title",
+      "label": "TallSeriesStatCard",
+      "aux_value": "",
+      "plot_data": "",
+      "plot_value": "",
+      "plot_zero_value": "",
+      "plot_category": "",
+      "plot_type": "",
+      "plot_curve": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "tall_series_stat"
+    }
+  },
+  {
+    "displayName": "Tall Stats Card",
+    "name": "tall_stats_card",
+    "parameters": {
+      "box": "",
+      "items": [],
+      "view": "tall_stats"
+    }
+  },
+  {
+    "displayName": "Template",
+    "name": "template",
+    "parameters": {
+      "content": "",
+      "data": "",
+      "name": "template",
+      "width": "",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Template Card",
+    "name": "template_card",
+    "parameters": {
+      "box": "",
+      "title": "TemplateCard Title",
+      "content": "TemplateCard content",
+      "data": "",
+      "items": [],
+      "view": "template"
+    }
+  },
+  {
+    "displayName": "Text",
+    "name": "text",
+    "parameters": {
+      "content": "",
+      "size": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "name": "text"
+    }
+  },
+  {
+    "displayName": "Text Xl",
+    "name": "text_xl",
+    "parameters": {
+      "content": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "items": [],
+      "name": "textxl"
+    }
+  },
+  {
+    "displayName": "Text L",
+    "name": "text_l",
+    "parameters": {
+      "content": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "items": [],
+      "name": "textl"
+    }
+  },
+  {
+    "displayName": "Text M",
+    "name": "text_m",
+    "parameters": {
+      "content": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "name": "textm"
+    }
+  },
+  {
+    "displayName": "Text S",
+    "name": "text_s",
+    "parameters": {
+      "content": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "name": "texts"
+    }
+  },
+  {
+    "displayName": "Text Xs",
+    "name": "text_xs",
+    "parameters": {
+      "content": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "name": "textxs"
+    }
+  },
+  {
+    "displayName": "Text Annotator Tag",
+    "name": "text_annotator_tag",
+    "parameters": {
+      "name": "textannotatortag",
+      "label": "TextAnnotatorTag",
+      "color": ""
+    }
+  },
+  {
+    "displayName": "Text Annotator Item",
+    "name": "text_annotator_item",
+    "parameters": {
+      "text": "",
+      "tag": ""
+    }
+  },
+  {
+    "displayName": "Text Annotator",
+    "name": "text_annotator",
+    "parameters": {
+      "name": "textannotator",
+      "title": "",
+      "tags": "",
+      "items": [],
+      "trigger": "",
+      "readonly": ""
+    }
+  },
+  {
+    "displayName": "Textbox",
+    "name": "textbox",
+    "parameters": {
+      "name": "textbox",
+      "label": "Textbox",
+      "placeholder": "",
+      "mask": "",
+      "icon": "",
+      "prefix": "",
+      "suffix": "",
+      "error": "",
+      "required": "",
+      "disabled": "",
+      "readonly": "",
+      "multiline": "",
+      "password": "",
+      "trigger": "",
+      "height": "",
+      "width": "",
+      "visible": "",
+      "tooltip": "",
+      "spellcheck": ""
+    }
+  },
+  {
+    "displayName": "Toggle",
+    "name": "toggle",
+    "parameters": {
+      "name": "toggle",
+      "label": "Toggle",
+      "disabled": "",
+      "trigger": "",
+      "width": "",
+      "visible": "",
+      "tooltip": ""
+    }
+  },
+  {
+    "displayName": "Command",
+    "name": "command",
+    "parameters": {
+      "name": "command",
+      "label": "Command",
+      "caption": "",
+      "icon": "",
+      "items": [],
+      "data": ""
+    }
+  },
+  {
+    "displayName": "Toolbar Card",
+    "name": "toolbar_card",
+    "parameters": {
+      "box": "",
+      "items": [],
+      "secondary_items": "",
+      "overflow_items": "",
+      "view": "toolbar"
+    }
+  },
+  {
+    "displayName": "Tracker",
+    "name": "tracker",
+    "parameters": {
+      "type": "",
+      "id": ""
+    }
+  },
+  {
+    "displayName": "Vega Visualization",
+    "name": "vega_visualization",
+    "parameters": {
+      "specification": "",
+      "data": "",
+      "width": "",
+      "height": "",
+      "name": "vegavisualization",
+      "visible": ""
+    }
+  },
+  {
+    "displayName": "Vega Card",
+    "name": "vega_card",
+    "parameters": {
+      "box": "",
+      "title": "VegaCard Title",
+      "specification": "",
+      "data": "",
+      "items": [],
+      "view": "vega"
+    }
+  },
+  {
+    "displayName": "Wide Article Preview Card",
+    "name": "wide_article_preview_card",
+    "parameters": {
+      "box": "",
+      "persona": "",
+      "image": "",
+      "title": "WideArticlePreviewCard Title",
+      "name": "widearticlepreviewcard",
+      "aux_value": "",
+      "caption": "",
+      "items": [],
+      "content": "WideArticlePreviewCard content",
+      "view": "wide_article_preview"
+    }
+  },
+  {
+    "displayName": "Wide Bar Stat Card",
+    "name": "wide_bar_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "WideBarStatCard Title",
+      "label": "WideBarStatCard",
+      "aux_value": "",
+      "progress": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "wide_bar_stat"
+    }
+  },
+  {
+    "displayName": "Wide Gauge Stat Card",
+    "name": "wide_gauge_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "WideGaugeStatCard Title",
+      "label": "WideGaugeStatCard",
+      "aux_value": "",
+      "progress": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "wide_gauge_stat"
+    }
+  },
+  {
+    "displayName": "Wide Info Card",
+    "name": "wide_info_card",
+    "parameters": {
+      "box": "",
+      "name": "wideinfocard",
+      "title": "WideInfoCard Title",
+      "caption": "",
+      "label": "WideInfoCard",
+      "subtitle": "",
+      "align": "",
+      "icon": "",
+      "image": "",
+      "category": "",
+      "items": [],
+      "view": "wide_info"
+    }
+  },
+  {
+    "displayName": "Pie",
+    "name": "pie",
+    "parameters": {
+      "label": "Pie",
+      "fraction": "",
+      "color": "",
+      "aux_value": ""
+    }
+  },
+  {
+    "displayName": "Wide Pie Stat Card",
+    "name": "wide_pie_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "WidePieStatCard Title",
+      "pies": "",
+      "items": [],
+      "view": "wide_pie_stat"
+    }
+  },
+  {
+    "displayName": "Wide Plot Card",
+    "name": "wide_plot_card",
+    "parameters": {
+      "box": "",
+      "title": "WidePlotCard Title",
+      "caption": "",
+      "plot": "",
+      "data": "",
+      "items": [],
+      "view": "wide_plot"
+    }
+  },
+  {
+    "displayName": "Wide Series Stat Card",
+    "name": "wide_series_stat_card",
+    "parameters": {
+      "box": "",
+      "title": "WideSeriesStatCard Title",
+      "label": "WideSeriesStatCard",
+      "aux_value": "",
+      "plot_data": "",
+      "plot_value": "",
+      "plot_zero_value": "",
+      "plot_category": "",
+      "plot_type": "",
+      "plot_curve": "",
+      "plot_color": "",
+      "data": "",
+      "items": [],
+      "view": "wide_series_stat"
+    }
+  }
+]

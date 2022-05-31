@@ -13,8 +13,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noFallthroughCasesInSwitch": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
     "sourceMap": true,
     "types": [
       "node"

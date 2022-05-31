@@ -15,6 +15,7 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import App from './app'
+import LayoutBuilder from './gui/layout_builder'
 import Login from './login'
 import { wave } from './ui'
 
@@ -22,6 +23,11 @@ const
   Router = () => {
     const
       routes = [
+        {
+          path: '/gui',
+          exact: true,
+          render: () => <LayoutBuilder />
+        },
         {
           path: wave.loginURL,
           exact: true,
@@ -36,7 +42,7 @@ const
     return (
       <BrowserRouter>
         <Switch>
-          {routes.map((r, i) => <Route key={i} path={r.path} exact={r.exact} render={r.render} />)}
+          {routes.map((r, i) => <Route key={i} path={r.path} exact={r.exact}>{r.render()}</Route>)}
         </Switch>
       </BrowserRouter>
     )

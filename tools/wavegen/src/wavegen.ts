@@ -62,6 +62,8 @@ type U = number
 // type F = number
 type S = string
 
+let id = 0
+
 interface OneOf {
   name: S
   type: Type
@@ -1136,6 +1138,34 @@ const
 
     fs.writeFileSync('../vscode-extension/component-snippets.json', JSON.stringify(resultJSON, null, 2))
   },
+  generateWidgetMappings = (protocol: Protocol) => {
+    const widgets = protocol.types.map(t => {
+      const widget = {
+        displayName: t.name.replace(/([A-Z])/g, ' $1').trim(),
+        name: t.name.replace(/([A-Z])/g, '_$1').toLocaleLowerCase().trim().slice(1),
+        parameters: t.members.reduce((acc, cur) => {
+
+          // cards
+          if (t.name.match(/card/i) && cur.name === 'title') return {...acc, title: `${t.name} Title`}
+          if (t.name.match(/card/i) && cur.name === 'content') return { ...acc, content: `${t.name} content` }
+
+          // containers
+          if (cur.name === 'items' || cur.name === 'commands' || cur.name === 'buttons' || cur.name === 'choices') return { ...acc, items: [] }
+          
+
+          if (cur.name === 'label') return { ...acc, label: t.name }
+          if (cur.name === 'value') return { ...acc, label: t.name }
+          if (cur.name === 'name') return { ...acc, name: `${t.name.toLocaleLowerCase()}` }
+          return { ...acc, [cur.name]: '' }
+        }, {}) as Record<string, any>
+      }
+
+      if (t.name.match(/card/i)) widget.parameters.view = t.file
+      return widget
+    })
+
+    fs.writeFileSync('../gui/mappings.json', JSON.stringify(widgets, null, 2))
+  },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []
     processDir(files, typescriptSrcDir)
@@ -1146,6 +1176,7 @@ const
     generateTypescript(protocol, typescriptSrcDir)
     generatePyCharmSnippets(protocol)
     generateVSCSnippets(protocol)
+    generateWidgetMappings(protocol)
 
     printStats(protocol)
   }
@@ -1154,7 +1185,7 @@ const
 try {
   main(process.argv[2], process.argv[3], process.argv[4])
   console.log(`Success! Code generation complete. ${warnings} warnings.`)
-} catch (e) {
+} catch (e: any) {
   if (e.name === codeGenErrorT) {
     console.log(`***Error: code generation failed: ${e.message}***`)
     process.exit(1)

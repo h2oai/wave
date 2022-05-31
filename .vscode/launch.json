@@ -12,6 +12,13 @@
       "webRoot": "${workspaceFolder}/ui"
     },
     {
+      "name": "Debug GUI",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:3000/gui",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "name": "Debug PY Build",
       "type": "python",
       "request": "launch",

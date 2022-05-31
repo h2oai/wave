@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardView, getCardEffectClass, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
-import { alignments, justifications, wrappings } from './theme'
+import { alignments, clas, justifications, wrappings } from './theme'
 import { bond } from './ui'
 
 
@@ -43,7 +43,30 @@ type CardSlot = {
   slot: Slot
 }
 
-type Section = {
+type FlexSectionProps = {
+  section: Section
+  hasEditor: B
+  direction?: S
+  style?: any
+  onRenderDirectionLabel?: any
+  onDrop?: any
+  setProperties?: any
+}
+
+type FlexLayoutProps = {
+  layout: Layout
+  index: U
+  name: S
+  cards: Card[]
+  onDrop?: any
+  onRenderSection?: (section: Section) => JSX.Element
+  setProperties?: any
+}
+
+// section represents a zone with
+// why does it have sub sections if we already have zone.zones?
+// TODO: check if there is unused props, possible zone.zones
+export type Section = {
   zone: Zone
   sections?: Section[]
   cardslots: CardSlot[]
@@ -65,7 +88,7 @@ const
   parseBox = ({ zone, order, size, width, height }: FlexBox): Slot => {
     return { zone, order: order ? order : 0, grow: size ? parseU(size) : NaN, width, height }
   },
-  parseBoxes = (index: U, spec: S): Slot => {
+  findSlot = (index: U, spec: S): Slot => {
     try {
       if (spec[0] === '[') {
         const specs: any[] = JSON.parse(spec)
@@ -115,7 +138,7 @@ on(layoutsB, layouts => {
   breakpointsB(bps)
 })
 
-const
+export const
   css = stylesheet({
     flex: {
       position: 'relative',
@@ -174,13 +197,12 @@ const
     sections: zone.zones?.map(toSection),
     cardslots: []
   }),
-  findSection = (section: Section, name: S): Section | null => {
-    const { zone, sections } = section
-    if (zone.name === name) return section
-    if (sections) {
-      for (const s of sections) {
-        const c = findSection(s, name)
-        if (c) return c
+  findSectionByZone = (section: Section, zoneName: S): Section | null => {
+    if (section.zone.name === zoneName) return section
+    if (section.sections) {
+      for (const s of section.sections) {
+        const found = findSectionByZone(s, zoneName)
+        if (found) return found
       }
     }
     return null
@@ -194,60 +216,83 @@ const
     }
     section.cardslots.sort((a, b) => a.slot.order - b.slot.order)
   },
-  FlexSection = ({ section, hasEditor, direction }: { section: Section, hasEditor: B, direction?: S }) => {
+  FlexSection = ({ section, hasEditor, direction, style, onRenderDirectionLabel, onDrop, setProperties }: FlexSectionProps) => {
     const
-      { zone, cardslots, sections } = section,
-      children = sections
-        ? sections.map(section => <FlexSection key={section.zone.name} section={section} hasEditor={hasEditor} direction={zone.direction} />)
-        : cardslots.length ?
-          cardslots.map(cardslot => {
-            const { card: c } = cardslot
-            return (
-              <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot)}>
-                <CardView card={c} />
-                <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
-              </div>
-            )
-          })
-          : null
+      { zone, cardslots = [], sections = [] } = section,
+      zones = sections?.map(section =>
+        <FlexSection
+          key={section.zone.name}
+          style={style} section={section}
+          hasEditor={hasEditor}
+          direction={zone.direction}
+          onRenderDirectionLabel={onRenderDirectionLabel}
+          onDrop={onDrop}
+          setProperties={setProperties}
+        />),
+      cards = cardslots.map(cardslot => <MyCard key={cardslot.card.id} setProperties={setProperties} cardslot={cardslot} />)
 
-    return <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>{children}</div>
+    return (
+      <div 
+        data-test={zone.name}
+        className={clas(css.flex, style)}
+        style={toSectionStyle(zone, direction)}
+        onDrop={onDrop(section.zone.name)}
+        onDragOver={ev => ev.preventDefault()}
+      > 
+        {cards}
+        {zones}
+        {onRenderDirectionLabel(section.zone.direction)}
+      </div>
+    )
   },
-  FlexLayout = ({ name, cards }: { name: S, cards: Card[] }) => {
-    const layoutIndex = layoutB()
-    if (!layoutIndex) return <></>
-    const
-      { layout, index } = layoutIndex,
-      section = toSection({ name: '__main__', zones: layout.zones, size: '1' }),
-      { width, min_width, max_width, height, min_height, max_height } = layout,
+  MyCard = (props: { cardslot: CardSlot, setProperties: any}) => {
+    const [card, setCard] = React.useState(props.cardslot.card)
+    const updater = (prop: string, value: any) => {
+      if (card.state[prop]) setCard(card => ({...card, state: {...card.state, [prop]: value}}))
+    }
+    return (
+      <div key={card.id} className={getCardEffectClass(card)} style={toSlotStyle(props.cardslot)} onClick={props.setProperties(card.state, updater)}>
+        <CardView card={card} />
+        <CardMenu name={card.name} commands={card.state.commands} changedB={card.changed} canEdit={false} />
+      </div>
+    ) 
+  },
+  FlexLayout = ({ layout, index, name, cards, onDrop, onRenderSection }: FlexLayoutProps) => {
+    if (!layout) return <></>
+    
+    let section
+    let editor
+    if (layout.zones.length) {
+      
+      section = toSection(layout?.zones[0]),
       editor = cards.find(c => c.state.view === 'editor')
 
-    for (const card of cards) {
-      const
-        slot = parseBoxes(index, card.state.box),
-        target = findSection(section, slot.zone ?? '')
-      target?.cardslots.push({ card, slot })
+      for (const card of cards) {
+        const slot = findSlot(index, card.state.box)
+        const targetSection = findSectionByZone(section, slot.zone ?? '')
+        targetSection?.cardslots.push({ card, slot })
+      }
+      sortCardsInSection(section)
     }
-
-    sortCardsInSection(section)
 
     const style: React.CSSProperties = {
       display: 'flex',
       flexDirection: 'column',
-      width: width ?? '100%',
-      minWidth: min_width,
-      maxWidth: max_width,
-      height,
-      minHeight: min_height,
-      maxHeight: max_height,
-    }
-    if (height === '100%') {
-      style.display = 'flex'
-      style.flexDirection = 'column'
+      width: layout.width ?? '100%',
+      minWidth: layout.min_width,
+      maxWidth: layout.max_width,
+      height: layout.height,
+      minHeight: layout.min_height,
+      maxHeight: layout.max_height,
     }
     return (
-      <div data-test={name} style={style}>
-        <FlexSection section={section} hasEditor={editor ? true : false} />
+      <div data-test={name} style={style} onDrop={onDrop} onDragOver={ev => ev.preventDefault()}>
+        {section ? onRenderSection ?
+          onRenderSection(section)
+          :
+          <FlexSection section={section} hasEditor={editor ? true : false} />
+          : <></>
+        }
         {editor && <CardView card={editor} />}
       </div>
     )
@@ -272,7 +317,7 @@ export const
           onMetaCardChanged = on(metaCard.changed, () => preload(metaCard as any))
         }
         return layoutsB().length
-          ? <FlexLayout name={page.key} cards={cards} />
+          ? <FlexLayout layoutIndex={layoutB} name={page.key} cards={cards} />
           : <GridLayout name={page.key} cards={cards} />
       }
 

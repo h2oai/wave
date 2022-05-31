@@ -20,7 +20,7 @@ import * as React from 'react'
 //
 
 interface Renderable {
-  render(): JSX.Element
+  render(props?: any): JSX.Element
   init?(): void
   update?(): void
   dispose?(): void
@@ -60,7 +60,7 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
       for (const a of this.arrows) a.dispose()
     }
     render() {
-      return this.model.render()
+      return this.model.render(this.props)
     }
   }
 }

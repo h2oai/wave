@@ -85,9 +85,9 @@ interface State {
   items?: Component[]
 }
 
-export const View = bond(({ name, state, changed }: Model<State>) => {
-  const render = () => {
-    const { title, content, items } = state
+export const View = bond(({ name, changed }: Model<State>) => {
+  const render = (props: any) => {
+    const { title, content, items } = props.state
     return (
       <section data-test={name} className={css.card}>
         <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>

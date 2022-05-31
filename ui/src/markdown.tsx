@@ -111,9 +111,9 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Model<State>) => {
+  View = bond(({ name, changed }: Model<State>) => {
     const
-      render = () => {
+      render = ({state}: any) => {
         const
           data = unpack<Rec>(state.data),
           title = substitute(state.title, data)
