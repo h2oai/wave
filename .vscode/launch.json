@@ -37,6 +37,19 @@
       ],
     },
     {
+      "name": "Debug Web IDE",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/web-ide/venv/bin/wave",
+      "python": "${workspaceFolder}/web-ide/venv/bin/python",
+      "cwd": "${workspaceFolder}/web-ide",
+      "args": [
+        "run",
+        "web_ide",
+        "--no-reload",
+      ],
+    },
+    {
       "name": "Debug Showcase",
       "type": "python",
       "request": "launch",
