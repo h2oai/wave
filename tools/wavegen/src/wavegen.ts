@@ -776,6 +776,7 @@ const
               p(`  # TODO Validate ${m.name}`)
           }
         }
+        if (type.isRoot) assigns.push(`view='${type.file}'`)
         if (type.oneOf) {
           p(`  .o <- list(${type.oneOf.name}=list(${layoutParams(assigns, '    ')}))`)
         } else {

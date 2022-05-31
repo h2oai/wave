@@ -145,12 +145,6 @@ data <- function(fields
 #' 
                                add_card = function(card_name, FUN) {
                                        o <- FUN
-                                       o$view = gsub("^ui_(\\w+)_card(.*)", "\\1", (deparse(substitute(FUN))))[1]
-                                       if (nchar(o$view) == 0)
-                                               stop(sprintf(
-                                                            " %s, is not a known card. Content on the page need to be a card",
-                                                            card_name
-                                                            ))
                                        if ("list" %notin% class(o))
                                                stop(sprintf("%s, card needs to be a list", card_name))
 
