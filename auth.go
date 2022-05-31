@@ -414,7 +414,8 @@ func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken
 	}
 
 	query := redirectURL.Query()
-	query.Set("post_logout_redirect_uri", r.Host)
+	// Use configuration instead of r.Host, workaround for Keycloak 10.0.2
+	query.Set("post_logout_redirect_uri", h.auth.conf.PostRedirectURL)
 	if len(idToken) > 0 {
 		// required by Okta
 		// https://developer.okta.com/docs/reference/api/oidc/#logout
