@@ -21,7 +21,7 @@ vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
 WaveProcess = namedtuple('WaveProcess', 'process is_app path')
 
 
-async def start(filename: str, code: str) -> Popen[bytes]:
+async def start(filename: str, is_app: bool) -> Popen[bytes]:
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
     env['H2O_WAVE_ADDRESS'] = _server_adress
@@ -29,7 +29,7 @@ async def start(filename: str, code: str) -> Popen[bytes]:
     # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
     if sys.platform.lower().startswith('win'):
         env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
-    if code.find('@app(') > 0:
+    if is_app:
         env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_host}:{_app_port}'
         return Popen([
             sys.executable, '-m', 'uvicorn',
@@ -98,11 +98,10 @@ async def setup_page(q: Q):
         ]
     )
     q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>')
-    # Put tmp placeholder <div></div> to simulate blank screen.
-    q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
 
 def show_empty_preview(q: Q):
-    q.page['preview'] = ui.tall_info_card(
+    del q.page['preview']
+    q.page['empty'] = ui.tall_info_card(
         box='preview',
         name='',
         image=q.app.app_not_running_img,
@@ -146,15 +145,20 @@ async def render_code(q: Q):
 
     if curr_process:
         await stop(curr_process.process)
-    if is_app:
-        filename = '.'.join([tmp_dir, 'app.py'])
-        new_process = await start(filename, code)
-        q.client.wave_process = WaveProcess(new_process, is_app, path)
-        q.page['preview'].title = f'Preview of {_server_adress}{path}'
-    # HACK
-    # The ?e= appended to the path forces the frame to reload.
-    # The url param is not actually used.
-    q.page['preview'].path = f'{_server_adress}{path}?e={random()}'
+
+    filename = '.'.join([tmp_dir, 'app.py']) if is_app else filename
+    new_process = await start(filename, is_app)
+    q.client.wave_process = WaveProcess(new_process, is_app, path)
+
+    del q.page['empty']
+    q.page['preview'] = ui.frame_card(
+        box='preview',
+        title=f'Preview of {_server_adress}{path}',
+        # HACK
+        # The ?e= appended to the path forces the frame to reload.
+        # The url param is not actually used.
+        path=f'{_server_adress}{path}?e={random()}'
+    )
 
 
 async def on_startup():
