@@ -23,8 +23,6 @@
 #' @description configure the list of environment variables. The list includes the 
 #' server address, the access key and secret, shutdown timeout, and app communication mode. 
 #' 
-#' @examples .onLoad()
-#' 
 .seth2owaveoptions <- function(){
         .config <- list()
         .config$hub_port <- .get_env_var(c("PORT",'10101'))

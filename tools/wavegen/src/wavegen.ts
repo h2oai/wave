@@ -696,7 +696,7 @@ const
         return null
       },
       genComments = (comments: S[]): S => {
-        return comments.map(c => "#' " + c.trimRight()).join('\n').trim()
+        return comments.map(c => "#' " + c.replace(/ui\./g,"ui_").replace(/\[/g,"list(").replace(/]/g,")").trimRight()).join('\n').trim()
       },
       layoutParams = (xs: S[], pad: S) => {
         const lines = pad + xs.join(',\n' + pad)

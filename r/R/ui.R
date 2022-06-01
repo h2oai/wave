@@ -372,9 +372,9 @@ ui_separator <- function(
 #' The label should tell someone exactly what the operation is doing.
 #' 
 #' Examples of formatting include:
-#' [Object] is being [operation name], or
-#' [Object] is being [operation name] to [destination name] or
-#' [Object] is being [operation name] from [source name] to [destination name]
+#' list(Object) is being list(operation name), or
+#' list(Object) is being list(operation name) to list(destination name) or
+#' list(Object) is being list(operation name) from list(source name) to list(destination name)
 #' 
 #' Status text is generally in units elapsed and total units.
 #' Real-world examples include copying files to a storage location, saving edits to a file, and more.
@@ -1428,12 +1428,12 @@ ui_tag <- function(
 #' Creates a collection of tags, usually used for rendering state values.
 #' In case of multiple tags per row, make sure the row values are
 #' separated by "," within a single cell string.
-#' E.g. ui.table_row(name="...", cells=["cell1", "TAG1,TAG2"]).
-#' Each value should correspond to a `ui.tag.label` attr.
-#' For the example above: [
-#' ui.tag(label="TAG1", color="red"),
-#' ui.tag(label="TAG2", color="green"),
-#' ]
+#' E.g. ui_table_row(name="...", cells=list("cell1", "TAG1,TAG2")).
+#' Each value should correspond to a `ui_tag.label` attr.
+#' For the example above: list(
+#' ui_tag(label="TAG1", color="red"),
+#' ui_tag(label="TAG2", color="green"),
+#' )
 #'
 #' @param name An identifying name for this component.
 #' @param tags Tags to be rendered.
@@ -1592,7 +1592,7 @@ ui_table_group <- function(
   return(.o)
 }
 
-#' Configure table pagination. Use as `pagination` parameter to `ui.table()`
+#' Configure table pagination. Use as `pagination` parameter to `ui_table()`
 #'
 #' @param total_rows Total count of all the rows in your dataset.
 #' @param rows_per_page The maximum amount of rows to be displayed in a single page.
@@ -1616,12 +1616,12 @@ ui_table_pagination <- function(
 #' display a non-interactive table of information, use a markdown table.
 #' 
 #' If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
-#' submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
+#' submitted automatically, and `q.args.table_name` is set to `list(row_name)`, where `table_name` is the `name` of
 #' the table, and `row_name` is the `name` of the row that was clicked on.
 #' 
 #' If `multiple` is set to True, each row in the table is selectable. A row can be selected by clicking on it.
 #' Multiple rows can be selected either by shift+clicking or using marquee selection. When the form is submitted,
-#' `q.args.table_name` is set to `[row1_name, row2_name, ...]` where `table_name` is the `name` of the table,
+#' `q.args.table_name` is set to `list(row1_name, row2_name, ...)` where `table_name` is the `name` of the table,
 #' and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
 #' set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
 #' submission.
@@ -4961,7 +4961,7 @@ ui_tall_series_stat_card <- function(
   return(.o)
 }
 
-#' Create a vertical label-value pairs collection. Icon in `ui.stat` is not yet supported in this card.
+#' Create a vertical label-value pairs collection. Icon in `ui_stat` is not yet supported in this card.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The individual stats to be displayed.

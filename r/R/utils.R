@@ -40,7 +40,9 @@
 #' environment variable object string. 
 #' 
 #' @examples
-#' .get_env_var("INTERNAL_ADDRESS")
+#' .get_env_var(c("INTERNAL_ADDRESS","http://localhost"))
+#' 
+#' @export 
 #' 
 .get_env_var <- function(object) {
         var <- Sys.getenv(paste0("H2O_WAVE_", object[1]))
