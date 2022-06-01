@@ -6,3 +6,6 @@ setup:
 
 run:
 	./venv/bin/wave run web_ide.py --no-reload
+
+clean:
+	rm -rf venv
