@@ -1,13 +1,13 @@
-from collections import namedtuple
 import os
 import os.path
-from random import random
 import re
 import shutil
 import sys
-from subprocess import Popen
+from collections import namedtuple
 from pathlib import Path
+from random import random
 from string import Template
+from subprocess import Popen
 from typing import Optional
 from urllib.parse import urlparse
 
@@ -87,23 +87,34 @@ async def setup_page(q: Q):
         subtitle='Develop Wave apps completely in browser',
         image='https://wave.h2o.ai/img/h2o-logo.svg',
         items=[
-            ui.links(inline=True, items=[
-                ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
-                ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
-                ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
-                ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
+            ui.button(name='export', label='Export', icon='Download'),
+            ui.button(name='console', label='Console', icon='CommandPrompt'),
+            ui.button(name='open_preview', label='Open preview', icon='OpenInNewWindow'),
+            ui.menu(icon='View', items=[
+                ui.command(name='split', label='Split view', icon='Split'),
+                ui.command(name='code', label='Full code view', icon='Code'),
+                ui.command(name='preview', label='Full preview view', icon='Preview'),
             ])
         ]
     )
     q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>')
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
-    await q.page.save()
 
+def show_empty_preview(q: Q):
+    q.page['preview'] = ui.tall_info_card(
+        box='preview',
+        name='',
+        image=q.app.app_not_running_img,
+        image_height='500px',
+        title='Oops! There is no running app.',
+        caption='Try writing one in the code editor on the left.'
+    )
 
 async def render_code(q: Q):
     code = q.events.editor.change if q.events.editor else ''
     if not code:
+        show_empty_preview(q)
         return
 
     code = code.replace("`", "\\`")
@@ -130,6 +141,7 @@ async def render_code(q: Q):
         if script_match:
             path = script_match.group(2)
     if not path:
+        show_empty_preview(q)
         return
 
     if curr_process:
@@ -143,8 +155,6 @@ async def render_code(q: Q):
     # The ?e= appended to the path forces the frame to reload.
     # The url param is not actually used.
     q.page['preview'].path = f'{_server_adress}{path}?e={random()}'
-
-    await q.page.save()
 
 
 async def on_startup():
@@ -171,9 +181,11 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
+        q.app.app_not_running_img, = await q.site.upload([os.path.join('assets', 'app_not_running.svg')])
         q.app.initialized = True
     if not q.client.initialized:
         await setup_page(q)
         q.client.initialized = True
 
     await render_code(q)
+    await q.page.save()
