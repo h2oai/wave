@@ -1,2 +1,3 @@
 venv
 tmp_project
+__pycache__

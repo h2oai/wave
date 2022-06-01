@@ -75,10 +75,9 @@ async def setup_page(q: Q):
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
-                ui.zone('blurb'),
-                ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
-                    ui.zone('code'),
-                    ui.zone('preview')
+                ui.zone('main', size='calc(100vh - 80px)', direction=ui.ZoneDirection.ROW, zones=[
+                    ui.zone('code', size='50%'),
+                    ui.zone('preview', size='50%'),
                 ])
             ])
         ])
