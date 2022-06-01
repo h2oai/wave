@@ -55,6 +55,17 @@ async def serve(q: Q):
 `q.site.upload()` accepts a list of file paths, so you can upload multiple files at a time.
 :::
 
+## Serving images
+
+Use `q.site.upload()` to upload images from your app to the Wave server. Use the returned paths in `ui.image()` or `ui.image_card().
+
+```
+image, = await q.site.upload(['path/to/my/image.png'])
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
+    ui.image(title='Image title', image=image, type='png'),
+])
+```
+
 ## Serving image streams
 
 Use image streams to display images that can be updated in near real time, say for use cases such as real time object detection in videos or webcam streams. This feature lets you display an initial image on a web page, then follow up with updated images (or frames).
