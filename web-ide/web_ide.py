@@ -4,7 +4,6 @@ import re
 import shutil
 import sys
 from pathlib import Path
-from random import random
 from string import Template
 from subprocess import Popen
 from typing import Optional
@@ -95,7 +94,11 @@ async def setup_page(q: Q):
             ])
         ]
     )
-    q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>')
+    q.page['code'] = ui.markup_card(
+        box='code',
+        title='Code editor',
+        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
+    )
 
 def show_empty_preview(q: Q):
     del q.page['preview']
@@ -124,9 +127,9 @@ async def render_code(q: Q):
     if is_app:
         filename = '.'.join([tmp_dir, 'app.py'])
 
-    if not is_app and q.client.active_path:
+    if not is_app and q.user.active_path:
         # Clear demo page
-        demo_page = q.site[q.client.active_path]
+        demo_page = q.site[q.user.active_path]
         demo_page.drop()
         await demo_page.save()
 
@@ -141,19 +144,16 @@ async def render_code(q: Q):
     if not path:
         show_empty_preview(q)
         return
-    q.client.active_path = path
+    q.user.active_path = path
 
-    await stop(q.client.wave_process)
-    q.client.wave_process = await start(filename, is_app)
+    await stop(q.user.wave_process)
+    q.user.wave_process = await start(filename, is_app)
 
     del q.page['empty']
     q.page['preview'] = ui.frame_card(
         box='preview',
         title=f'Preview of {_server_adress}{path}',
-        # HACK
-        # The ?e= appended to the path forces the frame to reload.
-        # The url param is not actually used.
-        path=f'{_server_adress}{path}?e={random()}'
+        path=f'{_server_adress}{path}'
     )
 
 
