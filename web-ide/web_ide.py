@@ -3,7 +3,6 @@ import os.path
 import re
 import shutil
 import sys
-from collections import namedtuple
 from pathlib import Path
 from random import random
 from string import Template
@@ -18,7 +17,6 @@ _server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
 _app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
 _app_port = '10102'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
-WaveProcess = namedtuple('WaveProcess', 'process is_app path')
 
 
 async def start(filename: str, is_app: bool) -> Popen[bytes]:
@@ -123,11 +121,12 @@ async def render_code(q: Q):
     filename = os.path.join(tmp_dir, 'app.py')
     with open(filename, 'w') as f:
         f.write(code)
+    if is_app:
+        filename = '.'.join([tmp_dir, 'app.py'])
 
-    curr_process = q.client.wave_process
-    if not is_app and curr_process and curr_process.path:
+    if not is_app and q.client.active_path:
         # Clear demo page
-        demo_page = q.site[q.client.wave_process.path]
+        demo_page = q.site[q.client.active_path]
         demo_page.drop()
         await demo_page.save()
 
@@ -142,13 +141,10 @@ async def render_code(q: Q):
     if not path:
         show_empty_preview(q)
         return
+    q.client.active_path = path
 
-    if curr_process:
-        await stop(curr_process.process)
-
-    filename = '.'.join([tmp_dir, 'app.py']) if is_app else filename
-    new_process = await start(filename, is_app)
-    q.client.wave_process = WaveProcess(new_process, is_app, path)
+    await stop(q.client.wave_process)
+    q.client.wave_process = await start(filename, is_app)
 
     del q.page['empty']
     q.page['preview'] = ui.frame_card(
