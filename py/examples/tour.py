@@ -248,7 +248,7 @@ def get_wave_completions(line, character, file_content):
 
 
 def make_blurb(q: Q):
-    example = q.client.active_example
+    example = q.user.active_example
     blurb_card = q.page['blurb']
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
@@ -276,13 +276,13 @@ async def show_example(q: Q, example: Example):
     filename = '.'.join([tour_tmp_dir, 'tmp.py']).split(os.sep)[-1] if code.find('@app(') > 0 else filename
 
     # Stop active example, if any.
-    active_example = q.client.active_example
+    active_example = q.user.active_example
     if active_example:
         await active_example.stop()
 
     # Start new example
     await example.start(filename, code)
-    q.client.active_example = example
+    q.user.active_example = example
 
     # Update example blurb
     make_blurb(q)
