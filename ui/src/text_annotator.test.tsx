@@ -54,20 +54,16 @@ describe('TextAnnotator.tsx', () => {
     expect(pushMock).toHaveBeenCalled()
   })
 
-  // TODO: fix test case
   it('Shows remove icon on hover', () => {
     const { container, getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
-    const removeIcon = container.querySelector('i')
-    expect(removeIcon).not.toBeVisible()
-    const mark1 = getByText('good')
-    fireEvent.mouseOver(mark1)
-    expect(removeIcon).toBeVisible()
-    fireEvent.mouseOut(mark1)
-    expect(removeIcon).not.toBeVisible()
-    const mark2 = getByText('Pretty')
-    fireEvent.mouseOver(mark2)
-    expect(removeIcon).toBeVisible()
+    expect(container.querySelector('i')).not.toBeVisible()
+    fireEvent.mouseOver(getByText('good'))
+    expect(container.querySelector('i')).toBeVisible()
+    fireEvent.mouseOut(getByText('good'))
+    expect(container.querySelector('i')).not.toBeVisible()
+    fireEvent.mouseOver(getByText('Pretty'))
+    expect(container.querySelector('i')).toBeVisible()
   })
 
   describe('readonly', () => {

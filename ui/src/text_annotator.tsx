@@ -284,7 +284,23 @@ export
           }}
         >
           {tag ? getMark(text, idx, tag) : text}
-        </span>
+        </span>,
+      text = React.useMemo(() => tokens.reduce((acc, token, idx) => {
+        if (smart_selection || token.text === " ") acc.push(<Token key={idx} idx={idx} tokenProps={token} />)
+        else if (!idx || tokens[idx - 1].text === " ") {
+          const word = []
+          for (let i = idx; i < tokens.length; i++) {
+            word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
+            if (i === tokens.length - 1 || tokens[i + 1].text === " ") {
+              // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
+              acc.push(<span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>)
+              break
+            }
+          }
+        }
+        return acc
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [] as React.ReactElement[]), [tokens, hoveredTagIdx, smart_selection, activeTag])
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -295,25 +311,7 @@ export
       <div data-test={name} className={readonly ? css.readonly : ''}>
         <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>
         <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
-        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}
-        >{
-            tokens.reduce((acc, token, idx) => {
-              if (smart_selection || token.text === " ") acc.push(<Token key={idx} idx={idx} tokenProps={token} />)
-              else if (!idx || tokens[idx - 1].text === " ") {
-                const word = []
-                for (let i = idx; i < tokens.length; i++) {
-                  word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
-                  if (tokens[i].text === " " || i === tokens.length - 1) {
-                    // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
-                    acc.push(<span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>)
-                    break
-                  }
-                }
-              }
-              return acc
-            }, [] as React.ReactElement[])
-          }
-        </div>
+        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{text}</div>
       </div>
     )
   }
