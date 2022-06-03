@@ -211,11 +211,11 @@ export
           // smart selection on double click
           const targetDataIdx = parseInt(target.dataset.key!)
           let strLength = 0 // number of characters right to the selection target; if not 0, we loop to the left direction
-          for (let i = 0; i < selectedTextStr.length; i++) {
+          for (let i = 0; i <= selectedTextStr.length; i++) {
             const tokenIdx = targetDataIdx + (!strLength ? i : (strLength - i))
             tokens[tokenIdx].tag = activeTag
             if (/[^a-z0-9]/i.test(tokens[tokenIdx + (!strLength ? 1 : -1)]?.text)) {
-              strLength = i
+              strLength = i + 1
             }
           }
         } else {
@@ -272,18 +272,18 @@ export
         else if (new Date().getTime() - mouseDownTimeRef.current > 250) annotate() // dragging (long click)
         else timeoutRef.current = setTimeout(() => annotate(), 250) // click
       },
-      Token = ({ idx, tokenProps }: { idx: number, tokenProps: TextAnnotatorItem & { start: number, end: number } }) =>
+      Token = ({ idx, tokenProps: { start, end, tag, text } }: { idx: number, tokenProps: TextAnnotatorItem & { start: number, end: number } }) =>
         <span
           data-key={idx}
-          data-start={tokenProps.start}
-          data-end={tokenProps.end}
+          data-start={start}
+          data-end={end}
           onMouseDown={() => { mouseDownTimeRef.current = new Date().getTime() }}
           onMouseUp={handleOnMouseUp}
           onMouseLeave={(ev: React.MouseEvent<HTMLSpanElement>) => {
             if ((ev.relatedTarget as any)?.nodeName !== 'SPAN') handleOnMouseUp(ev) // nodeName prop is not typed yet
           }}
         >
-          {tokenProps.tag ? getMark(tokenProps.text, idx, tokenProps.tag) : tokenProps.text}
+          {tag ? getMark(text, idx, tag) : text}
         </span>
 
 
@@ -297,25 +297,21 @@ export
         <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
         <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}
         >{
-            smart_selection
-              ? tokens.map((token, idx) =>
-                <Token key={idx} idx={idx} tokenProps={token} />
-              )
-              : tokens.reduce((acc, token, idx) => {
-                if (token.text === " ") acc.push(<Token key={idx} idx={idx} tokenProps={token} />)
-                else if (!idx || tokens[idx - 1].text === " ") {
-                  const word = []
-                  for (let i = idx; i < tokens.length; i++) {
-                    word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
-                    if (tokens[i].text === " " || i === tokens.length - 1) {
-                      // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
-                      acc.push(<span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>)
-                      break
-                    }
+            tokens.reduce((acc, token, idx) => {
+              if (smart_selection || token.text === " ") acc.push(<Token key={idx} idx={idx} tokenProps={token} />)
+              else if (!idx || tokens[idx - 1].text === " ") {
+                const word = []
+                for (let i = idx; i < tokens.length; i++) {
+                  word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
+                  if (tokens[i].text === " " || i === tokens.length - 1) {
+                    // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
+                    acc.push(<span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>)
+                    break
                   }
                 }
-                return acc
-              }, [] as React.ReactElement[])
+              }
+              return acc
+            }, [] as React.ReactElement[])
           }
         </div>
       </div>
