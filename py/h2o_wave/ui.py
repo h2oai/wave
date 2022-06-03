@@ -2334,7 +2334,7 @@ def text_annotator(
         items: Pretagged parts of text content.
         trigger: True if the form should be submitted when the annotator value changes.
         readonly: True to prevent user interaction with the annotator component. Defaults to False.
-        smart_selection: If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True.
+        smart_selection: If enabled it automatically selects the whole word when clicking on it. Defaults to True.
     Returns:
         A `h2o_wave.types.TextAnnotator` instance.
     """

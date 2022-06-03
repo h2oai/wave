@@ -6257,7 +6257,7 @@ class TextAnnotator:
         self.readonly = readonly
         """True to prevent user interaction with the annotator component. Defaults to False."""
         self.smart_selection = smart_selection
-        """If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True."""
+        """If enabled it automatically selects the whole word when clicking on it. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

@@ -2713,7 +2713,7 @@ ui_text_annotator_item <- function(
 #' @param items Pretagged parts of text content.
 #' @param trigger True if the form should be submitted when the annotator value changes.
 #' @param readonly True to prevent user interaction with the annotator component. Defaults to False.
-#' @param smart_selection If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True.
+#' @param smart_selection If enabled it automatically selects the whole word when clicking on it. Defaults to True.
 #' @return A TextAnnotator instance.
 #' @export
 ui_text_annotator <- function(

@@ -19,7 +19,7 @@ interface TextAnnotatorTag {
 interface TextAnnotatorItem {
   /** Text to be highlighted. */
   text: S
-  /** Tag connected to the highlighted text. */
+  /** The `name` of the text annotator tag to refer to for the `label` and `color` of this item. */
   tag?: S
 }
 
@@ -41,7 +41,7 @@ export interface TextAnnotator {
   trigger?: B
   /** True to prevent user interaction with the annotator component. Defaults to False. */
   readonly?: B
-  /** If enabled it automatically selects the whole word regardless of how many word characters user selects. Defaults to True. */
+  /** If enabled it automatically selects the whole word when clicking on it. Defaults to True. */
   smart_selection?: B
 }
 
