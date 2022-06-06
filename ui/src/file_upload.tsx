@@ -138,12 +138,16 @@ export const
           if (!compact) wave.push()
           setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
         }
-        catch ({ responseText }) {
-          if (isAborted.current) {
-            isAborted.current = false
-            return
+        catch (err: unknown) {
+          let errMsg = 'There was an error when uploading file.'
+          if (err instanceof XMLHttpRequest) {
+            if (isAborted.current) {
+              isAborted.current = false
+              return
+            }
+            errMsg = err.responseText
           }
-          setError(responseText as S || 'There was an error when uploading file.')
+          setError(errMsg)
         }
         finally {
           setFiles([])
@@ -272,7 +276,7 @@ export const
               description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`}
               percentComplete={percentComplete}
             />
-            <Fluent.DefaultButton styles={{ root: { marginTop: 12 } }} text={'Cancel'} onClick={() => onUploadCancel()} />
+            <Fluent.DefaultButton styles={{ root: { marginTop: 12 } }} text='Cancel' onClick={onUploadCancel} />
           </>
         )
         else if (files.length) return (
@@ -324,7 +328,7 @@ export const
                     percentComplete={percentComplete}
                     styles={{ root: { flex: 1 }, itemName: { padding: 0 }, itemProgress: { paddingTop: 5, paddingBottom: 5 } }}
                   />
-                  <Fluent.IconButton iconProps={{ iconName: 'cancel' }} title="Cancel" onClick={() => onUploadCancel()} styles={{ root: { padding: 16, marginTop: 11, marginLeft: 6 } }} />
+                  <Fluent.IconButton iconProps={{ iconName: 'cancel' }} title='Cancel' onClick={onUploadCancel} styles={{ root: { padding: 16, marginTop: 11, marginLeft: 6 } }} />
                 </div>
               )
               : (
