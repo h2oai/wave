@@ -1038,7 +1038,12 @@ const PlotTooltip = ({ items }: { items: TooltipItem[] }) =>
           <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
           <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
             <span style={{ marginRight: 16 }}>{item}:</span>
-            <span>{data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item]}</span>
+            <span>
+              {(Array.isArray(data[item]) ? data[item] : [data[item]]).map((val: any, idx: number) => {
+                const value = val instanceof Date ? val.toISOString().split('T')[0] : val
+                return idx > 0 ? ` - ${value}` : value
+              })}
+            </span>
           </span>
         </li>
       )
