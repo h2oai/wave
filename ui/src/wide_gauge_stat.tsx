@@ -15,9 +15,9 @@
 import { F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
+import { cards, Format, grid, substitute } from './layout'
 import { ProgressArc } from './parts/progress_arc'
-import { centerMixin, clas, cssVar, padding, pc } from './theme'
+import { centerMixin, clas, cssVar, padding } from './theme'
 import { bond } from './ui'
 
 const
@@ -28,10 +28,10 @@ const
     },
     lhs: {
       position: 'relative',
-      width: pc(50)
+      flex: 1
     },
     rhs: {
-      width: pc(50),
+      flex: 1,
       marginLeft: grid.gap,
     },
     values: {
@@ -48,9 +48,6 @@ const
     },
     title: {
       overflow: 'visible'
-    },
-    value: {
-      lineHeight: 28, // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
       color: cssVar('$text7'),
@@ -89,8 +86,8 @@ export const
           <div className={css.rhs}>
             <Format data={data} format={s.title} className={clas(css.title, 'wave-s12 wave-w6')} />
             <div className={css.values}>
-              <Format data={data} format={s.value} className='wave-s24 wave-w3' />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
+              <Format data={data} format={s.value} style={{ width: 14 * substitute(s.value, s.data).length }} className='wave-s24 wave-w3' />
+              <Format data={data} format={s.aux_value} style={{ width: 9 * substitute(s.aux_value, s.data).length }} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         </div >
