@@ -3,10 +3,11 @@ import os.path
 import re
 import shutil
 import sys
+import webbrowser
 from pathlib import Path
 from string import Template
 from subprocess import Popen
-from typing import Optional
+from zipfile import ZipFile
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
@@ -18,7 +19,7 @@ _app_port = '10102'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
 
 
-async def start(filename: str, is_app: bool) -> Popen[bytes]:
+async def start(filename: str, is_app: bool):
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
     env['H2O_WAVE_ADDRESS'] = _server_adress
@@ -37,7 +38,7 @@ async def start(filename: str, is_app: bool) -> Popen[bytes]:
     else:
         return Popen([sys.executable, filename], env=env)
 
-async def stop(process: Optional[Popen[bytes]]) -> None:
+async def stop(process) -> None:
     if process and process.returncode is None:
         process.terminate()
         process.wait()
@@ -168,9 +169,19 @@ async def on_shutdown():
     if dirpath.exists():
         shutil.rmtree(dirpath)
 
+async def export(q: Q):
+    tmp_files = [os.path.join(tmp_dir, file) if file.endswith(('.py')) else None for file in os.listdir(tmp_dir)]
+    with ZipFile('tmp_project/app.zip','w') as zip:
+        for file in tmp_files:
+            zip.write(file)
+    zip_path = await q.site.upload(['tmp_project/app.zip'])
+    webbrowser.open(f"{_server_adress}{zip_path[0]}", autoraise=True)
+    os.remove("tmp_project/app.zip")
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
+    if q.args.export:
+        await export(q)
     if not q.app.initialized:
         # Prod.
         if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
