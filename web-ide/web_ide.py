@@ -3,7 +3,6 @@ import os.path
 import re
 import shutil
 import sys
-import webbrowser
 from pathlib import Path
 from string import Template
 from subprocess import Popen
@@ -170,13 +169,10 @@ async def on_shutdown():
         shutil.rmtree(dirpath)
 
 async def export(q: Q):
-    tmp_files = [os.path.join(tmp_dir, file) if file.endswith(('.py')) else None for file in os.listdir(tmp_dir)]
-    with ZipFile('tmp_project/app.zip','w') as zip:
-        for file in tmp_files:
-            zip.write(file)
-    zip_path = await q.site.upload(['tmp_project/app.zip'])
-    webbrowser.open(f"{_server_adress}{zip_path[0]}", autoraise=True)
-    os.remove("tmp_project/app.zip")
+    shutil.make_archive('app', 'zip', '.', 'tmp_project')
+    zip_path = await q.site.upload(['app.zip'])
+    q.args.zip_path = f"{_server_adress}{zip_path[0]}"
+    os.remove("app.zip")
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
