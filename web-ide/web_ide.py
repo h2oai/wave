@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 from string import Template
 from subprocess import Popen
-from typing import Optional
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
@@ -18,7 +17,7 @@ _app_port = '10102'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
 
 
-async def start(filename: str, is_app: bool) -> Popen[bytes]:
+async def start(filename: str, is_app: bool):
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
     env['H2O_WAVE_ADDRESS'] = _server_adress
@@ -37,7 +36,7 @@ async def start(filename: str, is_app: bool) -> Popen[bytes]:
     else:
         return Popen([sys.executable, filename], env=env)
 
-async def stop(process: Optional[Popen[bytes]]) -> None:
+async def stop(process) -> None:
     if process and process.returncode is None:
         process.terminate()
         process.wait()
@@ -99,6 +98,7 @@ async def setup_page(q: Q):
         title='Code editor',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
     )
+    await render_code(q)
 
 def show_empty_preview(q: Q):
     del q.page['preview']
@@ -168,9 +168,16 @@ async def on_shutdown():
     if dirpath.exists():
         shutil.rmtree(dirpath)
 
+async def export(q: Q):
+    shutil.make_archive('app', 'zip', '.', 'tmp_project')
+    q.app.zip_path, = await q.site.upload(['app.zip'])
+    q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
+    os.remove("app.zip")
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
+    if q.args.export:
+        await export(q)
     if not q.app.initialized:
         # Prod.
         if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
@@ -186,6 +193,7 @@ async def serve(q: Q):
     if not q.client.initialized:
         await setup_page(q)
         q.client.initialized = True
+    if q.events.editor:
+        await render_code(q)
 
-    await render_code(q)
     await q.page.save()
