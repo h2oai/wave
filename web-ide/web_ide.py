@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 from string import Template
 from subprocess import Popen
-from zipfile import ZipFile
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
@@ -171,13 +170,14 @@ async def on_shutdown():
 async def export(q: Q):
     shutil.make_archive('app', 'zip', '.', 'tmp_project')
     zip_path = await q.site.upload(['app.zip'])
-    q.args.zip_path = f"{_server_adress}{zip_path[0]}"
-    os.remove("app.zip")
+    q.app.zip_path = f"{_server_adress}{zip_path[0]}"
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if q.args.export:
         await export(q)
+        q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
+        os.remove("app.zip")
     if not q.app.initialized:
         # Prod.
         if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
