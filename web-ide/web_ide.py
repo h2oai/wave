@@ -98,6 +98,7 @@ async def setup_page(q: Q):
         title='Code editor',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
     )
+    await render_code(q)
 
 def show_empty_preview(q: Q):
     del q.page['preview']
@@ -169,31 +170,30 @@ async def on_shutdown():
 
 async def export(q: Q):
     shutil.make_archive('app', 'zip', '.', 'tmp_project')
-    zip_path = await q.site.upload(['app.zip'])
-    q.app.zip_path = f"{_server_adress}{zip_path[0]}"
+    q.app.zip_path, = await q.site.upload(['app.zip'])
+    q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
+    os.remove("app.zip")
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if q.args.export:
         await export(q)
-        q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
-        os.remove("app.zip")
-    else:
-        if not q.app.initialized:
-            # Prod.
-            if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
-                q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
-            # When run in development from Wave repo.
-            elif os.path.exists(vsc_extension_path):
-                q.app.snippets1, q.app.snippets2, = await q.site.upload([
-                    os.path.join(vsc_extension_path, 'base-snippets.json'),
-                    os.path.join(vsc_extension_path, 'component-snippets.json')
-                ])
-            q.app.app_not_running_img, = await q.site.upload([os.path.join('assets', 'app_not_running.svg')])
-            q.app.initialized = True
-        if not q.client.initialized:
-            await setup_page(q)
-            q.client.initialized = True
+    if not q.app.initialized:
+        # Prod.
+        if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
+            q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
+        # When run in development from Wave repo.
+        elif os.path.exists(vsc_extension_path):
+            q.app.snippets1, q.app.snippets2, = await q.site.upload([
+                os.path.join(vsc_extension_path, 'base-snippets.json'),
+                os.path.join(vsc_extension_path, 'component-snippets.json')
+            ])
+        q.app.app_not_running_img, = await q.site.upload([os.path.join('assets', 'app_not_running.svg')])
+        q.app.initialized = True
+    if not q.client.initialized:
+        await setup_page(q)
+        q.client.initialized = True
+    if q.events.editor:
         await render_code(q)
 
     await q.page.save()
