@@ -178,21 +178,22 @@ async def serve(q: Q):
         await export(q)
         q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
         os.remove("app.zip")
-    if not q.app.initialized:
-        # Prod.
-        if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
-            q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
-        # When run in development from Wave repo.
-        elif os.path.exists(vsc_extension_path):
-            q.app.snippets1, q.app.snippets2, = await q.site.upload([
-                os.path.join(vsc_extension_path, 'base-snippets.json'),
-                os.path.join(vsc_extension_path, 'component-snippets.json')
-            ])
-        q.app.app_not_running_img, = await q.site.upload([os.path.join('assets', 'app_not_running.svg')])
-        q.app.initialized = True
-    if not q.client.initialized:
-        await setup_page(q)
-        q.client.initialized = True
+    else:
+        if not q.app.initialized:
+            # Prod.
+            if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
+                q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
+            # When run in development from Wave repo.
+            elif os.path.exists(vsc_extension_path):
+                q.app.snippets1, q.app.snippets2, = await q.site.upload([
+                    os.path.join(vsc_extension_path, 'base-snippets.json'),
+                    os.path.join(vsc_extension_path, 'component-snippets.json')
+                ])
+            q.app.app_not_running_img, = await q.site.upload([os.path.join('assets', 'app_not_running.svg')])
+            q.app.initialized = True
+        if not q.client.initialized:
+            await setup_page(q)
+            q.client.initialized = True
+        await render_code(q)
 
-    await render_code(q)
     await q.page.save()
