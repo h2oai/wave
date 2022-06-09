@@ -9,12 +9,16 @@ window.MonacoEnvironment = {
     )}`
   }
 }
-const completionToCompletionItem = item => ({
-  label: item.get('label'),
-  kind: item.get('kind'),
-  insertText: item.get('label'),
-  sortText: item.get('sort_text'),
-})
+const completionToCompletionItem = item => {
+  const ret = {
+    label: item.get('label'),
+    insertText: item.get('label'),
+    sortText: item.get('sort_text'),
+  }
+  if (item.has('kind')) ret.kind = item.get('kind')
+  else if (item.has('type')) ret.kind = monaco.languages.CompletionItemKind[capitalize(item.get('type'))]
+  return ret
+}
 const snippetToCompletionItem = item => ({
   label: item.prefix,
   kind: monaco.languages.CompletionItemKind.Snippet,
@@ -22,11 +26,12 @@ const snippetToCompletionItem = item => ({
   insertText: item.body.join('\n'),
   insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
 })
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 require(['vs/editor/editor.main'], async () => {
   monaco.languages.registerCompletionItemProvider('python', {
     triggerCharacters: ['.', "'", '"'],
     provideCompletionItems: async (model, position) => {
-      const pyRes = await window.pyodide.runPython(`get_wave_completions($${position.lineNumber - 1}, $${position.column - 1}, \'\'\'$${model.getValue()}\'\'\')`)
+      const pyRes = window.pyodide.runPython(`get_wave_completions($${position.lineNumber - 1}, $${position.column - 1}, \'\'\'$${model.getValue()}\'\'\')`)
       const completions = pyRes ? pyRes.toJs().map(completionToCompletionItem) : []
       // HACK: Fetch on every keystroke due to weird bug in monaco - showing snippets only for first example.
       let [snippets1, snippets2] = await Promise.all([
@@ -35,7 +40,9 @@ require(['vs/editor/editor.main'], async () => {
       ])
       snippets1 = Object.values(snippets1).map(snippetToCompletionItem)
       snippets2 = Object.values(snippets2).map(snippetToCompletionItem)
-      return { suggestions: [...completions, ...snippets1, ...snippets2] }
+      const jediRes = window.pyodide.runPython(`get_jedi_completions($${position.lineNumber}, $${position.column - 1}, \'\'\'$${model.getValue()}\'\'\')`)
+      const jediCompletions = jediRes ? jediRes.toJs().map(completionToCompletionItem) : []
+      return { suggestions: [...completions, ...jediCompletions, ...snippets1, ...snippets2] }
     }
   })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
@@ -58,5 +65,6 @@ require(['vs/editor/editor.main'], async () => {
 setTimeout(async () => {
   window.pyodide = await loadPyodide()
   await window.pyodide.loadPackage('parso')
+  await window.pyodide.loadPackage('jedi')
   await window.pyodide.runPythonAsync(`$py_content`)
 }, 100)

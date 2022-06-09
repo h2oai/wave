@@ -16,3 +16,9 @@ def get_wave_completions(line, character, file_content):
         return [{'label': theme, 'kind': 13, 'sort_text': '0'} for theme in themes]
     elif completion_type == 'icons':
         return [{'label': icon, 'kind': 13, 'sort_text': '0'} for icon in fluent_icons]
+
+import jedi
+
+def get_jedi_completions(line, character, file_content):
+    completions = jedi.Script(file_content).complete(line, character)
+    return [{'label': i.complete, 'documentation': i.description, 'type': i.type} for i in completions]
