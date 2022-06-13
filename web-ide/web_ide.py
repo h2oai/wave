@@ -192,6 +192,27 @@ async def export(q: Q):
     q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
     os.remove("app.zip")
 
+def change_layout(q: Q):
+    layout = q.user.layout or 0
+    sizes = [
+        # [editor, preview]
+        ['50%', '50%'], # split
+        ['100%', '0%'], # full code
+        ['0%', '100%'] # full preview
+    ]
+    sizes_editor = [
+        ['100%' , '80%'], # code
+        ['0%' , '20%'] # console
+    ]
+    q.page['meta'].layouts[0].zones[1].zones = [
+        ui.zone('editor', size=sizes[layout][0], direction=ui.ZoneDirection.COLUMN, zones=[
+            ui.zone('code', size=sizes_editor[0][q.user.show_console]),
+            ui.zone('console', size=sizes_editor[1][q.user.show_console]),
+        ]),
+        ui.zone('preview', size=sizes[layout][1]),
+    ]
+    q.page['header'].items[1].button.disabled = True if layout == 2 else False
+
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
