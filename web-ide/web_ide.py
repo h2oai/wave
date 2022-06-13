@@ -110,6 +110,7 @@ def show_empty_preview(q: Q):
         title='Oops! There is no running app.',
         caption='Try writing one in the code editor on the left.'
     )
+    q.page['header'].items[2].button.disabled = True
 
 async def render_code(q: Q):
     code = q.events.editor.change if q.events.editor else ''
@@ -155,6 +156,8 @@ async def render_code(q: Q):
         title=f'Preview of {_server_adress}{path}',
         path=f'{_server_adress}{path}'
     )
+    q.page['header'].items[2].button.disabled = False
+    q.page['header'].items[2].button.path = f'{_server_adress}{path}'
 
 
 async def on_startup():
