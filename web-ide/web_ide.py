@@ -82,17 +82,15 @@ async def setup_page(q: Q):
         title='Wave Web IDE',
         subtitle='Develop Wave apps completely in browser',
         image='https://wave.h2o.ai/img/h2o-logo.svg',
-        secondary_items=[
-            ui.tabs(name='tabs', value='split', link=True, items=[
-                ui.tab(name='split', label='Split', icon='DoubleColumn'),
-                ui.tab(name='code', label='Code', icon='Code'),
-                ui.tab(name='preview', label='Preview', icon='View'),
-            ])
-        ],
         items=[
-            ui.button(name='console', label='Console', icon='CommandPrompt'),
+            ui.button(name='console', label='Console', value='split', icon='CommandPrompt'),
             ui.button(name='export', label='Export', icon='Download'),
             ui.button(name='open_preview', label='Open preview', icon='OpenInNewWindow'),
+            ui.dropdown(name='dropdown', width='170px', trigger=True, value='split', choices=[
+                ui.choice(name='split', label='Split view'),
+                ui.choice(name='code', label='Full code view'),
+                ui.choice(name='preview', label='Full preview view'),
+            ])
         ]
     )
     q.page['logs'] = ui.markdown_card(box=ui.box('main', width='0px'), title='Logs', content='')
@@ -215,16 +213,19 @@ async def serve(q: Q):
 
     if q.args.export:
         await export(q)
-    elif q.args.tabs == "code":
+    elif q.args.dropdown == 'code':
         q.user.view = "code"
+        q.page['header'].items[3].dropdown.value = 'code'
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.tabs == "split":
+    elif q.args.dropdown == 'split':
         q.user.view = "split"
+        q.page['header'].items[3].dropdown.value = 'split'
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.tabs == "preview":
+    elif q.args.dropdown == 'preview':
         q.user.view = "preview"
+        q.page['header'].items[3].dropdown.value = 'preview'
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
     elif q.args.console:
