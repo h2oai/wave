@@ -57,6 +57,7 @@ require(['vs/editor/editor.main'], async () => {
     hideCursorInOverviewRuler: true,
     scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
+    automaticLayout: true
   })
   window.editor = editor
   window.emit_debounced = window.wave.debounce(2000, window.wave.emit)
