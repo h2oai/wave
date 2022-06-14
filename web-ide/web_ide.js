@@ -27,6 +27,10 @@ const snippetToCompletionItem = item => ({
   insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
 })
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
+const scrollLogsToBottom = () => {
+  const logs = document.querySelector('div[data-test="logs"]').parentElement
+  logs.scrollTop = logs.scrollHeight
+}
 require(['vs/editor/editor.main'], async () => {
   monaco.languages.registerCompletionItemProvider('python', {
     triggerCharacters: ['.', "'", '"'],
