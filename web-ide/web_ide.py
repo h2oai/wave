@@ -82,15 +82,17 @@ async def setup_page(q: Q):
         title='Wave Web IDE',
         subtitle='Develop Wave apps completely in browser',
         image='https://wave.h2o.ai/img/h2o-logo.svg',
+        secondary_items=[
+            ui.tabs(name='tabs', value='split', link=True, items=[
+                ui.tab(name='split', label='Split', icon='DoubleColumn'),
+                ui.tab(name='code', label='Code', icon='Code'),
+                ui.tab(name='preview', label='Preview', icon='View'),
+            ])
+        ],
         items=[
             ui.button(name='console', label='Console', icon='CommandPrompt'),
             ui.button(name='export', label='Export', icon='Download'),
             ui.button(name='open_preview', label='Open preview', icon='OpenInNewWindow'),
-            ui.menu(icon='View', items=[
-                ui.command(name='split', label='Split view', icon='Split'),
-                ui.command(name='code', label='Full code view', icon='Code'),
-                ui.command(name='preview', label='Full preview view', icon='Preview'),
-            ])
         ]
     )
     q.page['logs'] = ui.markdown_card(box=ui.box('main', width='0px'), title='Logs', content='')
@@ -102,7 +104,7 @@ async def setup_page(q: Q):
 
 def show_empty_preview(q: Q):
     del q.page['preview']
-    q.page['empty'] = ui.tall_info_card(
+    q.page['preview'] = ui.tall_info_card(
         box=ui.box('main', width='100%'),
         name='',
         image=q.app.app_not_running_img,
@@ -192,27 +194,6 @@ async def export(q: Q):
     q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
     os.remove("app.zip")
 
-def change_layout(q: Q):
-    layout = q.user.layout or 0
-    sizes = [
-        # [editor, preview]
-        ['50%', '50%'], # split
-        ['100%', '0%'], # full code
-        ['0%', '100%'] # full preview
-    ]
-    sizes_editor = [
-        ['100%' , '80%'], # code
-        ['0%' , '20%'] # console
-    ]
-    q.page['meta'].layouts[0].zones[1].zones = [
-        ui.zone('editor', size=sizes[layout][0], direction=ui.ZoneDirection.COLUMN, zones=[
-            ui.zone('code', size=sizes_editor[0][q.user.show_console]),
-            ui.zone('console', size=sizes_editor[1][q.user.show_console]),
-        ]),
-        ui.zone('preview', size=sizes[layout][1]),
-    ]
-    q.page['header'].items[1].button.disabled = True if layout == 2 else False
-
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
@@ -234,13 +215,13 @@ async def serve(q: Q):
 
     if q.args.export:
         await export(q)
-    elif q.args.code:
+    elif q.args.tabs == "code":
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.split:
+    elif q.args.tabs == "split":
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.preview:
+    elif q.args.tabs == "preview":
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
     elif q.args.console:
