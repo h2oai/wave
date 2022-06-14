@@ -1,3 +1,4 @@
+import asyncio
 import os
 import os.path
 import re
@@ -5,7 +6,7 @@ import shutil
 import sys
 from pathlib import Path
 from string import Template
-from subprocess import Popen
+from subprocess import PIPE, STDOUT, Popen
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
@@ -17,10 +18,11 @@ _app_port = '10102'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
 
 
-async def start(filename: str, is_app: bool):
+def start(filename: str, is_app: bool):
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
     env['H2O_WAVE_ADDRESS'] = _server_adress
+    env['PYTHONUNBUFFERED'] = 'False'
     # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
     # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
     if sys.platform.lower().startswith('win'):
@@ -32,20 +34,21 @@ async def start(filename: str, is_app: bool):
             '--host', '0.0.0.0',
             '--port', _app_port,
             f'{filename.replace(".py", "")}:main',
-        ], env=env)
+        ], env=env, stdout=PIPE, stderr=STDOUT)
     else:
-        return Popen([sys.executable, filename], env=env)
+        return Popen([sys.executable, filename], env=env, stdout=PIPE, stderr=STDOUT)
 
-async def stop(process) -> None:
-    if process and process.returncode is None:
-        process.terminate()
-        process.wait()
+async def stop_previous(q: Q) -> None:
+    if q.user.wave_process and q.user.wave_process.returncode is None:
+        q.user.wave_process.terminate()
+        q.user.wave_process.wait()
+    if q.user.display_logs_future:
+        q.user.display_logs_future.cancel()
 
 
 def read_file(p: str) -> str:
     with open(p, encoding='utf-8') as f:
         return f.read()
-
 
 async def setup_page(q: Q):
     py_content = ''
@@ -98,7 +101,7 @@ async def setup_page(q: Q):
         title='Code editor',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
     )
-    await render_code(q)
+    q.page['logs'] = ui.markdown_card(box=ui.box('code', height='300px'), title='Logs', content='')
 
 def show_empty_preview(q: Q):
     del q.page['preview']
@@ -111,6 +114,21 @@ def show_empty_preview(q: Q):
         caption='Try writing one in the code editor on the left.'
     )
     q.page['header'].items[2].button.disabled = True
+
+async def display_logs(q: Q) -> None:
+  lines = []
+  p = q.user.wave_process
+  os.set_blocking(p.stdout.fileno(), False)
+  while True:
+      line = p.stdout.readline() 
+      if line:
+          lines.append(line.decode('utf8')) 
+          code = ''.join(lines)
+          q.page['logs'].content = f'```\n{code}\n```'
+          q.page['meta'].script = ui.inline_script('scrollLogsToBottom()')
+          await q.page.save()
+      else:
+          await q.sleep(0.5)
 
 async def render_code(q: Q):
     code = q.events.editor.change if q.events.editor else ''
@@ -147,9 +165,9 @@ async def render_code(q: Q):
         return
     q.user.active_path = path
 
-    await stop(q.user.wave_process)
-    q.user.wave_process = await start(filename, is_app)
-
+    await stop_previous(q)
+    q.user.wave_process = start(filename, is_app)
+    q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
     q.page['preview'] = ui.frame_card(
         box='preview',
@@ -158,7 +176,6 @@ async def render_code(q: Q):
     )
     q.page['header'].items[2].button.disabled = False
     q.page['header'].items[2].button.path = f'{_server_adress}{path}'
-
 
 async def on_startup():
     # Clean up previous tmp dir.
@@ -179,8 +196,6 @@ async def export(q: Q):
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
-    if q.args.export:
-        await export(q)
     if not q.app.initialized:
         # Prod.
         if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
@@ -196,6 +211,9 @@ async def serve(q: Q):
     if not q.client.initialized:
         await setup_page(q)
         q.client.initialized = True
+
+    if q.args.export:
+        await export(q)
     if q.events.editor:
         await render_code(q)
 
