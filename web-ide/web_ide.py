@@ -105,7 +105,7 @@ async def setup_page(q: Q):
 def show_empty_preview(q: Q):
     del q.page['preview']
     q.page['preview'] = ui.tall_info_card(
-        box=ui.box('main', width='100%'),
+        box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
         name='',
         image=q.app.app_not_running_img,
         image_height='500px',
@@ -170,7 +170,7 @@ async def render_code(q: Q):
     del q.page['empty']
 
     q.page['preview'] = ui.frame_card(
-        box=ui.box('main', width='100%'),
+        box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
         title=f'Preview of {_server_adress}{path}',
         path=f'{_server_adress}{path}'
     )
@@ -216,12 +216,15 @@ async def serve(q: Q):
     if q.args.export:
         await export(q)
     elif q.args.tabs == "code":
+        q.user.view = "code"
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
     elif q.args.tabs == "split":
+        q.user.view = "split"
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='100%')
     elif q.args.tabs == "preview":
+        q.user.view = "preview"
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
     elif q.args.console:
