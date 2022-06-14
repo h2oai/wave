@@ -74,10 +74,7 @@ async def setup_page(q: Q):
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
-                ui.zone('main', size='calc(100vh - 80px)', direction=ui.ZoneDirection.ROW, zones=[
-                    ui.zone('code', size='50%'),
-                    ui.zone('preview', size='50%'),
-                ])
+                ui.zone('main', size='calc(100vh - 80px)', direction=ui.ZoneDirection.ROW),
             ])
         ])
     q.page['header'] = ui.header_card(
@@ -86,8 +83,8 @@ async def setup_page(q: Q):
         subtitle='Develop Wave apps completely in browser',
         image='https://wave.h2o.ai/img/h2o-logo.svg',
         items=[
-            ui.button(name='export', label='Export', icon='Download'),
             ui.button(name='console', label='Console', icon='CommandPrompt'),
+            ui.button(name='export', label='Export', icon='Download'),
             ui.button(name='open_preview', label='Open preview', icon='OpenInNewWindow'),
             ui.menu(icon='View', items=[
                 ui.command(name='split', label='Split view', icon='Split'),
@@ -96,17 +93,17 @@ async def setup_page(q: Q):
             ])
         ]
     )
+    q.page['logs'] = ui.markdown_card(box=ui.box('main', width='0px'), title='Logs', content='')
     q.page['code'] = ui.markup_card(
-        box='code',
+        box=ui.box('main', width='100%'),
         title='Code editor',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
     )
-    q.page['logs'] = ui.markdown_card(box=ui.box('code', height='300px'), title='Logs', content='')
 
 def show_empty_preview(q: Q):
     del q.page['preview']
     q.page['empty'] = ui.tall_info_card(
-        box='preview',
+        box=ui.box('main', width='100%'),
         name='',
         image=q.app.app_not_running_img,
         image_height='500px',
@@ -169,8 +166,9 @@ async def render_code(q: Q):
     q.user.wave_process = start(filename, is_app)
     q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
+
     q.page['preview'] = ui.frame_card(
-        box='preview',
+        box=ui.box('main', width='100%'),
         title=f'Preview of {_server_adress}{path}',
         path=f'{_server_adress}{path}'
     )
@@ -210,10 +208,35 @@ async def serve(q: Q):
         q.app.initialized = True
     if not q.client.initialized:
         await setup_page(q)
+        show_empty_preview(q)
         q.client.initialized = True
 
     if q.args.export:
         await export(q)
+    elif q.args.code:
+        q.page['preview'].box = ui.box('main', width='0px')
+        q.page['code'].box = ui.box('main', width='100%')
+    elif q.args.split:
+        q.page['preview'].box = ui.box('main', width='100%')
+        q.page['code'].box = ui.box('main', width='100%')
+    elif q.args.preview:
+        q.page['preview'].box = ui.box('main', width='100%')
+        q.page['code'].box = ui.box('main', width='0px')
+    elif q.args.console:
+        q.page['preview'].box = ui.box('main', width='100%')
+        q.page['code'].box = ui.box('main', width='0px')
+        q.page['logs'].box = ui.box('main', width='100%')
+        q.page['header'].items[0].button.name = 'show_code'
+        q.page['header'].items[0].button.label = 'Code'
+        q.page['header'].items[0].button.icon = 'Code'
+    elif q.args.show_code:
+        q.page['preview'].box = ui.box('main', width='100%')
+        q.page['logs'].box = ui.box('main', width='0px')
+        q.page['code'].box = ui.box('main', width='100%')
+        q.page['header'].items[0].button.name = 'console'
+        q.page['header'].items[0].button.label = 'Console'
+        q.page['header'].items[0].button.icon = 'CommandPrompt'
+
     if q.events.editor:
         await render_code(q)
 
