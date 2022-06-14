@@ -83,10 +83,10 @@ async def setup_page(q: Q):
         subtitle='Develop Wave apps completely in browser',
         image='https://wave.h2o.ai/img/h2o-logo.svg',
         items=[
-            ui.button(name='console', label='Console', value='split', icon='CommandPrompt'),
+            ui.button(name='console', label='Console', icon='CommandPrompt'),
             ui.button(name='export', label='Export', icon='Download'),
             ui.button(name='open_preview', label='Open preview', icon='OpenInNewWindow'),
-            ui.dropdown(name='dropdown', width='170px', trigger=True, value='split', choices=[
+            ui.dropdown(name='dropdown', width='170px', trigger=True, value=(q.user.view or 'split'), choices=[
                 ui.choice(name='split', label='Split view'),
                 ui.choice(name='code', label='Full code view'),
                 ui.choice(name='preview', label='Full preview view'),
@@ -211,21 +211,18 @@ async def serve(q: Q):
         show_empty_preview(q)
         q.client.initialized = True
 
+    if q.args.dropdown:
+        q.user.view = q.args.dropdown
+        q.page['header'].items[3].dropdown.value = q.args.dropdown
     if q.args.export:
         await export(q)
     elif q.args.dropdown == 'code':
-        q.user.view = "code"
-        q.page['header'].items[3].dropdown.value = 'code'
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
     elif q.args.dropdown == 'split':
-        q.user.view = "split"
-        q.page['header'].items[3].dropdown.value = 'split'
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='100%')
     elif q.args.dropdown == 'preview':
-        q.user.view = "preview"
-        q.page['header'].items[3].dropdown.value = 'preview'
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
     elif q.args.console:
