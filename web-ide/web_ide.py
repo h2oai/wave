@@ -9,7 +9,7 @@ from pathlib import Path
 from string import Template
 from subprocess import PIPE, STDOUT, Popen
 from urllib.parse import urlparse
-from file_utils import read_file, get_file_tree, remove_folder, remove_file, rename, create_file
+from file_utils import read_file, get_file_tree, remove_folder, remove_file, rename, create_file, pythonify_js_code, create_folder
 
 from h2o_wave import Q, app, main, ui
 
@@ -18,6 +18,7 @@ _server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
 _app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
 _app_port = '10102'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
+main_app_file = str(os.path.join(project_dir, 'app.py'))
 
 
 def start(filename: str, is_app: bool):
@@ -41,6 +42,12 @@ def start(filename: str, is_app: bool):
         return Popen([sys.executable, filename], env=env, stdout=PIPE, stderr=STDOUT)
 
 async def stop_previous(q: Q) -> None:
+    # Stop script if any.
+    if not q.user.is_app and q.user.active_path:
+        demo_page = q.site[q.user.active_path]
+        demo_page.drop()
+        await demo_page.save()
+    # Stop app if any.
     if q.user.wave_process and q.user.wave_process.returncode is None:
         q.user.wave_process.terminate()
         q.user.wave_process.wait()
@@ -62,6 +69,7 @@ async def setup_page(q: Q):
     template = Template(read_file('web_ide.js')).substitute(
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
+        file_content=read_file(main_app_file) or '',
         py_content=py_content,
         folder=json.dumps(get_file_tree(project_dir)),
     )
@@ -138,42 +146,31 @@ async def display_logs(q: Q) -> None:
           await q.sleep(0.5)
 
 async def render_code(q: Q):
-    code = q.events.editor.change if q.events.editor else ''
-    if not code:
-        show_empty_preview(q)
-        return
-
-    code = code.replace("`", "\\`")
-    code = code.replace('$', '\\$')
-
-    is_app = '@app(' in code
-    filename = os.path.join(project_dir, 'app.py')
-    with open(filename, 'w') as f:
-        f.write(code)
-    if is_app:
-        filename = '.'.join([project_dir, 'app.py'])
-
-    if not is_app and q.user.active_path:
-        # Clear demo page
-        demo_page = q.site[q.user.active_path]
-        demo_page.drop()
-        await demo_page.save()
+    if q.events.editor:
+        code = pythonify_js_code(q.events.editor.change if q.events.editor else '')
+        with open(q.client.open_file, 'w') as f:
+            f.write(code)
+    else:
+        code = read_file(q.client.open_file)
 
     path = ''
-    app_match = re.search('\n@app\(.*(\'|\")(.*)(\'|\")', code)
-    if app_match:
-        path = app_match.group(2)
-    else:
-        script_match = re.search('site\[(\'|\")(.*)(\'|\")\]', code)
-        if script_match:
-            path = script_match.group(2)
-    if not path:
-        show_empty_preview(q)
-        return
-    q.user.active_path = path
+    if q.client.open_file == main_app_file:
+        q.user.is_app = '@app(' in code
+        app_match = re.search('\n@app\(.*(\'|\")(.*)(\'|\")', code)
+        if app_match:
+            path = app_match.group(2)
+        else:
+            script_match = re.search('site\[(\'|\")(.*)(\'|\")\]', code)
+            if script_match:
+                path = script_match.group(2)
+        if not path:
+            show_empty_preview(q)
+            return
+        q.user.active_path = path
 
     await stop_previous(q)
-    q.user.wave_process = start(filename, is_app)
+    main_file = '.'.join([project_dir, 'app.py']) if q.user.is_app else os.path.join(project_dir, 'app.py') 
+    q.user.wave_process = start(main_file, q.user.is_app)
     q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
 
@@ -186,17 +183,13 @@ async def render_code(q: Q):
     q.page['header'].items[2].button.path = f'{_server_adress}{path}'
 
 async def on_startup():
-    dirpath = Path(project_dir)
-    if not dirpath.exists():
-        os.mkdir(project_dir)
+    create_folder(project_dir)
     app_path = Path(os.path.join(project_dir, 'app.py'))
     if not app_path.exists():
         shutil.copy('starter.py', app_path)
 
 async def on_shutdown():
-    dirpath = Path(project_dir)
-    if dirpath.exists():
-        shutil.rmtree(dirpath)
+    remove_folder(project_dir)
 
 async def export(q: Q):
     shutil.make_archive('app', 'zip', '.', project_dir)
@@ -220,7 +213,9 @@ async def serve(q: Q):
         q.app.initialized = True
     if not q.client.initialized:
         await setup_page(q)
+        q.client.open_file = main_app_file
         q.client.initialized = True
+        await render_code(q)
 
     if q.args.dropdown:
         q.user.view = q.args.dropdown
@@ -258,13 +253,17 @@ async def serve(q: Q):
         if e.new_file:
             create_file(os.path.join(e.new_file['path'], e.new_file['name']))
         elif e.new_folder:
-            create_file(os.path.join(e.new_folder['path'], e.new_folder['name']))
+            create_folder(os.path.join(e.new_folder['path'], e.new_folder['name']))
         elif e.remove_file:
             remove_file(e.remove_file)
         elif e.remove_folder:
             remove_folder(e.remove_folder)
         elif e.rename:
             rename(e.rename['path'], e.rename['name'])
+        elif e.open:
+            q.client.open_file = e.open
+            q.page['meta'].script = ui.inline_script(f'editor.setValue(`{read_file(e.open)}`)')
+            await q.page.save()
         q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(get_file_tree(project_dir))})')
 
     await q.page.save()

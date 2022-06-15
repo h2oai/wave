@@ -50,7 +50,7 @@ require(['vs/editor/editor.main'], async () => {
     }
   })
   const editor = monaco.editor.create(document.getElementById('monaco-editor'), {
-    value: '',
+    value: `$file_content`,
     language: 'python',
     minimap: { enabled: false },
     overviewRulerLanes: 0,
@@ -93,6 +93,7 @@ const Tree = {
     onClick(e) {
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
       eventBus.emit('documentClick', e)
+      if (!this.folder.isFolder) window.parent.wave.emit('file_viewer', 'open', this.folder.path)
     }
   },
   template: `
