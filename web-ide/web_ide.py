@@ -1,4 +1,5 @@
 import asyncio
+import json
 import os
 import os.path
 import re
@@ -8,10 +9,11 @@ from pathlib import Path
 from string import Template
 from subprocess import PIPE, STDOUT, Popen
 from urllib.parse import urlparse
+from file_utils import read_file, get_file_tree, remove_folder, remove_file, rename, create_file
 
 from h2o_wave import Q, app, main, ui
 
-tmp_dir = 'tmp_project'
+project_dir = 'project'
 _server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
 _app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
 _app_port = '10102'
@@ -45,11 +47,6 @@ async def stop_previous(q: Q) -> None:
     if q.user.display_logs_future:
         q.user.display_logs_future.cancel()
 
-
-def read_file(p: str) -> str:
-    with open(p, encoding='utf-8') as f:
-        return f.read()
-
 async def setup_page(q: Q):
     py_content = ''
     # In prod.
@@ -62,15 +59,22 @@ async def setup_page(q: Q):
         py_content += read_file(os.path.join(vsc_extension_path, 'server', 'utils.py'))
     if py_content:
         py_content += read_file('autocomplete.py')
-    template = Template(read_file('web_ide.js')).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2, py_content=py_content)
+    template = Template(read_file('web_ide.js')).substitute(
+        snippets1=q.app.snippets1,
+        snippets2=q.app.snippets2,
+        py_content=py_content,
+        folder=json.dumps(get_file_tree(project_dir)),
+    )
     q.page['meta'] = ui.meta_card(
         box='',
         title='Wave Web IDE',
         scripts=[
             ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
             ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
+            ui.script('https://unpkg.com/vue@3'),
         ],
-        script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
+        script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
+        stylesheets=[ui.stylesheet('/assets/web_ide.css')],
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -93,19 +97,21 @@ async def setup_page(q: Q):
             ])
         ]
     )
+    q.page['files'] = ui.markup_card(box=ui.box('main', width='500px'), title='', content='<div id="file-tree"></div><div id="file-tree-menu"></div>')
     q.page['logs'] = ui.markdown_card(box=ui.box('main', width='0px'), title='Logs', content='')
     q.page['code'] = ui.markup_card(
         box=ui.box('main', width='100%'),
         title='Code editor',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
     )
+    show_empty_preview(q)
 
 def show_empty_preview(q: Q):
     del q.page['preview']
     q.page['preview'] = ui.tall_info_card(
         box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
         name='',
-        image=q.app.app_not_running_img,
+        image='/assets/app_not_running.svg',
         image_height='500px',
         title='Oops! There is no running app.',
         caption='Try writing one in the code editor on the left.'
@@ -137,11 +143,11 @@ async def render_code(q: Q):
     code = code.replace('$', '\\$')
 
     is_app = '@app(' in code
-    filename = os.path.join(tmp_dir, 'app.py')
+    filename = os.path.join(project_dir, 'app.py')
     with open(filename, 'w') as f:
         f.write(code)
     if is_app:
-        filename = '.'.join([tmp_dir, 'app.py'])
+        filename = '.'.join([project_dir, 'app.py'])
 
     if not is_app and q.user.active_path:
         # Clear demo page
@@ -168,7 +174,7 @@ async def render_code(q: Q):
     del q.page['empty']
 
     q.page['preview'] = ui.frame_card(
-        box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
+        box=ui.box('main', width=('0px' if q.user.view == 'code' else '100%')),
         title=f'Preview of {_server_adress}{path}',
         path=f'{_server_adress}{path}'
     )
@@ -176,25 +182,28 @@ async def render_code(q: Q):
     q.page['header'].items[2].button.path = f'{_server_adress}{path}'
 
 async def on_startup():
-    # Clean up previous tmp dir.
-    await on_shutdown()
-    os.mkdir(tmp_dir)
-
+    dirpath = Path(project_dir)
+    if not dirpath.exists():
+        os.mkdir(project_dir)
+    app_path = Path(os.path.join(project_dir, 'app.py'))
+    if not app_path.exists():
+        shutil.copy('starter.py', app_path)
 
 async def on_shutdown():
-    dirpath = Path(tmp_dir)
+    dirpath = Path(project_dir)
     if dirpath.exists():
         shutil.rmtree(dirpath)
 
 async def export(q: Q):
-    shutil.make_archive('app', 'zip', '.', 'tmp_project')
+    shutil.make_archive('app', 'zip', '.', project_dir)
     q.app.zip_path, = await q.site.upload(['app.zip'])
-    q.page["meta"].script = ui.inline_script(f"""window.open("{q.app.zip_path}", "_blank");""")
+    q.page["meta"].script = ui.inline_script(f'window.open("{q.app.zip_path}", "_blank");')
     os.remove("app.zip")
 
 @app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
+        # TODO: Serve snippets directly from static dir.
         # Prod.
         if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
             q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
@@ -204,11 +213,9 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
-        q.app.app_not_running_img, = await q.site.upload([os.path.join('assets', 'app_not_running.svg')])
         q.app.initialized = True
     if not q.client.initialized:
         await setup_page(q)
-        show_empty_preview(q)
         q.client.initialized = True
 
     if q.args.dropdown:
@@ -241,6 +248,21 @@ async def serve(q: Q):
         q.page['header'].items[0].button.icon = 'CommandPrompt'
 
     if q.events.editor:
-        await render_code(q)
+        if q.events.editor.change:
+            await render_code(q)
+    elif q.events.file_viewer:
+        e = q.events.file_viewer
+        if e.new_file:
+            create_file(os.path.join(e.new_file['path'], e.new_file['name']))
+        elif e.new_folder:
+            create_file(os.path.join(e.new_folder['path'], e.new_folder['name']))
+        elif e.remove_file:
+            remove_file(e.remove_file)
+        elif e.remove_folder:
+            remove_folder(e.remove_folder)
+        elif e.rename:
+            rename(e.rename['path'], e.rename['name'])
+        
+        q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(get_file_tree(project_dir))})')
 
     await q.page.save()

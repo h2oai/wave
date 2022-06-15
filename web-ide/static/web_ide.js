@@ -82,14 +82,6 @@ const Tree = {
     onContextMenu(e) {
       eventBus.emit('menu', { e, folder: this.folder })
     },
-    onCreated() {
-      this.folder.action = null
-      window.parent.wave.emit('file_viewer', this.folder.isFolder ? 'new_folder' : 'new_file', { path: this.folder.path, name: this.folder.label })
-    },
-    onRenamed() {
-      this.folder.action = null
-      window.parent.wave.emit('file_viewer', 'rename', { path: this.folder.path, name: this.folder.label })
-    },
     onClick(e) {
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
       eventBus.emit('documentClick', e)
@@ -97,8 +89,8 @@ const Tree = {
   },
   template: `
 <li>
-    <input v-if="folder.action === 'new'" type="text" v-model="folder.label" @keyup.enter="onCreated">
-    <input v-else-if="folder.action === 'rename'" type="text" v-model="folder.label" @keyup.enter="onRenamed">
+    <input v-if="folder.action === 'new'" type="text" v-model="folder.label" @keyup.enter="folder.action=null">
+    <input v-else-if="folder.action === 'rename'" type="text" v-model="folder.label" @keyup.enter="folder.action=null">
     <span v-else @contextmenu.prevent="onContextMenu" @click.stop="onClick">{{folder.label}}</span>
     <ul v-if="isSubtreeOpen && folder.isFolder && folder.children">
       <li v-for="folder in folder.children">
@@ -123,17 +115,18 @@ const Menu = {
   },
   methods: {
     newFile() {
-      this.folder.children.push({ label: '', action: 'new', isFolder: false, path: this.folder.path })
+      this.folder.children.push({ label: '', action: 'new', isFolder: false })
       this.menuPosition = null
+      // window.parent.wave.emit('editor', 'new_file', {path:this.folder.path, name: this})
     },
     newFolder() {
-      this.folder.children.push({ label: '', action: 'new', isFolder: true, path: this.folder.path })
+      this.folder.children.push({ label: '', action: 'new', isFolder: true })
       this.menuPosition = null
     },
     remove() {
       this.folder.children = []
       this.folder.label = ''
-      window.parent.wave.emit('file_viewer', this.folder.isFolder ? 'remove_folder' : 'remove_file', this.folder.path)
+      window.parent.wave.emit('editor', 'remove', this.folder.path)
       this.menuPosition = null
     },
     rename() {

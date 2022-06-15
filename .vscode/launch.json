@@ -48,6 +48,9 @@
         "web_ide",
         "--no-reload",
       ],
+      "env": {
+        "H2O_WAVE_PUBLIC_DIR": "/assets/@../static"
+      }
     },
     {
       "name": "Debug Showcase",
