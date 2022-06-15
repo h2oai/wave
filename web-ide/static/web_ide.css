@@ -1,11 +1,103 @@
-#file-tree ul {
+#editor {
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0
+}
+
+#monaco-editor {
+  flex-grow: 1;
+  margin: 15px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+#files {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  max-width: 500px;
+}
+
+#files li>li {
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+#files li>span:hover {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#files ul {
   list-style: none;
   padding-left: 1rem;
 }
 
 #file-tree-menu .menu {
-  border: 1px solid #000;
+  padding: 4px 0px 4px 0px;
   display: inline-block;
   position: fixed;
-  background: #FFF;
+  z-index: 1;
+}
+
+#file-tree-menu .menu>li {
+  display: flex;
+  align-items: center;
+  width: 150px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#file-tree-menu .menu>li:hover {
+  color: #3d75dc;
+  background-color: #252A2D;
+  cursor: pointer;
+}
+
+#file-tree-menu .menu>li.delete:hover {
+  color: #ff0000;
+}
+
+#file-tree-menu .menu-item-img {
+  height: 14px;
+  width: 14px;
+  padding: 0.4rem 0.8rem 0.5rem 0.8rem;
+  filter: invert(52%) sepia(11%) saturate(13%) hue-rotate(3deg) brightness(95%) contrast(95%);
+}
+
+#file-tree-menu .menu>li:hover .menu-item-img {
+  filter: invert(37%) sepia(92%) saturate(446%) hue-rotate(179deg) brightness(101%) contrast(96%);
+}
+
+#file-tree-menu .menu>li.delete:hover .menu-item-img {
+  filter: invert(14%) sepia(72%) saturate(6261%) hue-rotate(2deg) brightness(99%) contrast(127%);
+}
+
+#file-tree input:focus {
+  outline: none;
+}
+
+#file-tree input[type=text] {
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: transparent;
+  font-weight: 100;
+  color: #808080;
+  font-size: 13px;
+}
+
+#file-tree .tree-item {
+  padding: 0.2rem 0rem 0.2rem 0rem;
+  display: flex;
+  align-items: center;
+}
+
+#file-tree .tree-item-img {
+  height: 14px;
+  width: 14px;
+  padding: 0rem 0.8rem 0.1rem 0.8rem;
+  filter: invert(52%) sepia(11%) saturate(13%) hue-rotate(3deg) brightness(95%) contrast(95%);
 }

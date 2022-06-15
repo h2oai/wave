@@ -71,7 +71,7 @@ async def setup_page(q: Q):
         scripts=[
             ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
             ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
-            ui.script('https://unpkg.com/vue@3'),
+            ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
         stylesheets=[ui.stylesheet('/assets/web_ide.css')],
@@ -97,13 +97,17 @@ async def setup_page(q: Q):
             ])
         ]
     )
-    q.page['files'] = ui.markup_card(box=ui.box('main', width='500px'), title='', content='<div id="file-tree"></div><div id="file-tree-menu"></div>')
+    editor_html = '''
+<div id="editor">
+  <div id="files">
+    <div id="file-tree"></div>
+    <div id="file-tree-menu"></div>
+  </div>
+  <div id="monaco-editor"></div>
+</div>
+    '''
     q.page['logs'] = ui.markdown_card(box=ui.box('main', width='0px'), title='Logs', content='')
-    q.page['code'] = ui.markup_card(
-        box=ui.box('main', width='100%'),
-        title='Code editor',
-        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
-    )
+    q.page['code'] = ui.markup_card(box=ui.box('main', width='100%'), title='', content=editor_html)
     show_empty_preview(q)
 
 def show_empty_preview(q: Q):
@@ -248,8 +252,7 @@ async def serve(q: Q):
         q.page['header'].items[0].button.icon = 'CommandPrompt'
 
     if q.events.editor:
-        if q.events.editor.change:
-            await render_code(q)
+        await render_code(q)
     elif q.events.file_viewer:
         e = q.events.file_viewer
         if e.new_file:
@@ -262,7 +265,6 @@ async def serve(q: Q):
             remove_folder(e.remove_folder)
         elif e.rename:
             rename(e.rename['path'], e.rename['name'])
-        
         q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(get_file_tree(project_dir))})')
 
     await q.page.save()
