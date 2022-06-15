@@ -11,6 +11,11 @@ def create_file(path:str) -> None:
     if not path.exists():
         path.touch()
 
+def create_folder(path:str) -> None:
+    dirpath = Path(path)
+    if not dirpath.exists():
+        os.mkdir(path)
+
 def rename(path:str, new_name:str):
     os.rename(path, os.path.join(os.path.dirname(path), new_name))
 
@@ -23,6 +28,9 @@ def remove_folder(path:str) -> None:
     dirpath = Path(path)
     if dirpath.exists():
         shutil.rmtree(dirpath)
+
+def pythonify_js_code(code:str) -> str:
+    return code.replace("`", "\\`").replace('$', '\\$')
 
 def get_file_tree(path):
     ret = {}
