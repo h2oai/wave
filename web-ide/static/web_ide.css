@@ -1,0 +1,11 @@
+#file-tree ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+#file-tree-menu .menu {
+  border: 1px solid #000;
+  display: inline-block;
+  position: fixed;
+  background: #FFF;
+}

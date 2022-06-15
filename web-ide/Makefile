@@ -5,7 +5,7 @@ setup:
 	./venv/bin/python -m pip install -r requirements.txt
 
 run:
-	./venv/bin/wave run web_ide.py --no-reload
+	H2O_WAVE_PUBLIC_DIR="/assets/@../static" ./venv/bin/wave run web_ide.py --no-reload
 
 clean:
 	rm -rf venv
