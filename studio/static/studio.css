@@ -4,26 +4,46 @@
   top: 0;
   bottom: 0;
   right: 0;
-  left: 0
+  left: 0;
 }
 
 #monaco-editor {
   flex-grow: 1;
-  margin: 15px;
+  padding: 15px 15px 15px 0px;
   max-width: 100%;
   overflow-x: auto;
+  background-color: #ffffff;
 }
 
 #files {
+  position: relative;
   font-family: 'Inter', sans-serif;
   font-weight: 300;
   font-size: 13px;
-  max-width: 600px;
+  user-select: none;
 }
 
-#files li>li {
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
+#explorer {
+  position: relative;
+  width: 120px;
+}
+
+#width-resizer {
+  position: absolute;
+  top: 0;
+  right: -6px;
+  bottom: 0;
+  width: 1px;
+  background-color: #d3d3d3;
+  background-clip: content-box;
+  padding: 0 0.3rem;
+  z-index: 1;
+}
+
+#width-resizer:hover {
+  background-color: #000000;
+  width: 2px;
+  cursor: col-resize;
 }
 
 #files li>span:hover {
@@ -33,14 +53,19 @@
 
 #files ul {
   list-style: none;
-  padding-left: 1rem;
+  padding-left: 0;
+}
+
+span.tree-item:hover, .tree-item-active {
+  background-color: #f0f0f0;
 }
 
 #file-tree-menu .menu {
-  padding: 4px 0px 4px 0px;
+  box-shadow: 0px 0px 8px #888888;
   display: inline-block;
   position: fixed;
-  z-index: 1;
+  background: #ffffff;
+  z-index: 2;
 }
 
 #file-tree-menu .menu>li {
@@ -53,7 +78,7 @@
 
 #file-tree-menu .menu>li:hover {
   color: #3d75dc;
-  background-color: #252A2D;
+  background-color: #e5e5e5;
   cursor: pointer;
 }
 
@@ -62,10 +87,9 @@
 }
 
 #file-tree-menu .menu-item-img {
-  height: 14px;
-  width: 14px;
+  height: 18px;
+  width: 18px;
   padding: 0.4rem 0.8rem 0.5rem 0.8rem;
-  filter: invert(52%) sepia(11%) saturate(13%) hue-rotate(3deg) brightness(95%) contrast(95%);
 }
 
 #file-tree-menu .menu>li:hover .menu-item-img {
@@ -81,12 +105,21 @@
 }
 
 #file-tree input[type=text] {
-  border: 1px solid black;
-  border-radius: 4px;
+  border: none;
+  outline: 1px solid black;
+  width: 100%;
+  padding-right: 5px;
+  margin: 0;
+  box-sizing: border-box;  
   background-color: transparent;
   font-weight: 100;
   color: #808080;
   font-size: 13px;
+}
+
+#file-tree input[type=text]:focus {
+  color: #000000;
+  outline: 1px solid #3d75dc;
 }
 
 #file-tree .tree-item {
@@ -96,10 +129,13 @@
 }
 
 #file-tree .tree-item-img {
-  height: 14px;
-  width: 14px;
-  padding: 0rem 0.8rem 0.1rem 0.8rem;
-  filter: invert(52%) sepia(11%) saturate(13%) hue-rotate(3deg) brightness(95%) contrast(95%);
+  height: 18px;
+  width: 18px;
+  padding: 0rem 0.2rem 0rem 0.4rem;
+}
+
+.tree-item-label {
+  white-space: nowrap;
 }
 
 /* TMP hack till new version release. Remove when on 0.23. */
