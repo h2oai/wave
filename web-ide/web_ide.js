@@ -67,7 +67,9 @@ require(['vs/editor/editor.main'], async () => {
   })
 })
 
-setTimeout(async () => {
+const initPyodide = setInterval(async () => {
+  if (!loadPyodide) return
+  clearInterval(initPyodide)
   window.pyodide = await loadPyodide()
   await window.pyodide.loadPackage('parso')
   await window.pyodide.loadPackage('jedi')
