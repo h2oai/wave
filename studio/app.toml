@@ -1,10 +1,14 @@
 [App]
 Name = "ai.h2o.wave.studio"
 Version = "{{VERSION}}"
-Title = "H2O Wave Tour"
-Description = "Visual and code examples of what's possible with H2O Wave."
+Title = "Wave Studio"
+Description = "In-browser IDE for building Wave apps."
 Tags = ["APP_DEV"]
 LongDescription = "about.md"
 
 [Runtime]
-Module = "examples.tour"
+Module = "studio"
+
+[[Env]]
+Name = "H2O_WAVE_PUBLIC_DIR"
+Value = "/assets/@../static"
