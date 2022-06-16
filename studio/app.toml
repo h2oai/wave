@@ -1,6 +1,6 @@
 [App]
 Name = "ai.h2o.wave.studio"
-Version = "{{VERSION}}"
+Version = "0.0.1"
 Title = "Wave Studio"
 Description = "In-browser IDE for building Wave apps."
 Tags = ["APP_DEV"]
