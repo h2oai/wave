@@ -66,7 +66,7 @@ async def setup_page(q: Q):
         py_content += read_file(os.path.join(vsc_extension_path, 'server', 'utils.py'))
     if py_content:
         py_content += read_file('autocomplete.py')
-    template = Template(read_file('web_ide.js')).substitute(
+    template = Template(read_file('studio.js')).substitute(
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
         file_content=read_file(main_app_file) or '',
@@ -82,7 +82,7 @@ async def setup_page(q: Q):
             ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
-        stylesheets=[ui.stylesheet('/assets/web_ide.css')],
+        stylesheets=[ui.stylesheet('/assets/studio.css')],
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
