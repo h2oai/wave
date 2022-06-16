@@ -75,7 +75,7 @@ async def setup_page(q: Q):
     )
     q.page['meta'] = ui.meta_card(
         box='',
-        title='Wave Web IDE',
+        title='Wave Studio',
         scripts=[
             ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
             ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
@@ -91,7 +91,7 @@ async def setup_page(q: Q):
         ])
     q.page['header'] = ui.header_card(
         box='header',
-        title='Wave Web IDE',
+        title='Wave Studio',
         subtitle='Develop Wave apps completely in browser',
         image='https://wave.h2o.ai/img/h2o-logo.svg',
         items=[
