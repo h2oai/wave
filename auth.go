@@ -445,7 +445,7 @@ func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken
 	}
 
 	post_logout_redirect_url := h.auth.conf.PostLogoutRedirectURL
-	if post_logout_redirect_url != "" {
+	if post_logout_redirect_url == "" {
 		post_logout_redirect_url = r.Host
 	}
 	query := redirectURL.Query()
