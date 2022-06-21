@@ -91,7 +91,7 @@ async def setup_page(q: Q):
             ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
-        stylesheets=[ui.stylesheet(f'/assets/studio.css?version={time.time()}')], # Cache busting.
+        stylesheets=[ui.stylesheet(f'/assets/studio.css?v={time.time()}')], # Cache busting.
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
