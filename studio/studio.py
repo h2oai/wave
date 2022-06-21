@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 from h2o_wave import Q, app, main, ui
 
 import file_utils
+import studio_editor as editor
 
 
 class Project:
@@ -157,6 +158,8 @@ async def render_code(q: Q):
         code = file_utils.pythonify_js_code(q.events.editor.change if q.events.editor else '')
         with open(q.client.opened_file, 'w') as f:
             f.write(code)
+        if not project.app_entry_point and ('@app(' in code or 'site[' in code):
+            project.app_entry_point = q.client.opened_file
     else:
         code = file_utils.read_file(q.client.opened_file)
 
@@ -190,12 +193,6 @@ async def render_code(q: Q):
     )
     q.page['header'].items[1].button.disabled = False
     q.page['header'].items[1].button.path = f'{project.server_adress}{path}'
-
-def update_file_tree(q: Q) -> None:
-    q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(file_utils.get_file_tree(project.dir))})')
-
-def open_editor_file(q: Q, file: str) -> None:
-    q.page['meta'].script = ui.inline_script(f'editor.setValue(`{file_utils.read_file(file)}`)')
 
 async def on_startup():
     file_utils.create_folder(project.dir)
@@ -262,9 +259,9 @@ async def serve(q: Q):
                 project.app_entry_point = file_utils.find_main_file(project.dir)
                 q.client.opened_file = project.app_entry_point
                 await render_code(q)
-                update_file_tree(q)
+                editor.update_file_tree(q, project.dir)
                 await q.page.save()
-                open_editor_file(q, project.app_entry_point)
+                editor.open_editor_file(q, project.app_entry_point)
             else:
                 q.page['meta'].dialog.items = [
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
@@ -307,15 +304,33 @@ async def serve(q: Q):
         elif e.new_folder:
             file_utils.create_folder(os.path.join(e.new_folder['path'], e.new_folder['name']))
         elif e.remove_file:
-            file_utils.remove_file(e.remove_file)
+            file_to_remove = e.remove_file
+            file_utils.remove_file(file_to_remove)
+            if file_to_remove == project.app_entry_point:
+                project.app_entry_point = None
+                show_empty_preview(q)
+            if file_to_remove == q.client.opened_file:
+                editor.clean_editor(q)
+                await q.page.save()
         elif e.remove_folder:
+            if file_utils.is_file_in_folder(project.app_entry_point, project.dir):
+                editor.clean_editor(q)
+                project.app_entry_point = None
+                show_empty_preview(q)
+                await q.page.save()
             file_utils.remove_folder(e.remove_folder)
         elif e.rename:
-            file_utils.rename(e.rename['path'], e.rename['name'])
+            path = e.rename['path']
+            new_name = e.rename['name']
+            file_utils.rename(path, new_name)
+            if path == project.app_entry_point:
+                project.app_entry_point = new_name
+            if path == project.dir:
+                project.dir = new_name
         elif e.open:
             q.client.opened_file = e.open
-            open_editor_file(q, e.open)
+            editor.open_file(q, e.open)
             await q.page.save()
-        update_file_tree(q)
+        editor.update_file_tree(q, project.dir)
 
     await q.page.save()
