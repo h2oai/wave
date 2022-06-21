@@ -5,39 +5,44 @@ import os.path
 import re
 import shutil
 import sys
+import time
+import zipfile
 from pathlib import Path
 from string import Template
 from subprocess import PIPE, STDOUT, Popen
-import time
 from urllib.parse import urlparse
-import zipfile
-import file_utils
 
 from h2o_wave import Q, app, main, ui
 
-project_dir = 'project'
-_server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
-_app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
-_app_port = '10102'
-vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
-main_app_file = os.path.join(project_dir, 'app.py')
+import file_utils
 
+
+class Project:
+    def __init__(self) -> None:
+        self.dir = 'project'
+        self.server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
+        self.app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
+        self.app_port = '10102'
+        self.vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
+        self.app_entry_point = os.path.join(self.dir, 'app.py')
+
+project = Project()
 
 def start(filename: str, is_app: bool):
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
-    env['H2O_WAVE_ADDRESS'] = _server_adress
+    env['H2O_WAVE_ADDRESS'] = project.server_adress
     env['PYTHONUNBUFFERED'] = 'False'
     # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
     # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
     if sys.platform.lower().startswith('win'):
         env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
     if is_app:
-        env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_host}:{_app_port}'
+        env['H2O_WAVE_APP_ADDRESS'] = f'http://{project.app_host}:{project.app_port}'
         return Popen([
             sys.executable, '-m', 'uvicorn',
             '--host', '0.0.0.0',
-            '--port', _app_port,
+            '--port', project.app_port,
             f'{filename.replace(".py", "")}:main',
         ], env=env, stdout=PIPE, stderr=STDOUT)
     else:
@@ -63,17 +68,17 @@ async def setup_page(q: Q):
         py_content = file_utils.read_file('autocomplete_parser.py')
         py_content += file_utils.read_file('autocomplete_utils.py')
     # When run in development from Wave repo.
-    elif os.path.exists(vsc_extension_path):
-        py_content = file_utils.read_file(os.path.join(vsc_extension_path, 'server', 'parser.py'))
-        py_content += file_utils.read_file(os.path.join(vsc_extension_path, 'server', 'utils.py'))
+    elif os.path.exists(project.vsc_extension_path):
+        py_content = file_utils.read_file(os.path.join(project.vsc_extension_path, 'server', 'parser.py'))
+        py_content += file_utils.read_file(os.path.join(project.vsc_extension_path, 'server', 'utils.py'))
     if py_content:
         py_content += file_utils.read_file('autocomplete.py')
     template = Template(file_utils.read_file('studio.js')).substitute(
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
-        file_content=file_utils.read_file(main_app_file) or '',
+        file_content=file_utils.read_file(project.app_entry_point) or '',
         py_content=py_content,
-        folder=json.dumps(file_utils.get_file_tree(project_dir)),
+        folder=json.dumps(file_utils.get_file_tree(project.dir)),
     )
     q.page['meta'] = ui.meta_card(
         box='',
@@ -150,13 +155,13 @@ async def display_logs(q: Q) -> None:
 async def render_code(q: Q):
     if q.events.editor:
         code = file_utils.pythonify_js_code(q.events.editor.change if q.events.editor else '')
-        with open(q.client.open_file, 'w') as f:
+        with open(q.client.opened_file, 'w') as f:
             f.write(code)
     else:
-        code = file_utils.read_file(q.client.open_file)
+        code = file_utils.read_file(q.client.opened_file)
 
     path = ''
-    if q.client.open_file == main_app_file:
+    if q.client.opened_file == project.app_entry_point:
         app_match = re.search('\n@app\(.*(\'|\")(.*)(\'|\")', code)
         if app_match:
             path = app_match.group(2)
@@ -173,65 +178,63 @@ async def render_code(q: Q):
         q.user.active_path = path
 
     await stop_previous(q)
-    exec_file = main_app_file.replace(os.sep, '.') if q.user.is_app else main_app_file
+    exec_file = project.app_entry_point.replace(os.sep, '.') if q.user.is_app else project.app_entry_point
     q.user.wave_process = start(exec_file, q.user.is_app)
     q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
 
     q.page['preview'] = ui.frame_card(
         box=ui.box('main', width=('0px' if q.user.view == 'code' else '100%')),
-        title=f'Preview of {_server_adress}{path}',
-        path=f'{_server_adress}{path}'
+        title=f'Preview of {project.server_adress}{path}',
+        path=f'{project.server_adress}{path}'
     )
     q.page['header'].items[1].button.disabled = False
-    q.page['header'].items[1].button.path = f'{_server_adress}{path}'
+    q.page['header'].items[1].button.path = f'{project.server_adress}{path}'
 
 def update_file_tree(q: Q) -> None:
-    q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(file_utils.get_file_tree(project_dir))})')
+    q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(file_utils.get_file_tree(project.dir))})')
 
 def open_editor_file(q: Q, file: str) -> None:
     q.page['meta'].script = ui.inline_script(f'editor.setValue(`{file_utils.read_file(file)}`)')
 
 async def on_startup():
-    file_utils.create_folder(project_dir)
-    app_path = Path(main_app_file)
+    file_utils.create_folder(project.dir)
+    app_path = Path(project.app_entry_point)
     if not app_path.exists():
         shutil.copy('starter.py', app_path)
 
 async def on_shutdown():
-    file_utils.remove_folder(project_dir)
+    file_utils.remove_folder(project.dir)
 
 async def export(q: Q):
-    shutil.make_archive('app', 'zip', '.', project_dir)
+    shutil.make_archive('app', 'zip', '.', project.dir)
     q.app.zip_path, = await q.site.upload(['app.zip'])
     q.page["meta"].script = ui.inline_script(f'window.open("{q.app.zip_path}", "_blank");')
     os.remove("app.zip")
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
-    global project_dir
-    global main_app_file
     if not q.app.initialized:
         # TODO: Serve snippets directly from static dir.
         # Prod.
         if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
             q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
         # When run in development from Wave repo.
-        elif os.path.exists(vsc_extension_path):
+        elif os.path.exists(project.vsc_extension_path):
             q.app.snippets1, q.app.snippets2, = await q.site.upload([
-                os.path.join(vsc_extension_path, 'base-snippets.json'),
-                os.path.join(vsc_extension_path, 'component-snippets.json')
+                os.path.join(project.vsc_extension_path, 'base-snippets.json'),
+                os.path.join(project.vsc_extension_path, 'component-snippets.json')
             ])
         q.app.initialized = True
     if not q.client.initialized:
         await setup_page(q)
-        q.client.open_file = main_app_file
+        q.client.opened_file = project.app_entry_point
         q.client.initialized = True
         await render_code(q)
 
     if q.args.dropdown:
         q.user.view = q.args.dropdown
-        q.page['header'].items[3].dropdown.value = q.args.dropdown
+        q.page['header'].items[2].dropdown.value = q.args.dropdown
     if q.args.export_project:
         await export(q)
     elif q.args.import_project:
@@ -244,7 +247,7 @@ async def serve(q: Q):
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             root_dirs = [f for f in zip_ref.filelist if f.is_dir() and f.filename.count(os.path.sep) == 1]
             if len(root_dirs) == 1:
-                file_utils.remove_folder(project_dir)
+                file_utils.remove_folder(project.dir)
                 zip_ref.extractall()
                 file_utils.remove_file(zip_path)
                 q.page['meta'].dialog = None
@@ -255,13 +258,13 @@ async def serve(q: Q):
                     position='top-right',
                     events=['dismissed'],
                 )
-                project_dir = root_dirs[0].filename.replace(os.path.sep, '')
-                main_app_file = file_utils.find_main_file(project_dir)
-                q.client.open_file = main_app_file
+                project.dir = root_dirs[0].filename.replace(os.path.sep, '')
+                project.app_entry_point = file_utils.find_main_file(project.dir)
+                q.client.opened_file = project.app_entry_point
                 await render_code(q)
                 update_file_tree(q)
                 await q.page.save()
-                open_editor_file(q, main_app_file)
+                open_editor_file(q, project.app_entry_point)
             else:
                 q.page['meta'].dialog.items = [
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
@@ -310,7 +313,7 @@ async def serve(q: Q):
         elif e.rename:
             file_utils.rename(e.rename['path'], e.rename['name'])
         elif e.open:
-            q.client.open_file = e.open
+            q.client.opened_file = e.open
             open_editor_file(q, e.open)
             await q.page.save()
         update_file_tree(q)
