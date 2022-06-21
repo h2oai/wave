@@ -8,8 +8,10 @@ import sys
 from pathlib import Path
 from string import Template
 from subprocess import PIPE, STDOUT, Popen
+import time
 from urllib.parse import urlparse
-from file_utils import read_file, get_file_tree, remove_folder, remove_file, rename, create_file, pythonify_js_code, create_folder
+import zipfile
+import file_utils
 
 from h2o_wave import Q, app, main, ui
 
@@ -18,7 +20,7 @@ _server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
 _app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
 _app_port = '10102'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
-main_app_file = str(os.path.join(project_dir, 'app.py'))
+main_app_file = os.path.join(project_dir, 'app.py')
 
 
 def start(filename: str, is_app: bool):
@@ -58,20 +60,20 @@ async def setup_page(q: Q):
     py_content = ''
     # In prod.
     if os.path.exists('autocomplete_parser.py') and os.path.exists('autocomplete_utils.py'):
-        py_content = read_file('autocomplete_parser.py')
-        py_content += read_file('autocomplete_utils.py')
+        py_content = file_utils.read_file('autocomplete_parser.py')
+        py_content += file_utils.read_file('autocomplete_utils.py')
     # When run in development from Wave repo.
     elif os.path.exists(vsc_extension_path):
-        py_content = read_file(os.path.join(vsc_extension_path, 'server', 'parser.py'))
-        py_content += read_file(os.path.join(vsc_extension_path, 'server', 'utils.py'))
+        py_content = file_utils.read_file(os.path.join(vsc_extension_path, 'server', 'parser.py'))
+        py_content += file_utils.read_file(os.path.join(vsc_extension_path, 'server', 'utils.py'))
     if py_content:
-        py_content += read_file('autocomplete.py')
-    template = Template(read_file('studio.js')).substitute(
+        py_content += file_utils.read_file('autocomplete.py')
+    template = Template(file_utils.read_file('studio.js')).substitute(
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
-        file_content=read_file(main_app_file) or '',
+        file_content=file_utils.read_file(main_app_file) or '',
         py_content=py_content,
-        folder=json.dumps(get_file_tree(project_dir)),
+        folder=json.dumps(file_utils.get_file_tree(project_dir)),
     )
     q.page['meta'] = ui.meta_card(
         box='',
@@ -82,7 +84,7 @@ async def setup_page(q: Q):
             ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
-        stylesheets=[ui.stylesheet('/assets/studio.css')],
+        stylesheets=[ui.stylesheet(f'/assets/studio.css?version={time.time()}')], # Cache busting.
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -96,13 +98,14 @@ async def setup_page(q: Q):
         image='https://wave.h2o.ai/img/h2o-logo.svg',
         items=[
             ui.button(name='console', label='Console', icon='CommandPrompt'),
-            ui.button(name='export', label='Export', icon='Download'),
-            ui.button(name='open_preview', label='Open preview', icon='OpenInNewWindow'),
+            ui.button(name='open_preview', label='Preview', icon='OpenInNewWindow'),
             ui.dropdown(name='dropdown', width='170px', trigger=True, value=(q.user.view or 'split'), choices=[
                 ui.choice(name='split', label='Split view'),
                 ui.choice(name='code', label='Full code view'),
                 ui.choice(name='preview', label='Full preview view'),
-            ])
+            ]),
+            ui.button(name='import_project', label='Import', icon='Upload'),
+            ui.button(name='export_project', label='Export', icon='Download'),
         ]
     )
     editor_html = '''
@@ -128,7 +131,6 @@ def show_empty_preview(q: Q):
         title='Oops! There is no running app.',
         caption='Try writing one in the code editor on the left.'
     )
-    q.page['header'].items[2].button.disabled = True
 
 async def display_logs(q: Q) -> None:
   lines = []
@@ -147,30 +149,32 @@ async def display_logs(q: Q) -> None:
 
 async def render_code(q: Q):
     if q.events.editor:
-        code = pythonify_js_code(q.events.editor.change if q.events.editor else '')
+        code = file_utils.pythonify_js_code(q.events.editor.change if q.events.editor else '')
         with open(q.client.open_file, 'w') as f:
             f.write(code)
     else:
-        code = read_file(q.client.open_file)
+        code = file_utils.read_file(q.client.open_file)
 
     path = ''
     if q.client.open_file == main_app_file:
-        q.user.is_app = '@app(' in code
         app_match = re.search('\n@app\(.*(\'|\")(.*)(\'|\")', code)
         if app_match:
             path = app_match.group(2)
+            q.user.is_app = True
         else:
             script_match = re.search('site\[(\'|\")(.*)(\'|\")\]', code)
             if script_match:
                 path = script_match.group(2)
+                q.user.is_app = False
         if not path:
             show_empty_preview(q)
+            q.user.is_app = False
             return
         q.user.active_path = path
 
     await stop_previous(q)
-    main_file = '.'.join([project_dir, 'app.py']) if q.user.is_app else os.path.join(project_dir, 'app.py') 
-    q.user.wave_process = start(main_file, q.user.is_app)
+    exec_file = main_app_file.replace(os.sep, '.') if q.user.is_app else main_app_file
+    q.user.wave_process = start(exec_file, q.user.is_app)
     q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
 
@@ -179,17 +183,23 @@ async def render_code(q: Q):
         title=f'Preview of {_server_adress}{path}',
         path=f'{_server_adress}{path}'
     )
-    q.page['header'].items[2].button.disabled = False
-    q.page['header'].items[2].button.path = f'{_server_adress}{path}'
+    q.page['header'].items[1].button.disabled = False
+    q.page['header'].items[1].button.path = f'{_server_adress}{path}'
+
+def update_file_tree(q: Q) -> None:
+    q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(file_utils.get_file_tree(project_dir))})')
+
+def open_editor_file(q: Q, file: str) -> None:
+    q.page['meta'].script = ui.inline_script(f'editor.setValue(`{file_utils.read_file(file)}`)')
 
 async def on_startup():
-    create_folder(project_dir)
-    app_path = Path(os.path.join(project_dir, 'app.py'))
+    file_utils.create_folder(project_dir)
+    app_path = Path(main_app_file)
     if not app_path.exists():
         shutil.copy('starter.py', app_path)
 
 async def on_shutdown():
-    remove_folder(project_dir)
+    file_utils.remove_folder(project_dir)
 
 async def export(q: Q):
     shutil.make_archive('app', 'zip', '.', project_dir)
@@ -197,8 +207,10 @@ async def export(q: Q):
     q.page["meta"].script = ui.inline_script(f'window.open("{q.app.zip_path}", "_blank");')
     os.remove("app.zip")
 
-@app('/ide', on_startup=on_startup, on_shutdown=on_shutdown)
+@app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
+    global project_dir
+    global main_app_file
     if not q.app.initialized:
         # TODO: Serve snippets directly from static dir.
         # Prod.
@@ -220,8 +232,41 @@ async def serve(q: Q):
     if q.args.dropdown:
         q.user.view = q.args.dropdown
         q.page['header'].items[3].dropdown.value = q.args.dropdown
-    if q.args.export:
+    if q.args.export_project:
         await export(q)
+    elif q.args.import_project:
+        q.page['meta'].dialog = ui.dialog(name='dialog', title='Import Project', events=['dismissed'], closable=True, items=[
+            ui.message_bar(type='warning', text='Current project files will be replaced with uploaded content.'),
+            ui.file_upload(name='imported_project', file_extensions=['zip']),		
+        ])
+    elif q.args.imported_project:
+        zip_path = await q.site.download(q.args.imported_project[0], os.getcwd())
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            root_dirs = [f for f in zip_ref.filelist if f.is_dir() and f.filename.count(os.path.sep) == 1]
+            if len(root_dirs) == 1:
+                file_utils.remove_folder(project_dir)
+                zip_ref.extractall()
+                file_utils.remove_file(zip_path)
+                q.page['meta'].dialog = None
+                q.page['meta'].notification_bar = ui.notification_bar(
+                    name='notification',
+                    text='Project imported successfully!',
+                    type='success',
+                    position='top-right',
+                    events=['dismissed'],
+                )
+                project_dir = root_dirs[0].filename.replace(os.path.sep, '')
+                main_app_file = file_utils.find_main_file(project_dir)
+                q.client.open_file = main_app_file
+                await render_code(q)
+                update_file_tree(q)
+                await q.page.save()
+                open_editor_file(q, main_app_file)
+            else:
+                q.page['meta'].dialog.items = [
+                    ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
+                    ui.button(name='import_project', label='Import again', icon='Upload'),
+                ]
     elif q.args.dropdown == 'code':
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
@@ -248,22 +293,26 @@ async def serve(q: Q):
 
     if q.events.editor:
         await render_code(q)
+    elif q.events.dialog and q.events.dialog.dismissed:
+        q.page['meta'].dialog = None
+    elif q.events.notification and q.events.notification.dismissed:
+        q.page['meta'].notification_bar = None
     elif q.events.file_viewer:
         e = q.events.file_viewer
         if e.new_file:
-            create_file(os.path.join(e.new_file['path'], e.new_file['name']))
+            file_utils.create_file(os.path.join(e.new_file['path'], e.new_file['name']))
         elif e.new_folder:
-            create_folder(os.path.join(e.new_folder['path'], e.new_folder['name']))
+            file_utils.create_folder(os.path.join(e.new_folder['path'], e.new_folder['name']))
         elif e.remove_file:
-            remove_file(e.remove_file)
+            file_utils.remove_file(e.remove_file)
         elif e.remove_folder:
-            remove_folder(e.remove_folder)
+            file_utils.remove_folder(e.remove_folder)
         elif e.rename:
-            rename(e.rename['path'], e.rename['name'])
+            file_utils.rename(e.rename['path'], e.rename['name'])
         elif e.open:
             q.client.open_file = e.open
-            q.page['meta'].script = ui.inline_script(f'editor.setValue(`{read_file(e.open)}`)')
+            open_editor_file(q, e.open)
             await q.page.save()
-        q.page['meta'].script = ui.inline_script(f'eventBus.emit("folder", {json.dumps(get_file_tree(project_dir))})')
+        update_file_tree(q)
 
     await q.page.save()
