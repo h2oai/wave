@@ -59,7 +59,8 @@ def find_main_file(root: str) -> Optional[str]:
                 return file_path
 
 def is_file_in_folder(file: str, root: str) -> bool:
-    for _dirpath, _dirs, files in os.walk(root):
-        if file in files:
-            return True
+    for dirpath, _dirs, files in os.walk(root):
+        for f in files:
+            if file == os.path.join(dirpath, f):
+                return True
     return False
