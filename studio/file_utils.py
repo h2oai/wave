@@ -57,3 +57,9 @@ def find_main_file(root: str) -> Optional[str]:
             content = read_file(file_path)
             if '@app(' in content or 'site[' in content:
                 return file_path
+
+def is_file_in_folder(file: str, root: str) -> bool:
+    for _dirpath, _dirs, files in os.walk(root):
+        if file in files:
+            return True
+    return False
