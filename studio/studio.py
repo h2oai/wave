@@ -25,11 +25,11 @@ class Project:
         self.app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
         self.app_port = '10102'
         self.vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
-        self.app_entry_point = os.path.join(self.dir, 'app.py')
+        self.entry_point = os.path.join(self.dir, 'app.py')
 
 project = Project()
 
-def start(filename: str, is_app: bool):
+def start(entry_point: str, is_app: bool):
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
     env['H2O_WAVE_ADDRESS'] = project.server_adress
@@ -40,14 +40,15 @@ def start(filename: str, is_app: bool):
         env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
     if is_app:
         env['H2O_WAVE_APP_ADDRESS'] = f'http://{project.app_host}:{project.app_port}'
+        entry_point = project.entry_point.replace(os.sep, '.').replace('.py', '')
         return Popen([
             sys.executable, '-m', 'uvicorn',
             '--host', '0.0.0.0',
             '--port', project.app_port,
-            f'{filename.replace(".py", "")}:main',
+            f'{entry_point}:main',
         ], env=env, stdout=PIPE, stderr=STDOUT)
     else:
-        return Popen([sys.executable, filename], env=env, stdout=PIPE, stderr=STDOUT)
+        return Popen([sys.executable, entry_point], env=env, stdout=PIPE, stderr=STDOUT)
 
 async def stop_previous(q: Q) -> None:
     # Stop script if any.
@@ -77,7 +78,7 @@ async def setup_page(q: Q):
     template = Template(file_utils.read_file('studio.js')).substitute(
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
-        file_content=file_utils.read_file(project.app_entry_point) or '',
+        file_content=file_utils.read_file(project.entry_point) or '',
         py_content=py_content,
         folder=json.dumps(file_utils.get_file_tree(project.dir)),
     )
@@ -158,13 +159,13 @@ async def render_code(q: Q):
         code = file_utils.pythonify_js_code(q.events.editor.change if q.events.editor else '')
         with open(q.client.opened_file, 'w') as f:
             f.write(code)
-        if not project.app_entry_point and ('@app(' in code or 'site[' in code):
-            project.app_entry_point = q.client.opened_file
+        if not project.entry_point and ('@app(' in code or 'site[' in code):
+            project.entry_point = q.client.opened_file
     else:
         code = file_utils.read_file(q.client.opened_file)
 
     path = ''
-    if q.client.opened_file == project.app_entry_point:
+    if q.client.opened_file == project.entry_point:
         app_match = re.search('\n@app\(.*(\'|\")(.*)(\'|\")', code)
         if app_match:
             path = app_match.group(2)
@@ -181,8 +182,7 @@ async def render_code(q: Q):
         q.user.active_path = path
 
     await stop_previous(q)
-    exec_file = project.app_entry_point.replace(os.sep, '.') if q.user.is_app else project.app_entry_point
-    q.user.wave_process = start(exec_file, q.user.is_app)
+    q.user.wave_process = start(project.entry_point, q.user.is_app)
     q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
 
@@ -196,7 +196,7 @@ async def render_code(q: Q):
 
 async def on_startup():
     file_utils.create_folder(project.dir)
-    app_path = Path(project.app_entry_point)
+    app_path = Path(project.entry_point)
     if not app_path.exists():
         shutil.copy('starter.py', app_path)
 
@@ -225,7 +225,7 @@ async def serve(q: Q):
         q.app.initialized = True
     if not q.client.initialized:
         await setup_page(q)
-        q.client.opened_file = project.app_entry_point
+        q.client.opened_file = project.entry_point
         q.client.initialized = True
         await render_code(q)
 
@@ -256,12 +256,12 @@ async def serve(q: Q):
                     events=['dismissed'],
                 )
                 project.dir = root_dirs[0].filename.replace(os.path.sep, '')
-                project.app_entry_point = file_utils.find_main_file(project.dir)
-                q.client.opened_file = project.app_entry_point
+                project.entry_point = file_utils.find_main_file(project.dir)
+                q.client.opened_file = project.entry_point
                 await render_code(q)
                 editor.update_file_tree(q, project.dir)
                 await q.page.save()
-                editor.open_editor_file(q, project.app_entry_point)
+                editor.open_editor_file(q, project.entry_point)
             else:
                 q.page['meta'].dialog.items = [
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
@@ -306,16 +306,16 @@ async def serve(q: Q):
         elif e.remove_file:
             file_to_remove = e.remove_file
             file_utils.remove_file(file_to_remove)
-            if file_to_remove == project.app_entry_point:
-                project.app_entry_point = None
+            if file_to_remove == project.entry_point:
+                project.entry_point = None
                 show_empty_preview(q)
             if file_to_remove == q.client.opened_file:
                 editor.clean_editor(q)
                 await q.page.save()
         elif e.remove_folder:
-            if file_utils.is_file_in_folder(project.app_entry_point, project.dir):
+            if file_utils.is_file_in_folder(project.entry_point, project.dir):
                 editor.clean_editor(q)
-                project.app_entry_point = None
+                project.entry_point = None
                 show_empty_preview(q)
                 await q.page.save()
             file_utils.remove_folder(e.remove_folder)
@@ -323,8 +323,8 @@ async def serve(q: Q):
             path = e.rename['path']
             new_name = e.rename['name']
             file_utils.rename(path, new_name)
-            if path == project.app_entry_point:
-                project.app_entry_point = new_name
+            if path == project.entry_point:
+                project.entry_point = new_name
             if path == project.dir:
                 project.dir = new_name
         elif e.open:
