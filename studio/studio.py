@@ -319,14 +319,24 @@ async def serve(q: Q):
                 show_empty_preview(q)
                 await q.page.save()
             file_utils.remove_folder(e.remove_folder)
-        elif e.rename:
-            path = e.rename['path']
-            new_name = e.rename['name']
-            file_utils.rename(path, new_name)
+        elif e.rename_file:
+            path = e.rename_file['path']
+            new_name = e.rename_file['name']
             if path == project.entry_point:
                 project.entry_point = new_name
+            elif path == q.client.opened_file:
+                q.client.opened_file = new_name
+            file_utils.rename(path, new_name)
+        elif e.rename_folder:
+            path = e.rename_folder['path']
+            new_name = e.rename_folder['name']
             if path == project.dir:
                 project.dir = new_name
+            if file_utils.is_file_in_folder(q.client.opened_file, path):
+                q.client.opened_file = os.path.join(new_name, *q.client.opened_file.split(os.path.sep)[1:]) 
+            if file_utils.is_file_in_folder(project.entry_point, path):
+                project.entry_point = os.path.join(new_name, *project.entry_point.split(os.path.sep)[1:]) 
+            file_utils.rename(path, new_name)
         elif e.open:
             q.client.opened_file = e.open
             editor.open_file(q, e.open)

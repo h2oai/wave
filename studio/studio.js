@@ -93,7 +93,7 @@ const Tree = {
     },
     onRenamed() {
       this.folder.action = null
-      window.parent.wave.emit('file_viewer', 'rename', { path: this.folder.path, name: this.folder.label })
+      window.parent.wave.emit('file_viewer', this.folder.isFolder ? 'rename_folder' : 'rename_file', { path: this.folder.path, name: this.folder.label })
     },
     onClick(e) {
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
