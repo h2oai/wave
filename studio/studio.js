@@ -67,7 +67,10 @@ require(['vs/editor/editor.main'], async () => {
   })
 })
 
+let tries = 0
 const initPyodide = setInterval(async () => {
+  tries++
+  if (tries > 10) clearInterval(initPyodide)
   if (!loadPyodide) return
   clearInterval(initPyodide)
   window.pyodide = await loadPyodide()

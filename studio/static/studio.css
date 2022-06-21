@@ -101,3 +101,8 @@
   padding: 0rem 0.8rem 0.1rem 0.8rem;
   filter: invert(52%) sepia(11%) saturate(13%) hue-rotate(3deg) brightness(95%) contrast(95%);
 }
+
+/* TMP hack till new version release. Remove when on 0.23. */
+.ms-MessageBar {
+  z-index: 999;
+}

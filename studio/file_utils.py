@@ -1,10 +1,14 @@
 import os
 from pathlib import Path
 import shutil
+from typing import Optional
 
 def read_file(p: str) -> str:
-    with open(p, encoding='utf-8') as f:
-        return f.read()
+    try:
+        with open(p, encoding='utf-8') as f:
+            return f.read()
+    except:
+        return ''
 
 def create_file(path:str) -> None:
     path = Path(path)
@@ -34,7 +38,7 @@ def pythonify_js_code(code:str) -> str:
 
 def get_file_tree(path):
     ret = {}
-    for (dirpath, dirnames, filenames) in os.walk(path):
+    for dirpath, dirnames, filenames in os.walk(path):
         ret['label'] = os.path.basename(dirpath)
         ret['isFolder'] = True
         ret['path'] = path
@@ -45,3 +49,11 @@ def get_file_tree(path):
             ret['children'].append({'label': filename, 'isFolder': False, 'path': os.path.join(path, filename)})
         return ret # Stop recursive os.walk.
     return ret
+
+def find_main_file(root: str) -> Optional[str]:
+    for dirpath, _dirs, files in os.walk(root):
+        for f in files:
+            file_path = os.path.join(dirpath, f)
+            content = read_file(file_path)
+            if '@app(' in content or 'site[' in content:
+                return file_path

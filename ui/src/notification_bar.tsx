@@ -120,6 +120,7 @@ export const
                   animationFillMode: 'forwards',
                   maxWidth: 500,
                   width: pc(100),
+                  zIndex: 999,
                   ...getPosition(currentModel?.position, shouldBeOpen)
                 },
                 content: { alignItems: isMultiline ? 'start' : 'center' },

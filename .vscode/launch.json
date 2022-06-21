@@ -37,15 +37,15 @@
       ],
     },
     {
-      "name": "Debug Web IDE",
+      "name": "Debug Wave Studio",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/web-ide/venv/bin/wave",
-      "python": "${workspaceFolder}/web-ide/venv/bin/python",
-      "cwd": "${workspaceFolder}/web-ide",
+      "program": "${workspaceFolder}/studio/venv/bin/wave",
+      "python": "${workspaceFolder}/studio/venv/bin/python",
+      "cwd": "${workspaceFolder}/studio",
       "args": [
         "run",
-        "web_ide",
+        "studio",
         "--no-reload",
       ],
       "env": {
