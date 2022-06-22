@@ -483,7 +483,7 @@ const
         if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
         if (col.cellType?.markdown) return <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
         if (col.dataType === 'time') {
-          const epoch = parseInt(v)
+          const epoch = Number(v)
           v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
         }
         if (col.key === primaryColumnKey) {

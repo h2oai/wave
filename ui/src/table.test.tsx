@@ -57,11 +57,21 @@ describe('Table.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Renders time column correctly - unix epoch', () => {
+    tableProps = {
+      ...tableProps,
+      rows: [{ name: 'rowname1', cells: ['1655941828434'] }],
+      columns: [{ name: 'colname1', label: 'Col1', data_type: 'time' }]
+    }
+    const { getAllByRole } = render(<XTable model={tableProps} />)
+    expect(getAllByRole('gridcell')[0].textContent).toBe('6/22/2022, 4:50:28 PM')
+  })
+
   it('Renders time column correctly', () => {
     tableProps = {
       ...tableProps,
       rows: [{ name: 'rowname1', cells: ['1971-07-08T23:09:33'] }],
-      columns: [{ name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'time' }]
+      columns: [{ name: 'colname1', label: 'Col1', data_type: 'time' }]
     }
     const { getAllByRole } = render(<XTable model={tableProps} />)
     expect(getAllByRole('gridcell')[0].textContent).toBe('7/8/1971, 11:09:33 PM')
