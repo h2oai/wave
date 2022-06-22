@@ -21,6 +21,7 @@ import studio_editor as editor
 class Project:
     def __init__(self) -> None:
         self.dir = 'project'
+        self.server_base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
         self.server_adress = self.get_server_address()
         self.internal_server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
         self.app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
@@ -29,21 +30,19 @@ class Project:
         self.entry_point = os.path.join(self.dir, 'app.py')
 
     def get_server_address(self) -> str:
-        instance_id = os.environ.get('H2O_CLOUD_INSTANCE_ID', None)
         cloud_env = os.environ.get('H2O_CLOUD_ENVIRONMENT', None)
 
-        if not instance_id or not cloud_env:
+        if not cloud_env:
             return os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
 
-        cloud_env_url = urlparse(cloud_env)
-        return f'{cloud_env_url.scheme}://{instance_id}.{cloud_env_url.hostname}'
+        return f'{cloud_env}{self.server_base_url}'
 
 
 project = Project()
 
 def start(entry_point: str, is_app: bool):
     env = os.environ.copy()
-    env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
+    env['H2O_WAVE_BASE_URL'] = project.server_base_url
     env['H2O_WAVE_ADDRESS'] = project.internal_server_adress
     env['PYTHONUNBUFFERED'] = 'False'
     # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
@@ -92,6 +91,7 @@ async def setup_page(q: Q):
         snippets2=q.app.snippets2,
         file_content=file_utils.read_file(project.entry_point) or '',
         py_content=py_content,
+        base_url=project.server_base_url,
         folder=json.dumps(file_utils.get_file_tree(project.dir)),
     )
     q.page['meta'] = ui.meta_card(
@@ -103,7 +103,7 @@ async def setup_page(q: Q):
             ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
-        stylesheets=[ui.stylesheet(f'/assets/studio.css?v={time.time()}')], # Cache busting.
+        stylesheets=[ui.stylesheet(f'{project.server_base_url}assets/studio.css?v={time.time()}')], # Cache busting.
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -145,7 +145,7 @@ def show_empty_preview(q: Q):
     q.page['preview'] = ui.tall_info_card(
         box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
         name='',
-        image='/assets/app_not_running.svg',
+        image=f'{project.server_base_url}assets/app_not_running.svg',
         image_height='500px',
         title='Oops! There is no running app.',
         caption='Try writing one in the code editor on the left.'
@@ -198,6 +198,8 @@ async def render_code(q: Q):
     q.user.display_logs_future = asyncio.ensure_future(display_logs(q))
     del q.page['empty']
 
+    path = path or q.user.active_path
+    path = '' if path == '/' else path
     q.page['preview'] = ui.frame_card(
         box=ui.box('main', width=('0px' if q.user.view == 'code' else '100%')),
         title=f'Preview of {project.server_adress}{path}',

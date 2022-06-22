@@ -8,6 +8,7 @@ LongDescription = "about.md"
 
 [Runtime]
 Module = "studio"
+RoutingMode = "BASE_URL"
 
 [[Env]]
 Name = "H2O_WAVE_PUBLIC_DIR"
