@@ -16,10 +16,10 @@ build: # Prepare bundle for HAIC.
 		cp ../tools/vscode-extension/component-snippets.json tmp/component-snippets.json
 		rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
 		find tmp -type f -name '*.toml' -exec sed -i'' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
-		cd tmp && zip -r ../wave-$(VERSION)-studio.wave * && cd -
+		cd tmp && zip -r ../wave-studio-$(VERSION).wave * && cd -
 		rm -rf tmp
 		mkdir -p ../build/apps/wave-studio
-		mv wave-$(VERSION)-studio.wave ../build/apps/wave-studio/
+		mv wave-studio-$(VERSION).wave ../build/apps/wave-studio/
 
 clean:
 	rm -rf venv studio.wave
