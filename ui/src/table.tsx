@@ -64,7 +64,7 @@ interface TableColumn {
   filterable?: B
   /** Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table. */
   link?: B
-  /** Defines the data type of this column. Defaults to `string`. */
+  /** Defines the data type of this column. Time column takes either ISO 8601 date string or unix epoch miliseconds. Defaults to `string`. */
   data_type?: 'string' | 'number' | 'time'
   /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType

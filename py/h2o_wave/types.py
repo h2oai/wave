@@ -3395,7 +3395,7 @@ class TableColumn:
         self.link = link
         """Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table."""
         self.data_type = data_type
-        """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
+        """Defines the data type of this column. Time column takes either ISO 8601 date string or unix epoch miliseconds. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Renders as plain text by default."""
         self.cell_overflow = cell_overflow
