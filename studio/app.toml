@@ -11,4 +11,4 @@ Module = "studio"
 
 [[Env]]
 Name = "H2O_WAVE_PUBLIC_DIR"
-Value = "/assets/@/static/"
+Value = "/assets/@../../app/static/"

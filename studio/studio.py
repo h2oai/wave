@@ -21,18 +21,30 @@ import studio_editor as editor
 class Project:
     def __init__(self) -> None:
         self.dir = 'project'
-        self.server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
+        self.server_adress = self.get_server_address()
+        self.internal_server_adress = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
         self.app_host = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000')).hostname
         self.app_port = '10102'
         self.vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
         self.entry_point = os.path.join(self.dir, 'app.py')
+
+    def get_server_address(self) -> str:
+        instance_id = os.environ.get('H2O_CLOUD_INSTANCE_ID', None)
+        cloud_env = os.environ.get('H2O_CLOUD_ENVIRONMENT', None)
+
+        if not instance_id or not cloud_env:
+            return os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
+
+        cloud_env_url = urlparse(cloud_env)
+        return f'{cloud_env_url.scheme}://{instance_id}.{cloud_env_url.hostname}'
+
 
 project = Project()
 
 def start(entry_point: str, is_app: bool):
     env = os.environ.copy()
     env['H2O_WAVE_BASE_URL'] = os.environ.get('H2O_WAVE_BASE_URL', '/')
-    env['H2O_WAVE_ADDRESS'] = project.server_adress
+    env['H2O_WAVE_ADDRESS'] = project.internal_server_adress
     env['PYTHONUNBUFFERED'] = 'False'
     # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
     # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
