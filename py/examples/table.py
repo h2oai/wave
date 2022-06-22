@@ -34,7 +34,7 @@ issues = [
         progress=random.random(),
         icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
         state=('RUNNING' if random.random() > 0.5 else 'DONE,SUCCESS'),
-        created=fake.iso8601()) for i in range(100)
+        created='1655927271') for i in range(100)
 ]
 
 # Create columns for our issue table.

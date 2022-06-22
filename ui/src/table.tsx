@@ -482,7 +482,10 @@ const
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
         if (col.cellType?.markdown) return <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
-        if (col.dataType === 'time') v = new Date(v).toLocaleString()
+        if (col.dataType === 'time') {
+          const epoch = parseInt(v)
+          v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
+        }
         if (col.key === primaryColumnKey) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
