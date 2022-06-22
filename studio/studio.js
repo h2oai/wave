@@ -79,6 +79,7 @@ const initPyodide = setInterval(async () => {
   await window.pyodide.runPythonAsync(`$py_content`)
 }, 100)
 
+const baseUrl = '$base_url'
 // Tree file viewer.
 const Tree = {
   props: { folder: { type: Object, required: false }, },
@@ -104,7 +105,7 @@ const Tree = {
   template: `
 <li>
   <span class="tree-item">
-    <img v-if="folder.isFolder" class="tree-item-img" src="/assets/img/folder-solid.svg" alt="Folder" />
+    <img v-if="folder.isFolder" class="tree-item-img" src="$${baseUrl}assets/img/folder-solid.svg" alt="Folder" />
     <input v-if="folder.action === 'new'" type="text" v-model="folder.label" @keyup.enter="onCreated">
     <input v-else-if="folder.action === 'rename'" type="text" v-model="folder.label" @keyup.enter="onRenamed">
     <span v-else @contextmenu.prevent="onContextMenu" @click.stop="onClick">{{folder.label}}</span>
@@ -152,10 +153,10 @@ const Menu = {
   },
   template: `
       <ul v-if="menuPosition && folder" class='menu' :style="{top: menuPosition.y + 'px', left: menuPosition.x + 'px'}">
-        <li @click="newFile"><img class="menu-item-img" src="/assets/img/file-solid.svg" alt="Folder" />New file</li>
-        <li @click="newFolder"><img class="menu-item-img" src="/assets/img/folder-solid.svg" alt="Folder" />New folder</li>
-        <li @click="rename"><img class="menu-item-img" src="/assets/img/pen-solid.svg" alt="Folder" />Rename</li>
-        <li @click="remove" class='delete'><img class="menu-item-img" src="/assets/img/trash-can-solid.svg" alt="Folder" />Delete</li>
+        <li @click="newFile"><img class="menu-item-img" src="$${baseUrl}assets/img/file-solid.svg" alt="Folder" />New file</li>
+        <li @click="newFolder"><img class="menu-item-img" src="$${baseUrl}assets/img/folder-solid.svg" alt="Folder" />New folder</li>
+        <li @click="rename"><img class="menu-item-img" src="$${baseUrl}assets/img/pen-solid.svg" alt="Folder" />Rename</li>
+        <li @click="remove" class='delete'><img class="menu-item-img" src="$${baseUrl}assets/img/trash-can-solid.svg" alt="Folder" />Delete</li>
       </ul>
     `}
 class EventBus {
