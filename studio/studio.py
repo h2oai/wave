@@ -273,7 +273,7 @@ async def serve(q: Q):
                 await render_code(q)
                 editor.update_file_tree(q, project.dir)
                 await q.page.save()
-                editor.open_editor_file(q, project.entry_point)
+                editor.open_file(q, project.entry_point)
             else:
                 q.page['meta'].dialog.items = [
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
