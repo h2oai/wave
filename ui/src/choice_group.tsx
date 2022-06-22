@@ -79,7 +79,7 @@ export const
 
     return (
       <Fluent.ChoiceGroup
-        styles={{ flexContainer: { display: 'flex', flexWrap: 'wrap' } }}
+        styles={m.inline ? { flexContainer: { display: 'flex', flexWrap: 'wrap' } } : undefined}
         data-test={m.name}
         label={m.label}
         required={m.required}
