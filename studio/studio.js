@@ -98,10 +98,6 @@ const iconLabels = {
 
 const baseUrl = '$base_url'
 
-const store = Vue.reactive({
-  activeFile: 'project/app.py'
-})
-
 const
   getIconSrc = (folder, isSubtreeOpen) => {
     if (folder.isFolder) return isSubtreeOpen ? baseUrl + 'assets/img/folder-open.svg' : baseUrl + 'assets/img/folder.svg'
@@ -116,8 +112,11 @@ const Tree = {
   mounted() {
     this.bus.on('openFolder', () => this.isSubtreeOpen = true)
   },
-  props: { folder: { type: Object, required: false }, },
-  data() { return { isSubtreeOpen: true, store } },
+  props: {
+    folder: { type: Object, required: false },
+    activeFile: { type: String, required: true }
+  },
+  data() { return { isSubtreeOpen: true } },
   methods: {
     onContextMenu(e) {
       eventBus.emit('menu', { e, folder: this.folder })
@@ -159,14 +158,14 @@ const Tree = {
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
       eventBus.emit('documentClick', e)
       if (!this.folder.isFolder) {
-        store.activeFile = this.folder.path
+        this.activeFile = this.folder.path
         window.parent.wave.emit('file_viewer', 'open', this.folder.path)
       }
     },
   },
   template: `
 <li v-if="folder.label || folder.action === 'new'">
-  <span @contextmenu.prevent="onContextMenu" @click.stop="onClick" :class="{ 'tree-item-active': store.activeFile == folder.path, 'tree-item': true }" ref="sample" :style="{paddingLeft: getItemLeftPadding(folder)}">
+  <span @contextmenu.prevent="onContextMenu" @click.stop="onClick" :class="{ 'tree-item-active': activeFile == folder.path, 'tree-item': true }" ref="sample" :style="{paddingLeft: getItemLeftPadding(folder)}">
     <img class="tree-item-img" :src="getIconSrc(folder, isSubtreeOpen)" :alt="folder.isFolder ? 'Folder' : 'File'" />
     <input v-if="folder.action === 'new'" v-focus type="text" spellcheck="false" v-model="folder.label" @keyup.enter="onCreated" @keyup.esc="onCreateCanceled" @blur="onCreateCanceled">
     <input v-else-if="folder.action === 'rename'" v-focus type="text" spellcheck="false" v-model="folder.label" @keyup.enter="onRenamed" @keyup.esc="onRenameCanceled" @blur="onRenameCanceled" @focus="handleSelect">
@@ -174,7 +173,7 @@ const Tree = {
   </span>
     <ul v-if="isSubtreeOpen && folder.isFolder && folder.children">
       <li v-for="folder in folder.children">
-        <Tree :folder="folder"></Tree>
+        <Tree :folder="folder" :activeFile="activeFile"></Tree>
       </li>
     </ul>  
 </li>
@@ -240,10 +239,16 @@ const eventBus = new EventBus()
 const app = Vue.createApp({
   mounted() {
     this.bus.on('folder', folder => this.folder = folder)
+    this.bus.on('activeFile', activeFile => this.activeFile = activeFile)
   },
-  data() { return { folder: {} } },
+  data() {
+    return {
+      folder: {},
+      activeFile: 'project/app.py' // TODO: Inject from python in case of Windows FS.
+    }
+  },
   template: `
-      <ul><Tree :folder="folder" /></ul>
+      <ul><Tree :folder="folder" :activeFile="activeFile" /></ul>
       <Teleport to="#file-tree-menu"><Menu/></Teleport>
       `
 })
@@ -251,9 +256,7 @@ app.config.globalProperties = { bus: eventBus, getIconSrc, getItemLeftPadding }
 app.component('Tree', Tree)
 app.component('Menu', Menu)
 app.mount('#file-tree')
-app.directive('focus', {
-  mounted: (el) => el.focus()
-})
+app.directive('focus', { mounted: el => el.focus() })
 document.onclick = e => eventBus.emit('documentClick', e)
 eventBus.emit("folder", $folder)
 
