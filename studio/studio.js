@@ -60,7 +60,7 @@ require(['vs/editor/editor.main'], async () => {
     automaticLayout: true
   })
   window.editor = editor
-  window.emit_debounced = window.wave.debounce(2000, window.wave.emit)
+  window.emit_debounced = window.wave.debounce(1000, window.wave.emit)
   editor.onDidChangeModelContent(e => {
     if (e.isFlush) return
     emit_debounced('editor', 'change', editor.getValue())
@@ -71,9 +71,9 @@ let tries = 0
 const initPyodide = setInterval(async () => {
   tries++
   if (tries > 100) clearInterval(initPyodide)
-  if (!loadPyodide) return
+  if (!window.loadPyodide) return
   clearInterval(initPyodide)
-  window.pyodide = await loadPyodide()
+  window.pyodide = await window.loadPyodide()
   await window.pyodide.loadPackage('parso')
   await window.pyodide.loadPackage('jedi')
   await window.pyodide.runPythonAsync(`$py_content`)
