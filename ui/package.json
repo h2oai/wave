@@ -57,7 +57,7 @@
     "audit": "npm audit --production",
     "start": "vite",
     "build": "npx vite build",
-    "test": "LC_ALL=en_US.UTF8 jest --watch",
-    "test:ci": "CI=true jest --bail --ci"
+    "test": "LC_ALL=en_US.UTF8 TZ=Europe/London jest --watch",
+    "test:ci": "CI=true LC_ALL=en_US.UTF8 TZ=Europe/London jest --bail --ci"
   }
 }
