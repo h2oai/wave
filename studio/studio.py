@@ -129,9 +129,12 @@ async def setup_page(q: Q):
     )
     editor_html = '''
 <div id="editor">
-  <div id="files">
-    <div id="file-tree"></div>
-    <div id="file-tree-menu"></div>
+  <div id="explorer">
+    <div id="files">
+        <div id="file-tree"></div>
+        <div id="file-tree-menu"></div>
+    </div>
+    <div id="width-resizer"></div>
   </div>
   <div id="monaco-editor"></div>
 </div>
