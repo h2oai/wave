@@ -117,7 +117,7 @@ const Tree = {
     this.bus.on('openFolder', () => this.isSubtreeOpen = true)
   },
   props: { folder: { type: Object, required: false }, },
-  data() { return { isSubtreeOpen: true, store, timer: null, clickCount: 0 } },
+  data() { return { isSubtreeOpen: true, store } },
   methods: {
     onContextMenu(e) {
       eventBus.emit('menu', { e, folder: this.folder })
@@ -155,22 +155,12 @@ const Tree = {
       })
     },
     onClick(e) {
-      this.clickCount++
       if (this.folder.action === 'rename') return
-      else if (this.clickCount === 1) {
-        // open on single click
-        if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
-        eventBus.emit('documentClick', e)
-        if (!this.folder.isFolder) {
-          store.activeFile = this.folder.path
-          window.parent.wave.emit('file_viewer', 'open', this.folder.path)
-        }
-        this.timer = setTimeout(() => { this.clickCount = 0 }, 300)
-      } else {
-        // rename on double click
-        this.rename()
-        clearTimeout(this.timer)
-        this.clickCount = 0
+      if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
+      eventBus.emit('documentClick', e)
+      if (!this.folder.isFolder) {
+        store.activeFile = this.folder.path
+        window.parent.wave.emit('file_viewer', 'open', this.folder.path)
       }
     },
   },
