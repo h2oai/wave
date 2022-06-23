@@ -317,7 +317,10 @@ async def serve(q: Q):
     elif q.events.file_viewer:
         e = q.events.file_viewer
         if e.new_file:
-            file_utils.create_file(os.path.join(e.new_file['path'], e.new_file['name']))
+            new_file = os.path.join(e.new_file['path'], e.new_file['name'])
+            file_utils.create_file(new_file)
+            editor.open_file(q, new_file)
+            await q.page.save()
         elif e.new_folder:
             file_utils.create_folder(os.path.join(e.new_folder['path'], e.new_folder['name']))
         elif e.remove_file:
