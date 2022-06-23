@@ -175,7 +175,7 @@ const Tree = {
     },
   },
   template: `
-<li v-if="folder.label !== '' || folder.action === 'new'">
+<li v-if="folder.label || folder.action === 'new'">
   <span @contextmenu.prevent="onContextMenu" @click.stop="onClick" :class="{ 'tree-item-active': store.activeFile == folder.path, 'tree-item': true }" ref="sample" :style="{paddingLeft: getItemLeftPadding(folder)}">
     <img class="tree-item-img" :src="getIconSrc(folder, isSubtreeOpen)" :alt="folder.isFolder ? 'Folder' : 'File'" />
     <input v-if="folder.action === 'new'" v-focus type="text" spellcheck="false" v-model="folder.label" @keyup.enter="onCreated" @keyup.esc="onCreateCanceled" @blur="onCreateCanceled">
