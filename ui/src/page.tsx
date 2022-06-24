@@ -164,6 +164,7 @@ const
       if (grow) style.flexGrow = grow // grow only if non-zero (else default to shrink)
       if (width) style.width = width
       if (height) style.height = height
+      if (width === '0px' || height === '0px') style.margin = 0
     } else { // no size specified; occupy 1 part
       style.flexGrow = 1
     }
