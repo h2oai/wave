@@ -110,7 +110,9 @@ const
 // Tree file viewer.
 const Tree = {
   mounted() {
-    this.bus.on('openFolder', () => this.isSubtreeOpen = true)
+    this.bus.on('openFolder', (path) => {
+      if (this.folder.path === path) this.isSubtreeOpen = true
+    })
   },
   props: {
     folder: { type: Object, required: false },
@@ -124,10 +126,6 @@ const Tree = {
     onCreated() {
       this.folder.action = null
       window.parent.wave.emit('file_viewer', this.folder.isFolder ? 'new_folder' : 'new_file', { path: this.folder.path, name: this.folder.label })
-    },
-    rename() {
-      this.folder.action = 'rename'
-      this.folder._labelCache = this.folder.label
     },
     onRenamed() {
       this.folder.action = null
@@ -194,12 +192,12 @@ const Menu = {
   },
   methods: {
     newFile() {
-      eventBus.emit('openFolder')
+      eventBus.emit('openFolder', this.folder.path)
       this.folder.children.push({ label: '', action: 'new', isFolder: false, path: this.folder.path })
       this.menuPosition = null
     },
     newFolder() {
-      eventBus.emit('openFolder')
+      eventBus.emit('openFolder', this.folder.path)
       this.folder.children.push({ label: '', action: 'new', isFolder: true, path: this.folder.path })
       this.menuPosition = null
     },
