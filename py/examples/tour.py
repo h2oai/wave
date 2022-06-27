@@ -210,10 +210,7 @@ def get_wave_completions(line, character, file_content):
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
-        scripts=[
-            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
-            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
-        ],
+        scripts=[ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js')],
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[

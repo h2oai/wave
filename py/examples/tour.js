@@ -1,4 +1,9 @@
-require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' } })
+require.config({
+  paths: {
+    'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs',
+    'pyodide': 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'
+  }
+})
 window.MonacoEnvironment = {
   getWorkerUrl: function (workerId, label) {
     return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`
@@ -22,7 +27,7 @@ const snippetToCompletionItem = item => ({
   insertText: item.body.join('\n'),
   insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
 })
-require(['vs/editor/editor.main'], async () => {
+require(['vs/editor/editor.main', 'pyodide'], async () => {
   monaco.languages.registerCompletionItemProvider('python', {
     triggerCharacters: ['.', "'", '"'],
     provideCompletionItems: async (model, position) => {
@@ -47,16 +52,14 @@ require(['vs/editor/editor.main'], async () => {
     scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
   })
-  window.editor = editor
-  window.emit_debounced = window.wave.debounce(2000, window.wave.emit)
   editor.onDidChangeModelContent(e => {
     if (e.isFlush) return
     emit_debounced('editor', 'change', editor.getValue())
   })
-})
-
-setTimeout(async () => {
-  window.pyodide = await loadPyodide()
+  window.editor = editor
+  window.emit_debounced = window.wave.debounce(2000, window.wave.emit)
+  window.pyodide = await window.loadPyodide()
   await window.pyodide.loadPackage('parso')
+  await window.pyodide.loadPackage('jedi')
   await window.pyodide.runPythonAsync(`$py_content`)
-}, 100)
+})
