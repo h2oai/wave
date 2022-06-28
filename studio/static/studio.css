@@ -7,12 +7,23 @@
   left: 0;
 }
 
-#monaco-editor {
+#monaco-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   padding: 15px 15px 15px 0px;
   max-width: 100%;
-  overflow-x: auto;
   background-color: #ffffff;
+}
+
+#tabs {
+  flex: 0 1 24px;
+}
+
+#monaco-editor {
+  flex: 1 1 auto;
+  height: calc(100% - 24px);
 }
 
 #files {

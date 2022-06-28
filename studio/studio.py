@@ -136,7 +136,10 @@ async def setup_page(q: Q):
     </div>
     <div id="width-resizer"></div>
   </div>
-  <div id="monaco-editor"></div>
+  <div id="monaco-container">
+    <div id="tabs"></div>
+    <div id="monaco-editor"></div>
+  </div>
 </div>
     '''
     q.page['logs'] = ui.markdown_card(box=ui.box('main', width='0px'), title='Logs', content='')

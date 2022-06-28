@@ -57,7 +57,7 @@ require(['vs/editor/editor.main'], async () => {
     hideCursorInOverviewRuler: true,
     scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
-    automaticLayout: true
+    automaticLayout: true,
   })
   window.editor = editor
   window.emit_debounced = window.wave.debounce(1000, window.wave.emit)
@@ -114,7 +114,8 @@ const Tree = {
   },
   props: {
     folder: { type: Object, required: false },
-    activeFile: { type: String, required: true }
+    activeFile: { type: String, required: true },
+    viewStates: { type: Object, required: true },
   },
   data() { return { isSubtreeOpen: true } },
   methods: {
@@ -156,9 +157,35 @@ const Tree = {
     onClick(e) {
       if (this.folder.action === 'rename') return
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
+
+      // https://github.com/microsoft/monaco-editor/issues/604#issuecomment-344214706
+      // save cursor and selection state
+      this.viewStates[this.activeFile] = window.editor.saveViewState()
+      // get/create model instance
+      let modelInstance = monaco.editor.getModel(monaco.Uri.parse(this.folder.path))
+      if (!modelInstance) {
+        modelInstance = monaco.editor.createModel(
+          undefined, // code is set through editor.setValue() inside studio_editor.py
+          'python', // TODO: set correct language for syntax highlighting based on file extension
+          monaco.Uri.parse(this.folder.path)
+        )
+
+        // create new tab if it does not exist
+        // TODO: move to helper function
+        // TODO: track open tabs
+        const tabs = document.getElementById('tabs')
+        const tab = document.createElement('span');
+        tab.className = 'tab active';
+        tab.appendChild(document.createTextNode(this.folder.path));
+        tab.onclick = function () { changeTab(tab, 'js'); };
+        tabs.appendChild(tab);
+      }
+
+      // switch model instance (switch file tab)
+      window.editor.setModel(modelInstance)
+
       eventBus.emit('documentClick', e)
       if (!this.folder.isFolder) {
-        this.activeFile = this.folder.path
         window.parent.wave.emit('file_viewer', 'open', this.folder.path)
       }
     },
@@ -173,7 +200,7 @@ const Tree = {
   </span>
     <ul v-if="isSubtreeOpen && folder.isFolder && folder.children">
       <li v-for="folder in folder.children">
-        <Tree :folder="folder" :activeFile="activeFile"></Tree>
+        <Tree :folder="folder" :activeFile="activeFile" :viewStates="viewStates"></Tree>
       </li>
     </ul>  
 </li>
@@ -239,16 +266,21 @@ const eventBus = new EventBus()
 const app = Vue.createApp({
   mounted() {
     this.bus.on('folder', folder => this.folder = folder)
-    this.bus.on('activeFile', activeFile => this.activeFile = activeFile)
+    this.bus.on('activeFile', activeFile => {
+      this.activeFile = activeFile
+      if (this.viewStates[activeFile]) window.editor.restoreViewState(this.viewStates[activeFile])
+      window.editor.focus()
+    })
   },
   data() {
     return {
       folder: {},
-      activeFile: 'project/app.py' // TODO: Inject from python in case of Windows FS.
+      activeFile: 'project/app.py', // TODO: Inject from python in case of Windows FS.
+      viewStates: {}
     }
   },
   template: `
-      <ul><Tree :folder="folder" :activeFile="activeFile" /></ul>
+      <ul><Tree :folder="folder" :activeFile="activeFile" :viewStates="viewStates" /></ul>
       <Teleport to="#file-tree-menu"><Menu/></Teleport>
       `
 })
