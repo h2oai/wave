@@ -113,14 +113,12 @@ const Tree = {
     this.bus.on('openFolder', (path) => {
       if (this.folder.path === path) this.isSubtreeOpen = true
     })
-    // open project root folder by default
-    if (!this.folder.path) this.isSubtreeOpen = true
   },
   props: {
     folder: { type: Object, required: false },
     activeFile: { type: String, required: true }
   },
-  data() { return { isSubtreeOpen: false } },
+  data() { return { isSubtreeOpen: !this.folder.path } },
   methods: {
     onContextMenu(e) {
       eventBus.emit('menu', { e, folder: this.folder })
