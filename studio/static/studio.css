@@ -12,13 +12,9 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 15px 15px 15px 0px;
+  padding: 0px 15px 15px 0px;
   max-width: 100%;
   background-color: #ffffff;
-}
-
-#tabs {
-  flex: 0 1 24px;
 }
 
 #monaco-editor {
@@ -55,6 +51,35 @@
   background-color: #000000;
   width: 2px;
   cursor: col-resize;
+}
+
+#tabs {
+  flex: 0 1 24px;
+  padding-bottom: 15px;
+}
+
+.tab {
+color: #808080;
+font-size: 12px;
+padding: 5px;
+cursor: pointer;
+border: 1px solid #d3d3d3;
+border-bottom: none;
+border-left: none;
+}
+
+.tab.active {
+color: #000000;
+background-color: #f0f0f0;
+border-bottom: 2px solid #FDC826;
+}
+
+.tabCloseButton {
+  padding: 2px;
+}
+
+.tabCloseButton:hover {
+  color: red
 }
 
 #files li>span:hover {
