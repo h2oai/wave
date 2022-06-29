@@ -108,19 +108,41 @@ const
     if (folder.path) return (folder.path.split('/').length - (folder.action === 'new' ? 0 : 1)) * 0.7 + 'rem'
   }
 
-const changeTab = (desiredModelId) => {
+const changeTab = (path) => {
   const tabs = document.getElementById('tabs')
   for (var i = 0; i < tabs.childNodes.length; i++) {
     var child = tabs.childNodes[i];
     if (/tab/.test(child.className)) {
-      child.className = child.id === desiredModelId ? 'tab active' : 'tab'
+      child.className = child.id === path ? 'tab active' : 'tab'
     }
   }
 
-  let modelInstance = monaco.editor.getModel(monaco.Uri.parse(desiredModelId))
+  const modelInstance = monaco.editor.getModel(monaco.Uri.parse(path))
   window.editor.setModel(modelInstance);
-  eventBus.emit('activeFile', desiredModelId)
+  eventBus.emit('activeFile', path)
   window.editor.focus();
+}
+
+const createTab = (path, label) => {
+  const tabs = document.getElementById('tabs')
+  const tab = document.createElement('span')
+  const tabLabel = document.createElement('span')
+  tabLabel.title = path
+  tab.id = path
+  tab.className = 'tab active'
+  tabLabel.appendChild(document.createTextNode(label))
+  tab.appendChild(tabLabel)
+  const closeButton = document.createElement('span')
+  closeButton.className = 'tabCloseButton'
+  closeButton.appendChild(document.createTextNode('\u2715'))
+  closeButton.onclick = () => { tab.remove() }
+  tab.appendChild(closeButton)
+  tab.onclick = () => {
+    window.editorViewStates[window.editor.getModel().uri.path] = window.editor.saveViewState()
+    changeTab(path)
+  }
+  tabs.appendChild(tab)
+
 }
 
 // Tree file viewer.
@@ -173,49 +195,29 @@ const Tree = {
       if (this.folder.action === 'rename') return
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
 
+      // handle tab change
       if (!this.folder.isFolder) {
         // https://github.com/microsoft/monaco-editor/issues/604#issuecomment-344214706
         // save cursor and selection state
-        window.editorViewStates[this.activeFile] = window.editor.saveViewState()
+        window.editorViewStates[monaco.Uri.parse(this.folder.path)] = window.editor.saveViewState()
+
         // get/create model instance
-        let modelInstance = monaco.editor.getModel(monaco.Uri.parse(this.folder.path))
-        if (!modelInstance) {
-          modelInstance = monaco.editor.createModel(
+        const modelInstance = monaco.editor.getModel(monaco.Uri.parse(this.folder.path)) ||
+          monaco.editor.createModel(
             undefined, // code is set through editor.setValue() inside studio_editor.py
             'python', // TODO: set correct language for syntax highlighting based on file extension
             monaco.Uri.parse(this.folder.path)
           )
 
-          // switch model instance (switch file tab)
-          window.editor.setModel(modelInstance)
-        }
+        // switch model instance
+        window.editor.setModel(modelInstance)
 
         // create new tab if it does not exist
-        // TODO: move to helper function
-        // TODO: track open tabs
-        const tabs = document.getElementById('tabs')
-        if (!document.getElementById(this.folder.path)) {
-          const tab = document.createElement('span')
-          const label = document.createElement('span')
-          label.title = this.folder.path
-          tab.id = this.folder.path
-          tab.className = 'tab active'
-          label.appendChild(document.createTextNode(this.folder.label))
-          tab.appendChild(label)
-          const closeButton = document.createElement('span')
-          closeButton.className = 'tabCloseButton'
-          closeButton.appendChild(document.createTextNode('\u2715'))
-          closeButton.onclick = () => { tab.remove() }
-          tab.appendChild(closeButton)
-          tab.onclick = () => {
-            window.editorViewStates[this.activeFile] = window.editor.saveViewState()
-            changeTab(this.folder.path)
-          }
-          tabs.appendChild(tab)
-        }
-      }
+        if (!document.getElementById(this.folder.path)) createTab(this.folder.path, this.folder.label)
 
-      changeTab(this.folder.path)
+        // switch file tab
+        changeTab(this.folder.path)
+      }
 
       eventBus.emit('documentClick', e)
       if (!this.folder.isFolder) {
@@ -301,7 +303,8 @@ const app = Vue.createApp({
     this.bus.on('folder', folder => this.folder = folder)
     this.bus.on('activeFile', activeFile => {
       this.activeFile = activeFile
-      if (window.editorViewStates[activeFile]) window.editor.restoreViewState(window.editorViewStates[activeFile])
+      // TODO: replace '/' + with monaco.Uri.parse 
+      if (window.editorViewStates['/' + activeFile]) window.editor.restoreViewState(window.editorViewStates['/' + activeFile])
       window.editor.focus()
     })
     // TODO: set active file tab

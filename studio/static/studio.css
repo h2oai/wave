@@ -75,11 +75,17 @@ border-bottom: 2px solid #FDC826;
 }
 
 .tabCloseButton {
+  margin-left: 4px;
   padding: 2px;
+  visibility: hidden;
 }
 
 .tabCloseButton:hover {
-  color: red
+  background-color: lightgray;
+}
+
+.tab:hover .tabCloseButton {
+  visibility: visible;
 }
 
 #files li>span:hover {
