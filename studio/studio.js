@@ -110,13 +110,15 @@ const
 // Tree file viewer.
 const Tree = {
   mounted() {
-    this.bus.on('openFolder', () => this.isSubtreeOpen = true)
+    this.bus.on('openFolder', (path) => {
+      if (this.folder.path === path) this.isSubtreeOpen = true
+    })
   },
   props: {
     folder: { type: Object, required: false },
     activeFile: { type: String, required: true }
   },
-  data() { return { isSubtreeOpen: true } },
+  data() { return { isSubtreeOpen: !this.folder.path } },
   methods: {
     onContextMenu(e) {
       eventBus.emit('menu', { e, folder: this.folder })
@@ -124,10 +126,6 @@ const Tree = {
     onCreated() {
       this.folder.action = null
       window.parent.wave.emit('file_viewer', this.folder.isFolder ? 'new_folder' : 'new_file', { path: this.folder.path, name: this.folder.label })
-    },
-    rename() {
-      this.folder.action = 'rename'
-      this.folder._labelCache = this.folder.label
     },
     onRenamed() {
       this.folder.action = null
@@ -171,7 +169,7 @@ const Tree = {
     <input v-else-if="folder.action === 'rename'" v-focus type="text" spellcheck="false" v-model="folder.label" @keyup.enter="onRenamed" @keyup.esc="onRenameCanceled" @blur="onRenameCanceled" @focus="handleSelect">
     <span v-else class="tree-item-label">{{folder.label}}</span>
   </span>
-    <ul v-if="isSubtreeOpen && folder.isFolder && folder.children">
+    <ul v-show="isSubtreeOpen && folder.isFolder && folder.children">
       <li v-for="folder in folder.children">
         <Tree :folder="folder" :activeFile="activeFile"></Tree>
       </li>
@@ -194,12 +192,12 @@ const Menu = {
   },
   methods: {
     newFile() {
-      eventBus.emit('openFolder')
+      eventBus.emit('openFolder', this.folder.path)
       this.folder.children.push({ label: '', action: 'new', isFolder: false, path: this.folder.path })
       this.menuPosition = null
     },
     newFolder() {
-      eventBus.emit('openFolder')
+      eventBus.emit('openFolder', this.folder.path)
       this.folder.children.push({ label: '', action: 'new', isFolder: true, path: this.folder.path })
       this.menuPosition = null
     },
