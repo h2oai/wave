@@ -37,6 +37,22 @@
       ],
     },
     {
+      "name": "Debug Wave Studio",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/studio/venv/bin/wave",
+      "python": "${workspaceFolder}/studio/venv/bin/python",
+      "cwd": "${workspaceFolder}/studio",
+      "args": [
+        "run",
+        "studio",
+        "--no-reload",
+      ],
+      "env": {
+        "H2O_WAVE_PUBLIC_DIR": "/assets/@../static"
+      }
+    },
+    {
       "name": "Debug Showcase",
       "type": "python",
       "request": "launch",
