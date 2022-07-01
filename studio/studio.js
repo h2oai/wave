@@ -1,4 +1,9 @@
-require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' } })
+require.config({
+  paths: {
+    'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs',
+    'pyodide': 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'
+  }
+})
 window.MonacoEnvironment = {
   getWorkerUrl: function (workerId, label) {
     return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`
@@ -31,7 +36,7 @@ const scrollLogsToBottom = () => {
   const logs = document.querySelector('div[data-test="logs"]').parentElement
   logs.scrollTop = logs.scrollHeight
 }
-require(['vs/editor/editor.main'], async () => {
+require(['vs/editor/editor.main', 'pyodide'], async () => {
   monaco.languages.registerCompletionItemProvider('python', {
     triggerCharacters: ['.', "'", '"'],
     provideCompletionItems: async (model, position) => {
@@ -61,23 +66,15 @@ require(['vs/editor/editor.main'], async () => {
   })
   window.editor = editor
   window.emit_debounced = window.wave.debounce(1000, window.wave.emit)
+  window.pyodide = await window.loadPyodide()
+  await window.pyodide.loadPackage('parso')
+  await window.pyodide.loadPackage('jedi')
+  await window.pyodide.runPythonAsync(`$py_content`)
   editor.onDidChangeModelContent(e => {
     if (e.isFlush) return
     emit_debounced('editor', 'change', editor.getValue())
   })
 })
-
-let tries = 0
-const initPyodide = setInterval(async () => {
-  tries++
-  if (tries > 100) clearInterval(initPyodide)
-  if (!window.loadPyodide) return
-  clearInterval(initPyodide)
-  window.pyodide = await window.loadPyodide()
-  await window.pyodide.loadPackage('parso')
-  await window.pyodide.loadPackage('jedi')
-  await window.pyodide.runPythonAsync(`$py_content`)
-}, 100)
 
 const iconLabels = {
   'css': 'language-css3',

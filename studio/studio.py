@@ -98,7 +98,6 @@ async def setup_page(q: Q):
         box='',
         title='Wave Studio',
         scripts=[
-            ui.script('https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'),
             ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
             ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
         ],
