@@ -89,6 +89,18 @@ Usage of ./waved:
         directory to serve web assets from (default "./www")
 ```
 
+Supported size units (case insensitive):
+
+* Exabyte: `E` / `EB` / `EIB`.
+* Petabyte: `P` / `PB` / `PIB`.
+* Terabyte: `T` / `TB` / `TIB`.
+* Gigabyte: `G` / `GB` / `GIB`.
+* Megabyte: `M` / `MB` / `MIB`.
+* Kilobyte: `K` / `KB` / `KIB`.
+* Byte: `B`
+
+Valid time units: `ns`, `us` (or `µs`), `ms`, `s`, `m`, `h`.
+
 ### Environment variables
 
 Almost all of the command line arguments listed above can be set using environment variables (with the exception of actions like `-version`, `-create-access-key`, `-list-access-key`, etc.).
