@@ -2,7 +2,7 @@
 title: "Tutorial: System Monitor"
 ---
 
-In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page.
+In this tutorial, we'll put our learnings from the [first](tutorial-hello.mdx) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page.
 
 ![CPU](assets/tutorial-monitor__cpu_mem.png)
 
@@ -12,7 +12,7 @@ We'll also introduce a new concept, called [data buffers](buffers.md), which all
 
 ## Prerequisites
 
-This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.mdx) and complete steps 1 and 2.
 
 ## Step 1: Install dependencies
 

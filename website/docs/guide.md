@@ -11,7 +11,7 @@ If you haven't already, it's worthwhile reading the [Getting Started](getting-st
 
 ## Before you start
 
-If you prefer to learn by doing, [start with our tutorials](tutorial-hello.md) - they're short and simple, illustrate the most important concepts in a beginner-friendly way, and are the best way to get hands-on with Wave. Like any unfamiliar technology, Wave has a slight learning curve, but you will get the hang of it with practice and patience. 
+If you prefer to learn by doing, [start with our tutorials](tutorial-hello.mdx) - they're short and simple, illustrate the most important concepts in a beginner-friendly way, and are the best way to get hands-on with Wave. Like any unfamiliar technology, Wave has a slight learning curve, but you will get the hang of it with practice and patience. 
 
 ## Who is this for?
 

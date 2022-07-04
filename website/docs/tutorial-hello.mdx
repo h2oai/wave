@@ -2,6 +2,8 @@
 title: "Tutorial: Hello World"
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import StartQ from './_start_q.md'
 
 In this section, we'll learn how to author our first Wave program from scratch, and understand the basics of how to display content in a web browser.
@@ -55,11 +57,18 @@ If you are using Conda as your package manager,
 conda install -c h2oai h2o_wave
 ```
 
+:::info
+Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) yourself. See how to run it [here](/docs/installation-8-20#setup).
+:::
+
 ## Step 3: Write your program
 
 Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/wave-apps` directory, and copy-paste the following.
 
 For now, don't worry too much about what this program is doing. We'll get to that shortly.
+
+<Tabs>
+<TabItem value="py" label="Python">
 
 ```py title="$HOME/wave-apps/hello_world.py"
 from h2o_wave import site, ui
@@ -77,6 +86,27 @@ page['quote'] = ui.markdown_card(
 # Finally, save the page.
 page.save()
 ```
+
+</TabItem>
+<TabItem value="r" label="R">
+
+```r title="$HOME/wave-apps/hello_world.py"
+library(h2owave)
+
+page <- Site("/demo")
+page$drop()
+
+page$add_card("hello", ui_markdown_card(
+    box="1 1 2 2",
+    title="Hello World!",
+    content='And now for something completely different!'
+))
+
+page$save()
+```
+
+</TabItem>
+</Tabs>
 
 
 ## Step 4: Run your program
