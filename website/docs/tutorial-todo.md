@@ -453,6 +453,6 @@ Congratulations! You've completed all the tutorials (hopefully). There are three
 - [Widgets](/docs/widgets/overview). Widgets that cover best UX practices and a lot of widgets variations.
 - [Gallery](examples). 150+ examples that cover everything that Wave has to offer.
 - [Guide](guide). An in-depth look at each of Wave's features.
-- [API](api/index). Reference-level documentation for the Python API.
+- [API](/docs/api). Reference-level documentation for the Python API.
 
 Happy hacking!

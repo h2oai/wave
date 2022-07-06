@@ -12,7 +12,7 @@ This tutorial outlines the basics of how to handle events, update the UI, manage
 
 ## Prerequisites
 
-This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.mdx) and complete steps 1 and 2.
 
 ## Step 1: Start listening
 

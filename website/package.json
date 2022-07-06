@@ -19,8 +19,8 @@
     "react-dom": "^16.8.4"
   },
   "devDependencies": {
-    "@docusaurus/core": "^2.0.0-beta.4",
-    "@docusaurus/preset-classic": "^2.0.0-beta.4"
+    "@docusaurus/core": "^2.0.0-beta.21",
+    "@docusaurus/preset-classic": "^2.0.0-beta.21"
   },
   "browserslist": {
     "production": [
