@@ -60,6 +60,7 @@
 
 .tab {
 color: #808080;
+background-color: #f0f0f0;
 font-size: 12px;
 padding: 5px;
 cursor: pointer;
@@ -70,7 +71,7 @@ border-left: none;
 
 .tab.active {
 color: #000000;
-background-color: #f0f0f0;
+background-color: #ffffff;
 border-bottom: 2px solid #FDC826;
 }
 

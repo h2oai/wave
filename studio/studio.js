@@ -58,6 +58,7 @@ require(['vs/editor/editor.main'], async () => {
     scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
     automaticLayout: true,
+    model: null
   })
   window.editor = editor
   window.editorViewStates = {}
@@ -66,6 +67,7 @@ require(['vs/editor/editor.main'], async () => {
     if (e.isFlush) return
     emit_debounced('editor', 'change', editor.getValue())
   })
+  eventBus.emit('openActiveFileTab')
 })
 
 let tries = 0
@@ -135,14 +137,41 @@ const createTab = (path, label) => {
   const closeButton = document.createElement('span')
   closeButton.className = 'tabCloseButton'
   closeButton.appendChild(document.createTextNode('\u2715'))
-  closeButton.onclick = () => { tab.remove() }
+  closeButton.onclick = () => {
+    tab.remove()
+    // TODO: change tab on remove
+  }
   tab.appendChild(closeButton)
   tab.onclick = () => {
     window.editorViewStates[window.editor.getModel().uri.path] = window.editor.saveViewState()
     changeTab(path)
   }
   tabs.appendChild(tab)
+}
 
+const openTab = (path) => {
+  if (path && path.includes('/')) {
+    // https://github.com/microsoft/monaco-editor/issues/604#issuecomment-344214706
+    // save cursor and selection state
+    window.editorViewStates[monaco.Uri.parse(path)] = window.editor.saveViewState()
+
+    // get/create model instance
+    const modelInstance = monaco.editor.getModel(monaco.Uri.parse(path)) ||
+      monaco.editor.createModel(
+        undefined, // code is set through editor.setValue() inside studio_editor.py
+        'python', // TODO: set correct language for syntax highlighting based on file extension
+        monaco.Uri.parse(path)
+      )
+
+    // switch model instance
+    window.editor.setModel(modelInstance)
+
+    // create new tab if it does not exist
+    if (!document.getElementById(path)) createTab(path, path.split('/').pop())
+
+    // switch file tab
+    changeTab(path)
+  }
 }
 
 // Tree file viewer.
@@ -194,35 +223,9 @@ const Tree = {
     onClick(e) {
       if (this.folder.action === 'rename') return
       if (!document.querySelector('.menu')) this.isSubtreeOpen = !this.isSubtreeOpen
-
-      // handle tab change
-      if (!this.folder.isFolder) {
-        // https://github.com/microsoft/monaco-editor/issues/604#issuecomment-344214706
-        // save cursor and selection state
-        window.editorViewStates[monaco.Uri.parse(this.folder.path)] = window.editor.saveViewState()
-
-        // get/create model instance
-        const modelInstance = monaco.editor.getModel(monaco.Uri.parse(this.folder.path)) ||
-          monaco.editor.createModel(
-            undefined, // code is set through editor.setValue() inside studio_editor.py
-            'python', // TODO: set correct language for syntax highlighting based on file extension
-            monaco.Uri.parse(this.folder.path)
-          )
-
-        // switch model instance
-        window.editor.setModel(modelInstance)
-
-        // create new tab if it does not exist
-        if (!document.getElementById(this.folder.path)) createTab(this.folder.path, this.folder.label)
-
-        // switch file tab
-        changeTab(this.folder.path)
-      }
-
+      if (!this.folder.isFolder) openTab(this.folder.path)
       eventBus.emit('documentClick', e)
-      if (!this.folder.isFolder) {
-        window.parent.wave.emit('file_viewer', 'open', this.folder.path)
-      }
+      if (!this.folder.isFolder) window.parent.wave.emit('file_viewer', 'open', this.folder.path)
     },
   },
   template: `
@@ -307,7 +310,10 @@ const app = Vue.createApp({
       if (window.editorViewStates['/' + activeFile]) window.editor.restoreViewState(window.editorViewStates['/' + activeFile])
       window.editor.focus()
     })
-    // TODO: set active file tab
+    this.bus.on('openActiveFileTab', () => {
+      openTab(this.activeFile)
+      window.parent.wave.emit('file_viewer', 'open', this.activeFile)
+    })
   },
   data() {
     return {
