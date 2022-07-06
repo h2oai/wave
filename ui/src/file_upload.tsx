@@ -113,7 +113,7 @@ export const
       maxFileSizeBytes = max_file_size ? convertMegabytesToBytes(max_file_size) : 0,
       maxSizeBytes = max_size ? convertMegabytesToBytes(max_size) : 0,
       fileExtensions = file_extensions ? file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
-      isAborted = React.useRef<B>(false),
+      rejectXhr = React.useRef<(reason?: any) => void>(),
       xhrRef = React.useRef<XMLHttpRequest>(),
       upload = async (uploadFiles = files) => {
         const formData = new FormData()
@@ -122,6 +122,7 @@ export const
         try {
           const { responseText } = await new Promise<XMLHttpRequest>((resolve, reject) => {
             xhrRef.current = new XMLHttpRequest()
+            rejectXhr.current = reject
             const xhr = xhrRef.current
             xhr.open("POST", wave.uploadURL)
             xhr.upload.onprogress = e => setPercentComplete(e.loaded / e.total)
@@ -130,7 +131,6 @@ export const
               if (xhr.readyState !== XMLHttpRequest.DONE) return
               xhr.status >= 200 && xhr.status < 300 ? resolve(xhr) : reject(xhr)
             }
-            xhr.onabort = () => isAborted.current = true
           })
           const { files } = JSON.parse(responseText)
           wave.args[name] = files
@@ -139,15 +139,13 @@ export const
           setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
         }
         catch (err: unknown) {
-          let errMsg = 'There was an error when uploading file.'
-          if (err instanceof XMLHttpRequest) {
-            if (isAborted.current) {
-              isAborted.current = false
-              return
+          if (err) {
+            let errMsg = 'There was an error when uploading file.'
+            if (err instanceof XMLHttpRequest) {
+              errMsg = err.responseText
             }
-            errMsg = err.responseText
+            setError(errMsg)
           }
-          setError(errMsg)
         }
         finally {
           setFiles([])
@@ -190,11 +188,11 @@ export const
         }
         else {
           setFiles(fileArr)
-          setFileNames(fileArr.map(({ name }) => name).join(', '))
           if (compact) {
             await upload(fileArr)
             setPercentComplete(0)
           }
+          setFileNames(fileArr.map(({ name }) => name).join(', '))
         }
       },
       onIsDragging = (e: React.DragEvent<HTMLFormElement>) => {
@@ -233,6 +231,7 @@ export const
         setPercentComplete(0)
       },
       onUploadCancel = () => {
+        rejectXhr.current()
         xhrRef.current?.abort()
         setPercentComplete(0)
       },
