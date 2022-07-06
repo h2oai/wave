@@ -4979,6 +4979,7 @@ class Mark:
             ref_stroke_opacity: Optional[float] = None,
             ref_stroke_size: Optional[float] = None,
             ref_stroke_dash: Optional[str] = None,
+            interactive: Optional[bool] = None,
     ):
         _guard_enum('Mark.coord', coord, _MarkCoord, True)
         _guard_enum('Mark.type', type, _MarkType, True)
@@ -5027,6 +5028,7 @@ class Mark:
         _guard_scalar('Mark.ref_stroke_opacity', ref_stroke_opacity, (float, int,), False, True, False)
         _guard_scalar('Mark.ref_stroke_size', ref_stroke_size, (float, int,), False, True, False)
         _guard_scalar('Mark.ref_stroke_dash', ref_stroke_dash, (str,), False, True, False)
+        _guard_scalar('Mark.interactive', interactive, (bool,), False, True, False)
         self.coord = coord
         """Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'. See enum h2o_wave.ui.MarkCoord."""
         self.type = type
@@ -5151,6 +5153,8 @@ class Mark:
         """Reference line stroke size (line width or pen thickness)."""
         self.ref_stroke_dash = ref_stroke_dash
         """Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
+        self.interactive = interactive
+        """Defines whether to raise events on interactions with the mark. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5201,6 +5205,7 @@ class Mark:
         _guard_scalar('Mark.ref_stroke_opacity', self.ref_stroke_opacity, (float, int,), False, True, False)
         _guard_scalar('Mark.ref_stroke_size', self.ref_stroke_size, (float, int,), False, True, False)
         _guard_scalar('Mark.ref_stroke_dash', self.ref_stroke_dash, (str,), False, True, False)
+        _guard_scalar('Mark.interactive', self.interactive, (bool,), False, True, False)
         return _dump(
             coord=self.coord,
             type=self.type,
@@ -5264,6 +5269,7 @@ class Mark:
             ref_stroke_opacity=self.ref_stroke_opacity,
             ref_stroke_size=self.ref_stroke_size,
             ref_stroke_dash=self.ref_stroke_dash,
+            interactive=self.interactive,
         )
 
     @staticmethod
@@ -5378,6 +5384,8 @@ class Mark:
         _guard_scalar('Mark.ref_stroke_size', __d_ref_stroke_size, (float, int,), False, True, False)
         __d_ref_stroke_dash: Any = __d.get('ref_stroke_dash')
         _guard_scalar('Mark.ref_stroke_dash', __d_ref_stroke_dash, (str,), False, True, False)
+        __d_interactive: Any = __d.get('interactive')
+        _guard_scalar('Mark.interactive', __d_interactive, (bool,), False, True, False)
         coord: Optional[str] = __d_coord
         type: Optional[str] = __d_type
         x: Optional[Value] = __d_x
@@ -5440,6 +5448,7 @@ class Mark:
         ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
         ref_stroke_size: Optional[float] = __d_ref_stroke_size
         ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
+        interactive: Optional[bool] = __d_interactive
         return Mark(
             coord,
             type,
@@ -5503,6 +5512,7 @@ class Mark:
             ref_stroke_opacity,
             ref_stroke_size,
             ref_stroke_dash,
+            interactive,
         )
 
 

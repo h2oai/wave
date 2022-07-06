@@ -171,6 +171,8 @@ interface Mark {
   ref_stroke_size?: F
   /** Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
   ref_stroke_dash?: S
+  /** Defines whether to raise events on interactions with the mark. Defaults to True. */
+  interactive?: B
 }
 
 /** Extended mark attributes. Not exposed to API. */
@@ -582,7 +584,7 @@ const
     fill_color, fill_opacity, stroke_color, stroke_opacity, stroke_dash, stroke_size,
     label_field, label_format, label_offset, label_offset_x, label_offset_y, label_rotation, label_position, label_overlap,
     label_fill_color, label_fill_opacity, label_stroke_color, label_stroke_opacity, label_stroke_size,
-    label_font_size, label_font_weight, label_line_height, label_align,
+    label_font_size, label_font_weight, label_line_height, label_align
   }: MarkExt): GeometryOption => {
     const o: GeometryOption = {}
     if (isS(type)) o.type = type
@@ -1100,6 +1102,7 @@ export const
           })
           currentChart.current = chart
           chart.data(data)
+          model.plot.marks.forEach(({ interactive = true }, idx) => chart.geometries[idx].customInfo({ interactive }))
           if (model.events) {
             for (const event of model.events) {
               switch (event) {
@@ -1108,7 +1111,7 @@ export const
                   chart.on('element:statechange', (ev: any) => {
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected') {
-                      if (model.name) wave.emit(model.name, event, [e.element?.data])
+                      if (model.name && e.element.geometry.customOption.interactive) wave.emit(model.name, event, [e.element?.data])
                     }
                   })
                 }

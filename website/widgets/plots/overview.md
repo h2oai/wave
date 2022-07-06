@@ -105,6 +105,35 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
+### Disable events
+
+If you do not wish to raise wave events on interaction with a specific mark, simply specify the `interactive=False` attribute.
+
+```py
+from h2o_wave import data
+
+q.page['example'] = ui.plot_card(
+        box='1 1 4 5',
+        title='Interval, range',
+        data=data('year value', 8, rows=[
+            ('1991', 3),
+            ('1992', 4),
+            ('1993', 3.5),
+            ('1994', 5),
+            ('1995', 4.9),
+            ('1996', 6),
+            ('1997', 7),
+            ('1998', 9),
+            ('1999', 13),
+        ]),
+        events=['select_marks'],
+        plot=ui.plot([
+            ui.mark(type='line', x_scale='time', x='=year', y='=value', y_min=0, interactive=False), 
+            ui.mark(type='point', x='=year', y='=value', size=8, fill_color='red')
+        ]),
+)
+```
+
 ## Custom axis title
 
 If you are not happy with the defaults provided, simply use either `x_title` or `y_title` attribute.

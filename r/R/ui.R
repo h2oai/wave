@@ -2208,6 +2208,7 @@ ui_stepper <- function(
 #' @param ref_stroke_opacity Reference line stroke opacity.
 #' @param ref_stroke_size Reference line stroke size (line width or pen thickness).
 #' @param ref_stroke_dash Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+#' @param interactive Defines whether to raise events on interactions with the mark. Defaults to True.
 #' @return A Mark instance.
 #' @export
 ui_mark <- function(
@@ -2272,7 +2273,8 @@ ui_mark <- function(
   ref_stroke_color = NULL,
   ref_stroke_opacity = NULL,
   ref_stroke_size = NULL,
-  ref_stroke_dash = NULL) {
+  ref_stroke_dash = NULL,
+  interactive = NULL) {
   # TODO Validate coord
   # TODO Validate type
   # TODO Validate x: V
@@ -2335,6 +2337,7 @@ ui_mark <- function(
   .guard_scalar("ref_stroke_opacity", "numeric", ref_stroke_opacity)
   .guard_scalar("ref_stroke_size", "numeric", ref_stroke_size)
   .guard_scalar("ref_stroke_dash", "character", ref_stroke_dash)
+  .guard_scalar("interactive", "logical", interactive)
   .o <- list(
     coord=coord,
     type=type,
@@ -2397,7 +2400,8 @@ ui_mark <- function(
     ref_stroke_color=ref_stroke_color,
     ref_stroke_opacity=ref_stroke_opacity,
     ref_stroke_size=ref_stroke_size,
-    ref_stroke_dash=ref_stroke_dash)
+    ref_stroke_dash=ref_stroke_dash,
+    interactive=interactive)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMark"))
   return(.o)
 }
