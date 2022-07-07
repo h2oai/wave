@@ -45,6 +45,8 @@ export interface TextAnnotator {
   smart_selection?: B
 }
 
+type TokenProps = TextAnnotatorItem & { start: U, end: U }
+
 const css = stylesheet({
   title: {
     color: cssVar('$neutralPrimary'),
@@ -135,12 +137,9 @@ export
     const
       [activeTag, setActiveTag] = React.useState<S | undefined>(readonly ? undefined : tags[0]?.name),
       [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
-      tagColorMap = tags.reduce((map, t) => {
-        map.set(t.name, t.color)
-        return map
-      }, new Map<S, S>()),
+      tagColorMap = new Map(tags.map(t => [t.name, t.color])),
       [tokens, setTokens] = React.useState(items.reduce((arr, { text, tag }) => {
-        // If the smart_selection is True, split by any non-letter character.
+        // If the smart_selection is True, split by any non-letter and non-number character.
         text.split(smart_selection ? /(?=[^a-z0-9])/ig : "").forEach((textItem) => {
           const
             start = arr.length === 0 ? 0 : arr[arr.length - 1].end + 1,
@@ -153,7 +152,7 @@ export
           }
         })
         return arr
-      }, [] as (TextAnnotatorItem & { start: number, end: number })[])),
+      }, [] as (TokenProps)[])),
       submitWaveArgs = () => {
         let currentText = ''
         let currentTag: S | undefined
@@ -186,12 +185,12 @@ export
         setTokens([...tokens])
         submitWaveArgs()
       },
-      timeoutRef = React.useRef<NodeJS.Timeout | null>(null),
-      mouseDownTimeRef = React.useRef<number>(0),
+      dblClickTimeoutRef = React.useRef<U | null>(null),
+      mouseDownTimeRef = React.useRef(0),
       annotate = (target?: EventTarget & HTMLSpanElement) => {
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current)
-          timeoutRef.current = null
+        if (dblClickTimeoutRef.current) {
+          clearTimeout(dblClickTimeoutRef.current)
+          dblClickTimeoutRef.current = null
         }
         const
           selectedText = window.getSelection(),
@@ -210,12 +209,12 @@ export
         if (target && selectedTextStr.length) {
           // smart selection on double click
           const targetDataIdx = parseInt(target.dataset.key!)
-          let strLength = 0 // number of characters right to the selection target; if not 0, we loop to the left direction
+          let charsSelectedOnRightCount = 0 // if not 0, we loop to the left direction
           for (let i = 0; i <= selectedTextStr.length; i++) {
-            const tokenIdx = targetDataIdx + (!strLength ? i : (strLength - i))
+            const tokenIdx = targetDataIdx + (charsSelectedOnRightCount ? (charsSelectedOnRightCount - i) : i)
             tokens[tokenIdx].tag = activeTag
-            if (/[^a-z0-9]/i.test(tokens[tokenIdx + (!strLength ? 1 : -1)]?.text)) {
-              strLength = i + 1
+            if (/[^a-z0-9]/i.test(tokens[tokenIdx + (charsSelectedOnRightCount ? -1 : 1)]?.text)) {
+              charsSelectedOnRightCount = i + 1
             }
           }
         } else {
@@ -266,42 +265,39 @@ export
           </mark>
         )
       },
-      handleOnMouseUp = (ev: React.MouseEvent<HTMLSpanElement>) => {
+      handleMouseUp = (ev: React.MouseEvent<HTMLSpanElement>) => {
         if (smart_selection) annotate()
-        else if (timeoutRef.current) annotate(ev.currentTarget) // double-click
+        else if (dblClickTimeoutRef.current) annotate(ev.currentTarget) // double-click
         else if (new Date().getTime() - mouseDownTimeRef.current > 250) annotate() // dragging (long click)
-        else timeoutRef.current = setTimeout(() => annotate(), 250) // click
+        else dblClickTimeoutRef.current = setTimeout(annotate, 250) // click
       },
-      Token = ({ idx, tokenProps: { start, end, tag, text } }: { idx: number, tokenProps: TextAnnotatorItem & { start: number, end: number } }) =>
+      Token = ({ idx, tokenProps: { start, end, tag, text } }: { idx: U, tokenProps: TokenProps }) =>
         <span
           data-key={idx}
           data-start={start}
           data-end={end}
           onMouseDown={() => { mouseDownTimeRef.current = new Date().getTime() }}
-          onMouseUp={handleOnMouseUp}
+          onMouseUp={handleMouseUp}
           onMouseLeave={(ev: React.MouseEvent<HTMLSpanElement>) => {
-            if ((ev.relatedTarget as any)?.nodeName !== 'SPAN') handleOnMouseUp(ev) // nodeName prop is not typed yet
+            if ((ev.relatedTarget as any)?.nodeName !== 'SPAN') handleMouseUp(ev) // nodeName prop is not typed yet
           }}
         >
           {tag ? getMark(text, idx, tag) : text}
         </span>,
-      text = React.useMemo(() => tokens.reduce((acc, token, idx) => {
-        if (smart_selection || token.text === " ") acc.push(<Token key={idx} idx={idx} tokenProps={token} />)
+      text = tokens.map((token, idx) => {
+        if (smart_selection || token.text === " ") return <Token key={idx} idx={idx} tokenProps={token} />
         else if (!idx || tokens[idx - 1].text === " ") {
           const word = []
           for (let i = idx; i < tokens.length; i++) {
             word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
             if (i === tokens.length - 1 || tokens[i + 1].text === " ") {
               // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
-              acc.push(<span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>)
-              break
+              return <span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>
             }
           }
         }
-        return acc
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [] as React.ReactElement[]), [tokens, hoveredTagIdx, smart_selection, activeTag])
-
+      }, [] as React.ReactElement[])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = items as unknown as Rec[] }, [])
