@@ -1,7 +1,7 @@
 import React, { useRef } from "react"
 import { useState } from "react"
 import { stylesheet } from "typestyle"
-import { Widget } from "./component_mapping"
+import { Widget as LBZone } from "./component_mapping"
 import { FlexLayout, FlexSection, Section } from "../page"
 import { box, Card, on } from "h2o-wave"
 import { Layout, Zone } from "../meta"
@@ -70,7 +70,7 @@ export const Canvas = (props: any) => {
   const onDropOnLayout = (ev: any) => {
     ev.preventDefault()
 
-    const widget: Widget = JSON.parse(ev.dataTransfer.getData("text"))
+    const widget: LBZone = JSON.parse(ev.dataTransfer.getData("text"))
 
     if (widget.name === 'zone') {
       const newZone = createZone(widget.parameters)
@@ -96,7 +96,7 @@ export const Canvas = (props: any) => {
 
   const onDropOnZone = (zoneName: string) => (ev: any) => {
     ev.stopPropagation()
-    const widget: Widget = JSON.parse(ev.dataTransfer.getData("text"))
+    const widget: LBZone = JSON.parse(ev.dataTransfer.getData("text"))
     
     if (widget.name === 'zone') {
       setLayout(layout => {
@@ -130,7 +130,7 @@ export const Canvas = (props: any) => {
 
   const onDropOnCard = (cardId: string) => (ev: any) => {
 
-    const { name, parameters}: Widget = JSON.parse(ev.dataTransfer.getData("text"))
+    const { name, parameters}: LBZone = JSON.parse(ev.dataTransfer.getData("text"))
     
     if (name.match(/.+_card$/) || name === 'layout' || name === 'zone') return
       
@@ -165,9 +165,8 @@ export const Canvas = (props: any) => {
           index={0}
           cards={cards}
           onDrop={onDropOnLayout}
-          setProperties={setProperties}
           onRenderSection={(section: Section) =>
-            <Widget>
+            <LBZone name={section.zone.name} setLayout={setLayout}>
               <FlexSection
                 style={css.zone}
                 section={section}
@@ -176,7 +175,7 @@ export const Canvas = (props: any) => {
                 onDrop={onDropOnZone}
                 setProperties={setProperties}
               />
-            </Widget>
+            </LBZone>
           } 
         />
 
@@ -185,11 +184,25 @@ export const Canvas = (props: any) => {
   )
 }
 
+const removeZone = (zones: Zone[], targetName: string) => {
+  for (const zone of zones) {
+    if (zone.name === targetName) {
+      zones = zone.zones?.filter(z => z.name !== targetName) ?? []
+      return zones
+    } else {
+      removeZone(zone.zones ?? [], targetName)
+    }
+  }
+}
 
-const Widget = ({ id, children, setCards }: any) => {
+const LBZone = ({ name, children, setLayout }: any) => {
 
   const deleteWidget = () => {
-    setCards((cards: Card[]) => cards.filter(c => c.id !== id))
+    console.log('deleting zone')
+    setLayout((layout: Layout) => {
+      layout.zones = removeZone(layout.zones, name) ?? []
+      return layout
+    })
   }
   
   return (
