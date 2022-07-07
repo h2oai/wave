@@ -45,7 +45,7 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          working-directory: 'r'
+          working-directory: ./r
       # - name: Install R deps
       #   run: |
       #     sudo apt-get update
