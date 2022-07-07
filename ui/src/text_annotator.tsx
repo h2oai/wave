@@ -185,13 +185,7 @@ export
         setTokens([...tokens])
         submitWaveArgs()
       },
-      dblClickTimeoutRef = React.useRef<U | null>(null),
-      mouseDownTimeRef = React.useRef(0),
       annotate = (target?: EventTarget & HTMLSpanElement) => {
-        if (dblClickTimeoutRef.current) {
-          clearTimeout(dblClickTimeoutRef.current)
-          dblClickTimeoutRef.current = null
-        }
         const
           selectedText = window.getSelection(),
           startElData = selectedText?.anchorNode?.parentElement?.dataset,
@@ -267,16 +261,15 @@ export
       },
       handleMouseUp = (ev: React.MouseEvent<HTMLSpanElement>) => {
         if (smart_selection) annotate()
-        else if (dblClickTimeoutRef.current) annotate(ev.currentTarget) // double-click
-        else if (new Date().getTime() - mouseDownTimeRef.current > 250) annotate() // dragging (long click)
-        else dblClickTimeoutRef.current = setTimeout(annotate, 250) // click
+        else if (ev.detail === 2) annotate(ev.currentTarget) // double-click
+        else if (ev.detail === 0) annotate() // dragging (long click)
+        else annotate() // click
       },
       Token = ({ idx, tokenProps: { start, end, tag, text } }: { idx: U, tokenProps: TokenProps }) =>
         <span
           data-key={idx}
           data-start={start}
           data-end={end}
-          onMouseDown={() => { mouseDownTimeRef.current = new Date().getTime() }}
           onMouseUp={handleMouseUp}
           onMouseLeave={(ev: React.MouseEvent<HTMLSpanElement>) => {
             if ((ev.relatedTarget as any)?.nodeName !== 'SPAN') handleMouseUp(ev) // nodeName prop is not typed yet
