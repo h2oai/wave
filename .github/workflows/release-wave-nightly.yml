@@ -42,11 +42,15 @@ jobs:
       - name: Setup
         run: make setup
 
-      - name: Install R deps
-        run: |
-          sudo apt-get update
-          sudo apt-get upgrade
-          sudo apt-get -y install libcurl4-openssl-dev libxml2-dev gdebi-core r-base-dev r-cran-httpuv r-cran-openssl r-cran-xml2 r-cran-curl r-cran-httr
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r-dependencies@v1
+        with:
+          working-directory: 'r'
+      # - name: Install R deps
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get upgrade
+      #     sudo apt-get -y install libcurl4-openssl-dev libxml2-dev gdebi-core r-base-dev r-cran-httpuv r-cran-openssl r-cran-xml2 r-cran-curl r-cran-httr
 
       - name: Unit Test
         run: make test-ui-ci
