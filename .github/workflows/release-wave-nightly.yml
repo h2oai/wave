@@ -43,7 +43,7 @@ jobs:
         run: make setup
 
       - name: Install R deps
-        run: apt-get update -q && apt-get -y install libcurl4-openssl-dev libxml2-dev wget curl git gdebi-core r-base-dev r-cran-openssl r-cran-xml2 r-cran-curl r-cran-httr
+        run: sudo apt-get update -q && apt-get -y install libcurl4-openssl-dev libxml2-dev wget curl git gdebi-core r-base-dev r-cran-openssl r-cran-xml2 r-cran-curl r-cran-httr
 
       - name: Unit Test
         run: make test-ui-ci
