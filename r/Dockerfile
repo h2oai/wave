@@ -1,14 +1,12 @@
 #base rdriver image
-FROM opsh2oai/rdriver:latest
+FROM r-base:latest
 
-# clone our library, note that this might be cached so run docker with --no-cache if you have done
-# changes to repo
-RUN git clone --depth 1 https://github.com/h2oai/wave
+COPY ../ /wave
 
-# step 6! clone our library, note that this might be cached so run docker with --no-cache if you have done
-# changes to repo
-RUN git clone --depth 1 https://github.com/h2oai/wave
+WORKDIR /wave
+
+RUN apt-get update -q && apt-get -y install libcurl4-openssl-dev libxml2-dev wget curl git gdebi-core r-base-dev r-cran-openssl r-cran-xml2 r-cran-curl r-cran-httr
 
 # mek me a package, please! 
 # if this runs fine then the dependencies have been installed and package will be ready in wave directory in docker
-RUN cd wave/r/ && make package
+RUN make build

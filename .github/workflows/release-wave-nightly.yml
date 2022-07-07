@@ -42,6 +42,9 @@ jobs:
       - name: Setup
         run: make setup
 
+      - name: Install R deps
+        run: apt-get update -q && apt-get -y install libcurl4-openssl-dev libxml2-dev wget curl git gdebi-core r-base-dev r-cran-openssl r-cran-xml2 r-cran-curl r-cran-httr
+
       - name: Unit Test
         run: make test-ui-ci
 
@@ -65,6 +68,7 @@ jobs:
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+            r/h2owave_0.22.0.9000.tar.gz
           tag_name: ${{ env.TAG }}
           prerelease: true
         env:
