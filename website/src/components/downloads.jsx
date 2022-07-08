@@ -14,6 +14,7 @@ export const Downloads = () => {
           setItems([
             files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('wave-')).reverse(),
             files.filter(({ Key }) => Key.endsWith('.whl') && Key.includes('wave-')).reverse(),
+            files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('_R')).reverse(),
             files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('wavedb-')).reverse()
           ])
         }
@@ -27,8 +28,10 @@ export const Downloads = () => {
         {items[0].map(mapToLink)}
         <h4>Python client</h4>
         {items[1].map(mapToLink)}
-        <h4>WaveDB</h4>
+        <h4>R client</h4>
         {items[2].map(mapToLink)}
+        <h4>WaveDB</h4>
+        {items[3].map(mapToLink)}
       </>
     )
     : 'Loading...'

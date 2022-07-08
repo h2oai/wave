@@ -152,6 +152,7 @@ release-nightly: build-ui ## Prepare nightly release builds.
 publish-release-s3:
 	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 	aws s3 sync py/dist/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.whl"
+	aws s3 sync r/build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 
 publish-apps-s3:
 	for app in build/apps/*; do aws s3 sync $$app $(MC_S3_BUCKET)/`basename $$app`; done
