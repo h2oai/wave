@@ -75,7 +75,7 @@ jobs:
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
-            r/h2owave_0.22.0.9000.tar.gz
+            r/build/h2owave_nightly_R.tar.gz
           tag_name: ${{ env.TAG }}
           prerelease: true
         env:

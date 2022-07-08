@@ -9,9 +9,19 @@ PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
 all: clean preinstall doc package install
 
-build: preinstall doc $(PKG_NAME)_$(VERSION).tar.gz
-$(PKG_NAME)_$(VERSION).tar.gz: $(PKG_FILES)
+build: preinstall doc
 	R CMD build .
+	rm -rf build
+	mkdir build
+	mv man build
+	mv NAMESPACE build
+	mv $(PKG_NAME)_$(VERSION).tar.gz build/$(PKG_NAME)_$(VERSION)_R.tar.gz
+
+build-nightly: preinstall
+	R CMD build .
+	rm -rf build
+	mkdir build
+	mv $(PKG_NAME)_$(VERSION).tar.gz build/$(PKG_NAME)_nightly_R.tar.gz
 
 package0: doc $(PKG_NAME)_$(VERSION).tar.gz
 $(PKG_NAME)_$(VERSION).tar.gz: $(PKG_FILES)
@@ -25,7 +35,7 @@ doc:
 
 preinstall: 
 	mkdir -p ~/R_LIBS
-	R -e 'install.packages(c("roxygen2","devtools","httr","stringr","httpuv"), repos="http://cran.us.r-project.org")'
+	R -e 'install.packages(c("roxygen2","devtools","httr","stringr"), repos="http://cran.us.r-project.org")'
 
 install: 
 	R CMD INSTALL $(PKG_NAME)_$(VERSION).tar.gz
@@ -43,6 +53,5 @@ uninstall: $(PKG_NAME)_$(VERSION).tar.gz
 clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck
-	-rm -f NAMESPACE
-	-rm -rf man
+	-rm -f build
 

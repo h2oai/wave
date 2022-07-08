@@ -40,6 +40,9 @@ build-ide: ## Build IDE
 build-r: ## Build R client.
 	cd r && $(MAKE) build
 
+build-r-nightly: ## Build nightly R client.
+	cd r && $(MAKE) build-nightly
+
 build-apps: ## Prepare apps for HAC upload.
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
@@ -136,6 +139,7 @@ release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
 	$(MAKE) website
 	$(MAKE) build-py
+	$(MAKE) build-r
 
 release-nightly: build-ui ## Prepare nightly release builds. 
 	$(MAKE) OS=linux ARCH=amd64 release-os
@@ -143,7 +147,7 @@ release-nightly: build-ui ## Prepare nightly release builds.
 	$(MAKE) OS=darwin ARCH=arm64 release-os
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
 	$(MAKE) build-py
-	$(MAKE) build-r
+	$(MAKE) build-r-nightly
 
 publish-release-s3:
 	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
