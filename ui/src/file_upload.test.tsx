@@ -39,7 +39,7 @@ describe('FileUpload.tsx', () => {
       responseText: data ? JSON.stringify(data) : null,
     }
     // @ts-ignore
-    window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj)
+    window.XMLHttpRequest = jest.fn(() => xhrMockObj)
     // @ts-ignore
     setTimeout(() => { xhrMockObj['onreadystatechange']() }, 0)
   }
