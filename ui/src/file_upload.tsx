@@ -183,6 +183,7 @@ export const
           setError(errMsg)
         }
         else {
+          if (error) setError('')
           setFiles(fileArr)
           setFileNames(fileArr.map(({ name }) => name).join(', '))
           if (compact) {
@@ -211,6 +212,8 @@ export const
         if (errMsg) {
           setError(errMsg)
           return
+        } else {
+          if (error) setError('')
         }
 
         setFiles(fileArr)
