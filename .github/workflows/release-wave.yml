@@ -56,6 +56,7 @@ jobs:
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+            r/build/h2owave_${{ env.VERSION }}_R.tar.gz
           tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
