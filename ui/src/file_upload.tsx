@@ -226,9 +226,6 @@ export const
         setSuccessMsg('')
         setPercentComplete(0)
       },
-      onUploadCancel = () => {
-        if (rejectXhr.current) rejectXhr.current()
-      },
       removeFile = (index: U) => () => {
         files.splice(index, 1)
         setFiles([...files])
@@ -269,7 +266,7 @@ export const
               description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`}
               percentComplete={percentComplete}
             />
-            <Fluent.DefaultButton styles={{ root: { marginTop: 12 } }} text='Cancel' onClick={onUploadCancel} />
+            <Fluent.DefaultButton styles={{ root: { marginTop: 12 } }} text='Cancel' onClick={rejectXhr.current} />
           </>
         )
         else if (files.length) return (
@@ -321,7 +318,7 @@ export const
                     percentComplete={percentComplete}
                     styles={{ root: { flex: 1 }, itemName: { padding: 0 }, itemProgress: { paddingTop: 5, paddingBottom: 5 } }}
                   />
-                  <Fluent.IconButton iconProps={{ iconName: 'cancel' }} title='Cancel' onClick={onUploadCancel} styles={{ root: { padding: 16, marginTop: 11, marginLeft: 6 } }} />
+                  <Fluent.IconButton iconProps={{ iconName: 'cancel' }} title='Cancel' onClick={rejectXhr.current} styles={{ root: { padding: 16, marginTop: 11, marginLeft: 6 } }} />
                 </div>
               )
               : (
