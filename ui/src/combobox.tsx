@@ -75,9 +75,9 @@ export const
       },
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: U, value?: S) => {
         if (!option && value) {
-          const opt: Fluent.IComboBoxOption = { key: value, text: value, selected: true }
+          const opt: Fluent.IComboBoxOption = { key: value, text: value }
           setOptions((prevOptions = []) => [...prevOptions, opt])
-          selectOpt(opt)
+          selectOpt({...opt, selected: true})
         }
         if (option && isMultiValued) {
           selectOpt(option)

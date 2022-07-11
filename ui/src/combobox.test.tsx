@@ -46,7 +46,7 @@ describe('Combobox.tsx', () => {
   })
 
   it('Sets args - multiple selection', () => {
-    const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps , values: [] }} />)
+    const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, values: [] }} />)
     fireEvent.click(getByRole('presentation', { hidden: true }))
     fireEvent.click(getByText('Choice1'))
     fireEvent.click(getByText('Choice2'))
@@ -85,5 +85,14 @@ describe('Combobox.tsx', () => {
     fireEvent.click(getByText('Choice1'))
 
     expect(pushMock).toHaveBeenCalled()
+  })
+
+  it('Selects and unselects a user typed option', () => {
+    const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, values: [] }} />)
+    userEvent.type(getByRole('combobox'), 'Choice4{Enter}')
+    expect(wave.args[name]).toEqual(['Choice4'])
+    fireEvent.click(getByRole('presentation', { hidden: true }))
+    fireEvent.click(getByText('Choice4'))
+    expect(wave.args[name]).toEqual([])
   })
 })
