@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, Model, Rec, S, unpack, xid } from 'h2o-wave'
+import { B, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { Result } from 'vega-embed'
 import { cards } from './layout'
 import { formItemWidth } from './theme'
 import { bond, debounce } from './ui'
@@ -66,6 +67,14 @@ export const
   XVegaVisualization = ({ model }: { model: VegaVisualization }) => {
     const
       ref = React.useRef<HTMLDivElement>(null),
+      vegaRef = React.useRef<Result>(),
+      updateData = React.useCallback(async () => {
+        if (vegaRef.current && model.data) {
+          const changeset = (await import('vega')).changeset().remove(() => true).insert(unpack<any[]>(model.data))
+          // source_0 is default dataset for some reason in Vega.
+          vegaRef.current.view.change('source_0', changeset).run()
+        }
+      }, [model.data]),
       init = React.useCallback(async () => {
         const el = ref.current
         if (!el) return
@@ -83,7 +92,7 @@ export const
 
         if (data) spec.data = { values: data }
         const { default: vegaEmbed } = await import('vega-embed')
-        vegaEmbed(el, spec, {
+        vegaRef.current = await vegaEmbed(el, spec, {
           mode: model.grammar || 'vega-lite',
           defaultStyle: false,
           renderer: 'canvas',
@@ -100,7 +109,7 @@ export const
               continuousHeight: height,
             }
           }
-        }).catch(console.error)
+        })
       }, [model.data, model.grammar, model.specification]),
       onResize = debounce(1000, init),
       { name, width = 'auto', height = 'auto' } = model,
@@ -108,7 +117,7 @@ export const
         ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
 
-    React.useEffect(() => { init() }, [init, model])
+    React.useEffect(() => { updateData() }, [updateData, model])
     React.useEffect(() => {
       init()
       window.addEventListener('resize', onResize)
@@ -140,7 +149,7 @@ export const
           <div data-test={name} className={css.card}>
             <div className='wave-s12 wave-w6'>{title}</div>
             <div className={css.body}>
-              <XVegaVisualization key={xid()} model={{ specification, data, grammar }} />
+              <XVegaVisualization model={{ specification, data, grammar }} />
             </div>
           </div>
         )
