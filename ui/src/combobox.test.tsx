@@ -86,4 +86,12 @@ describe('Combobox.tsx', () => {
 
     expect(pushMock).toHaveBeenCalled()
   })
+
+  it('Selects and unselects a user typed option', () => {
+    const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, values: [] }} />)
+    userEvent.type(getByRole('combobox'), 'Choice4{Enter}')
+    fireEvent.click(getByRole('presentation', { hidden: true }))
+    fireEvent.click(getByText('Choice4'))
+    expect(wave.args[name]).toEqual([])
+  })
 })
