@@ -92,6 +92,7 @@ export const
           disabled={m.disabled}
           readOnly={m.readonly}
           onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+          iconProps={{ iconName: m.icon }}
         />
       )
       : (
