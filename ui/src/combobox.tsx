@@ -64,7 +64,8 @@ export const
     const
       isMultiValued = !!m.values,
       [text, setText] = React.useState(m.value),
-      [options, setOptions] = React.useState((m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text }))),
+      mapChoices = React.useCallback(() => (m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [m.choices]),
+      [options, setOptions] = React.useState(mapChoices()),
       [selected, setSelected] = React.useState<Fluent.IComboBoxOption[]>((m.values || []).map(text => ({ key: text, text }))),
       selectOpt = (option: Fluent.IComboBoxOption) => {
         setSelected(items => {
@@ -91,6 +92,10 @@ export const
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m?.value || m?.values || null }, [])
+    React.useEffect(() => {
+      setText(m.value)
+      setOptions(mapChoices)
+    }, [m.choices, m.value, mapChoices])
 
     return (
       <Fluent.ComboBox
