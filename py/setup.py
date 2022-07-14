@@ -28,6 +28,13 @@ version = os.getenv('VERSION', 'DEV')
 arch = os.getenv('ARCH', 'amd64')
 base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-{arch}')
 
+# Create a metadata file to get easy access to platform/OS arch when needed.
+with open(os.path.join('h2o_wave', 'metadata.py'), 'w') as f:
+    f.write(f'''
+# Generated in setup.py.
+__platform__ = "{platform}"
+__arch__ = "{arch}"
+''')
 
 def get_data_files():
     build_path = os.path.join(base_path, 'www')

@@ -27,6 +27,7 @@ import os
 from urllib import request
 from urllib.parse import urlparse
 from .version import __version__
+from .metadata import __platform__, __arch__
 
 _localhost = '127.0.0.1'
 
@@ -129,7 +130,7 @@ def fetch():
     $ wave fetch
     """
     print('Fetching examples and related files. Please wait...')
-    tar_name = f'wave-{__version__}-linux-amd64'
+    tar_name = f'wave-{__version__}-{__platform__}-{__arch__}'
     tar_file = f'{tar_name}.tar.gz'
     tar_url = f'https://github.com/h2oai/wave/releases/download/v{__version__}/{tar_file}'
     tar_path = Path(tar_file)
