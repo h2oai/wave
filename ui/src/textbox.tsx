@@ -70,12 +70,30 @@ export interface Textbox {
 const DEBOUNCE_TIMEOUT = 500
 export const
   XTextbox = ({ model: m }: { model: Textbox }) => {
-    const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
-      v = v || (target as HTMLInputElement).value
+    const
+      onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
+        v = v || (target as HTMLInputElement).value
 
-      wave.args[m.name] = v ?? (m.value || '')
-      if (m.trigger) wave.push()
-    }
+        wave.args[m.name] = v ?? (m.value || '')
+        if (m.trigger) wave.push()
+      },
+      textFieldProps: Fluent.ITextFieldProps = {
+        label: m.label,
+        value: m.value,
+        errorMessage: m.error,
+        required: m.required,
+        disabled: m.disabled,
+        readOnly: m.readonly,
+        onChange: m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange,
+        iconProps: { iconName: m.icon },
+        placeholder: m.placeholder,
+        prefix: m.prefix,
+        suffix: m.suffix,
+        defaultValue: m.value,
+        multiline: m.multiline,
+        spellCheck: m.spellcheck,
+        type: m.password ? 'password' : undefined,
+      }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m.value || '' }, [])
@@ -84,35 +102,15 @@ export const
       ? (
         <Fluent.MaskedTextField
           data-test={m.name}
-          label={m.label}
-          value={m.value}
           mask={m.mask}
-          errorMessage={m.error}
-          required={m.required}
-          disabled={m.disabled}
-          readOnly={m.readonly}
-          onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
-          iconProps={{ iconName: m.icon }}
+          {...textFieldProps}
         />
       )
       : (
         <Fluent.TextField
           data-test={m.name}
           styles={m.multiline && m.height ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } } : undefined}
-          label={m.label}
-          placeholder={m.placeholder}
-          iconProps={{ iconName: m.icon }}
-          prefix={m.prefix}
-          suffix={m.suffix}
-          defaultValue={m.value}
-          errorMessage={m.error}
-          required={m.required}
-          disabled={m.disabled}
-          readOnly={m.readonly}
-          multiline={m.multiline}
-          spellCheck={m.spellcheck}
-          type={m.password ? 'password' : undefined}
-          onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+          {...textFieldProps}
         />
       )
   }
