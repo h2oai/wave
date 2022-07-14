@@ -5,6 +5,9 @@ R_FILES := $(wildcard R/*.R)
 SRC_FILES := $(wildcard R/*.R)
 PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
+# HACK: Linux uses GNU sed, while OSX uses BSD - need to install gsed to unify.
+SED=$(shell command -v gsed || command -v sed)
+
 .PHONY: doc preinstall package install check clean 
 
 all: clean preinstall doc package install
@@ -35,7 +38,7 @@ uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 .PHONY: tag
 tag: # Bump version
-	sed -i -r -e "s/Version.+/Version: $(VERSION)/" DESCRIPTION
+	$(SED) -i -r -e "s/Version.+/Version: $(VERSION)/" DESCRIPTION
 
 uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R CMD REMOVE $(PKG_NAME)

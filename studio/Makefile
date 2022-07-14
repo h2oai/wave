@@ -1,4 +1,6 @@
 VERSION ?= $(shell cat ../VERSION)
+# HACK: Linux uses GNU sed, while OSX uses BSD - need to install gsed to unify.
+SED=$(shell command -v gsed || command -v sed)
 
 setup: 
 	python3 -m venv venv
@@ -14,11 +16,11 @@ build: # Prepare bundle for HAIC.
 		cp ../tools/vscode-extension/server/utils.py tmp/autocomplete_utils.py
 		cp ../tools/vscode-extension/base-snippets.json tmp/base-snippets.json
 		cp ../tools/vscode-extension/component-snippets.json tmp/component-snippets.json
-		find tmp -type f -name '*.toml' -exec sed -i'' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
-		cd tmp && zip -r ../wave-studio-$(VERSION).wave * && cd -
-		rm -rf tmp
+		$(SED) -i -r -e "s/\{\{VERSION\}\}/$(VERSION)/g" tmp/app.toml
 		mkdir -p ../build/apps/wave-studio
-		mv wave-studio-$(VERSION).wave ../build/apps/wave-studio/
+		cd tmp && zip -r wave-studio-$(VERSION).wave * && cd -
+		mv tmp/wave-studio-$(VERSION).wave ../build/apps/wave-studio/
+		rm -rf tmp
 
 clean:
 	rm -rf venv studio.wave

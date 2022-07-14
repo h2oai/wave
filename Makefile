@@ -4,6 +4,8 @@ ARCH?=amd64
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
 REL=wave-$(VERSION)-$(OS)-$(ARCH)
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
+# HACK: Linux uses GNU sed, while OSX uses BSD - need to install gsed to unify.
+SED=$(shell command -v gsed || command -v sed)
 
 all: clean setup build ## Setup and build everything
 
@@ -41,8 +43,8 @@ build-apps: ## Prepare apps for HAC upload.
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
 	cp -r py/apps/ py/tmp/
-	find py/tmp -type f -name '*.toml' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
-	find py/tmp -type f -name 'requirements.txt' -exec sed -i '' -e "s/{{VERSION}}/$(VERSION)/g" {} \;
+	find py/tmp -type f -name '*.toml' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
+	find py/tmp -type f -name 'requirements.txt' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
@@ -50,8 +52,8 @@ build-apps: ## Prepare apps for HAC upload.
 	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/server/utils.py py/tmp/tour/examples/tour_autocomplete_utils.py
 	cp tools/vscode-extension/server/parser.py py/tmp/tour/examples/tour_autocomplete_parser.py
-	find py/tmp -type f -name '*tour.py' -exec sed -i'' -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" {} \;
-	find py/tmp -type f -name '*theme_generator.py' -exec sed -i'' -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" {} \;
+	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/tour/examples/tour.py 
+	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/theme-generator/theme_generator.py 
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
 	rm -rf py/tmp
 	cd studio && $(MAKE) build

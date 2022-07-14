@@ -1,4 +1,6 @@
 WAVE_ML_VERSION := v0.8.0
+# HACK: Linux uses GNU sed, while OSX uses BSD - need to install gsed to unify.
+SED=$(shell command -v gsed || command -v sed)
 
 all: build ## Build h2o_wave wheel
 
@@ -38,10 +40,7 @@ clean: purge ## Clean
 
 .PHONY: tag
 tag: # Bump version
-	sed -i -r -e "s/version.+/version=os.getenv('VERSION', '$(VERSION)'),/" setup.py
-	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/version.py
-	# Causes chicken-egg situation during CI
-	# sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/version.py
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
