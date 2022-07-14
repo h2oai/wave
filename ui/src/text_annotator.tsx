@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
+import { stylesheet, style } from 'typestyle'
 import { border, clas, cssVar, getContrast, margin, padding } from './theme'
 import { wave } from './ui'
 
@@ -46,6 +46,7 @@ export interface TextAnnotator {
 }
 
 type TokenProps = TextAnnotatorItem & { start: U, end: U }
+type TokenMouseEventProps = { key: U, start: U, end: U }
 
 const css = stylesheet({
   title: {
@@ -108,6 +109,16 @@ const css = stylesheet({
   },
   readonly: { pointerEvents: 'none' }
 })
+const Token = ({ idx, tokenProps: { start, end, tag, text }, handleMouseDown, handleMouseUp, handleMouseLeave, getMark, activeColor }: { idx: U, tokenProps: TokenProps, handleMouseDown: any, handleMouseUp: any, handleMouseLeave: any, getMark: any, activeColor: S | undefined }) =>
+  <p
+    onMouseDown={tag ? undefined : handleMouseDown({ key: idx, start, end })}
+    onMouseUp={tag ? undefined : handleMouseUp({ key: idx, start, end })}
+    onMouseLeave={handleMouseLeave({ key: idx, start, end })}
+    style={{ display: 'inline' }}
+    className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
+  >
+    {tag ? getMark(text, idx, tag) : text}
+  </p >
 
 export
   const AnnotatorTags = ({ tags, activateTag, activeTag }: { tags: TextAnnotatorTag[], activateTag: (name: S) => () => void, activeTag?: S }) => (
@@ -137,18 +148,23 @@ export
     const
       [activeTag, setActiveTag] = React.useState<S | undefined>(readonly ? undefined : tags[0]?.name),
       [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
+      mouseDownRef = React.useRef<TokenMouseEventProps>(),
+      mouseDownTimeRef = React.useRef(0),
       tagColorMap = new Map(tags.map(t => [t.name, t.color])),
       [tokens, setTokens] = React.useState(items.reduce((arr, { text, tag }) => {
         // If the smart_selection is True, split by any non-letter and non-number character.
-        text.split(smart_selection ? /(?=[^a-z0-9])/ig : "").forEach((textItem) => {
+        text.split(/(?=[^a-z0-9])/ig).forEach((textItem) => {
           const
             start = arr.length === 0 ? 0 : arr[arr.length - 1].end + 1,
-            end = arr.length === 0 ? textItem.length - 1 : arr[arr.length - 1].end + textItem.length
-          if (/[^a-z]/i.test(textItem)) {
-            arr.push({ text: textItem.substring(0, 1), tag, start, end: start })
-            if (textItem.substring(1) !== '') arr.push({ text: textItem.substring(1), tag, start: start + 1, end: end + 1 })
+            end = arr.length === 0 ? textItem.length - 1 : arr[arr.length - 1].end + textItem.length,
+            word = textItem.split(/[^a-z]/i),
+            hasNonWordChar = word.length === 2
+
+          if (hasNonWordChar) arr.push({ text: textItem.substring(0, 1), tag, start, end: start })
+          if (smart_selection) {
+            arr.push({ text: word[hasNonWordChar ? 1 : 0], tag, start: start + (hasNonWordChar ? 1 : 0), end })
           } else {
-            arr.push({ text: textItem, tag, start, end })
+            arr.push(...word[hasNonWordChar ? 1 : 0].split("").map((it: any) => { return { text: it, tag, start: start + (hasNonWordChar ? 1 : 0), end } }))
           }
         })
         return arr
@@ -185,48 +201,22 @@ export
         setTokens([...tokens])
         submitWaveArgs()
       },
-      annotate = (target?: EventTarget & HTMLSpanElement) => {
+      annotate = (endElProps: TokenMouseEventProps, smartSelection?: B) => {
+        if (!mouseDownRef.current) return
         const
-          selectedText = window.getSelection(),
-          startElData = selectedText?.anchorNode?.parentElement?.dataset,
-          endElData = selectedText?.focusNode?.parentElement?.dataset
+          startElProps = mouseDownRef.current,
+          max = smartSelection ? endElProps.end : Math.max(startElProps.key, endElProps.key),
+          min = smartSelection ? endElProps.start : Math.min(startElProps.key, endElProps.key)
 
-        if (!startElData || !endElData) return
-
-        const
-          selectedTextStr = selectedText.toString(),
-          startTokenIdx = parseInt(smart_selection ? startElData!.key! : startElData!.start!),
-          endTokenIdx = target ? (startTokenIdx + selectedTextStr.length) : parseInt(smart_selection ? endElData!.key! : endElData!.end!),
-          max = Math.max(startTokenIdx, endTokenIdx),
-          min = Math.min(startTokenIdx, endTokenIdx)
-
-        if (target && selectedTextStr.length) {
-          // smart selection on double click
-          const targetDataIdx = parseInt(target.dataset.key!)
-          let charsSelectedOnRightCount = 0 // if not 0, we loop to the left direction
-          for (let i = 0; i <= selectedTextStr.length; i++) {
-            const tokenIdx = targetDataIdx + (charsSelectedOnRightCount ? (charsSelectedOnRightCount - i) : i)
-            tokens[tokenIdx].tag = activeTag
-            if (/[^a-z0-9]/i.test(tokens[tokenIdx + (charsSelectedOnRightCount ? -1 : 1)]?.text)) {
-              charsSelectedOnRightCount = i + 1
-            }
-          }
-        } else {
-          // selection by dragging or clicking
-          for (let i = min; i <= max; i++) {
-            // HACK: Ignore accompanying spaces selected by double clicking in Firefox
-            // HACK: Ignore characters returned by Firefox when user hovers over the part of the prev/next character
-            if (!smart_selection && max - min + 1 !== selectedTextStr.length) {
-              if (i === min && selectedTextStr.charAt(0) !== tokens[i].text) continue
-              if (i === max && selectedTextStr.charAt(selectedTextStr.length - 1) !== tokens[i].text) continue
-            }
-            tokens[i].tag = activeTag
-          }
+        if (smart_selection) { tokens[endElProps.key].tag = activeTag }
+        else {
+          for (let i = min; i <= max; i++) tokens[i].tag = activeTag
         }
 
         setTokens([...tokens])
         submitWaveArgs()
         window.getSelection()?.removeAllRanges()
+        mouseDownRef.current = undefined
       },
       onMarkHover = (idx: U) => () => setHoveredTagIdx(idx),
       onMarkMouseOut = () => setHoveredTagIdx(null),
@@ -259,37 +249,30 @@ export
           </mark>
         )
       },
-      handleMouseUp = (ev: React.MouseEvent<HTMLSpanElement>) => {
-        if (smart_selection) annotate()
-        else if (ev.detail === 2) annotate(ev.currentTarget) // double-click
-        else if (ev.detail === 0) annotate() // dragging (long click)
-        else annotate() // click
+      handleMouseDown = (startElProps: TokenMouseEventProps) => () => {
+        mouseDownRef.current = startElProps
+        mouseDownTimeRef.current = new Date().getTime()
       },
-      Token = ({ idx, tokenProps: { start, end, tag, text } }: { idx: U, tokenProps: TokenProps }) =>
-        <span
-          data-key={idx}
-          data-start={start}
-          data-end={end}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={(ev: React.MouseEvent<HTMLSpanElement>) => {
-            if ((ev.relatedTarget as any)?.nodeName !== 'SPAN') handleMouseUp(ev) // nodeName prop is not typed yet
-          }}
-        >
-          {tag ? getMark(text, idx, tag) : text}
-        </span>,
+      handleMouseUp = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
+        window.getSelection()?.removeAllRanges()
+        if (smart_selection) annotate(endElProps, true)
+        else if (ev.detail === 2) annotate(endElProps, true) // double-click
+        else if (ev.detail === 1 && new Date().getTime() - mouseDownTimeRef.current > 200) annotate(endElProps) // dragging
+      },
+      handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
+        if (mouseDownRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps)
+      },
       text = tokens.map((token, idx) => {
-        if (smart_selection || token.text === " ") return <Token key={idx} idx={idx} tokenProps={token} />
-        else if (!idx || tokens[idx - 1].text === " ") {
-          const word = []
-          for (let i = idx; i < tokens.length; i++) {
-            word.push(<Token key={i} idx={i} tokenProps={tokens[i]} />)
-            if (i === tokens.length - 1 || tokens[i + 1].text === " ") {
-              // placing word broken into characters into span with display: 'inline-block' prevents it from wrapping in the EOL
-              return <span key={`w${i}`} style={{ display: 'inline-block' }}>{word}</span>
-            }
-          }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        return <Token
+          key={idx}
+          idx={idx}
+          tokenProps={token}
+          handleMouseDown={handleMouseDown}
+          handleMouseUp={handleMouseUp}
+          handleMouseLeave={handleMouseLeave}
+          getMark={getMark}
+          activeColor={activeTag ? tagColorMap.get(activeTag)! : undefined}
+        />
       }, [] as React.ReactElement[])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
