@@ -37,6 +37,7 @@ module.exports = {
       'files',
       'plotting',
       'javascript',
+      'custom-css',
       'graphics',
       'security',
       'logging',
