@@ -86,7 +86,8 @@ const css = stylesheet({
   },
   content: {
     margin: margin(12, 0),
-    paddingTop: 2
+    paddingTop: 2,
+    lineHeight: '26px'
   },
   removeIcon: {
     cursor: 'pointer',
