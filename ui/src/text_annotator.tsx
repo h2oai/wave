@@ -59,6 +59,7 @@ const css = stylesheet({
     marginTop: 1
   },
   tag: {
+    cursor: 'pointer',
     padding: padding(4, 16),
     textAlign: 'center',
     borderRadius: 4,
@@ -202,15 +203,25 @@ export
         submitWaveArgs()
       },
       annotate = (endElProps: TokenMouseEventProps, smartSelection?: B) => {
-        if (!mouseDownRef.current) return
+        // trim new line characters because Firefox does count them
+        const selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
+        if (!mouseDownRef.current || !selectedStr) return
+        const startElProps = mouseDownRef.current
+
         const
-          startElProps = mouseDownRef.current,
           max = smartSelection ? endElProps.end : Math.max(startElProps.key, endElProps.key),
           min = smartSelection ? endElProps.start : Math.min(startElProps.key, endElProps.key)
 
         if (smart_selection) { tokens[endElProps.key].tag = activeTag }
         else {
-          for (let i = min; i <= max; i++) tokens[i].tag = activeTag
+          for (let i = min; i <= max; i++) {
+            // HACK: Ignore characters returned when user hovers over the part of the prev/next character
+            if (!smart_selection && max - min + 1 !== selectedStr.length) {
+              if (i === min && selectedStr.charAt(0) !== tokens[i].text) continue
+              if (i === max && selectedStr.charAt(selectedStr.length - 1) !== tokens[i].text) continue
+            }
+            tokens[i].tag = activeTag
+          }
         }
 
         setTokens([...tokens])
@@ -254,7 +265,6 @@ export
         mouseDownTimeRef.current = new Date().getTime()
       },
       handleMouseUp = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
-        window.getSelection()?.removeAllRanges()
         if (smart_selection) annotate(endElProps, true)
         else if (ev.detail === 2) annotate(endElProps, true) // double-click
         else if (ev.detail === 1 && new Date().getTime() - mouseDownTimeRef.current > 200) annotate(endElProps) // dragging
