@@ -41,8 +41,6 @@ export interface TextAnnotator {
   trigger?: B
   /** True to prevent user interaction with the annotator component. Defaults to False. */
   readonly?: B
-  /** If enabled it automatically selects the whole word when clicking on it. Defaults to True. */
-  smart_selection?: B
 }
 
 type TokenProps = TextAnnotatorItem & { start: U, end: U }
@@ -146,12 +144,12 @@ export
       }
     </div>
   ),
-  XTextAnnotator = ({ model: { name, title, tags, items, trigger, readonly, smart_selection = true } }: { model: TextAnnotator }) => {
+  XTextAnnotator = ({ model: { name, title, tags, items, trigger, readonly } }: { model: TextAnnotator }) => {
     const
       [activeTag, setActiveTag] = React.useState<S | undefined>(readonly ? undefined : tags[0]?.name),
       [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
+      [smartSelection, setSmartSelection] = React.useState(true),
       mouseDownRef = React.useRef<TokenMouseEventProps>(),
-      mouseDownTimeRef = React.useRef(0),
       tagColorMap = new Map(tags.map(t => [t.name, t.color])),
       [tokens, setTokens] = React.useState(items.reduce((arr, { text, tag }) => {
         // If the smart_selection is True, split by any non-letter and non-number character.
@@ -163,11 +161,7 @@ export
             hasNonWordChar = word.length === 2
 
           if (hasNonWordChar) arr.push({ text: textItem.substring(0, 1), tag, start, end: start })
-          if (smart_selection) {
-            arr.push({ text: word[hasNonWordChar ? 1 : 0], tag, start: start + (hasNonWordChar ? 1 : 0), end })
-          } else {
-            arr.push(...word[hasNonWordChar ? 1 : 0].split("").map((it: any) => { return { text: it, tag, start: start + (hasNonWordChar ? 1 : 0), end } }))
-          }
+          arr.push(...word[hasNonWordChar ? 1 : 0].split("").map(it => { return { text: it, tag, start: start + (hasNonWordChar ? 1 : 0), end } }))
         })
         return arr
       }, [] as (TokenProps)[])),
@@ -203,27 +197,25 @@ export
         setTokens([...tokens])
         submitWaveArgs()
       },
-      annotate = (endElProps: TokenMouseEventProps, smartSelection?: B) => {
+      annotate = (endElProps: TokenMouseEventProps) => {
         // trim new line characters because Firefox does count them
         const selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
-        if (!mouseDownRef.current || !selectedStr) return
+        if (!mouseDownRef.current) return
         const startElProps = mouseDownRef.current
 
         const
           max = smartSelection ? endElProps.end : Math.max(startElProps.key, endElProps.key),
           min = smartSelection ? endElProps.start : Math.min(startElProps.key, endElProps.key)
 
-        if (smart_selection) { tokens[endElProps.key].tag = activeTag }
-        else {
-          for (let i = min; i <= max; i++) {
-            // HACK: Ignore characters returned when user hovers over the part of the prev/next character
-            if (!smart_selection && max - min + 1 !== selectedStr.length) {
-              if (i === min && selectedStr.charAt(0) !== tokens[i].text) continue
-              if (i === max && selectedStr.charAt(selectedStr.length - 1) !== tokens[i].text) continue
-            }
-            tokens[i].tag = activeTag
+        for (let i = min; i <= max; i++) {
+          // HACK: Ignore characters returned when user hovers over the part of the prev/next character
+          if (!smartSelection && selectedStr && max - min + 1 !== selectedStr.length) {
+            if (i === min && selectedStr.charAt(0) !== tokens[i].text) continue
+            if (i === max && selectedStr.charAt(selectedStr.length - 1) !== tokens[i].text) continue
           }
+          tokens[i].tag = activeTag
         }
+
 
         setTokens([...tokens])
         submitWaveArgs()
@@ -263,12 +255,9 @@ export
       },
       handleMouseDown = (startElProps: TokenMouseEventProps) => () => {
         mouseDownRef.current = startElProps
-        mouseDownTimeRef.current = new Date().getTime()
       },
-      handleMouseUp = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
-        if (smart_selection) annotate(endElProps, true)
-        else if (ev.detail === 2) annotate(endElProps, true) // double-click
-        else if (ev.detail === 1 && new Date().getTime() - mouseDownTimeRef.current > 200) annotate(endElProps) // dragging
+      handleMouseUp = (endElProps: TokenMouseEventProps) => () => {
+        annotate(endElProps)
       },
       handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
         if (mouseDownRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps)
@@ -294,6 +283,15 @@ export
       <div data-test={name} className={readonly ? css.readonly : ''}>
         <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>
         <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
+        <Fluent.Toggle
+          data-test={'toggle'}
+          label={'Smart selection'}
+          defaultChecked={smartSelection}
+          onChange={() => setSmartSelection(!smartSelection)}
+          onText="On"
+          offText="Off"
+          inlineLabel
+        />
         <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{text}</div>
       </div>
     )
