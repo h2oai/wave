@@ -77,7 +77,8 @@ export const
         wave.args[m.name] = v ?? (m.value || '')
         if (m.trigger) wave.push()
       },
-      textFieldProps: Fluent.ITextFieldProps = {
+      textFieldProps: Fluent.ITextFieldProps & { 'data-test': string } = {
+        'data-test': m.name,
         label: m.label,
         value: m.value,
         errorMessage: m.error,
@@ -101,14 +102,12 @@ export const
     return m.mask
       ? (
         <Fluent.MaskedTextField
-          data-test={m.name}
           mask={m.mask}
           {...textFieldProps}
         />
       )
       : (
         <Fluent.TextField
-          data-test={m.name}
           styles={m.multiline && m.height ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } } : undefined}
           {...textFieldProps}
         />
