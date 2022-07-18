@@ -12,6 +12,11 @@ The `name` attribute indicates how to reference this component in the query argu
 
 You can see the API for [ui.tabs](/docs/api/ui#tabs) or check the interactive example in Tour app.
 
+Tabs in Wave do not hold content, they are just "visual feedback" for a user, the actual content needs to be handled by the developer. There are 2 ways to handle the content:
+
+1. Recreate all form items every time tab changes (shown [here](/docs/examples/tabs/)) - useful when you do not need to preserve state across tabs, e.g. if user scrolls table -> goes to new tab -> returns, the table would be scrolled to top.
+2. Update existing items - Developers must adjust the `visible` prop to show/hide the particular components temporarily. This requires more code but allows for keeping the state between tabs - the table should remain scrolled where it was left when coming back.
+
 ## Basic tabs
 
 ```py
