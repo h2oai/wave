@@ -747,8 +747,9 @@ const
     const
       scale: ScaleOption = {},
       // Bug in G2? `autoHide` should be set to false by default (it is not).
+      // Autorotate should be true by default as well, but is not. Same as ^^.
       // Manually set title to null to avoid the title being automatically displayed in v4.1.49+.
-      axis: AxisOption = { label: { autoHide: false }, title: null }
+      axis: AxisOption = { label: { autoHide: false, autoRotate: true }, title: null }
     if (isS(typ)) scale.type = fixScaleType(typ) as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
