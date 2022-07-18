@@ -45,6 +45,15 @@ export interface TextAnnotator {
 
 type TokenProps = TextAnnotatorItem & { start: U, end: U }
 type TokenMouseEventProps = { key: U, start: U, end: U }
+type Token = {
+  idx: U,
+  tokenProps: TokenProps,
+  handleMouseDown: (startElProps: TokenMouseEventProps) => () => void,
+  handleMouseUp: (endElProps: TokenMouseEventProps) => () => void,
+  handleMouseLeave: (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => void,
+  getMark: (text: S, idx: U, tag: S) => JSX.Element,
+  activeColor: S | undefined
+}
 
 const css = stylesheet({
   title: {
@@ -109,7 +118,7 @@ const css = stylesheet({
   },
   readonly: { pointerEvents: 'none' }
 })
-const Token = ({ idx, tokenProps: { start, end, tag, text }, handleMouseDown, handleMouseUp, handleMouseLeave, getMark, activeColor }: { idx: U, tokenProps: TokenProps, handleMouseDown: any, handleMouseUp: any, handleMouseLeave: any, getMark: any, activeColor: S | undefined }) =>
+const Token = ({ idx, tokenProps: { start, end, tag, text }, handleMouseDown, handleMouseUp, handleMouseLeave, getMark, activeColor }: Token) =>
   <p
     onMouseDown={tag ? undefined : handleMouseDown({ key: idx, start, end })}
     onMouseUp={tag ? undefined : handleMouseUp({ key: idx, start, end })}
@@ -260,7 +269,7 @@ export
         annotate(endElProps)
       },
       handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
-        if (mouseDownRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps)
+        if (mouseDownRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps) // nodeName prop is not typed yet
       },
       text = tokens.map((token, idx) => {
         return <Token
