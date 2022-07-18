@@ -77,7 +77,7 @@ export const
         wave.args[m.name] = v ?? (m.value || '')
         if (m.trigger) wave.push()
       },
-      textFieldProps: Fluent.ITextFieldProps & { 'data-test': string } = {
+      textFieldProps: Fluent.ITextFieldProps & { 'data-test': S } = {
         'data-test': m.name,
         label: m.label,
         value: m.value,
