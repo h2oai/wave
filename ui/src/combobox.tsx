@@ -66,11 +66,11 @@ export const
       [text, setText] = React.useState(m.value),
       mapChoices = React.useCallback(() => (m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [m.choices]),
       [options, setOptions] = React.useState(mapChoices()),
-      [selected, setSelected] = React.useState<Fluent.IComboBoxOption[]>((m.values || []).map(text => ({ key: text, text }))),
+      [selected, setSelected] = React.useState<S[]>(m.values || []),
       selectOpt = (option: Fluent.IComboBoxOption) => {
-        setSelected(items => {
-          const result = option.selected ? [...items, option] : items.filter(item => item.key !== option.key)
-          wave.args[m.name] = result.map(item => item.text)
+        setSelected(keys => {
+          const result = option.selected ? [...keys, String(option)] : keys.filter(key => key !== option.key)
+          wave.args[m.name] = result
           return result
         })
       },
@@ -87,15 +87,15 @@ export const
           const v = option?.text || value || ''
           wave.args[m.name] = v
           setText(v)
+          m.value = undefined
         }
         if (m.trigger) wave.push()
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = m?.value || m?.values || null }, [])
-    React.useEffect(() => {
-      setText(m.value)
-      setOptions(mapChoices)
-    }, [m.choices, m.value, mapChoices])
+    React.useEffect(() => { setText(m.value) }, [m.value])
+    React.useEffect(() => { setSelected(m.values || []) }, [m.values])
+    React.useEffect(() => { setOptions(mapChoices) }, [m.choices, mapChoices])
 
     return (
       <Fluent.ComboBox
@@ -105,7 +105,7 @@ export const
         options={options}
         required={m.required}
         multiSelect={isMultiValued}
-        selectedKey={isMultiValued ? selected.map(s => s.key as S) : undefined}
+        selectedKey={isMultiValued ? selected : undefined}
         text={isMultiValued ? undefined : text}
         allowFreeform
         disabled={m.disabled}
