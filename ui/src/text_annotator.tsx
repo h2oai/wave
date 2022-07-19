@@ -120,8 +120,8 @@ const css = stylesheet({
 })
 const Token = ({ idx, tokenProps: { start, end, tag, text }, handleMouseDown, handleMouseUp, handleMouseLeave, getMark, activeColor }: Token) =>
   <p
-    onMouseDown={tag ? undefined : handleMouseDown({ key: idx, start, end })}
-    onMouseUp={tag ? undefined : handleMouseUp({ key: idx, start, end })}
+    onMouseDown={handleMouseDown({ key: idx, start, end })}
+    onMouseUp={handleMouseUp({ key: idx, start, end })}
     onMouseLeave={handleMouseLeave({ key: idx, start, end })}
     style={{ display: 'inline' }}
     className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
@@ -158,7 +158,7 @@ export
       [activeTag, setActiveTag] = React.useState<S | undefined>(readonly ? undefined : tags[0]?.name),
       [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
       [smartSelection, setSmartSelection] = React.useState(true),
-      mouseDownRef = React.useRef<TokenMouseEventProps>(),
+      startElPropsRef = React.useRef<TokenMouseEventProps>(),
       tagColorMap = new Map(tags.map(t => [t.name, t.color])),
       [tokens, setTokens] = React.useState(items.reduce((arr, { text, tag }) => {
         // If the smart_selection is True, split by any non-letter and non-number character.
@@ -203,18 +203,18 @@ export
         ev.stopPropagation() // Stop event bubbling so that annotate is not called.
         const tagToRemove = tokens[idx].tag
         for (let i = idx; tokens[i]?.tag === tagToRemove; i++) tokens[i].tag = undefined
+        startElPropsRef.current = undefined
         setTokens([...tokens])
         submitWaveArgs()
       },
       annotate = (endElProps: TokenMouseEventProps) => {
-        // trim new line characters because Firefox does count them
-        const selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
-        if (!mouseDownRef.current) return
-        const startElProps = mouseDownRef.current
-
+        if (!startElPropsRef.current) return
         const
-          max = smartSelection ? endElProps.end : Math.max(startElProps.key, endElProps.key),
-          min = smartSelection ? endElProps.start : Math.min(startElProps.key, endElProps.key)
+          startElProps = startElPropsRef.current,
+          max = smartSelection ? Math.max(startElProps.end, endElProps.end) : Math.max(startElProps.key, endElProps.key),
+          min = smartSelection ? Math.min(startElProps.start, endElProps.start) : Math.min(startElProps.key, endElProps.key),
+          // replace removes new line characters because Firefox does count them
+          selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
 
         for (let i = min; i <= max; i++) {
           // HACK: Ignore characters returned when user hovers over the part of the prev/next character
@@ -225,11 +225,10 @@ export
           tokens[i].tag = activeTag
         }
 
-
         setTokens([...tokens])
         submitWaveArgs()
         window.getSelection()?.removeAllRanges()
-        mouseDownRef.current = undefined
+        startElPropsRef.current = undefined
       },
       onMarkHover = (idx: U) => () => setHoveredTagIdx(idx),
       onMarkMouseOut = () => setHoveredTagIdx(null),
@@ -263,13 +262,13 @@ export
         )
       },
       handleMouseDown = (startElProps: TokenMouseEventProps) => () => {
-        mouseDownRef.current = startElProps
+        startElPropsRef.current = startElProps
       },
       handleMouseUp = (endElProps: TokenMouseEventProps) => () => {
         annotate(endElProps)
       },
       handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
-        if (mouseDownRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps) // nodeName prop is not typed yet
+        if (startElPropsRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps) // nodeName prop is not typed yet
       },
       text = tokens.map((token, idx) => {
         return <Token
