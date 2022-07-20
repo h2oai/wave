@@ -69,7 +69,7 @@ export const
       [selected, setSelected] = React.useState<S[]>(m.values || []),
       selectOpt = (option: Fluent.IComboBoxOption) => {
         setSelected(keys => {
-          const result = option.selected ? [...keys, String(option)] : keys.filter(key => key !== option.key)
+          const result = option.selected ? [...keys, String(option.key)] : keys.filter(key => key !== option.key)
           wave.args[m.name] = result
           return result
         })
