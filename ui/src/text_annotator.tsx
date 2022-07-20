@@ -45,14 +45,10 @@ export interface TextAnnotator {
 
 type TokenProps = TextAnnotatorItem & { start: U, end: U }
 type TokenMouseEventProps = { key: U, start: U, end: U }
-type Token = {
-  idx: U,
-  tokenProps: TokenProps,
-  handleMouseDown: (startElProps: TokenMouseEventProps) => () => void,
-  handleMouseUp: (endElProps: TokenMouseEventProps) => () => void,
-  handleMouseLeave: (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => void,
-  getMark: (text: S, idx: U, tag: S) => JSX.Element,
-  activeColor: S | undefined
+type AnnotatorTagsProps = {
+  tags: TextAnnotatorTag[],
+  activateTag: (name: S) => () => void,
+  activeTag?: S
 }
 
 const css = stylesheet({
@@ -118,19 +114,9 @@ const css = stylesheet({
   },
   readonly: { pointerEvents: 'none' }
 })
-const Token = ({ idx, tokenProps: { start, end, tag, text }, handleMouseDown, handleMouseUp, handleMouseLeave, getMark, activeColor }: Token) =>
-  <p
-    onMouseDown={handleMouseDown({ key: idx, start, end })}
-    onMouseUp={handleMouseUp({ key: idx, start, end })}
-    onMouseLeave={handleMouseLeave({ key: idx, start, end })}
-    style={{ display: 'inline' }}
-    className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
-  >
-    {tag ? getMark(text, idx, tag) : text}
-  </p >
 
 export
-  const AnnotatorTags = ({ tags, activateTag, activeTag }: { tags: TextAnnotatorTag[], activateTag: (name: S) => () => void, activeTag?: S }) => (
+  const AnnotatorTags = ({ tags, activateTag, activeTag }: AnnotatorTagsProps) => (
     <div className={css.tags}>
       {
         tags.map(({ name, color, label }) => {
@@ -160,20 +146,17 @@ export
       [smartSelection, setSmartSelection] = React.useState(true),
       startElPropsRef = React.useRef<TokenMouseEventProps>(),
       tagColorMap = new Map(tags.map(t => [t.name, t.color])),
-      [tokens, setTokens] = React.useState(items.reduce((arr, { text, tag }) => {
-        // If the smart_selection is True, split by any non-letter and non-number character.
-        text.split(/(?=[^a-z0-9])/ig).forEach((textItem) => {
+      [tokens, setTokens] = React.useState(items.reduce((tokenArr, { text, tag }) => {
+        // Split by any non-letter.
+        text.split(/([^a-z])/ig).filter(word => word !== '').forEach(textItem => {
           const
-            start = arr.length === 0 ? 0 : arr[arr.length - 1].end + 1,
-            end = arr.length === 0 ? textItem.length - 1 : arr[arr.length - 1].end + textItem.length,
-            word = textItem.split(/[^a-z]/i),
-            hasNonWordChar = word.length === 2
+            start = tokenArr.length === 0 ? 0 : tokenArr[tokenArr.length - 1].end + 1,
+            end = tokenArr.length === 0 ? textItem.length - 1 : tokenArr[tokenArr.length - 1].end + textItem.length
 
-          if (hasNonWordChar) arr.push({ text: textItem.substring(0, 1), tag, start, end: start })
-          arr.push(...word[hasNonWordChar ? 1 : 0].split("").map(it => { return { text: it, tag, start: start + (hasNonWordChar ? 1 : 0), end } }))
+          tokenArr.push(...textItem.split('').map(char => ({ text: char, tag, start, end })))
         })
-        return arr
-      }, [] as (TokenProps)[])),
+        return tokenArr
+      }, [] as TokenProps[])),
       submitWaveArgs = () => {
         let currentText = ''
         let currentTag: S | undefined
@@ -213,16 +196,41 @@ export
           startElProps = startElPropsRef.current,
           max = smartSelection ? Math.max(startElProps.end, endElProps.end) : Math.max(startElProps.key, endElProps.key),
           min = smartSelection ? Math.min(startElProps.start, endElProps.start) : Math.min(startElProps.key, endElProps.key),
-          // replace removes new line characters because Firefox does count them
-          selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
+          // Remove new line characters because Firefox does count them.
+          selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, ""),
+          annotateNumbersAroundToken = (tokenIdx: U) => {
+            let charRightIdx = tokenIdx + 1, charLeftIdx = tokenIdx - 1
+            while (charRightIdx <= tokens.length - 1 && /[0-9]/g.test(tokens[charRightIdx].text)) {
+              tokens[charRightIdx].tag = activeTag
+              charRightIdx++
+            }
+            while (charLeftIdx >= 0 && /[0-9]/g.test(tokens[charLeftIdx].text)) {
+              tokens[charLeftIdx].tag = activeTag
+              charLeftIdx--
+            }
+          }
 
         for (let i = min; i <= max; i++) {
           // HACK: Ignore characters returned when user hovers over the part of the prev/next character
           if (!smartSelection && selectedStr && max - min + 1 !== selectedStr.length) {
+            // Check whether the first character highlighted by the browser corresponds with the character returned by the mouse event
             if (i === min && selectedStr.charAt(0) !== tokens[i].text) continue
+            // Check whether the last character highlighted by the browser corresponds with the character returned by the mouse event
             if (i === max && selectedStr.charAt(selectedStr.length - 1) !== tokens[i].text) continue
           }
           tokens[i].tag = activeTag
+        }
+
+        // Smart selection for numbers.
+        if (smartSelection) {
+          if (/[0-9]/g.test(tokens[startElProps.key].text)) {
+            // Smart select around selection start token.
+            annotateNumbersAroundToken(startElProps.key)
+          }
+          if (startElProps.key !== endElProps.key && /[0-9]/g.test(tokens[endElProps.key].text)) {
+            // Smart select around selection end token.
+            annotateNumbersAroundToken(endElProps.key)
+          }
         }
 
         setTokens([...tokens])
@@ -243,8 +251,10 @@ export
         return false
       },
       getMark = (text: S, idx: U, tag: S) => {
+        const color = tagColorMap.get(tag)
+        // Handle invalid tags entered by user
+        if (!color) return text
         const
-          color = tagColorMap.get(tag)!,
           removeIconStyle = { visibility: shouldShowRemoveIcon(idx, tag) ? 'visible' : 'hidden' },
           isFirst = tokens[idx - 1]?.tag !== tag,
           isLast = tokens[idx + 1]?.tag !== tag
@@ -261,46 +271,46 @@ export
           </mark>
         )
       },
-      handleMouseDown = (startElProps: TokenMouseEventProps) => () => {
-        startElPropsRef.current = startElProps
-      },
-      handleMouseUp = (endElProps: TokenMouseEventProps) => () => {
-        annotate(endElProps)
-      },
+      handleMouseDown = (startElProps: TokenMouseEventProps) => () => startElPropsRef.current = startElProps,
+      handleMouseUp = (endElProps: TokenMouseEventProps) => () => annotate(endElProps),
       handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
         if (startElPropsRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps) // nodeName prop is not typed yet
-      },
-      text = tokens.map((token, idx) => {
-        return <Token
-          key={idx}
-          idx={idx}
-          tokenProps={token}
-          handleMouseDown={handleMouseDown}
-          handleMouseUp={handleMouseUp}
-          handleMouseLeave={handleMouseLeave}
-          getMark={getMark}
-          activeColor={activeTag ? tagColorMap.get(activeTag)! : undefined}
-        />
-      }, [] as React.ReactElement[])
+      }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = items as unknown as Rec[] }, [])
-
 
     return (
       <div data-test={name} className={readonly ? css.readonly : ''}>
         <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>
         <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
         <Fluent.Toggle
-          data-test={'toggle'}
-          label={'Smart selection'}
+          data-test='smart-selection'
+          label='Smart selection'
           defaultChecked={smartSelection}
-          onChange={() => setSmartSelection(!smartSelection)}
+          onChange={() => setSmartSelection(prevSelection => !prevSelection)}
           onText="On"
           offText="Off"
           inlineLabel
         />
-        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{text}</div>
+        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
+          tokens.map(({ start, end, text, tag }, idx) => {
+            const activeColor = activeTag ? tagColorMap.get(activeTag) : undefined
+            return (
+              // Use paragraph instead of span to support text highlight.
+              <p
+                key={idx}
+                onMouseDown={handleMouseDown({ key: idx, start, end })}
+                onMouseUp={handleMouseUp({ key: idx, start, end })}
+                onMouseLeave={handleMouseLeave({ key: idx, start, end })}
+                style={{ display: 'inline' }}
+                className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
+              >
+                {tag ? getMark(text, idx, tag) : text}
+              </p>
+            )
+          })
+        }</div>
       </div>
     )
   }

@@ -67,6 +67,71 @@ describe('TextAnnotator.tsx', () => {
     ])
   })
 
+  it('Sets correct args on annotate when word is preceeded by special character', () => {
+    const customItems = [{ text: 'Hello (there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('h'))
+    fireEvent.mouseUp(getByText('h'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello (' },
+      { text: 'there', tag: 'tag1' },
+      { text: '! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+    ])
+  })
+
+  it('Sets correct args on annotate when text starts with numbers', () => {
+    const customItems = [{ text: '123Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('1'))
+    fireEvent.mouseUp(getByText('1'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: '123', tag: 'tag1' },
+      { text: 'Hello there! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+    ])
+  })
+
+  it('Sets correct args on annotate when text ends with numbers', () => {
+    const customItems = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day123' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('3'))
+    fireEvent.mouseUp(getByText('3'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello there! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+      { text: '123', tag: 'tag1' },
+    ])
+  })
+
+  it('Sets correct args on annotate when selection starts and ends with numbers', () => {
+    const customItems = [{ text: '123Hello there456! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('2'))
+    fireEvent.mouseUp(getByText('4'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: '123Hello there456', tag: 'tag1' },
+      { text: '! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' }
+    ])
+  })
+
   it('Removes browser text selection highlight after annotate', () => {
     const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
