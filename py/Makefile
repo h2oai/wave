@@ -22,6 +22,8 @@ setup: ## Install dependencies
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
+	rm -f h2o_wave/metadata.py
+	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/metadata.py
 
 .PHONY: docs
 docs: ## Build API docs
