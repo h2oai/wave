@@ -133,7 +133,9 @@ const
           minWidth: width ? 'initial' : undefined,
         },
         icon: {
-          fontSize: 20
+          fontSize: 20,
+          display: 'flex',
+          alignItems: 'center'
         }
       }
 
