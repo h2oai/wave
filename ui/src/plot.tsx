@@ -746,10 +746,16 @@ const
   makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
     const
       scale: ScaleOption = {},
-      // Bug in G2? `autoHide` should be set to false by default (it is not).
-      // Autorotate should be true by default as well, but is not. Same as ^^.
-      // Manually set title to null to avoid the title being automatically displayed in v4.1.49+.
-      axis: AxisOption = { label: { autoHide: false, autoRotate: true }, title: null }
+      axis: AxisOption = {
+        label: {
+          // Bug in G2? `autoHide` should be set to false by default (it is not).
+          autoHide: false,
+          // Autorotate should be true by default as well, but is not. Same as ^^.
+          autoRotate: true,
+        },
+        // Manually set title to null to avoid the title being automatically displayed in v4.1.49+.
+        title: null
+      }
     if (isS(typ)) scale.type = fixScaleType(typ) as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
@@ -1119,6 +1125,16 @@ export const
             }
           }
           chart.render()
+          // HACK: Prevent font descenders from overflow clipping.
+          const svgHeight = el.querySelector('svg')?.clientHeight
+          if (svgHeight) {
+            el.querySelectorAll('text').forEach(text => {
+              const y = Number(text.getAttribute('y'))
+              if (isNaN(y)) return
+              if (svgHeight - y > 12) return
+              text.setAttribute('y', String(y - 3))
+            })
+          }
           // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
           // same as after Layout phase. If not, rerender the plot again.
           setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)

@@ -14,6 +14,7 @@ generate:
 	./venv/bin/python showcase.py
 
 visual-regression:
+	rm -rf test/compare test/diff
 	./venv/bin/python showcase.py --test
 
 test-result:
