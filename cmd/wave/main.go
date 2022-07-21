@@ -142,8 +142,6 @@ func main() {
 		}
 	}
 
-	fmt.Printf("params: %v", auth.URLParameters)
-
 	if version {
 		fmt.Printf("Wave Daemon\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
 		return
