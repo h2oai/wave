@@ -51,69 +51,81 @@ type AnnotatorTagsProps = {
   activeTag?: S
 }
 
-const css = stylesheet({
-  title: {
-    color: cssVar('$neutralPrimary'),
-    marginBottom: 8
-  },
-  tags: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    marginTop: 1
-  },
-  tag: {
-    cursor: 'pointer',
-    padding: padding(4, 16),
-    textAlign: 'center',
-    borderRadius: 4,
-  },
-  tagWrapper: {
-    marginRight: 4,
-    marginBottom: 4,
-    border: border(2, cssVar('$card')),
-    padding: 1,
-  },
-  mark: {
-    position: 'relative',
-    padding: padding(2, 0),
-  },
-  firstMark: {
-    paddingLeft: 4,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4
-  },
-  lastMark: {
-    paddingRight: 4,
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4
-  },
-  content: {
-    margin: margin(12, 0),
-    paddingTop: 2,
-    lineHeight: '26px'
-  },
-  removeIcon: {
-    cursor: 'pointer',
-    position: 'absolute',
-    left: -8,
-    top: -7,
-    transform: 'rotate(45deg)', //HACK: Fluent doesn't provide rounded X icon so rotate the "+" one.
-    fontSize: 16,
-    fontWeight: 100,
-    lineHeight: 'initial',
-    color: cssVar('$neutralPrimary'),
-    zIndex: 1
-  },
-  iconUnderlay: {
-    width: 10,
-    height: 10,
-    position: 'absolute',
-    left: -5,
-    top: -3,
-    background: cssVar('$card'),
-  },
-  readonly: { pointerEvents: 'none' }
-})
+const
+  css = stylesheet({
+    title: {
+      color: cssVar('$neutralPrimary'),
+      marginBottom: 8
+    },
+    tags: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      marginTop: 1
+    },
+    tag: {
+      cursor: 'pointer',
+      padding: padding(4, 16),
+      textAlign: 'center',
+      borderRadius: 4,
+    },
+    tagWrapper: {
+      marginRight: 4,
+      marginBottom: 4,
+      border: border(2, cssVar('$card')),
+      padding: 1,
+    },
+    mark: {
+      position: 'relative',
+      padding: padding(2, 0),
+    },
+    firstMark: {
+      paddingLeft: 4,
+      borderTopLeftRadius: 4,
+      borderBottomLeftRadius: 4
+    },
+    lastMark: {
+      paddingRight: 4,
+      borderTopRightRadius: 4,
+      borderBottomRightRadius: 4
+    },
+    content: {
+      margin: margin(12, 0),
+      paddingTop: 2,
+      lineHeight: '26px'
+    },
+    removeIcon: {
+      cursor: 'pointer',
+      position: 'absolute',
+      left: -8,
+      top: -7,
+      transform: 'rotate(45deg)', //HACK: Fluent doesn't provide rounded X icon so rotate the "+" one.
+      fontSize: 16,
+      fontWeight: 100,
+      lineHeight: 'initial',
+      color: cssVar('$neutralPrimary'),
+      zIndex: 1
+    },
+    iconUnderlay: {
+      width: 10,
+      height: 10,
+      position: 'absolute',
+      left: -5,
+      top: -3,
+      background: cssVar('$card'),
+    },
+    readonly: { pointerEvents: 'none' }
+  }),
+  annotateNumbersAroundToken = (tokenIdx: U, tokens: TokenProps[], activeTag?: S) => {
+    let charRightIdx = tokenIdx + 1, charLeftIdx = tokenIdx - 1
+    while (charRightIdx <= tokens.length - 1 && !isNaN(+tokens[charRightIdx].text)) {
+      tokens[charRightIdx].tag = activeTag
+      charRightIdx++
+    }
+    while (charLeftIdx >= 0 && !isNaN(+tokens[charLeftIdx].text)) {
+      tokens[charLeftIdx].tag = activeTag
+      charLeftIdx--
+    }
+  }
 
 export
   const AnnotatorTags = ({ tags, activateTag, activeTag }: AnnotatorTagsProps) => (
@@ -197,39 +209,25 @@ export
           max = smartSelection ? Math.max(startElProps.end, endElProps.end) : Math.max(startElProps.key, endElProps.key),
           min = smartSelection ? Math.min(startElProps.start, endElProps.start) : Math.min(startElProps.key, endElProps.key),
           // Remove new line characters because Firefox does count them.
-          selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, ""),
-          annotateNumbersAroundToken = (tokenIdx: U) => {
-            let charRightIdx = tokenIdx + 1, charLeftIdx = tokenIdx - 1
-            while (charRightIdx <= tokens.length - 1 && /[0-9]/g.test(tokens[charRightIdx].text)) {
-              tokens[charRightIdx].tag = activeTag
-              charRightIdx++
-            }
-            while (charLeftIdx >= 0 && /[0-9]/g.test(tokens[charLeftIdx].text)) {
-              tokens[charLeftIdx].tag = activeTag
-              charLeftIdx--
-            }
-          }
+          selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
 
         for (let i = min; i <= max; i++) {
-          // HACK: Ignore characters returned when user hovers over the part of the prev/next character
+          // Ignore characters returned when user hovers over the part of the prev/next character.
           if (!smartSelection && selectedStr && max - min + 1 !== selectedStr.length) {
-            // Check whether the first character highlighted by the browser corresponds with the character returned by the mouse event
+            // Check whether the first character highlighted by the browser corresponds with the character returned by the mouse event.
             if (i === min && selectedStr.charAt(0) !== tokens[i].text) continue
-            // Check whether the last character highlighted by the browser corresponds with the character returned by the mouse event
+            // Check whether the last character highlighted by the browser corresponds with the character returned by the mouse event.
             if (i === max && selectedStr.charAt(selectedStr.length - 1) !== tokens[i].text) continue
           }
           tokens[i].tag = activeTag
         }
 
-        // Smart selection for numbers.
         if (smartSelection) {
-          if (/[0-9]/g.test(tokens[startElProps.key].text)) {
-            // Smart select around selection start token.
-            annotateNumbersAroundToken(startElProps.key)
+          if (!isNaN(+tokens[startElProps.key].text)) {
+            annotateNumbersAroundToken(startElProps.key, tokens, activeTag)
           }
-          if (startElProps.key !== endElProps.key && /[0-9]/g.test(tokens[endElProps.key].text)) {
-            // Smart select around selection end token.
-            annotateNumbersAroundToken(endElProps.key)
+          if (startElProps.key !== endElProps.key && !isNaN(+tokens[endElProps.key].text)) {
+            annotateNumbersAroundToken(endElProps.key, tokens, activeTag)
           }
         }
 
@@ -252,7 +250,7 @@ export
       },
       getMark = (text: S, idx: U, tag: S) => {
         const color = tagColorMap.get(tag)
-        // Handle invalid tags entered by user
+        // Handle invalid tags entered by user.
         if (!color) return text
         const
           removeIconStyle = { visibility: shouldShowRemoveIcon(idx, tag) ? 'visible' : 'hidden' },

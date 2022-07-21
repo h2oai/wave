@@ -23,7 +23,7 @@ async def serve(q: Q):
                 ],
                 items=[
                     ui.text_annotator_item(text='Killer Mike', tag='p'),
-                    ui.text_annotator_item(text=' is a member, of the hip hop supergroup '),  # no tag
+                    ui.text_annotator_item(text=' is a member123, of the hip hop (supergroup) '),  # no tag
                     ui.text_annotator_item(text='Run the Jewels', tag='o'),
                 ],
             ),
