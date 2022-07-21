@@ -97,3 +97,51 @@ q.page['form'] = ui.form_card(
     items=[ui.text(sample_markdown)]
 )
 ```
+
+Note that markdown interprets tabs as code blocks (renders text in monospace font) so that's why you should avoid them.
+
+```py
+def get_markdown():
+    # Remove tabs from your string to prevent undesired effects.
+    sample_markdown = '''
+The **quick** _brown_ fox jumped over the lazy dog.
+
+Block quote:
+
+> The quick brown fox jumped over the lazy dog.
+
+Unordered list:
+
+- The quick brown fox jumped over the lazy dog.
+- The quick brown fox jumped over the lazy dog.
+- The quick brown fox jumped over the lazy dog.
+
+Ordered list:
+
+1. The quick brown fox jumped over the lazy dog.
+1. The quick brown fox jumped over the lazy dog.
+1. The quick brown fox jumped over the lazy dog.
+
+Image:
+
+![Monty Python](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg)
+
+Links:
+
+Here's a [link to an image](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg).
+
+Table:
+
+| Column 1 | Column 2 | Column 3 |
+| -------- | -------- | -------- |
+| Item 1   | Item 2   | Item 3   |
+| Item 1   | Item 2   | Item 3   |
+| Item 1   | Item 2   | Item 3   |
+    '''
+    return sample_markdown
+
+q.page['form'] = ui.form_card(
+    box='1 1 4 10',
+    items=[ui.text(get_markdown())]
+)
+```
