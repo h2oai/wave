@@ -74,6 +74,7 @@ export const
           return result
         })
       },
+      byPassTextUpdate = React.useRef(true),
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: U, value?: S) => {
         if (!option && value) {
           const opt: Fluent.IComboBoxOption = { key: value, text: value }
@@ -87,13 +88,24 @@ export const
           const v = option?.text || value || ''
           wave.args[m.name] = v
           setText(v)
+          // We have to set m.value to a different value (undefined in this case) because a Wave app might
+          // try to update the "value" prop with same value and it won't trigger the useEffect because "m.value" didn't change
           m.value = undefined
+          // We use this flag to prevent the line above from triggering the useEffect with "m.value" in the dependency array
+          byPassTextUpdate.current = true
         }
         if (m.trigger) wave.push()
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m?.value || m?.values || null }, [])
-    React.useEffect(() => { setText(m.value) }, [m.value])
+    React.useEffect(() => { wave.args[m.name] = m?.value || m?.values || null }, [m.value, m.values])
+    React.useEffect(() => {
+      if (!byPassTextUpdate.current) {
+        setText(m.value)
+      }
+      // Reset the flag so the next change to "m.value" can be passed down to "setText". This change will come from the Wave app
+      // by setting it dynamically e.g. q.page['form'].items[0].combobox.value = 'New Value'
+      byPassTextUpdate.current = false
+    }, [m.value, m.name])
     React.useEffect(() => { setSelected(m.values || []) }, [m.values])
     React.useEffect(() => { setOptions(mapChoices) }, [m.choices, mapChoices])
 
