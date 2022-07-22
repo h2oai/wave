@@ -95,4 +95,54 @@ describe('Combobox.tsx', () => {
     fireEvent.click(getByText('Choice4'))
     expect(wave.args[name]).toEqual([])
   })
+
+  describe('Prop changes - update values dynamically from Wave app', () => {
+    it('Display newly provided "value" prop in the combobox input', () => {
+      const { getByRole, getByText, rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'Choice1' }} />)
+      expect(getByRole('combobox')).toHaveValue('Choice1')
+
+      rerender(<XCombobox model={{ ...comboboxProps, value: 'Choice2' }} />)
+      expect(getByRole('combobox')).toHaveValue('Choice2')
+
+      fireEvent.click(getByRole('presentation', { hidden: true }))
+      fireEvent.click(getByText('Choice3'))
+      expect(getByRole('combobox')).toHaveValue('Choice3')
+
+      rerender(<XCombobox model={{ ...comboboxProps, value: 'Choice2' }} />)
+      expect(getByRole('combobox')).toHaveValue('Choice2')
+    })
+
+    it('Display newly provided "values" prop in the combobox input (multivalued)', () => {
+      const { getByRole, getByText, rerender } = render(<XCombobox model={{ ...comboboxProps, values: ['Choice1', 'Choice2'] }} />)
+      expect(getByRole('combobox')).toHaveValue('Choice1, Choice2')
+
+      rerender(<XCombobox model={{ ...comboboxProps, values: ['Choice3'] }} />)
+      expect(getByRole('combobox')).toHaveValue('Choice3')
+
+      fireEvent.click(getByRole('presentation', { hidden: true }))
+      fireEvent.click(getByText('Choice2'))
+      fireEvent.blur(getByRole('presentation', { hidden: true }))
+      expect(getByRole('combobox')).toHaveValue('Choice2, Choice3')
+
+      rerender(<XCombobox model={{ ...comboboxProps, values: ['Choice1', 'Choice2'] }} />)
+      expect(getByRole('combobox')).toHaveValue('Choice1, Choice2')
+    })
+
+    it('Updates wave.args when "value" prop changes', () => {
+      const { rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'Choice1' }} />)
+      expect(wave.args[name]).toEqual('Choice1')
+
+      rerender(<XCombobox model={{ ...comboboxProps, value: 'Choice2' }} />)
+      expect(wave.args[name]).toEqual('Choice2')
+    })
+
+    it('Updates wave.args when "values" prop changes (multivalued)', () => {
+      const { rerender } = render(<XCombobox model={{ ...comboboxProps, values: ['Choice1'] }} />)
+      expect(wave.args[name]).toEqual(['Choice1'])
+
+      rerender(<XCombobox model={{ ...comboboxProps, values: ['Choice2'] }} />)
+      expect(wave.args[name]).toEqual(['Choice2'])
+    })
+
+  })
 })
