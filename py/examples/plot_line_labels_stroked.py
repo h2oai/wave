@@ -1,4 +1,4 @@
-# Plot / Line / Labels/ Stroked
+# Plot / Line / Labels / Stroked
 # Customize label rendering: add a subtle outline to labels to improve readability.
 # #plot
 # ---

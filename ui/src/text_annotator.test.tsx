@@ -6,7 +6,12 @@ import { wave } from './ui'
 const
   name = 'textAnnotator',
   items = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }],
-  annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
+  annotatorProps: TextAnnotator = {
+    name,
+    title: name,
+    tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }, { name: 'tag2', label: 'Tag 2', color: '$blue' }],
+    items
+  },
   getSelectionMock = jest.fn(),
   pushMock = jest.fn()
 
@@ -37,12 +42,12 @@ describe('TextAnnotator.tsx', () => {
     expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
-  it('Sets correct args on annotate', () => {
+  it('Sets correct args on annotate from left to right', () => {
     const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
     fireEvent.click(getByText('Tag 1'))
-    fireEvent.mouseDown(getByText('Hello'))
-    fireEvent.mouseUp(getByText('there'))
+    fireEvent.mouseDown(getByText('H'))
+    fireEvent.mouseUp(getByText('h'))
 
     expect(wave.args[name]).toMatchObject([
       { text: 'Hello there', tag: 'tag1' },
@@ -52,12 +57,106 @@ describe('TextAnnotator.tsx', () => {
     ])
   })
 
+  it('Sets correct args on annotate from right to left', () => {
+    const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('h'))
+    fireEvent.mouseUp(getByText('H'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello there', tag: 'tag1' },
+      { text: '! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+    ])
+  })
+
+  it('Sets correct args on annotate when word is preceeded by special character', () => {
+    const customItems = [{ text: 'Hello (there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('h'))
+    fireEvent.mouseUp(getByText('h'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello (' },
+      { text: 'there', tag: 'tag1' },
+      { text: '! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+    ])
+  })
+
+  it('Sets correct args on annotate when text starts with numbers', () => {
+    const customItems = [{ text: '123Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('1'))
+    fireEvent.mouseUp(getByText('1'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: '123', tag: 'tag1' },
+      { text: 'Hello there! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+    ])
+  })
+
+  it('Sets correct args on annotate when text ends with numbers', () => {
+    const customItems = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day123' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('3'))
+    fireEvent.mouseUp(getByText('3'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello there! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' },
+      { text: '123', tag: 'tag1' },
+    ])
+  })
+
+  it('Sets correct args on annotate when selection starts and ends with numbers', () => {
+    const customItems = [{ text: '123Hello there456! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }]
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+    fireEvent.click(getByText('Tag 1'))
+    fireEvent.mouseDown(getByText('2'))
+    fireEvent.mouseUp(getByText('4'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: '123Hello there456', tag: 'tag1' },
+      { text: '! ' },
+      { text: 'Pretty good', tag: 'tag1' },
+      { text: ' day' }
+    ])
+  })
+
+  it('Sets correct args on annotate when replacing selection', () => {
+    const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
+
+    fireEvent.click(getByText('Tag 2'))
+    fireEvent.mouseDown(getByText('P'))
+    fireEvent.mouseUp(getByText('P'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello there! ' },
+      { text: 'Pretty', tag: 'tag2' },
+      { text: ' good', tag: 'tag1' },
+      { text: ' day' }])
+  })
+
   it('Removes browser text selection highlight after annotate', () => {
     const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
     fireEvent.click(getByText('Tag 1'))
-    fireEvent.mouseDown(getByText('Hello'))
-    fireEvent.mouseUp(getByText('there'))
+    fireEvent.mouseDown(getByText('H'))
+    fireEvent.mouseUp(getByText('h'))
 
     expect(getSelectionMock).toHaveBeenCalled()
   })
@@ -73,8 +172,8 @@ describe('TextAnnotator.tsx', () => {
     const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
 
     fireEvent.click(getByText('Tag 1'))
-    fireEvent.mouseDown(getByText('Hello'))
-    fireEvent.mouseUp(getByText('there'))
+    fireEvent.mouseDown(getByText('H'))
+    fireEvent.mouseUp(getByText('h'))
 
     expect(pushMock).toHaveBeenCalled()
   })
@@ -82,16 +181,13 @@ describe('TextAnnotator.tsx', () => {
   it('Shows remove icon on hover', () => {
     const { container, getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
-    const removeIcon = container.querySelector('i')
-    expect(removeIcon).not.toBeVisible()
-    const mark1 = getByText('good')
-    fireEvent.mouseOver(mark1)
-    expect(removeIcon).toBeVisible()
-    fireEvent.mouseOut(mark1)
-    expect(removeIcon).not.toBeVisible()
-    const mark2 = getByText('Pretty')
-    fireEvent.mouseOver(mark2)
-    expect(removeIcon).toBeVisible()
+    expect(container.querySelector('i')).not.toBeVisible()
+    fireEvent.mouseOver(getByText('g'))
+    expect(container.querySelector('i')).toBeVisible()
+    fireEvent.mouseOut(getByText('g'))
+    expect(container.querySelector('i')).not.toBeVisible()
+    fireEvent.mouseOver(getByText('P'))
+    expect(container.querySelector('i')).toBeVisible()
   })
 
   describe('readonly', () => {
@@ -99,6 +195,55 @@ describe('TextAnnotator.tsx', () => {
       const { container } = render(<XTextAnnotator model={{ ...annotatorProps, readonly: true }} />)
 
       expect(container.querySelector('[class*=activeTag]')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('smart selection off', () => {
+    it('Sets correct args on annotate from left to right', () => {
+      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.click(getByRole('switch'))
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('H'))
+      fireEvent.mouseUp(getByText('h'))
+
+      expect(wave.args[name]).toMatchObject([
+        { text: 'Hello th', tag: 'tag1' },
+        { text: 'ere! ' },
+        { text: 'Pretty good', tag: 'tag1' },
+        { text: ' day' },
+      ])
+    })
+
+    it('Sets correct args on annotate from right to left', () => {
+      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.click(getByRole('switch'))
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('h'))
+      fireEvent.mouseUp(getByText('H'))
+
+      expect(wave.args[name]).toMatchObject([
+        { text: 'Hello th', tag: 'tag1' },
+        { text: 'ere! ' },
+        { text: 'Pretty good', tag: 'tag1' },
+        { text: ' day' },
+      ])
+    })
+
+    it('Sets correct args on annotate when replacing selection', () => {
+      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.click(getByText('Tag 2'))
+      fireEvent.click(getByRole('switch'))
+      fireEvent.mouseDown(getByText('P'))
+      fireEvent.mouseUp(getByText('g'))
+
+      expect(wave.args[name]).toMatchObject([
+        { text: 'Hello there! ' },
+        { text: 'Pretty g', tag: 'tag2' },
+        { text: 'ood', tag: 'tag1' },
+        { text: ' day' }])
     })
   })
 })

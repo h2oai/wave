@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
+import { stylesheet, style } from 'typestyle'
 import { border, clas, cssVar, getContrast, margin, padding } from './theme'
 import { wave } from './ui'
 
@@ -43,71 +43,92 @@ export interface TextAnnotator {
   readonly?: B
 }
 
-const css = stylesheet({
-  title: {
-    color: cssVar('$neutralPrimary'),
-    marginBottom: 8
-  },
-  tags: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    marginTop: 1
-  },
-  tag: {
-    padding: padding(4, 16),
-    textAlign: 'center',
-    borderRadius: 4,
-    cursor: 'pointer'
-  },
-  tagWrapper: {
-    marginRight: 4,
-    marginBottom: 4,
-    border: border(2, cssVar('$card')),
-    padding: 1
-  },
-  mark: {
-    position: 'relative',
-    padding: padding(2, 0),
-  },
-  firstMark: {
-    paddingLeft: 4,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4
-  },
-  lastMark: {
-    paddingRight: 4,
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4
-  },
-  content: {
-    margin: margin(12, 0),
-    paddingTop: 2
-  },
-  removeIcon: {
-    cursor: 'pointer',
-    position: 'absolute',
-    left: -8,
-    top: -7,
-    transform: 'rotate(45deg)', //HACK: Fluent doesn't provide rounded X icon so rotate the "+" one.
-    fontSize: 16,
-    fontWeight: 100,
-    lineHeight: 'initial',
-    color: cssVar('$neutralPrimary'),
-    zIndex: 1
-  },
-  iconUnderlay: {
-    width: 10,
-    height: 10,
-    position: 'absolute',
-    left: -5,
-    top: -3,
-    background: cssVar('$card')
-  },
-  readonly: { pointerEvents: 'none' }
-})
+type TokenProps = TextAnnotatorItem & { start: U, end: U }
+type TokenMouseEventProps = { key: U, start: U, end: U }
+type AnnotatorTagsProps = {
+  tags: TextAnnotatorTag[],
+  activateTag: (name: S) => () => void,
+  activeTag?: S
+}
+
+const
+  css = stylesheet({
+    title: {
+      color: cssVar('$neutralPrimary'),
+      marginBottom: 8
+    },
+    tags: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      marginTop: 1
+    },
+    tag: {
+      cursor: 'pointer',
+      padding: padding(4, 16),
+      textAlign: 'center',
+      borderRadius: 4,
+    },
+    tagWrapper: {
+      marginRight: 4,
+      marginBottom: 4,
+      border: border(2, cssVar('$card')),
+      padding: 1,
+    },
+    mark: {
+      position: 'relative',
+      padding: padding(2, 0),
+    },
+    firstMark: {
+      paddingLeft: 4,
+      borderTopLeftRadius: 4,
+      borderBottomLeftRadius: 4
+    },
+    lastMark: {
+      paddingRight: 4,
+      borderTopRightRadius: 4,
+      borderBottomRightRadius: 4
+    },
+    content: {
+      margin: margin(12, 0),
+      paddingTop: 2,
+      lineHeight: '26px'
+    },
+    removeIcon: {
+      cursor: 'pointer',
+      position: 'absolute',
+      left: -8,
+      top: -7,
+      transform: 'rotate(45deg)', //HACK: Fluent doesn't provide rounded X icon so rotate the "+" one.
+      fontSize: 16,
+      fontWeight: 100,
+      lineHeight: 'initial',
+      color: cssVar('$neutralPrimary'),
+      zIndex: 1
+    },
+    iconUnderlay: {
+      width: 10,
+      height: 10,
+      position: 'absolute',
+      left: -5,
+      top: -3,
+      background: cssVar('$card'),
+    },
+    readonly: { pointerEvents: 'none' }
+  }),
+  annotateNumbersAroundToken = (tokenIdx: U, tokens: TokenProps[], activeTag?: S) => {
+    let charRightIdx = tokenIdx + 1, charLeftIdx = tokenIdx - 1
+    while (charRightIdx <= tokens.length - 1 && !isNaN(+tokens[charRightIdx].text)) {
+      tokens[charRightIdx].tag = activeTag
+      charRightIdx++
+    }
+    while (charLeftIdx >= 0 && !isNaN(+tokens[charLeftIdx].text)) {
+      tokens[charLeftIdx].tag = activeTag
+      charLeftIdx--
+    }
+  }
 
 export
-  const AnnotatorTags = ({ tags, activateTag, activeTag }: { tags: TextAnnotatorTag[], activateTag: (name: S) => () => void, activeTag?: S }) => (
+  const AnnotatorTags = ({ tags, activateTag, activeTag }: AnnotatorTagsProps) => (
     <div className={css.tags}>
       {
         tags.map(({ name, color, label }) => {
@@ -130,31 +151,28 @@ export
       }
     </div>
   ),
-  XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
+  XTextAnnotator = ({ model: { name, title, tags, items, trigger, readonly } }: { model: TextAnnotator }) => {
     const
-      [startIdx, setStartIdx] = React.useState<U | null>(null),
-      [activeTag, setActiveTag] = React.useState<S | undefined>(model.readonly ? undefined : model.tags[0]?.name),
+      [activeTag, setActiveTag] = React.useState<S | undefined>(readonly ? undefined : tags[0]?.name),
       [hoveredTagIdx, setHoveredTagIdx] = React.useState<U | null>(),
-      tagColorMap = model.tags.reduce((map, t) => {
-        map.set(t.name, t.color)
-        return map
-      }, new Map<S, S>()),
-      [tokens, setTokens] = React.useState(model.items.reduce((arr, { text, tag }) => {
-        // Split by any non-letter character.
-        text.split(/(?=[^a-z])/ig).forEach(textItem => {
-          if (/[^a-z]/i.test(textItem)) {
-            arr.push({ text: textItem.substring(0, 1), tag })
-            arr.push({ text: textItem.substring(1), tag })
-          } else {
-            arr.push({ text: textItem, tag })
-          }
+      [smartSelection, setSmartSelection] = React.useState(true),
+      startElPropsRef = React.useRef<TokenMouseEventProps>(),
+      tagColorMap = new Map(tags.map(t => [t.name, t.color])),
+      [tokens, setTokens] = React.useState(items.reduce((tokenArr, { text, tag }) => {
+        // Split by any non-letter.
+        text.split(/([^a-z])/ig).filter(word => word !== '').forEach(textItem => {
+          const
+            start = tokenArr.length === 0 ? 0 : tokenArr[tokenArr.length - 1].end + 1,
+            end = tokenArr.length === 0 ? textItem.length - 1 : tokenArr[tokenArr.length - 1].end + textItem.length
+
+          tokenArr.push(...textItem.split('').map(char => ({ text: char, tag, start, end })))
         })
-        return arr
-      }, [] as TextAnnotatorItem[])),
+        return tokenArr
+      }, [] as TokenProps[])),
       submitWaveArgs = () => {
         let currentText = ''
         let currentTag: S | undefined
-        wave.args[model.name] = tokens.reduce((arr, { text, tag }, idx, tokens) => {
+        wave.args[name] = tokens.reduce((arr, { text, tag }, idx, tokens) => {
           if (idx === tokens.length - 1) {
             if (tag !== currentTag) {
               arr.push({ text: currentText, tag: currentTag })
@@ -173,27 +191,50 @@ export
           currentTag = tag
           return arr
         }, [] as TextAnnotatorItem[]) as unknown as Rec[]
-        if (model.trigger) wave.push()
+        if (trigger) wave.push()
       },
-      activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
+      activateTag = (tagName: S) => () => setActiveTag(tagName),
       removeAnnotation = (idx: U) => (ev: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         ev.stopPropagation() // Stop event bubbling so that annotate is not called.
         const tagToRemove = tokens[idx].tag
         for (let i = idx; tokens[i]?.tag === tagToRemove; i++) tokens[i].tag = undefined
+        startElPropsRef.current = undefined
         setTokens([...tokens])
         submitWaveArgs()
       },
-      updateStartIdx = (startIdx: U) => () => setStartIdx(startIdx),
-      annotate = (end: U) => () => {
-        const start = startIdx
-        if (start === null) return
+      annotate = (endElProps: TokenMouseEventProps) => {
+        if (!startElPropsRef.current) return
+        const
+          startElProps = startElPropsRef.current,
+          max = smartSelection ? Math.max(startElProps.end, endElProps.end) : Math.max(startElProps.key, endElProps.key),
+          min = smartSelection ? Math.min(startElProps.start, endElProps.start) : Math.min(startElProps.key, endElProps.key),
+          // Remove new line characters because Firefox does count them.
+          selectedStr = window.getSelection()?.toString().replace(/\r?\n|\r/g, "")
 
-        const max = Math.max(start, end)
-        for (let i = Math.min(start, end); i <= max; i++) tokens[i].tag = activeTag
+        for (let i = min; i <= max; i++) {
+          // Ignore characters returned when user hovers over the part of the prev/next character.
+          if (!smartSelection && selectedStr && max - min + 1 !== selectedStr.length) {
+            // Check whether the first character highlighted by the browser corresponds with the character returned by the mouse event.
+            if (i === min && selectedStr.charAt(0) !== tokens[i].text) continue
+            // Check whether the last character highlighted by the browser corresponds with the character returned by the mouse event.
+            if (i === max && selectedStr.charAt(selectedStr.length - 1) !== tokens[i].text) continue
+          }
+          tokens[i].tag = activeTag
+        }
 
+        if (smartSelection) {
+          if (!isNaN(+tokens[startElProps.key].text)) {
+            annotateNumbersAroundToken(startElProps.key, tokens, activeTag)
+          }
+          if (startElProps.key !== endElProps.key && !isNaN(+tokens[endElProps.key].text)) {
+            annotateNumbersAroundToken(endElProps.key, tokens, activeTag)
+          }
+        }
+
+        setTokens([...tokens])
         submitWaveArgs()
-        setStartIdx(null)
         window.getSelection()?.removeAllRanges()
+        startElPropsRef.current = undefined
       },
       onMarkHover = (idx: U) => () => setHoveredTagIdx(idx),
       onMarkMouseOut = () => setHoveredTagIdx(null),
@@ -209,7 +250,7 @@ export
       },
       getMark = (text: S, idx: U, tag: S) => {
         const color = tagColorMap.get(tag)
-        // Handle invalid tags entered by user
+        // Handle invalid tags entered by user.
         if (!color) return text
         const
           removeIconStyle = { visibility: shouldShowRemoveIcon(idx, tag) ? 'visible' : 'hidden' },
@@ -227,22 +268,48 @@ export
             <span style={removeIconStyle as React.CSSProperties} className={css.iconUnderlay}></span>
           </mark>
         )
+      },
+      handleMouseDown = (startElProps: TokenMouseEventProps) => () => startElPropsRef.current = startElProps,
+      handleMouseUp = (endElProps: TokenMouseEventProps) => () => annotate(endElProps),
+      handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
+        const nodeName = (ev.relatedTarget as any)?.nodeName
+        if (startElPropsRef.current !== undefined && nodeName !== 'P' && nodeName !== 'MARK') annotate(endElProps) // nodeName prop is not typed yet
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] }, [])
+    React.useEffect(() => { wave.args[name] = items as unknown as Rec[] }, [])
 
     return (
-      <div data-test={model.name} className={model.readonly ? css.readonly : ''}>
-        <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
-        <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
-        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>
-          {
-            tokens.map(({ text, tag }, idx) => (
-              <span key={idx} onMouseDown={updateStartIdx(idx)} onMouseUp={annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
-            ))
-          }
-        </div>
+      <div data-test={name} className={readonly ? css.readonly : ''}>
+        <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>
+        <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
+        <Fluent.Toggle
+          data-test='smart-selection'
+          label='Smart selection'
+          defaultChecked={smartSelection}
+          onChange={() => setSmartSelection(prevSelection => !prevSelection)}
+          onText="On"
+          offText="Off"
+          inlineLabel
+        />
+        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
+          tokens.map(({ start, end, text, tag }, idx) => {
+            const activeColor = activeTag ? tagColorMap.get(activeTag) : undefined
+            return (
+              // Use paragraph instead of span to support text highlight.
+              <p
+                key={idx}
+                onMouseDown={handleMouseDown({ key: idx, start, end })}
+                onMouseUp={handleMouseUp({ key: idx, start, end })}
+                onMouseLeave={handleMouseLeave({ key: idx, start, end })}
+                style={{ display: 'inline' }}
+                className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
+              >
+                {tag ? getMark(text, idx, tag) : text}
+              </p>
+            )
+          })
+        }</div>
       </div>
     )
   }
