@@ -487,6 +487,7 @@ func (h *RefreshHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	token, err := h.auth.ensureValidOAuth2Token(r.Context(), session.token)
 	if err != nil {
+		// Purge session and reload clients if refresh not successful?
 		echo(Log{"t": "refresh_session", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
