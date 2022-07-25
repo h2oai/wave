@@ -117,7 +117,6 @@ To enable OpenID Connect, pass the following flags when starting the Wave server
 
 Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](api/server#auth) class for details):
 
-
 ```py
 from h2o_wave import Q, main, app
 
@@ -127,12 +126,16 @@ async def serve(q: Q):
     print(q.auth.access_token)
 ```
 
-:::caution
-Note that access token is not refreshed automatically and it's not suited for long running jobs. The lifespan of a token
-depends on a provider settings but usually it's short. Access token is refreshed each time user performs an action i.e.
-the query handler `serve()` is called.
-:::
+Note that access token is not refreshed automatically and it's not suited for long running jobs. The lifespan of a token depends on a provider settings but usually it's short. Access token is refreshed each time user performs an action i.e. the query handler `serve()` is called. However, if your UI is blocked (no user interacitons that could automatically refresh the token) and you are performing a long-running job, and still need fresh access token, you can call `force_token_refresh` function that refreshes and sets the token explicitly.
 
+```py
+from h2o_wave import Q, main, app
+
+@app('/example')
+async def serve(q: Q):
+    # Refreshes the token and makes it available in q.auth.access_token.
+    q.auth.force_token_refresh()
+```
 
 ## App Server API Access Keys
 
