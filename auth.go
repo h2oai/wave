@@ -27,6 +27,7 @@ import (
 
 	"github.com/coreos/go-oidc"
 	"github.com/google/uuid"
+	"github.com/h2oai/wave/pkg/keychain"
 	"golang.org/x/oauth2"
 )
 
@@ -458,4 +459,41 @@ func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken
 	redirectURL.RawQuery = query.Encode()
 
 	http.Redirect(w, r, redirectURL.String(), http.StatusFound)
+}
+
+// Handles token refreshes.
+type RefreshHandler struct {
+	auth     *Auth
+	keychain *keychain.Keychain
+}
+
+func newRefreshHandler(auth *Auth, keychain *keychain.Keychain) http.Handler {
+	return &RefreshHandler{auth, keychain}
+}
+
+func (h *RefreshHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !h.keychain.Guard(w, r) { // API
+		return
+	}
+
+	sessionID := r.Header.Get("Wave-Session-ID")
+	session, ok := h.auth.get(sessionID)
+
+	if !ok {
+		echo(Log{"t": "refresh_session", "error": "session unavailable"})
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	token, err := h.auth.ensureValidOAuth2Token(r.Context(), session.token)
+	if err != nil {
+		echo(Log{"t": "refresh_session", "error": err.Error()})
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	session.token = token
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Wave-Access-Token", token.AccessToken)
+	w.Header().Set("Wave-Refresh-Token", token.RefreshToken)
 }
