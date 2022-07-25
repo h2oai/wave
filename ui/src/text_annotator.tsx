@@ -272,7 +272,8 @@ export
       handleMouseDown = (startElProps: TokenMouseEventProps) => () => startElPropsRef.current = startElProps,
       handleMouseUp = (endElProps: TokenMouseEventProps) => () => annotate(endElProps),
       handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
-        if (startElPropsRef.current !== undefined && (ev.relatedTarget as any)?.nodeName !== 'P') annotate(endElProps) // nodeName prop is not typed yet
+        const nodeName = (ev.relatedTarget as any)?.nodeName
+        if (startElPropsRef.current !== undefined && nodeName !== 'P' && nodeName !== 'MARK') annotate(endElProps) // nodeName prop is not typed yet
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

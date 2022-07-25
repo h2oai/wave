@@ -6,7 +6,12 @@ import { wave } from './ui'
 const
   name = 'textAnnotator',
   items = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }],
-  annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
+  annotatorProps: TextAnnotator = {
+    name,
+    title: name,
+    tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }, { name: 'tag2', label: 'Tag 2', color: '$blue' }],
+    items
+  },
   getSelectionMock = jest.fn(),
   pushMock = jest.fn()
 
@@ -132,6 +137,20 @@ describe('TextAnnotator.tsx', () => {
     ])
   })
 
+  it('Sets correct args on annotate when replacing selection', () => {
+    const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
+
+    fireEvent.click(getByText('Tag 2'))
+    fireEvent.mouseDown(getByText('P'))
+    fireEvent.mouseUp(getByText('P'))
+
+    expect(wave.args[name]).toMatchObject([
+      { text: 'Hello there! ' },
+      { text: 'Pretty', tag: 'tag2' },
+      { text: ' good', tag: 'tag1' },
+      { text: ' day' }])
+  })
+
   it('Removes browser text selection highlight after annotate', () => {
     const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
@@ -210,6 +229,21 @@ describe('TextAnnotator.tsx', () => {
         { text: 'Pretty good', tag: 'tag1' },
         { text: ' day' },
       ])
+    })
+
+    it('Sets correct args on annotate when replacing selection', () => {
+      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+
+      fireEvent.click(getByText('Tag 2'))
+      fireEvent.click(getByRole('switch'))
+      fireEvent.mouseDown(getByText('P'))
+      fireEvent.mouseUp(getByText('g'))
+
+      expect(wave.args[name]).toMatchObject([
+        { text: 'Hello there! ' },
+        { text: 'Pretty g', tag: 'tag2' },
+        { text: 'ood', tag: 'tag1' },
+        { text: ' day' }])
     })
   })
 })
