@@ -87,6 +87,8 @@ Usage of ./waved:
         print version and exit
   -web-dir string
         directory to serve web assets from (default "./www")
+  -verify-tls
+        do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION
 ```
 
 Supported size units (case insensitive):
@@ -139,6 +141,7 @@ H2O_WAVE_PRIVATE_DIR [2]
 H2O_WAVE_TLS_CERT_FILE
 H2O_WAVE_TLS_KEY_FILE
 H2O_WAVE_WEB_DIR
+H2O_WAVE_VERIFY_TLS
 ```
 
 Notes:
@@ -146,9 +149,17 @@ Notes:
 - [1] `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
 - [2] Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
 
-## Public/Private dirs
+### Public/Private dirs
 
 Wave server serves whole directories as they are. This means that these directories are listable by default. If you wish to turn off this behavior, simply put an empty file called `index.html` into the folder you wish to not list.
+
+### TLS verification
+
+During development, you might want to test out TLS encryption, e.g. communication between Wave server and Keycloak. The easiest thing to do is to generate a self-signed certificate. However, Wave server verifies certificates for all communication by default, thus would throw an error for a self-signed one. ***FOR DEVELOPMENT PURPOSES ONLY***, it's possible to turn off the check using either `H2O_WAVE_VERIFY_TLS` environment variable or `verify-tls` parameter.
+
+:::warning
+Make sure the TLS verification is not turned off in production environments as it's a huge security hole.
+:::
 
 ## Configuring your app
 

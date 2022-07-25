@@ -17,6 +17,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"math"
@@ -75,6 +76,7 @@ func main() {
 		httpHeadersFile      string
 		createAccessKey      bool
 		listAccessKeys       bool
+		verifyTLS            bool
 		removeAccessKeyID    string
 		rawAuthScopes        string
 		rawAuthURLParams     string
@@ -120,6 +122,7 @@ func main() {
 	stringVar(&rawAuthScopes, "oidc-scopes", "", "OIDC scopes, comma-separated (default \"openid,profile\")")
 	stringVar(&rawAuthURLParams, "oidc-auth-url-params", "", "additional URL parameters to pass during OIDC authorization, in the format \"key:value\", comma-separated, e.g. \"foo:bar,qux:42\"")
 	boolVar(&auth.SkipLogin, "oidc-skip-login", false, "do not display the login form during OIDC authorization")
+	boolVar(&verifyTLS, "verify-tls", true, "do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION")
 
 	flag.Parse()
 
@@ -249,6 +252,10 @@ func main() {
 
 	if conf.IDE {
 		conf.Proxy = true // IDE won't function without proxy
+	}
+
+	if !verifyTLS {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 
 	wave.Run(conf)
