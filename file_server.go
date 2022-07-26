@@ -110,8 +110,9 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if err := fs.deleteFile(r.URL.Path); err != nil {
+		if err := fs.deleteFile(r.URL.Path, fs.baseURL); err != nil {
 			echo(Log{"t": "file_unload", "path": r.URL.Path, "error": err.Error()})
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
 		echo(Log{"t": "file_unload", "path": r.URL.Path})
@@ -172,8 +173,10 @@ func (fs *FileServer) acceptFiles(r *http.Request) ([]string, error) {
 	return uploadPaths, nil
 }
 
-func (fs *FileServer) deleteFile(url string) error {
-	tokens := strings.Split(path.Clean(url), "/")
+func (fs *FileServer) deleteFile(url, baseURL string) error {
+	// Remove baseURL portion if specified.
+	cleanURL := strings.Replace(path.Clean(url), baseURL, "/_f", 1)
+	tokens := strings.Split(cleanURL, "/")
 	if len(tokens) != 4 { // /_f/uuid/file.ext
 		return errInvalidUnloadPath
 	}
