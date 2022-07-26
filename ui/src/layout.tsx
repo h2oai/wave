@@ -368,7 +368,7 @@ export const
           display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
-          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex, margin: 0 }}>
+          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex, margin: 0, "--height": height } as React.CSSProperties}>
             <CardView card={c} />
             <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
           </div>
