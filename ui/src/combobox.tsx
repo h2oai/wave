@@ -85,7 +85,7 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
 
   // Select value when "value" is set from Wave App dynamically
   React.useEffect(() => {
-    setSelected(m.value!)
+    setSelected(m.value || null)
   }, [m.value])
 
   return (
