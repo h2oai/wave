@@ -67,25 +67,26 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
     [options, setOptions] = useOptions(m.choices),
     [selected, setSelected] = React.useState<S | null>(m.value ?? null),
     onChange = (_e: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: U, value?: S) => {
-      if (!option && value) setOptions((prevOptions = []) => [...prevOptions, { key: value, text: value }])
-      
-      const v = option?.text || value || ''
+      const v = (option && String(option.key)) || value || ''
       setSelected(v)
       
+      // Hacky: Ensure that next "model.value" set from a Wave App will be different and trigger the second "useEffect"
+      m.value = v
+
       wave.args[m.name] = v
       if (m.trigger) wave.push()
-
-      // Hacky: Ensure that next dynamically change to value from Wave app will trigger the useEffect
-      m.value = v
     }
   
-  React.useEffect(() => {
-    wave.args[m.name] = (selected && options.map(o => String(o.key)).includes(selected || '')) ? selected : null
-  }, [m.name, m.value, options, selected])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { wave.args[m.name] = selected }, [selected])
 
-  // Select value when "value" is set from Wave App dynamically
+  // Whenever a new "value" is set in a Wave App, set it as the current value and add it to options list if it's not included yet
   React.useEffect(() => {
     setSelected(m.value || null)
+    if (m.value && !(m.choices || []).includes(m.value)) {
+      setOptions((prevOptions = []) => [...prevOptions, { key: m.value!, text: m.value! }])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [m.value])
 
   return (
@@ -129,11 +130,16 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
     }
   
   React.useEffect(() => {
-      const intersection = options.map(o => String(o.key)).filter(choice => selected?.includes(choice))
-      wave.args[m.name] = intersection ?? null
-    }, [m.name, m.values, options, selected])
-  
-  React.useEffect(() => setSelected(m.values || []), [m.values])
+    wave.args[m.name] = m.values?.length ? m.values : null
+    setSelected(m.values || [])
+    setOptions((prevOptions = []) =>
+      [
+        ...prevOptions,
+        ...(m.values || []).filter(v => !prevOptions.map(o => String(o.key)).includes(v)).map(v => ({ key: v, text: v }))
+      ]
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [m.values])
 
   return (
     <Fluent.ComboBox
