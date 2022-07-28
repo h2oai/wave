@@ -111,7 +111,7 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
     [selected, setSelected] = React.useState<S[]>(m.values ?? []),
     selectOpt = (option: IComboBoxOption) => {
       setSelected(keys => {
-        const result = option.selected ? [...keys, String(option.key)] : (keys as S[]).filter(key => key !== option.key)
+        const result = option.selected ? [...keys, String(option.key)] : keys.filter(key => key !== option.key)
         wave.args[m.name] = result
         return result
       })
