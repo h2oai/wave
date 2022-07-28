@@ -60,7 +60,7 @@ export interface Combobox {
   required?: B
 }
 
-export const XCombobox = ({ model: m }: { model: Combobox }) => !m.values ? <ComboboxSingleSelect model={m} /> : <ComboboxMultiSelect model={m} />
+export const XCombobox = ({ model: m }: { model: Combobox }) => m.values ? <ComboboxMultiSelect model={m} /> : <ComboboxSingleSelect model={m} />
 
 const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> }) => {
   const
