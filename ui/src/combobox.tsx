@@ -142,7 +142,7 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
       placeholder={m.placeholder}
       options={options}
       required={m.required}
-      multiSelect={true}
+      multiSelect
       selectedKey={selected}
       allowFreeform
       disabled={m.disabled}
