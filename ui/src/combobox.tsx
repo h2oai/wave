@@ -66,7 +66,6 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
   const
     [options, setOptions] = useOptions(m.choices),
     [selected, setSelected] = React.useState<S | null>(m.value ?? null),
-    skipUseEffectForValue = React.useRef(false),
     onChange = (_e: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: U, value?: S) => {
       if (!option && value) setOptions((prevOptions = []) => [...prevOptions, { key: value, text: value }])
       
@@ -78,8 +77,6 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
 
       // Hacky: Ensure that next dynamically change to value from Wave app will trigger the useEffect
       m.value = v
-      // The line above will trigger the useEffect for change in m.value and we need to skip it
-      skipUseEffectForValue.current = true
     }
   
   React.useEffect(() => {
@@ -88,8 +85,7 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
 
   // Select value when "value" is set from Wave App dynamically
   React.useEffect(() => {
-    if (!skipUseEffectForValue.current) setSelected(m.value!)
-    skipUseEffectForValue.current = false
+    setSelected(m.value!)
   }, [m.value])
 
   return (
