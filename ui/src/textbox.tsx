@@ -55,7 +55,7 @@ export interface Textbox {
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
-  /** The height of the text box, e.g. '100px'. Applicable only if `multiline` is true. */
+  /** The height of the text box, e.g. '100px'. Percentage values not supported. Applicable only if `multiline` is true. */
   height?: S
   /** The width of the text box, e.g. '100px'. Defaults to '100%'. */
   width?: S
@@ -86,7 +86,7 @@ export const
         disabled: m.disabled,
         readOnly: m.readonly,
         onChange: m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange,
-        iconProps: { iconName: m.icon },
+        iconProps: m.icon ? { iconName: m.icon } : undefined,
         placeholder: m.placeholder,
         prefix: m.prefix,
         suffix: m.suffix,
@@ -108,7 +108,11 @@ export const
       )
       : (
         <Fluent.TextField
-          styles={m.multiline && m.height ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } } : undefined}
+          styles={
+            m.multiline && m.height && !m.height.endsWith('%')
+              ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } }
+              : undefined
+          }
           {...textFieldProps}
         />
       )
