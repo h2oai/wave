@@ -113,7 +113,15 @@ const
       top: -3,
       background: cssVar('$card'),
     },
-    readonly: { pointerEvents: 'none' }
+    readonly: { pointerEvents: 'none' },
+    checkbox: {
+      $nest: {
+        '&:hover': {
+          backgroundColor: cssVar('$neutralLighter'),
+          color: cssVar('$neutralDark')
+        }
+      }
+    }
   }),
   annotateNumbersAroundToken = (tokenIdx: U, tokens: TokenProps[], activeTag?: S) => {
     let charRightIdx = tokenIdx + 1, charLeftIdx = tokenIdx - 1
@@ -202,6 +210,11 @@ export
         setTokens([...tokens])
         submitWaveArgs()
       },
+      removeAllAnnotations = () => {
+        for (let idx = 0; idx < tokens.length; idx++) tokens[idx].tag = undefined
+        setTokens([...tokens])
+        submitWaveArgs()
+      },
       annotate = (endElProps: TokenMouseEventProps) => {
         if (!startElPropsRef.current) return
         const
@@ -263,7 +276,7 @@ export
             className={clas(css.mark, isFirst ? css.firstMark : '', isLast ? css.lastMark : '')}
             style={{ backgroundColor: cssVar(color), color: getContrast(color) }}>
             {text}
-            <Fluent.Icon iconName='CircleAdditionSolid' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
+            <Fluent.Icon iconName='CircleAdditionSolid' data-test={'remove-icon'} styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
             {/* HACK: Put color underlay under remove icon because its glyph is transparent and doesn't look good on tags. */}
             <span style={removeIconStyle as React.CSSProperties} className={css.iconUnderlay}></span>
           </mark>
@@ -283,15 +296,25 @@ export
       <div data-test={name} className={readonly ? css.readonly : ''}>
         <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>
         <AnnotatorTags tags={tags} activateTag={activateTag} activeTag={activeTag} />
-        <Fluent.Toggle
-          data-test='smart-selection'
-          label='Smart selection'
-          defaultChecked={smartSelection}
-          onChange={() => setSmartSelection(prevSelection => !prevSelection)}
-          onText="On"
-          offText="Off"
-          inlineLabel
-        />
+        <div style={{ display: 'flex' }}>
+          <Fluent.Checkbox
+            label='Smart selection'
+            checked={smartSelection}
+            onChange={() => setSmartSelection(prevSelection => !prevSelection)}
+            className={css.checkbox}
+            styles={{ root: { alignItems: 'center', paddingLeft: 8, paddingRight: 8 } }}
+          />
+          <Fluent.CommandBar styles={{ root: { padding: 0 } }} items={[
+            {
+              key: 'remove-all',
+              text: 'Remove all selections',
+              onClick: removeAllAnnotations,
+              disabled: !tokens.find(token => token.tag),
+              iconProps: { iconName: 'DependencyRemove', styles: { root: { fontSize: 20 } } },
+            },
+          ]}
+          />
+        </div>
         <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
           tokens.map(({ start, end, text, tag }, idx) => {
             const activeColor = activeTag ? tagColorMap.get(activeTag) : undefined
