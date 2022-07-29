@@ -479,7 +479,7 @@ ui_message_bar <- function(
 #' @param multiline True if the text box should allow multi-line text entry.
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
-#' @param height The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
+#' @param height The height of the text box, e.g. '100px'. Percentage values not supported. Applicable only if `multiline` is true.
 #' @param width The width of the text box, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
