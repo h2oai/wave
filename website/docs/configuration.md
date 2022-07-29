@@ -146,6 +146,10 @@ Notes:
 - [1] `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
 - [2] Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
 
+## Public/Private dirs
+
+Wave server serves whole directories as they are. This means that these directories are listable by default. If you wish to turn off this behavior, simply put an empty file called `index.html` into the folder you wish to not list.
+
 ## Configuring your app
 
 Your Wave application is an ASGI server. When you run your app during development, the app server runs at <http://127.0.0.1:8000/> by default (localhost, port 8000), and assumes that your Wave server is running at <http://127.0.0.1:10101/> (localhost, port 10101). The `wave run` command automatically picks another available port if `8000` is not available.
