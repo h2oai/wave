@@ -232,17 +232,16 @@ const
 
     sortCardsInSection(section)
 
-    const style = {
+    const style: React.CSSProperties = {
       display: 'flex',
       flexDirection: 'column',
       width: width ?? '100%',
       minWidth: min_width,
       maxWidth: max_width,
       height,
-      "--layout-flex-height": height, // used for calculation of ui.textbox percentage height.
       minHeight: min_height,
       maxHeight: max_height,
-    } as React.CSSProperties
+    }
     if (height === '100%') {
       style.display = 'flex'
       style.flexDirection = 'column'

@@ -55,7 +55,7 @@ export interface Textbox {
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
-  /** The height of the text box, e.g. '100px'. Applicable only if `multiline` is true. */
+  /** The height of the text box, e.g. '100px'. Percentage values not supported. Applicable only if `multiline` is true. */
   height?: S
   /** The width of the text box, e.g. '100px'. Defaults to '100%'. */
   width?: S
