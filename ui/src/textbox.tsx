@@ -108,7 +108,11 @@ export const
       )
       : (
         <Fluent.TextField
-          styles={m.multiline && m.height ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } } : undefined}
+          styles={
+            m.multiline && m.height && !m.height.endsWith('%')
+              ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } }
+              : undefined
+          }
           {...textFieldProps}
         />
       )
