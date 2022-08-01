@@ -78,7 +78,7 @@ class Auth:
     
     async def force_token_refresh(self):
         """
-        Implictly refresh OIDC tokens when needed, e.g. during long-running background jobs.
+        Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs.
         """
         async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
             res = await http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id}) 
