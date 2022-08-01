@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid, substitute } from './layout'
 import { ProgressArc } from './parts/progress_arc'
-import { centerMixin, clas, cssVar, padding } from './theme'
+import { centerMixin, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
 
 const
@@ -28,10 +28,11 @@ const
     },
     lhs: {
       position: 'relative',
-      flex: 1
+      minWidth: pc(30),
+      width: pc(30)
     },
     rhs: {
-      flex: 1,
+      width: pc(70),
       marginLeft: grid.gap,
     },
     values: {
