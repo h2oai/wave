@@ -38,7 +38,14 @@ describe('TextAnnotator.tsx', () => {
   it('Sets correct args on remove', () => {
     const { container } = render(<XTextAnnotator model={annotatorProps} />)
 
-    fireEvent.mouseUp(container.querySelector('i')!)
+    fireEvent.mouseUp(container.querySelector('[data-test="remove-icon"]')!)
+    expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
+  })
+
+  it('Sets correct args on remove all', () => {
+    const { getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+
+    fireEvent.click(getByRole('menuitem'))
     expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
@@ -164,7 +171,7 @@ describe('TextAnnotator.tsx', () => {
   it('Calls sync on remove if trigger specified', () => {
     const { container } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
 
-    fireEvent.mouseUp(container.querySelector('i')!)
+    fireEvent.mouseUp(container.querySelector('[data-test="remove-icon"]')!)
     expect(pushMock).toHaveBeenCalled()
   })
 
@@ -181,13 +188,13 @@ describe('TextAnnotator.tsx', () => {
   it('Shows remove icon on hover', () => {
     const { container, getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
-    expect(container.querySelector('i')).not.toBeVisible()
+    expect(container.querySelector('[data-test="remove-icon"]')!).not.toBeVisible()
     fireEvent.mouseOver(getByText('g'))
-    expect(container.querySelector('i')).toBeVisible()
+    expect(container.querySelector('[data-test="remove-icon"]')!).toBeVisible()
     fireEvent.mouseOut(getByText('g'))
-    expect(container.querySelector('i')).not.toBeVisible()
+    expect(container.querySelector('[data-test="remove-icon"]')!).not.toBeVisible()
     fireEvent.mouseOver(getByText('P'))
-    expect(container.querySelector('i')).toBeVisible()
+    expect(container.querySelector('[data-test="remove-icon"]')!).toBeVisible()
   })
 
   describe('readonly', () => {
@@ -200,9 +207,9 @@ describe('TextAnnotator.tsx', () => {
 
   describe('smart selection off', () => {
     it('Sets correct args on annotate from left to right', () => {
-      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+      const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
-      fireEvent.click(getByRole('switch'))
+      fireEvent.click(getByText('Smart selection'))
       fireEvent.click(getByText('Tag 1'))
       fireEvent.mouseDown(getByText('H'))
       fireEvent.mouseUp(getByText('h'))
@@ -216,9 +223,9 @@ describe('TextAnnotator.tsx', () => {
     })
 
     it('Sets correct args on annotate from right to left', () => {
-      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+      const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
-      fireEvent.click(getByRole('switch'))
+      fireEvent.click(getByText('Smart selection'))
       fireEvent.click(getByText('Tag 1'))
       fireEvent.mouseDown(getByText('h'))
       fireEvent.mouseUp(getByText('H'))
@@ -232,10 +239,10 @@ describe('TextAnnotator.tsx', () => {
     })
 
     it('Sets correct args on annotate when replacing selection', () => {
-      const { getByText, getByRole } = render(<XTextAnnotator model={annotatorProps} />)
+      const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
       fireEvent.click(getByText('Tag 2'))
-      fireEvent.click(getByRole('switch'))
+      fireEvent.click(getByText('Smart selection'))
       fireEvent.mouseDown(getByText('P'))
       fireEvent.mouseUp(getByText('g'))
 
