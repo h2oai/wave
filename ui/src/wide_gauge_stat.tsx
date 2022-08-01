@@ -34,6 +34,7 @@ const
     rhs: {
       width: pc(70),
       marginLeft: grid.gap,
+      alignSelf: 'center'
     },
     values: {
       display: 'flex',
