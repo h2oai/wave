@@ -266,8 +266,12 @@ class _App:
 
     async def _unregister(self):
         logger.debug(f'Unregistering app...')
-        await self._wave.call('unregister_app', route=self._route)
-        logger.debug('Unregister: success!')
+        try:
+            await self._wave.call('unregister_app', route=self._route)
+            logger.debug('Unregister: success!')
+        # Happens during killing reloader process (dev mode) - server process killed before starlette on_shutdown hook.
+        except httpx.ConnectError:
+            logger.debug('Could not unregister app due to unreachable server.')
 
     async def _receive(self, req: Request):
         basic_auth = req.headers.get("Authorization")

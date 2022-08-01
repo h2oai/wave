@@ -16,8 +16,6 @@ import sys
 import difflib
 import json
 
-import httpx
-
 from h2o_wave import site, Page, data, Expando
 
 
