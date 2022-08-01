@@ -76,7 +76,7 @@ class Auth:
         self._session_id = session_id
         """Session identifier. Do not access, internal use only."""
     
-    async def force_token_refresh(self):
+    async def ensure_fresh_token(self):
         """
         Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs.
         """
