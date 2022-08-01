@@ -211,7 +211,7 @@ export
         submitWaveArgs()
       },
       removeAllAnnotations = () => {
-        for (let idx = 0; idx < tokens.length; idx++) tokens[idx].tag = undefined
+        tokens.forEach(token => token.tag = undefined)
         setTokens([...tokens])
         submitWaveArgs()
       },
@@ -276,7 +276,7 @@ export
             className={clas(css.mark, isFirst ? css.firstMark : '', isLast ? css.lastMark : '')}
             style={{ backgroundColor: cssVar(color), color: getContrast(color) }}>
             {text}
-            <Fluent.Icon iconName='CircleAdditionSolid' data-test={'remove-icon'} styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
+            <Fluent.Icon iconName='CircleAdditionSolid' data-test='remove-icon' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
             {/* HACK: Put color underlay under remove icon because its glyph is transparent and doesn't look good on tags. */}
             <span style={removeIconStyle as React.CSSProperties} className={css.iconUnderlay}></span>
           </mark>
