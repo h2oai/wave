@@ -37,6 +37,14 @@
       ],
     },
     {
+      "name": "Debug Py Tests",
+      "type": "python",
+      "cwd": "${workspaceFolder}/py",
+      "python": "${workspaceFolder}/py/venv/bin/python",
+      "request": "launch",
+      "module": "tests"
+    },
+    {
       "name": "Debug Wave Studio",
       "type": "python",
       "request": "launch",

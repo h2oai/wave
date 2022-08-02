@@ -34,7 +34,9 @@ jobs:
           working-directory: ./r
 
       - name: Unit Test
-        run: make test-ui-ci
+        run: |
+          make test-ui-ci
+          make test-py-ci
 
       - name: Build Release
         run: make release
