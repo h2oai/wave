@@ -59,6 +59,7 @@ import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
 import { Menu, XMenu } from './menu'
 import { XTags, Tags } from './tags'
+import { TimePicker, XTimePicker } from './time_picker'
 
 /** Create a component. */
 export interface Component {
@@ -160,6 +161,8 @@ export interface Component {
   menu?: Menu
   /** Tags. */
   tags?: Tags
+  /** Time picker. */
+  time_picker?: TimePicker
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -294,6 +297,7 @@ const
     if (m.copyable_text) return <XCopyableText model={m.copyable_text} />
     if (m.menu) return <XMenu model={m.menu} />
     if (m.tags) return <XTags model={m.tags} />
+    if (m.time_picker) return <XTimePicker model={m.time_picker} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

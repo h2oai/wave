@@ -2939,6 +2939,62 @@ ui_tags <- function(
   return(.o)
 }
 
+#' Create a timepicker.
+#' 
+#' TODO: description
+#'
+#' @param name An identifying name for this component.
+#' @param label Text to be displayed alongside the component.
+#' @param value Default time selected. E.g. '10:30'
+#' @param disabled True if this field is disabled.
+#' @param width The width of the combobox, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
+#' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
+#' @param required True if this is a required field. Defaults to False.
+#' @param useHour12 If true, use 12-hour time format. Otherwise, use 24-hour format.
+#' @param min Minimum time for time options in hours (inclusive), e.g. 9
+#' @param max Maximum time for time options n hours (exclusive), e.g. 18
+#' @return A TimePicker instance.
+#' @export
+ui_time_picker <- function(
+  name,
+  label = NULL,
+  value = NULL,
+  disabled = NULL,
+  width = NULL,
+  visible = NULL,
+  trigger = NULL,
+  required = NULL,
+  useHour12 = NULL,
+  min = NULL,
+  max = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("required", "logical", required)
+  .guard_scalar("useHour12", "character", useHour12)
+  .guard_scalar("min", "numeric", min)
+  .guard_scalar("max", "numeric", max)
+  .o <- list(time_picker=list(
+    name=name,
+    label=label,
+    value=value,
+    disabled=disabled,
+    width=width,
+    visible=visible,
+    trigger=trigger,
+    required=required,
+    useHour12=useHour12,
+    min=min,
+    max=max))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.

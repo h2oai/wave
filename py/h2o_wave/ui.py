@@ -2533,6 +2533,53 @@ def tags(
     ))
 
 
+def time_picker(
+        name: str,
+        label: Optional[str] = None,
+        value: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        width: Optional[str] = None,
+        visible: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        required: Optional[bool] = None,
+        useHour12: Optional[str] = None,
+        min: Optional[int] = None,
+        max: Optional[int] = None,
+) -> Component:
+    """Create a timepicker.
+
+    TODO: description
+
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        value: Default time selected. E.g. '10:30'
+        disabled: True if this field is disabled.
+        width: The width of the combobox, e.g. '100px'. Defaults to '100%'.
+        visible: True if the component should be visible. Defaults to True.
+        trigger: True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
+        required: True if this is a required field. Defaults to False.
+        useHour12: If true, use 12-hour time format. Otherwise, use 24-hour format.
+        min: Minimum time for time options in hours (inclusive), e.g. 9
+        max: Maximum time for time options n hours (exclusive), e.g. 18
+    Returns:
+        A `h2o_wave.types.TimePicker` instance.
+    """
+    return Component(time_picker=TimePicker(
+        name,
+        label,
+        value,
+        disabled,
+        width,
+        visible,
+        trigger,
+        required,
+        useHour12,
+        min,
+        max,
+    ))
+
+
 def article_card(
         box: str,
         title: str,
