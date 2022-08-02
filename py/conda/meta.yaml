@@ -21,16 +21,16 @@ requirements:
     - pip
     - wheel
     - Click
-    - httpx==0.16.1
-    - uvicorn==0.17.6
-    - starlette==0.13.8
+    - httpx>=0.16.1
+    - uvicorn>=0.17.6
+    - starlette>=0.13.8
 
   run:
     - python={{ python_version }}
     - Click
-    - httpx==0.16.1
-    - uvicorn==0.17.6
-    - starlette==0.13.8
+    - httpx>=0.16.1
+    - uvicorn>=0.17.6
+    - starlette>=0.13.8
 
 source:
   path: ..
