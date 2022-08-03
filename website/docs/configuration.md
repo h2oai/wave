@@ -158,7 +158,7 @@ Wave server serves whole directories as they are. This means that these director
 During development, you might want to test out TLS encryption, e.g. communication between Wave server and Keycloak. The easiest thing to do is to generate a self-signed certificate. However, Wave server verifies certificates for all communication by default, thus would throw an error for a self-signed one. ***FOR DEVELOPMENT PURPOSES ONLY***, it's possible to turn off the check using either `H2O_WAVE_VERIFY_TLS` environment variable or `verify-tls` parameter.
 
 :::warning
-Make sure the TLS verification is not turned off in production environments as it's a huge security hole.
+**Disabling TLS verification is a security risk.** Make sure TLS is not disabled in production environments.
 :::
 
 ## Configuring your app
