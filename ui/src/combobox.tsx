@@ -77,8 +77,7 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
       if (m.trigger) wave.push()
     }
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { wave.args[m.name] = selected }, [selected])
+  React.useEffect(() => { wave.args[m.name] = selected }, [m.name, selected])
 
   // Whenever a new "value" is set in a Wave App, set it as the current value and add it to options list if it's not included yet
   React.useEffect(() => {
@@ -132,12 +131,14 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
   React.useEffect(() => {
     wave.args[m.name] = m.values?.length ? m.values : null
     setSelected(m.values || [])
-    setOptions((prevOptions = []) =>
-      [
-        ...prevOptions,
-        ...(m.values || []).filter(v => !prevOptions.map(o => String(o.key)).includes(v)).map(v => ({ key: v, text: v }))
-      ]
-    )
+    if (m.values?.length) {
+      setOptions((prevOptions = []) =>
+        [
+          ...prevOptions,
+          ...m.values!.filter(v => !prevOptions.map(o => String(o.key)).includes(v)).map(v => ({ key: v, text: v }))
+        ]
+      )
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [m.values])
 
@@ -160,10 +161,10 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
 }
 
 const useOptions = (choices: S[] = []): [Fluent.IComboBoxOption[], React.Dispatch<React.SetStateAction<Fluent.IComboBoxOption[]>>]  => {
-  const mapChoices = React.useMemo(() => (choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [choices])
-  const [options, setOptions] = React.useState(mapChoices)
+  const mappedChoices = React.useMemo(() => (choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [choices])
+  const [options, setOptions] = React.useState(mappedChoices)
   
-  React.useEffect(() => { setOptions(mapChoices) }, [choices, mapChoices])
+  React.useEffect(() => { setOptions(mappedChoices) }, [choices, mappedChoices])
   
   return [options, setOptions]
 }
