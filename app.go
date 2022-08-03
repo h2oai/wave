@@ -86,6 +86,7 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 	if session.subject != anon {
 		req.Header.Set("Wave-Access-Token", session.token.AccessToken)
 		req.Header.Set("Wave-Refresh-Token", session.token.RefreshToken)
+		req.Header.Set("Wave-Session-ID", session.id)
 	}
 
 	resp, err := app.client.Do(req)

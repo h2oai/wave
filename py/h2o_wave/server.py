@@ -64,7 +64,7 @@ class Auth:
     Represents authentication information for a given query context. Carries valid information only if single sign on is enabled.
     """
 
-    def __init__(self, username: str, subject: str, access_token: str, refresh_token: str):
+    def __init__(self, username: str, subject: str, access_token: str, refresh_token: str, session_id: str):
         self.username = username
         """The username of the user."""
         self.subject = subject
@@ -73,6 +73,22 @@ class Auth:
         """The access token of the user."""
         self.refresh_token = refresh_token
         """The refresh token of the user."""
+        self._session_id = session_id
+        """Session identifier. Do not access, internal use only."""
+    
+    async def ensure_fresh_token(self) -> Optional[str]:
+        """
+        Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs.
+        """
+        async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
+            res = await http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id}) 
+
+            access_token = res.headers.get('Wave-Access-Token', None)
+            refresh_token = res.headers.get('Wave-Refresh-Token', None)
+            if access_token and refresh_token:
+                self.access_token = access_token
+                self.refresh_token = refresh_token
+            return access_token
 
 
 class Query:
@@ -290,7 +306,8 @@ class _App:
         username = req.headers.get('Wave-Username')
         access_token = req.headers.get('Wave-Access-Token')
         refresh_token = req.headers.get('Wave-Refresh-Token')
-        auth = Auth(username, subject, access_token, refresh_token)
+        session_id = req.headers.get('Wave-Session-ID')
+        auth = Auth(username, subject, access_token, refresh_token, session_id)
         args = await req.json()
 
         return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))

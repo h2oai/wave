@@ -103,6 +103,7 @@ func Run(conf ServerConf) {
 		handle("_auth/init", newLoginHandler(auth))
 		handle("_auth/callback", newAuthHandler(auth))
 		handle("_auth/logout", newLogoutHandler(auth, broker))
+		handle("_auth/refresh", newRefreshHandler(auth, conf.Keychain))
 	}
 
 	handle("_s/", newSocketServer(broker, auth, conf.Editable, conf.BaseURL)) // XXX terminate sockets when logged out
