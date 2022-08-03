@@ -73,6 +73,9 @@ run-ui: ## Run UI in development mode (hot reloading)
 test-ui-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-ci
 
+test-py-ci: ## Run Python unit tests in CI mode
+	cd py && $(MAKE) test
+
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
 
