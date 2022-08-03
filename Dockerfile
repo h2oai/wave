@@ -1,4 +1,4 @@
-FROM golang:1.13
+FROM golang:1.17.13
 ENV DEBIAN_FRONTEND=noninteractive
 
 # This needs to be set up from Jenkins
