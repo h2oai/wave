@@ -83,12 +83,12 @@ Usage of ./waved:
         path to certificate file (TLS only)
   -tls-key-file string
         path to private key file (TLS only)
+  -no-tls-verify
+        do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION
   -version
         print version and exit
   -web-dir string
         directory to serve web assets from (default "./www")
-  -verify-tls
-        do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION
 ```
 
 Supported size units (case insensitive):
@@ -140,8 +140,8 @@ H2O_WAVE_PUBLIC_DIR [2]
 H2O_WAVE_PRIVATE_DIR [2]
 H2O_WAVE_TLS_CERT_FILE
 H2O_WAVE_TLS_KEY_FILE
+H2O_WAVE_NO_TLS_VERIFY
 H2O_WAVE_WEB_DIR
-H2O_WAVE_VERIFY_TLS
 ```
 
 Notes:
@@ -155,7 +155,7 @@ Wave server serves whole directories as they are. This means that these director
 
 ### TLS verification
 
-During development, you might want to test out TLS encryption, e.g. communication between Wave server and Keycloak. The easiest thing to do is to generate a self-signed certificate. However, Wave server verifies certificates for all communication by default, thus would throw an error for a self-signed one. ***FOR DEVELOPMENT PURPOSES ONLY***, it's possible to turn off the check using either `H2O_WAVE_VERIFY_TLS` environment variable or `verify-tls` parameter.
+During development, you might want to test out TLS encryption, e.g. communication between Wave server and Keycloak. The easiest thing to do is to generate a self-signed certificate. However, Wave server verifies certificates for all communication by default, thus would throw an error for a self-signed one. ***FOR DEVELOPMENT PURPOSES ONLY***, it's possible to turn off the check using either `H2O_WAVE_NO_TLS_VERIFY` environment variable or `no-tls-verify` parameter.
 
 :::warning
 **Disabling TLS verification is a security risk.** Make sure TLS is not disabled in production environments.
