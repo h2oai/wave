@@ -15,6 +15,7 @@
 package wave
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -155,6 +156,9 @@ func Run(conf ServerConf) {
 		if err := http.ListenAndServe(conf.Listen, nil); err != nil {
 			echo(Log{"t": "listen_no_tls", "error": err.Error()})
 		}
+	}
+	if conf.SkipCertVerification {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 }
 

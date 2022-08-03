@@ -48,6 +48,7 @@ type ServerConf struct {
 	Init                 string
 	Compact              string
 	CertFile             string
+	SkipCertVerification bool
 	KeyFile              string
 	Header               http.Header
 	Editable             bool
@@ -64,15 +65,15 @@ type ServerConf struct {
 }
 
 type AuthConf struct {
-	ClientID          string
-	ClientSecret      string
-	ProviderURL       string
-	RedirectURL       string
-	EndSessionURL     string
-	PostLogoutRedirectURL string	
-	Scopes            []string
-	URLParameters     [][]string
-	SkipLogin         bool
-	SessionExpiry     time.Duration
-	InactivityTimeout time.Duration
+	ClientID              string
+	ClientSecret          string
+	ProviderURL           string
+	RedirectURL           string
+	EndSessionURL         string
+	PostLogoutRedirectURL string
+	Scopes                []string
+	URLParameters         [][]string
+	SkipLogin             bool
+	SessionExpiry         time.Duration
+	InactivityTimeout     time.Duration
 }

@@ -17,7 +17,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"crypto/tls"
 	"flag"
 	"fmt"
 	"math"
@@ -76,7 +75,6 @@ func main() {
 		httpHeadersFile      string
 		createAccessKey      bool
 		listAccessKeys       bool
-		verifyTLS            bool
 		removeAccessKeyID    string
 		rawAuthScopes        string
 		rawAuthURLParams     string
@@ -99,6 +97,7 @@ func main() {
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	stringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	stringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
+	boolVar(&conf.SkipCertVerification, "no-tls-verify", false, "do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION")
 	stringVar(&httpHeadersFile, "http-headers-file", "", "path to a MIME-formatted file containing additional HTTP headers to add to responses from the server")
 	boolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	stringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
@@ -122,7 +121,6 @@ func main() {
 	stringVar(&rawAuthScopes, "oidc-scopes", "", "OIDC scopes, comma-separated (default \"openid,profile\")")
 	stringVar(&rawAuthURLParams, "oidc-auth-url-params", "", "additional URL parameters to pass during OIDC authorization, in the format \"key:value\", comma-separated, e.g. \"foo:bar,qux:42\"")
 	boolVar(&auth.SkipLogin, "oidc-skip-login", false, "do not display the login form during OIDC authorization")
-	boolVar(&verifyTLS, "verify-tls", true, "do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION")
 
 	flag.Parse()
 
@@ -252,10 +250,6 @@ func main() {
 
 	if conf.IDE {
 		conf.Proxy = true // IDE won't function without proxy
-	}
-
-	if !verifyTLS {
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 
 	wave.Run(conf)
