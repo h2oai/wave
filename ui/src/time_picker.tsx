@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import React from 'react'
 import * as Fluent from '@fluentui/react'
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers' // TODO: lazyload
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns' // TODO: lazyload
 import { B, Id, S } from 'h2o-wave'
-import React from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { cssVar, cssVarValue } from './theme'
-import { wave } from './ui'
 import { TextFieldProps } from '@mui/material'
+import { wave } from './ui'
+import { stylesheet } from 'typestyle'
 
 /**
  * Create a timepicker.
@@ -64,8 +65,14 @@ const
             hours = d.getHours(),
             minutes = d.getMinutes()
         // TODO: add pad2 to numbers
-        return `${useHour12 && hours >= 12 ? hours - 12 : hours}:${minutes}${useHour12 ? (hours >= 12 ? 'pm' : 'am') : null}`
-    }
+        return `${useHour12 && hours >= 12 ? hours - 12 : hours}:${minutes}${useHour12 ? (hours >= 12 ? 'pm' : 'am') : ''}`
+    },
+    css = stylesheet({
+        toolbarTime: {
+            fontSize: 26,
+            cursor: 'pointer'
+        }
+    })
 
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
@@ -101,7 +108,6 @@ export const
             onSelectTime = (time: Date | null) => {
                 // TODO: rename 'time' to better represent it is in a Date format
                 wave.args[m.name] = time ? formatDateToTimeString(time, m.useHour12) : null
-                setValue(time)
                 if (m.trigger) wave.push()
             }
 
@@ -116,8 +122,8 @@ export const
                             value={value}
                             open={isDialogOpen}
                             onClose={() => setIsDialogOpen(false)}
-                            // ampm={m.useHour12}
-                            onChange={(newValue) => onSelectTime(newValue)}
+                            ampm={m.useHour12}
+                            onChange={setValue}
                             showToolbar={true}
                             PopperProps={{
                                 anchorEl: textInputRef.current,
@@ -142,13 +148,13 @@ export const
 
                                 return (
                                     <div style={{ paddingTop: 16, paddingLeft: 16 }}>
-                                        {m.label && <Fluent.Label>{m.label}</Fluent.Label>}
-                                        <Fluent.Text>
-                                            <Fluent.Text style={{ fontSize: 26, cursor: 'pointer' }} onClick={() => params.setOpenView('hours')}>{`${time.substring(0, 2)}`}</Fluent.Text>
-                                            <Fluent.Text style={{ fontSize: 26 }}>{':'}</Fluent.Text>
-                                            <Fluent.Text style={{ fontSize: 26, cursor: 'pointer' }} onClick={() => params.setOpenView('minutes')}>{`${time.substring(3, 5)}`}</Fluent.Text>
-                                            <Fluent.Text style={{ fontSize: 26 }}>{' '}</Fluent.Text>
-                                            <Fluent.Text style={{ fontSize: 26, cursor: 'pointer' }} onClick={() => {
+                                        {m.label && <Fluent.Label style={{ maxWidth: '70%' }}>{m.label}</Fluent.Label>}
+                                        <Fluent.Text style={{ fontSize: 26 }}>
+                                            <Fluent.Text className={css.toolbarTime} onClick={() => params.setOpenView('hours')}>{`${time.substring(0, 2)}`}</Fluent.Text>
+                                            {':'}
+                                            <Fluent.Text className={css.toolbarTime} onClick={() => params.setOpenView('minutes')}>{`${time.substring(3, 5)}`}</Fluent.Text>
+                                            {' '}
+                                            <Fluent.Text className={css.toolbarTime} onClick={() => {
                                                 setValue((prevValue) => {
                                                     const date = new Date(prevValue!)
                                                     date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
@@ -187,8 +193,8 @@ export const
                             maxTime={m.max ? parseTimeToDate(m.max) : undefined}
                             // mask // TODO: discuss
                             // inputFormat // TODO: change placeholder and value to support both 24 and 12 hour format
-                            // onAccept // TODO: wave trigger here?
                             // minutesStep // TODO: discuss
+                            onAccept={onSelectTime}
                             onOpen={() => {
                                 // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
                                 setTimeout(() => {
