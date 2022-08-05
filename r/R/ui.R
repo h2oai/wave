@@ -2952,8 +2952,8 @@ ui_tags <- function(
 #' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
 #' @param required True if this is a required field. Defaults to False.
 #' @param useHour12 If true, use 12-hour time format. Otherwise, use 24-hour format.
-#' @param min Minimum time for time options in hours (inclusive), e.g. 9
-#' @param max Maximum time for time options n hours (exclusive), e.g. 18
+#' @param min The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
+#' @param max The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
 #' @return A TimePicker instance.
 #' @export
 ui_time_picker <- function(
@@ -2976,9 +2976,9 @@ ui_time_picker <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("required", "logical", required)
-  .guard_scalar("useHour12", "character", useHour12)
-  .guard_scalar("min", "numeric", min)
-  .guard_scalar("max", "numeric", max)
+  .guard_scalar("useHour12", "logical", useHour12)
+  .guard_scalar("min", "character", min)
+  .guard_scalar("max", "character", max)
   .o <- list(time_picker=list(
     name=name,
     label=label,

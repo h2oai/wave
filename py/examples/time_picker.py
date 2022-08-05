@@ -14,7 +14,8 @@ async def serve(q: Q):
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-            ui.time_picker(name='timepicker'),
+            ui.time_picker(name='timepicker', label="Select time", min='10:00', max='06:00pm'),
+            ui.date_picker(name='date', label='Standard date picker'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()

@@ -6793,9 +6793,9 @@ class TimePicker:
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             required: Optional[bool] = None,
-            useHour12: Optional[str] = None,
-            min: Optional[int] = None,
-            max: Optional[int] = None,
+            useHour12: Optional[bool] = None,
+            min: Optional[str] = None,
+            max: Optional[str] = None,
     ):
         _guard_scalar('TimePicker.name', name, (str,), True, False, False)
         _guard_scalar('TimePicker.label', label, (str,), False, True, False)
@@ -6805,9 +6805,9 @@ class TimePicker:
         _guard_scalar('TimePicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('TimePicker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('TimePicker.required', required, (bool,), False, True, False)
-        _guard_scalar('TimePicker.useHour12', useHour12, (str,), False, True, False)
-        _guard_scalar('TimePicker.min', min, (int,), False, True, False)
-        _guard_scalar('TimePicker.max', max, (int,), False, True, False)
+        _guard_scalar('TimePicker.useHour12', useHour12, (bool,), False, True, False)
+        _guard_scalar('TimePicker.min', min, (str,), False, True, False)
+        _guard_scalar('TimePicker.max', max, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -6827,9 +6827,9 @@ class TimePicker:
         self.useHour12 = useHour12
         """If true, use 12-hour time format. Otherwise, use 24-hour format."""
         self.min = min
-        """Minimum time for time options in hours (inclusive), e.g. 9"""
+        """The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'"""
         self.max = max
-        """Maximum time for time options n hours (exclusive), e.g. 18"""
+        """The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6841,9 +6841,9 @@ class TimePicker:
         _guard_scalar('TimePicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TimePicker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('TimePicker.required', self.required, (bool,), False, True, False)
-        _guard_scalar('TimePicker.useHour12', self.useHour12, (str,), False, True, False)
-        _guard_scalar('TimePicker.min', self.min, (int,), False, True, False)
-        _guard_scalar('TimePicker.max', self.max, (int,), False, True, False)
+        _guard_scalar('TimePicker.useHour12', self.useHour12, (bool,), False, True, False)
+        _guard_scalar('TimePicker.min', self.min, (str,), False, True, False)
+        _guard_scalar('TimePicker.max', self.max, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -6878,11 +6878,11 @@ class TimePicker:
         __d_required: Any = __d.get('required')
         _guard_scalar('TimePicker.required', __d_required, (bool,), False, True, False)
         __d_useHour12: Any = __d.get('useHour12')
-        _guard_scalar('TimePicker.useHour12', __d_useHour12, (str,), False, True, False)
+        _guard_scalar('TimePicker.useHour12', __d_useHour12, (bool,), False, True, False)
         __d_min: Any = __d.get('min')
-        _guard_scalar('TimePicker.min', __d_min, (int,), False, True, False)
+        _guard_scalar('TimePicker.min', __d_min, (str,), False, True, False)
         __d_max: Any = __d.get('max')
-        _guard_scalar('TimePicker.max', __d_max, (int,), False, True, False)
+        _guard_scalar('TimePicker.max', __d_max, (str,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         value: Optional[str] = __d_value
@@ -6891,9 +6891,9 @@ class TimePicker:
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         required: Optional[bool] = __d_required
-        useHour12: Optional[str] = __d_useHour12
-        min: Optional[int] = __d_min
-        max: Optional[int] = __d_max
+        useHour12: Optional[bool] = __d_useHour12
+        min: Optional[str] = __d_min
+        max: Optional[str] = __d_max
         return TimePicker(
             name,
             label,

@@ -2542,9 +2542,9 @@ def time_picker(
         visible: Optional[bool] = None,
         trigger: Optional[bool] = None,
         required: Optional[bool] = None,
-        useHour12: Optional[str] = None,
-        min: Optional[int] = None,
-        max: Optional[int] = None,
+        useHour12: Optional[bool] = None,
+        min: Optional[str] = None,
+        max: Optional[str] = None,
 ) -> Component:
     """Create a timepicker.
 
@@ -2560,8 +2560,8 @@ def time_picker(
         trigger: True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
         required: True if this is a required field. Defaults to False.
         useHour12: If true, use 12-hour time format. Otherwise, use 24-hour format.
-        min: Minimum time for time options in hours (inclusive), e.g. 9
-        max: Maximum time for time options n hours (exclusive), e.g. 18
+        min: The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
+        max: The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
     Returns:
         A `h2o_wave.types.TimePicker` instance.
     """
