@@ -118,8 +118,7 @@ const
     const
       onClick = (ev: any) => {
         ev.stopPropagation()
-        if (path) window.open(path, "_blank")
-        else if (name.startsWith('#')) window.location.hash = name.substr(1)
+        if (!path && name.startsWith('#')) window.location.hash = name.substring(1)
         else {
           wave.args[name] = value === undefined || value
           wave.push()
@@ -143,7 +142,7 @@ const
     React.useEffect(() => { wave.args[name] = false }, [])
 
     if (link) {
-      return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
+      return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} href={path} target="_blank" styles={styles}>{label}</Fluent.Link>
     }
     const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
     if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />

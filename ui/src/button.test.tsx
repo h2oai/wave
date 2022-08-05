@@ -82,14 +82,33 @@ describe('Button.tsx', () => {
       expect(queryByTestId(name)).not.toHaveClass('ms-Link')
     })
 
-    it('Does redirect if path is specified', () => {
-      const
-        windowOpenMock = jest.fn(),
-        { getByTestId } = render(<XButtons model={{ items: [{ button: { name, label: name, path: 'https://h2o.ai/' } }] }} />)
-
-      window.open = windowOpenMock
-      fireEvent.click(getByTestId(name))
-      expect(windowOpenMock).toHaveBeenCalled()
+    describe('Link', () => {
+      it('Opens in new tab when path are specified', () => {
+        const
+          path = 'https://h2o.ai/',
+          { getByTestId } = render(<XButtons model={{ items: [{ button: { name, label: name, link: true, path } }] }} />)
+  
+        expect(getByTestId(name)).toHaveAttribute('href', path)
+        expect(getByTestId(name)).toHaveAttribute('target', '_blank')
+      })
+  
+      it('Updates location hash when name has hash and path is not specified', () => {
+        const
+          nameWithHash = '#mylink',
+          { getByTestId } = render(<XButtons model={{ items: [{ button: { name: nameWithHash, label: name, link: true } }] }} />)
+  
+        fireEvent.click(getByTestId(nameWithHash))
+        expect(window.location.hash).toBe(nameWithHash)
+      })
+  
+      it('Does not update location hash when name has hash and path is specified', () => {
+        const
+          nameWithHash = '#mylink',
+          { getByTestId } = render(<XButtons model={{ items: [{ button: { name: nameWithHash, label: name, link: true, path: 'https://h2o.ai/' } }] }} />)
+  
+        fireEvent.click(getByTestId(nameWithHash))
+        expect(window.location.hash).toBe('')
+      })
     })
   })
 
