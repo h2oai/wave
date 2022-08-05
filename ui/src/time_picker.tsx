@@ -19,9 +19,10 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns' // TODO: laz
 import { B, Id, S } from 'h2o-wave'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { cssVar, cssVarValue } from './theme'
-import { TextFieldProps } from '@mui/material'
+import { PopperProps, TextFieldProps } from '@mui/material'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
+import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 
 /**
  * Create a timepicker.
@@ -55,6 +56,26 @@ export interface TimePicker {
 }
 
 const
+    css = stylesheet({
+        toolbarTime: {
+            fontSize: 26,
+            cursor: 'pointer'
+        }
+    }),
+    popoverProps: Partial<PopperProps> | undefined = {
+        placement: 'bottom-start',
+        sx: {
+            '& .MuiPaper-root': {
+                borderRadius: '2px',
+                boxShadow: 'rgb(0 0 0 / 13%) 0px 6.4px 14.4px 0px, rgb(0 0 0 / 11%) 0px 1.2px 3.6px 0px'
+            },
+            '& .MuiTypography-root': {
+                fontFamily: 'Inter',
+            }
+        }
+    }
+
+const
     parseTimeToDate = (time: S) => {
         const date = new Date(`2000-01-01T${time.slice(0, 5)}:00`)
         if (time?.endsWith('pm')) date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
@@ -67,12 +88,27 @@ const
         // TODO: add pad2 to numbers
         return `${useHour12 && hours >= 12 ? hours - 12 : hours}:${minutes}${useHour12 ? (hours >= 12 ? 'pm' : 'am') : ''}`
     },
-    css = stylesheet({
-        toolbarTime: {
-            fontSize: 26,
-            cursor: 'pointer'
-        }
-    })
+    Toolbar = ({ params, label, switchAmPm }: { params: BaseToolbarProps<Date, Date | null>, label: S | undefined, switchAmPm: () => void }) => {
+        const
+            { parsedValue, setOpenView, ampm } = params,
+            time = parsedValue
+                // https://github.com/moment/luxon/issues/726
+                ? parsedValue.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: ampm ? 'h12' : 'h23' })
+                : '--:--'
+
+        return (
+            <div style={{ paddingTop: 16, paddingLeft: 16 }}>
+                {label && <Fluent.Label style={{ maxWidth: '70%' }}>{label}</Fluent.Label>}
+                <Fluent.Text style={{ fontSize: 26 }}>
+                    <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{`${time.substring(0, 2)}`}</Fluent.Text>
+                    {':'}
+                    <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{`${time.substring(3, 5)}`}</Fluent.Text>
+                    {' '}
+                    <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{`${time.substring(6, 8) || ''}`}</Fluent.Text>
+                </Fluent.Text>
+            </div>
+        )
+    }
 
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
@@ -81,6 +117,18 @@ export const
             [value, setValue] = React.useState(defaultVal),
             [isDialogOpen, setIsDialogOpen] = React.useState(false),
             textInputRef = React.useRef<HTMLDivElement>(null),
+            switchAmPm = () => {
+                setValue((prevValue) => {
+                    const date = new Date(prevValue!)
+                    date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
+                    return date
+                })
+            },
+            onSelectTime = (time: Date | null) => {
+                // TODO: rename 'time' to better represent it is in a Date format
+                wave.args[m.name] = time ? formatDateToTimeString(time, m.useHour12) : null
+                if (m.trigger) wave.push()
+            },
             // TODO: test component with all wave themes
             [theme] = React.useState(
                 // Not all of MUI's components support cssVar - cssVarValue used instead.
@@ -104,12 +152,7 @@ export const
                             hoverOpacity: 0.04
                         }
                     },
-                })),
-            onSelectTime = (time: Date | null) => {
-                // TODO: rename 'time' to better represent it is in a Date format
-                wave.args[m.name] = time ? formatDateToTimeString(time, m.useHour12) : null
-                if (m.trigger) wave.push()
-            }
+                }))
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
         React.useEffect(() => { wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.useHour12) : null }, []) // TODO: 
@@ -120,52 +163,16 @@ export const
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <TimePicker
                             value={value}
+                            label={m.label}
                             open={isDialogOpen}
                             onClose={() => setIsDialogOpen(false)}
                             ampm={m.useHour12}
                             onChange={setValue}
                             showToolbar={true}
-                            PopperProps={{
-                                anchorEl: textInputRef.current,
-                                placement: 'bottom-start',
-                                sx: {
-                                    '& .MuiPaper-root': {
-                                        borderRadius: '2px',
-                                        boxShadow: 'rgb(0 0 0 / 13%) 0px 6.4px 14.4px 0px, rgb(0 0 0 / 11%) 0px 1.2px 3.6px 0px'
-                                    },
-                                    '& .MuiTypography-root': {
-                                        fontFamily: 'Inter',
-                                    }
-                                }
-                            }}
-                            ToolbarComponent={(params) => {
-                                const
-                                    { parsedValue } = params,
-                                    time = parsedValue
-                                        // https://github.com/moment/luxon/issues/726
-                                        ? parsedValue.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: params.ampm ? 'h12' : 'h23' })
-                                        : '--:--'
-
-                                return (
-                                    <div style={{ paddingTop: 16, paddingLeft: 16 }}>
-                                        {m.label && <Fluent.Label style={{ maxWidth: '70%' }}>{m.label}</Fluent.Label>}
-                                        <Fluent.Text style={{ fontSize: 26 }}>
-                                            <Fluent.Text className={css.toolbarTime} onClick={() => params.setOpenView('hours')}>{`${time.substring(0, 2)}`}</Fluent.Text>
-                                            {':'}
-                                            <Fluent.Text className={css.toolbarTime} onClick={() => params.setOpenView('minutes')}>{`${time.substring(3, 5)}`}</Fluent.Text>
-                                            {' '}
-                                            <Fluent.Text className={css.toolbarTime} onClick={() => {
-                                                setValue((prevValue) => {
-                                                    const date = new Date(prevValue!)
-                                                    date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-                                                    return date
-                                                })
-                                            }}>{`${time.substring(6, 8) || ''}`}</Fluent.Text>
-                                        </Fluent.Text>
-                                    </div>
-                                )
-                            }}
-                            renderInput={({ inputProps, error }: TextFieldProps) => {
+                            disabled={m.disabled}
+                            PopperProps={{ anchorEl: textInputRef.current, ...popoverProps }}
+                            ToolbarComponent={(params) => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
+                            renderInput={({ inputProps, error, disabled }: TextFieldProps) => {
                                 return <div ref={textInputRef}>
                                     <Fluent.TextField
                                         iconProps={{ iconName: 'Clock', }}
@@ -176,7 +183,7 @@ export const
                                         }}
                                         onChange={inputProps?.onChange}
                                         placeholder={inputProps?.placeholder}
-                                        disabled={m.disabled}
+                                        disabled={disabled}
                                         errorMessage={
                                             // TODO: handle wrong min-max range
                                             error
@@ -191,9 +198,6 @@ export const
                             }}
                             minTime={m.min ? parseTimeToDate(m.min) : undefined}
                             maxTime={m.max ? parseTimeToDate(m.max) : undefined}
-                            // mask // TODO: discuss
-                            // inputFormat // TODO: change placeholder and value to support both 24 and 12 hour format
-                            // minutesStep // TODO: discuss
                             onAccept={onSelectTime}
                             onOpen={() => {
                                 // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
@@ -202,6 +206,9 @@ export const
                                     if (el) (el as HTMLElement).blur()
                                 })
                             }}
+                        // mask // TODO: discuss
+                        // inputFormat // TODO: change placeholder and value to support both 24 and 12 hour format
+                        // minutesStep // TODO: discuss
                         />
                     </LocalizationProvider>
                 </ThemeProvider>
