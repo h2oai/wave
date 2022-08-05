@@ -20,7 +20,7 @@ import React from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { cssVar, cssVarValue } from './theme'
 import { wave } from './ui'
-// import { InputBaseProps } from '@mui/material'
+import { TextFieldProps } from '@mui/material'
 
 /**
  * Create a timepicker.
@@ -73,7 +73,7 @@ export const
             defaultVal = m.value ? parseTimeToDate(m.value) : null,
             [value, setValue] = React.useState(defaultVal),
             [isDialogOpen, setIsDialogOpen] = React.useState(false),
-            textInputRef = React.useRef(),
+            textInputRef = React.useRef<HTMLDivElement>(null),
             // TODO: test component with all wave themes
             [theme] = React.useState(
                 // Not all of MUI's components support cssVar - cssVarValue used instead.
@@ -150,7 +150,7 @@ export const
                                             <Fluent.Text style={{ fontSize: 26 }}>{' '}</Fluent.Text>
                                             <Fluent.Text style={{ fontSize: 26, cursor: 'pointer' }} onClick={() => {
                                                 setValue((prevValue) => {
-                                                    const date = new Date(prevValue)
+                                                    const date = new Date(prevValue!)
                                                     date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
                                                     return date
                                                 })
@@ -159,7 +159,7 @@ export const
                                     </div>
                                 )
                             }}
-                            renderInput={({ inputProps: { onChange, placeholder, readOnly, value }, error }) => {
+                            renderInput={({ inputProps, error }: TextFieldProps) => {
                                 return <div ref={textInputRef}>
                                     <Fluent.TextField
                                         iconProps={{ iconName: 'Clock', }}
@@ -168,8 +168,8 @@ export const
                                             field: { cursor: 'pointer' },
                                             icon: { bottom: 7 }
                                         }}
-                                        onChange={onChange}
-                                        placeholder={placeholder}
+                                        onChange={inputProps?.onChange}
+                                        placeholder={inputProps?.placeholder}
                                         disabled={m.disabled}
                                         errorMessage={
                                             // TODO: handle wrong min-max range
@@ -177,8 +177,8 @@ export const
                                                 ? `Wrong input. Please enter time in hh:mm (a|p)m format. Example: ${m.useHour12 ? "11:35 am" : "14:32"}`
                                                 : undefined
                                         }
-                                        readOnly={readOnly} // TODO: remove?
-                                        value={value}
+                                        readOnly={inputProps?.readOnly} // TODO: remove?
+                                        value={inputProps?.value}
                                         label={m.label}
                                         required={m.required}
                                     /></div>
