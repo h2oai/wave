@@ -47,15 +47,13 @@ jobs:
         with:
           working-directory: ./r
 
+      - name: Build Release
+        run: make release-nightly
+
       - name: Unit Test UI
-        env: 
-          _H2O_WAVE_TEST_TIMEOUT: 15
         run: |
           make test-ui-ci
           make test-py-ci
-
-      - name: Build Release
-        run: make release-nightly
 
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags

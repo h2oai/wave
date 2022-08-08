@@ -33,15 +33,13 @@ jobs:
         with:
           working-directory: ./r
 
+      - name: Build Release
+        run: make release
+
       - name: Unit Test
-        env: 
-          _H2O_WAVE_TEST_TIMEOUT: 15
         run: |
           make test-ui-ci
           make test-py-ci
-
-      - name: Build Release
-        run: make release
 
       - name: Create GitHub Release
         id: create_release
