@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { IComboBox, IComboBoxOption } from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { wave } from './ui'
@@ -59,54 +60,111 @@ export interface Combobox {
   required?: B
 }
 
-export const
-  XCombobox = ({ model: m }: { model: Combobox }) => {
-    const
-      isMultiValued = !!m.values,
-      [text, setText] = React.useState(m.value),
-      [options, setOptions] = React.useState((m.choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text }))),
-      [selected, setSelected] = React.useState<Fluent.IComboBoxOption[]>((m.values || []).map(text => ({ key: text, text }))),
-      selectOpt = (option: Fluent.IComboBoxOption) => {
-        setSelected(items => {
-          const result = option.selected ? [...items, option] : items.filter(item => item.key !== option.key)
-          wave.args[m.name] = result.map(item => item.text)
-          return result
-        })
-      },
-      onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: U, value?: S) => {
-        if (!option && value) {
-          const opt: Fluent.IComboBoxOption = { key: value, text: value }
-          setOptions((prevOptions = []) => [...prevOptions, opt])
-          selectOpt({...opt, selected: true})
-        }
-        if (option && isMultiValued) {
-          selectOpt(option)
-        }
-        else {
-          const v = option?.text || value || ''
-          wave.args[m.name] = v
-          setText(v)
-        }
-        if (m.trigger) wave.push()
-      }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m?.value || m?.values || null }, [])
+export const XCombobox = ({ model: m }: { model: Combobox }) => m.values ? <ComboboxMultiSelect model={m} /> : <ComboboxSingleSelect model={m} />
 
-    return (
-      <Fluent.ComboBox
-        data-test={m.name}
-        label={m.label}
-        placeholder={m.placeholder}
-        options={options}
-        required={m.required}
-        multiSelect={isMultiValued}
-        selectedKey={isMultiValued ? selected.map(s => s.key as S) : undefined}
-        text={isMultiValued ? undefined : text}
-        allowFreeform
-        disabled={m.disabled}
-        autoComplete="on"
-        errorMessage={m.error}
-        onChange={onChange}
-      />
-    )
-  }
+const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> }) => {
+  const
+    [options, setOptions] = useOptions(m.choices),
+    [selected, setSelected] = React.useState<S | null>(m.value ?? null),
+    onChange = (_e: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: U, value?: S) => {
+      const v = (option && String(option.key)) || value || ''
+      setSelected(v)
+
+      // Hacky: Ensure that next "model.value" set from a Wave App will be different and trigger the second "useEffect"
+      m.value = v
+
+      wave.args[m.name] = v
+      if (m.trigger) wave.push()
+    }
+
+  React.useEffect(() => { wave.args[m.name] = selected }, [m.name, selected])
+
+  // Whenever a new "value" is set in a Wave App, set it as the current value and add it to options list if it's not included yet
+  React.useEffect(() => {
+    setSelected(m.value || null)
+    if (m.value && !(m.choices || []).includes(m.value)) {
+      setOptions((prevOptions = []) => [...prevOptions, { key: m.value!, text: m.value! }])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [m.value])
+
+  return (
+    <Fluent.ComboBox
+      data-test={m.name}
+      label={m.label}
+      placeholder={m.placeholder}
+      options={options}
+      required={m.required}
+      selectedKey={selected}
+      allowFreeform
+      disabled={m.disabled}
+      autoComplete="on"
+      errorMessage={m.error}
+      onChange={onChange}
+    />
+  )
+}
+
+const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) => {
+  const
+    [options, setOptions] = useOptions(m.choices),
+    [selected, setSelected] = React.useState<S[]>(m.values ?? []),
+    selectOpt = (option: IComboBoxOption) => {
+      setSelected(keys => {
+        const result = option.selected ? [...keys, String(option.key)] : keys.filter(key => key !== option.key)
+        wave.args[m.name] = result
+        return result
+      })
+    },
+    onChange = (_e: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: U, value?: S) => {
+      if (!option && value) {
+        const opt: IComboBoxOption = { key: value, text: value }
+        setOptions((prevOptions = []) => [...prevOptions, opt])
+        selectOpt({ ...opt, selected: true })
+      }
+      if (option) {
+        selectOpt(option)
+      }
+      if (m.trigger) wave.push()
+    }
+
+  React.useEffect(() => {
+    wave.args[m.name] = m.values?.length ? m.values : null
+    setSelected(m.values || [])
+    if (m.values?.length) {
+      setOptions((prevOptions = []) =>
+        [
+          ...prevOptions,
+          ...m.values!.filter(v => !prevOptions.some(o => o.key === v)).map(v => ({ key: v, text: v }))
+        ]
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [m.values])
+
+  return (
+    <Fluent.ComboBox
+      data-test={m.name}
+      label={m.label}
+      placeholder={m.placeholder}
+      options={options}
+      required={m.required}
+      multiSelect
+      selectedKey={selected}
+      allowFreeform
+      disabled={m.disabled}
+      autoComplete="on"
+      errorMessage={m.error}
+      onChange={onChange}
+    />
+  )
+}
+
+const useOptions = (choices: S[] = []): [Fluent.IComboBoxOption[], React.Dispatch<React.SetStateAction<Fluent.IComboBoxOption[]>>] => {
+  const mappedChoices = React.useMemo(() => (choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [choices])
+  const [options, setOptions] = React.useState(mappedChoices)
+
+  React.useEffect(() => { setOptions(mappedChoices) }, [choices, mappedChoices])
+
+  return [options, setOptions]
+}
