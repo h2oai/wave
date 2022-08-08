@@ -80,7 +80,6 @@ export const
       textFieldProps: Fluent.ITextFieldProps & { 'data-test': S } = {
         'data-test': m.name,
         label: m.label,
-        value: m.value,
         errorMessage: m.error,
         required: m.required,
         disabled: m.disabled,
@@ -90,7 +89,6 @@ export const
         placeholder: m.placeholder,
         prefix: m.prefix,
         suffix: m.suffix,
-        defaultValue: m.value,
         multiline: m.multiline,
         spellCheck: m.spellcheck,
         type: m.password ? 'password' : undefined,
@@ -100,12 +98,7 @@ export const
     React.useEffect(() => { wave.args[m.name] = m.value || '' }, [])
 
     return m.mask
-      ? (
-        <Fluent.MaskedTextField
-          mask={m.mask}
-          {...textFieldProps}
-        />
-      )
+      ? <Fluent.MaskedTextField mask={m.mask} {...textFieldProps} value={m.value} />
       : (
         <Fluent.TextField
           styles={
@@ -114,6 +107,7 @@ export const
               : undefined
           }
           {...textFieldProps}
+          defaultValue={m.value}
         />
       )
   }
