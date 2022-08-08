@@ -48,6 +48,8 @@ jobs:
           working-directory: ./r
 
       - name: Unit Test UI
+        env: 
+          _H2O_WAVE_TEST_TIMEOUT: 5
         run: |
           make test-ui-ci
           make test-py-ci

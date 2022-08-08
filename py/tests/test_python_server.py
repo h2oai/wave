@@ -86,7 +86,7 @@ class TestPythonServer(unittest.TestCase):
         env['H2O_WAVE_NO_LOG'] = 't'
         cls.wave_server_process = subprocess.Popen(['make', 'run'], cwd='..', preexec_fn=os.setsid, env=env)
         # Wait for server to boot up.
-        time.sleep(2)
+        time.sleep(int(os.environ.get('_H2O_WAVE_TEST_TIMEOUT', 2)))
 
     @classmethod
     def tearDownClass(cls):
