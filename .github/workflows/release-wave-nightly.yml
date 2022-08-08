@@ -49,7 +49,7 @@ jobs:
 
       - name: Unit Test UI
         env: 
-          _H2O_WAVE_TEST_TIMEOUT: 5
+          _H2O_WAVE_TEST_TIMEOUT: 15
         run: |
           make test-ui-ci
           make test-py-ci
