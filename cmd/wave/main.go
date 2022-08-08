@@ -97,6 +97,7 @@ func main() {
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	stringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	stringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
+	boolVar(&conf.SkipCertVerification, "no-tls-verify", false, "do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION")
 	stringVar(&httpHeadersFile, "http-headers-file", "", "path to a MIME-formatted file containing additional HTTP headers to add to responses from the server")
 	boolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	stringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
