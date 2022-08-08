@@ -69,14 +69,14 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
     onChange = (_e: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: U, value?: S) => {
       const v = (option && String(option.key)) || value || ''
       setSelected(v)
-      
+
       // Hacky: Ensure that next "model.value" set from a Wave App will be different and trigger the second "useEffect"
       m.value = v
 
       wave.args[m.name] = v
       if (m.trigger) wave.push()
     }
-  
+
   React.useEffect(() => { wave.args[m.name] = selected }, [m.name, selected])
 
   // Whenever a new "value" is set in a Wave App, set it as the current value and add it to options list if it's not included yet
@@ -85,7 +85,7 @@ const ComboboxSingleSelect = ({ model: m }: { model: Omit<Combobox, 'values'> })
     if (m.value && !(m.choices || []).includes(m.value)) {
       setOptions((prevOptions = []) => [...prevOptions, { key: m.value!, text: m.value! }])
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [m.value])
 
   return (
@@ -120,14 +120,14 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
       if (!option && value) {
         const opt: IComboBoxOption = { key: value, text: value }
         setOptions((prevOptions = []) => [...prevOptions, opt])
-        selectOpt({...opt, selected: true})
+        selectOpt({ ...opt, selected: true })
       }
       if (option) {
         selectOpt(option)
       }
       if (m.trigger) wave.push()
     }
-  
+
   React.useEffect(() => {
     wave.args[m.name] = m.values?.length ? m.values : null
     setSelected(m.values || [])
@@ -135,11 +135,11 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
       setOptions((prevOptions = []) =>
         [
           ...prevOptions,
-          ...m.values!.filter(v => !prevOptions.map(o => String(o.key)).includes(v)).map(v => ({ key: v, text: v }))
+          ...m.values!.filter(v => !prevOptions.some(o => o.key === v)).map(v => ({ key: v, text: v }))
         ]
       )
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [m.values])
 
   return (
@@ -160,11 +160,11 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
   )
 }
 
-const useOptions = (choices: S[] = []): [Fluent.IComboBoxOption[], React.Dispatch<React.SetStateAction<Fluent.IComboBoxOption[]>>]  => {
+const useOptions = (choices: S[] = []): [Fluent.IComboBoxOption[], React.Dispatch<React.SetStateAction<Fluent.IComboBoxOption[]>>] => {
   const mappedChoices = React.useMemo(() => (choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [choices])
   const [options, setOptions] = React.useState(mappedChoices)
-  
+
   React.useEffect(() => { setOptions(mappedChoices) }, [choices, mappedChoices])
-  
+
   return [options, setOptions]
 }
