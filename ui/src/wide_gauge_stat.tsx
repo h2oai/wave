@@ -82,7 +82,7 @@ export const
         /*
          * Numbers 14 and 9 are representing maximum width of the single character.
          * The minimum width of the value containers is the width of 4 characters.
-         * This prevents the jumping layout in the most common scenarios when numbers are changing from ones to tens. 
+         * This prevents the jumping layout in the most common scenarios when numbers are changing between ones to tens. 
         */
         valueContainerWidth = 14 * Math.max(substitute(s.value, s.data).length, 4 + valueNonDigitCharCount),
         auxValueContainerWidth = 9 * Math.max(substitute(s.aux_value, s.data).length, 4 + auxValueNonDigitCharCount)
