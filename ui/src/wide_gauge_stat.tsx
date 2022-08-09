@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid, substitute } from './layout'
 import { ProgressArc } from './parts/progress_arc'
-import { centerMixin, clas, cssVar, padding, pc } from './theme'
+import { centerMixin, clas, cssVar, padding } from './theme'
 import { bond } from './ui'
 
 const
@@ -28,11 +28,9 @@ const
     },
     lhs: {
       position: 'relative',
-      minWidth: pc(30),
-      width: pc(30)
+      width: '100%'
     },
     rhs: {
-      width: pc(70),
       marginLeft: grid.gap,
       alignSelf: 'center'
     },
@@ -75,8 +73,19 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Model<State>) => {
+    const
+      valueNonDigitCharCount = substitute(s.value, s.data).replace(/[0-9]/g, '').length,
+      auxValueNonDigitCharCount = substitute(s.aux_value, s.data).replace(/[0-9]/g, '').length
     const render = () => {
-      const data = unpack<Rec>(s.data)
+      const
+        data = unpack<Rec>(s.data),
+        /*
+         * Numbers 14 and 9 are representing maximum width of the single character.
+         * The minimum width of the value containers is the width of 4 characters.
+         * This prevents the jumping layout in the most common scenarios when numbers are changing from ones to tens. 
+        */
+        valueContainerWidth = 14 * Math.max(substitute(s.value, s.data).length, 4 + valueNonDigitCharCount),
+        auxValueContainerWidth = 9 * Math.max(substitute(s.aux_value, s.data).length, 4 + auxValueNonDigitCharCount)
       return (
         <div data-test={name} className={css.card}>
           <div className={css.lhs}>
@@ -88,8 +97,8 @@ export const
           <div className={css.rhs}>
             <Format data={data} format={s.title} className={clas(css.title, 'wave-s12 wave-w6')} />
             <div className={css.values}>
-              <Format data={data} format={s.value} style={{ width: 14 * substitute(s.value, s.data).length }} className='wave-s24 wave-w3' />
-              <Format data={data} format={s.aux_value} style={{ width: 9 * substitute(s.aux_value, s.data).length }} className={clas(css.aux_value, 'wave-s13')} />
+              <Format data={data} format={s.value} style={{ minWidth: valueContainerWidth }} className='wave-s24 wave-w3' />
+              <Format data={data} format={s.aux_value} style={{ minWidth: auxValueContainerWidth }} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         </div >
