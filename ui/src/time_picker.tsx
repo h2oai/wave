@@ -14,15 +14,15 @@
 
 import React from 'react'
 import * as Fluent from '@fluentui/react'
-import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers' // TODO: lazyload
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns' // TODO: lazyload
 import { B, Id, S } from 'h2o-wave'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { cssVar, cssVarValue } from './theme'
-import { PopperProps, TextFieldProps } from '@mui/material'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers' // TODO: lazyload
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns' // TODO: lazyload
+import { InputBaseComponentProps, PopperProps, TextFieldProps } from '@mui/material' // TODO: lazyload
+import { createTheme, ThemeProvider } from '@mui/material/styles' // TODO: lazyload
+import { BaseToolbarProps } from '@mui/x-date-pickers/internals' // TODO: lazyload
 
 /**
  * Create a timepicker.
@@ -108,7 +108,30 @@ const
                 </Fluent.Text>
             </div>
         )
-    }
+    },
+    TextField = ({ onClick, inputProps, disabled, error, label, required, useHour12 }: { inputProps?: InputBaseComponentProps, onClick: () => void, label?: S, useHour12?: B, error?: B, disabled?: B, required?: B }) =>
+        <Fluent.TextField
+            iconProps={{ iconName: 'Clock', }}
+            onClick={onClick}
+            styles={{
+                field: { cursor: 'pointer' },
+                icon: { bottom: 7 }
+            }}
+            onChange={inputProps?.onChange}
+            placeholder={inputProps?.placeholder}
+            disabled={disabled}
+            errorMessage={
+                // TODO: handle wrong min-max range
+                error
+                    ? `Wrong input. Please enter time in hh:mm (a|p)m format. Example: ${useHour12 ? "11:35 am" : "14:32"}`
+                    : undefined
+            }
+            readOnly={inputProps?.readOnly} // TODO: remove?
+            value={inputProps?.value}
+            label={label}
+            required={required}
+        />
+
 
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
@@ -131,7 +154,7 @@ export const
             },
             // TODO: test component with all wave themes
             [theme] = React.useState(
-                // Not all of MUI's components support cssVar - cssVarValue used instead.
+                // Not all of MUI's components support css variables yet - cssVarValue used instead.
                 createTheme({
                     palette: {
                         background: {
@@ -165,40 +188,29 @@ export const
                             value={value}
                             label={m.label}
                             open={isDialogOpen}
+                            onChange={setValue}
+                            onAccept={onSelectTime}
                             onClose={() => setIsDialogOpen(false)}
                             ampm={m.useHour12}
-                            onChange={setValue}
-                            showToolbar={true}
-                            disabled={m.disabled}
                             PopperProps={{ anchorEl: textInputRef.current, ...popoverProps }}
+                            showToolbar={true}
                             ToolbarComponent={(params) => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
-                            renderInput={({ inputProps, error, disabled }: TextFieldProps) => {
-                                return <div ref={textInputRef}>
-                                    <Fluent.TextField
-                                        iconProps={{ iconName: 'Clock', }}
+                            renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
+                                <div ref={textInputRef}>
+                                    <TextField
                                         onClick={() => setIsDialogOpen(true)}
-                                        styles={{
-                                            field: { cursor: 'pointer' },
-                                            icon: { bottom: 7 }
-                                        }}
-                                        onChange={inputProps?.onChange}
-                                        placeholder={inputProps?.placeholder}
+                                        inputProps={inputProps}
                                         disabled={disabled}
-                                        errorMessage={
-                                            // TODO: handle wrong min-max range
-                                            error
-                                                ? `Wrong input. Please enter time in hh:mm (a|p)m format. Example: ${m.useHour12 ? "11:35 am" : "14:32"}`
-                                                : undefined
-                                        }
-                                        readOnly={inputProps?.readOnly} // TODO: remove?
-                                        value={inputProps?.value}
+                                        error={error}
                                         label={m.label}
                                         required={m.required}
-                                    /></div>
-                            }}
+                                        useHour12={m.useHour12}
+                                    />
+                                </div>
+                            }
                             minTime={m.min ? parseTimeToDate(m.min) : undefined}
                             maxTime={m.max ? parseTimeToDate(m.max) : undefined}
-                            onAccept={onSelectTime}
+                            disabled={m.disabled}
                             onOpen={() => {
                                 // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
                                 setTimeout(() => {
