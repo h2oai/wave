@@ -14,21 +14,23 @@
 
 import React from 'react'
 import * as Fluent from '@fluentui/react'
-import { B, Id, S } from 'h2o-wave'
+import { B, Id, S, U } from 'h2o-wave'
 import { cssVar, cssVarValue } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers' // TODO: lazyload
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns' // TODO: lazyload
-import { InputBaseComponentProps, PopperProps, TextFieldProps } from '@mui/material' // TODO: lazyload
-import { createTheme, ThemeProvider } from '@mui/material/styles' // TODO: lazyload
-import { BaseToolbarProps } from '@mui/x-date-pickers/internals' // TODO: lazyload
+// TODO: lazyload
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { PopperProps, TextFieldProps } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 
 /**
  * Create a timepicker.
  *
  * TODO: description
  */
+// TODO: check API descriptions
 
 export interface TimePicker {
     /** An identifying name for this component. */
@@ -43,23 +45,31 @@ export interface TimePicker {
     width?: S
     /** True if the component should be visible. Defaults to True. */
     visible?: B
-    /** True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes. */
+    /** True if the choice should be submitted when the time is selected. */
     trigger?: B
     /** True if this is a required field. Defaults to False. */
     required?: B
-    /** If true, use 12-hour time format. Otherwise, use 24-hour format.*/
-    useHour12?: B // S:, enum
+    /** If true, use 12-hour time format. Otherwise, use 24-hour format. */
+    time_format?: 'h12' | 'h24'
     /** The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm' */
     min?: S
     /** The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm' */
     max?: S
+    /** Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`. */
+    minutes_step?: U
 }
 
 const
     css = stylesheet({
         toolbarTime: {
             fontSize: 26,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            $nest: {
+                '&:hover': {
+                    backgroundColor: cssVar('$neutralLighter'),
+                    color: cssVar('$neutralDark')
+                }
+            }
         }
     }),
     popoverProps: Partial<PopperProps> | undefined = {
@@ -81,12 +91,14 @@ const
         if (time?.endsWith('pm')) date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
         return date
     },
-    formatDateToTimeString = (d: Date, useHour12: B = false) => {
+    formatDateToTimeString = (d: Date, time_format: 'h12' | 'h24' = 'h24') => {
         const
             hours = d.getHours(),
-            minutes = d.getMinutes()
-        // TODO: add pad2 to numbers
-        return `${useHour12 && hours >= 12 ? hours - 12 : hours}:${minutes}${useHour12 ? (hours >= 12 ? 'pm' : 'am') : ''}`
+            minutes = d.getMinutes(),
+            hoursAmPm = time_format === 'h12' && hours >= 12 ? (hours - 12) : hours,
+            hoursStr = hoursAmPm.toString().padStart(2, '0'),
+            minutesStr = minutes.toString().padStart(2, '0')
+        return `${hoursStr}:${minutesStr}${time_format === 'h12' ? (hours >= 12 ? ' pm' : ' am') : ''}`
     },
     Toolbar = ({ params, label, switchAmPm }: { params: BaseToolbarProps<Date, Date | null>, label: S | undefined, switchAmPm: () => void }) => {
         const
@@ -109,7 +121,7 @@ const
             </div>
         )
     },
-    TextField = ({ onClick, inputProps, disabled, error, label, required, useHour12 }: { inputProps?: InputBaseComponentProps, onClick: () => void, label?: S, useHour12?: B, error?: B, disabled?: B, required?: B }) =>
+    TextField = ({ onClick, onChange, disabled, error, label, required, timeFormat, value }: { onChange: any, onClick: () => void, label?: S, timeFormat?: 'h12' | 'h24', error?: B, disabled?: B, required?: B, value: Date | null }) =>
         <Fluent.TextField
             iconProps={{ iconName: 'Clock', }}
             onClick={onClick}
@@ -117,17 +129,17 @@ const
                 field: { cursor: 'pointer' },
                 icon: { bottom: 7 }
             }}
-            onChange={inputProps?.onChange}
-            placeholder={inputProps?.placeholder}
+            onChange={onChange}
+            placeholder='Select a time'
             disabled={disabled}
             errorMessage={
-                // TODO: handle wrong min-max range
+                // TODO: handle wrong min-max range, use MUI onError to set error message - example 17:59 to 18:59
                 error
-                    ? `Wrong input. Please enter time in hh:mm (a|p)m format. Example: ${useHour12 ? "11:35 am" : "14:32"}`
+                    ? `Wrong input. Please enter time in hh:mm (a|p)m format. Example: ${timeFormat === 'h12' ? "11:35 am" : "14:32"}`
                     : undefined
             }
-            readOnly={inputProps?.readOnly} // TODO: remove?
-            value={inputProps?.value}
+            readOnly={true}
+            value={value ? formatDateToTimeString(value, timeFormat) : ''}
             label={label}
             required={required}
         />
@@ -148,8 +160,7 @@ export const
                 })
             },
             onSelectTime = (time: Date | null) => {
-                // TODO: rename 'time' to better represent it is in a Date format
-                wave.args[m.name] = time ? formatDateToTimeString(time, m.useHour12) : null
+                wave.args[m.name] = time ? formatDateToTimeString(time, m.time_format) : null
                 if (m.trigger) wave.push()
             },
             // TODO: test component with all wave themes
@@ -178,7 +189,7 @@ export const
                 }))
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        React.useEffect(() => { wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.useHour12) : null }, []) // TODO: 
+        React.useEffect(() => { wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null }, []) // TODO: 
 
         return (
             <>
@@ -191,25 +202,27 @@ export const
                             onChange={setValue}
                             onAccept={onSelectTime}
                             onClose={() => setIsDialogOpen(false)}
-                            ampm={m.useHour12}
+                            ampm={m.time_format === 'h12'}
                             PopperProps={{ anchorEl: textInputRef.current, ...popoverProps }}
                             showToolbar={true}
-                            ToolbarComponent={(params) => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
+                            ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
                             renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
                                 <div ref={textInputRef}>
                                     <TextField
                                         onClick={() => setIsDialogOpen(true)}
-                                        inputProps={inputProps}
+                                        onChange={inputProps?.onChange}
                                         disabled={disabled}
                                         error={error}
                                         label={m.label}
                                         required={m.required}
-                                        useHour12={m.useHour12}
+                                        timeFormat={m.time_format}
+                                        value={value}
                                     />
                                 </div>
                             }
                             minTime={m.min ? parseTimeToDate(m.min) : undefined}
                             maxTime={m.max ? parseTimeToDate(m.max) : undefined}
+                            minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
                             disabled={m.disabled}
                             onOpen={() => {
                                 // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
@@ -218,9 +231,6 @@ export const
                                     if (el) (el as HTMLElement).blur()
                                 })
                             }}
-                        // mask // TODO: discuss
-                        // inputFormat // TODO: change placeholder and value to support both 24 and 12 hour format
-                        // minutesStep // TODO: discuss
                         />
                     </LocalizationProvider>
                 </ThemeProvider>

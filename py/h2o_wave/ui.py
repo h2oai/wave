@@ -2542,9 +2542,10 @@ def time_picker(
         visible: Optional[bool] = None,
         trigger: Optional[bool] = None,
         required: Optional[bool] = None,
-        useHour12: Optional[bool] = None,
+        time_format: Optional[str] = None,
         min: Optional[str] = None,
         max: Optional[str] = None,
+        minutes_step: Optional[int] = None,
 ) -> Component:
     """Create a timepicker.
 
@@ -2553,15 +2554,16 @@ def time_picker(
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        value: Default time selected. E.g. '10:30'
+        value: Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
         disabled: True if this field is disabled.
         width: The width of the combobox, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
-        trigger: True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
+        trigger: True if the choice should be submitted when the time is selected.
         required: True if this is a required field. Defaults to False.
-        useHour12: If true, use 12-hour time format. Otherwise, use 24-hour format.
+        time_format: If true, use 12-hour time format. Otherwise, use 24-hour format. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat.
         min: The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
         max: The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
+        minutes_step: Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
     Returns:
         A `h2o_wave.types.TimePicker` instance.
     """
@@ -2574,9 +2576,10 @@ def time_picker(
         visible,
         trigger,
         required,
-        useHour12,
+        time_format,
         min,
         max,
+        minutes_step,
     ))
 
 

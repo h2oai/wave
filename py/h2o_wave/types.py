@@ -6778,6 +6778,14 @@ class Tags:
         )
 
 
+_TimePickerTimeFormat = ['h12', 'h24']
+
+
+class TimePickerTimeFormat:
+    H12 = 'h12'
+    H24 = 'h24'
+
+
 class TimePicker:
     """Create a timepicker.
 
@@ -6793,9 +6801,10 @@ class TimePicker:
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             required: Optional[bool] = None,
-            useHour12: Optional[bool] = None,
+            time_format: Optional[str] = None,
             min: Optional[str] = None,
             max: Optional[str] = None,
+            minutes_step: Optional[int] = None,
     ):
         _guard_scalar('TimePicker.name', name, (str,), True, False, False)
         _guard_scalar('TimePicker.label', label, (str,), False, True, False)
@@ -6805,15 +6814,16 @@ class TimePicker:
         _guard_scalar('TimePicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('TimePicker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('TimePicker.required', required, (bool,), False, True, False)
-        _guard_scalar('TimePicker.useHour12', useHour12, (bool,), False, True, False)
+        _guard_enum('TimePicker.time_format', time_format, _TimePickerTimeFormat, True)
         _guard_scalar('TimePicker.min', min, (str,), False, True, False)
         _guard_scalar('TimePicker.max', max, (str,), False, True, False)
+        _guard_scalar('TimePicker.minutes_step', minutes_step, (int,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
         """Text to be displayed alongside the component."""
         self.value = value
-        """Default time selected. E.g. '10:30'"""
+        """Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'"""
         self.disabled = disabled
         """True if this field is disabled."""
         self.width = width
@@ -6821,15 +6831,17 @@ class TimePicker:
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
         self.trigger = trigger
-        """True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes."""
+        """True if the choice should be submitted when the time is selected."""
         self.required = required
         """True if this is a required field. Defaults to False."""
-        self.useHour12 = useHour12
-        """If true, use 12-hour time format. Otherwise, use 24-hour format."""
+        self.time_format = time_format
+        """If true, use 12-hour time format. Otherwise, use 24-hour format. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat."""
         self.min = min
         """The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'"""
         self.max = max
         """The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'"""
+        self.minutes_step = minutes_step
+        """Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6841,9 +6853,10 @@ class TimePicker:
         _guard_scalar('TimePicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TimePicker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('TimePicker.required', self.required, (bool,), False, True, False)
-        _guard_scalar('TimePicker.useHour12', self.useHour12, (bool,), False, True, False)
+        _guard_enum('TimePicker.time_format', self.time_format, _TimePickerTimeFormat, True)
         _guard_scalar('TimePicker.min', self.min, (str,), False, True, False)
         _guard_scalar('TimePicker.max', self.max, (str,), False, True, False)
+        _guard_scalar('TimePicker.minutes_step', self.minutes_step, (int,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -6853,9 +6866,10 @@ class TimePicker:
             visible=self.visible,
             trigger=self.trigger,
             required=self.required,
-            useHour12=self.useHour12,
+            time_format=self.time_format,
             min=self.min,
             max=self.max,
+            minutes_step=self.minutes_step,
         )
 
     @staticmethod
@@ -6877,12 +6891,14 @@ class TimePicker:
         _guard_scalar('TimePicker.trigger', __d_trigger, (bool,), False, True, False)
         __d_required: Any = __d.get('required')
         _guard_scalar('TimePicker.required', __d_required, (bool,), False, True, False)
-        __d_useHour12: Any = __d.get('useHour12')
-        _guard_scalar('TimePicker.useHour12', __d_useHour12, (bool,), False, True, False)
+        __d_time_format: Any = __d.get('time_format')
+        _guard_enum('TimePicker.time_format', __d_time_format, _TimePickerTimeFormat, True)
         __d_min: Any = __d.get('min')
         _guard_scalar('TimePicker.min', __d_min, (str,), False, True, False)
         __d_max: Any = __d.get('max')
         _guard_scalar('TimePicker.max', __d_max, (str,), False, True, False)
+        __d_minutes_step: Any = __d.get('minutes_step')
+        _guard_scalar('TimePicker.minutes_step', __d_minutes_step, (int,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         value: Optional[str] = __d_value
@@ -6891,9 +6907,10 @@ class TimePicker:
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         required: Optional[bool] = __d_required
-        useHour12: Optional[bool] = __d_useHour12
+        time_format: Optional[str] = __d_time_format
         min: Optional[str] = __d_min
         max: Optional[str] = __d_max
+        minutes_step: Optional[int] = __d_minutes_step
         return TimePicker(
             name,
             label,
@@ -6903,9 +6920,10 @@ class TimePicker:
             visible,
             trigger,
             required,
-            useHour12,
+            time_format,
             min,
             max,
+            minutes_step,
         )
 
 

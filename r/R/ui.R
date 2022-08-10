@@ -2945,15 +2945,17 @@ ui_tags <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param value Default time selected. E.g. '10:30'
+#' @param value Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
 #' @param disabled True if this field is disabled.
 #' @param width The width of the combobox, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
-#' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
+#' @param trigger True if the choice should be submitted when the time is selected.
 #' @param required True if this is a required field. Defaults to False.
-#' @param useHour12 If true, use 12-hour time format. Otherwise, use 24-hour format.
+#' @param time_format If true, use 12-hour time format. Otherwise, use 24-hour format.
+#'   One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat.
 #' @param min The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
 #' @param max The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
+#' @param minutes_step Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
 #' @return A TimePicker instance.
 #' @export
 ui_time_picker <- function(
@@ -2965,9 +2967,10 @@ ui_time_picker <- function(
   visible = NULL,
   trigger = NULL,
   required = NULL,
-  useHour12 = NULL,
+  time_format = NULL,
   min = NULL,
-  max = NULL) {
+  max = NULL,
+  minutes_step = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
@@ -2976,9 +2979,10 @@ ui_time_picker <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("required", "logical", required)
-  .guard_scalar("useHour12", "logical", useHour12)
+  # TODO Validate time_format
   .guard_scalar("min", "character", min)
   .guard_scalar("max", "character", max)
+  .guard_scalar("minutes_step", "numeric", minutes_step)
   .o <- list(time_picker=list(
     name=name,
     label=label,
@@ -2988,9 +2992,10 @@ ui_time_picker <- function(
     visible=visible,
     trigger=trigger,
     required=required,
-    useHour12=useHour12,
+    time_format=time_format,
     min=min,
-    max=max))
+    max=max,
+    minutes_step=minutes_step))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
