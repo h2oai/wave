@@ -793,12 +793,32 @@ class AsyncSite:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
 
+    async def upload_dir(self, directory: str) -> str:
+        """
+        Upload local files to the site.
+
+        Args:
+            files: A list of file paths of the files to be uploaded.
+
+        Returns:
+            A list of remote URLs for the uploaded files, in order.
+        """
+        if not os.path.isdir(directory):
+            raise ValueError(f'{directory} is not a directory.')
+
+        files = _get_files_in_directory(directory, [])
+        res = await self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"},
+                                    files=[('files', (os.path.relpath(f, directory), open(f, 'rb'))) for f in files])
+        if res.status_code == 200:
+            return json.loads(res.text)['files']
+        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
+
     async def upload(self, files: List[str]) -> List[str]:
         """
         Upload local files to the site.
 
         Args:
-            files: A list of file paths of the files to be uploaded..
+            files: A list of file paths of the files to be uploaded.
 
         Returns:
             A list of remote URLs for the uploaded files, in order.
@@ -897,9 +917,14 @@ class AsyncSite:
         raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
 
 
-def _kv(key: str, index: str, value: Any):
-    return dict(k=key, v=value) if index is None or index == '' else dict(k=key, i=index, v=value)
-
+def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:
+    for f in os.listdir(directory):
+        path = os.path.join(directory, f)
+        if os.path.isfile(path):
+            files.append(path)
+        else:
+            _get_files_in_directory(path, files)
+    return files
 
 def marshal(d: Any) -> str:
     """
