@@ -14,13 +14,13 @@
 
 import { Chart } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, TooltipItem } from '@antv/g2/lib/interface'
-import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
+import { B, Dict, Disposable, F, Model, on, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { cssVar, cssVarValue, formItemWidth } from './theme'
+import { cssVarValue, cssVar, formItemWidth, themeB } from './theme'
 import { bond, wave } from './ui'
 
 let
@@ -312,6 +312,164 @@ export interface Plot {
     rollback: [{ trigger: 'dblclick', action: ['brush:reset'] }],
   })
 })()
+
+// Referrence: https://theme-set.antv.vision/  https://g2.antv.vision/en/docs/api/advanced/register-theme
+const getPlotTheme = () => ({
+  defaultColor: cssVarValue('$themePrimary'),
+  labels: {
+    style: {
+      fill: cssVarValue('$text'),
+    }
+  },
+  geometries: {
+    point: {
+      'hollow-circle': {
+        default: {
+          style: {
+            fill: 'transparent'
+          }
+        }
+      }
+    },
+    interval: {
+      rect: {
+        selected: {
+          style: {
+            stroke: cssVarValue('$text'),
+          }
+        }
+      },
+    }
+  },
+  components: {
+    annotation: {
+      dataMarker: {
+        point: {
+          style: {
+            stroke: cssVarValue('$themePrimary'),
+            fill: cssVarValue('$card'),
+          }
+        }
+      },
+      line: {
+        style: {
+          fill: cssVarValue('$neutralPrimaryAlt'),
+        }
+      },
+      region: {
+        style: {
+          fill: cssVarValue('$themePrimary'),
+          fillOpacity: 0.3
+        }
+      },
+    },
+    legend: {
+      common: {
+        itemName: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        },
+        pageNavigator: {
+          text: {
+            style: {
+              fill: cssVarValue('$text'),
+            }
+          },
+          marker: {
+            style: {
+              fill: cssVarValue('$themePrimary'),
+              inactiveFill: cssVarValue('$themePrimary')
+            }
+          },
+        }
+      },
+      continuous: {
+        label: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        },
+        handler: {
+          style: {
+            fill: cssVarValue('$neutralPrimaryAlt'),
+          }
+        },
+      }
+    },
+    axis: {
+      top: {
+        title: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        }
+      },
+      right: {
+        title: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        }
+      },
+      bottom: {
+        title: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        }
+      },
+      left: {
+        title: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        }
+      },
+      circle: {
+        label: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        }
+      },
+      radius: {
+        label: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        }
+      },
+      common: {
+        label: {
+          style: {
+            fill: cssVarValue('$text'),
+          }
+        },
+        grid: {
+          line: {
+            style: {
+              stroke: cssVarValue('$neutralPrimaryAlt'),
+              strokeOpacity: 0.2
+            }
+          }
+        },
+        line: {
+          style: {
+            stroke: cssVarValue('$neutralPrimaryAlt'),
+            strokeOpacity: 0.6
+          }
+        },
+        tickLine: {
+          style: {
+            stroke: cssVarValue('$neutralPrimaryAlt'),
+            strokeOpacity: 0.6
+          }
+        },
+      }
+    },
+  }
+})
 
 // TODO not in use
 export const
@@ -610,7 +768,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = cssVar(isS(color) ? color : '$themePrimary')
+      o.color = cssVarValue(isS(color) ? color : '$themePrimary')
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -697,7 +855,7 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    s.fill = cssVar(isS(fill_color) ? fill_color : '$neutralPrimaryAlt')
+    s.fill = cssVarValue(isS(fill_color) ? fill_color : '$neutralPrimaryAlt')
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
     if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
@@ -819,163 +977,8 @@ const
     return {
       container: el,
       autoFit: true,
-      renderer: 'svg', // Use SVG to allow use of CSS vars which don't work with canvas.
-      theme: { // Referrence: https://theme-set.antv.vision/  https://g2.antv.vision/en/docs/api/advanced/register-theme
-        defaultColor: cssVar('$themePrimary'),
-        labels: {
-          style: {
-            fill: cssVar('$text'),
-          }
-        },
-        geometries: {
-          point: {
-            'hollow-circle': {
-              default: {
-                style: {
-                  fill: 'transparent'
-                }
-              }
-            }
-          },
-          interval: {
-            rect: {
-              selected: {
-                style: {
-                  stroke: cssVar('$text'),
-                }
-              }
-            },
-          }
-        },
-        components: {
-          annotation: {
-            dataMarker: {
-              point: {
-                style: {
-                  stroke: cssVar('$themePrimary'),
-                  fill: cssVar('$card'),
-                }
-              }
-            },
-            line: {
-              style: {
-                fill: cssVar('$neutralPrimaryAlt'),
-              }
-            },
-            region: {
-              style: {
-                fill: cssVar('$themePrimary'),
-                fillOpacity: 0.3
-              }
-            },
-          },
-          legend: {
-            common: {
-              itemName: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              },
-              pageNavigator: {
-                text: {
-                  style: {
-                    fill: cssVar('$text'),
-                  }
-                },
-                marker: {
-                  style: {
-                    fill: cssVar('$themePrimary'),
-                    inactiveFill: cssVar('$themePrimary')
-                  }
-                },
-              }
-            },
-            continuous: {
-              label: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              },
-              handler: {
-                style: {
-                  fill: cssVar('$neutralPrimaryAlt'),
-                }
-              },
-            }
-          },
-          axis: {
-            top: {
-              title: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              }
-            },
-            right: {
-              title: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              }
-            },
-            bottom: {
-              title: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              }
-            },
-            left: {
-              title: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              }
-            },
-            circle: {
-              label: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              }
-            },
-            radius: {
-              label: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              }
-            },
-            common: {
-              label: {
-                style: {
-                  fill: cssVar('$text'),
-                }
-              },
-              grid: {
-                line: {
-                  style: {
-                    stroke: cssVar('$neutralPrimaryAlt'),
-                    strokeOpacity: 0.2
-                  }
-                }
-              },
-              line: {
-                style: {
-                  stroke: cssVar('$neutralPrimaryAlt'),
-                  strokeOpacity: 0.6
-                }
-              },
-              tickLine: {
-                style: {
-                  stroke: cssVar('$neutralPrimaryAlt'),
-                  strokeOpacity: 0.6
-                }
-              },
-            }
-          },
-        }
-      },
+      renderer: 'canvas',
+      theme: getPlotTheme(),
       options: {
         animate: false,
         coordinate,
@@ -1066,6 +1069,7 @@ export const
       container = React.useRef<HTMLDivElement>(null),
       currentChart = React.useRef<Chart | null>(null),
       currentPlot = React.useRef<Plot | null>(null),
+      themeWatchRef = React.useRef<Disposable | null>(null),
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
@@ -1125,24 +1129,24 @@ export const
             }
           }
           chart.render()
-          // HACK: Prevent font descenders from overflow clipping.
-          const svgHeight = el.querySelector('svg')?.clientHeight
-          if (svgHeight) {
-            el.querySelectorAll('text').forEach(text => {
-              const y = Number(text.getAttribute('y'))
-              if (isNaN(y)) return
-              if (svgHeight - y > 12) return
-              text.setAttribute('y', String(y - 3))
-            })
-          }
           // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
           // same as after Layout phase. If not, rerender the plot again.
           setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
+          themeWatchRef.current = on(themeB, () => {
+            cat10 = cat10.map(cssVarValue)
+            const [geometries, annotations] = makeMarks(marks)
+            chart.updateOptions({ geometries, annotations })
+            chart.theme(getPlotTheme())
+            chart.render(true)
+          })
         }
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { init() }, [])
+    React.useEffect(() => {
+      init()
+      return () => themeWatchRef.current?.dispose()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     React.useEffect(() => {
       const el = container.current
       if (!el || !currentChart.current || !currentPlot.current) return
