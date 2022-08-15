@@ -3,7 +3,7 @@
 # ---
 import random
 
-from .synth import FakeTimeSeries, FakeMultiTimeSeries, FakeCategoricalSeries, FakeMultiCategoricalSeries, FakeScatter
+from synth import FakeTimeSeries, FakeMultiTimeSeries, FakeCategoricalSeries, FakeMultiCategoricalSeries, FakeScatter
 from h2o_wave import main, app, data, Q, ui
 
 
@@ -15,23 +15,18 @@ f_cat = FakeCategoricalSeries()
 f_cat_multi = FakeMultiCategoricalSeries(groups=k)
 f_scat = FakeScatter()
 
+zones = [
+    ui.zone(name='title', size='60px'),
+    ui.zone(name='plots', direction=ui.ZoneDirection.ROW, wrap='start', justify='center'),
+]
 
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.page['meta'] = ui.meta_card(box='', layouts=[
-            ui.layout(breakpoint='xs', zones=[
-                ui.zone(name='title'),
-                ui.zone(name='plots', direction=ui.ZoneDirection.ROW, wrap='start', justify='center'),
-            ]),
-            ui.layout(breakpoint='m', zones=[
-                ui.zone(name='title'),
-                ui.zone(name='plots', direction=ui.ZoneDirection.ROW, wrap='start', justify='center'),
-            ]),
-            ui.layout(breakpoint='xl', zones=[
-                ui.zone(name='title'),
-                ui.zone(name='plots', direction=ui.ZoneDirection.ROW, wrap='start', justify='center'),
-            ]),
+            ui.layout(breakpoint='xs', zones=zones),
+            ui.layout(breakpoint='m', zones=zones),
+            ui.layout(breakpoint='xl', zones=zones),
         ])
 
         q.client.active_theme = 'default'

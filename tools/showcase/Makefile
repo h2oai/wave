@@ -15,6 +15,7 @@ generate:
 
 visual-regression:
 	rm -rf test/compare test/diff
+	mkdir -p test/compare test/diff
 	./venv/bin/python showcase.py --test
 
 test-result:
