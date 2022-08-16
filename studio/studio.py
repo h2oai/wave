@@ -32,6 +32,9 @@ class Project:
     def get_server_address(self) -> str:
         cloud_env = os.environ.get('H2O_CLOUD_ENVIRONMENT', None)
         return f'{cloud_env}{self.server_base_url}' if cloud_env else os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
+    
+    def get_assets_url_for(self, url: str) -> str:
+        return f'{self.server_base_url}assets/{url}'
 
 project = Project()
 
@@ -93,11 +96,12 @@ async def setup_page(q: Q):
         box='',
         title='Wave Studio',
         scripts=[
-            ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js'),
-            ui.script('https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js'),
+            ui.script(project.get_assets_url_for('loader.min.js')),
+            ui.script(project.get_assets_url_for('vue.prod.js')),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
-        stylesheets=[ui.stylesheet(f'{project.server_base_url}assets/studio.css?v={time.time()}')], # Cache busting.
+        
+        stylesheets=[ui.stylesheet(project.get_assets_url_for(f'studio.css?v={time.time()}'))], # Cache busting.
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -108,7 +112,7 @@ async def setup_page(q: Q):
         box='header',
         title='Wave Studio',
         subtitle='Develop Wave apps completely in browser',
-        image='https://wave.h2o.ai/img/h2o-logo.svg',
+        image=project.get_assets_url_for('h2o-logo.svg'),
         items=[
             ui.button(name='console', label='Console', icon='CommandPrompt'),
             ui.button(name='open_preview', label='Preview', icon='OpenInNewWindow'),
@@ -142,7 +146,7 @@ def show_empty_preview(q: Q):
     q.page['preview'] = ui.tall_info_card(
         box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
         name='',
-        image=f'{project.server_base_url}assets/app_not_running.svg',
+        image=project.get_assets_url_for('app_not_running.svg'),
         image_height='500px',
         title='Oops! There is no running app.',
         caption='Try writing one in the code editor on the left.'
