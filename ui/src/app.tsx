@@ -144,7 +144,7 @@ const
                 return (
                   <div className={clas(css.centerFullHeight, css.app, css.notFoundOverlay)}>
                     <div>{message}</div>
-                    <div>Make sure your Wave server is running and the environment network policies allows websocket connections.</div>
+                    <div>Make sure your Wave server is running and the environment network policies allow websocket connections.</div>
                   </div>
                 )
               }
