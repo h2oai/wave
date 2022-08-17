@@ -18,11 +18,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import { cssVar, cssVarValue } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-// TODO: lazyload
-import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { PopperProps, TextFieldProps } from '@mui/material'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 
 /**
@@ -95,7 +91,7 @@ const
         const
             hours = d.getHours(),
             minutes = d.getMinutes(),
-            hoursAmPm = time_format === 'h12' && hours >= 12 ? (hours - 12) : hours,
+            hoursAmPm = time_format === 'h12' ? (hours >= 13 ? hours - 12 : (hours < 1 ? (hours + 12) : hours)) : hours,
             hoursStr = hoursAmPm.toString().padStart(2, '0'),
             minutesStr = minutes.toString().padStart(2, '0')
         return `${hoursStr}:${minutesStr}${time_format === 'h12' ? (hours >= 12 ? ' pm' : ' am') : ''}`
@@ -121,7 +117,8 @@ const
             </div>
         )
     },
-    TextField = ({ onClick, onChange, disabled, error, label, required, timeFormat, value }: { onChange: any, onClick: () => void, label?: S, timeFormat?: 'h12' | 'h24', error?: B, disabled?: B, required?: B, value: Date | null }) =>
+    // TODO: move directly to component's return JSX
+    TextField = ({ onClick, onChange, disabled, errorMessage, label, required, timeFormat, value }: { onChange: any, onClick: () => void, label?: S, timeFormat?: 'h12' | 'h24', errorMessage?: S, disabled?: B, required?: B, value: Date | null }) =>
         <Fluent.TextField
             iconProps={{ iconName: 'Clock', }}
             onClick={onClick}
@@ -132,12 +129,7 @@ const
             onChange={onChange}
             placeholder='Select a time'
             disabled={disabled}
-            errorMessage={
-                // TODO: handle wrong min-max range, use MUI onError to set error message - example 17:59 to 18:59
-                error
-                    ? `Wrong input. Please enter time in hh:mm (a|p)m format. Example: ${timeFormat === 'h12' ? "11:35 am" : "14:32"}`
-                    : undefined
-            }
+            errorMessage={errorMessage}
             readOnly={true}
             value={value ? formatDateToTimeString(value, timeFormat) : ''}
             label={label}
@@ -148,6 +140,10 @@ const
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
         const
+            ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
+            LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.LocalizationProvider }))),
+            TimePicker = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.TimePicker }))),
+            // AdapterDateFns = React.lazy(() => import('@mui/x-date-pickers/AdapterDateFns').then((module) => ({ default: module.AdapterDateFns }))),
             defaultVal = m.value ? parseTimeToDate(m.value) : null,
             [value, setValue] = React.useState(defaultVal),
             [isDialogOpen, setIsDialogOpen] = React.useState(false),
@@ -164,76 +160,99 @@ export const
                 if (m.trigger) wave.push()
             },
             // TODO: test component with all wave themes
-            [theme] = React.useState(
-                // Not all of MUI's components support css variables yet - cssVarValue used instead.
-                createTheme({
-                    palette: {
-                        background: {
-                            paper: cssVar('$card')
+            [AdapterDateFns, setAdapterDateFns] = React.useState<any>(null),
+            [theme, setTheme] = React.useState<any>(null),
+            getTheme = async () => {
+                return await import('@mui/material/styles').then(({ createTheme }) => {
+                    // Not all of MUI's components support css variables yet - cssVarValue used instead.
+                    return createTheme({
+                        palette: {
+                            background: {
+                                paper: cssVar('$card')
+                            },
+                            primary: {
+                                main: cssVarValue('$themePrimary')
+                            },
+                            text: {
+                                primary: cssVar('$neutralPrimary'),
+                                secondary: cssVar('$themeLight'),
+                                disabled: cssVar('$neutralTertiaryAlt'),
+                            },
+                            action: {
+                                active: cssVarValue('$themePrimary'),
+                                disabled: cssVar('$neutralLight'),
+                                hover: cssVar('$neutralLight'),
+                                hoverOpacity: 0.04
+                            }
                         },
-                        primary: {
-                            main: cssVarValue('$themePrimary')
-                        },
-                        text: {
-                            primary: cssVar('$neutralPrimary'),
-                            secondary: cssVar('$themeLight'),
-                            disabled: cssVar('$neutralTertiaryAlt'),
-                        },
-                        action: {
-                            active: cssVarValue('$themePrimary'),
-                            disabled: cssVar('$neutralLight'),
-                            hover: cssVar('$neutralLight'),
-                            hoverOpacity: 0.04
-                        }
-                    },
-                }))
+                    })
+                })
+            },
+            getAdapterDateFns = async () => {
+                return await import('@mui/x-date-pickers/AdapterDateFns')
+            }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        React.useEffect(() => { wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null }, []) // TODO: 
+        React.useEffect(() => {
+            wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null // TODO: 
+            getTheme().then(t => setTheme(t))
+            getAdapterDateFns().then(a => setAdapterDateFns(a))
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
+
+        console.log(textInputRef)
 
         return (
             <>
-                <ThemeProvider theme={theme}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <TimePicker
-                            value={value}
-                            label={m.label}
-                            open={isDialogOpen}
-                            onChange={setValue}
-                            onAccept={onSelectTime}
-                            onClose={() => setIsDialogOpen(false)}
-                            ampm={m.time_format === 'h12'}
-                            PopperProps={{ anchorEl: textInputRef.current, ...popoverProps }}
-                            showToolbar={true}
-                            ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
-                            renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
-                                <div ref={textInputRef}>
-                                    <TextField
-                                        onClick={() => setIsDialogOpen(true)}
-                                        onChange={inputProps?.onChange}
-                                        disabled={disabled}
-                                        error={error}
-                                        label={m.label}
-                                        required={m.required}
-                                        timeFormat={m.time_format}
-                                        value={value}
-                                    />
-                                </div>
-                            }
-                            minTime={m.min ? parseTimeToDate(m.min) : undefined}
-                            maxTime={m.max ? parseTimeToDate(m.max) : undefined}
-                            minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
-                            disabled={m.disabled}
-                            onOpen={() => {
-                                // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
-                                setTimeout(() => {
-                                    const el = document.activeElement
-                                    if (el) (el as HTMLElement).blur()
-                                })
-                            }}
-                        />
-                    </LocalizationProvider>
-                </ThemeProvider>
+                {/* TODO: loading div styling*/}
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    {theme && AdapterDateFns ? <ThemeProvider theme={theme}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns.AdapterDateFns}>
+                            <TimePicker
+                                value={value}
+                                label={m.label}
+                                open={isDialogOpen}
+                                onChange={setValue}
+                                onAccept={onSelectTime}
+                                onClose={() => setIsDialogOpen(false)}
+                                ampm={m.time_format === 'h12'}
+                                PopperProps={{ anchorEl: textInputRef.current, ...popoverProps }} // TODO: textInputRef is null because component is not rendered due to falsy (theme && AdapterDateFns) condition
+                                showToolbar={true}
+                                ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
+                                renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
+                                    <div ref={textInputRef}>
+                                        <TextField
+                                            onClick={() => setIsDialogOpen(true)}
+                                            onChange={inputProps?.onChange}
+                                            disabled={disabled}
+                                            errorMessage={
+                                                error
+                                                    ? `Wrong input. Please enter the time in range from ${m.min || (inputProps?.ampm ? '12:00am' : '00:00')} to ${m.max || (inputProps?.ampm ? '12:00am' : '00:00')}.`
+                                                    : undefined
+                                            }
+                                            label={m.label}
+                                            required={m.required}
+                                            timeFormat={m.time_format}
+                                            value={value}
+                                        />
+                                    </div>
+                                }
+                                minTime={m.min ? parseTimeToDate(m.min) : undefined}
+                                maxTime={m.max ? parseTimeToDate(m.max) : undefined}
+                                minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
+                                disabled={m.disabled}
+                                onOpen={() => {
+                                    // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
+                                    setTimeout(() => {
+                                        const el = document.activeElement
+                                        if (el) (el as HTMLElement).blur()
+                                    })
+                                }}
+                            />
+                        </LocalizationProvider>
+                    </ThemeProvider>
+                        : <>{/* TODO: use the same loading div as for react suspense*/}</>
+                    }
+                </React.Suspense>
             </>
         )
     }
