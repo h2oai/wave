@@ -673,6 +673,36 @@ class Site:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
+    def upload_dir(self, directory: str) -> str:
+        """
+        Upload local files to the site.
+
+        Args:
+            files: A list of file paths of the files to be uploaded.
+
+        Returns:
+            A list of remote URLs for the uploaded files, in order.
+        """
+        if not os.path.isdir(directory):
+            raise ValueError(f'{directory} is not a directory.')
+
+        upload_files = []
+        file_handles: List[BufferedReader] = []
+        for f in _get_files_in_directory(directory, []):
+            file_handle = open(f, 'rb')
+            upload_files.append(('files', (os.path.relpath(f, directory), file_handle)))
+            file_handles.append(file_handle)
+
+        res = self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"}, files=upload_files)
+
+        for h in file_handles:
+            h.close()
+
+        if res.status_code == 200:
+            return json.loads(res.text)['files']
+        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
+
+
     def download(self, url: str, path: str) -> str:
         """
         Download a file from the site.
@@ -806,9 +836,18 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        files = _get_files_in_directory(directory, [])
-        res = await self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"},
-                                    files=[('files', (os.path.relpath(f, directory), open(f, 'rb'))) for f in files])
+        upload_files = []
+        file_handles: List[BufferedReader] = []
+        for f in _get_files_in_directory(directory, []):
+            file_handle = open(f, 'rb')
+            upload_files.append(('files', (os.path.relpath(f, directory), file_handle)))
+            file_handles.append(file_handle)
+
+        res = await self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"}, files=upload_files)
+
+        for h in file_handles:
+            h.close()
+
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')

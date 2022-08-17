@@ -451,3 +451,11 @@ class TestPythonServer(unittest.TestCase):
         site.unlink('test_stream')
         file_handle.close()
         assert len(p) > 0
+
+    def test_upload_dir(self):
+        upload_path, = site.upload_dir(os.path.join('tests', 'test_folder'))
+        base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
+        download_path = site.download(f'{base_url}{upload_path}test.txt', 'test.txt')
+        txt = _read_file(download_path)
+        os.remove(download_path)
+        assert len(txt) > 0
