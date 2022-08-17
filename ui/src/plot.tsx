@@ -1112,7 +1112,10 @@ export const
           })
           currentChart.current = chart
           chart.data(data)
-          model.plot.marks.forEach(({ interactive = true }, idx) => chart.geometries[idx].customInfo({ interactive }))
+          // filter out annotation marks
+          model.plot.marks.filter(({ x, y }) => x == null && y == null).forEach(({ interactive = true }, idx) =>
+            chart.geometries[idx].customInfo({ interactive })
+          )
           if (model.events) {
             for (const event of model.events) {
               switch (event) {
