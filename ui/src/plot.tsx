@@ -1097,6 +1097,7 @@ export const
         currentPlot.current = plot
         if (chart) {
           chart.tooltip({
+            title: ' ', // HACK: Ignore tooltip title computation by G2 since we overwrite it anyway.
             showCrosshairs: true,
             crosshairs: { type: 'xy' },
             domStyles: {
