@@ -15,9 +15,9 @@
 import { F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
+import { cards, Format, grid, substitute } from './layout'
 import { ProgressArc } from './parts/progress_arc'
-import { centerMixin, clas, cssVar, padding, pc } from './theme'
+import { centerMixin, clas, cssVar, padding } from './theme'
 import { bond } from './ui'
 
 const
@@ -28,11 +28,11 @@ const
     },
     lhs: {
       position: 'relative',
-      width: pc(50)
+      width: '100%'
     },
     rhs: {
-      width: pc(50),
       marginLeft: grid.gap,
+      alignSelf: 'center'
     },
     values: {
       display: 'flex',
@@ -49,14 +49,16 @@ const
     title: {
       overflow: 'visible'
     },
-    value: {
-      lineHeight: 28, // Override to fit inside 1 unit height in grid layout.
-    },
     aux_value: {
       color: cssVar('$text7'),
       marginLeft: 5,
     }
   })
+
+const
+  MAX_CHAR_WIDTH = 14,
+  MAX_CHAR_AUX_WIDTH = 9,
+  MIN_CHAR_COUNT = 4
 
 /** Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge. */
 interface State {
@@ -77,7 +79,15 @@ interface State {
 export const
   View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
-      const data = unpack<Rec>(s.data)
+      const
+        data = unpack<Rec>(s.data),
+        value = substitute(s.value, s.data),
+        auxValue = substitute(s.aux_value, s.data),
+        valueNonDigitCharCount = value.match(/[^0-9]/g).length,
+        auxValueNonDigitCharCount = auxValue.match(/[^0-9]/g).length,
+        // This prevents the jumping layout in the most common scenarios when numbers are changing between ones to tens. 
+        valueContainerWidth = MAX_CHAR_WIDTH * Math.max(value.length, MIN_CHAR_COUNT + valueNonDigitCharCount),
+        auxValueContainerWidth = MAX_CHAR_AUX_WIDTH * Math.max(auxValue.length, MIN_CHAR_COUNT + auxValueNonDigitCharCount)
       return (
         <div data-test={name} className={css.card}>
           <div className={css.lhs}>
@@ -89,8 +99,8 @@ export const
           <div className={css.rhs}>
             <Format data={data} format={s.title} className={clas(css.title, 'wave-s12 wave-w6')} />
             <div className={css.values}>
-              <Format data={data} format={s.value} className='wave-s24 wave-w3' />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
+              <Format data={data} format={s.value} style={{ minWidth: valueContainerWidth }} className='wave-s24 wave-w3' />
+              <Format data={data} format={s.aux_value} style={{ minWidth: auxValueContainerWidth }} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         </div >

@@ -64,10 +64,10 @@ export const
         ? defaultValue
         : null
   },
-  Format = ({ data, defaultValue: v, format: f, className }: { data?: Rec, defaultValue?: any, format?: S, className?: S }) => {
+  Format = ({ data, defaultValue: v, format: f, className, style }: { data?: Rec, defaultValue?: any, format?: S, className?: S, style?: React.CSSProperties }) => {
     const x = substitute(f, data, v)
     if (x == null) return null
-    if (className) return <div className={className}>{x}</div>
+    if (className || style) return <div className={className} style={style} >{x}</div>
     return <>{x}</>
   },
   CardView = ({ card }: { card: Model<any> }) => {
