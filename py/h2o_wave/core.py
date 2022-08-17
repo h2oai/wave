@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from io import BufferedReader
 import json
 import secrets
 import warnings
@@ -656,8 +657,18 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        res = self._http.post(f'{_config.hub_address}_f/',
-                              files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        upload_files = []
+        file_handles: List[BufferedReader] = []
+        for f in files:
+            file_handle = open(f, 'rb')
+            upload_files.append(('files', (os.path.basename(f), file_handle)))
+            file_handles.append(file_handle)
+
+        res = self._http.post(f'{_config.hub_address}_f/', files=upload_files)
+
+        for h in file_handles:
+            h.close()
+
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
@@ -792,8 +803,18 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        res = await self._http.post(f'{_config.hub_address}_f/',
-                                    files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        upload_files = []
+        file_handles: List[BufferedReader] = []
+        for f in files:
+            file_handle = open(f, 'rb')
+            upload_files.append(('files', (os.path.basename(f), file_handle)))
+            file_handles.append(file_handle)
+
+        res = await self._http.post(f'{_config.hub_address}_f/', files=upload_files)
+
+        for h in file_handles:
+            h.close()
+
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
