@@ -55,6 +55,11 @@ const
     }
   })
 
+const
+  MAX_CHAR_WIDTH = 14,
+  MAX_CHAR_AUX_WIDTH = 9,
+  MIN_CHAR_COUNT = 4
+
 /** Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge. */
 interface State {
   /** The card's title. */
@@ -73,19 +78,16 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Model<State>) => {
-    const
-      valueNonDigitCharCount = substitute(s.value, s.data).replace(/[0-9]/g, '').length,
-      auxValueNonDigitCharCount = substitute(s.aux_value, s.data).replace(/[0-9]/g, '').length
     const render = () => {
       const
         data = unpack<Rec>(s.data),
-        /*
-         * Numbers 14 and 9 are representing maximum width of the single character.
-         * The minimum width of the value containers is the width of 4 characters.
-         * This prevents the jumping layout in the most common scenarios when numbers are changing between ones to tens. 
-        */
-        valueContainerWidth = 14 * Math.max(substitute(s.value, s.data).length, 4 + valueNonDigitCharCount),
-        auxValueContainerWidth = 9 * Math.max(substitute(s.aux_value, s.data).length, 4 + auxValueNonDigitCharCount)
+        value = substitute(s.value, s.data),
+        auxValue = substitute(s.aux_value, s.data),
+        valueNonDigitCharCount = value.match(/[^0-9]/g).length,
+        auxValueNonDigitCharCount = auxValue.match(/[^0-9]/g).length,
+        // This prevents the jumping layout in the most common scenarios when numbers are changing between ones to tens. 
+        valueContainerWidth = MAX_CHAR_WIDTH * Math.max(value.length, MIN_CHAR_COUNT + valueNonDigitCharCount),
+        auxValueContainerWidth = MAX_CHAR_AUX_WIDTH * Math.max(auxValue.length, MIN_CHAR_COUNT + auxValueNonDigitCharCount)
       return (
         <div data-test={name} className={css.card}>
           <div className={css.lhs}>
