@@ -297,105 +297,105 @@ class TestPythonServer(unittest.TestCase):
     )))))
 
 
-def test_fix_buf_init(self):
-    page = site['/test']
-    page.drop()
-    c = page.add('card1', dict(data=data(fields=sample_fields, size=3)))
-    c.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
-        fields=sample_fields,
-        data=[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
-    ))))
+    def test_fix_buf_init(self):
+        page = site['/test']
+        page.drop()
+        c = page.add('card1', dict(data=data(fields=sample_fields, size=3)))
+        c.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
+            fields=sample_fields,
+            data=[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+        ))))
 
 
-def test_fix_buf_write(self):
-    page = site['/test']
-    page.drop()
-    c = page.add('card1', dict(data=data(fields=sample_fields, size=3)))
-    c.data[0] = [1, 2, 3]
-    c.data[1] = [4, 5, 6]
-    c.data[2] = [7, 8, 9]
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
-        fields=sample_fields,
-        data=[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
-    ))))
+    def test_fix_buf_write(self):
+        page = site['/test']
+        page.drop()
+        c = page.add('card1', dict(data=data(fields=sample_fields, size=3)))
+        c.data[0] = [1, 2, 3]
+        c.data[1] = [4, 5, 6]
+        c.data[2] = [7, 8, 9]
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
+            fields=sample_fields,
+            data=[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+        ))))
 
-    c.data[2][1] = 42
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
-        fields=sample_fields,
-        data=[[1, 2, 3], [4, 5, 6], [7, 42, 9]],
-    ))))
+        c.data[2][1] = 42
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
+            fields=sample_fields,
+            data=[[1, 2, 3], [4, 5, 6], [7, 42, 9]],
+        ))))
 
-    c.data[2][1] = [41, 42, 43]
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
-        fields=sample_fields,
-        data=[[1, 2, 3], [4, 5, 6], [7, [41, 42, 43], 9]],
-    ))))
+        c.data[2][1] = [41, 42, 43]
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
+            fields=sample_fields,
+            data=[[1, 2, 3], [4, 5, 6], [7, [41, 42, 43], 9]],
+        ))))
 
-    c.data[2][1][1] = 999
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
-        fields=sample_fields,
-        data=[[1, 2, 3], [4, 5, 6], [7, [41, 999, 43], 9]],
-    ))))
-
-
-def test_cyc_buf_init(self):
-    page = site['/test']
-    page.drop()
-    c = page.add('card1', dict(data=data(fields=sample_fields, size=-3)))
-    c.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]  # insert 4 instead of 3; should circle back
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
-        fields=sample_fields,
-        data=[[10, 11, 12], [4, 5, 6], [7, 8, 9]],
-        i=1,
-    ))))
+        c.data[2][1][1] = 999
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(
+            fields=sample_fields,
+            data=[[1, 2, 3], [4, 5, 6], [7, [41, 999, 43], 9]],
+        ))))
 
 
-def test_cyc_buf_write(self):
-    page = site['/test']
-    page.drop()
-    c = page.add('card1', dict(data=data(fields=sample_fields, size=-3)))
-    c.data[0] = [1, 2, 3]
-    c.data[1] = [4, 5, 6]
-    c.data[2] = [7, 8, 9]
-    c.data[100] = [10, 11, 12]  # keys don't matter
-    c.data[101] = [13, 14, 15]  # keys don't matter
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
-        fields=sample_fields,
-        data=[[10, 11, 12], [13, 14, 15], [7, 8, 9]],
-        i=2,
-    ))))
+    def test_cyc_buf_init(self):
+        page = site['/test']
+        page.drop()
+        c = page.add('card1', dict(data=data(fields=sample_fields, size=-3)))
+        c.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]  # insert 4 instead of 3; should circle back
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
+            fields=sample_fields,
+            data=[[10, 11, 12], [4, 5, 6], [7, 8, 9]],
+            i=1,
+        ))))
 
-    c.data[2][1] = 42
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
-        fields=sample_fields,
-        data=[[10, 11, 12], [13, 14, 15], [7, 42, 9]],
-        i=2,
-    ))))
 
-    c.data[2][1] = [41, 42, 43]
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
-        fields=sample_fields,
-        data=[[10, 11, 12], [13, 14, 15], [7, [41, 42, 43], 9]],
-        i=2,
-    ))))
+    def test_cyc_buf_write(self):
+        page = site['/test']
+        page.drop()
+        c = page.add('card1', dict(data=data(fields=sample_fields, size=-3)))
+        c.data[0] = [1, 2, 3]
+        c.data[1] = [4, 5, 6]
+        c.data[2] = [7, 8, 9]
+        c.data[100] = [10, 11, 12]  # keys don't matter
+        c.data[101] = [13, 14, 15]  # keys don't matter
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
+            fields=sample_fields,
+            data=[[10, 11, 12], [13, 14, 15], [7, 8, 9]],
+            i=2,
+        ))))
 
-    c.data[2][1][1] = 999
-    page.save()
-    assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
-        fields=sample_fields,
-        data=[[10, 11, 12], [13, 14, 15], [7, [41, 999, 43], 9]],
-        i=2,
-    ))))
+        c.data[2][1] = 42
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
+            fields=sample_fields,
+            data=[[10, 11, 12], [13, 14, 15], [7, 42, 9]],
+            i=2,
+        ))))
+
+        c.data[2][1] = [41, 42, 43]
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
+            fields=sample_fields,
+            data=[[10, 11, 12], [13, 14, 15], [7, [41, 42, 43], 9]],
+            i=2,
+        ))))
+
+        c.data[2][1][1] = 999
+        page.save()
+        assert compare(page.load(), make_page(card1=make_card(data=make_cyc_buf(
+            fields=sample_fields,
+            data=[[10, 11, 12], [13, 14, 15], [7, [41, 999, 43], 9]],
+            i=2,
+        ))))
 
 
     def test_proxy(self):
