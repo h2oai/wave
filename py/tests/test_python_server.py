@@ -12,86 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-import signal
-import subprocess
-import sys
-import difflib
-import json
-import time
 import unittest
 
-from h2o_wave import site, data, Expando
+from h2o_wave import Expando, data, site, ui
+import httpx
 
+from .utils import (compare, make_card, make_cyc_buf, make_fix_buf,
+                    make_map_buf, make_page, read_file, sample_fields)
 
-def make_card(**props):
-    d = {}
-    b = []
-    for k, v in props.items():
-        # HACK
-        if isinstance(v, dict) and len(v) == 1 and ('__c__' in v or '__f__' in v or '__m__' in v):
-            d['~' + k] = len(b)
-            buf = dict()
-            for k2, v2 in v.items():
-                buf[k2[2]] = v2
-                break
-            b.append(buf)
-        else:
-            d[k] = v
-    return dict(d=d, b=b) if len(b) else dict(d=d)
-
-
-def make_map_buf(fields, data): return {'__m__': dict(f=fields, d=data)}
-
-
-def make_fix_buf(fields, data): return {'__f__': dict(f=fields, d=data, n=len(data))}
-
-
-def make_cyc_buf(fields, data, i): return {'__c__': dict(f=fields, d=data, i=i, n=len(data))}
-
-
-def make_page(**cards) -> dict: return dict(p=dict(c=cards))
-
-
-def dump_for_comparison(x: dict): return json.dumps(x, indent=2, sort_keys=True).splitlines(keepends=True)
-
-
-def compare(actual: dict, expected: dict) -> bool:
-    a = dump_for_comparison(actual)
-    b = dump_for_comparison(expected)
-    if a == b:
-        return True
-
-    diff = difflib.Differ().compare(a, b)
-    sys.stdout.write('\n------------------- Actual --------------------\n')
-    sys.stdout.writelines(a)
-    sys.stdout.write('\n------------------- Expected --------------------\n')
-    sys.stdout.writelines(b)
-    sys.stdout.write('\n------------------- Diff --------------------\n')
-    sys.stdout.writelines(diff)
-    return False
-
-def _read_file(path: str):
-    with open(path, 'r') as f:
-        return f.read()
-
-
-sample_fields = ['a', 'b', 'c']
-
+base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
 
 class TestPythonServer(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        env = os.environ.copy()
-        # Turn off excessive logging.
-        env['H2O_WAVE_NO_LOG'] = 't'
-        cls.wave_server_process = subprocess.Popen(['make', 'run'], cwd='..', preexec_fn=os.setsid, env=env)
-        # Wait for server to boot up.
-        time.sleep(2)
-
-    @classmethod
-    def tearDownClass(cls):
-        os.killpg(os.getpgid(cls.wave_server_process.pid), signal.SIGTERM)
-
     def test_new_empty_card(self):
         page = site['/test']
         page.drop()
@@ -410,7 +341,6 @@ class TestPythonServer(unittest.TestCase):
             assert len(result.headers) > 0
 
 
-
     def test_file_server(self):
         f1 = 'temp_file1.txt'
         with open(f1, 'w') as f:
@@ -418,17 +348,16 @@ class TestPythonServer(unittest.TestCase):
         paths = site.upload([f1])
         f2 = 'temp_file2.txt'
         f2 = site.download(paths[0], f2)
-        s1 = _read_file(f1)
-        s2 = _read_file(f2)
+        s1 = read_file(f1)
+        s2 = read_file(f2)
         os.remove(f1)
         os.remove(f2)
         assert s1 == s2
 
 
     def test_public_dir(self):
-        base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
         p = site.download(f'{base_url}assets/brand/h2o.svg', 'h2o.svg')
-        svg = _read_file(p)
+        svg = read_file(p)
         os.remove(p)
         assert svg.index('<svg') == 0
 
@@ -454,8 +383,16 @@ class TestPythonServer(unittest.TestCase):
 
     def test_upload_dir(self):
         upload_path, = site.upload_dir(os.path.join('tests', 'test_folder'))
-        base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
         download_path = site.download(f'{base_url}{upload_path}test.txt', 'test.txt')
-        txt = _read_file(download_path)
+        txt = read_file(download_path)
         os.remove(download_path)
         assert len(txt) > 0
+
+
+    def test_deleting_files(self):
+        upload_path, = site.upload([os.path.join('tests', 'test_folder', 'test.txt')])
+        res = httpx.get(f'http://localhost:10101{upload_path}')
+        assert res.status_code == 200
+        site.unload(upload_path)
+        res = httpx.get(f'http://localhost:10101{upload_path}')
+        assert res.status_code == 404
