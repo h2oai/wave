@@ -206,11 +206,16 @@ def get_wave_completions(line, character, file_content):
     js_code = ''
     with open(os.path.join(example_dir, 'tour.js'), 'r') as f:
         js_code = f.read()
-    template = Template(js_code).substitute(snippets1=q.app.snippets1, snippets2=q.app.snippets2, py_content=py_content)
+    template = Template(js_code).substitute(
+        tour_assets=q.app.tour_assets,
+        snippets1=q.app.snippets1,
+        snippets2=q.app.snippets2,
+        py_content=py_content
+    )
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
-        scripts=[ui.script('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js')],
+        scripts=[ui.script(q.app.tour_assets + '/loader.min.js')],
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
@@ -226,7 +231,7 @@ def get_wave_completions(line, character, file_content):
         box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
-        image='https://wave.h2o.ai/img/h2o-logo.svg',
+        image=f'{q.app.tour_assets}/h2o-logo.svg',
         items=[
             ui.links(inline=True, items=[
                 ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
@@ -328,6 +333,7 @@ async def on_shutdown():
 @app('/tour', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
+        q.app.tour_assets, = await q.site.upload_dir(os.path.join(example_dir, 'tour-assets'))
         base_snippets_path = os.path.join(example_dir, 'base-snippets.json')
         component_snippets_path = os.path.join(example_dir, 'component-snippets.json')
         # Prod.
