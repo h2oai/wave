@@ -2,7 +2,7 @@
 title: Background Tasks
 ---
 
-Wave apps are servers based on [asyncio](https://docs.python.org/3/library/asyncio.html), Python's library for Asynchronous I/O, and lets you develop and deploy high-performance applications. 
+Wave apps are servers based on [asyncio](https://docs.python.org/3/library/asyncio.html), Python's library for Asynchronous I/O, and lets you develop and deploy high-performance applications.
 
 Your `@app` query handler is invoked every time a user performs some action in your app's UI - access the page, reload it, click a button, access a menu, enter text, and so on. Performing blocking operations in your handler will hang your app's server and make your app's UI appear unresponsive until the blocking operation completes.
 
@@ -42,7 +42,6 @@ async def serve(q: Q):
 
 Depending on your use case, you might want to use a separate process pool or thread pool from Python's [multiprocessing](https://docs.python.org/3/library/multiprocessing.html) library, like this:
 
-
 ```python {1,6-7}
 import concurrent.futures
 
@@ -56,8 +55,8 @@ async def serve(q: Q):
 
 `q.exec()` accepts a custom process pool or thread pool to run the blocking function.
 
-
 :::tip
 Apps that make calls to external services or APIs are better off replacing blocking HTTP clients like [requests](https://requests.readthedocs.io/en/master/) with non-blocking clients like [HTTPX](https://www.python-httpx.org/async/).
 :::
 
+For furher details see [this blog post](https://medium.com/@unusualcode/background-jobs-in-wave-or-how-not-to-kill-your-ui-ae1fed95693a).
