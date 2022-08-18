@@ -1,17 +1,13 @@
 require.config({
   paths: {
-    'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs',
-    'pyodide': 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'
+    'vs': '$tour_assets' + '/monaco',
+    'pyodide': '$tour_assets' + '/pyodide/pyodide.js'
   }
 })
 window.MonacoEnvironment = {
   getWorkerUrl: function (workerId, label) {
-    return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`
-      self.MonacoEnvironment = {
-        baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/'
-      };
-      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/base/worker/workerMain.js');`
-    )}`
+    const { origin } = window.location
+    return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`importScripts('$${origin}$tour_assets' + '/monaco/base/worker/workerMain.js');`)}`
   }
 }
 const completionToCompletionItem = item => ({
