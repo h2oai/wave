@@ -120,7 +120,10 @@ const
                 </Fluent.Text>
             </div>
         )
-    }
+    },
+    LazyLoadPlaceholder = () => <div style={{ height: 59 }}>
+        <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
+    </div>
 
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
@@ -144,6 +147,7 @@ export const
             [AdapterDateFns, setAdapterDateFns] = React.useState<any>(null), // TODO: type
             [theme, setTheme] = React.useState<any>(null), // TODO: type
             getTheme = async () => {
+                // return null
                 return await import('@mui/material/styles').then(({ createTheme }) => {
                     // Not all of MUI's components support css variables yet - cssVarValue used instead.
                     return createTheme({
@@ -182,8 +186,7 @@ export const
 
         return (
             <>
-                {/* TODO: loading div styling*/}
-                <React.Suspense fallback={<div>Loading...</div>}>
+                <React.Suspense fallback={<LazyLoadPlaceholder />}>
                     {theme && AdapterDateFns ? <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDateFns.AdapterDateFns}>
                             <TimePicker
@@ -235,7 +238,7 @@ export const
                             />
                         </LocalizationProvider>
                     </ThemeProvider>
-                        : <>{/* TODO: use the same loading div as for react suspense*/}</>
+                        : <LazyLoadPlaceholder />
                     }
                 </React.Suspense>
             </>
