@@ -83,6 +83,9 @@ const
     }
 
 const
+    ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
+    LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.LocalizationProvider }))),
+    TimePicker = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.TimePicker }))),
     parseTimeToDate = (time: S) => {
         const date = new Date(`2000-01-01T${time.slice(0, 5)}:00`)
         if (time?.endsWith('pm')) date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
@@ -119,14 +122,9 @@ const
         )
     }
 
-
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
         const
-            ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
-            LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.LocalizationProvider }))),
-            TimePicker = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.TimePicker }))),
-            // AdapterDateFns = React.lazy(() => import('@mui/x-date-pickers/AdapterDateFns').then((module) => ({ default: module.AdapterDateFns }))),
             defaultVal = m.value ? parseTimeToDate(m.value) : null,
             [value, setValue] = React.useState(defaultVal),
             [isDialogOpen, setIsDialogOpen] = React.useState(false),
@@ -182,7 +180,6 @@ export const
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
 
-        // TODO: dialog keeps opening after selection
         return (
             <>
                 {/* TODO: loading div styling*/}
