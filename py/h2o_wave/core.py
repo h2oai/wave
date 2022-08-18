@@ -675,6 +675,7 @@ class Site:
 
     def upload_dir(self, directory: str) -> str:
         """
+        WARNING: Experimental and subject to change.
         Upload whole directory to the site with directory structure preserved.
 
         Args:
@@ -825,6 +826,7 @@ class AsyncSite:
 
     async def upload_dir(self, directory: str) -> str:
         """
+        WARNING: Experimental and subject to change.
         Upload whole directory to the site with directory structure preserved.
 
         Args:
