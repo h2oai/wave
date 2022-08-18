@@ -32,7 +32,7 @@ async def serve(q: Q):
 ```
 
 :::tip
-After a file is uploaded from the browser, it is stored forever on the Wave server. If you don't need the file any longer, use `q.site.unload()` to delete it from the Wave server. 
+After a file is uploaded from the browser, it is stored forever on the Wave server. If you don't need the file any longer, use `q.site.unload()` to delete it from the Wave server.
 :::
 
 ## Provide file downloads
@@ -55,11 +55,17 @@ async def serve(q: Q):
 `q.site.upload()` accepts a list of file paths, so you can upload multiple files at a time.
 :::
 
+Use `q.site.upload_dir()` to upload whole directories and preserve their structure. Useful when you want to host Javascript files having relative paths to other scripts for example. The function returns a list of uploaded paths and since it only takes a single directory at a time, the list is always going to have size of 1.
+
+:::tip
+`q.site.upload_dir()` is necessary only in very specific edgecases. For most of the time we recommend [serving files directly](/docs/files/#serving-files-directly-from-the-wave-server).
+:::
+
 ## Serving images
 
 Use `q.site.upload()` to upload images from your app to the Wave server. Use the returned paths in `ui.image()` or `ui.image_card().
 
-```
+```py
 image, = await q.site.upload(['path/to/my/image.png'])
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.image(title='Image title', image=image, type='png'),

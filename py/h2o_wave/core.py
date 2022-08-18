@@ -675,13 +675,13 @@ class Site:
 
     def upload_dir(self, directory: str) -> str:
         """
-        Upload local files to the site.
+        Upload whole directory to the site with directory structure preserved.
 
         Args:
-            files: A list of file paths of the files to be uploaded.
+            directory: Folder to be uploaded.
 
         Returns:
-            A list of remote URLs for the uploaded files, in order.
+            A list of remote URLs for the uploaded directory (always size of 1).
         """
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
@@ -825,13 +825,13 @@ class AsyncSite:
 
     async def upload_dir(self, directory: str) -> str:
         """
-        Upload local files to the site.
+        Upload whole directory to the site with directory structure preserved.
 
         Args:
-            files: A list of file paths of the files to be uploaded.
+            directory: Folder to be uploaded.
 
         Returns:
-            A list of remote URLs for the uploaded files, in order.
+            A list of remote URLs for the uploaded directory (always size of 1).
         """
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
