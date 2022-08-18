@@ -18,7 +18,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import { cssVar, cssVarValue } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-import { PopperProps, TextFieldProps } from '@mui/material'
+import { PopperProps, TextFieldProps, Theme } from '@mui/material'
 import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 import { VirtualElement } from '@popperjs/core/lib'
 
@@ -144,8 +144,8 @@ export const
                 if (m.trigger) wave.push()
             },
             // TODO: test component with all wave themes
-            [AdapterDateFns, setAdapterDateFns] = React.useState<any>(null), // TODO: type
-            [theme, setTheme] = React.useState<any>(null), // TODO: type
+            [AdapterDateFns, setAdapterDateFns] = React.useState<any>(), // TODO: type - typeof DateFnsUtils
+            [theme, setTheme] = React.useState<Theme>(),
             getTheme = async () => {
                 // return null
                 return await import('@mui/material/styles').then(({ createTheme }) => {
@@ -178,7 +178,7 @@ export const
             }
 
         React.useEffect(() => {
-            wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null // TODO: 
+            wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null
             getTheme().then(t => setTheme(t))
             getAdapterDateFns().then(a => setAdapterDateFns(a))
             // eslint-disable-next-line react-hooks/exhaustive-deps
