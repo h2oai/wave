@@ -20,6 +20,7 @@ import { wave } from './ui'
 import { stylesheet } from 'typestyle'
 import { PopperProps, TextFieldProps } from '@mui/material'
 import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
+import { VirtualElement } from '@popperjs/core/lib'
 
 /**
  * Create a timepicker.
@@ -116,25 +117,7 @@ const
                 </Fluent.Text>
             </div>
         )
-    },
-    // TODO: move directly to component's return JSX
-    TextField = ({ onClick, onChange, disabled, errorMessage, label, required, timeFormat, value }: { onChange: any, onClick: () => void, label?: S, timeFormat?: 'h12' | 'h24', errorMessage?: S, disabled?: B, required?: B, value: Date | null }) =>
-        <Fluent.TextField
-            iconProps={{ iconName: 'Clock', }}
-            onClick={onClick}
-            styles={{
-                field: { cursor: 'pointer' },
-                icon: { bottom: 7 }
-            }}
-            onChange={onChange}
-            placeholder='Select a time'
-            disabled={disabled}
-            errorMessage={errorMessage}
-            readOnly={true}
-            value={value ? formatDateToTimeString(value, timeFormat) : ''}
-            label={label}
-            required={required}
-        />
+    }
 
 
 export const
@@ -147,7 +130,7 @@ export const
             defaultVal = m.value ? parseTimeToDate(m.value) : null,
             [value, setValue] = React.useState(defaultVal),
             [isDialogOpen, setIsDialogOpen] = React.useState(false),
-            textInputRef = React.useRef<HTMLDivElement>(null),
+            textInputRef = React.useRef<HTMLDivElement | null>(null),
             switchAmPm = () => {
                 setValue((prevValue) => {
                     const date = new Date(prevValue!)
@@ -160,8 +143,8 @@ export const
                 if (m.trigger) wave.push()
             },
             // TODO: test component with all wave themes
-            [AdapterDateFns, setAdapterDateFns] = React.useState<any>(null),
-            [theme, setTheme] = React.useState<any>(null),
+            [AdapterDateFns, setAdapterDateFns] = React.useState<any>(null), // TODO: type
+            [theme, setTheme] = React.useState<any>(null), // TODO: type
             getTheme = async () => {
                 return await import('@mui/material/styles').then(({ createTheme }) => {
                     // Not all of MUI's components support css variables yet - cssVarValue used instead.
@@ -199,8 +182,7 @@ export const
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
 
-        console.log(textInputRef)
-
+        // TODO: dialog keeps opening after selection
         return (
             <>
                 {/* TODO: loading div styling*/}
@@ -215,27 +197,33 @@ export const
                                 onAccept={onSelectTime}
                                 onClose={() => setIsDialogOpen(false)}
                                 ampm={m.time_format === 'h12'}
-                                PopperProps={{ anchorEl: textInputRef.current, ...popoverProps }} // TODO: textInputRef is null because component is not rendered due to falsy (theme && AdapterDateFns) condition
                                 showToolbar={true}
                                 ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
                                 renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
                                     <div ref={textInputRef}>
-                                        <TextField
+                                        <Fluent.TextField
+                                            iconProps={{ iconName: 'Clock', }}
                                             onClick={() => setIsDialogOpen(true)}
+                                            styles={{
+                                                field: { cursor: 'pointer' },
+                                                icon: { bottom: 7 }
+                                            }}
                                             onChange={inputProps?.onChange}
+                                            placeholder='Select a time'
                                             disabled={disabled}
                                             errorMessage={
                                                 error
                                                     ? `Wrong input. Please enter the time in range from ${m.min || (inputProps?.ampm ? '12:00am' : '00:00')} to ${m.max || (inputProps?.ampm ? '12:00am' : '00:00')}.`
                                                     : undefined
                                             }
+                                            readOnly={true}
+                                            value={value ? formatDateToTimeString(value, m.time_format) : ''}
                                             label={m.label}
                                             required={m.required}
-                                            timeFormat={m.time_format}
-                                            value={value}
                                         />
                                     </div>
                                 }
+                                PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
                                 minTime={m.min ? parseTimeToDate(m.min) : undefined}
                                 maxTime={m.max ? parseTimeToDate(m.max) : undefined}
                                 minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
