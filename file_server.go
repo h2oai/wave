@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path"
@@ -134,6 +135,73 @@ func (fs *FileServer) acceptFiles(r *http.Request) ([]string, error) {
 		return nil, errors.New("want 'files' field in upload form, got none")
 	}
 
+	isDirectoryUpload := r.Header.Get("Wave-Directory-Upload")
+	if isDirectoryUpload == "True" {
+		return fs.storeFilesInSingleDir(files)
+	}
+
+	return fs.storeFilesInSeparateDirs(files)
+}
+
+func (fs *FileServer) deleteFile(url, baseURL string) error {
+	// Remove baseURL portion if specified.
+	cleanURL := strings.Replace(path.Clean(url), baseURL, "/_f", 1)
+	tokens := strings.Split(cleanURL, "/")
+	if len(tokens) != 4 { // /_f/uuid/file.ext
+		return errInvalidUnloadPath
+	}
+	if tokens[0] != "" || tokens[1] != "_f" || path.Ext(tokens[3]) == "" {
+		return errInvalidUnloadPath
+	}
+
+	dirpath := filepath.Join(fs.dir, tokens[2])
+	return os.RemoveAll(dirpath)
+}
+
+func (fs *FileServer) storeFilesInSingleDir(files []*multipart.FileHeader) ([]string, error) {
+
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return nil, fmt.Errorf("failed generating file id: %v", err)
+	}
+
+	dirID := id.String()
+	uploadDir := filepath.Join(fs.dir, dirID)
+
+	if err := os.MkdirAll(uploadDir, 0700); err != nil {
+		return nil, fmt.Errorf("failed creating upload dir %s: %v", uploadDir, err)
+	}
+
+	for _, file := range files {
+		src, err := file.Open()
+		if err != nil {
+			return nil, fmt.Errorf("failed opening uploaded file: %v", err)
+		}
+		defer src.Close()
+
+		dir, file := filepath.Split(file.Filename)
+		uploadPath := filepath.Join(uploadDir, dir)
+
+		if err := os.MkdirAll(uploadPath, 0700); err != nil {
+			return nil, fmt.Errorf("failed creating dir structure %s: %v", uploadDir, err)
+		}
+
+		uploadPath = filepath.Join(uploadPath, file)
+		dst, err := os.Create(uploadPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed writing uploaded file %s: %v", uploadPath, err)
+		}
+		defer dst.Close()
+
+		if _, err = io.Copy(dst, src); err != nil {
+			return nil, fmt.Errorf("failed copying uploaded file %s: %v", uploadPath, err)
+		}
+	}
+
+	return []string{path.Join(fs.baseURL, dirID)}, nil
+}
+
+func (fs *FileServer) storeFilesInSeparateDirs(files []*multipart.FileHeader) ([]string, error) {
 	uploadPaths := make([]string, len(files))
 	for i, file := range files {
 
@@ -171,19 +239,4 @@ func (fs *FileServer) acceptFiles(r *http.Request) ([]string, error) {
 		uploadPaths[i] = path.Join(fs.baseURL, fileID, basename)
 	}
 	return uploadPaths, nil
-}
-
-func (fs *FileServer) deleteFile(url, baseURL string) error {
-	// Remove baseURL portion if specified.
-	cleanURL := strings.Replace(path.Clean(url), baseURL, "/_f", 1)
-	tokens := strings.Split(cleanURL, "/")
-	if len(tokens) != 4 { // /_f/uuid/file.ext
-		return errInvalidUnloadPath
-	}
-	if tokens[0] != "" || tokens[1] != "_f" || path.Ext(tokens[3]) == "" {
-		return errInvalidUnloadPath
-	}
-
-	dirpath := filepath.Join(fs.dir, tokens[2])
-	return os.RemoveAll(dirpath)
 }
