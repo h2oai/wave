@@ -148,7 +148,6 @@ export const
                 wave.args[m.name] = time ? formatDateToTimeString(time, m.time_format) : null
                 if (m.trigger) wave.push()
             },
-            // TODO: test component with all wave themes
             [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils>(),
             [theme, setTheme] = React.useState<Theme>(),
             getAdapterDateFns = async () => await import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => AdapterDateFns),
@@ -164,7 +163,7 @@ export const
                         },
                         text: {
                             primary: cssVar('$neutralPrimary'),
-                            secondary: cssVar('$themeLight'),
+                            secondary: cssVar('$neutralSecondary'),
                             disabled: cssVar('$neutralTertiaryAlt'),
                         },
                         action: {
