@@ -86,8 +86,8 @@ const
 
 const
     ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
-    LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.LocalizationProvider }))),
-    TimePicker = React.lazy(() => import('@mui/x-date-pickers').then((module) => ({ default: module.TimePicker }))),
+    LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
+    TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
     parseTimeToDate = (time: S) => {
         const date = new Date(`2000-01-01T${time.slice(0, 5)}:00`)
         if (time?.endsWith('pm')) date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
@@ -106,7 +106,8 @@ const
         <div style={{ height: 59 }}>
             <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
         </div>,
-    Toolbar = ({ params, label, switchAmPm }: { params: BaseToolbarProps<Date, Date | null>, label: S | undefined, switchAmPm: () => void }) => {
+    // Type 'any' instead of 'Date' because of warning when TimePicker is lazy loaded.
+    Toolbar = ({ params, label, switchAmPm }: { params: BaseToolbarProps<any, any | null>, label: S | undefined, switchAmPm: () => void }) => {
         const
             { parsedValue, setOpenView, ampm } = params,
             time = parsedValue
@@ -193,8 +194,8 @@ export const
                                 value={value}
                                 label={m.label}
                                 open={isDialogOpen}
-                                onChange={setValue}
-                                onAccept={onSelectTime}
+                                onChange={(value, _keyboardInputValue) => setValue(value as Date)}
+                                onAccept={(value) => onSelectTime(value as Date)}
                                 onClose={() => setIsDialogOpen(false)}
                                 ampm={m.time_format === 'h12'}
                                 showToolbar={true}
