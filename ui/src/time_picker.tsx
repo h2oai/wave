@@ -24,30 +24,31 @@ import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 import { VirtualElement } from '@popperjs/core/lib'
 
 /**
- * Create a timepicker.
+ * Create a time picker.
  *
- * TODO: description
+ * A time picker allows a user to pick a time value.
  */
-// TODO: check API descriptions
 
 export interface TimePicker {
     /** An identifying name for this component. */
     name: Id
     /** Text to be displayed alongside the component. */
     label?: S
-    /** Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm' */
+    /** A string that provides a brief hint to the user as to what kind of information is expected in the field. */
+    placeholder?: S
+    /** The time value in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm' */
     value?: S
     /** True if this field is disabled. */
     disabled?: B
-    /** The width of the combobox, e.g. '100px'. Defaults to '100%'. */
+    /** The width of the time picker, e.g. '100px'. Defaults to '100%'. */
     width?: S
     /** True if the component should be visible. Defaults to True. */
     visible?: B
-    /** True if the choice should be submitted when the time is selected. */
+    /** True if the form should be submitted when the time is selected. */
     trigger?: B
     /** True if this is a required field. Defaults to False. */
     required?: B
-    /** If true, use 12-hour time format. Otherwise, use 24-hour format. */
+    /** Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`. */
     time_format?: 'h12' | 'h24'
     /** The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm' */
     min?: S
@@ -208,7 +209,7 @@ export const
                                                 icon: { bottom: 7 }
                                             }}
                                             onChange={inputProps?.onChange}
-                                            placeholder='Select a time'
+                                            placeholder={m.placeholder || 'Select a time'}
                                             disabled={disabled}
                                             errorMessage={
                                                 error

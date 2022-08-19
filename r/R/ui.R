@@ -2939,19 +2939,20 @@ ui_tags <- function(
   return(.o)
 }
 
-#' Create a timepicker.
+#' Create a time picker.
 #' 
-#' TODO: description
+#' A time picker allows a user to pick a time value.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param value Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
+#' @param placeholder A string that provides a brief hint to the user as to what kind of information is expected in the field.
+#' @param value The time value in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
 #' @param disabled True if this field is disabled.
-#' @param width The width of the combobox, e.g. '100px'. Defaults to '100%'.
+#' @param width The width of the time picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
-#' @param trigger True if the choice should be submitted when the time is selected.
+#' @param trigger True if the form should be submitted when the time is selected.
 #' @param required True if this is a required field. Defaults to False.
-#' @param time_format If true, use 12-hour time format. Otherwise, use 24-hour format.
+#' @param time_format Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`.
 #'   One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat.
 #' @param min The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
 #' @param max The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
@@ -2961,6 +2962,7 @@ ui_tags <- function(
 ui_time_picker <- function(
   name,
   label = NULL,
+  placeholder = NULL,
   value = NULL,
   disabled = NULL,
   width = NULL,
@@ -2973,6 +2975,7 @@ ui_time_picker <- function(
   minutes_step = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
+  .guard_scalar("placeholder", "character", placeholder)
   .guard_scalar("value", "character", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("width", "character", width)
@@ -2986,6 +2989,7 @@ ui_time_picker <- function(
   .o <- list(time_picker=list(
     name=name,
     label=label,
+    placeholder=placeholder,
     value=value,
     disabled=disabled,
     width=width,

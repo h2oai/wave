@@ -2536,6 +2536,7 @@ def tags(
 def time_picker(
         name: str,
         label: Optional[str] = None,
+        placeholder: Optional[str] = None,
         value: Optional[str] = None,
         disabled: Optional[bool] = None,
         width: Optional[str] = None,
@@ -2547,20 +2548,21 @@ def time_picker(
         max: Optional[str] = None,
         minutes_step: Optional[int] = None,
 ) -> Component:
-    """Create a timepicker.
+    """Create a time picker.
 
-    TODO: description
+    A time picker allows a user to pick a time value.
 
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        value: Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
+        placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+        value: The time value in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
         disabled: True if this field is disabled.
-        width: The width of the combobox, e.g. '100px'. Defaults to '100%'.
+        width: The width of the time picker, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
-        trigger: True if the choice should be submitted when the time is selected.
+        trigger: True if the form should be submitted when the time is selected.
         required: True if this is a required field. Defaults to False.
-        time_format: If true, use 12-hour time format. Otherwise, use 24-hour format. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat.
+        time_format: Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat.
         min: The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
         max: The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
         minutes_step: Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
@@ -2570,6 +2572,7 @@ def time_picker(
     return Component(time_picker=TimePicker(
         name,
         label,
+        placeholder,
         value,
         disabled,
         width,

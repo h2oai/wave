@@ -6787,14 +6787,15 @@ class TimePickerTimeFormat:
 
 
 class TimePicker:
-    """Create a timepicker.
+    """Create a time picker.
 
-    TODO: description
+    A time picker allows a user to pick a time value.
     """
     def __init__(
             self,
             name: str,
             label: Optional[str] = None,
+            placeholder: Optional[str] = None,
             value: Optional[str] = None,
             disabled: Optional[bool] = None,
             width: Optional[str] = None,
@@ -6808,6 +6809,7 @@ class TimePicker:
     ):
         _guard_scalar('TimePicker.name', name, (str,), True, False, False)
         _guard_scalar('TimePicker.label', label, (str,), False, True, False)
+        _guard_scalar('TimePicker.placeholder', placeholder, (str,), False, True, False)
         _guard_scalar('TimePicker.value', value, (str,), False, True, False)
         _guard_scalar('TimePicker.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('TimePicker.width', width, (str,), False, True, False)
@@ -6822,20 +6824,22 @@ class TimePicker:
         """An identifying name for this component."""
         self.label = label
         """Text to be displayed alongside the component."""
+        self.placeholder = placeholder
+        """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
-        """Default time selected in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'"""
+        """The time value in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'"""
         self.disabled = disabled
         """True if this field is disabled."""
         self.width = width
-        """The width of the combobox, e.g. '100px'. Defaults to '100%'."""
+        """The width of the time picker, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
         self.trigger = trigger
-        """True if the choice should be submitted when the time is selected."""
+        """True if the form should be submitted when the time is selected."""
         self.required = required
         """True if this is a required field. Defaults to False."""
         self.time_format = time_format
-        """If true, use 12-hour time format. Otherwise, use 24-hour format. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat."""
+        """Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat."""
         self.min = min
         """The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'"""
         self.max = max
@@ -6847,6 +6851,7 @@ class TimePicker:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TimePicker.name', self.name, (str,), True, False, False)
         _guard_scalar('TimePicker.label', self.label, (str,), False, True, False)
+        _guard_scalar('TimePicker.placeholder', self.placeholder, (str,), False, True, False)
         _guard_scalar('TimePicker.value', self.value, (str,), False, True, False)
         _guard_scalar('TimePicker.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('TimePicker.width', self.width, (str,), False, True, False)
@@ -6860,6 +6865,7 @@ class TimePicker:
         return _dump(
             name=self.name,
             label=self.label,
+            placeholder=self.placeholder,
             value=self.value,
             disabled=self.disabled,
             width=self.width,
@@ -6879,6 +6885,8 @@ class TimePicker:
         _guard_scalar('TimePicker.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('TimePicker.label', __d_label, (str,), False, True, False)
+        __d_placeholder: Any = __d.get('placeholder')
+        _guard_scalar('TimePicker.placeholder', __d_placeholder, (str,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('TimePicker.value', __d_value, (str,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
@@ -6901,6 +6909,7 @@ class TimePicker:
         _guard_scalar('TimePicker.minutes_step', __d_minutes_step, (int,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
+        placeholder: Optional[str] = __d_placeholder
         value: Optional[str] = __d_value
         disabled: Optional[bool] = __d_disabled
         width: Optional[str] = __d_width
@@ -6914,6 +6923,7 @@ class TimePicker:
         return TimePicker(
             name,
             label,
+            placeholder,
             value,
             disabled,
             width,
