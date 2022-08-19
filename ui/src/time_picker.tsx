@@ -19,6 +19,7 @@ import { cssVar, cssVarValue } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
 import { PopperProps, TextFieldProps, Theme } from '@mui/material'
+import DateFnsUtils from '@date-io/date-fns'
 import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 import { VirtualElement } from '@popperjs/core/lib'
 
@@ -100,6 +101,10 @@ const
             minutesStr = minutes.toString().padStart(2, '0')
         return `${hoursStr}:${minutesStr}${time_format === 'h12' ? (hours >= 12 ? ' pm' : ' am') : ''}`
     },
+    LazyLoadPlaceholder = () =>
+        <div style={{ height: 59 }}>
+            <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
+        </div>,
     Toolbar = ({ params, label, switchAmPm }: { params: BaseToolbarProps<Date, Date | null>, label: S | undefined, switchAmPm: () => void }) => {
         const
             { parsedValue, setOpenView, ampm } = params,
@@ -120,10 +125,8 @@ const
                 </Fluent.Text>
             </div>
         )
-    },
-    LazyLoadPlaceholder = () => <div style={{ height: 59 }}>
-        <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
-    </div>
+    }
+
 
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
@@ -144,43 +147,39 @@ export const
                 if (m.trigger) wave.push()
             },
             // TODO: test component with all wave themes
-            [AdapterDateFns, setAdapterDateFns] = React.useState<any>(), // TODO: type - typeof DateFnsUtils
+            [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils>(),
             [theme, setTheme] = React.useState<Theme>(),
-            getTheme = async () => {
-                // return null
-                return await import('@mui/material/styles').then(({ createTheme }) => {
-                    // Not all of MUI's components support css variables yet - cssVarValue used instead.
-                    return createTheme({
-                        palette: {
-                            background: {
-                                paper: cssVar('$card')
-                            },
-                            primary: {
-                                main: cssVarValue('$themePrimary')
-                            },
-                            text: {
-                                primary: cssVar('$neutralPrimary'),
-                                secondary: cssVar('$themeLight'),
-                                disabled: cssVar('$neutralTertiaryAlt'),
-                            },
-                            action: {
-                                active: cssVarValue('$themePrimary'),
-                                disabled: cssVar('$neutralLight'),
-                                hover: cssVar('$neutralLight'),
-                                hoverOpacity: 0.04
-                            }
+            getAdapterDateFns = async () => await import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => AdapterDateFns),
+            getTheme = async () => await import('@mui/material/styles').then(({ createTheme }) =>
+                createTheme({
+                    palette: {
+                        background: {
+                            paper: cssVar('$card')
                         },
-                    })
+                        primary: {
+                            // Not all of MUI's components support css variables yet - cssVarValue used instead.
+                            main: cssVarValue('$themePrimary')
+                        },
+                        text: {
+                            primary: cssVar('$neutralPrimary'),
+                            secondary: cssVar('$themeLight'),
+                            disabled: cssVar('$neutralTertiaryAlt'),
+                        },
+                        action: {
+                            active: cssVarValue('$themePrimary'),
+                            disabled: cssVar('$neutralLight'),
+                            hover: cssVar('$neutralLight'),
+                            hoverOpacity: 0.04
+                        }
+                    },
                 })
-            },
-            getAdapterDateFns = async () => {
-                return await import('@mui/x-date-pickers/AdapterDateFns')
-            }
+            )
+
 
         React.useEffect(() => {
             wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null
-            getTheme().then(t => setTheme(t))
-            getAdapterDateFns().then(a => setAdapterDateFns(a))
+            getTheme().then(theme => setTheme(theme))
+            getAdapterDateFns().then(adapter => setAdapterDateFns(() => adapter))
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
 
@@ -188,7 +187,7 @@ export const
             <>
                 <React.Suspense fallback={<LazyLoadPlaceholder />}>
                     {theme && AdapterDateFns ? <ThemeProvider theme={theme}>
-                        <LocalizationProvider dateAdapter={AdapterDateFns.AdapterDateFns}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <TimePicker
                                 value={value}
                                 label={m.label}
