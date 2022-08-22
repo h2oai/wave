@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, waitFor, act } from '@testing-library/react'
+import { fireEvent, render, waitFor, act, prettyDOM } from '@testing-library/react'
 import React from 'react'
 // import { act } from 'react-dom/test-utils'
 import { TimePicker, XTimePicker } from './time_picker'
@@ -22,23 +22,32 @@ const
     name = 'timepicker',
     timepickerProps: TimePicker = { name }
 
-// jest.mock('./theme')
+// jest.mock('./theme') // TODO: mock createTheme()
 
 describe('time_picker.tsx', () => {
-    beforeEach(() => { wave.args[name] = null })
 
-    it('Renders data-test attr', () => {
-        act(() => {
-            const { findByTestId } = render(<XTimePicker model={timepickerProps} />)
-            // const {queryByTestId} = act( async () => render(<XTimePicker model={timepickerProps} />))
-            // await waitFor(() => {
-            //     expect(queryByTestId(name)).toBeInTheDocument()
-            // })
-            const element = findByTestId(name) // This is essentially waitFor & getByTestId
-            // const element = await waitFor(() => findByTestId(name)) // This is essentially waitFor & getByTestId
-            expect(element).toBeTruthy()
+    beforeEach(() => {
+        wave.args[name] = null
+    })
+
+    it('Renders data-test attr - lazy load placeholder', async () => {
+        const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
+        await act(async () => {
+            // const element = container.querySelector(`[data-test="${'lazyload'}"]`)
+            // const element = await waitFor(() => findByTestId('lazyload'))
+            // console.log(prettyDOM(container))
+            const element = getByTestId('lazyload')
+            expect(element).toBeInTheDocument()
         })
+    }
+    )
 
+    it('Renders data-test attr - time picker component', async () => {
+        const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
+        await act(async () => {
+            const element = await waitFor(() => getByTestId(name))
+            expect(element).toBeInTheDocument()
+        })
     }
     )
 
@@ -74,3 +83,34 @@ describe('time_picker.tsx', () => {
     //     expect(pushMock).toHaveBeenCalled()
     // })
 })
+
+
+
+/** 
+ *     it('Renders data-test attr - time picker component', async () => {
+        // const container = document.createElement('div')
+        const { container, findByTestId } = render(<XTimePicker model={timepickerProps} />)
+        await act(async () => {
+            // render(<XTimePicker model={timepickerProps} />)
+
+            // render(<XTimePicker model={timepickerProps} />, container)
+            // const {queryByTestId} = act( async () => render(<XTimePicker model={timepickerProps} />))
+            // await waitFor(() => {
+            //     expect(queryByTestId(name)).toBeInTheDocument()
+            // })
+            // const element = container.querySelector(`[data-testid="${name}"]`)
+
+            // const element = findByTestId(name) // This is essentially waitFor & getByTestId
+            // const element = await waitFor(() => findByTestId(name)) // This is essentially waitFor & getByTestId
+            const element = await waitFor(() => findByTestId(name))
+            // const element = await waitFor(() => container.querySelector(`[data-test="${name}"]`))
+            // console.log(prettyDOM(container))
+
+            // expect(element).toBeTruthy()
+            expect(element).toBeInTheDocument()
+        })
+        // expect(element).toBeInTheDocument()
+
+    }
+    )
+ */
