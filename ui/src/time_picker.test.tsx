@@ -20,7 +20,7 @@ import { wave } from './ui'
 
 const
     name = 'timepicker',
-    timepickerProps: TimePicker = { name }
+    timepickerProps: TimePicker = { name, label: 'Select time' }
 
 // jest.mock('./theme') // TODO: mock createTheme()
 
@@ -33,14 +33,10 @@ describe('time_picker.tsx', () => {
     it('Renders data-test attr - lazy load placeholder', async () => {
         const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
         await act(async () => {
-            // const element = container.querySelector(`[data-test="${'lazyload'}"]`)
-            // const element = await waitFor(() => findByTestId('lazyload'))
-            // console.log(prettyDOM(container))
             const element = getByTestId('lazyload')
             expect(element).toBeInTheDocument()
         })
-    }
-    )
+    })
 
     it('Renders data-test attr - time picker component', async () => {
         const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
@@ -48,20 +44,47 @@ describe('time_picker.tsx', () => {
             const element = await waitFor(() => getByTestId(name))
             expect(element).toBeInTheDocument()
         })
-    }
-    )
+    })
 
-    // it('Sets args - init - value not specified', async () => {
-    //     render(<XTimePicker model={timepickerProps} />)
-    //     await waitFor(() => {
-    //         expect(wave.args[name]).toBeFalsy()
-    //     })
-    // })
+    it('Sets args - init - value not specified', async () => {
+        render(<XTimePicker model={timepickerProps} />)
+        await waitFor(() => expect(wave.args[name]).toBeFalsy())
+    })
 
-    // it('Sets args - init - value specified', () => {
-    //     render(<XTimePicker model={{ ...timepickerProps, value: 'Test' }} />)
-    //     expect(wave.args[name]).toBe('Test')
-    // })
+    it('Sets args - init - value specified', async () => {
+        render(<XTimePicker model={{ ...timepickerProps, value: '10:30' }} />)
+        await act(async () => {
+            expect(wave.args[name]).toBe('10:30')
+        })
+    })
+
+    it('Time picker dialog visible after input click', async () => {
+        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            await waitFor(() => expect(getByText('12')).toBeVisible())
+
+        })
+    })
+
+    it('Set args - selection', async () => {
+        const { getByTestId, getByText, getByPlaceholderText, getAllByRole } = render(<XTimePicker model={timepickerProps} />)
+        await act(async () => {
+            // const element = await waitFor(() => getByTestId(name))
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            const element2 = await waitFor(() => getByText('12'))
+            fireEvent.click(element2)
+            fireEvent.click(element)
+            await waitFor(() => expect(element2).not.toBeVisible()) // TODO: not working
+            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
+        })
+    })
+
+
+
+
 
     // it('Sets args - selection', () => {
     //     expect(wave.args[name]).toBeFalsy()
@@ -85,6 +108,10 @@ describe('time_picker.tsx', () => {
 })
 
 
+
+            // const element = container.querySelector(`[data-test="${'lazyload'}"]`)
+            // const element = await waitFor(() => findByTestId('lazyload'))
+            // console.log(prettyDOM(container))
 
 /** 
  *     it('Renders data-test attr - time picker component', async () => {
