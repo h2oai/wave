@@ -104,7 +104,7 @@ const
         return `${hoursStr}:${minutesStr}${time_format === 'h12' ? (hours >= 12 ? ' pm' : ' am') : ''}`
     },
     LazyLoadPlaceholder = () =>
-        <div style={{ height: 59 }}>
+        <div data-test='lazyload' style={{ height: 59 }}>
             <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
         </div>,
     // Type 'any' instead of 'Date' because of warning when TimePicker is lazy loaded.
@@ -157,17 +157,17 @@ export const
                         background: {
                             paper: cssVar('$card'),
                         },
-                        primary: {
-                            // Not all of MUI's components support css variables yet - cssVarValue used instead.
-                            main: cssVarValue('$themePrimary'),
-                        },
+                        // primary: {
+                        //     // Not all of MUI's components support css variables yet - cssVarValue used instead.
+                        //     main: cssVarValue('$themePrimary'),
+                        // },
                         text: {
                             primary: cssVar('$neutralPrimary'),
                             secondary: cssVar('$neutralSecondary'),
                             disabled: cssVar('$neutralTertiaryAlt'),
                         },
                         action: {
-                            active: cssVarValue('$themePrimary'),
+                            // active: cssVarValue('$themePrimary'),
                             disabled: cssVar('$neutralLight'),
                             hover: cssVar('$neutralLight'),
                             hoverOpacity: 0.04
@@ -195,7 +195,6 @@ export const
                         ? <ThemeProvider theme={theme}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <TimePicker
-                                    data-test={m.name}
                                     value={value}
                                     label={m.label}
                                     open={isDialogOpen}
@@ -206,7 +205,7 @@ export const
                                     showToolbar={true}
                                     ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
                                     renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
-                                        <div ref={textInputRef}>
+                                        <div ref={textInputRef} data-test={m.name}>
                                             <Fluent.TextField
                                                 iconProps={{ iconName: 'Clock', }}
                                                 onClick={() => setIsDialogOpen(true)}
