@@ -66,240 +66,151 @@ describe('time_picker.tsx', () => {
             await waitFor(() => expect(getByText('10')).toBeInTheDocument()) // TODO: error getting selected value
             // await waitFor(() => expect(container.querySelector(`[aria-selected="true"]`)).toBeTruthy())
 
-        })
-    })
-
-    /*
- 
-it('Sets args - init - value specified in 24 hour format in 12 hour format time picker', async () => {
-    // TODO:
-    render(<XTimePicker model={{ ...timepickerProps, value: '10:30' }} />)
-    await act(async () => {
-        expect(wave.args[name]).toBe('10:30')
-    })
-})
- 
-it('Sets args - init - shows midnight correctly in 12 hour time format', async () => {
-    // TODO:
-    render(<XTimePicker model={{ ...timepickerProps, value: '00:00' }} />)
-    await act(async () => {
-        expect(wave.args[name]).toBe('12:00am')
-    })
-})
- 
-it('Sets args - init - shows noon correctly in 12 hour time format', async () => {
-    // TODO:
-    render(<XTimePicker model={{ ...timepickerProps, value: '12:00' }} />)
-    await act(async () => {
-        expect(wave.args[name]).toBe('12:00pm')
-    })
-})
-
-*/
-
-
-    it('Time picker dialog visible after input click', async () => {
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            await waitFor(() => expect(getByText('12')).toBeVisible())
-        })
-    })
-
-    /*
- 
-    it('Shows custom label', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Shows custom placeholder', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Disabled time picker', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Calls sync when trigger specified', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Displays 12 hour time format', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Limits available minutes to select from when minutes step is set', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Disable hours out of boundaries in 24 hour format', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
- 
-    it('Disable hours out of boundaries in 12 hour format', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    it('Show error if input out of the boundaries', async () => {
-        // TODO:
-        const { getByText, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            const element = await waitFor(() => getByPlaceholderText('Select a time'))
-            fireEvent.click(element)
-            const element2 = await waitFor(() => getByText('12'))
-            expect(element2).toBeVisible() // TODO: not working
-            await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-        })
-    })
- 
-    */
-
-})
-
-
-
-
-
-
-
-
-
-
-//===============================
-
-
             // const element = container.querySelector(`[data-test="${'lazyload'}"]`)
             // const element = await waitFor(() => findByTestId('lazyload'))
             // console.log(prettyDOM(container))
-
-
-  // it('Sets args - selection', () => {
-    //     expect(wave.args[name]).toBeFalsy()
-    //     const { getAllByRole, getAllByText } = render(<XTimePicker model={timepickerProps} />)
-    //     fireEvent.click(getAllByRole('combobox')[0])
-    //     fireEvent.click(getAllByText('1')[0])
-
-    //     expect(wave.args[name]).toBeTruthy()
-    // })
-
-    // it('Calls sync when trigger specified', () => {
-    //     const pushMock = jest.fn()
-    //     const { getAllByRole, getAllByText } = render(<XTimePicker model={{ ...timepickerProps, trigger: true }} />)
-
-    //     wave.push = pushMock
-    //     fireEvent.click(getAllByRole('combobox')[0])
-    //     fireEvent.click(getAllByText('1')[0])
-
-    //     expect(pushMock).toHaveBeenCalled()
-    // })
-
-    // it('Set args - selection', async () => {
-    //     const { container, getByTestId, getByText, getByPlaceholderText, getAllByRole } = render(<XTimePicker model={timepickerProps} />)
-    //     await act(async () => {
-    //         // const element = await waitFor(() => getByTestId(name))
-    //         const element = await waitFor(() => getByPlaceholderText('Select a time'))
-    //         fireEvent.click(element)
-    //         const element2 = await waitFor(() => getByText('12'))
-    //         fireEvent.click(element2) // document.querySelector('[aria-label="4 hours"]').click() - not working
-    //         // await new Promise((res) => setTimeout(() => res('resolved'), 1000))
-    //         const element3 = await waitFor(() => getByText('30'))
-    //         fireEvent.click(element3)
-    //         expect(element2).not.toBeVisible() // TODO: not working
-    //         await waitFor(() => expect(wave.args[name]).toBe('12:00'))
-    //     })
-    // })
-
-/** 
- *     it('Renders data-test attr - time picker component', async () => {
-        // const container = document.createElement('div')
-        const { container, findByTestId } = render(<XTimePicker model={timepickerProps} />)
-        await act(async () => {
-            // render(<XTimePicker model={timepickerProps} />)
-
-            // render(<XTimePicker model={timepickerProps} />, container)
-            // const {queryByTestId} = act( async () => render(<XTimePicker model={timepickerProps} />))
-            // await waitFor(() => {
-            //     expect(queryByTestId(name)).toBeInTheDocument()
-            // })
-            // const element = container.querySelector(`[data-testid="${name}"]`)
-
-            // const element = findByTestId(name) // This is essentially waitFor & getByTestId
-            // const element = await waitFor(() => findByTestId(name)) // This is essentially waitFor & getByTestId
-            const element = await waitFor(() => findByTestId(name))
-            // const element = await waitFor(() => container.querySelector(`[data-test="${name}"]`))
-            // console.log(prettyDOM(container))
-
-            // expect(element).toBeTruthy()
-            expect(element).toBeInTheDocument()
         })
-        // expect(element).toBeInTheDocument()
+    })
 
-    }
-    )
- */
+    it('Sets args - init - value specified in 24 hour format in 12 hour format time picker', async () => {
+        render(<XTimePicker model={{ ...timepickerProps, value: '14:30', time_format: 'h12' }} />)
+        await act(async () => {
+            expect(wave.args[name]).toBe('02:30 pm')
+        })
+    })
+
+    it('Sets args - init - shows midnight correctly in 12 hour time format', async () => {
+        render(<XTimePicker model={{ ...timepickerProps, value: '00:00', time_format: 'h12' }} />)
+        await act(async () => {
+            expect(wave.args[name]).toBe('12:00 am')
+        })
+    })
+
+    it('Sets args - init - shows noon correctly in 12 hour time format', async () => {
+        render(<XTimePicker model={{ ...timepickerProps, value: '12:00', time_format: 'h12' }} />)
+        await act(async () => {
+            expect(wave.args[name]).toBe('12:00 pm')
+        })
+    })
+
+    it('Time picker dialog visible after input click', async () => {
+        const { queryByRole, getByPlaceholderText } = render(<XTimePicker model={timepickerProps} />)
+        await act(async () => {
+            await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            // await waitFor(() => expect(getByText('12')).toBeVisible())
+            await waitFor(() => expect(queryByRole('dialog')).toBeInTheDocument())
+        })
+    })
+
+    it('Shows custom label', async () => {
+        const { getByText } = render(<XTimePicker model={{ ...timepickerProps, label: 'Custom label' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByText('Custom label'))
+            await waitFor(() => expect(element).toBeInTheDocument())
+        })
+    })
+
+    it('Shows custom placeholder', async () => {
+        const { getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, placeholder: 'Custom placeholder' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Custom placeholder'))
+            await waitFor(() => expect(element).toBeInTheDocument())
+        })
+    })
+
+    it('Disabled time picker', async () => {
+        const { queryByRole, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, disabled: true }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+        })
+    })
+
+    it('Calls sync when trigger specified', async () => {
+        const pushMock = jest.fn()
+        const { getByPlaceholderText, queryByRole } = render(<XTimePicker model={{ ...timepickerProps, value: '12:40', trigger: true }} />)
+        wave.push = pushMock
+        await act(async () => {
+            await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            await waitFor(() => expect(queryByRole('dialog')).toBeInTheDocument())
+            fireEvent.click(element)
+            await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument()) // TODO:
+
+            expect(pushMock).toHaveBeenCalled()
+        })
+    })
+
+    it('Displays 12 hour time format', async () => {
+        const { queryByText, getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00pm', time_format: 'h12' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            await waitFor(() => expect(getByText('PM')).toBeVisible())
+            await waitFor(() => expect(queryByText('13')).not.toBeInTheDocument())
+        })
+    })
+
+    it('Switch AM to PM in 12 hour time format', async () => {
+        const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00am', time_format: 'h12' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            const element2 = await waitFor(() => getByText('AM'))
+            await waitFor(() => expect(element2).toBeVisible())
+            fireEvent.click(element2)
+            await waitFor(() => expect(getByText('PM')).toBeVisible())
+        })
+    })
+
+    it('Limits available minutes to select from when minutes step is set', async () => {
+        const { getAllByText, getByPlaceholderText, queryAllByRole } = render(<XTimePicker model={{ ...timepickerProps, minutes_step: 10 }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            const element2 = await waitFor(() => getAllByText('--')[1]) // switches to dialog minutes view
+            fireEvent.click(element2)
+            await waitFor(() => expect(queryAllByRole('option')[0]).toHaveClass('Mui-disabled'))
+            await waitFor(() => expect(queryAllByRole('option')[2]).toHaveClass('Mui-disabled'))
+        })
+    })
+
+    it('Disable hours out of boundaries in 24 hour format', async () => {
+        const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, min: '10:00', max: '18:00' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            await waitFor(() => expect(getByText('9')).toHaveClass('Mui-disabled'))
+            await waitFor(() => expect(getByText('19')).toHaveClass('Mui-disabled'))
+            await waitFor(() => expect(getByText('12')).not.toHaveClass('Mui-disabled'))
+        })
+    })
+
+    it('Disable hours out of boundaries in 12 hour format', async () => {
+        const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '02:00am', time_format: 'h12', min: '02:00am', max: '03:00pm' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            await waitFor(() => expect(getByText('1')).toHaveClass('Mui-disabled'))
+            await waitFor(() => expect(getByText('4')).not.toHaveClass('Mui-disabled'))
+            const element2 = await waitFor(() => getByText('AM')) // switches to PM
+            fireEvent.click(element2)
+            await waitFor(() => expect(getByText('4')).toHaveClass('Mui-disabled'))
+        })
+    })
+
+    it('Show error if input out of the boundaries', async () => {
+        const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00am', time_format: 'h12', min: '02:00am', max: '03:00pm' }} />)
+        await act(async () => {
+            const element = await waitFor(() => getByPlaceholderText('Select a time'))
+            fireEvent.click(element)
+            const element2 = await waitFor(() => getByText('AM')) // switches to PM
+            fireEvent.click(element2)
+            await waitFor(() => expect(getByText('Wrong input. Please enter the time in range from 02:00am to 03:00pm.')).toBeTruthy())
+        })
+    })
+})
