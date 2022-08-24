@@ -14,7 +14,6 @@
 
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
 import React from 'react'
-// import { act } from 'react-dom/test-utils'
 import { TimePicker, XTimePicker } from './time_picker'
 import { wave } from './ui'
 
