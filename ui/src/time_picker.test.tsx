@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, waitFor, act, prettyDOM } from '@testing-library/react'
+import { fireEvent, render, waitFor, act } from '@testing-library/react'
 import React from 'react'
 // import { act } from 'react-dom/test-utils'
 import { TimePicker, XTimePicker } from './time_picker'
@@ -21,8 +21,6 @@ import { wave } from './ui'
 const
     name = 'timepicker',
     timepickerProps: TimePicker = { name, label: 'Select time' }
-
-// jest.mock('./theme') // TODO: mock createTheme()
 
 describe('time_picker.tsx', () => {
 
@@ -59,16 +57,11 @@ describe('time_picker.tsx', () => {
     })
 
     it('Sets args - init - value pre-selected in popover', async () => {
-        const { container, getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '10:30' }} />)
+        const { queryAllByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '10:30' }} />)
         await act(async () => {
             const element = await waitFor(() => getByPlaceholderText('Select a time'))
             fireEvent.click(element)
-            await waitFor(() => expect(getByText('10')).toBeInTheDocument()) // TODO: error getting selected value
-            // await waitFor(() => expect(container.querySelector(`[aria-selected="true"]`)).toBeTruthy())
-
-            // const element = container.querySelector(`[data-test="${'lazyload'}"]`)
-            // const element = await waitFor(() => findByTestId('lazyload'))
-            // console.log(prettyDOM(container))
+            await waitFor(() => expect(queryAllByText('10')[1]).toHaveClass('Mui-selected'))
         })
     })
 
@@ -131,16 +124,15 @@ describe('time_picker.tsx', () => {
 
     it('Calls sync when trigger specified', async () => {
         const pushMock = jest.fn()
-        const { getByPlaceholderText, queryByRole } = render(<XTimePicker model={{ ...timepickerProps, value: '12:40', trigger: true }} />)
+        const { getByPlaceholderText, getByText, queryByRole } = render(<XTimePicker model={{ ...timepickerProps, time_format: 'h12', value: '10:40am', trigger: true }} />)
         wave.push = pushMock
         await act(async () => {
             await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
             const element = await waitFor(() => getByPlaceholderText('Select a time'))
             fireEvent.click(element)
-            await waitFor(() => expect(queryByRole('dialog')).toBeInTheDocument())
-            fireEvent.click(element)
-            await waitFor(() => expect(queryByRole('dialog')).not.toBeInTheDocument()) // TODO:
-
+            const element2 = await waitFor(() => getByText('AM')) // switches to PM
+            fireEvent.click(element2)
+            fireEvent.click(element) // TODO: closing the dialog not working
             expect(pushMock).toHaveBeenCalled()
         })
     })
