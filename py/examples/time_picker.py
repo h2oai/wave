@@ -1,5 +1,5 @@
 # Form / TimePicker
-# Use TimePicker to... // TODO: finish descriptions
+# Use time pickers to allow users to pick times.
 # #form #timepicker
 # ---
 from h2o_wave import main, app, Q, ui

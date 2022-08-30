@@ -54,8 +54,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 
 ## With time format
 
-<!-- TODO -->
-Property `time_format` specifies whether the time picker should use 12 hour or 24 hour time format. Possible options are `h12` and `h24`. 24 hour time format selected by default.
+Property `time_format` specifies whether the time picker should use 12 hour or 24 hour time format. Possible options are `h12` and `h24`. 24 hour time format used by default.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
@@ -63,24 +62,22 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
-## With minutes step
+## With boundaries
 
-<!-- TODO -->
-Description.
+The minimum and/or maximum allowed time value in `hh:mm` or `hh:mm(a|p)m` format.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.time_picker(name='time_picker', label='Time picker')
+    ui.time_picker(name='time_picker', label='Time picker', min='10:00am', max='06:00pm')
 ])
 ```
 
-## With boundaries
+## With minutes step
 
-<!-- TODO -->
-Description.
+If you wish to limit the available minutes to select from, use `minutes_step` property. Available values are `1`, `5`, `10`, `15`, `20`, `30` or `60` where `1` is the default.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.time_picker(name='time_picker', label='Time picker')
+    ui.time_picker(name='time_picker', label='Time picker', minutes_step=10)
 ])
 ```
