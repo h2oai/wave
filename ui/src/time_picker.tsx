@@ -89,16 +89,18 @@ const
     LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
     TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
     getAdapterDateFns = async () => await import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => AdapterDateFns),
-    parseTimeToDate = (time: S) => {
+    parseTimeStringToDate = (time: S) => {
         const date = new Date(`2000-01-01T${time.slice(0, 5)}:00`)
-        if (time?.endsWith('pm')) date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
+        if (time.endsWith('pm')) date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
         return date
     },
-    formatDateToTimeString = (d: Date, time_format: 'h12' | 'h24' = 'h24') => {
+    formatDateToTimeString = (date: Date, time_format: 'h12' | 'h24' = 'h24') => {
         const
-            hours = d.getHours(),
-            minutes = d.getMinutes(),
-            hoursAmPm = time_format === 'h12' ? (hours >= 13 ? hours - 12 : (hours < 1 ? (hours + 12) : hours)) : hours,
+            hours = date.getHours(),
+            minutes = date.getMinutes(),
+            hoursAmPm = time_format === 'h12' && (hours < 1 || hours >= 13)
+                ? hours >= 13 ? hours - 12 : hours + 12
+                : hours,
             hoursStr = hoursAmPm.toString().padStart(2, '0'),
             minutesStr = minutes.toString().padStart(2, '0')
         return `${hoursStr}:${minutesStr}${time_format === 'h12' ? (hours >= 12 ? ' pm' : ' am') : ''}`
@@ -108,13 +110,11 @@ const
             <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
         </div>,
     // Type 'any' instead of 'Date' because of warning when TimePicker is lazy loaded.
-    Toolbar = ({ params, label, switchAmPm }: { params: BaseToolbarProps<any, any | null>, label: S | undefined, switchAmPm: () => void }) => {
-        const
-            { parsedValue, setOpenView, ampm } = params,
-            time = parsedValue
-                // https://github.com/moment/luxon/issues/726
-                ? parsedValue.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: ampm ? 'h12' : 'h23' })
-                : '--:--'
+    Toolbar = ({ params: { parsedValue, setOpenView, ampm }, label, switchAmPm }: { params: BaseToolbarProps<any, any | null>, label: S | undefined, switchAmPm: () => void }) => {
+        const time = parsedValue
+            // https://github.com/moment/luxon/issues/726
+            ? parsedValue.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: ampm ? 'h12' : 'h23' })
+            : '--:--'
 
         return (
             <div style={{ paddingTop: 16, paddingLeft: 16 }}>
@@ -134,7 +134,7 @@ const
 export const
     XTimePicker = ({ model: m }: { model: TimePicker }) => {
         const
-            defaultVal = m.value ? parseTimeToDate(m.value) : null,
+            defaultVal = m.value ? parseTimeStringToDate(m.value) : null,
             [value, setValue] = React.useState(defaultVal),
             [isDialogOpen, setIsDialogOpen] = React.useState(false),
             textInputRef = React.useRef<HTMLDivElement | null>(null),
@@ -229,8 +229,8 @@ export const
                                         </div>
                                     }
                                     PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
-                                    minTime={m.min ? parseTimeToDate(m.min) : undefined}
-                                    maxTime={m.max ? parseTimeToDate(m.max) : undefined}
+                                    minTime={m.min ? parseTimeStringToDate(m.min) : undefined}
+                                    maxTime={m.max ? parseTimeStringToDate(m.max) : undefined}
                                     minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
                                     disabled={m.disabled}
                                     onOpen={() => {
