@@ -15,7 +15,7 @@
 import React from 'react'
 import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
-import { cssVar } from './theme'
+import { cssVar, cssVarValue } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
 import { PopperProps, TextFieldProps, Theme } from '@mui/material'
@@ -85,7 +85,7 @@ const
     }
 
 const
-    // ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
+    ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
     LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
     TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
     getAdapterDateFns = async () => await import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => AdapterDateFns),
@@ -150,36 +150,35 @@ export const
                 if (m.trigger) wave.push()
             },
             [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
-            [theme, setTheme] = React.useState<Theme | null>()
-        // getTheme = async () => await import('@mui/material/styles').then(({ createTheme }) =>
-        //     createTheme({
-        //         palette: {
-        //             background: {
-        //                 paper: cssVar('$card'),
-        //             },
-        //             // TODO: mock createTheme in tests to get cssVarValue working in jest
-        //             // primary: {
-        //             //     // Not all of MUI's components support css variables yet - cssVarValue used instead.
-        //             //     main: cssVarValue('$themePrimary'),
-        //             // },
-        //             text: {
-        //                 primary: cssVar('$neutralPrimary'),
-        //                 secondary: cssVar('$neutralSecondary'),
-        //                 disabled: cssVar('$neutralTertiaryAlt'),
-        //             },
-        //             action: {
-        //                 // active: cssVarValue('$themePrimary'),
-        //                 disabled: cssVar('$neutralLight'),
-        //                 hover: cssVar('$neutralLight'),
-        //                 hoverOpacity: 0.04
-        //             }
-        //         },
-        //     })
-        // )
+            themeObj = {
+                palette: {
+                    background: {
+                        paper: cssVar('$card'),
+                    },
+                    primary: {
+                        // Not all of MUI's components support css variables yet - cssVarValue used instead.
+                        // HACK: cssVarValue returns empty string in tests (similar to themeObject implemented outside of this scope)
+                        main: cssVarValue('$themePrimary') || '#000000',
+                    },
+                    text: {
+                        primary: cssVarValue('$neutralPrimary') || '#323130',
+                        secondary: cssVar('$neutralSecondary'),
+                        disabled: cssVar('$neutralTertiaryAlt'),
+                    },
+                    action: {
+                        active: cssVarValue('$themePrimary') || '#000000',
+                        disabled: cssVar('$neutralLight'),
+                        hover: cssVar('$neutralLight'),
+                        hoverOpacity: 0.04
+                    }
+                },
+            },
+            [theme, setTheme] = React.useState<Theme | null>(),
+            getTheme = async () => await import('@mui/material/styles').then(({ createTheme }) => createTheme(themeObj))
 
         React.useEffect(() => {
             wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null
-            // getTheme().then(theme => { if (theme !== null) setTheme(theme) })
+            getTheme().then(theme => { if (theme !== null) setTheme(theme) })
             getAdapterDateFns().then(adapter => { if (adapter !== null) setAdapterDateFns(() => adapter) })
             return (() => {
                 // clean up
@@ -192,58 +191,58 @@ export const
         return (
             <>
                 <React.Suspense fallback={<LazyLoadPlaceholder />}>
-                    {AdapterDateFns
-                        // ? <ThemeProvider theme={theme}>
-                        ? <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <TimePicker
-                                value={value}
-                                label={m.label}
-                                open={isDialogOpen}
-                                onChange={(value, _keyboardInputValue) => setValue(value as Date)}
-                                onAccept={(value) => onSelectTime(value as Date)}
-                                onClose={() => setIsDialogOpen(false)}
-                                ampm={m.time_format === 'h12'}
-                                showToolbar={true}
-                                ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
-                                renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
-                                    <div ref={textInputRef} data-test={m.name}>
-                                        <Fluent.TextField
-                                            iconProps={{ iconName: 'Clock', }}
-                                            onClick={() => setIsDialogOpen(true)}
-                                            styles={{
-                                                field: { cursor: 'pointer' },
-                                                icon: { bottom: 7 }
-                                            }}
-                                            onChange={inputProps?.onChange}
-                                            placeholder={m.placeholder || 'Select a time'}
-                                            disabled={disabled}
-                                            errorMessage={
-                                                error
-                                                    ? `Wrong input. Please enter the time in range from ${m.min || (inputProps?.ampm ? '12:00am' : '00:00')} to ${m.max || (inputProps?.ampm ? '12:00am' : '00:00')}.`
-                                                    : undefined
-                                            }
-                                            readOnly={true}
-                                            value={value ? formatDateToTimeString(value, m.time_format) : ''}
-                                            label={m.label}
-                                            required={m.required}
-                                        />
-                                    </div>
-                                }
-                                PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
-                                minTime={m.min ? parseTimeToDate(m.min) : undefined}
-                                maxTime={m.max ? parseTimeToDate(m.max) : undefined}
-                                minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
-                                disabled={m.disabled}
-                                onOpen={() => {
-                                    // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
-                                    setTimeout(() => {
-                                        const el = document.activeElement
-                                        if (el) (el as HTMLElement).blur()
-                                    })
-                                }}
-                            />
-                        </LocalizationProvider>
-                        // </ThemeProvider>
+                    {theme && AdapterDateFns
+                        ? <ThemeProvider theme={theme}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <TimePicker
+                                    value={value}
+                                    label={m.label}
+                                    open={isDialogOpen}
+                                    onChange={(value, _keyboardInputValue) => setValue(value as Date)}
+                                    onAccept={(value) => onSelectTime(value as Date)}
+                                    onClose={() => setIsDialogOpen(false)}
+                                    ampm={m.time_format === 'h12'}
+                                    showToolbar={true}
+                                    ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
+                                    renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
+                                        <div ref={textInputRef} data-test={m.name}>
+                                            <Fluent.TextField
+                                                iconProps={{ iconName: 'Clock', }}
+                                                onClick={() => setIsDialogOpen(true)}
+                                                styles={{
+                                                    field: { cursor: 'pointer' },
+                                                    icon: { bottom: 7 }
+                                                }}
+                                                onChange={inputProps?.onChange}
+                                                placeholder={m.placeholder || 'Select a time'}
+                                                disabled={disabled}
+                                                errorMessage={
+                                                    error
+                                                        ? `Wrong input. Please enter the time in range from ${m.min || (inputProps?.ampm ? '12:00am' : '00:00')} to ${m.max || (inputProps?.ampm ? '12:00am' : '00:00')}.`
+                                                        : undefined
+                                                }
+                                                readOnly={true}
+                                                value={value ? formatDateToTimeString(value, m.time_format) : ''}
+                                                label={m.label}
+                                                required={m.required}
+                                            />
+                                        </div>
+                                    }
+                                    PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
+                                    minTime={m.min ? parseTimeToDate(m.min) : undefined}
+                                    maxTime={m.max ? parseTimeToDate(m.max) : undefined}
+                                    minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
+                                    disabled={m.disabled}
+                                    onOpen={() => {
+                                        // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
+                                        setTimeout(() => {
+                                            const el = document.activeElement
+                                            if (el) (el as HTMLElement).blur()
+                                        })
+                                    }}
+                                />
+                            </LocalizationProvider>
+                        </ThemeProvider>
                         : <LazyLoadPlaceholder />
                     }
                 </React.Suspense>
