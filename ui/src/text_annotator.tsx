@@ -324,17 +324,21 @@ export
             const activeColor = activeTag ? tagColorMap.get(activeTag) : undefined
             return (
               // Use paragraph instead of span to support text highlight.
-              <p
-                key={idx}
-                // data-keys keeps state in DOM to access it via window.getSelection() API in case mouse up event is fired when cursor is not above <p/> element
-                data-keys={`{ "key": ${idx}, "start": ${start}, "end": ${end} }`}
-                onMouseDown={handleMouseDown({ key: idx, start, end })}
-                onMouseUp={handleMouseUp({ key: idx, start, end })}
-                style={{ display: 'inline', padding: '4px 0px' }}
-                className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
-              >
-                {tag ? getMark(text, idx, tag) : text}
-              </p>
+              text === '\n' || text === '\r'
+                // Handle newline escape characters
+                ? <br key={idx}></br>
+                // Use paragraph instead of span to support text highlight.
+                : <p
+                  key={idx}
+                  // data-keys keeps state in DOM to access it via window.getSelection() API in case mouse up event is fired when cursor is not above <p/> element
+                  data-keys={`{ "key": ${idx}, "start": ${start}, "end": ${end} }`}
+                  onMouseDown={handleMouseDown({ key: idx, start, end })}
+                  onMouseUp={handleMouseUp({ key: idx, start, end })}
+                  style={{ display: 'inline', padding: '4px 0px' }}
+                  className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
+                >
+                  {tag ? getMark(text, idx, tag) : text}
+                </p>
             )
           })
         }</div>
