@@ -71,20 +71,25 @@ const DEBOUNCE_TIMEOUT = 500
 export const
   XTextbox = ({ model: m }: { model: Textbox }) => {
     const
+      [value, setValue] = React.useState(m.value ?? ''),
+      debounceRef = React.useRef(debounce(DEBOUNCE_TIMEOUT, wave.push)),
       onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
         v = v || (target as HTMLInputElement).value
 
         wave.args[m.name] = v ?? (m.value || '')
-        if (m.trigger) wave.push()
+        if (m.trigger) debounceRef.current()
+        setValue(v)
+        m.value = v
       },
       textFieldProps: Fluent.ITextFieldProps & { 'data-test': S } = {
         'data-test': m.name,
         label: m.label,
+        value,
         errorMessage: m.error,
         required: m.required,
         disabled: m.disabled,
         readOnly: m.readonly,
-        onChange: m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange,
+        onChange,
         iconProps: m.icon ? { iconName: m.icon } : undefined,
         placeholder: m.placeholder,
         prefix: m.prefix,
@@ -94,11 +99,13 @@ export const
         type: m.password ? 'password' : undefined,
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.value || '' }, [])
+    React.useEffect(() => {
+      wave.args[m.name] = m.value ?? ''
+      setValue(m.value ?? '')
+    }, [m.value, m.name])
 
     return m.mask
-      ? <Fluent.MaskedTextField mask={m.mask} {...textFieldProps} value={m.value} />
+      ? <Fluent.MaskedTextField mask={m.mask} {...textFieldProps} />
       : (
         <Fluent.TextField
           styles={
@@ -107,7 +114,6 @@ export const
               : undefined
           }
           {...textFieldProps}
-          defaultValue={m.value}
         />
       )
   }
