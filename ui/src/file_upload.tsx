@@ -138,7 +138,7 @@ export const
           wave.args[name] = files
 
           if (!compact) wave.push()
-          setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
+          setSuccessMsg(`Successfully uploaded files: ${fileNames}.`)
         }
         catch (err: unknown) {
           if (err) setError(err instanceof XMLHttpRequest ? err.responseText : 'There was an error when uploading file.')
