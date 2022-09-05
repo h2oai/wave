@@ -49,9 +49,9 @@ q.page['example'] = ui.form_card(box='1 1 4 10', items=[
 ])
 ```
 
-## With linebreaks
+## With line breaks
 
-Use the `\n` or `\r` escape characters, if you wish to force the line breaks within the text.
+Use the `\n` or `\r` escape characters if you wish to force the line breaks within the text.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 4 10', items=[
