@@ -64,7 +64,7 @@ q.page['example'] = ui.form_card(box='1 1 4 10', items=[
         ],
         items=[
             ui.text_annotator_item(text='Killer Mike', tag='p'),
-            ui.text_annotator_item(text=' is a member, of the hip\rhop super\ngroup '),  # no tag
+            ui.text_annotator_item(text=' is a member, of the hip\rhop super\ngroup '),
             ui.text_annotator_item(text='Run the Jewels', tag='o'),
         ],
     )
