@@ -18,8 +18,11 @@ import React from 'react'
 import { Textbox, XTextbox } from './textbox'
 import { wave } from './ui'
 
-const name = 'textbox'
+const
+  name = 'textbox',
+  pushMock = jest.fn()
 let textboxProps: Textbox = { name }
+wave.push = pushMock
 
 describe('Textbox.tsx', () => {
   beforeEach(() => {
@@ -76,9 +79,6 @@ describe('Textbox.tsx', () => {
   it('Calls sync on change - trigger specified', () => {
     const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger: true }} />)
 
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
     expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
@@ -90,8 +90,6 @@ describe('Textbox.tsx', () => {
 
   it('Debounces wave push', () => {
     const { getByTestId } = render(<XTextbox model={{...textboxProps, trigger: true}} />)
-    const pushMock = jest.fn()
-    wave.push = pushMock
 
     userEvent.type(getByTestId(name), 'a')
     userEvent.type(getByTestId(name), 'a')
@@ -104,9 +102,6 @@ describe('Textbox.tsx', () => {
 
   it('Does not call sync on change - trigger not specified', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
-
-    const pushMock = jest.fn()
-    wave.push = pushMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
