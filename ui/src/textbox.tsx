@@ -99,9 +99,10 @@ export const
         type: m.password ? 'password' : undefined,
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.value || '' }, [])
-    React.useEffect(() => { setValue(m.value ?? '')}, [m.value])
+    React.useEffect(() => {
+      wave.args[m.name] = m.value ?? ''
+      setValue(m.value ?? '')
+    }, [m.value, m.name])
 
     return m.mask
       ? <Fluent.MaskedTextField mask={m.mask} {...textFieldProps} />

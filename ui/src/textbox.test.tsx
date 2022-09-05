@@ -75,6 +75,25 @@ describe('Textbox.tsx', () => {
     expect(wave.args[name]).toBe('default')
   })
 
+  it('Sets args when "value" prop changes', () => {
+    const { rerender } = render(<XTextbox model={{ ...textboxProps, value: 'a' }} />)
+    expect(wave.args[name]).toBe('a')
+
+    rerender(<XTextbox model={{ ...textboxProps, value: 'b' }} />)
+    expect(wave.args[name]).toBe('b')
+  })
+
+  it('Sets args when typing new text and then "value" prop changes', () => {
+    const { getByTestId, rerender } = render(<XTextbox model={{ ...textboxProps, value: 'a' }} />)
+    expect(wave.args[name]).toBe('a')
+
+    userEvent.type(getByTestId(name), '{backspace}b')
+    expect(wave.args[name]).toBe('b')
+
+    rerender(<XTextbox model={{ ...textboxProps, value: 'c' }} />)
+    expect(wave.args[name]).toBe('c')
+  })
+
   it('Calls sync on change - trigger specified', () => {
     const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger: true }} />)
 
