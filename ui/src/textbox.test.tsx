@@ -81,10 +81,8 @@ describe('Textbox.tsx', () => {
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
     expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
-    jest.advanceTimersByTime(250)
-    expect(pushMock).not.toBeCalled()
-    jest.advanceTimersByTime(250)
-    expect(pushMock).toBeCalled()
+    jest.runOnlyPendingTimers()
+    expect(pushMock).toBeCalledTimes(1)
   })
 
   it('Debounces wave push', () => {
