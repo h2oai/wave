@@ -28,7 +28,6 @@ describe('Textbox.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.useFakeTimers()
-    wave.args[name] = null
     // Because we mutate props to programatically change "value" from Wave app we need to reset it before every test
     textboxProps = { name }
   })
