@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, act } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { Textbox, XTextbox } from './textbox'
@@ -56,7 +56,7 @@ describe('Textbox.tsx', () => {
   it('Sets args on input', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
     fireEvent.change(getByTestId(name), { target: { value: 'text' } })
-    act(() => { jest.runOnlyPendingTimers() })
+    jest.runOnlyPendingTimers()
 
     expect(wave.args[name]).toBe('text')
   })
@@ -81,9 +81,9 @@ describe('Textbox.tsx', () => {
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
     expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
-    act(() => { jest.advanceTimersByTime(250) })
+    jest.advanceTimersByTime(250)
     expect(pushMock).not.toBeCalled()
-    act(() => { jest.advanceTimersByTime(250) })
+    jest.advanceTimersByTime(250)
     expect(pushMock).toBeCalled()
   })
 
@@ -94,7 +94,7 @@ describe('Textbox.tsx', () => {
     userEvent.type(getByTestId(name), 'a')
     userEvent.type(getByTestId(name), 'a')
     userEvent.type(getByTestId(name), 'a')
-    act(() => { jest.runOnlyPendingTimers() })
+    jest.runOnlyPendingTimers()
 
     expect(pushMock).toBeCalledTimes(1)
   })
