@@ -120,10 +120,8 @@ const
             <div style={{ paddingTop: 16, paddingLeft: 16 }}>
                 {label && <Fluent.Label style={{ maxWidth: '70%' }}>{label}</Fluent.Label>}
                 <Fluent.Text style={{ fontSize: 26 }}>
-                    <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{`${time.substring(0, 2)}`}</Fluent.Text>
-                    {':'}
-                    <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{`${time.substring(3, 5)}`}</Fluent.Text>
-                    {' '}
+                    <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{`${time.substring(0, 2)}`}</Fluent.Text>{':'}
+                    <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{`${time.substring(3, 5)}`}</Fluent.Text>{' '}
                     <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{`${time.substring(6, 8) || ''}`}</Fluent.Text>
                 </Fluent.Text>
             </div>
@@ -150,7 +148,7 @@ export const
                 if (m.trigger) wave.push()
             },
             [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
-            themeObj = {
+            themeOptions = {
                 palette: {
                     background: {
                         paper: cssVar('$card'),
@@ -174,7 +172,7 @@ export const
                 },
             },
             [theme, setTheme] = React.useState<Theme | null>(),
-            getTheme = async () => await import('@mui/material/styles').then(({ createTheme }) => createTheme(themeObj))
+            getTheme = async () => await import('@mui/material/styles').then(({ createTheme }) => createTheme(themeOptions))
 
         React.useEffect(() => {
             wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, m.time_format) : null
@@ -204,35 +202,35 @@ export const
                                     ampm={m.time_format === 'h12'}
                                     showToolbar={true}
                                     ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
-                                    renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
-                                        <div ref={textInputRef} data-test={m.name}>
-                                            <Fluent.TextField
-                                                iconProps={{ iconName: 'Clock', }}
-                                                onClick={() => setIsDialogOpen(true)}
-                                                styles={{
-                                                    field: { cursor: 'pointer' },
-                                                    icon: { bottom: 7 }
-                                                }}
-                                                onChange={inputProps?.onChange}
-                                                placeholder={m.placeholder || 'Select a time'}
-                                                disabled={disabled}
-                                                errorMessage={
-                                                    error
-                                                        ? `Wrong input. Please enter the time in range from ${m.min || (inputProps?.ampm ? '12:00am' : '00:00')} to ${m.max || (inputProps?.ampm ? '12:00am' : '00:00')}.`
-                                                        : undefined
-                                                }
-                                                readOnly={true}
-                                                value={value ? formatDateToTimeString(value, m.time_format) : ''}
-                                                label={m.label}
-                                                required={m.required}
-                                            />
-                                        </div>
-                                    }
                                     PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
                                     minTime={m.min ? parseTimeStringToDate(m.min) : undefined}
                                     maxTime={m.max ? parseTimeStringToDate(m.max) : undefined}
                                     minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
                                     disabled={m.disabled}
+                                    renderInput={({ inputProps, error, disabled }: TextFieldProps) =>
+                                        <div ref={textInputRef} data-test={m.name}>
+                                            <Fluent.TextField
+                                                iconProps={{ iconName: 'Clock', }}
+                                                onClick={() => setIsDialogOpen(true)}
+                                                onChange={inputProps?.onChange}
+                                                placeholder={m.placeholder || 'Select a time'}
+                                                disabled={disabled}
+                                                readOnly={true}
+                                                value={value ? formatDateToTimeString(value, m.time_format) : ''}
+                                                label={m.label}
+                                                required={m.required}
+                                                styles={{
+                                                    field: { cursor: 'pointer' },
+                                                    icon: { bottom: 7 }
+                                                }}
+                                                errorMessage={
+                                                    error
+                                                        ? `Wrong input. Please enter the time in range from ${m.min || (inputProps?.ampm ? '12:00am' : '00:00')} to ${m.max || (inputProps?.ampm ? '12:00am' : '00:00')}.`
+                                                        : undefined
+                                                }
+                                            />
+                                        </div>
+                                    }
                                     onOpen={() => {
                                         // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
                                         setTimeout(() => {
