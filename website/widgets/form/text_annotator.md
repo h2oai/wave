@@ -48,3 +48,25 @@ q.page['example'] = ui.form_card(box='1 1 4 10', items=[
     )
 ])
 ```
+
+## With linebreaks
+
+Use the `\n` or `\r` escape characters, if you wish to force the line breaks within the text.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+    ui.text_annotator(
+        name='annotator',
+        title='Select text to annotate',
+        tags=[
+            ui.text_annotator_tag(name='p', label='Person', color='#F1CBCB'),
+            ui.text_annotator_tag(name='o', label='Org', color='#CAEACA'),
+        ],
+        items=[
+            ui.text_annotator_item(text='Killer Mike', tag='p'),
+            ui.text_annotator_item(text=' is a member, of the hip\rhop super\ngroup '),  # no tag
+            ui.text_annotator_item(text='Run the Jewels', tag='o'),
+        ],
+    )
+])
+```
