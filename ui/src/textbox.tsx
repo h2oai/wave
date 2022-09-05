@@ -72,7 +72,7 @@ export const
   XTextbox = ({ model: m }: { model: Textbox }) => {
     const
       [value, setValue] = React.useState(m.value ?? ''),
-      debounceRef = React.useRef(debounce(DEBOUNCE_TIMEOUT, () => wave.push())),
+      debounceRef = React.useRef(debounce(DEBOUNCE_TIMEOUT, wave.push)),
       onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
         v = v || (target as HTMLInputElement).value
 
