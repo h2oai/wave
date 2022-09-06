@@ -30,6 +30,16 @@ q.page['example'] = ui.form_card(box='1 1 2 5', items=[
 ])
 ```
 
+## Inline
+
+Color picker as is can take a lot of space. For cases where space is limited, use the `inline` attribute that displays a more compact version.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 5 2', items=[
+    ui.color_picker(name='color_picker', label='Color picker', inline=True)
+])
+```
+
 ## Swatch
 
 If the `choices` parameter is set, a swatch picker is displayed instead of the standard color picker.
