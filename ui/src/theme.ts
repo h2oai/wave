@@ -588,6 +588,7 @@ const
     const
       theme = themes[themeName] ?? themes[defaultThemeName],
       { palette, fluentPalette } = theme,
+      cardColor = Fluent.getColorFromString(palette.card)!,
       updateTones = (key: S, color: S) => {
         document.body.style.setProperty(`--${key}`, color)
         const [r, g, b] = rgb(color)
@@ -622,7 +623,7 @@ const
     // HACK: Execute as microtask to prevent race condition. Since meta is handled in page.tsx:render,
     // Fluent wants to update all components present (Spinner), but throws warning it cannot update unmounted element (Spinner)
     // because it is replaced by our new component tree in the meanwhile.
-    setTimeout(() => Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' } }), 0)
+    setTimeout(() => Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' }, isInverted: Fluent.isDark(cardColor) }), 0)
   }
 
 export const
