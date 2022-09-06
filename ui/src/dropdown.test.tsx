@@ -97,11 +97,6 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['A', 'B'])
     })
 
-    it('Returns null when value not specified - init', () => {
-      render(<XDropdown model={defaultProps} />)
-      expect(wave.args[name]).toBeNull()
-    })
-
     it('Shows correct selection in UI on select', () => {
       const { getByTestId, getByText, getAllByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
 
