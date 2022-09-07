@@ -19,12 +19,13 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
+        # q.page['meta'] = ui.meta_card(box='', theme='neon')
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
             ui.time_picker(name='timepicker', label="Standard time picker"),
             ui.time_picker(name='timepicker_required', label="Time picker - required", required=True),
             ui.time_picker(name='timepicker_disabled', label="Disabled time picker", value='11:15am', disabled=True),
             ui.time_picker(name='timepicker_placeholder', label="Time picker with custom placeholder", placeholder='Pick a time'),
-            ui.time_picker(name='timepicker_12h', label="Time picker with 12 hour time format", time_format='h12'),
+            ui.time_picker(name='timepicker_12h', label="Time picker with 12 hour time format", time_format_12h=True, value="10:35 am"),
             ui.time_picker(name='timepicker_boundaries', label="Time picker with boundaries", min='10:00', max='06:00pm', value='13:36'),
             ui.time_picker(name='timepicker_step', label="Time picker with minutes step", minutes_step=10),
             ui.button(name='show_inputs', label='Submit', primary=True),

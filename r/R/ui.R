@@ -2952,8 +2952,7 @@ ui_tags <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param trigger True if the form should be submitted when the time is selected.
 #' @param required True if this is a required field. Defaults to False.
-#' @param time_format Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`.
-#'   One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerTimeFormat.
+#' @param time_format_12h True if time picker should use a 12-hour time format. Defaults to False.
 #' @param min The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
 #' @param max The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
 #' @param minutes_step Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
@@ -2969,7 +2968,7 @@ ui_time_picker <- function(
   visible = NULL,
   trigger = NULL,
   required = NULL,
-  time_format = NULL,
+  time_format_12h = NULL,
   min = NULL,
   max = NULL,
   minutes_step = NULL) {
@@ -2982,7 +2981,7 @@ ui_time_picker <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("required", "logical", required)
-  # TODO Validate time_format
+  .guard_scalar("time_format_12h", "logical", time_format_12h)
   .guard_scalar("min", "character", min)
   .guard_scalar("max", "character", max)
   .guard_scalar("minutes_step", "numeric", minutes_step)
@@ -2996,7 +2995,7 @@ ui_time_picker <- function(
     visible=visible,
     trigger=trigger,
     required=required,
-    time_format=time_format,
+    time_format_12h=time_format_12h,
     min=min,
     max=max,
     minutes_step=minutes_step))
