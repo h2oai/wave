@@ -89,7 +89,7 @@ const
 
     return (
       <div className={css.inlinePickerContainer}>
-        <Fluent.Label>{model.label}</Fluent.Label>
+        {model.label && <Fluent.Label>{model.label}</Fluent.Label>}
         <div className={css.rhs}>
           <div className={css.preview} style={{ background: color?.str }} onClick={toggleCallout} />
           {isCalloutVisible && (
@@ -131,7 +131,7 @@ export const
             ? <InlineColorPicker model={model} onChange={onChange} />
             : (
               <>
-                <Fluent.Label>{label}</Fluent.Label>
+                {label && <Fluent.Label>{label}</Fluent.Label>}
                 {
                   choices?.length
                     ? <Fluent.SwatchColorPicker columnCount={10} selectedId={selectedColorId || choices[0]} colorCells={toColorCells(choices)} onChange={onSwatchChange} />
