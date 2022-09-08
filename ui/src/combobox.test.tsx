@@ -85,6 +85,14 @@ describe('Combobox.tsx', () => {
     
         expect(pushMock).toHaveBeenCalled()
       })
+
+      it('Sets wave args as string when a new valued is typed after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+    
+        userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
+    
+        expect(wave.args[name]).toBe('D')
+      })
     })
 
     describe('Prop changes - update values dynamically from Wave app', () => {
