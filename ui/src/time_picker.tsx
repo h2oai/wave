@@ -76,6 +76,7 @@ const
         sx: {
             '& .MuiPaper-root': {
                 borderRadius: '2px',
+                boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`
             },
             '& .MuiTypography-root': {
                 fontFamily: 'Inter',
@@ -123,7 +124,6 @@ const
             minutesStr = minutes.toString().padStart(2, '0')
         return `${hoursStr}:${minutesStr}${time_format_12h ? (hours >= 12 ? ' pm' : ' am') : ''}`
     },
-    hexToRGBA = (hex: S, alpha: S) => `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${hex.slice(5, 7), 16}, ${alpha})`,
     LazyLoadPlaceholder = () =>
         <div data-test='lazyload' style={{ height: 59 }}>
             <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
@@ -198,7 +198,6 @@ export const
                     palette: {
                         background: {
                             paper: cssVar('$card'),
-                            // paper: 'var(--card, var(--gray))' 
                         },
                         primary: {
                             // Not all of MUI's components support css variables yet - cssVarValue used instead.
@@ -253,7 +252,7 @@ export const
                                     ampm={m.time_format_12h}
                                     showToolbar={true}
                                     ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
-                                    PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...{ popoverProps, ...{ sx: { '& .MuiPaper-root': { boxShadow: `${hexToRGBA(cssVarValue('$text'), '0.13')} 0px 6.4px 14.4px 0px, ${hexToRGBA(cssVarValue('$text'), '0.11')} 0px 1.2px 3.6px 0px` } } } } }}
+                                    PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
                                     minTime={m.min ? parseTimeStringToDate(m.min) : undefined}
                                     maxTime={m.max ? parseTimeStringToDate(m.max) : undefined}
                                     minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
