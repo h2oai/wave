@@ -18,11 +18,13 @@ import React from 'react'
 import { Combobox, XCombobox } from './combobox'
 import { wave } from './ui'
 
-const name = 'combobox'
-const comboboxProps: Combobox = { name, choices: ['A', 'B', 'C'] }
-describe('Combobox.tsx', () => {
-  beforeEach(() => { wave.args[name] = null })
+const
+  name = 'combobox',
+  comboboxProps: Combobox = { name, choices: ['A', 'B', 'C'] },
+  pushMock = jest.fn()
+  wave.push = pushMock
 
+describe('Combobox.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XCombobox model={comboboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
@@ -76,8 +78,6 @@ describe('Combobox.tsx', () => {
       })
 
       it('Calls sync when trigger is on', () => {
-        const pushMock = jest.fn()
-        wave.push = pushMock
         const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, trigger: true }} />)
     
         fireEvent.click(getByRole('presentation', { hidden: true }))
@@ -231,8 +231,6 @@ describe('Combobox.tsx', () => {
       })
 
       it('Calls sync when trigger is on', () => {
-        const pushMock = jest.fn()
-        wave.push = pushMock
         const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, values: [], trigger: true }} />)
     
         fireEvent.click(getByRole('presentation', { hidden: true }))
