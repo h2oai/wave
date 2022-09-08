@@ -89,7 +89,7 @@ jobs:
           AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
 
       # Needed for PyCharm plugin publish.
       - name: Setup Java
@@ -111,6 +111,10 @@ jobs:
 
       - name: Publish to S3
         run: make publish-release-s3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
 
       # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
       - name: Reindex Algolia search
@@ -122,9 +126,17 @@ jobs:
           ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
       - name: Publish apps for Managed Cloud
-        run: make build-apps publish-apps-s3
+        run: make build-apps publish-apps-s3-mc
         env:
           MC_S3_BUCKET : ${{ secrets.MC_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY : ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
           AWS_REGION: ${{ secrets.MC_AWS_REGION }}
+
+      - name: Publish apps for Cloud
+        run: make publish-apps-s3-hac
+        env:
+          HAC_S3_BUCKET : ${{ secrets.HAC_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
