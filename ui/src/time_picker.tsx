@@ -199,9 +199,9 @@ export const
                 paper: cssVar('$card'),
               },
               primary: {
-                // HACK: cssVar unsupported by some of the MUI theme properties yet
-                // TODO: find or create an issue for that
-                main: fluentPalette.themePrimary
+                // HACK: cssVar unsupported by some of the MUI theme properties yet https://github.com/mui/material-ui/issues/27651
+                main: fluentPalette.themePrimary,
+                contrastText: cssVar('$neutralLight')
               },
               text: {
                 primary: fluentPalette.neutralPrimary,
