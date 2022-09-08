@@ -92,6 +92,7 @@ async def setup_page(q: Q):
         base_url=project.server_base_url,
         folder=json.dumps(file_utils.get_file_tree(project.dir)),
     )
+    q.client.view = 'split'
     q.page['meta'] = ui.meta_card(
         box='',
         title='Wave Studio',
@@ -114,9 +115,10 @@ async def setup_page(q: Q):
         subtitle='Develop Wave apps completely in browser',
         image=project.get_assets_url_for('h2o-logo.svg'),
         items=[
-            ui.button(name='console', label='Console', icon='CommandPrompt'),
+            ui.button(name='terminal', label='Terminal', icon='CommandPrompt'),
+            ui.button(name='logs', label='Logs', icon='ContextMenu'),
             ui.button(name='open_preview', label='Preview', icon='OpenInNewWindow'),
-            ui.dropdown(name='dropdown', width='170px', trigger=True, value=(q.user.view or 'split'), choices=[
+            ui.dropdown(name='dropdown', width='170px', trigger=True, value=q.client.view, choices=[
                 ui.choice(name='split', label='Split view'),
                 ui.choice(name='code', label='Full code view'),
                 ui.choice(name='preview', label='Full preview view'),
@@ -144,7 +146,7 @@ async def setup_page(q: Q):
 def show_empty_preview(q: Q):
     del q.page['preview']
     q.page['preview'] = ui.tall_info_card(
-        box=ui.box('main', width=('0px' if q.user.view == "code" else '100%')),
+        box=ui.box('main', width=('0px' if q.client.view == "code" else '100%')),
         name='',
         image=project.get_assets_url_for('app_not_running.svg'),
         image_height='500px',
@@ -202,12 +204,12 @@ async def render_code(q: Q):
     path = path or q.user.active_path
     path = '' if path == '/' else path
     q.page['preview'] = ui.frame_card(
-        box=ui.box('main', width=('0px' if q.user.view == 'code' else '100%')),
+        box=ui.box('main', width=('0px' if q.client.view == 'code' else '100%')),
         title=f'Preview of {project.server_adress}{path}',
         path=f'{project.server_adress}{path}'
     )
-    q.page['header'].items[1].button.disabled = False
-    q.page['header'].items[1].button.path = f'{project.server_adress}{path}'
+    q.page['header'].items[2].button.disabled = False
+    q.page['header'].items[2].button.path = f'{project.server_adress}{path}'
 
 async def on_startup():
     file_utils.create_folder(project.dir)
@@ -244,9 +246,35 @@ async def serve(q: Q):
         q.client.initialized = True
         await render_code(q)
 
-    if q.args.dropdown:
-        q.user.view = q.args.dropdown
-        q.page['header'].items[2].dropdown.value = q.args.dropdown
+    if q.args.dropdown and q.client.view != q.args.dropdown:
+        q.client.view = q.args.dropdown
+        q.page['header'].items[3].dropdown.value = q.args.dropdown
+        if q.args.dropdown == 'code':
+            q.page['preview'].box = ui.box('main', width='0px')
+            q.page['code'].box = ui.box('main', width='100%')
+        elif q.args.dropdown == 'split':
+            q.page['preview'].box = ui.box('main', width='100%')
+            q.page['code'].box = ui.box('main', width='100%')
+        elif q.args.dropdown == 'preview':
+            q.page['preview'].box = ui.box('main', width='100%')
+            q.page['code'].box = ui.box('main', width='0px')
+    elif q.args.terminal_input_btn:
+        if q.args.terminal_input:
+            env = os.environ.copy()
+            env['PYTHONUNBUFFERED'] = 'False'
+            env['PATH'] = f'{os.path.abspath("venv")}{os.path.sep}bin{os.path.pathsep}{env["PATH"]}'
+            p = Popen(q.args.terminal_input.split(), env=env, stdout=PIPE, stderr=STDOUT, cwd=project.dir)
+            lines = [f'> {q.args.terminal_input}\n']
+            line = p.stdout.readline()
+            while line:
+                lines.append(line.decode('utf8')) 
+                q.page['meta'].side_panel.items[0].text.content = f'```\n{"".join(lines)}\n```'
+                # q.page['meta'].script = ui.inline_script('scrollLogsToBottom()')
+                await q.page.save()
+                line = p.stdout.readline()
+            p.kill()
+            q.page['meta'].side_panel.items[0].text.content = f'```\n{"".join(lines)}\n```'
+            await q.page.save()
     elif q.args.export_project:
         await export(q)
     elif q.args.import_project:
@@ -282,34 +310,34 @@ async def serve(q: Q):
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
                     ui.button(name='import_project', label='Import again', icon='Upload'),
                 ]
-    elif q.args.dropdown == 'code':
-        q.page['preview'].box = ui.box('main', width='0px')
-        q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.dropdown == 'split':
-        q.page['preview'].box = ui.box('main', width='100%')
-        q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.dropdown == 'preview':
-        q.page['preview'].box = ui.box('main', width='100%')
-        q.page['code'].box = ui.box('main', width='0px')
-    elif q.args.console:
+    elif q.args.terminal:
+        q.page['meta'].side_panel = ui.side_panel(name='side_panel', title='Terminal', events=['dismissed'], closable=True, items=[
+            ui.text('terminal output'),
+            ui.textbox(name='terminal_input'),
+            ui.button(name='terminal_input_btn', label='Submit'), #TODO: Remove once textbox has support for enter submissions.
+        ])
+    elif q.args.logs:
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
+        q.page['terminal'].box = ui.box('main', width='0px')
         q.page['logs'].box = ui.box('main', width='100%')
-        q.page['header'].items[0].button.name = 'show_code'
-        q.page['header'].items[0].button.label = 'Code'
-        q.page['header'].items[0].button.icon = 'Code'
+        q.page['header'].items[1].button.name = 'show_code'
+        q.page['header'].items[1].button.label = 'Code'
+        q.page['header'].items[1].button.icon = 'Code'
     elif q.args.show_code:
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['logs'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
-        q.page['header'].items[0].button.name = 'console'
-        q.page['header'].items[0].button.label = 'Console'
-        q.page['header'].items[0].button.icon = 'CommandPrompt'
+        q.page['header'].items[1].button.name = 'logs'
+        q.page['header'].items[1].button.label = 'Logs'
+        q.page['header'].items[1].button.icon = 'CommandPrompt'
 
     if q.events.editor:
         await render_code(q)
     elif q.events.dialog and q.events.dialog.dismissed:
         q.page['meta'].dialog = None
+    elif q.events.side_panel and q.events.side_panel.dismissed:
+        q.page['meta'].side_panel = None
     elif q.events.notification and q.events.notification.dismissed:
         q.page['meta'].notification_bar = None
     elif q.events.file_viewer:

@@ -142,3 +142,8 @@ span.tree-item:hover,
 .ms-MessageBar {
   z-index: 999;
 }
+
+code {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
