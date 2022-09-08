@@ -31,14 +31,20 @@ describe('time_picker.tsx', () => {
 
   it('Renders data-test attr - lazy load placeholder', async () => {
     const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
+    expect(getByTestId('lazyload')).toBeInTheDocument()
+  })
+
+  // TODO:
+  it('Renders data-test attr - lazy load placeholder not present after component is loaded', async () => {
+    const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
     await waitForIdleEventLoop()
-    expect(getByTestId('lazyload')).toBeInTheDocument() // TODO:
+    expect(getByTestId('lazyload')).not.toBeInTheDocument()
   })
 
   it('Renders data-test attr - time picker component', async () => {
     const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
     await waitForIdleEventLoop()
-    expect(getByTestId(name)).toBeInTheDocument() // TODO: 
+    expect(getByTestId(name)).toBeInTheDocument()
   })
 
   it('Sets args - init - value not specified', async () => {
@@ -69,23 +75,6 @@ describe('time_picker.tsx', () => {
     const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '12:00', time_format_12h: true }} />)
     await waitForIdleEventLoop()
     expect(getByDisplayValue('12:00 pm')).toBeInTheDocument()
-  })
-
-  // TODO: Not working.
-  it.skip('Calls sync when trigger specified', async () => {
-    const pushMock = jest.fn()
-    const { getByPlaceholderText, getByText, getByRole } = render(<XTimePicker model={{ ...timepickerProps, time_format_12h: true, value: '10:40am', trigger: true }} />)
-    wave.push = pushMock
-    await waitForIdleEventLoop()
-    const element = getByPlaceholderText('Select a time')
-    fireEvent.click(element)
-    expect(getByRole('dialog')).toBeInTheDocument()
-    const element2 = getByText('AM') // switches to PM
-    fireEvent.click(element2)
-    fireEvent.click(element) // TODO: closing the dialog not working
-    fireEvent.click(document.body)
-    expect(getByRole('dialog')).not.toBeInTheDocument()
-    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Custom popover toolbar - Switch AM to PM in 12 hour time format', async () => {
