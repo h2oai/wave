@@ -6778,6 +6778,14 @@ class Tags:
         )
 
 
+_TimePickerHourCycle = ['h12', 'h24']
+
+
+class TimePickerHourCycle:
+    H12 = 'h12'
+    H24 = 'h24'
+
+
 class TimePicker:
     """Create a time picker.
 
@@ -6794,7 +6802,7 @@ class TimePicker:
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             required: Optional[bool] = None,
-            time_format_12h: Optional[bool] = None,
+            hour_cycle: Optional[str] = None,
             min: Optional[str] = None,
             max: Optional[str] = None,
             minutes_step: Optional[int] = None,
@@ -6808,7 +6816,7 @@ class TimePicker:
         _guard_scalar('TimePicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('TimePicker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('TimePicker.required', required, (bool,), False, True, False)
-        _guard_scalar('TimePicker.time_format_12h', time_format_12h, (bool,), False, True, False)
+        _guard_enum('TimePicker.hour_cycle', hour_cycle, _TimePickerHourCycle, True)
         _guard_scalar('TimePicker.min', min, (str,), False, True, False)
         _guard_scalar('TimePicker.max', max, (str,), False, True, False)
         _guard_scalar('TimePicker.minutes_step', minutes_step, (int,), False, True, False)
@@ -6819,7 +6827,7 @@ class TimePicker:
         self.placeholder = placeholder
         """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
-        """The time value in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'"""
+        """The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'"""
         self.disabled = disabled
         """True if this field is disabled."""
         self.width = width
@@ -6830,12 +6838,12 @@ class TimePicker:
         """True if the form should be submitted when the time is selected."""
         self.required = required
         """True if this is a required field. Defaults to False."""
-        self.time_format_12h = time_format_12h
-        """True if time picker should use a 12-hour time format. Defaults to False."""
+        self.hour_cycle = hour_cycle
+        """Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`. One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerHourCycle."""
         self.min = min
-        """The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'"""
+        """The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'"""
         self.max = max
-        """The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'"""
+        """The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'"""
         self.minutes_step = minutes_step
         """Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`."""
 
@@ -6850,7 +6858,7 @@ class TimePicker:
         _guard_scalar('TimePicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TimePicker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('TimePicker.required', self.required, (bool,), False, True, False)
-        _guard_scalar('TimePicker.time_format_12h', self.time_format_12h, (bool,), False, True, False)
+        _guard_enum('TimePicker.hour_cycle', self.hour_cycle, _TimePickerHourCycle, True)
         _guard_scalar('TimePicker.min', self.min, (str,), False, True, False)
         _guard_scalar('TimePicker.max', self.max, (str,), False, True, False)
         _guard_scalar('TimePicker.minutes_step', self.minutes_step, (int,), False, True, False)
@@ -6864,7 +6872,7 @@ class TimePicker:
             visible=self.visible,
             trigger=self.trigger,
             required=self.required,
-            time_format_12h=self.time_format_12h,
+            hour_cycle=self.hour_cycle,
             min=self.min,
             max=self.max,
             minutes_step=self.minutes_step,
@@ -6891,8 +6899,8 @@ class TimePicker:
         _guard_scalar('TimePicker.trigger', __d_trigger, (bool,), False, True, False)
         __d_required: Any = __d.get('required')
         _guard_scalar('TimePicker.required', __d_required, (bool,), False, True, False)
-        __d_time_format_12h: Any = __d.get('time_format_12h')
-        _guard_scalar('TimePicker.time_format_12h', __d_time_format_12h, (bool,), False, True, False)
+        __d_hour_cycle: Any = __d.get('hour_cycle')
+        _guard_enum('TimePicker.hour_cycle', __d_hour_cycle, _TimePickerHourCycle, True)
         __d_min: Any = __d.get('min')
         _guard_scalar('TimePicker.min', __d_min, (str,), False, True, False)
         __d_max: Any = __d.get('max')
@@ -6908,7 +6916,7 @@ class TimePicker:
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         required: Optional[bool] = __d_required
-        time_format_12h: Optional[bool] = __d_time_format_12h
+        hour_cycle: Optional[str] = __d_hour_cycle
         min: Optional[str] = __d_min
         max: Optional[str] = __d_max
         minutes_step: Optional[int] = __d_minutes_step
@@ -6922,7 +6930,7 @@ class TimePicker:
             visible,
             trigger,
             required,
-            time_format_12h,
+            hour_cycle,
             min,
             max,
             minutes_step,

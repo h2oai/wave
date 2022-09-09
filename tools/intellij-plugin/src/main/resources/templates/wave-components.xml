@@ -2491,7 +2491,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_time_picker" value="ui.time_picker(name='$name$',label='$label$',placeholder='$placeholder$',value='$value$',disabled=$disabled$,width='$width$',visible=$visible$,trigger=$trigger$,required=$required$,time_format_12h=$time_format_12h$,min='$min$',max='$max$',minutes_step=$minutes_step$),$END$" description="Create Wave TimePicker with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_time_picker" value="ui.time_picker(name='$name$',label='$label$',placeholder='$placeholder$',value='$value$',disabled=$disabled$,width='$width$',visible=$visible$,trigger=$trigger$,required=$required$,hour_cycle='$hour_cycle$',min='$min$',max='$max$',minutes_step=$minutes_step$),$END$" description="Create Wave TimePicker with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2501,7 +2501,7 @@
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="time_format_12h" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="hour_cycle" expression="" defaultValue="&quot;h24&quot;" alwaysStopAt="true"/>
     <variable name="min" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="max" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="minutes_step" expression="" defaultValue="&quot;1&quot;" alwaysStopAt="true"/>

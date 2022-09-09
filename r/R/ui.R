@@ -2946,15 +2946,16 @@ ui_tags <- function(
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
 #' @param placeholder A string that provides a brief hint to the user as to what kind of information is expected in the field.
-#' @param value The time value in hh:mm or hh:mm(a|p)m format. E.g. '14:30', '2:30pm'
+#' @param value The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'
 #' @param disabled True if this field is disabled.
 #' @param width The width of the time picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param trigger True if the form should be submitted when the time is selected.
 #' @param required True if this is a required field. Defaults to False.
-#' @param time_format_12h True if time picker should use a 12-hour time format. Defaults to False.
-#' @param min The minimum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '13:45', '01:45pm'
-#' @param max The maximum allowed time value in hh:mm or hh:mm(a|p)m format. E.g.: '18:45', '06:45pm'
+#' @param hour_cycle Specifies 12-hour or 24-hour time format. One of `h12` or `h24`. Defaults to `h24`.
+#'   One of 'h12', 'h24'. See enum h2o_wave.ui.TimePickerHourCycle.
+#' @param min The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
+#' @param max The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
 #' @param minutes_step Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
 #' @return A TimePicker instance.
 #' @export
@@ -2968,7 +2969,7 @@ ui_time_picker <- function(
   visible = NULL,
   trigger = NULL,
   required = NULL,
-  time_format_12h = NULL,
+  hour_cycle = NULL,
   min = NULL,
   max = NULL,
   minutes_step = NULL) {
@@ -2981,7 +2982,7 @@ ui_time_picker <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("required", "logical", required)
-  .guard_scalar("time_format_12h", "logical", time_format_12h)
+  # TODO Validate hour_cycle
   .guard_scalar("min", "character", min)
   .guard_scalar("max", "character", max)
   .guard_scalar("minutes_step", "numeric", minutes_step)
@@ -2995,7 +2996,7 @@ ui_time_picker <- function(
     visible=visible,
     trigger=trigger,
     required=required,
-    time_format_12h=time_format_12h,
+    hour_cycle=hour_cycle,
     min=min,
     max=max,
     minutes_step=minutes_step))
