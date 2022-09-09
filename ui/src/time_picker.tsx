@@ -122,9 +122,9 @@ const
     return <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
-        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{`${time?.substring(0, 2) || '--'}`}</Fluent.Text>{':'}
-        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{`${time?.substring(3, 5) || '--'}`}</Fluent.Text>{' '}
-        <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{`${time?.substring(6, 8) || ''}`}</Fluent.Text>
+        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>{':'}
+        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>{' '}
+        <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
       </Fluent.Text>
     </div>
 
@@ -140,10 +140,7 @@ const
       value={value ? formatDateToTimeString(value, time_format_12h) : ''}
       label={label}
       required={required}
-      styles={{
-        field: { cursor: 'pointer' },
-        icon: { bottom: 7 }
-      }}
+      styles={{ field: { cursor: 'pointer' }, icon: { bottom: 7 } }}
       errorMessage={error ? errorMsg : undefined}
     />
 
@@ -213,7 +210,10 @@ export const
         required: m.required,
         time_format_12h: time_format_12h,
         disabled: m.disabled,
-        errorMsg: `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(m.min || '00:00'), time_format_12h)} to ${formatDateToTimeString(parseTimeStringToDate(m.max || '00:00'), time_format_12h)}.`
+        errorMsg: `Wrong input. Please enter the time in range from 
+          ${formatDateToTimeString(parseTimeStringToDate(m.min || '00:00'), time_format_12h)} to 
+          ${formatDateToTimeString(parseTimeStringToDate(m.max || '00:00'), time_format_12h)}.
+        `
       }
 
     React.useEffect(() => {
