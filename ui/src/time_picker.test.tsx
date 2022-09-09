@@ -38,7 +38,7 @@ describe('time_picker.tsx', () => {
   it('Renders data-test attr - time picker component', async () => {
     const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
     await waitForIdleEventLoop()
-    expect(getByTestId(name)).toBeInTheDocument()
+    await waitFor(() => expect(getByTestId(name)).toBeInTheDocument())
   })
 
   it('Sets args - init - value not specified', async () => {
