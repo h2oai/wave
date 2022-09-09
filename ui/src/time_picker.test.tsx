@@ -59,26 +59,28 @@ describe('time_picker.tsx', () => {
     expect(wave.args[name]).toBe('10:30')
   })
 
+  // TODO: check also value in UI
+
   it('Show correct value specified in 24 hour format in 12 hour format time picker', async () => {
-    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '14:30', hour_cycle: 'h12' }} />)
+    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '14:30' }} />)
     await waitForIdleEventLoop()
-    expect(getByDisplayValue('02:30 pm')).toBeInTheDocument()
+    expect(getByDisplayValue('02:30 PM')).toBeInTheDocument()
   })
 
   it('Shows midnight correctly in 12 hour time format', async () => {
-    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '00:00', hour_cycle: 'h12' }} />)
+    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '00:00' }} />)
     await waitForIdleEventLoop()
-    expect(getByDisplayValue('12:00 am')).toBeInTheDocument()
+    expect(getByDisplayValue('12:00 AM')).toBeInTheDocument()
   })
 
   it('Shows noon correctly in 12 hour time format', async () => {
-    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '12:00', hour_cycle: 'h12' }} />)
+    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '12:00' }} />)
     await waitForIdleEventLoop()
-    expect(getByDisplayValue('12:00 pm')).toBeInTheDocument()
+    expect(getByDisplayValue('12:00 PM')).toBeInTheDocument()
   })
 
   it('Custom popover toolbar - Switch AM to PM in 12 hour time format', async () => {
-    const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00', hour_cycle: 'h12' }} />)
+    const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00' }} />)
     await waitForIdleEventLoop()
     fireEvent.click(getByPlaceholderText('Select a time'))
     const element = getByText('AM')
@@ -88,11 +90,11 @@ describe('time_picker.tsx', () => {
   })
 
   it('Show error if input out of the boundaries', async () => {
-    const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00', hour_cycle: 'h12', min: '02:00', max: '15:00' }} />)
+    const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00', min: '02:00', max: '15:00' }} />)
     await waitForIdleEventLoop()
     fireEvent.click(getByPlaceholderText('Select a time'))
     fireEvent.click(getByText('AM')) // switches to PM
     await waitForIdleEventLoop()
-    expect(getByText('Wrong input. Please enter the time in range from 02:00 am to 03:00 pm.')).toBeTruthy()
+    expect(getByText('Wrong input. Please enter the time in range from 02:00 AM to 03:00 PM.')).toBeTruthy()
   })
 })

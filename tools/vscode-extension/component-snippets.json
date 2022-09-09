@@ -1801,7 +1801,7 @@
   "Wave Full TimePicker": {
     "prefix": "w_full_time_picker",
     "body": [
-      "ui.time_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, required=${9:False}, hour_cycle='${10:h24`}', min='$11', max='$12', minutes_step=${13:1`}),$0"
+      "ui.time_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, required=${9:False}, time_format_12h=${10:True}, min='$11', max='$12', minutes_step=${13:1`}),$0"
     ],
     "description": "Create a full Wave TimePicker."
   },

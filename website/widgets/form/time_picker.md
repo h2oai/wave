@@ -6,7 +6,7 @@ keywords:
 custom_edit_url: null
 ---
 
-Use this component when you wish to collect time values. The format of a submitted value is `hh:mm` by default or `hh:mm (a|p)m` if 12 hour time format is selected.
+Use this component when you wish to collect time values. A return value is in `hh:mm` 24 hour cycle format.
 
 The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
 
@@ -54,21 +54,21 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 
 ## With time format
 
-Property `time_format` specifies whether the time picker should use 12 hour or 24 hour time format. Possible options are `h12` and `h24`. 24 hour time format used by default.
+Property `time_format_12h` specifies whether the time picker should use a 12 hour (default) or a 24 hour time format.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.time_picker(name='time_picker', label='Time picker', time_format='h12')
+    ui.time_picker(name='time_picker', label='Time picker', time_format_12h=False)
 ])
 ```
 
 ## With boundaries
 
-The minimum and/or maximum allowed time value in `hh:mm` or `hh:mm(a|p)m` format.
+The minimum and/or maximum allowed time value in `hh:mm` format.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.time_picker(name='time_picker', label='Time picker', min='10:00am', max='06:00pm')
+    ui.time_picker(name='time_picker', label='Time picker', min='10:00', max='18:00')
 ])
 ```
 
