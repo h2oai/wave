@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, act } from '@testing-library/react'
+import { fireEvent, render, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import { TimePicker, XTimePicker } from './time_picker'
 import { wave } from './ui'
@@ -31,14 +31,8 @@ describe('time_picker.tsx', () => {
 
   it('Renders data-test attr - lazy load placeholder', async () => {
     const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
-    expect(getByTestId('lazyload')).toBeInTheDocument()
-  })
-
-  // TODO:
-  it('Renders data-test attr - lazy load placeholder not present after component is loaded', async () => {
-    const { getByTestId } = render(<XTimePicker model={timepickerProps} />)
     await waitForIdleEventLoop()
-    expect(getByTestId('lazyload')).not.toBeInTheDocument()
+    expect(getByTestId('lazyload')).toBeInTheDocument()
   })
 
   it('Renders data-test attr - time picker component', async () => {
@@ -59,9 +53,7 @@ describe('time_picker.tsx', () => {
     expect(wave.args[name]).toBe('10:30')
   })
 
-  // TODO: check also value in UI
-
-  it('Show correct value specified in 24 hour format in 12 hour format time picker', async () => {
+  it('Show correct input value in 12 hour time format', async () => {
     const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '14:30' }} />)
     await waitForIdleEventLoop()
     expect(getByDisplayValue('02:30 PM')).toBeInTheDocument()
@@ -79,6 +71,12 @@ describe('time_picker.tsx', () => {
     expect(getByDisplayValue('12:00 PM')).toBeInTheDocument()
   })
 
+  it('Show correct input value in 24 hour time format', async () => {
+    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, time_format_12h: false, value: '23:30' }} />)
+    await waitForIdleEventLoop()
+    expect(getByDisplayValue('23:30')).toBeInTheDocument()
+  })
+
   it('Custom popover toolbar - Switch AM to PM in 12 hour time format', async () => {
     const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00' }} />)
     await waitForIdleEventLoop()
@@ -89,12 +87,18 @@ describe('time_picker.tsx', () => {
     expect(getByText('PM')).toBeVisible()
   })
 
-  it('Show error if input out of the boundaries', async () => {
+  it('Show error if input out of the boundaries - 12 hour time format', async () => {
     const { getByText, getByPlaceholderText } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00', min: '02:00', max: '15:00' }} />)
     await waitForIdleEventLoop()
     fireEvent.click(getByPlaceholderText('Select a time'))
     fireEvent.click(getByText('AM')) // switches to PM
     await waitForIdleEventLoop()
     expect(getByText('Wrong input. Please enter the time in range from 02:00 AM to 03:00 PM.')).toBeTruthy()
+  })
+
+  it('Show error if input out of the boundaries - 24 hour time format', async () => {
+    const { getByText } = render(<XTimePicker model={{ ...timepickerProps, time_format_12h: false, min: '02:00', max: '15:00', value: '16:00' }} />)
+    await waitForIdleEventLoop()
+    await waitFor(() => expect(getByText('Wrong input. Please enter the time in range from 02:00 to 15:00.')).toBeTruthy())
   })
 })
