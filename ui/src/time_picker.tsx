@@ -84,28 +84,14 @@ const
         borderRadius: '2px',
         boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`
       },
-      '& .MuiTypography-root': {
-        fontFamily: 'Inter',
+      '& .MuiTypography-root, [role=listbox]>span': {
+        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
       }
     }
   }
 
 // Type 'any' instead of 'Date' because of warning when TimePicker is lazy loaded.
 type ToolbarProps = { params: BaseToolbarProps<any, any | null>, label: S | undefined, switchAmPm: () => void }
-type TextInputProps = {
-  props: {
-    onClick?: React.MouseEventHandler<HTMLInputElement | HTMLTextAreaElement>,
-    onChange?: React.FormEventHandler<HTMLInputElement | HTMLTextAreaElement>,
-    value?: Date | null,
-    placeholder?: S,
-    label?: S,
-    required?: B,
-    hour_cycle?: S,
-    errorMsg?: S,
-    error?: B,
-    disabled?: B
-  }
-}
 
 const
   ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
@@ -113,6 +99,7 @@ const
   TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
   formatDateToTimeString = (date: Date, hour_cycle: S = '12') => date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: hour_cycle === '12' ? 'h12' : 'h23' }),
+  getErrMsg = (hour_cycle: S, min: S, max: S) => `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min || '00:00'), hour_cycle)} to ${formatDateToTimeString(parseTimeStringToDate(max || '00:00'), hour_cycle)}.`,
   LazyLoadPlaceholder = () =>
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
@@ -122,34 +109,21 @@ const
     return <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
-        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>{':'}
+        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>:
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>{' '}
         <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
       </Fluent.Text>
     </div>
 
-  },
-  TextInput = ({ props: { onClick, onChange, placeholder, value, label, required, hour_cycle = '12', errorMsg, error, disabled } }: TextInputProps) =>
-    <Fluent.TextField
-      iconProps={{ iconName: 'Clock', }}
-      onClick={onClick}
-      onChange={onChange}
-      placeholder={placeholder || 'Select a time'}
-      disabled={disabled}
-      readOnly={true}
-      value={value ? formatDateToTimeString(value, hour_cycle) : ''}
-      label={label}
-      required={required}
-      styles={{ field: { cursor: 'pointer' }, icon: { bottom: 7 } }}
-      errorMessage={error ? errorMsg : undefined}
-    />
+  }
 
 
 export const
   XTimePicker = ({ model: m }: { model: TimePicker }) => {
     const
-      { hour_cycle = '12' } = m,
-      defaultVal = m.value ? parseTimeStringToDate(m.value,) : null,
+      { hour_cycle = '12', label, disabled, min, max, placeholder = 'Select a time', required, minutes_step = 1 } = m,
+      allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
+      defaultVal = m.value ? parseTimeStringToDate(m.value) : null,
       [value, setValue] = React.useState(defaultVal),
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
@@ -164,13 +138,8 @@ export const
         wave.args[m.name] = time ? formatDateToTimeString(time, '24') : null
         if (m.trigger) wave.push()
       },
-      onOpen = () => {
-        // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
-        setTimeout(() => {
-          const el = document.activeElement as HTMLElement
-          if (el) el.blur()
-        })
-      },
+      // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
+      onOpen = () => setTimeout(() => (document.activeElement as HTMLElement)?.blur()),
       { palette: fluentPalette } = Fluent.useTheme(),
       [theme, setTheme] = React.useState<Theme | null>(),
       getTheme = () => import('@mui/material/styles').then(({ createTheme }) => {
@@ -201,20 +170,7 @@ export const
         ))
       }),
       [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
-      getAdapterDateFns = () => import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) }),
-      textInputProps = {
-        onClick: () => setIsDialogOpen(true),
-        placeholder: m.placeholder,
-        value,
-        label: m.label,
-        required: m.required,
-        hour_cycle: hour_cycle,
-        disabled: m.disabled,
-        errorMsg: `Wrong input. Please enter the time in range from 
-          ${formatDateToTimeString(parseTimeStringToDate(m.min || '00:00'), hour_cycle)} to 
-          ${formatDateToTimeString(parseTimeStringToDate(m.max || '00:00'), hour_cycle)}.
-        `
-      }
+      getAdapterDateFns = () => import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
 
     React.useEffect(() => {
       wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, '24') : null
@@ -223,6 +179,7 @@ export const
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
       if (theme) {
         theme.palette.primary.main = fluentPalette.themePrimary
@@ -239,23 +196,35 @@ export const
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <TimePicker
                 value={value}
-                label={m.label}
+                label={label}
                 open={isDialogOpen}
-                onChange={(value, _keyboardInputValue) => setValue(value as Date)}
-                onAccept={(value) => onSelectTime(value as Date)}
+                onChange={value => setValue(value as Date)}
+                onAccept={value => onSelectTime(value as Date)}
                 onClose={() => setIsDialogOpen(false)}
                 ampm={hour_cycle === '12'}
-                showToolbar={true}
-                ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
+                showToolbar
+                ToolbarComponent={params => <Toolbar params={params} label={label} switchAmPm={switchAmPm} />}
                 PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
-                minTime={m.min ? parseTimeStringToDate(m.min) : undefined}
-                maxTime={m.max ? parseTimeStringToDate(m.max) : undefined}
-                minutesStep={[1, 5, 10, 15, 20, 30, 60].includes(m.minutes_step || 1) ? m.minutes_step : 1}
-                disabled={m.disabled}
+                minTime={min ? parseTimeStringToDate(min) : undefined}
+                maxTime={max ? parseTimeStringToDate(max) : undefined}
+                minutesStep={allowedMinutesSteps[minutes_step]}
+                disabled={disabled}
                 onOpen={onOpen}
                 renderInput={({ inputProps, error }: TextFieldProps) =>
                   <div ref={textInputRef} data-test={m.name}>
-                    <TextInput props={{ onChange: inputProps?.onChange, error, ...textInputProps }} />
+                    <Fluent.TextField
+                      iconProps={{ iconName: 'Clock' }}
+                      onClick={() => setIsDialogOpen(true)}
+                      onChange={inputProps?.onChange}
+                      placeholder={placeholder}
+                      disabled={disabled}
+                      readOnly
+                      value={value ? formatDateToTimeString(value, hour_cycle) : ''}
+                      label={label}
+                      required={required}
+                      styles={{ field: { cursor: 'pointer' }, icon: { bottom: 7 } }}
+                      errorMessage={error ? getErrMsg(hour_cycle, min, max) : undefined}
+                    />
                   </div>
                 }
               />

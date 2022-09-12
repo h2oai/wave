@@ -17,7 +17,7 @@ async def serve(q: Q):
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-            ui.date_picker(name='date', label='Standard date picker', value='2017-10-19'),
+            ui.date_picker(name='date', value='2017-10-19'),
             ui.date_picker(name='date_placeholder', label='Date picker with placeholder', placeholder='Pick a date'),
             ui.date_picker(name='date_disabled', label='Disabled date picker', value='2017-10-19', disabled=True),
             ui.date_picker(name='date_boundaries', label='Date with boundaries', value='2017-10-19', min="2017-10-19", max="2017-10-25"),
