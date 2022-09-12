@@ -86,11 +86,36 @@ describe('Combobox.tsx', () => {
         expect(pushMock).toHaveBeenCalled()
       })
 
-      it('Sets wave args as string when a new valued is typed after init', () => {
+      it('Sets wave args as string when a new valued is typed and enter is pressed - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+        expect(wave.args[name]).toBe('A')
+        userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
+        expect(wave.args[name]).toBe('D')
+      })
+
+      it('Sets wave args as string when a new valued is typed and user clicks away - after init', () => {
         const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
     
-        userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
+        expect(wave.args[name]).toBe('A')
+
+        userEvent.type(getByRole('combobox'), '{backspace}D')
+        // fireEvent.blur(getByRole('combobox')) doesn't trigger blur. Might be related to https://github.com/testing-library/user-event/issues/592
+        getByRole('combobox').blur()
+        fireEvent.focusOut(getByRole('combobox'))
+
+        expect(getByRole('combobox')).not.toHaveFocus()
+        expect(wave.args[name]).toBe('D')
+      })
+
+      it('Sets wave args as string when a new valued is typed and tab is pressed - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
     
+        expect(wave.args[name]).toBe('A')
+
+        userEvent.type(getByRole('combobox'), '{backspace}D')
+        userEvent.tab()
+
+        expect(getByRole('combobox')).not.toHaveFocus()
         expect(wave.args[name]).toBe('D')
       })
     })
