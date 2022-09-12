@@ -76,6 +76,7 @@ async def serve(q: Q):
         ui.range_slider(name='range_slider', label='Range slider', max=99),
         ui.spinbox(name='spinbox', label='Spinbox'),
         ui.date_picker(name='date_picker', label='Date picker'),
+        ui.time_picker(name='time_picker', label='Time picker'),
         ui.color_picker(name='color_picker', label='Color picker'),
         ui.buttons([
             ui.button(name='primary_button', label='Primary', primary=True),

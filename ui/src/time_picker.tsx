@@ -121,10 +121,9 @@ const
 export const
   XTimePicker = ({ model: m }: { model: TimePicker }) => {
     const
-      { hour_cycle = '12', label, disabled, min, max, placeholder = 'Select a time', required, minutes_step = 1 } = m,
+      { hour_cycle = '12', label, disabled, min, max, placeholder, required, minutes_step = 1 } = m,
       allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
-      defaultVal = m.value ? parseTimeStringToDate(m.value) : null,
-      [value, setValue] = React.useState(defaultVal),
+      [value, setValue] = React.useState(m.value ? parseTimeStringToDate(m.value) : null),
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
       switchAmPm = () => {
@@ -142,38 +141,34 @@ export const
       onOpen = () => setTimeout(() => (document.activeElement as HTMLElement)?.blur()),
       { palette: fluentPalette } = Fluent.useTheme(),
       [theme, setTheme] = React.useState<Theme | null>(),
-      getTheme = () => import('@mui/material/styles').then(({ createTheme }) => {
-        setTheme(createTheme(
-          {
-            palette: {
-              background: {
-                paper: cssVar('$card'),
-              },
-              primary: {
-                // HACK: cssVar unsupported by some of the MUI theme properties yet https://github.com/mui/material-ui/issues/27651
-                main: fluentPalette.themePrimary,
-                contrastText: cssVar('$neutralLight')
-              },
-              text: {
-                primary: fluentPalette.neutralPrimary,
-                secondary: cssVar('$neutralSecondary'),
-                disabled: cssVar('$neutralTertiaryAlt'),
-              },
-              action: {
-                active: fluentPalette.themePrimary,
-                disabled: cssVar('$neutralLight'),
-                hover: cssVar('$neutralLight'),
-                hoverOpacity: 0.04
-              }
+      getTheme = () => import('@mui/material/styles').then(({ createTheme }) =>
+        setTheme(createTheme({
+          palette: {
+            background: {
+              paper: cssVar('$card'),
             },
-          }
-        ))
-      }),
+            primary: {
+              main: fluentPalette.themePrimary,
+              contrastText: cssVar('$neutralLight')
+            },
+            text: {
+              primary: fluentPalette.neutralPrimary,
+              secondary: cssVar('$neutralSecondary'),
+              disabled: cssVar('$neutralTertiaryAlt'),
+            },
+            action: {
+              active: fluentPalette.themePrimary,
+              disabled: cssVar('$neutralLight'),
+              hover: cssVar('$neutralLight'),
+              hoverOpacity: 0.04
+            }
+          },
+        }))),
       [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
       getAdapterDateFns = () => import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
 
     React.useEffect(() => {
-      wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, '24') : null
+      wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
       getTheme()
       getAdapterDateFns()
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,7 +217,7 @@ export const
                       value={value ? formatDateToTimeString(value, hour_cycle) : ''}
                       label={label}
                       required={required}
-                      styles={{ field: { cursor: 'pointer' }, icon: { bottom: 7 } }}
+                      styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
                       errorMessage={error ? getErrMsg(hour_cycle, min, max) : undefined}
                     />
                   </div>
@@ -234,5 +229,4 @@ export const
         }
       </React.Suspense>
     </>
-
   }
