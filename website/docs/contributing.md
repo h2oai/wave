@@ -63,8 +63,8 @@ See https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md.
 Prerequisites:
 
 - [Go](https://golang.org/) v1.16+
-- [Node.js](http://nodejs.org) v14 or v15
-- [Python](https://www.python.org/) 3.6+
+- [Node.js](http://nodejs.org) v16+
+- [Python](https://www.python.org/) 3.7+
 - A C/C++ compiler [XCode](https://developer.apple.com/xcode/) on OSX, `build-essential` on Debian, `base-devel` on Arch, etc.) to build Python/Node.js dependencies.
 
 :warning: This project is best developed on OSX or Linux. If you are on Windows, use [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
@@ -83,20 +83,28 @@ Launch the Wave server at http://localhost:10101/
 make run
 ```
 
-If you intend to modify the UI (Typescript), also launch the UI development server at http://localhost:3000/ to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
-
-``` bash
-make run-ui
-```
-
-If you modify the Typescript card/component definitions, run `make generate` to re-generate the corresponding Python and R definitions.
-
 To modify the `h2o-wave` Python package or examples, open `./py` in PyCharm or your preferred IDE. To test your modifications, first activate the `venv` in `./py`:
 
 ``` bash
 cd py
 ./venv/bin/activate
 ```
+
+If you want to run for example a python button example:
+
+```bash
+wave run examples.button
+```
+
+All examples are located in [py/examples](https://github.com/h2oai/wave/tree/master/py/examples) folder.
+
+If you intend to modify the UI (Typescript), also launch the UI development server at http://localhost:3000/ to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
+
+``` bash
+make run-ui
+```
+
+If you modify the Typescript card/component definitions (TS interfaces), run `make generate` to re-generate the corresponding Python and R definitions.
 
 To view a list of additional make tasks:
 
