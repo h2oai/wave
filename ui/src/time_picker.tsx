@@ -48,8 +48,8 @@ export interface TimePicker {
   trigger?: B
   /** True if this is a required field. Defaults to False. */
   required?: B
-  /** True if time picker should use a 12-hour time format. Defaults to True. */
-  time_format_12h?: B
+  /** Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`. */
+  hour_cycle?: S
   /** The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30' */
   min?: S
   /** The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00' */
@@ -100,7 +100,7 @@ type TextInputProps = {
     placeholder?: S,
     label?: S,
     required?: B,
-    time_format_12h?: B,
+    hour_cycle?: S,
     errorMsg?: S,
     error?: B,
     disabled?: B
@@ -112,13 +112,13 @@ const
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
-  formatDateToTimeString = (date: Date, time_format_12h: B = true) => date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: time_format_12h ? 'h12' : 'h23' }),
+  formatDateToTimeString = (date: Date, hour_cycle: S = '12') => date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: hour_cycle === '12' ? 'h12' : 'h23' }),
   LazyLoadPlaceholder = () =>
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
     </div>,
   Toolbar = ({ params: { parsedValue, setOpenView, ampm }, label, switchAmPm }: ToolbarProps) => {
-    const time = parsedValue ? formatDateToTimeString(parsedValue, ampm) : parsedValue
+    const time = parsedValue ? formatDateToTimeString(parsedValue, ampm ? '12' : '24') : parsedValue
     return <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
@@ -129,7 +129,7 @@ const
     </div>
 
   },
-  TextInput = ({ props: { onClick, onChange, placeholder, value, label, required, time_format_12h = true, errorMsg, error, disabled } }: TextInputProps) =>
+  TextInput = ({ props: { onClick, onChange, placeholder, value, label, required, hour_cycle = '12', errorMsg, error, disabled } }: TextInputProps) =>
     <Fluent.TextField
       iconProps={{ iconName: 'Clock', }}
       onClick={onClick}
@@ -137,7 +137,7 @@ const
       placeholder={placeholder || 'Select a time'}
       disabled={disabled}
       readOnly={true}
-      value={value ? formatDateToTimeString(value, time_format_12h) : ''}
+      value={value ? formatDateToTimeString(value, hour_cycle) : ''}
       label={label}
       required={required}
       styles={{ field: { cursor: 'pointer' }, icon: { bottom: 7 } }}
@@ -148,7 +148,7 @@ const
 export const
   XTimePicker = ({ model: m }: { model: TimePicker }) => {
     const
-      { time_format_12h = true } = m,
+      { hour_cycle = '12' } = m,
       defaultVal = m.value ? parseTimeStringToDate(m.value,) : null,
       [value, setValue] = React.useState(defaultVal),
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
@@ -161,7 +161,7 @@ export const
         })
       },
       onSelectTime = (time: Date | null) => {
-        wave.args[m.name] = time ? formatDateToTimeString(time, false) : null
+        wave.args[m.name] = time ? formatDateToTimeString(time, '24') : null
         if (m.trigger) wave.push()
       },
       onOpen = () => {
@@ -208,16 +208,16 @@ export const
         value,
         label: m.label,
         required: m.required,
-        time_format_12h: time_format_12h,
+        hour_cycle: hour_cycle,
         disabled: m.disabled,
         errorMsg: `Wrong input. Please enter the time in range from 
-          ${formatDateToTimeString(parseTimeStringToDate(m.min || '00:00'), time_format_12h)} to 
-          ${formatDateToTimeString(parseTimeStringToDate(m.max || '00:00'), time_format_12h)}.
+          ${formatDateToTimeString(parseTimeStringToDate(m.min || '00:00'), hour_cycle)} to 
+          ${formatDateToTimeString(parseTimeStringToDate(m.max || '00:00'), hour_cycle)}.
         `
       }
 
     React.useEffect(() => {
-      wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, false) : null
+      wave.args[m.name] = defaultVal ? formatDateToTimeString(defaultVal, '24') : null
       getTheme()
       getAdapterDateFns()
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -244,7 +244,7 @@ export const
                 onChange={(value, _keyboardInputValue) => setValue(value as Date)}
                 onAccept={(value) => onSelectTime(value as Date)}
                 onClose={() => setIsDialogOpen(false)}
-                ampm={time_format_12h}
+                ampm={hour_cycle === '12'}
                 showToolbar={true}
                 ToolbarComponent={params => <Toolbar params={params} label={m.label} switchAmPm={switchAmPm} />}
                 PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}

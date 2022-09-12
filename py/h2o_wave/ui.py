@@ -2543,7 +2543,7 @@ def time_picker(
         visible: Optional[bool] = None,
         trigger: Optional[bool] = None,
         required: Optional[bool] = None,
-        time_format_12h: Optional[bool] = None,
+        hour_cycle: Optional[str] = None,
         min: Optional[str] = None,
         max: Optional[str] = None,
         minutes_step: Optional[int] = None,
@@ -2562,7 +2562,7 @@ def time_picker(
         visible: True if the component should be visible. Defaults to True.
         trigger: True if the form should be submitted when the time is selected.
         required: True if this is a required field. Defaults to False.
-        time_format_12h: True if time picker should use a 12-hour time format. Defaults to True.
+        hour_cycle: Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`.
         min: The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
         max: The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
         minutes_step: Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
@@ -2579,7 +2579,7 @@ def time_picker(
         visible,
         trigger,
         required,
-        time_format_12h,
+        hour_cycle,
         min,
         max,
         minutes_step,

@@ -2952,7 +2952,7 @@ ui_tags <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param trigger True if the form should be submitted when the time is selected.
 #' @param required True if this is a required field. Defaults to False.
-#' @param time_format_12h True if time picker should use a 12-hour time format. Defaults to True.
+#' @param hour_cycle Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`.
 #' @param min The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
 #' @param max The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
 #' @param minutes_step Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
@@ -2968,7 +2968,7 @@ ui_time_picker <- function(
   visible = NULL,
   trigger = NULL,
   required = NULL,
-  time_format_12h = NULL,
+  hour_cycle = NULL,
   min = NULL,
   max = NULL,
   minutes_step = NULL) {
@@ -2981,7 +2981,7 @@ ui_time_picker <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("required", "logical", required)
-  .guard_scalar("time_format_12h", "logical", time_format_12h)
+  .guard_scalar("hour_cycle", "character", hour_cycle)
   .guard_scalar("min", "character", min)
   .guard_scalar("max", "character", max)
   .guard_scalar("minutes_step", "numeric", minutes_step)
@@ -2995,7 +2995,7 @@ ui_time_picker <- function(
     visible=visible,
     trigger=trigger,
     required=required,
-    time_format_12h=time_format_12h,
+    hour_cycle=hour_cycle,
     min=min,
     max=max,
     minutes_step=minutes_step))
