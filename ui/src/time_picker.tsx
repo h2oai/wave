@@ -48,7 +48,7 @@ export interface TimePicker {
   trigger?: B
   /** True if this is a required field. Defaults to False. */
   required?: B
-  /** Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`. */
+  /** Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`. */
   hour_format?: S
   /** The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30' */
   min?: S
@@ -96,31 +96,22 @@ const
   ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
+  allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
-  useMuiTheme = (themeObj: ThemeOptions) => {
-    const [theme, setTheme] = React.useState<Theme>()
+  useDependencies = (themeObj: ThemeOptions) => {
+    const
+      [theme, setTheme] = React.useState<Theme>(),
+      [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
+      [format, setFormat] = React.useState<any>() // TODO:
+
     React.useEffect(() => {
-      import('@mui/material/styles')
-        .then(({ createTheme }) => setTheme(createTheme(themeObj)))
+      import('@mui/material/styles').then(({ createTheme }) => setTheme(createTheme(themeObj)))
+      import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
+      import('date-fns/format').then(({ default: format }) => setFormat(() => format))
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    return [theme]
-  },
-  useAdapterDateFns = () => {
-    const [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>()
-    React.useEffect(() => {
-      import('@mui/x-date-pickers/AdapterDateFns')
-        .then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
-    }, [])
-    return [AdapterDateFns]
-  },
-  useDateFns = () => {
-    const [dateFns, setDateFns] = React.useState<any>()
-    React.useEffect(() => {
-      import('date-fns')
-        .then(dateFns => setDateFns(dateFns))
-    })
-    return [dateFns]
+
+    return { theme, AdapterDateFns, format }
   },
   LazyLoadPlaceholder = () =>
     <div data-test='lazyload' style={{ height: 59 }}>
@@ -141,15 +132,9 @@ export const
   XTimePicker = ({ model: m }: { model: TimePicker }) => {
     const
       { hour_format = '12', label, disabled, min, max, placeholder, required, minutes_step = 1 } = m,
-      allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
       [value, setValue] = React.useState(m.value ? parseTimeStringToDate(m.value) : null),
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
-      [dateFns] = useDateFns(),
-      formatDateToTimeString = (date: Date, hour_format: S = '12') => dateFns?.format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm'),
-      getErrMsg = (hour_format: S, min?: S, max?: S) =>
-        `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min || '00:00'), hour_format)} 
-        to ${formatDateToTimeString(parseTimeStringToDate(max || '00:00'), hour_format)}.`,
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
@@ -186,13 +171,16 @@ export const
           }
         },
       },
-      [theme] = useMuiTheme(themeObj),
-      [AdapterDateFns] = useAdapterDateFns()
+      { format, AdapterDateFns, theme } = useDependencies(themeObj),
+      formatDateToTimeString = (date: Date, hour_format: S = '12') => format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm'),
+      getErrMsg = (hour_format: S, min: S = '00:00', max: S = '00:00') =>
+        `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min), hour_format)} 
+        to ${formatDateToTimeString(parseTimeStringToDate(max), hour_format)}.`
 
     React.useEffect(() => {
-      if (dateFns) wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
+      if (format) wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dateFns])
+    }, [format])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
@@ -206,7 +194,7 @@ export const
 
     return <>
       <React.Suspense fallback={<LazyLoadPlaceholder />}>
-        {theme && AdapterDateFns && dateFns
+        {theme && AdapterDateFns && format
           ? <ThemeProvider theme={theme}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <TimePicker

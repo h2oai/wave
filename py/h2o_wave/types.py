@@ -6831,7 +6831,7 @@ class TimePicker:
         self.required = required
         """True if this is a required field. Defaults to False."""
         self.hour_format = hour_format
-        """Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`."""
+        """Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`."""
         self.min = min
         """The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'"""
         self.max = max

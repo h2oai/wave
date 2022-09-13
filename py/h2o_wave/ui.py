@@ -2562,7 +2562,7 @@ def time_picker(
         visible: True if the component should be visible. Defaults to True.
         trigger: True if the form should be submitted when the time is selected.
         required: True if this is a required field. Defaults to False.
-        hour_format: Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`.
+        hour_format: Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`.
         min: The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
         max: The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
         minutes_step: Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.

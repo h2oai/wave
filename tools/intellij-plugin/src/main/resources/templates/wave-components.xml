@@ -2501,7 +2501,7 @@
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="hour_format" expression="" defaultValue="&quot;24&quot;" alwaysStopAt="true"/>
+    <variable name="hour_format" expression="" defaultValue="&quot;12&quot;" alwaysStopAt="true"/>
     <variable name="min" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="max" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="minutes_step" expression="" defaultValue="&quot;1&quot;" alwaysStopAt="true"/>
