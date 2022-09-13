@@ -24,7 +24,7 @@ async def serve(q: Q):
             ui.time_picker(name='timepicker_required', label="Time picker - required", required=True),
             ui.time_picker(name='timepicker_disabled', label="Disabled time picker", value='11:15', disabled=True),
             ui.time_picker(name='timepicker_placeholder', label="Time picker with custom placeholder", placeholder='Select a time'),
-            ui.time_picker(name='timepicker_h24', label="Time picker with 24 hour time format", hour_cycle='24', value="18:35"),
+            ui.time_picker(name='timepicker_h24', label="Time picker with 24 hour time format", hour_format='24', value="18:35"),
             ui.time_picker(name='timepicker_boundaries', label="Time picker with boundaries", min='10:00', max='18:00', value='13:36'),
             ui.time_picker(name='timepicker_step', label="Time picker with minutes step", minutes_step=10),
             ui.button(name='show_inputs', label='Submit', primary=True),

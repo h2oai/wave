@@ -20,8 +20,8 @@ import { wave } from './ui'
 import { stylesheet } from 'typestyle'
 import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
 import DateFnsUtils from '@date-io/date-fns'
-import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 import { VirtualElement } from '@popperjs/core/lib'
+import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models'
 
 /**
  * Create a time picker.
@@ -49,7 +49,7 @@ export interface TimePicker {
   /** True if this is a required field. Defaults to False. */
   required?: B
   /** Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `24`. */
-  hour_cycle?: S
+  hour_format?: S
   /** The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30' */
   min?: S
   /** The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00' */
@@ -90,24 +90,20 @@ const
     }
   }
 
-// Type 'any' instead of 'Date' because of warning when TimePicker is lazy loaded.
-type ToolbarProps = { params: BaseToolbarProps<any, any | null>, label: S | undefined, switchAmPm: () => void }
+type ToolbarProps = { time: S, setOpenView: (view: CalendarOrClockPickerView) => void, label: S | undefined, switchAmPm: () => void }
 
 const
   ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
-  formatDateToTimeString = (date: Date, hour_cycle: S = '12') => date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: hour_cycle === '12' ? 'h12' : 'h23' }),
-  getErrMsg = (hour_cycle: S, min?: S, max?: S) =>
-    `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min || '00:00'), hour_cycle)} 
-    to ${formatDateToTimeString(parseTimeStringToDate(max || '00:00'), hour_cycle)}.`,
   useMuiTheme = (themeObj: ThemeOptions) => {
     const [theme, setTheme] = React.useState<Theme>()
     React.useEffect(() => {
       import('@mui/material/styles')
         .then(({ createTheme }) => setTheme(createTheme(themeObj)))
-    }, [themeObj])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return [theme]
   },
   useAdapterDateFns = () => {
@@ -118,13 +114,20 @@ const
     }, [])
     return [AdapterDateFns]
   },
+  useDateFns = () => {
+    const [dateFns, setDateFns] = React.useState<any>()
+    React.useEffect(() => {
+      import('date-fns')
+        .then(dateFns => setDateFns(dateFns))
+    })
+    return [dateFns]
+  },
   LazyLoadPlaceholder = () =>
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
     </div>,
-  Toolbar = ({ params: { parsedValue, setOpenView, ampm }, label, switchAmPm }: ToolbarProps) => {
-    const time = parsedValue ? formatDateToTimeString(parsedValue, ampm ? '12' : '24') : parsedValue
-    return <div className={css.toolbar}>
+  Toolbar = ({ setOpenView, time, label, switchAmPm }: ToolbarProps) =>
+    <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>:
@@ -133,17 +136,20 @@ const
       </Fluent.Text>
     </div>
 
-  }
-
 
 export const
   XTimePicker = ({ model: m }: { model: TimePicker }) => {
     const
-      { hour_cycle = '12', label, disabled, min, max, placeholder, required, minutes_step = 1 } = m,
+      { hour_format = '12', label, disabled, min, max, placeholder, required, minutes_step = 1 } = m,
       allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
       [value, setValue] = React.useState(m.value ? parseTimeStringToDate(m.value) : null),
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
+      [dateFns] = useDateFns(),
+      formatDateToTimeString = (date: Date, hour_format: S = '12') => dateFns?.format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm'),
+      getErrMsg = (hour_format: S, min?: S, max?: S) =>
+        `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min || '00:00'), hour_format)} 
+        to ${formatDateToTimeString(parseTimeStringToDate(max || '00:00'), hour_format)}.`,
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
@@ -184,9 +190,9 @@ export const
       [AdapterDateFns] = useAdapterDateFns()
 
     React.useEffect(() => {
-      wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
+      if (dateFns) wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [dateFns])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
@@ -200,7 +206,7 @@ export const
 
     return <>
       <React.Suspense fallback={<LazyLoadPlaceholder />}>
-        {theme && AdapterDateFns
+        {theme && AdapterDateFns && dateFns
           ? <ThemeProvider theme={theme}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <TimePicker
@@ -210,9 +216,16 @@ export const
                 onChange={value => setValue(value as Date)}
                 onAccept={value => onSelectTime(value as Date)}
                 onClose={() => setIsDialogOpen(false)}
-                ampm={hour_cycle === '12'}
+                ampm={hour_format === '12'}
                 showToolbar
-                ToolbarComponent={params => <Toolbar params={params} label={label} switchAmPm={switchAmPm} />}
+                ToolbarComponent={({ parsedValue, setOpenView, ampm }) =>
+                  <Toolbar
+                    setOpenView={setOpenView}
+                    time={parsedValue ? formatDateToTimeString(parsedValue as Date, ampm ? '12' : '24') : parsedValue}
+                    label={label}
+                    switchAmPm={switchAmPm}
+                  />
+                }
                 PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
                 minTime={min ? parseTimeStringToDate(min) : undefined}
                 maxTime={max ? parseTimeStringToDate(max) : undefined}
@@ -228,11 +241,11 @@ export const
                       placeholder={placeholder}
                       disabled={disabled}
                       readOnly
-                      value={value ? formatDateToTimeString(value, hour_cycle) : ''}
+                      value={value ? formatDateToTimeString(value, hour_format) : ''}
                       label={label}
                       required={required}
                       styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                      errorMessage={error ? getErrMsg(hour_cycle, min, max) : undefined}
+                      errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
                     />
                   </div>
                 }

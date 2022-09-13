@@ -54,11 +54,11 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 
 ## With time format
 
-Property `hour_cycle` specifies whether the time picker should use 12 hour (default) or 24 hour time format. Possible options are `12` and `24`.
+Property `hour_format` specifies whether the time picker should use 12 hour (default) or 24 hour time format. Possible options are `12` and `24`.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.time_picker(name='time_picker', label='Time picker', hour_cycle='24')
+    ui.time_picker(name='time_picker', label='Time picker', hour_format='24')
 ])
 ```
 

@@ -75,7 +75,7 @@ describe('time_picker.tsx', () => {
   })
 
   it('Show correct input value in 24 hour time format', async () => {
-    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, hour_cycle: '24', value: '23:30' }} />)
+    const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, hour_format: '24', value: '23:30' }} />)
     await waitForIdleEventLoop()
     expect(getByDisplayValue('23:30')).toBeInTheDocument()
     expect(wave.args[name]).toBe('23:30')
@@ -101,7 +101,7 @@ describe('time_picker.tsx', () => {
   })
 
   it('Show error if input out of the boundaries - 24 hour time format', async () => {
-    const { getByText } = render(<XTimePicker model={{ ...timepickerProps, hour_cycle: '24', min: '02:00', max: '15:00', value: '16:00' }} />)
+    const { getByText } = render(<XTimePicker model={{ ...timepickerProps, hour_format: '24', min: '02:00', max: '15:00', value: '16:00' }} />)
     await waitForIdleEventLoop()
     await waitFor(() => expect(getByText('Wrong input. Please enter the time in range from 02:00 to 15:00.')).toBeTruthy())
   })
