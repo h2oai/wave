@@ -18,7 +18,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import { cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-import { PopperProps, TextFieldProps, Theme } from '@mui/material'
+import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
 import DateFnsUtils from '@date-io/date-fns'
 import { BaseToolbarProps } from '@mui/x-date-pickers/internals'
 import { VirtualElement } from '@popperjs/core/lib'
@@ -99,7 +99,25 @@ const
   TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
   formatDateToTimeString = (date: Date, hour_cycle: S = '12') => date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hourCycle: hour_cycle === '12' ? 'h12' : 'h23' }),
-  getErrMsg = (hour_cycle: S, min: S, max: S) => `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min || '00:00'), hour_cycle)} to ${formatDateToTimeString(parseTimeStringToDate(max || '00:00'), hour_cycle)}.`,
+  getErrMsg = (hour_cycle: S, min?: S, max?: S) =>
+    `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min || '00:00'), hour_cycle)} 
+    to ${formatDateToTimeString(parseTimeStringToDate(max || '00:00'), hour_cycle)}.`,
+  useMuiTheme = (themeObj: ThemeOptions) => {
+    const [theme, setTheme] = React.useState<Theme>()
+    React.useEffect(() => {
+      import('@mui/material/styles')
+        .then(({ createTheme }) => setTheme(createTheme(themeObj)))
+    }, [themeObj])
+    return [theme]
+  },
+  useAdapterDateFns = () => {
+    const [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>()
+    React.useEffect(() => {
+      import('@mui/x-date-pickers/AdapterDateFns')
+        .then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
+    }, [])
+    return [AdapterDateFns]
+  },
   LazyLoadPlaceholder = () =>
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
@@ -140,37 +158,33 @@ export const
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
       onOpen = () => setTimeout(() => (document.activeElement as HTMLElement)?.blur()),
       { palette: fluentPalette } = Fluent.useTheme(),
-      [theme, setTheme] = React.useState<Theme | null>(),
-      getTheme = () => import('@mui/material/styles').then(({ createTheme }) =>
-        setTheme(createTheme({
-          palette: {
-            background: {
-              paper: cssVar('$card'),
-            },
-            primary: {
-              main: fluentPalette.themePrimary,
-              contrastText: cssVar('$neutralLight')
-            },
-            text: {
-              primary: fluentPalette.neutralPrimary,
-              secondary: cssVar('$neutralSecondary'),
-              disabled: cssVar('$neutralTertiaryAlt'),
-            },
-            action: {
-              active: fluentPalette.themePrimary,
-              disabled: cssVar('$neutralLight'),
-              hover: cssVar('$neutralLight'),
-              hoverOpacity: 0.04
-            }
+      themeObj = {
+        palette: {
+          background: {
+            paper: cssVar('$card'),
           },
-        }))),
-      [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
-      getAdapterDateFns = () => import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
+          primary: {
+            main: fluentPalette.themePrimary,
+            contrastText: cssVar('$neutralLight')
+          },
+          text: {
+            primary: fluentPalette.neutralPrimary,
+            secondary: cssVar('$neutralSecondary'),
+            disabled: cssVar('$neutralTertiaryAlt'),
+          },
+          action: {
+            active: fluentPalette.themePrimary,
+            disabled: cssVar('$neutralLight'),
+            hover: cssVar('$neutralLight'),
+            hoverOpacity: 0.04
+          }
+        },
+      },
+      [theme] = useMuiTheme(themeObj),
+      [AdapterDateFns] = useAdapterDateFns()
 
     React.useEffect(() => {
       wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
-      getTheme()
-      getAdapterDateFns()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
