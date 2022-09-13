@@ -5,6 +5,7 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
+import GitHubButton from 'react-github-btn'
 
 const features = [
   {
@@ -106,6 +107,11 @@ function Home() {
               Get Started
             </Link>
           </div>
+
+        
+          <GitHubButton href="https://github.com/h2oai/wave" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star h2oai/wave on GitHub">Star</GitHubButton>
+
+
         </div>
       </header>
       <main>
