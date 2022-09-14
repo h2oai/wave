@@ -1,3 +1,5 @@
+SED=$(shell command -v gsed || command -v sed)
+
 # Can be only built correctly with python 3.8 set.
 build:
 	[ -d "venv/lib/python3.8/site-packages" ] && npm run build || echo "venv need to use python 3.8"
@@ -17,6 +19,10 @@ run-client:
 
 test:
 	./venv/bin/python -m server.tests
+
+# "version": "0.22.0",
+tag: # Bump version
+	$(SED) -i -r -e 's/"version": .+/"version": "$(VERSION)",/' package.json
 
 publish:
 	npm run publish
