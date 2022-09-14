@@ -22,6 +22,7 @@ import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
 import DateFnsUtils from '@date-io/date-fns'
 import { VirtualElement } from '@popperjs/core/lib'
 import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models'
+import { format } from 'date-fns'
 
 /**
  * Create a time picker.
@@ -90,31 +91,31 @@ const
     }
   }
 
-type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label: S | undefined, switchAmPm: () => void }
+type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void }
 
 const
-  // TODO: import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider' - needs to be transformed via babel first - https://stackoverflow.com/questions/60714101/how-to-setup-jest-with-node-modules-that-use-es6
+  // TODO: Import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider', config Jest to transpile the module to prevent err.
   ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers/LocalizationProvider').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers/TimePicker').then(({ TimePicker }) => ({ default: TimePicker }))),
   allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
-  useDependencies = (themeObj: ThemeOptions) => {
+  useTime = (themeObj: ThemeOptions) => {
     const
       [theme, setTheme] = React.useState<Theme>(),
       [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
-      [format, setFormat] = React.useState<((date: D, format: S) => S) | undefined>()
+      [formatF, setFormatF] = React.useState<typeof format>()
 
     React.useEffect(() => {
-      import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
-      // TODO: import 'createTheme' directly from '@mui/material/styles/createTheme' - needs to be transformed via babel first
+      import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => setAdapterDateFns(() => AdapterDateFns))
+      // TODO: Import 'createTheme' directly from '@mui/material/styles/createTheme', config Jest to transpile the module to prevent err.
       import('@mui/material/styles').then(({ createTheme }) => setTheme(createTheme(themeObj)))
-      // TODO: import 'format' directly from 'date-fns/esm/format' - needs to be transformed via babel first
-      import('date-fns/format').then(({ default: format }) => setFormat(() => format))
+      // TODO: Import 'format' directly from 'date-fns/esm/format', config Jest to transpile the module to prevent err.
+      import('date-fns/format').then(({ default: format }) => setFormatF(() => format))
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    return { theme, AdapterDateFns, format }
+    return { theme, AdapterDateFns, format: formatF }
   },
   LazyLoadPlaceholder = () =>
     <div data-test='lazyload' style={{ height: 59 }}>
@@ -174,9 +175,9 @@ export const
           }
         },
       },
-      { format, AdapterDateFns, theme } = useDependencies(themeObj),
-      formatDateToTimeString = (date: D, hour_format: S = '12') => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '',
-      getErrMsg = (hour_format: S, min: S = '00:00', max: S = '00:00') =>
+      { format, AdapterDateFns, theme } = useTime(themeObj),
+      formatDateToTimeString = (date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '',
+      getErrMsg = (hour_format: S, min = '00:00', max = '00:00') =>
         `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min), hour_format)} 
         to ${formatDateToTimeString(parseTimeStringToDate(max), hour_format)}.`
 
