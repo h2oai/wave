@@ -93,9 +93,10 @@ const
 type ToolbarProps = { time: S, setOpenView: (view: CalendarOrClockPickerView) => void, label: S | undefined, switchAmPm: () => void }
 
 const
+  // TODO: import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider' - needs to be transformed via babel first - https://stackoverflow.com/questions/60714101/how-to-setup-jest-with-node-modules-that-use-es6
   ThemeProvider = React.lazy(() => import('@mui/material/styles').then(({ ThemeProvider }) => ({ default: ThemeProvider }))),
-  LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
-  TimePicker = React.lazy(() => import('@mui/x-date-pickers').then(({ TimePicker }) => ({ default: TimePicker }))),
+  LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers/LocalizationProvider').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
+  TimePicker = React.lazy(() => import('@mui/x-date-pickers/TimePicker').then(({ TimePicker }) => ({ default: TimePicker }))),
   allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
   parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
   useDependencies = (themeObj: ThemeOptions) => {
@@ -105,8 +106,10 @@ const
       [format, setFormat] = React.useState<any>() // TODO:
 
     React.useEffect(() => {
-      import('@mui/material/styles').then(({ createTheme }) => setTheme(createTheme(themeObj)))
       import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
+      // TODO: import 'createTheme' directly from '@mui/material/styles/createTheme' - needs to be transformed via babel first
+      import('@mui/material/styles').then(({ createTheme }) => setTheme(createTheme(themeObj)))
+      // TODO: import 'format' directly from 'date-fns/esm/format' - needs to be transformed via babel first
       import('date-fns/format').then(({ default: format }) => setFormat(() => format))
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
