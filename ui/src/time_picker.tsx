@@ -14,7 +14,7 @@
 
 import React from 'react'
 import * as Fluent from '@fluentui/react'
-import { B, Id, S, U } from 'h2o-wave'
+import { B, D, Id, S, U } from 'h2o-wave'
 import { cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
@@ -90,7 +90,7 @@ const
     }
   }
 
-type ToolbarProps = { time: S, setOpenView: (view: CalendarOrClockPickerView) => void, label: S | undefined, switchAmPm: () => void }
+type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label: S | undefined, switchAmPm: () => void }
 
 const
   // TODO: import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider' - needs to be transformed via babel first - https://stackoverflow.com/questions/60714101/how-to-setup-jest-with-node-modules-that-use-es6
@@ -103,7 +103,7 @@ const
     const
       [theme, setTheme] = React.useState<Theme>(),
       [AdapterDateFns, setAdapterDateFns] = React.useState<typeof DateFnsUtils | null>(),
-      [format, setFormat] = React.useState<any>() // TODO:
+      [format, setFormat] = React.useState<((date: D, format: S) => S) | undefined>()
 
     React.useEffect(() => {
       import('@mui/x-date-pickers/AdapterDateFns').then(({ AdapterDateFns }) => { setAdapterDateFns(() => AdapterDateFns) })
@@ -145,7 +145,7 @@ export const
           return date
         })
       },
-      onSelectTime = (time: Date | null) => {
+      onSelectTime = (time: D | null) => {
         wave.args[m.name] = time ? formatDateToTimeString(time, '24') : null
         if (m.trigger) wave.push()
       },
@@ -175,7 +175,7 @@ export const
         },
       },
       { format, AdapterDateFns, theme } = useDependencies(themeObj),
-      formatDateToTimeString = (date: Date, hour_format: S = '12') => format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm'),
+      formatDateToTimeString = (date: D, hour_format: S = '12') => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '',
       getErrMsg = (hour_format: S, min: S = '00:00', max: S = '00:00') =>
         `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min), hour_format)} 
         to ${formatDateToTimeString(parseTimeStringToDate(max), hour_format)}.`
@@ -212,7 +212,7 @@ export const
                 ToolbarComponent={({ parsedValue, setOpenView, ampm }) =>
                   <Toolbar
                     setOpenView={setOpenView}
-                    time={parsedValue ? formatDateToTimeString(parsedValue as Date, ampm ? '12' : '24') : parsedValue}
+                    time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
                     label={label}
                     switchAmPm={switchAmPm}
                   />
