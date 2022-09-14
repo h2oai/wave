@@ -81,12 +81,16 @@ const
       marginTop: 16
     }
   }),
-  BaseDropdown = ({ name, label, required, disabled, value, values, choices, trigger, placeholder }: Dropdown) => {
-    const
-      isMultivalued = !!values,
-      selection = React.useMemo(() => isMultivalued ? new Set<S>(values) : null, [isMultivalued, values]),
+  BaseDropdown = ({ model: m}: { model: Dropdown}) => {
+  const
+      { name, label, required, disabled, choices, trigger, placeholder } = m,
+      isMultivalued = !!m.values,
+      [stateValue, setStateValue] = React.useState(m.value ?? null),
+      selection = React.useMemo(() => isMultivalued ? new Set<S>(m.values) : null, [isMultivalued, m.values]),
       [selectedOptions, setSelectedOptions] = React.useState(Array.from(selection || [])),
       options = (choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
+      previousValues = React.useRef<S[] | undefined>(),
+      skipUseEffect = React.useRef(false),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
           const optionKey = option.key as S
@@ -94,9 +98,18 @@ const
             option.selected ? selection.add(optionKey) : selection.delete(optionKey)
 
             const selectedOpts = Array.from(selection)
+            previousValues.current = selectedOpts
             wave.args[name] = selectedOpts
             setSelectedOptions(selectedOpts)
           } else {
+            setStateValue(optionKey)
+            // HACK: The useEffect is only triggered if the above setter sets a different value and "m.value" changed.
+            // The next line does two things: 
+            // 1. Skip the useEffect so that it doesn't set wave args to same value if trigger is provided
+            // 2. m.value !== optionKey prevents the bug where user selects the same value twice and then the wave app tries to change the "value" prop
+            // e.g. choices = ['a', 'b', 'c'], selects 'c', selects 'c', wave app changes "value" to 'b'
+            skipUseEffect.current = m.value !== optionKey
+            m.value = optionKey
             wave.args[name] = optionKey
           }
         }
@@ -110,19 +123,40 @@ const
 
         const selectionArr = Array.from(selection)
         setSelectedOptions(selectionArr)
+        previousValues.current = selectionArr
         wave.args[name] = selectionArr
 
-        onChange()
+        if (trigger) wave.push()
       },
       deselectAll = () => {
         if (!selection) return
 
         selection.clear()
         setSelectedOptions([])
+        previousValues.current = []
         wave.args[name] = []
 
-        onChange()
+        if (trigger) wave.push()
       }
+
+    React.useEffect(() => {
+      if (!isMultivalued && !skipUseEffect.current) {
+        setStateValue(m.value ?? null)
+        wave.args[name] = m.value ?? null
+      }
+      skipUseEffect.current = false
+    }, [m.value, isMultivalued, name])
+
+    // Since "m.values" is an array, every time it's set from Wave App we create a new array reference and the useEffect bellow is triggered.
+    // Because of that we don't have to use the hack where "m.values" is set in "onChange" like we do for "m.value".
+    React.useEffect(() => {
+      if (isMultivalued ) {
+        setSelectedOptions(Array.from(m.values || []))
+        const isDifferent = previousValues.current?.toString() !== m.values?.toString()
+        if (isDifferent) wave.args[name] = m.values ?? []
+        previousValues.current = m.values
+      }
+    }, [m.values, isMultivalued, name])
 
     return (
       <>
@@ -135,7 +169,7 @@ const
           required={required}
           disabled={disabled}
           multiSelect={isMultivalued || undefined}
-          defaultSelectedKey={!isMultivalued ? value : undefined}
+          selectedKey={!isMultivalued ? stateValue : undefined}
           selectedKeys={isMultivalued ? selectedOptions : undefined}
           onChange={onChange}
         />
@@ -152,49 +186,70 @@ const
   },
   ROW_HEIGHT = 44,
   PAGE_SIZE = 40,
-  DialogDropdown = ({ name, choices, values, value, disabled, required, trigger, placeholder, label }: Dropdown) => {
+  DialogDropdown = ({ model: m}: { model: Dropdown}) => {
     const
-      isMultivalued = !!values,
+      { name, choices = [], disabled, required, trigger, placeholder, label } = m,
+      isMultivalued = !!m.values,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
-      initialSelectedMap = React.useMemo(() => {
-        if (values?.length) return new Map(values.map(v => [v, true]))
-        if (value) return new Map([[value, true]])
+      [searchValue, setSearchValue] = React.useState(''),
+      selectedMap = React.useMemo<Map<S, B>>(() => {
+        if (m.values?.length) return new Map(m.values.map(v => [v, true]))
+        if (m.value) return new Map([[m.value, true]])
         return new Map()
-      }, [value, values]),
-      items = React.useMemo<DropdownItem[]>(() => choices?.map(({ name, label }, idx) => ({ name, text: label || name, idx, checked: initialSelectedMap.has(name) })) || [], [initialSelectedMap, choices]),
+      }, [m.value, m.values]),
+      [items, setItems] = React.useState<DropdownItem[]>(choices.map(({ name, label }, idx) => ({ name, text: label || name, idx, checked: selectedMap.has(name) })) || []),
       [filteredItems, setFilteredItems] = React.useState(items),
+      previousValues = React.useRef<S[] | undefined>(),
       [textValue, setTextValue] = React.useState(() => {
-        if (!values?.length && !value) return
+        if (!m.values?.length && !m.value) return
 
         const itemsMap = new Map<S, S>(items.map(({ name, text }) => [name, text]))
 
-        if (values?.length) return values.map(v => itemsMap.get(v) || '').filter(Boolean).join(', ')
-        if (value) return itemsMap.get(value)
+        if (m.values?.length) return m.values.map(v => itemsMap.get(v) || '').filter(Boolean).join(', ')
+        if (m.value) return itemsMap.get(m.value)
       }),
       toggleDialog = React.useCallback(() => setIsDialogHidden(!isDialogHidden), [isDialogHidden]),
       cancelDialog = React.useCallback(() => {
         toggleDialog()
-        setFilteredItems(items.map(i => { i.checked = initialSelectedMap.has(i.name); return i }))
-      }, [initialSelectedMap, items, toggleDialog]),
+        setItems(items => items.map(i => ({ ...i, checked: selectedMap.has(i.name) })))
+        setSearchValue('')
+      }, [selectedMap, toggleDialog]),
+      skipUseEffect = React.useRef(false),
       submit = React.useCallback((checkedItem?: DropdownItem) => {
         const result = checkedItem ? [checkedItem] : items.filter(({ checked }) => checked)
-        wave.args[name] = result.length === 1 ? result[0].name : result.map(({ name }) => name)
+        wave.args[name] = result.length === 1 ? isMultivalued ? [result[0].name] : result[0].name : result.map(({ name }) => name)
 
+        if (!isMultivalued) {
+          m.value = result[0].name
+          skipUseEffect.current = true
+        }
         if (trigger) wave.push()
         setTextValue(result.length ? result.map(({ text }) => text).join(', ') : '')
-        initialSelectedMap.clear()
-        result.forEach(({ name }) => initialSelectedMap.set(name, true))
+        selectedMap.clear()
+        result.forEach(({ name }) => selectedMap.set(name, true))
         cancelDialog()
-      }, [cancelDialog, initialSelectedMap, items, name, trigger]),
-      selectAll = (checked = true) => () => setFilteredItems(filteredItems.map(i => { i.checked = checked; return i })),
-      onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setFilteredItems(newVal ? items.filter(({ text }) => fuzzysearch(text, newVal)) : items),
+      }, [cancelDialog, selectedMap, items, name, trigger, m, isMultivalued]),
+      selectAll = (checked = true) => () => {
+          setItems(items => {
+            const newItems = items.map(i => ({
+              ...i,
+              // In order to select only the filtered values we could use "filteredItems.map(f => f.name).includes(i.name)" but that would be O(n^2)
+              checked: fuzzysearch(i.text, searchValue) ? checked : i.checked
+            }))
+            previousValues.current = newItems.filter(i => i.checked).map(i => i.name)
+            return newItems
+          })
+      },
+      onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setSearchValue(newVal),
       onChecked = React.useCallback((idx: U) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
         items[idx].checked = checked
 
+        previousValues.current = items.filter(i => i.checked).map(i => i.name)
+
         isMultivalued
-          ? setFilteredItems(filteredItems.map(i => { if (items[idx].name === i.name) i.checked = checked; return i }))
+          ? setItems(items => items.map(i => ({ ...i, checked: items[idx].name === i.name ? checked : i.checked}) ))
           : submit(items[idx])
-      }, [filteredItems, isMultivalued, items, submit]),
+      }, [isMultivalued, items, submit]),
       onRenderCell = React.useCallback((item?: DropdownItem) => item
         ? <Fluent.Checkbox
           label={item.text}
@@ -208,6 +263,35 @@ const
           checked={item.checked} />
         : null, [onChecked]),
       getPageSpecification = React.useCallback(() => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE, } as Fluent.IPageSpecification), [])
+
+    React.useEffect(() => {
+      if (!isMultivalued && !skipUseEffect.current) {
+        setTextValue(new Map<S, S>(items.map(({ name, text }) => [name, text])).get(m.value || ''))
+        setItems(items => items.map(i => ({ ...i, checked: i.name === m.value })))
+        wave.args[name] = m.value ?? null
+      }
+      skipUseEffect.current = false
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [name, m.value])
+
+    React.useEffect(() => {
+      if (!isMultivalued) return
+
+      setItems(items => {
+        const newItems = items.map(i => ({ ...i, checked: m.values?.includes(i.name) ?? false }))
+        setTextValue(newItems.filter(i => i.checked).map(i => i.text).join(', '))
+        return newItems
+      })
+      const isDifferent = previousValues.current?.toString() !== m.values?.toString()
+      if (isDifferent) wave.args[name] = m.values ?? []
+      previousValues.current = m.values
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [name, m.values])
+
+    // sync filtered items
+    React.useEffect(() => {
+      setFilteredItems(searchValue ? items.filter(({ text }) => fuzzysearch(text, searchValue)) : items)
+    }, [items, searchValue])
 
     return (
       <>
@@ -257,14 +341,11 @@ const
   }
 
 export const XDropdown = ({ model: m }: { model: Dropdown }) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { wave.args[m.name] = m.values ? (m.values || []) : (m.value || null) }, [])
-
   return m.popup === 'always'
-    ? <DialogDropdown {...m} />
+    ? <DialogDropdown model={m} />
     : m.popup === 'never'
-      ? <BaseDropdown {...m} />
+      ? <BaseDropdown model={m} />
       : (m.choices?.length || 0) > 100
-        ? <DialogDropdown {...m} />
-        : <BaseDropdown {...m} />
+        ? <DialogDropdown model={m} />
+        : <BaseDropdown model={m} />
 }
