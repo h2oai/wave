@@ -200,6 +200,7 @@ tag: ## Bump version and tag
 	cd py && $(MAKE) tag
 	cd r && $(MAKE) tag
 	cd tools/vscode-extension && $(MAKE) tag
+	cd tools/intellij-plugin && $(MAKE) tag
 	git add .
 	git commit -m "chore: Release v$(VERSION)"
 	git tag v$(VERSION)
