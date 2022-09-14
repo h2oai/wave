@@ -20,7 +20,6 @@ run-client:
 test:
 	./venv/bin/python -m server.tests
 
-# "version": "0.22.0",
 tag: # Bump version
 	$(SED) -i -r -e 's/"version": .+/"version": "$(VERSION)",/' package.json
 
