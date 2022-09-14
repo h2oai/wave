@@ -804,6 +804,13 @@
     ],
     "description": "Create a minimal Wave Textbox."
   },
+  "Wave TimePicker": {
+    "prefix": "w_time_picker",
+    "body": [
+      "ui.time_picker(name='$1'),$0"
+    ],
+    "description": "Create a minimal Wave TimePicker."
+  },
   "Wave Toggle": {
     "prefix": "w_toggle",
     "body": [
@@ -1080,7 +1087,7 @@
   "Wave Full Component": {
     "prefix": "w_full_component",
     "body": [
-      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, image_annotator=$45, facepile=$46, copyable_text=$47, menu=$48, tags=$49),$0"
+      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, image_annotator=$45, facepile=$46, copyable_text=$47, menu=$48, tags=$49, time_picker=$50),$0"
     ],
     "description": "Create a full Wave Component."
   },
@@ -1790,6 +1797,13 @@
       "ui.textbox(name='$1', label='$2', placeholder='$3', value='$4', mask='$5', icon='$6', prefix='$7', suffix='$8', error='$9', required=${10:False}, disabled=${11:False}, readonly=${12:False}, multiline=${13:False}, password=${14:False}, trigger=${15:False}, height='$16', width='${17:100%'}', visible=${18:True}, tooltip='$19', spellcheck=${20:True}),$0"
     ],
     "description": "Create a full Wave Textbox."
+  },
+  "Wave Full TimePicker": {
+    "prefix": "w_full_time_picker",
+    "body": [
+      "ui.time_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, required=${9:False}, hour_format='${10:12`}', min='$11', max='$12', minutes_step=${13:1`}),$0"
+    ],
+    "description": "Create a full Wave TimePicker."
   },
   "Wave Full Toggle": {
     "prefix": "w_full_toggle",

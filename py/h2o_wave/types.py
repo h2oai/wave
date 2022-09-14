@@ -6778,6 +6778,157 @@ class Tags:
         )
 
 
+class TimePicker:
+    """Create a time picker.
+
+    A time picker allows a user to pick a time value.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            value: Optional[str] = None,
+            disabled: Optional[bool] = None,
+            width: Optional[str] = None,
+            visible: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            required: Optional[bool] = None,
+            hour_format: Optional[str] = None,
+            min: Optional[str] = None,
+            max: Optional[str] = None,
+            minutes_step: Optional[int] = None,
+    ):
+        _guard_scalar('TimePicker.name', name, (str,), True, False, False)
+        _guard_scalar('TimePicker.label', label, (str,), False, True, False)
+        _guard_scalar('TimePicker.placeholder', placeholder, (str,), False, True, False)
+        _guard_scalar('TimePicker.value', value, (str,), False, True, False)
+        _guard_scalar('TimePicker.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('TimePicker.width', width, (str,), False, True, False)
+        _guard_scalar('TimePicker.visible', visible, (bool,), False, True, False)
+        _guard_scalar('TimePicker.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('TimePicker.required', required, (bool,), False, True, False)
+        _guard_scalar('TimePicker.hour_format', hour_format, (str,), False, True, False)
+        _guard_scalar('TimePicker.min', min, (str,), False, True, False)
+        _guard_scalar('TimePicker.max', max, (str,), False, True, False)
+        _guard_scalar('TimePicker.minutes_step', minutes_step, (int,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.label = label
+        """Text to be displayed alongside the component."""
+        self.placeholder = placeholder
+        """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
+        self.value = value
+        """The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'"""
+        self.disabled = disabled
+        """True if this field is disabled."""
+        self.width = width
+        """The width of the time picker, e.g. '100px'. Defaults to '100%'."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to True."""
+        self.trigger = trigger
+        """True if the form should be submitted when the time is selected."""
+        self.required = required
+        """True if this is a required field. Defaults to False."""
+        self.hour_format = hour_format
+        """Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`."""
+        self.min = min
+        """The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'"""
+        self.max = max
+        """The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'"""
+        self.minutes_step = minutes_step
+        """Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TimePicker.name', self.name, (str,), True, False, False)
+        _guard_scalar('TimePicker.label', self.label, (str,), False, True, False)
+        _guard_scalar('TimePicker.placeholder', self.placeholder, (str,), False, True, False)
+        _guard_scalar('TimePicker.value', self.value, (str,), False, True, False)
+        _guard_scalar('TimePicker.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('TimePicker.width', self.width, (str,), False, True, False)
+        _guard_scalar('TimePicker.visible', self.visible, (bool,), False, True, False)
+        _guard_scalar('TimePicker.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('TimePicker.required', self.required, (bool,), False, True, False)
+        _guard_scalar('TimePicker.hour_format', self.hour_format, (str,), False, True, False)
+        _guard_scalar('TimePicker.min', self.min, (str,), False, True, False)
+        _guard_scalar('TimePicker.max', self.max, (str,), False, True, False)
+        _guard_scalar('TimePicker.minutes_step', self.minutes_step, (int,), False, True, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            placeholder=self.placeholder,
+            value=self.value,
+            disabled=self.disabled,
+            width=self.width,
+            visible=self.visible,
+            trigger=self.trigger,
+            required=self.required,
+            hour_format=self.hour_format,
+            min=self.min,
+            max=self.max,
+            minutes_step=self.minutes_step,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TimePicker':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TimePicker.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('TimePicker.label', __d_label, (str,), False, True, False)
+        __d_placeholder: Any = __d.get('placeholder')
+        _guard_scalar('TimePicker.placeholder', __d_placeholder, (str,), False, True, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('TimePicker.value', __d_value, (str,), False, True, False)
+        __d_disabled: Any = __d.get('disabled')
+        _guard_scalar('TimePicker.disabled', __d_disabled, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('TimePicker.width', __d_width, (str,), False, True, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('TimePicker.visible', __d_visible, (bool,), False, True, False)
+        __d_trigger: Any = __d.get('trigger')
+        _guard_scalar('TimePicker.trigger', __d_trigger, (bool,), False, True, False)
+        __d_required: Any = __d.get('required')
+        _guard_scalar('TimePicker.required', __d_required, (bool,), False, True, False)
+        __d_hour_format: Any = __d.get('hour_format')
+        _guard_scalar('TimePicker.hour_format', __d_hour_format, (str,), False, True, False)
+        __d_min: Any = __d.get('min')
+        _guard_scalar('TimePicker.min', __d_min, (str,), False, True, False)
+        __d_max: Any = __d.get('max')
+        _guard_scalar('TimePicker.max', __d_max, (str,), False, True, False)
+        __d_minutes_step: Any = __d.get('minutes_step')
+        _guard_scalar('TimePicker.minutes_step', __d_minutes_step, (int,), False, True, False)
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        placeholder: Optional[str] = __d_placeholder
+        value: Optional[str] = __d_value
+        disabled: Optional[bool] = __d_disabled
+        width: Optional[str] = __d_width
+        visible: Optional[bool] = __d_visible
+        trigger: Optional[bool] = __d_trigger
+        required: Optional[bool] = __d_required
+        hour_format: Optional[str] = __d_hour_format
+        min: Optional[str] = __d_min
+        max: Optional[str] = __d_max
+        minutes_step: Optional[int] = __d_minutes_step
+        return TimePicker(
+            name,
+            label,
+            placeholder,
+            value,
+            disabled,
+            width,
+            visible,
+            trigger,
+            required,
+            hour_format,
+            min,
+            max,
+            minutes_step,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -6832,6 +6983,7 @@ class Component:
             copyable_text: Optional[CopyableText] = None,
             menu: Optional[Menu] = None,
             tags: Optional[Tags] = None,
+            time_picker: Optional[TimePicker] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6882,6 +7034,7 @@ class Component:
         _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
         _guard_scalar('Component.tags', tags, (Tags,), False, True, False)
+        _guard_scalar('Component.time_picker', time_picker, (TimePicker,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6980,6 +7133,8 @@ class Component:
         """Menu."""
         self.tags = tags
         """Tags."""
+        self.time_picker = time_picker
+        """Time picker."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7032,6 +7187,7 @@ class Component:
         _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
         _guard_scalar('Component.tags', self.tags, (Tags,), False, True, False)
+        _guard_scalar('Component.time_picker', self.time_picker, (TimePicker,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -7082,6 +7238,7 @@ class Component:
             copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
             menu=None if self.menu is None else self.menu.dump(),
             tags=None if self.tags is None else self.tags.dump(),
+            time_picker=None if self.time_picker is None else self.time_picker.dump(),
         )
 
     @staticmethod
@@ -7185,6 +7342,8 @@ class Component:
         _guard_scalar('Component.menu', __d_menu, (dict,), False, True, False)
         __d_tags: Any = __d.get('tags')
         _guard_scalar('Component.tags', __d_tags, (dict,), False, True, False)
+        __d_time_picker: Any = __d.get('time_picker')
+        _guard_scalar('Component.time_picker', __d_time_picker, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7234,6 +7393,7 @@ class Component:
         copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
         menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
         tags: Optional[Tags] = None if __d_tags is None else Tags.load(__d_tags)
+        time_picker: Optional[TimePicker] = None if __d_time_picker is None else TimePicker.load(__d_time_picker)
         return Component(
             text,
             text_xl,
@@ -7284,6 +7444,7 @@ class Component:
             copyable_text,
             menu,
             tags,
+            time_picker,
         )
 
 
