@@ -66,7 +66,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
         'Operating System :: OS Independent',
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Topic :: Database',
