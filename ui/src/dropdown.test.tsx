@@ -36,7 +36,7 @@ describe('Dropdown.tsx', () => {
         { name: 'D', label: 'Choice D' },
       ]
     },
-    pushMock.mockReset()
+      pushMock.mockReset()
   })
 
   describe('Base dropdown', () => {
@@ -150,29 +150,29 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject([])
       expect(pushMock).toHaveBeenCalled()
     })
-    
+
     describe('Prop changes', () => {
       describe('Single-valued', () => {
         it('Displays new value when "value" prop is updated', () => {
           const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice B')
         })
 
         it('Sets wave args when "value" prop is updated ', () => {
-          const { rerender } = render(<XDropdown model={{...defaultProps, value: 'A'}} />)
+          const { rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(wave.args[name]).toBe('A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(wave.args[name]).toBe('B')
         })
-  
+
         it('Clears input when "value" prop is updated to empty string', () => {
           const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(getByRole('combobox').children[0]).toHaveTextContent('Choice A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: '' }} />)
           expect(getByRole('combobox').children[0]).toBeEmptyDOMElement()
         })
@@ -180,15 +180,15 @@ describe('Dropdown.tsx', () => {
         it('Sets wave args to empty string when "value" prop is updated to an empty string', () => {
           const { rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(wave.args[name]).toBe('A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: '' }} />)
           expect(wave.args[name]).toBe('')
         })
-    
+
         it('Clears input when "value" prop is updated to undefined (None)', () => {
           const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(getByRole('combobox').children[0]).toHaveTextContent('Choice A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps }} />)
           expect(getByRole('combobox').children[0]).toBeEmptyDOMElement()
         })
@@ -196,29 +196,29 @@ describe('Dropdown.tsx', () => {
         it('Sets wave args to null when "value" prop is updated to undefined (None)', () => {
           const { rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(wave.args[name]).toBe('A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps }} />)
           expect(wave.args[name]).toBeNull()
         })
-    
+
         it('Displays new value when option is selected and "value" prop is updated', () => {
           const { getByRole, getByText, rerender } = render(<XDropdown model={defaultProps} />)
-    
+
           fireEvent.click(getByRole('combobox'))
           fireEvent.click(getByText('Choice A'))
           expect(getByRole('combobox')).toHaveTextContent('Choice A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice B')
         })
 
         it('Sets wave args when an option is selected and "value" prop updated', () => {
-          const { getByRole, getByText, rerender } = render(<XDropdown model={{ ...defaultProps}} />)
+          const { getByRole, getByText, rerender } = render(<XDropdown model={{ ...defaultProps }} />)
           fireEvent.click(getByRole('combobox'))
           fireEvent.click(getByText('Choice A'))
           expect(getByRole('combobox')).toHaveTextContent('Choice A')
           expect(wave.args[name]).toBe('A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(wave.args[name]).toBe('B')
         })
@@ -227,17 +227,17 @@ describe('Dropdown.tsx', () => {
         // For more info, read the comment in "onChange" function. 
         it('Sets wave args when same option is selected twice and "value" prop is updated', () => {
           const { getByRole, getAllByText, rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
-          
+
           fireEvent.click(getByRole('combobox'))
           fireEvent.click(getAllByText('Choice C')[0])
           expect(getByRole('combobox')).toHaveTextContent('Choice C')
           expect(wave.args[name]).toEqual('C')
-    
+
           fireEvent.click(getByRole('combobox'))
           fireEvent.click(getAllByText('Choice C')[1])
           expect(getByRole('combobox')).toHaveTextContent('Choice C')
           expect(wave.args[name]).toEqual('C')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(wave.args[name]).toEqual('B')
         })
@@ -247,63 +247,49 @@ describe('Dropdown.tsx', () => {
         it('Displays new value when "values" prop is updated', () => {
           const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice A')
-    
+
           rerender(<XDropdown model={{ ...defaultProps, values: ['B'] }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice B')
         })
 
         it('Sets wave args when "values" prop is updated', () => {
-          const { rerender } = render(<XDropdown model={{...defaultProps, values: ['A']}} />)
-          expect(wave.args[name]).toEqual(['A'])
-    
-          rerender(<XDropdown model={{ ...defaultProps, values: ['B'] }} />)
-          expect(wave.args[name]).toEqual(['B'])
-        })
-    
-        it('Displays new values when "values" prop is updated to array with 2 items', () => {
-          const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
-          expect(getByRole('combobox')).toHaveTextContent('Choice A')
-    
-          rerender(<XDropdown model={{ ...defaultProps, values: ['B', 'C'] }} />)
-          expect(getByRole('combobox')).toHaveTextContent('Choice B, Choice C')
-        })
-    
-        it('Displays new value when option is selected and "values" prop is updated', () => {
-          const { getByRole, getByText, rerender } = render(<XDropdown model={defaultProps} />)
-    
-          fireEvent.click(getByRole('combobox'))
-          fireEvent.click(getByText('Choice A'))
-          expect(getByRole('combobox')).toHaveTextContent('Choice A')
-    
-          rerender(<XDropdown model={{ ...defaultProps, values: ['B', 'C'] }} />)
-          expect(getByRole('combobox')).toHaveTextContent('Choice B, Choice C')
-        })
-    
-        it('Sets wave args when option is selected and "values" prop is updated', () => {
-          const { getByRole, getByText, rerender } = render(<XDropdown model={{ ...defaultProps, values: []}} />)
-          fireEvent.click(getByRole('combobox'))
-          fireEvent.click(getByText('Choice A'))
-          expect(getByRole('combobox')).toHaveTextContent('Choice A')
-          expect(wave.args[name]).toEqual(['A'])
-    
-          rerender(<XDropdown model={{ ...defaultProps, values: ['B'] }} />)
-          expect(wave.args[name]).toEqual(['B'])
-        })
-
-        // Because two arrays with same content are not equal, we need to check if it sets Wave args only once and only if values are different
-        it('Sets wave args only when "values" is updated to different "values"', () => {
           const { rerender } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
           expect(wave.args[name]).toEqual(['A'])
 
-          rerender(<XDropdown model={{ ...defaultProps, values: ['B', 'C'] }} />)
-          expect(wave.args[name]).toEqual(['B', 'C'])
-
-          // Simulates a button submit, wave.push clear the args
-          delete wave.args[name]
-
-          rerender(<XDropdown model={{ ...defaultProps, values: ['B', 'C'] }} />)
-          expect(wave.args[name]).toBeUndefined()
+          rerender(<XDropdown model={{ ...defaultProps, values: ['B'] }} />)
+          expect(wave.args[name]).toEqual(['B'])
         })
+
+        it('Displays new values when "values" prop is updated to array with 2 items', () => {
+          const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
+          expect(getByRole('combobox')).toHaveTextContent('Choice A')
+
+          rerender(<XDropdown model={{ ...defaultProps, values: ['B', 'C'] }} />)
+          expect(getByRole('combobox')).toHaveTextContent('Choice B, Choice C')
+        })
+
+        it('Displays new value when option is selected and "values" prop is updated', () => {
+          const { getByRole, getByText, rerender } = render(<XDropdown model={defaultProps} />)
+
+          fireEvent.click(getByRole('combobox'))
+          fireEvent.click(getByText('Choice A'))
+          expect(getByRole('combobox')).toHaveTextContent('Choice A')
+
+          rerender(<XDropdown model={{ ...defaultProps, values: ['B', 'C'] }} />)
+          expect(getByRole('combobox')).toHaveTextContent('Choice B, Choice C')
+        })
+
+        it('Sets wave args when option is selected and "values" prop is updated', () => {
+          const { getByRole, getByText, rerender } = render(<XDropdown model={{ ...defaultProps, values: [] }} />)
+          fireEvent.click(getByRole('combobox'))
+          fireEvent.click(getByText('Choice A'))
+          expect(getByRole('combobox')).toHaveTextContent('Choice A')
+          expect(wave.args[name]).toEqual(['A'])
+
+          rerender(<XDropdown model={{ ...defaultProps, values: ['B'] }} />)
+          expect(wave.args[name]).toEqual(['B'])
+        })
+
       })
     })
   })
@@ -440,7 +426,7 @@ describe('Dropdown.tsx', () => {
 
       fireEvent.click(getByTestId(name))
 
-      expect(getAllByRole('checkbox', { checked: true})).toHaveLength(1)
+      expect(getAllByRole('checkbox', { checked: true })).toHaveLength(1)
     })
 
     it('Has correct number of checked checkboxes - check and cancel', () => {
@@ -475,7 +461,7 @@ describe('Dropdown.tsx', () => {
       const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
 
       fireEvent.click(getByTestId(name))
-      expect(getAllByRole('listitem')).toHaveLength(10) 
+      expect(getAllByRole('listitem')).toHaveLength(10)
       fireEvent.change(getByTestId(`${name}-search`), { target: { value: '9' } })
       expect(getAllByRole('listitem')).toHaveLength(1)
     })
@@ -485,7 +471,7 @@ describe('Dropdown.tsx', () => {
 
       fireEvent.click(getByTestId(name))
       // Only displays 40 options
-      expect(getAllByRole('listitem')).toHaveLength(40) 
+      expect(getAllByRole('listitem')).toHaveLength(40)
     })
 
     it('Shows correct number of selected items even during filtering', () => {
@@ -572,7 +558,7 @@ describe('Dropdown.tsx', () => {
     })
 
     it(`Does not displays dialog when choices > 100 and 'popup' prop is set as 'never'`, () => {
-      const { getByTestId, queryByRole } = render(<XDropdown model={{...dialogProps, choices: overOneHundredChoices, popup: 'never'}} />)
+      const { getByTestId, queryByRole } = render(<XDropdown model={{ ...dialogProps, choices: overOneHundredChoices, popup: 'never' }} />)
 
       fireEvent.click(getByTestId(name))
 
@@ -584,36 +570,36 @@ describe('Dropdown.tsx', () => {
         it('Displays new value when "value" prop is updated', () => {
           const { getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, popup: 'always', value: '1' }} />)
           expect(getByTestId(name)).toHaveValue('Choice 1')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, value: '2' }} />)
           expect(getByTestId(name)).toHaveValue('Choice 2')
         })
-    
+
         it('Selects option and updates "value"', () => {
           const { getByTestId, getByText, rerender } = render(<XDropdown model={dialogProps} />)
-    
+
           fireEvent.click(getByTestId(name))
           fireEvent.click(getByText('Choice 1'))
           expect(getByTestId(name)).toHaveValue('Choice 1')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, value: '2' }} />)
           expect(getByTestId(name)).toHaveValue('Choice 2')
         })
 
         it('Sets wave args when "value" prop changes', () => {
-          const { rerender } = render(<XDropdown model={{...dialogProps, value: 'A'}} />)
+          const { rerender } = render(<XDropdown model={{ ...dialogProps, value: 'A' }} />)
           expect(wave.args[name]).toBe('A')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, value: 'B' }} />)
           expect(wave.args[name]).toBe('B')
         })
 
         it('Sets wave args when selecting a value and "value" prop changes', () => {
-          const { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps}} />)
+          const { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps }} />)
           fireEvent.click(getByTestId(name))
           fireEvent.click(getByText('Choice 1'))
           expect(wave.args[name]).toBe('1')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, value: '2' }} />)
           expect(wave.args[name]).toBe('2')
         })
@@ -623,62 +609,47 @@ describe('Dropdown.tsx', () => {
         it('Displays new value when "values" prop is updated', () => {
           const { getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
           expect(getByTestId(name)).toHaveValue('Choice 1')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, values: ['2'] }} />)
           expect(getByTestId(name)).toHaveValue('Choice 2')
         })
-    
+
         it('Displays new values when "values" prop is updated to array with 2 items', () => {
           const { getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
           expect(getByTestId(name)).toHaveValue('Choice 1')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, values: ['2', '3'] }} />)
           expect(getByTestId(name)).toHaveValue('Choice 2, Choice 3')
         })
-    
+
         it('Displayes new values when option is selected and "values" prop is updated', () => {
           const { getByTestId, getByText, rerender } = render(<XDropdown model={dialogProps} />)
-    
+
           fireEvent.click(getByTestId(name))
           fireEvent.click(getByText('Choice 1'))
           expect(getByTestId(name)).toHaveValue('Choice 1')
-    
+
           rerender(<XDropdown model={{ ...dialogProps, values: ['2', '3'] }} />)
           expect(getByTestId(name)).toHaveValue('Choice 2, Choice 3')
         })
 
         it('Sets wave args when "values" prop is updated', () => {
-          const { rerender } = render(<XDropdown model={{...dialogProps, values: ['1']}} />)
+          const { rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
           expect(wave.args[name]).toEqual(['1'])
-    
+
           rerender(<XDropdown model={{ ...dialogProps, values: ['2'] }} />)
           expect(wave.args[name]).toEqual(['2'])
         })
 
         it('Sets wave args when option is selected and "values" prop is updated', () => {
-          const { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps, values: []}} />)
+          const { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
           fireEvent.click(getByTestId(name))
           fireEvent.click(getByText('Choice 1'))
           fireEvent.click(getByText('Select'))
           expect(wave.args[name]).toEqual(['1'])
-    
+
           rerender(<XDropdown model={{ ...dialogProps, values: ['2'] }} />)
           expect(wave.args[name]).toEqual(['2'])
-        })
-
-        // Because two arrays with same content are not equal, we need to check if it sets Wave args only once and only if values are different
-        it('Sets wave args only when "values" is updated to different "values"', () => {
-          const { rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
-          expect(wave.args[name]).toEqual(['1'])
-
-          rerender(<XDropdown model={{ ...dialogProps, values: ['2', '3'] }} />)
-          expect(wave.args[name]).toEqual(['2', '3'])
-
-          // Simulates a button submit, wave.push clear the args
-          delete wave.args[name]
-
-          rerender(<XDropdown model={{ ...dialogProps, values: ['2', '3'] }} />)
-          expect(wave.args[name]).toBeUndefined()
         })
 
         it('Display all selected values in input when "value" prop is update and select all is clicked', () => {
@@ -696,11 +667,11 @@ describe('Dropdown.tsx', () => {
         })
 
         it('Display all selected values in input when "value" prop is updated, searchbox is used, and select all is clicked', () => {
-          const choices = [{ name: 'aa', label: 'Choice aa'}, { name: 'ab', label: 'Choice ab'}, { name: 'c', label: 'Choice c'}]
+          const choices = [{ name: 'aa', label: 'Choice aa' }, { name: 'ab', label: 'Choice ab' }, { name: 'c', label: 'Choice c' }]
           const { getByRole, getByText, getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'], choices }} />)
           expect(wave.args[name]).toEqual(['1'])
 
-          rerender(<XDropdown model={{ ...dialogProps, values: ['2'] }} />)
+          rerender(<XDropdown model={{ ...dialogProps, values: ['2'], choices }} />)
           expect(wave.args[name]).toEqual(['2'])
 
           fireEvent.click(getByTestId(name))
