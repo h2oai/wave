@@ -252,5 +252,35 @@ describe('TextAnnotator.tsx', () => {
         { text: 'ood', tag: 'tag1' },
         { text: ' day' }])
     })
+
+    it('Sets correct args on annotate when escape characters are included - single line selection', () => {
+      const customItems = [{ text: 'I am\nmultiline\ntext.' }]
+      const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('u'))
+      fireEvent.mouseUp(getByText('n'))
+
+      expect(wave.args[name]).toMatchObject([
+        { text: 'I am\n' },
+        { text: 'multiline', tag: 'tag1' },
+        { text: '\ntext.' },
+      ])
+    })
+
+    it('Sets correct args on annotate when escape characters are included - multiline selection', () => {
+      const customItems = [{ text: 'I am\nmultiline\ntext.' }]
+      const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, items: customItems }} />)
+
+      fireEvent.click(getByText('Tag 1'))
+      fireEvent.mouseDown(getByText('u'))
+      fireEvent.mouseUp(getByText('x'))
+
+      expect(wave.args[name]).toMatchObject([
+        { text: 'I am\n' },
+        { text: 'multiline\ntext', tag: 'tag1' },
+        { text: '.' },
+      ])
+    })
   })
 })
