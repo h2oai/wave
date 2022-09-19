@@ -14,6 +14,7 @@ setup: ## Set up development dependencies
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 	cd tools/showcase && $(MAKE) setup
+	cd tools/vscode-extension && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
@@ -75,6 +76,9 @@ test-ui-ci: ## Run UI unit tests in CI mode
 
 test-py-ci: ## Run Python unit tests in CI mode
 	cd py && $(MAKE) test
+
+test-vsc-ci: ## Run Python unit tests in CI mode
+	cd tools/vscode-extension && $(MAKE) test
 
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
@@ -193,7 +197,7 @@ publish-pycharm: ## Publish PyCharm plugin
 	cd tools/intellij-plugin && $(MAKE) publish
 	
 publish-vsc-extension: ## Publish VS Code extension
-	cd tools/vscode-extension && $(MAKE) setup && $(MAKE) test && $(MAKE) publish
+	cd tools/vscode-extension && $(MAKE) publish
 	
 .PHONY: tag
 tag: ## Bump version and tag

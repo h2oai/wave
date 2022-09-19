@@ -50,10 +50,11 @@ jobs:
       - name: Build Release
         run: make release-nightly
 
-      - name: Unit Test UI
+      - name: Unit Test
         run: |
           make test-ui-ci
           make test-py-ci
+          make test-vsc-ci
 
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags
