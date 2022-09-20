@@ -28,7 +28,6 @@ const
       padding: grid.gap,
     },
     plot: {
-      position: 'relative',
       width: '100%',
     },
     text: {
