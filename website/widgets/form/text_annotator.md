@@ -48,3 +48,30 @@ q.page['example'] = ui.form_card(box='1 1 4 10', items=[
     )
 ])
 ```
+
+## With line breaks
+
+Use the `\n` or `\r` escape characters if you wish to force the line breaks within the text.
+
+```py
+multiline_text='''
+I am
+multiline
+text
+'''
+
+q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+    ui.text_annotator(
+        name='annotator',
+        title='Select text to annotate',
+        tags=[
+            ui.text_annotator_tag(name='p', label='Tag 1', color='#CAEACA'),
+            ui.text_annotator_tag(name='n', label='Tag 2', color='#F1CBCB'),
+        ],
+        items=[
+            ui.text_annotator_item(text='I am\nmultiline\rtext'),
+            ui.text_annotator_item(text=multiline_text),
+        ],
+    )
+])
+```
