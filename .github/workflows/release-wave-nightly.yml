@@ -40,41 +40,41 @@ jobs:
           node-version: '15'
 
       - name: Setup
-        run: make setup
+        run: make build-apps
 
-      - uses: r-lib/actions/setup-r@v2
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          working-directory: ./r
+      # - uses: r-lib/actions/setup-r@v2
+      # - uses: r-lib/actions/setup-r-dependencies@v2
+      #   with:
+      #     working-directory: ./r
 
-      - name: Build Release
-        run: make release-nightly
+      # - name: Build Release
+      #   run: make release-nightly
 
-      - name: Unit Test
-        run: |
-          make test-ui-ci
-          make test-py-ci
-          make test-vsc-ci
+      # - name: Unit Test
+      #   run: |
+      #     make test-ui-ci
+      #     make test-py-ci
+      #     make test-vsc-ci
 
-      - name: Update tag
-        run: git tag -f ${{ env.TAG }} && git push -f --tags
+      # - name: Update tag
+      #   run: git tag -f ${{ env.TAG }} && git push -f --tags
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
-            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
-            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
-            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
-            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
-            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
-            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
-            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
-            r/build/h2owave_nightly_R.tar.gz
-          tag_name: ${{ env.TAG }}
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: |
+      #       build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
+      #       build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
+      #       build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+      #       build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
+      #       py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
+      #       py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
+      #       py/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
+      #       py/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
+      #       py/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
+      #       py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+      #       r/build/h2owave_nightly_R.tar.gz
+      #     tag_name: ${{ env.TAG }}
+      #     prerelease: true
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

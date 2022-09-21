@@ -59,6 +59,8 @@ build-apps: ## Prepare apps for HAC upload.
 	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/server/utils.py py/tmp/tour/examples/tour_autocomplete_utils.py
 	cp tools/vscode-extension/server/parser.py py/tmp/tour/examples/tour_autocomplete_parser.py
+	ls py/tmp
+	ls py/tmp/theme-generator
 	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/tour/examples/tour.py 
 	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/theme-generator/theme_generator.py 
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
