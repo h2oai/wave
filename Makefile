@@ -49,12 +49,12 @@ build-r-nightly: ## Build nightly R client.
 build-apps: ## Prepare apps for HAC upload.
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
-	cp -r py/apps/ py/tmp/
+	cp -r py/apps/* py/tmp/
 	find py/tmp -type f -name '*.toml' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	find py/tmp -type f -name 'requirements.txt' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	cp py/examples/theme_generator.py py/tmp/theme-generator
 	cp tools/vscode-extension/base-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/server/utils.py py/tmp/tour/examples/tour_autocomplete_utils.py
