@@ -49,6 +49,7 @@ build-r-nightly: ## Build nightly R client.
 build-apps: ## Prepare apps for HAC upload.
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
+	ls py/apps/theme-generator
 	cp -r py/apps/ py/tmp/
 	find py/tmp -type f -name '*.toml' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	find py/tmp -type f -name 'requirements.txt' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
@@ -59,8 +60,7 @@ build-apps: ## Prepare apps for HAC upload.
 	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/server/utils.py py/tmp/tour/examples/tour_autocomplete_utils.py
 	cp tools/vscode-extension/server/parser.py py/tmp/tour/examples/tour_autocomplete_parser.py
-	ls py/tmp
-	ls py/tmp/theme-generator
+	tree py/tmp
 	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/tour/examples/tour.py 
 	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/theme-generator/theme_generator.py 
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
