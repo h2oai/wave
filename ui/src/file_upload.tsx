@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, Id, S, U, xid } from 'h2o-wave'
 import React from 'react'
-import { style, stylesheet } from 'typestyle'
+import { stylesheet } from 'typestyle'
 import { centerMixin, clas, cssVar, dashed, padding } from './theme'
 import { wave } from './ui'
 
@@ -84,6 +84,7 @@ const
           paddingLeft: '2px',
           lineHeight: '12px',
           position: 'absolute',
+          color: cssVar('$errorText')
         }
       }
     },
@@ -119,7 +120,6 @@ export const
       [percentComplete, setPercentComplete] = React.useState(0.0),
       [error, setError] = React.useState(''),
       [successMsg, setSuccessMsg] = React.useState(''),
-      { semanticColors: { errorText: errorTextColor } } = Fluent.useTheme(),
       maxFileSizeBytes = max_file_size ? convertMegabytesToBytes(max_file_size) : 0,
       maxSizeBytes = max_size ? convertMegabytesToBytes(max_size) : 0,
       fileExtensions = file_extensions ? file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
@@ -314,7 +314,7 @@ export const
               type='file'
               accept={fileExtensions?.join(',')}
               multiple={multiple} />
-            <div className={required ? clas(css.asterisk, style({ $nest: { '&::after': { color: errorTextColor } } })) : undefined}>
+            <div className={required ? css.asterisk : undefined}>
               <label htmlFor={name} className={css.uploadLabel}>Browse...</label>
             </div>
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {multiple ? 'files' : 'a file'} here.</Fluent.Text>
