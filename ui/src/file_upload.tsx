@@ -338,9 +338,9 @@ export const
               )
               : (
                 <>
-                  {label && <Fluent.Label style={{ paddingTop: 6 }}>{label}</Fluent.Label>}
+                  {label && <Fluent.Label style={{ paddingTop: 6 }} required={required}>{label}</Fluent.Label>}
                   <div className={css.compact}>
-                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} required={required} />
+                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} required={label ? undefined : required} />
                     <input id={name} data-test={name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={multiple} />
                     <label htmlFor={name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
                   </div>
