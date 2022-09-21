@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, Id, S, U, xid } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
+import { style, stylesheet } from 'typestyle'
 import { centerMixin, clas, cssVar, dashed, padding } from './theme'
 import { wave } from './ui'
 
@@ -46,6 +46,8 @@ export interface FileUpload {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if this is a required field. Defaults to False. */
+  required?: B
 }
 
 const
@@ -72,9 +74,16 @@ const
       minWidth: 80,
       boxSizing: 'border-box',
       height: 32,
+      display: 'inline-block'
+    },
+    asterisk: {
       $nest: {
-        '&:hover': {
-          cursor: 'pointer'
+        '&::after': {
+          content: "'*'",
+          verticalAlign: 'top',
+          paddingLeft: '2px',
+          lineHeight: '12px',
+          position: 'absolute',
         }
       }
     },
@@ -103,13 +112,14 @@ const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const
   XFileUpload = ({ model }: { model: FileUpload }) => {
     const
-      { name, label, file_extensions, max_file_size, compact, height, max_size, multiple } = model,
+      { name, label, file_extensions, max_file_size, compact, height, max_size, multiple, required } = model,
       [isDragging, setIsDragging] = React.useState(false),
       [files, setFiles] = React.useState<File[]>([]),
       [fileNames, setFileNames] = React.useState<S>(''),
       [percentComplete, setPercentComplete] = React.useState(0.0),
       [error, setError] = React.useState(''),
       [successMsg, setSuccessMsg] = React.useState(''),
+      { semanticColors: { errorText: errorTextColor } } = Fluent.useTheme(),
       maxFileSizeBytes = max_file_size ? convertMegabytesToBytes(max_file_size) : 0,
       maxSizeBytes = max_size ? convertMegabytesToBytes(max_size) : 0,
       fileExtensions = file_extensions ? file_extensions.map(e => e.startsWith('.') ? e : `.${e}`) : null,
@@ -304,7 +314,9 @@ export const
               type='file'
               accept={fileExtensions?.join(',')}
               multiple={multiple} />
-            <label htmlFor={name} className={css.uploadLabel}>Browse...</label>
+            <div className={required ? clas(css.asterisk, style({ $nest: { '&::after': { color: errorTextColor } } })) : undefined}>
+              <label htmlFor={name} className={css.uploadLabel}>Browse...</label>
+            </div>
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
@@ -328,7 +340,7 @@ export const
                 <>
                   {label && <Fluent.Label style={{ paddingTop: 6 }}>{label}</Fluent.Label>}
                   <div className={css.compact}>
-                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} />
+                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} required={required} />
                     <input id={name} data-test={name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={multiple} />
                     <label htmlFor={name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
                   </div>

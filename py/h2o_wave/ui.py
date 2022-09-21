@@ -1123,6 +1123,7 @@ def file_upload(
         compact: Optional[bool] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        required: Optional[bool] = None,
 ) -> Component:
     """Create a file upload component.
     A file upload component allows a user to browse, select and upload one or more files.
@@ -1139,6 +1140,7 @@ def file_upload(
         compact: True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        required: True if this is a required field. Defaults to False.
     Returns:
         A `h2o_wave.types.FileUpload` instance.
     """
@@ -1154,6 +1156,7 @@ def file_upload(
         compact,
         visible,
         tooltip,
+        required,
     ))
 
 

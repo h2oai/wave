@@ -1066,7 +1066,7 @@
   "Wave Full FileUpload": {
     "prefix": "w_full_file_upload",
     "body": [
-      "ui.file_upload(name='$1', label='${2:Upload\"}', multiple=${3:False}, max_file_size=${4:None}, max_size=${5:None}, height='${6:300px}', width='${7:100%'}', compact=${8:False}, visible=${9:True}, tooltip='$10', file_extensions=[\n\t\t$11\t\t\n]),$0"
+      "ui.file_upload(name='$1', label='${2:Upload\"}', multiple=${3:False}, max_file_size=${4:None}, max_size=${5:None}, height='${6:300px}', width='${7:100%'}', compact=${8:False}, visible=${9:True}, tooltip='$10', required=${11:False}, file_extensions=[\n\t\t$12\t\t\n]),$0"
     ],
     "description": "Create a full Wave FileUpload."
   },
