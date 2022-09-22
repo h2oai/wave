@@ -22,6 +22,8 @@ from .utils import (compare, make_card, make_cyc_buf, make_fix_buf,
 
 base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
 
+
+# TODO: Add cleanup (site.unload) to tests that upload files.
 class TestPythonServer(unittest.TestCase):
     def test_new_empty_card(self):
         page = site['/test']
