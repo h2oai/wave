@@ -96,11 +96,6 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['A', 'B'])
     })
 
-    it('Returns multiple items on init', () => {
-      render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
-      expect(wave.args[name]).toMatchObject(['A', 'B'])
-    })
-
     it('Shows correct selection in UI on select', () => {
       const { getByTestId, getByText, getAllByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
 
@@ -315,16 +310,18 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Calls sync on Deselect all - trigger enabled', () => {
-      const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['1'], trigger: true }} />)
+      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, values: ['1'], trigger: true }} />)
 
+      fireEvent.click(getByTestId(name))
       expect(wave.args[name]).toMatchObject(['1'])
       fireEvent.click(getByText('Deselect All'))
+      fireEvent.click(getByText('Select'))
       expect(wave.args[name]).toMatchObject([])
     })
 
-    it('Returns null when value not specified - init', () => {
+    it('Sets wave args to empty array when values is empty an empty array - init', () => {
       render(<XDropdown model={dialogProps} />)
-      expect(wave.args[name]).toBeNull()
+      expect(wave.args[name]).toEqual([])
     })
 
     it('Returns multiple items on select', () => {
@@ -349,14 +346,29 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['1', '9'])
     })
 
-    it('Shows correct selection in UI - init single value', () => {
+    it('Shows correct selection in the dropdown input - init single value', () => {
       const { getByDisplayValue } = render(<XDropdown model={{ ...dialogProps, value: '1' }} />)
       expect(getByDisplayValue('Choice 1')).toBeInTheDocument()
     })
 
-    it('Shows correct selection in UI - init multi values', () => {
+    it('Shows correct selection in the dropdown dialog - init single value', () => {
+      const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, value: '1' }} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('checkbox')[1]).toBeChecked()
+    })
+
+    it('Shows correct selection in the dropdown input - init multi values', () => {
       const { getByDisplayValue } = render(<XDropdown model={{ ...dialogProps, values: ['1', '2'] }} />)
       expect(getByDisplayValue('Choice 1, Choice 2')).toBeInTheDocument()
+    })
+
+    it('Shows correct selection in the dropdown dialog - init multi values', () => {
+      const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1', '2'] }} />)
+      
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('checkbox')[1]).toBeChecked()
+      expect(getAllByRole('checkbox')[2]).toBeChecked()
     })
 
     it('Shows none selection in UI - deselect', () => {
@@ -386,7 +398,7 @@ describe('Dropdown.tsx', () => {
       const { getByText, getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
 
       fireEvent.click(getByTestId(name))
-      fireEvent.click(getAllByRole('checkbox')[1])
+      fireEvent.click(getAllByRole('checkbox')[3])
       fireEvent.click(getByText('Cancel'))
 
       expect(getByTestId(name)).toHaveValue('Choice 1')
@@ -622,7 +634,7 @@ describe('Dropdown.tsx', () => {
           expect(getByTestId(name)).toHaveValue('Choice 2, Choice 3')
         })
 
-        it('Displayes new values when option is selected and "values" prop is updated', () => {
+        it('Displays new values when option is selected and "values" prop is updated', () => {
           const { getByTestId, getByText, rerender } = render(<XDropdown model={dialogProps} />)
 
           fireEvent.click(getByTestId(name))
@@ -652,7 +664,7 @@ describe('Dropdown.tsx', () => {
           expect(wave.args[name]).toEqual(['2'])
         })
 
-        it('Display all selected values in input when "value" prop is update and select all is clicked', () => {
+        it('Display all selected values in input when "value" prop is update and select all is clicked, select is clicked', () => {
           const { getByText, getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
           expect(wave.args[name]).toEqual(['1'])
 
@@ -666,13 +678,13 @@ describe('Dropdown.tsx', () => {
           expect(getByTestId(name)).toHaveValue(choices.map(c => c.label).join(', '))
         })
 
-        it('Display all selected values in input when "value" prop is updated, searchbox is used, and select all is clicked', () => {
+        it('Display all selected values in input when "value" prop is updated, searchbox is used, and select all is clicked, select is clicked', () => {
           const choices = [{ name: 'aa', label: 'Choice aa' }, { name: 'ab', label: 'Choice ab' }, { name: 'c', label: 'Choice c' }]
-          const { getByRole, getByText, getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, values: ['1'], choices }} />)
-          expect(wave.args[name]).toEqual(['1'])
+          const { getByRole, getByText, getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, values: ['aa'], choices }} />)
+          expect(getByTestId(name)).toHaveValue('Choice aa')
 
-          rerender(<XDropdown model={{ ...dialogProps, values: ['2'], choices }} />)
-          expect(wave.args[name]).toEqual(['2'])
+          rerender(<XDropdown model={{ ...dialogProps, values: ['ab'], choices }} />)
+          expect(getByTestId(name)).toHaveValue('Choice ab')
 
           fireEvent.click(getByTestId(name))
           userEvent.type(getByRole('searchbox'), 'a')
@@ -680,6 +692,24 @@ describe('Dropdown.tsx', () => {
           fireEvent.click(getByText('Select'))
 
           expect(getByTestId(name)).toHaveValue('Choice aa, Choice ab')
+        })
+
+        it('Checks all filtered values when "value" prop is updated, searchbox is used, and select all is clicked', () => {
+          const choices = [{ name: 'aa', label: 'Choice aa' }, { name: 'ab', label: 'Choice ab' }, { name: 'c', label: 'Choice c' }]
+          const { getByRole, getByText, getByTestId, rerender, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['aa'], choices }} />)
+          expect(getByTestId(name)).toHaveValue('Choice aa')
+
+          rerender(<XDropdown model={{ ...dialogProps, values: ['ab'], choices }} />)
+          expect(getByTestId(name)).toHaveValue('Choice ab')
+
+          fireEvent.click(getByTestId(name))
+          userEvent.type(getByRole('searchbox'), 'a')
+          fireEvent.click(getByText('Select All'))
+
+          const checkboxes = getAllByRole('checkbox')
+          expect(checkboxes).toHaveLength(2)
+          expect(checkboxes[0]).toBeChecked()
+          expect(checkboxes[1]).toBeChecked()
         })
       })
     })
