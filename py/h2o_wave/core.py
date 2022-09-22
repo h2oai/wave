@@ -893,10 +893,12 @@ class AsyncSite:
         path = os.path.abspath(path)
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
-
-        with open(filepath, 'wb') as f:
-            async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as r:
-                async for chunk in r.aiter_bytes():
+        async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
+            if res.status_code != 200:
+                await res.aread()
+                raise ServiceError(f'Download failed (code={res.status_code}): {res.text}')
+            with open(filepath, 'wb') as f:
+                async for chunk in res.aiter_bytes():
                     f.write(chunk)
 
         return filepath
