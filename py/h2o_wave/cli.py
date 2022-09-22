@@ -209,9 +209,9 @@ def init():
           choices=[
               'Hello World app (for beginners)',
               'App with header',
-              'App with header with navigation',
-              'App with sidebar with navigation',
-              'App with header & sidebar with navigation'
+              'App with header + navigation',
+              'App with sidebar + navigation',
+              'App with header & sidebar + navigation'
           ]),
     ])['project']
     
@@ -219,14 +219,14 @@ def init():
     base_path = os.path.join(sys.exec_prefix, 'project_templates')
     if 'Hello World' in project:
         app_content = read_file(os.path.join(base_path, 'hello_world.py'))
-    elif 'header with' in project:
-        app_content = read_file(os.path.join(base_path, 'header.py'))
-    elif 'header' in project:
-        app_content = read_file(os.path.join(base_path, 'header_nav.py'))
-    elif 'sidebar with' in project:
-        app_content = read_file(os.path.join(base_path, 'sidebar.py'))
     elif 'header & sidebar' in project:
         app_content = read_file(os.path.join(base_path, 'header_sidebar_nav.py'))
+    elif 'header +' in project:
+        app_content = read_file(os.path.join(base_path, 'header_nav.py'))
+    elif 'header' in project:
+        app_content = read_file(os.path.join(base_path, 'header.py'))
+    elif 'sidebar +' in project:
+        app_content = read_file(os.path.join(base_path, 'sidebar_nav.py'))
 
     write_file('app.py', app_content)
     write_file('requirements.txt', f'h2o-wave=={__version__}')
