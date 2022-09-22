@@ -719,9 +719,11 @@ class Site:
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
 
-        with open(filepath, 'wb') as f:
-            with self._http.stream('GET', f'{_config.hub_host_address}{url}') as r:
-                for chunk in r.iter_bytes():
+        with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
+            if res.status_code != 200:
+                raise ServiceError(f'Download failed (code={res.status_code}): {res.text}')
+            with open(filepath, 'wb') as f:
+                for chunk in res.iter_bytes():
                     f.write(chunk)
 
         return filepath
