@@ -589,7 +589,6 @@ const
       theme = themes[themeName] ?? themes[defaultThemeName],
       { palette, fluentPalette } = theme,
       cardColor = Fluent.getColorFromString(palette.card)!,
-      isInverted = Fluent.isDark(cardColor),
       updateTones = (key: S, color: S) => {
         document.body.style.setProperty(`--${key}`, color)
         const [r, g, b] = rgb(color)
@@ -621,12 +620,13 @@ const
       }
     }
 
-    document.body.style.setProperty('--errorText', isInverted ? "#F1707B" : "#a4262c")
-
     // HACK: Execute as microtask to prevent race condition. Since meta is handled in page.tsx:render,
     // Fluent wants to update all components present (Spinner), but throws warning it cannot update unmounted element (Spinner)
     // because it is replaced by our new component tree in the meanwhile.
-    setTimeout(() => Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' }, isInverted }), 0)
+    setTimeout(() => {
+      const { semanticColors } = Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' }, isInverted: Fluent.isDark(cardColor) })
+      document.body.style.setProperty('--errorText', semanticColors.errorText)
+    }, 0)
   }
 
 export const
