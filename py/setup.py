@@ -37,17 +37,22 @@ __arch__ = "{arch}"
 ''')
 
 def get_data_files():
-    build_path = os.path.join(base_path, 'www')
     data_dict = dict()
-    for p in Path(build_path).rglob('*'):
-        if os.path.isdir(p):
-            continue
-        *dirs, _ = p.relative_to(build_path).parts
-        key = os.path.join('www', *dirs)
-        if key in data_dict:
-            data_dict[key].append(str(p))
-        else:
-            data_dict[key] = [str(p)]
+    data_dict['project_templates'] = [os.path.join('project_templates', f) for f in os.listdir('project_templates')]
+
+    if platform != 'any':
+        data_dict[''] = glob(os.path.join(base_path, 'waved*'))
+        build_path = os.path.join(base_path, 'www')
+        for p in Path(build_path).rglob('*'):
+            if os.path.isdir(p):
+                continue
+            *dirs, _ = p.relative_to(build_path).parts
+            key = os.path.join('www', *dirs)
+            if key in data_dict:
+                data_dict[key].append(str(p))
+            else:
+                data_dict[key] = [str(p)]
+
     return list(data_dict.items())
 
 
@@ -61,7 +66,7 @@ setuptools.setup(
     conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_wave'],
-    data_files=None if platform == 'any' else [('', glob(os.path.join(base_path, 'waved*')))] + get_data_files(),
+    data_files=get_data_files(),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
@@ -80,6 +85,7 @@ setuptools.setup(
     python_requires='>=3.7.1',
     install_requires=[
         'Click',
+        'inquirer',
         'httpx>=0.16.1',
         'starlette>=0.13.8',
         'uvicorn>=0.17.6',
