@@ -721,6 +721,7 @@ class Site:
 
         with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
             if res.status_code != 200:
+                res.read()
                 raise ServiceError(f'Download failed (code={res.status_code}): {res.text}')
             with open(filepath, 'wb') as f:
                 for chunk in res.iter_bytes():
