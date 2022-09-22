@@ -383,7 +383,7 @@ class TestPythonServer(unittest.TestCase):
 
     def test_upload_dir(self):
         upload_path, = site.upload_dir(os.path.join('tests', 'test_folder'))
-        download_path = site.download(f'{base_url}{upload_path}test.txt', 'test.txt')
+        download_path = site.download(f'{upload_path}/test.txt', 'test.txt')
         txt = read_file(download_path)
         os.remove(download_path)
         assert len(txt) > 0
