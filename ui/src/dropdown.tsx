@@ -133,13 +133,13 @@ const
       if (!isMultivalued) return
       setMultiValues(values || [])
       wave.args[name] = values ?? null
-    }, [name, values])
+    }, [name, values, isMultivalued])
 
     React.useEffect(() => {
       if (isMultivalued) return
       setSingleValue(value || '')
       wave.args[name] = value ?? null
-    }, [name, value])
+    }, [name, value, isMultivalued])
 
     return (
       <>
@@ -246,17 +246,17 @@ const
     const
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, values),
-      auxItems = React.useRef([...items]),
+      itemsBackup = React.useRef([...items]),
       openDialog = () => {
         setIsDialogHidden(false)
-        auxItems.current = [...items]
+        itemsBackup.current = [...items]
       },
       closeDialog = () => {
         setItems(items => items.map(i => ({ ...i, show: true })))
         setIsDialogHidden(true)
       },
       cancelDialog = () => {
-        setItems(auxItems.current)
+        setItems(itemsBackup.current)
         closeDialog()
       },
       submit = (items: DropdownItem[]) => {
