@@ -18,6 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { formItemWidth } from './theme'
 import { bond } from './ui'
+import { Lightbox } from './parts/lightbox'
 
 const
   css = stylesheet({
@@ -29,7 +30,8 @@ const
     img: {
       flexGrow: 1,
       objectFit: 'contain',
-      maxHeight: 'calc(100% - 20px)'
+      maxHeight: 'calc(100% - 20px)',
+      cursor: 'pointer'
     }
   })
 
@@ -67,12 +69,16 @@ export interface Image {
 export const
   XImage = ({ model: { title, type, image, path, width } }: { model: Image }) => {
     const
+      [lightboxVisible, setLightboxVisible] = React.useState(false),
       src = path
         ? path
         : (image && type)
           ? `data:image/${type};base64,${image}`
           : ''
-    return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} />
+    return <>
+      <img className={css.img} alt={title} src={src} width={formItemWidth(width)} onClick={() => setLightboxVisible(true)} />
+      <Lightbox title={title} type={type} image={image} path={path} visible={lightboxVisible} onDismiss={() => setLightboxVisible(false)} />
+    </>
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {
