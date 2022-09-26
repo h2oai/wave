@@ -74,7 +74,12 @@ const
       minWidth: 80,
       boxSizing: 'border-box',
       height: 32,
-      display: 'inline-block'
+      display: 'inline-block',
+      $nest: {
+        '&:hover': {
+          cursor: 'pointer'
+        }
+      }
     },
     asterisk: {
       $nest: {
