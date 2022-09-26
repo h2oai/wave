@@ -84,10 +84,10 @@ const
   }),
   BaseDropdown = ({ model: m }: { model: Dropdown }) => {
     const
-      { name, label, required, disabled, value, values, choices, trigger, placeholder } = m,
+      { name, label, required, disabled, values, choices, trigger, placeholder } = m,
       isMultivalued = !!values,
       selection = React.useMemo(() => isMultivalued ? new Set<S>(values) : null, [isMultivalued, values]),
-      [singleValue, setSingleValue] = React.useState(value),
+      [singleValue, setSingleValue] = React.useState(m.value),
       [multiValues, setMultiValues] = React.useState(values),
       options = (choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
@@ -137,9 +137,9 @@ const
 
     React.useEffect(() => {
       if (isMultivalued) return
-      setSingleValue(value || '')
-      wave.args[name] = value ?? null
-    }, [name, value, isMultivalued])
+      setSingleValue(m.value || '')
+      wave.args[name] = m.value ?? null
+    }, [name, m.value, isMultivalued])
 
     return (
       <>
@@ -246,17 +246,17 @@ const
     const
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, values),
-      itemsBackup = React.useRef([...items]),
+      itemsOnDialogOpen = React.useRef(items),
       openDialog = () => {
         setIsDialogHidden(false)
-        itemsBackup.current = [...items]
+        itemsOnDialogOpen.current = items
       },
       closeDialog = () => {
         setItems(items => items.map(i => ({ ...i, show: true })))
         setIsDialogHidden(true)
       },
       cancelDialog = () => {
-        setItems(itemsBackup.current)
+        setItems(itemsOnDialogOpen.current)
         closeDialog()
       },
       submit = (items: DropdownItem[]) => {
