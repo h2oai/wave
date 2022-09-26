@@ -77,7 +77,7 @@ export const
           : ''
     return <>
       <img className={css.img} alt={title} src={src} width={formItemWidth(width)} onClick={() => setLightboxVisible(true)} />
-      <Lightbox title={title} type={type} image={image} path={path} visible={lightboxVisible} onDismiss={() => setLightboxVisible(false)} />
+      <Lightbox images={[{ title, type, image, path }]} visible={lightboxVisible} onDismiss={() => setLightboxVisible(false)} />
     </>
   },
   View = bond(({ name, state, changed }: Model<State>) => {
