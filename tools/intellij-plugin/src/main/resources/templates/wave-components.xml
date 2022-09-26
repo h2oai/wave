@@ -1195,7 +1195,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_file_upload" value="ui.file_upload(name='$name$',label='$label$',multiple=$multiple$,max_file_size=$max_file_size$,max_size=$max_size$,height='$height$',width='$width$',compact=$compact$,visible=$visible$,tooltip='$tooltip$',file_extensions=[&#10;	$file_extensions$	&#10;]),$END$" description="Create Wave FileUpload with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_file_upload" value="ui.file_upload(name='$name$',label='$label$',multiple=$multiple$,max_file_size=$max_file_size$,max_size=$max_size$,height='$height$',width='$width$',compact=$compact$,visible=$visible$,tooltip='$tooltip$',required=$required$,file_extensions=[&#10;	$file_extensions$	&#10;]),$END$" description="Create Wave FileUpload with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="&quot;Upload&quot;" alwaysStopAt="true"/>
     <variable name="multiple" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
@@ -1206,6 +1206,7 @@
     <variable name="compact" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="required" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="file_extensions" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

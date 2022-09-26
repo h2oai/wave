@@ -623,7 +623,10 @@ const
     // HACK: Execute as microtask to prevent race condition. Since meta is handled in page.tsx:render,
     // Fluent wants to update all components present (Spinner), but throws warning it cannot update unmounted element (Spinner)
     // because it is replaced by our new component tree in the meanwhile.
-    setTimeout(() => Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' }, isInverted: Fluent.isDark(cardColor) }), 0)
+    setTimeout(() => {
+      const { semanticColors } = Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' }, isInverted: Fluent.isDark(cardColor) })
+      document.body.style.setProperty('--errorText', semanticColors.errorText)
+    }, 0)
   }
 
 export const

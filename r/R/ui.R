@@ -1324,6 +1324,7 @@ ui_mini_buttons <- function(
 #' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param required True if this is a required field. Defaults to False.
 #' @return A FileUpload instance.
 #' @export
 ui_file_upload <- function(
@@ -1337,7 +1338,8 @@ ui_file_upload <- function(
   width = NULL,
   compact = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  required = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("multiple", "logical", multiple)
@@ -1349,6 +1351,7 @@ ui_file_upload <- function(
   .guard_scalar("compact", "logical", compact)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("required", "logical", required)
   .o <- list(file_upload=list(
     name=name,
     label=label,
@@ -1360,7 +1363,8 @@ ui_file_upload <- function(
     width=width,
     compact=compact,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    required=required))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

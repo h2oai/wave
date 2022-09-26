@@ -46,6 +46,8 @@ export interface FileUpload {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if this is a required field. Defaults to False. */
+  required?: B
 }
 
 const
@@ -72,9 +74,22 @@ const
       minWidth: 80,
       boxSizing: 'border-box',
       height: 32,
+      display: 'inline-block',
       $nest: {
         '&:hover': {
           cursor: 'pointer'
+        }
+      }
+    },
+    asterisk: {
+      $nest: {
+        '&::after': {
+          content: "'*'",
+          verticalAlign: 'top',
+          paddingLeft: '2px',
+          lineHeight: '12px',
+          position: 'absolute',
+          color: cssVar('$errorText')
         }
       }
     },
@@ -103,7 +118,7 @@ const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const
   XFileUpload = ({ model }: { model: FileUpload }) => {
     const
-      { name, label, file_extensions, max_file_size, compact, height, max_size, multiple } = model,
+      { name, label, file_extensions, max_file_size, compact, height, max_size, multiple, required } = model,
       [isDragging, setIsDragging] = React.useState(false),
       [files, setFiles] = React.useState<File[]>([]),
       [fileNames, setFileNames] = React.useState<S>(''),
@@ -304,7 +319,9 @@ export const
               type='file'
               accept={fileExtensions?.join(',')}
               multiple={multiple} />
-            <label htmlFor={name} className={css.uploadLabel}>Browse...</label>
+            <div className={required ? css.asterisk : undefined}>
+              <label htmlFor={name} className={css.uploadLabel}>Browse...</label>
+            </div>
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
@@ -326,9 +343,9 @@ export const
               )
               : (
                 <>
-                  {label && <Fluent.Label style={{ paddingTop: 6 }}>{label}</Fluent.Label>}
+                  {label && <Fluent.Label style={{ paddingTop: 6 }} required={required}>{label}</Fluent.Label>}
                   <div className={css.compact}>
-                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} />
+                    <Fluent.TextField data-test={`textfield-${name}`} readOnly value={fileNames} errorMessage={error} required={label ? undefined : required} />
                     <input id={name} data-test={name} type='file' hidden onChange={onChange} accept={fileExtensions?.join(',')} multiple={multiple} />
                     <label htmlFor={name} className={clas(css.uploadLabel, css.uploadLabelCompact)}>Browse</label>
                   </div>

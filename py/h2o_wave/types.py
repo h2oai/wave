@@ -2892,6 +2892,7 @@ class FileUpload:
             compact: Optional[bool] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            required: Optional[bool] = None,
     ):
         _guard_scalar('FileUpload.name', name, (str,), True, False, False)
         _guard_scalar('FileUpload.label', label, (str,), False, True, False)
@@ -2904,6 +2905,7 @@ class FileUpload:
         _guard_scalar('FileUpload.compact', compact, (bool,), False, True, False)
         _guard_scalar('FileUpload.visible', visible, (bool,), False, True, False)
         _guard_scalar('FileUpload.tooltip', tooltip, (str,), False, True, False)
+        _guard_scalar('FileUpload.required', required, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -2926,6 +2928,8 @@ class FileUpload:
         """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.required = required
+        """True if this is a required field. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2940,6 +2944,7 @@ class FileUpload:
         _guard_scalar('FileUpload.compact', self.compact, (bool,), False, True, False)
         _guard_scalar('FileUpload.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('FileUpload.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_scalar('FileUpload.required', self.required, (bool,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -2952,6 +2957,7 @@ class FileUpload:
             compact=self.compact,
             visible=self.visible,
             tooltip=self.tooltip,
+            required=self.required,
         )
 
     @staticmethod
@@ -2979,6 +2985,8 @@ class FileUpload:
         _guard_scalar('FileUpload.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('FileUpload.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_required: Any = __d.get('required')
+        _guard_scalar('FileUpload.required', __d_required, (bool,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         multiple: Optional[bool] = __d_multiple
@@ -2990,6 +2998,7 @@ class FileUpload:
         compact: Optional[bool] = __d_compact
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        required: Optional[bool] = __d_required
         return FileUpload(
             name,
             label,
@@ -3002,6 +3011,7 @@ class FileUpload:
             compact,
             visible,
             tooltip,
+            required,
         )
 
 
