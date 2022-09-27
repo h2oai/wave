@@ -2,10 +2,24 @@ import * as Fluent from '@fluentui/react'
 import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { AnnotatorRect, getCorner, isIntersectingRect } from './image_annotator_rect'
+import { PolygonAnnotator } from './image_annotator_polygon'
+import { RectAnnotator, getCorner, isIntersectingRect } from './image_annotator_rect'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
+
+export interface ImageAnnotatorPoint {
+  /** `x` coordinate of the point. */
+  x: F
+  /** `y` coordinate of the point. */
+  y: F
+}
+
+/** Create a polygon annotation shape. */
+export interface ImageAnnotatorPolygon {
+  /** List of points of the polygon. */
+  items: ImageAnnotatorPoint[]
+}
 
 /** Create a rectangular annotation shape. */
 export interface ImageAnnotatorRect {
@@ -22,7 +36,7 @@ export interface ImageAnnotatorRect {
 /** Create a shape to be rendered as an annotation on an image annotator. */
 interface ImageAnnotatorShape {
   rect?: ImageAnnotatorRect
-  polygon?: ImageAnnotatorRect
+  polygon?: ImageAnnotatorPolygon
 }
 
 /** Create a unique tag type for use in an image annotator. */
@@ -118,11 +132,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
-    rectRef = React.useRef<AnnotatorRect | null>(null),
+    rectRef = React.useRef<RectAnnotator | null>(null),
+    polygonRef = React.useRef<PolygonAnnotator | null>(null),
     [aspectRatio, setAspectRatio] = React.useState(1),
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
+    getCurrentTagColor = React.useCallback(() => colorsMap.get(activeTag) || cssVarValue('$red'), [activeTag, colorsMap]),
     redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
       const ctx = ctxRef.current
@@ -130,12 +146,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       setDrawnShapes(shapes => {
-        shapes.forEach(item => {
-          if (item.shape.rect) rectRef.current?.drawRect(item.shape.rect, colorsMap.get(item.tag) || cssVarValue('$red'), item.isFocused)
+        shapes.forEach(({ shape, isFocused }) => {
+          if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(), isFocused)
+          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.items, getCurrentTagColor())
         })
         return shapes
       })
-    }, [colorsMap]),
+    }, [getCurrentTagColor]),
     onMouseDown = (e: React.MouseEvent) => {
       if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
@@ -162,12 +179,22 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         let newShape = null
         clickStartPosition.dragging = true
 
-        if (activeShape === 'rect') newShape = rectRef.current?.onMouseMove(clickStartPosition, cursor_x, cursor_y, focused, intersected)
-
-        if (newShape) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
-
-        redrawExistingShapes()
-        if (newShape?.rect) rectRef.current?.drawRect(newShape.rect, colorsMap.get(activeTag) || cssVarValue('$red'))
+        switch (activeShape) {
+          case 'rect': {
+            newShape = rectRef.current?.onMouseMove(clickStartPosition, cursor_x, cursor_y, focused, intersected)
+            if (newShape) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
+            redrawExistingShapes()
+            if (newShape?.rect) rectRef.current?.drawRect(newShape.rect, getCurrentTagColor())
+            break
+          }
+          case 'polygon': {
+            redrawExistingShapes()
+            polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor())
+            if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
+            else canvas.style.cursor = 'crosshair'
+            break
+          }
+        }
       }
       else {
         canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, focused)
@@ -180,24 +207,37 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         start = startPosition.current,
         rect = canvas.getBoundingClientRect(),
-        { cursor_x, cursor_y } = eventToCursor(e, rect),
-        newShapes = [...drawnShapes]
+        { cursor_x, cursor_y } = eventToCursor(e, rect)
 
-      if (activeShape === 'rect') {
-        rectRef.current?.onClick(e, cursor_x, cursor_y, newShapes, drawnShapes, activeTag, start)
-        startPosition.current = undefined
+      switch (activeShape) {
+        case 'rect': {
+          // TODO: Fix rect selection.
+          const newRect = rectRef.current?.onClick(e, cursor_x, cursor_y, drawnShapes, drawnShapes, activeTag, start)
+          if (newRect) setDrawnShapes([newRect, ...drawnShapes])
+          break
+        }
+        case 'polygon': {
+          const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(), activeTag)
+          if (newPolygon) setDrawnShapes([newPolygon, ...drawnShapes])
+          break
+        }
       }
 
-      canvas.style.cursor = getCorrectCursor(newShapes, cursor_x, cursor_y, newShapes.find(({ isFocused }) => isFocused))
-      setDrawnShapes(newShapes)
       redrawExistingShapes()
+      if (activeShape !== 'polygon') startPosition.current = undefined
+      canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused))
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
       setDrawnShapes(shapes => item.key === 'remove-selected' ? shapes.filter(s => !s.isFocused) : [])
       redrawExistingShapes()
     },
-    chooseShape = (_e?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, i?: Fluent.IContextualMenuItem) => setActiveShape(i?.key as keyof ImageAnnotatorShape)
+    chooseShape = (_e?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, i?: Fluent.IContextualMenuItem) => {
+      setActiveShape(i?.key as keyof ImageAnnotatorShape)
+      startPosition.current = undefined
+      setDrawnShapes(shapes => shapes.map(s => { s.isFocused = false; return s }))
+      redrawExistingShapes()
+    }
 
   React.useEffect(() => {
     const img = new Image()
@@ -221,7 +261,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.zIndex = '1'
       canvas.parentElement!.style.height = px(height)
 
-      rectRef.current = new AnnotatorRect(canvas)
+      rectRef.current = new RectAnnotator(canvas)
+      polygonRef.current = new PolygonAnnotator(canvas)
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
       setDrawnShapes((model.items || []).map(({ tag, shape }) => {

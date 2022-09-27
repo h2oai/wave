@@ -3,12 +3,12 @@ import { DrawnShape, ImageAnnotatorRect, Position } from './image_annotator'
 
 const
   MIN_RECT_WIDTH = 5,
-  MIN_RECT_HEIGHT = 5,
-  ARC_RADIUS = 4
+  MIN_RECT_HEIGHT = 5
+export const ARC_RADIUS = 4
 
-export class AnnotatorRect {
-  private resizedCorner: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | undefined
-  private movedRect: DrawnShape | undefined
+export class RectAnnotator {
+  private resizedCorner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+  private movedRect?: DrawnShape
   private ctx: CanvasRenderingContext2D | null
 
   constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
@@ -22,6 +22,7 @@ export class AnnotatorRect {
     this.ctx.fill(path)
     this.ctx.closePath()
   }
+
   drawRect = ({ x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
     if (!this.ctx) return
     this.ctx.beginPath()
@@ -52,9 +53,10 @@ export class AnnotatorRect {
   }
 
   onClick = (e: React.MouseEvent, cursor_x: U, cursor_y: U, newShapes: DrawnShape[], drawnShapes: DrawnShape[], tag: S, start?: Position) => {
+    let newRect = null
     if (start && !this.resizedCorner) {
-      const newRect = this.createRect(start.x, cursor_x, start.y, cursor_y)
-      if (newRect) newShapes.unshift({ shape: { rect: newRect }, tag })
+      const rect = this.createRect(start.x, cursor_x, start.y, cursor_y)
+      if (rect) newRect = ({ shape: { rect: rect }, tag })
     }
 
     if (!this.resizedCorner && !start?.dragging && e.type !== 'mouseleave') {
@@ -65,6 +67,8 @@ export class AnnotatorRect {
 
     this.resizedCorner = undefined
     this.movedRect = undefined
+
+    return newRect
   }
 
   onMouseDown(cursor_x: U, cursor_y: U, rect: ImageAnnotatorRect) {
