@@ -136,7 +136,6 @@ from h2o_wave import Q, main, app
 @app('/example')
 async def serve(q: Q):
     # Refreshes the token and makes it available in q.auth.access_token.
-    # Note that if refresh is not necessary, q.auth.access_token stays the same and None is returned.
     new_access_token = await q.auth.ensure_fresh_token()
 ```
 

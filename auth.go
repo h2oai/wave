@@ -496,7 +496,7 @@ func (h *RefreshHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	session.token = token
 	h.auth.set(session)
 
-	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Wave-Access-Token", token.AccessToken)
 	w.Header().Set("Wave-Refresh-Token", token.RefreshToken)
+	w.WriteHeader(http.StatusOK)
 }
