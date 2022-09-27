@@ -213,6 +213,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       switch (activeShape) {
         case 'rect': {
           rectRef.current?.onClick(e, cursor_x, cursor_y, setDrawnShapes, activeTag, start)
+          redrawExistingShapes()
           break
         }
         case 'polygon': {
@@ -222,7 +223,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
 
-      redrawExistingShapes()
       if (activeShape !== 'polygon') startPosition.current = undefined
       canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused))
     },

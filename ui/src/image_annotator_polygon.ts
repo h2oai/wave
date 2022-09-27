@@ -13,7 +13,6 @@ export class PolygonAnnotator {
       const { x, y } = this.currPolygonPoints.at(-1)!
       const firstPoint = this.currPolygonPoints[0]
       this.drawLine(x, y, firstPoint.x, firstPoint.y)
-      // TODO: Reset points for next polygon.
       const newPolygon = { shape: { polygon: { items: [...this.currPolygonPoints] } }, tag }
       this.currPolygonPoints = []
       return newPolygon
