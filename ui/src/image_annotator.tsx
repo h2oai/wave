@@ -154,6 +154,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       })
     }, [getCurrentTagColor]),
     onMouseDown = (e: React.MouseEvent) => {
+      console.log('mousedown')
       if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
       if (!canvas) return
@@ -212,8 +213,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       switch (activeShape) {
         case 'rect': {
           // TODO: Fix rect selection.
-          const newRect = rectRef.current?.onClick(e, cursor_x, cursor_y, drawnShapes, drawnShapes, activeTag, start)
-          if (newRect) setDrawnShapes([newRect, ...drawnShapes])
+          rectRef.current?.onClick(e, cursor_x, cursor_y, setDrawnShapes, activeTag, start)
           break
         }
         case 'polygon': {

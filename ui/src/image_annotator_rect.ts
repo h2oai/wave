@@ -52,7 +52,7 @@ export class RectAnnotator {
     }
   }
 
-  onClick = (e: React.MouseEvent, cursor_x: U, cursor_y: U, newShapes: DrawnShape[], drawnShapes: DrawnShape[], tag: S, start?: Position) => {
+  onClick = (e: React.MouseEvent, cursor_x: U, cursor_y: U, setDrawnShapes: (value: React.SetStateAction<DrawnShape[]>) => void, tag: S, start?: Position) => {
     let newRect = null
     if (start && !this.resizedCorner) {
       const rect = this.createRect(start.x, cursor_x, start.y, cursor_y)
@@ -60,9 +60,10 @@ export class RectAnnotator {
     }
 
     if (!this.resizedCorner && !start?.dragging && e.type !== 'mouseleave') {
-      newShapes.forEach(shape => shape.isFocused = false)
-      const intersecting = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
-      if (intersecting) intersecting.isFocused = true
+      setDrawnShapes(drawnShapes => drawnShapes.map(s => {
+        s.isFocused = isIntersectingRect(cursor_x, cursor_y, s.shape.rect)
+        return s
+      }))
     }
 
     this.resizedCorner = undefined
