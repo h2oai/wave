@@ -53,10 +53,9 @@ export class RectAnnotator {
   }
 
   onClick = (e: React.MouseEvent, cursor_x: U, cursor_y: U, setDrawnShapes: (value: React.SetStateAction<DrawnShape[]>) => void, tag: S, start?: Position) => {
-    let newRect = null
     if (start && !this.resizedCorner) {
       const rect = this.createRect(start.x, cursor_x, start.y, cursor_y)
-      if (rect) newRect = ({ shape: { rect: rect }, tag })
+      if (rect) setDrawnShapes(drawnShapes => [{ shape: { rect }, tag }, ...drawnShapes])
     }
 
     if (!this.resizedCorner && !start?.dragging && e.type !== 'mouseleave') {
@@ -68,8 +67,6 @@ export class RectAnnotator {
 
     this.resizedCorner = undefined
     this.movedRect = undefined
-
-    return newRect
   }
 
   onMouseDown(cursor_x: U, cursor_y: U, rect: ImageAnnotatorRect) {

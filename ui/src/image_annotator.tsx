@@ -212,7 +212,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       switch (activeShape) {
         case 'rect': {
-          // TODO: Fix rect selection.
           rectRef.current?.onClick(e, cursor_x, cursor_y, setDrawnShapes, activeTag, start)
           break
         }
