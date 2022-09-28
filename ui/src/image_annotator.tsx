@@ -2,10 +2,10 @@ import * as Fluent from '@fluentui/react'
 import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { PolygonAnnotator } from './image_annotator_polygon'
+import { isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
 import { RectAnnotator, getCorner, isIntersectingRect } from './image_annotator_rect'
 import { AnnotatorTags } from './text_annotator'
-import { clas, cssVar, cssVarValue, px } from './theme'
+import { clas, cssVar, cssVarValue, px, rgb } from './theme'
 import { wave } from './ui'
 
 export interface ImageAnnotatorPoint {
@@ -126,9 +126,12 @@ const
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
-    colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => [tag.name, cssVarValue(tag.color)])), [model.tags]),
+    colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => {
+      const [R, G, B] = rgb(cssVarValue(tag.color))
+      return [tag.name, `rgba(${R}, ${G}, ${B}, 1)`]
+    })), [model.tags]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
-    [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape>('rect'),
+    [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('rect'),
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
@@ -148,13 +151,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       setDrawnShapes(shapes => {
         shapes.forEach(({ shape, isFocused }) => {
           if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(), isFocused)
-          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.items, getCurrentTagColor())
+          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.items, getCurrentTagColor(), true, isFocused)
         })
         return shapes
       })
     }, [getCurrentTagColor]),
     onMouseDown = (e: React.MouseEvent) => {
-      console.log('mousedown')
       if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
       if (!canvas) return
@@ -219,6 +221,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         case 'polygon': {
           const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(), activeTag)
           if (newPolygon) setDrawnShapes([newPolygon, ...drawnShapes])
+          break
+        }
+        case 'select': {
+          setDrawnShapes(drawnShapes => drawnShapes.map(s => {
+            if (s.shape.rect) s.isFocused = isIntersectingRect(cursor_x, cursor_y, s.shape.rect)
+            else if (s.shape.polygon) s.isFocused = isIntersectingPolygon({ x: cursor_x, y: cursor_y }, s.shape.polygon.items)
+            return s
+          }))
+          redrawExistingShapes()
           break
         }
       }
@@ -324,6 +335,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         ]}
         farItems={[
           {
+            key: 'select',
+            text: 'Select',
+            onClick: chooseShape,
+            canCheck: true,
+            checked: activeShape === 'select',
+            iconProps: { iconName: 'TouchPointer', styles: { root: { fontSize: 20 } } },
+          },
+          {
             key: 'rect',
             text: 'Rectangle',
             onClick: chooseShape,
@@ -342,7 +361,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         ]} />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
-        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseLeave={onClick} onClick={onClick} />
+        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onClick={onClick} />
       </div>
     </div >
   )

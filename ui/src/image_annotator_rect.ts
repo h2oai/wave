@@ -32,7 +32,7 @@ export class RectAnnotator {
     this.ctx.closePath()
     if (isFocused) {
       this.ctx.beginPath()
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
+      this.ctx.fillStyle = strokeColor.substring(0, strokeColor.length - 2) + '0.2)'
       this.ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
       this.ctx.closePath()
       this.drawCircle(x1, y1, strokeColor)

@@ -9,41 +9,49 @@ export class PolygonAnnotator {
   constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
 
   onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
+    if (!this.ctx) return
+
+    this.ctx.beginPath()
+    this.ctx.fillStyle = color
+
     if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) {
-      const { x, y } = this.currPolygonPoints.at(-1)!
-      const firstPoint = this.currPolygonPoints[0]
-      this.drawLine(x, y, firstPoint.x, firstPoint.y)
+      const { x, y } = this.currPolygonPoints[0]
+      this.drawLine(x, y)
       const newPolygon = { shape: { polygon: { items: [...this.currPolygonPoints] } }, tag }
       this.currPolygonPoints = []
       return newPolygon
     }
     if (this.currPolygonPoints.length) {
-      const { x, y } = this.currPolygonPoints.at(-1)!
-      this.drawLine(x, y, cursor_x, cursor_y)
+      this.drawLine(cursor_x, cursor_y)
     }
-    this.drawCircle(cursor_x, cursor_y, color)
+    this.drawCircle(cursor_x, cursor_y)
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
   }
 
-  drawLine = (x1: F, y1: F, x2: F, y2: F) => {
+  drawLine = (x2: F, y2: F) => {
     if (!this.ctx) return
 
-    this.ctx.beginPath()
-    this.ctx.moveTo(x1, y1)
     this.ctx.lineTo(x2, y2)
     this.ctx.stroke()
   }
 
-  drawPolygon = (points: ImageAnnotatorPoint[], color: S, joinLastPoint = true) => {
-    if (!points.length) return
+  drawPolygon = (points: ImageAnnotatorPoint[], color: S, joinLastPoint = true, isFocused = false) => {
+    if (!points.length || !this.ctx) return
 
-    let prevPoint: ImageAnnotatorPoint | null = null
+    this.ctx.fillStyle = color
+    this.ctx.beginPath()
+    this.ctx.moveTo(points[0].x, points[0].y)
+
     points.forEach(({ x, y }) => {
-      this.drawCircle(x, y, color)
-      if (prevPoint) this.drawLine(prevPoint.x, prevPoint.y, x, y)
-      prevPoint = { x, y }
+      if (isFocused) this.drawCircle(x, y)
+      this.drawLine(x, y)
     })
-    if (joinLastPoint) this.drawLine(points.at(-1)!.x, points.at(-1)!.y, points[0].x, points[0].y)
+
+    if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
+    if (isFocused) {
+      this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
+      this.ctx.fill()
+    }
   }
 
   drawPreviewLine = (cursor_x: F, cursor_y: F, color: S) => {
@@ -59,15 +67,12 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawCircle = (x: F, y: F, fillColor: S) => {
+  drawCircle = (x: F, y: F) => {
     if (!this.ctx) return
 
-    this.ctx.beginPath()
-    this.ctx.fillStyle = fillColor
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
     this.ctx.fill(path)
-    this.ctx.closePath()
   }
 
 
@@ -77,4 +82,23 @@ export class PolygonAnnotator {
     const offset = 2 * ARC_RADIUS
     return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
   }
+}
+
+// Credit: https://gist.github.com/vlasky/d0d1d97af30af3191fc214beaf379acc?permalink_comment_id=3658988#gistcomment-3658988
+const cross = (x: ImageAnnotatorPoint, y: ImageAnnotatorPoint, z: ImageAnnotatorPoint) => (y.x - x.x) * (z.y - x.y) - (z.x - x.x) * (y.y - x.y)
+export const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[]) => {
+  let windingNumber = 0
+
+  points.forEach((point, idx) => {
+    const b = points[(idx + 1) % points.length]
+    if (point.y <= p.y) {
+      if (b.y > p.y && cross(point, b, p) > 0) {
+        windingNumber += 1
+      }
+    } else if (b.y <= p.y && cross(point, b, p) < 0) {
+      windingNumber -= 1
+    }
+  })
+
+  return windingNumber !== 0
 }

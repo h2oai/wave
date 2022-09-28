@@ -46,6 +46,10 @@ export const
     prop = prop.substring(1)
     return getComputedStyle(document.body).getPropertyValue(`--${prop}`).trim()
   },
+  rgb = (hex: S): [U, U, U] => {
+    const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
+  },
   // The width is applied to both form item container and component root which is a problem for percentages.
   // E.g. 50% width on both form container and component results in 25% of total form width instead of 50% (component takes 50% of 50% of the form = 25% total).
   formItemWidth = (width?: S) => width?.includes('%') ? '100%' : width,
@@ -572,10 +576,6 @@ const
         black: '#2f2f2f',
       },
     },
-  },
-  rgb = (hex: S): [U, U, U] => {
-    const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
   },
   themeRules = Fluent.themeRulesStandardCreator(),
   changeTheme = (themeName: S) => {
