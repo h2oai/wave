@@ -1,10 +1,12 @@
 import { F, S, U } from "h2o-wave"
-import { DrawnShape, ImageAnnotatorPoint } from "./image_annotator"
+import { DrawnShape, ImageAnnotatorPoint, Position } from "./image_annotator"
 import { ARC_RADIUS } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
   private ctx: CanvasRenderingContext2D | null
   private currPolygonPoints: ImageAnnotatorPoint[] = []
+  private draggedPoint: ImageAnnotatorPoint | null = null
+  private draggedShape: DrawnShape | null = null
 
   constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
 
@@ -26,6 +28,28 @@ export class PolygonAnnotator {
     }
     this.drawCircle(cursor_x, cursor_y)
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
+  }
+
+  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
+    if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
+      this.draggedPoint = null
+      this.draggedShape = null
+      return
+    }
+
+    const clickedPolygonPoint = focused.shape.polygon.items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
+    this.draggedPoint = clickedPolygonPoint || this.draggedPoint
+    if (this.draggedPoint) {
+      this.draggedPoint.x += cursor_x - this.draggedPoint.x
+      this.draggedPoint.y += cursor_y - this.draggedPoint.y
+    }
+    else if (intersected == focused || this.draggedShape) {
+      this.draggedShape = intersected || this.draggedShape
+      this.draggedShape?.shape.polygon?.items.forEach(p => {
+        p.x += cursor_x - p.x
+        p.y += cursor_y - p.y
+      })
+    }
   }
 
   drawLine = (x2: F, y2: F) => {
@@ -85,7 +109,8 @@ export class PolygonAnnotator {
 // Credit: https://gist.github.com/vlasky/d0d1d97af30af3191fc214beaf379acc?permalink_comment_id=3658988#gistcomment-3658988
 const cross = (x: ImageAnnotatorPoint, y: ImageAnnotatorPoint, z: ImageAnnotatorPoint) => (y.x - x.x) * (z.y - x.y) - (z.x - x.x) * (y.y - x.y)
 export
-  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[]) => {
+  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[], isFocused = false) => {
+    if (isFocused && points.some(point => isIntersectingPoint(point, p.x, p.y))) return true
     let windingNumber = 0
 
     points.forEach((point, idx) => {

@@ -111,12 +111,11 @@ const
     }
   }),
   eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
-  getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape, isSelect = false) => {
-    const intersected = drawnShapes.find(({ shape }) => {
-      if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect)
-      if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.items)
-    })
-
+  getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
+    if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
+    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.items, isFocused)
+  }),
+  getCorrectCursor = (cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
     let cursor = intersected
       ? 'pointer'
       : isSelect
@@ -204,7 +203,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         focused = drawnShapes.find(({ isFocused }) => isFocused)
 
       if (focused?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, focused.shape.rect)
-      startPosition.current = { x: cursor_x, y: cursor_y }
+      startPosition.current = { x: cursor_x, y: cursor_y, dragging: true }
     },
     onMouseMove = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
@@ -213,31 +212,30 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
         focused = drawnShapes.find(({ isFocused }) => isFocused),
-        clickStartPosition = startPosition.current
+        clickStartPosition = startPosition.current,
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
-      if (clickStartPosition) {
-        clickStartPosition.dragging = true
-
-        switch (activeShape) {
-          case 'rect': {
-            const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
-            const newRect = rectRef.current?.onMouseMove(clickStartPosition, cursor_x, cursor_y, focused, intersected)
-            if (newRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
-            redrawExistingShapes()
-            if (newRect?.rect) rectRef.current?.drawRect(newRect.rect, getCurrentTagColor(activeTag))
-            break
-          }
-          case 'polygon': {
-            redrawExistingShapes()
-            polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
-            if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
-            else canvas.style.cursor = 'crosshair'
-            break
-          }
+      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
+      switch (activeShape) {
+        case 'rect': {
+          const newRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+          if (newRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
+          redrawExistingShapes()
+          if (newRect?.rect) rectRef.current?.drawRect(newRect.rect, getCurrentTagColor(activeTag))
+          break
         }
-      }
-      else {
-        canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, focused, activeShape === 'select')
+        case 'polygon': {
+          redrawExistingShapes()
+          polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
+          if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
+          break
+        }
+        case 'select': {
+          if (focused?.shape.rect) rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+          else if (focused?.shape.polygon) polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+          redrawExistingShapes()
+          break
+        }
       }
     },
     onClick = (e: React.MouseEvent) => {
@@ -247,7 +245,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         start = startPosition.current,
         rect = canvas.getBoundingClientRect(),
-        { cursor_x, cursor_y } = eventToCursor(e, rect)
+        { cursor_x, cursor_y } = eventToCursor(e, rect),
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
       switch (activeShape) {
         case 'rect': {
@@ -261,20 +260,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'select': {
-          setDrawnShapes(drawnShapes => drawnShapes.map(s => {
-            if (s.shape.rect) s.isFocused = isIntersectingRect(cursor_x, cursor_y, s.shape.rect)
-            else if (s.shape.polygon) s.isFocused = isIntersectingPolygon({ x: cursor_x, y: cursor_y }, s.shape.polygon.items)
-
-            if (s.isFocused) setActiveTag(s.tag)
-            return s
-          }))
+          if (intersected) setActiveTag(intersected.tag)
+          setDrawnShapes(drawnShapes => drawnShapes.map(s => { s.isFocused = s === intersected; return s }))
           redrawExistingShapes()
           break
         }
       }
 
-      if (activeShape !== 'polygon') startPosition.current = undefined
-      canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused), activeShape === 'select')
+      startPosition.current = undefined
+      const focused = drawnShapes.find(({ isFocused }) => isFocused)
+      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return

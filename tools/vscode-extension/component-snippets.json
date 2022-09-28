@@ -230,6 +230,20 @@
     ],
     "description": "Create a minimal Wave Image."
   },
+  "Wave ImageAnnotatorPoint": {
+    "prefix": "w_image_annotator_point",
+    "body": [
+      "ui.image_annotator_point(x=$1, y=$2),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorPoint."
+  },
+  "Wave ImageAnnotatorPolygon": {
+    "prefix": "w_image_annotator_polygon",
+    "body": [
+      "ui.image_annotator_polygon(items=[\n\t\t$1\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorPolygon."
+  },
   "Wave ImageAnnotatorRect": {
     "prefix": "w_image_annotator_rect",
     "body": [
@@ -1161,6 +1175,20 @@
     ],
     "description": "Create a full Wave Image."
   },
+  "Wave Full ImageAnnotatorPoint": {
+    "prefix": "w_full_image_annotator_point",
+    "body": [
+      "ui.image_annotator_point(x=$1, y=$2),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorPoint."
+  },
+  "Wave Full ImageAnnotatorPolygon": {
+    "prefix": "w_full_image_annotator_polygon",
+    "body": [
+      "ui.image_annotator_polygon(items=[\n\t\t$1\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorPolygon."
+  },
   "Wave Full ImageAnnotatorRect": {
     "prefix": "w_full_image_annotator_rect",
     "body": [
@@ -1171,7 +1199,7 @@
   "Wave Full ImageAnnotatorShape": {
     "prefix": "w_full_image_annotator_shape",
     "body": [
-      "ui.image_annotator_shape(rect=${1:None}),$0"
+      "ui.image_annotator_shape(rect=${1:None}, polygon=${2:None}),$0"
     ],
     "description": "Create a full Wave ImageAnnotatorShape."
   },

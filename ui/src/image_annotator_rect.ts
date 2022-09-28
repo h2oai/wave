@@ -73,7 +73,9 @@ export class RectAnnotator {
     this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
   }
 
-  onMouseMove(clickStartPosition: Position, cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape) {
+  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
+    if (!clickStartPosition) return
+
     const
       x1 = clickStartPosition.x,
       y1 = clickStartPosition.y
@@ -141,8 +143,9 @@ export class RectAnnotator {
 }
 
 export const
-  isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect) => {
+  isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect, isFocused = false) => {
     if (!rect) return false
+    if (isFocused && getCorner(cursor_x, cursor_y, rect)) return true
     const
       { x2, x1, y2, y1 } = rect,
       x_min = Math.min(x1, x2),

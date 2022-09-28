@@ -223,6 +223,19 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_image_annotator_point" value="ui.image_annotator_point(x=$x$,y=$y$),$END$" description="Create a minimal Wave ImageAnnotatorPoint." toReformat="true" toShortenFQNames="true">
+    <variable name="x" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_image_annotator_polygon" value="ui.image_annotator_polygon(items=[&#10;	$items$	&#10;]),$END$" description="Create a minimal Wave ImageAnnotatorPolygon." toReformat="true" toShortenFQNames="true">
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_image_annotator_rect" value="ui.image_annotator_rect(x1=$x1$,y1=$y1$,x2=$x2$,y2=$y2$),$END$" description="Create a minimal Wave ImageAnnotatorRect." toReformat="true" toShortenFQNames="true">
     <variable name="x1" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y1" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1396,6 +1409,19 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_full_image_annotator_point" value="ui.image_annotator_point(x=$x$,y=$y$),$END$" description="Create Wave ImageAnnotatorPoint with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="x" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="y" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_annotator_polygon" value="ui.image_annotator_polygon(items=[&#10;	$items$	&#10;]),$END$" description="Create Wave ImageAnnotatorPolygon with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_full_image_annotator_rect" value="ui.image_annotator_rect(x1=$x1$,y1=$y1$,x2=$x2$,y2=$y2$),$END$" description="Create Wave ImageAnnotatorRect with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="x1" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="y1" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1405,8 +1431,9 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_image_annotator_shape" value="ui.image_annotator_shape(rect=$rect$),$END$" description="Create Wave ImageAnnotatorShape with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_image_annotator_shape" value="ui.image_annotator_shape(rect=$rect$,polygon=$polygon$),$END$" description="Create Wave ImageAnnotatorShape with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="rect" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="polygon" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
