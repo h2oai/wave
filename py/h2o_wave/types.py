@@ -6442,7 +6442,7 @@ class ImageAnnotatorRect:
 
 
 class ImageAnnotatorPoint:
-    """No documentation available.
+    """Create a polygon annotation point with x and y coordinates..
     """
     def __init__(
             self,

@@ -2797,7 +2797,7 @@ ui_image_annotator_rect <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Create a polygon annotation point with x and y coordinates..
 #'
 #' @param x `x` coordinate of the point.
 #' @param y `y` coordinate of the point.

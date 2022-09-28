@@ -8,6 +8,7 @@ import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px, rgb } from './theme'
 import { wave } from './ui'
 
+/** Create a polygon annotation point with x and y coordinates.. */
 export interface ImageAnnotatorPoint {
   /** `x` coordinate of the point. */
   x: F

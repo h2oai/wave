@@ -2402,7 +2402,7 @@ def image_annotator_point(
         x: float,
         y: float,
 ) -> ImageAnnotatorPoint:
-    """No documentation available.
+    """Create a polygon annotation point with x and y coordinates..
 
     Args:
         x: `x` coordinate of the point.
