@@ -39,6 +39,7 @@ export class PolygonAnnotator {
     if (!points.length || !this.ctx) return
 
     this.ctx.fillStyle = color
+    this.ctx.strokeStyle = color
     this.ctx.beginPath()
     this.ctx.moveTo(points[0].x, points[0].y)
 

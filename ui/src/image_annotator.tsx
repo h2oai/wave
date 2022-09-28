@@ -122,6 +122,31 @@ const
     else if (focused?.shape.rect) return getCornerCursor(focused.shape.rect, cursor_x, cursor_y) || 'crosshair'
     else if (intersected) return 'pointer'
     return 'crosshair'
+  },
+  mapShapesToWaveArgs = (shapes: DrawnShape[], aspectRatio: F) => {
+    return shapes.map(({ shape, tag }) => {
+      if (shape.rect) return {
+        tag,
+        shape: {
+          rect: {
+            x1: shape.rect.x1 * aspectRatio,
+            x2: shape.rect.x2 * aspectRatio,
+            y1: shape.rect.y1 * aspectRatio,
+            y2: shape.rect.y2 * aspectRatio,
+          }
+        }
+      }
+      else if (shape.polygon) return {
+        tag,
+        shape: {
+          polygon: {
+            items: shape.polygon.items.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio }))
+          }
+        }
+      }
+      return { tag, shape }
+    })
+
   }
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
@@ -140,8 +165,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [aspectRatio, setAspectRatio] = React.useState(1),
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
-    activateTag = React.useCallback((tagName: S) => () => setActiveTag(tagName), [setActiveTag]),
-    getCurrentTagColor = React.useCallback(() => colorsMap.get(activeTag) || cssVarValue('$red'), [activeTag, colorsMap]),
+    getCurrentTagColor = React.useCallback((tag: S) => colorsMap.get(tag) || cssVarValue('$red'), [colorsMap]),
     redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
       const ctx = ctxRef.current
@@ -149,13 +173,21 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       setDrawnShapes(shapes => {
-        shapes.forEach(({ shape, isFocused }) => {
-          if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(), isFocused)
-          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.items, getCurrentTagColor(), true, isFocused)
+        shapes.forEach(({ shape, isFocused, tag }) => {
+          if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(tag), isFocused)
+          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.items, getCurrentTagColor(tag), true, isFocused)
         })
         return shapes
       })
     }, [getCurrentTagColor]),
+    activateTag = React.useCallback((tagName: S) => () => {
+      setActiveTag(tagName)
+      setDrawnShapes(shapes => shapes.map(s => {
+        if (s.isFocused) s.tag = tagName
+        return s
+      }))
+      redrawExistingShapes()
+    }, [redrawExistingShapes]),
     onMouseDown = (e: React.MouseEvent) => {
       if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
@@ -187,12 +219,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             newShape = rectRef.current?.onMouseMove(clickStartPosition, cursor_x, cursor_y, focused, intersected)
             if (newShape) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
             redrawExistingShapes()
-            if (newShape?.rect) rectRef.current?.drawRect(newShape.rect, getCurrentTagColor())
+            if (newShape?.rect) rectRef.current?.drawRect(newShape.rect, getCurrentTagColor(activeTag))
             break
           }
           case 'polygon': {
             redrawExistingShapes()
-            polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor())
+            polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
             if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
             else canvas.style.cursor = 'crosshair'
             break
@@ -219,7 +251,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'polygon': {
-          const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(), activeTag)
+          const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(activeTag), activeTag)
           if (newPolygon) setDrawnShapes([newPolygon, ...drawnShapes])
           break
         }
@@ -227,6 +259,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           setDrawnShapes(drawnShapes => drawnShapes.map(s => {
             if (s.shape.rect) s.isFocused = isIntersectingRect(cursor_x, cursor_y, s.shape.rect)
             else if (s.shape.polygon) s.isFocused = isIntersectingPolygon({ x: cursor_x, y: cursor_y }, s.shape.polygon.items)
+            if (s.isFocused) setActiveTag(s.tag)
             return s
           }))
           redrawExistingShapes()
@@ -275,24 +308,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       polygonRef.current = new PolygonAnnotator(canvas)
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
-      setDrawnShapes((model.items || []).map(({ tag, shape }) => {
-        if (shape.rect) return {
-          tag,
-          shape: {
-            rect: {
-              x1: shape.rect.x1 * aspectRatio,
-              x2: shape.rect.x2 * aspectRatio,
-              y1: shape.rect.y1 * aspectRatio,
-              y2: shape.rect.y2 * aspectRatio,
-            }
-          }
-        }
-        return { tag, shape }
-      }))
-      redrawExistingShapes()
+      if (!drawnShapes.length) {
+        setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
+        redrawExistingShapes()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model.name, model.image, model.image_height, redrawExistingShapes, model.items])
+  }, [model.name, model.image, model.image_height, model.items])
 
   React.useEffect(() => {
     wave.args[model.name] = drawnShapes.map(({ tag, shape }) => {
@@ -304,6 +326,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             x2: shape.rect.x2 / aspectRatio,
             y1: shape.rect.y1 / aspectRatio,
             y2: shape.rect.y2 / aspectRatio,
+          }
+        }
+      }
+      else if (shape.polygon) return {
+        tag,
+        shape: {
+          polygon: {
+            items: shape.polygon.items.map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
           }
         }
       }
