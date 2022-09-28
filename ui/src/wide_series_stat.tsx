@@ -15,10 +15,10 @@
 import { Data, F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
+import { cards, Format, grid, substitute } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
-import { clas, cssVar, pc } from './theme'
+import { clas, cssVar } from './theme'
 import { bond } from './ui'
 
 const
@@ -28,12 +28,11 @@ const
       padding: grid.gap,
     },
     plot: {
-      display: 'flex',
-      width: pc(50),
+      width: '100%',
     },
     text: {
-      width: pc(50),
       paddingLeft: grid.gap,
+      alignSelf: 'center',
     },
     values: {
       display: 'flex',
@@ -47,6 +46,11 @@ const
       marginLeft: 5,
     }
   })
+
+const
+  MAX_CHAR_WIDTH = 14,
+  MAX_CHAR_AUX_WIDTH = 9,
+  MIN_CHAR_COUNT = 4
 
 /** Create a wide stat card displaying a primary value, an auxiliary value and a series plot. */
 interface State {
@@ -96,16 +100,22 @@ export const
               zeroValue={s.plot_zero_value}
               curve={s.plot_curve || 'linear'}
             />
-          )
-
+          ),
+        value = substitute(s.value, s.data),
+        auxValue = substitute(s.aux_value, s.data),
+        valueNonDigitCharCount = value.match(/[^0-9-]/g).length,
+        auxValueNonDigitCharCount = auxValue.match(/[^0-9-]/g).length,
+        // This prevents the jumping layout in the most common scenarios when numbers are changing between ones to tens. 
+        valueContainerWidth = MAX_CHAR_WIDTH * Math.max(value.length, MIN_CHAR_COUNT + valueNonDigitCharCount),
+        auxValueContainerWidth = MAX_CHAR_AUX_WIDTH * Math.max(auxValue.length, MIN_CHAR_COUNT + auxValueNonDigitCharCount)
       return (
         <div data-test={name} className={css.card}>
           <div className={css.plot}>{plot}</div>
           <div className={css.text}>
             <Format data={data} format={s.title} className='wave-s12 wave-w6' />
             <div className={css.values}>
-              <Format data={data} format={s.value} className={clas(css.value, 'wave-s24 wave-w3')} />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
+              <Format data={data} format={s.value} style={{ minWidth: valueContainerWidth }} className={clas(css.value, 'wave-s24 wave-w3')} />
+              <Format data={data} format={s.aux_value} style={{ minWidth: auxValueContainerWidth }} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         </div>

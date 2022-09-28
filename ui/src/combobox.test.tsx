@@ -18,11 +18,13 @@ import React from 'react'
 import { Combobox, XCombobox } from './combobox'
 import { wave } from './ui'
 
-const name = 'combobox'
-const comboboxProps: Combobox = { name, choices: ['A', 'B', 'C'] }
-describe('Combobox.tsx', () => {
-  beforeEach(() => { wave.args[name] = null })
+const
+  name = 'combobox',
+  comboboxProps: Combobox = { name, choices: ['A', 'B', 'C'] },
+  pushMock = jest.fn()
+  wave.push = pushMock
 
+describe('Combobox.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XCombobox model={comboboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
@@ -76,14 +78,45 @@ describe('Combobox.tsx', () => {
       })
 
       it('Calls sync when trigger is on', () => {
-        const pushMock = jest.fn()
-        wave.push = pushMock
         const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, trigger: true }} />)
     
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('A'))
     
         expect(pushMock).toHaveBeenCalled()
+      })
+
+      it('Sets wave args as string when a new valued is typed and enter is pressed - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+        expect(wave.args[name]).toBe('A')
+        userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
+        expect(wave.args[name]).toBe('D')
+      })
+
+      it('Sets wave args as string when a new valued is typed and user clicks away - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+    
+        expect(wave.args[name]).toBe('A')
+
+        userEvent.type(getByRole('combobox'), '{backspace}D')
+        // fireEvent.blur(getByRole('combobox')) doesn't trigger blur. Might be related to https://github.com/testing-library/user-event/issues/592
+        getByRole('combobox').blur()
+        fireEvent.focusOut(getByRole('combobox'))
+
+        expect(getByRole('combobox')).not.toHaveFocus()
+        expect(wave.args[name]).toBe('D')
+      })
+
+      it('Sets wave args as string when a new valued is typed and tab is pressed - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+    
+        expect(wave.args[name]).toBe('A')
+
+        userEvent.type(getByRole('combobox'), '{backspace}D')
+        userEvent.tab()
+
+        expect(getByRole('combobox')).not.toHaveFocus()
+        expect(wave.args[name]).toBe('D')
       })
     })
 
@@ -223,8 +256,6 @@ describe('Combobox.tsx', () => {
       })
 
       it('Calls sync when trigger is on', () => {
-        const pushMock = jest.fn()
-        wave.push = pushMock
         const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, values: [], trigger: true }} />)
     
         fireEvent.click(getByRole('presentation', { hidden: true }))

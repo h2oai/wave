@@ -1324,6 +1324,7 @@ ui_mini_buttons <- function(
 #' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param required True if this is a required field. Defaults to False.
 #' @return A FileUpload instance.
 #' @export
 ui_file_upload <- function(
@@ -1337,7 +1338,8 @@ ui_file_upload <- function(
   width = NULL,
   compact = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  required = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("multiple", "logical", multiple)
@@ -1349,6 +1351,7 @@ ui_file_upload <- function(
   .guard_scalar("compact", "logical", compact)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("required", "logical", required)
   .o <- list(file_upload=list(
     name=name,
     label=label,
@@ -1360,7 +1363,8 @@ ui_file_upload <- function(
     width=width,
     compact=compact,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    required=required))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2935,6 +2939,70 @@ ui_tags <- function(
   .guard_vector("items", "WaveTag", items)
   .o <- list(tags=list(
     items=items))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a time picker.
+#' 
+#' A time picker allows a user to pick a time value.
+#'
+#' @param name An identifying name for this component.
+#' @param label Text to be displayed alongside the component.
+#' @param placeholder A string that provides a brief hint to the user as to what kind of information is expected in the field.
+#' @param value The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'
+#' @param disabled True if this field is disabled.
+#' @param width The width of the time picker, e.g. '100px'. Defaults to '100%'.
+#' @param visible True if the component should be visible. Defaults to True.
+#' @param trigger True if the form should be submitted when the time is selected.
+#' @param required True if this is a required field. Defaults to False.
+#' @param hour_format Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`.
+#' @param min The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
+#' @param max The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
+#' @param minutes_step Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
+#' @return A TimePicker instance.
+#' @export
+ui_time_picker <- function(
+  name,
+  label = NULL,
+  placeholder = NULL,
+  value = NULL,
+  disabled = NULL,
+  width = NULL,
+  visible = NULL,
+  trigger = NULL,
+  required = NULL,
+  hour_format = NULL,
+  min = NULL,
+  max = NULL,
+  minutes_step = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("placeholder", "character", placeholder)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("required", "logical", required)
+  .guard_scalar("hour_format", "character", hour_format)
+  .guard_scalar("min", "character", min)
+  .guard_scalar("max", "character", max)
+  .guard_scalar("minutes_step", "numeric", minutes_step)
+  .o <- list(time_picker=list(
+    name=name,
+    label=label,
+    placeholder=placeholder,
+    value=value,
+    disabled=disabled,
+    width=width,
+    visible=visible,
+    trigger=trigger,
+    required=required,
+    hour_format=hour_format,
+    min=min,
+    max=max,
+    minutes_step=minutes_step))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

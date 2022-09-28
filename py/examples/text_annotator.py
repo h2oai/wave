@@ -23,8 +23,11 @@ async def serve(q: Q):
                 ],
                 items=[
                     ui.text_annotator_item(text='Killer Mike', tag='p'),
-                    ui.text_annotator_item(text=' is a member, of the hip hop supergroup '),  # no tag
+                    ui.text_annotator_item(text=' is a member of the hip hop supergroup '),  # no tag
                     ui.text_annotator_item(text='Run the Jewels', tag='o'),
+                    ui.text_annotator_item(text='.\nIt is also known by the initials '),
+                    ui.text_annotator_item(text='RTJ', tag='o'),
+                    ui.text_annotator_item(text='.')
                 ],
             ),
             ui.button(name='submit', label='Submit', primary=True)

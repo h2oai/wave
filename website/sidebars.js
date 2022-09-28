@@ -136,6 +136,7 @@ module.exports = {
           "widgets/form/text_annotator",
           "widgets/form/text",
           "widgets/form/textbox",
+          "widgets/form/time_picker",
           "widgets/form/toggle",
           "widgets/form/vega_visualization",
           "widgets/form/visualization"

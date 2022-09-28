@@ -284,9 +284,13 @@ export
       },
       handleMouseDown = (startElProps: TokenMouseEventProps) => () => startElPropsRef.current = startElProps,
       handleMouseUp = (endElProps: TokenMouseEventProps) => () => annotate(endElProps),
-      handleMouseLeave = (endElProps: TokenMouseEventProps) => (ev: React.MouseEvent<HTMLSpanElement>) => {
-        const nodeName = (ev.relatedTarget as any)?.nodeName
-        if (startElPropsRef.current !== undefined && nodeName !== 'P' && nodeName !== 'MARK') annotate(endElProps) // nodeName prop is not typed yet
+      // handles the selection in case mouse up event is fired when cursor is not above text
+      handleSelectionFinish = (ev: React.MouseEvent<HTMLSpanElement>) => {
+        const nodeName = (ev.relatedTarget as any)?.nodeName // nodeName prop is not typed yet
+        if (startElPropsRef.current !== undefined && nodeName !== 'P' && nodeName !== 'MARK') {
+          const keys = window.getSelection()?.focusNode?.parentElement?.dataset?.keys
+          if (keys) annotate(JSON.parse(keys))
+        }
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -315,21 +319,26 @@ export
           ]}
           />
         </div>
-        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')}>{
+        <div className={clas(css.content, 'wave-s16 wave-t7 wave-w3')} onMouseUp={handleSelectionFinish}>{
           tokens.map(({ start, end, text, tag }, idx) => {
             const activeColor = activeTag ? tagColorMap.get(activeTag) : undefined
             return (
               // Use paragraph instead of span to support text highlight.
-              <p
-                key={idx}
-                onMouseDown={handleMouseDown({ key: idx, start, end })}
-                onMouseUp={handleMouseUp({ key: idx, start, end })}
-                onMouseLeave={handleMouseLeave({ key: idx, start, end })}
-                style={{ display: 'inline' }}
-                className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
-              >
-                {tag ? getMark(text, idx, tag) : text}
-              </p>
+              text === '\n' || text === '\r'
+                // Handle newline escape characters
+                ? <br key={idx}></br>
+                // Use paragraph instead of span to support text highlight.
+                : <p
+                  key={idx}
+                  // data-keys keeps state in DOM to access it via window.getSelection() API in case mouse up event is fired when cursor is not above <p/> element
+                  data-keys={`{ "key": ${idx}, "start": ${start}, "end": ${end} }`}
+                  onMouseDown={handleMouseDown({ key: idx, start, end })}
+                  onMouseUp={handleMouseUp({ key: idx, start, end })}
+                  style={{ display: 'inline', padding: '4px 0px' }}
+                  className={activeColor ? style({ $nest: { '&::selection': { background: activeColor, color: getContrast(activeColor) } } }) : undefined}
+                >
+                  {tag ? getMark(text, idx, tag) : text}
+                </p>
             )
           })
         }</div>

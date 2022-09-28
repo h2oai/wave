@@ -106,7 +106,7 @@ def fill_metadata(node: Any, file_metadata: FileMetadata) -> None:
 
 
 def get_files_to_parse(root: str, py_files: List[str]) -> List[str]:
-    for f in os.scandir(root):
+    for f in sorted(os.scandir(root), key=lambda x: (x.is_dir(), x.name)):
         # Ignore all .dirs and python venvs.
         if f.is_dir() and not f.name.startswith('.') and f.name != 'node_modules' and 'pyvenv.cfg' not in os.listdir(f.path):
             get_files_to_parse(f.path, py_files)
@@ -145,7 +145,7 @@ def get_initial_completions(root: str) -> Dict[str, FileMetadata]:
     files_to_parse = get_files_to_parse(root, [])
     FileMetadata.set_files_to_parse(files_to_parse)
     for file in files_to_parse:
-        completion = fill_completion(read_file(file))
+        completion = fill_completion(read_file(file), metadata=store.get(file))
         store[file] = completion
         for dep in completion.deps:
             if dep in store:

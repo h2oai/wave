@@ -99,6 +99,7 @@ native Wave components and use custom HTML only as a last resort solution.
 - [text](/docs/widgets/form/text)
 - [text_annotator](/docs/widgets/form/text_annotator)
 - [textbox](/docs/widgets/form/textbox)
+- [time_picker](/docs/widgets/form/time_picker)
 - [toggle](/docs/widgets/form/toggle)
 - [vega_visualization](/docs/widgets/form/vega_visualization)
 - [visualization](/docs/widgets/form/visualization)

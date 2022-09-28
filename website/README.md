@@ -9,8 +9,11 @@ git clone https://github.com/h2oai/wave.git
 cd wave/py
 make setup
 make docs
-cd ../website
-npm install
+cd ../tools/showcase
+make setup
+make generate
+cd ../../website
+make ci
 ```
 
 ## Local Development

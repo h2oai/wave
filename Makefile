@@ -14,6 +14,7 @@ setup: ## Set up development dependencies
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 	cd tools/showcase && $(MAKE) setup
+	cd tools/vscode-extension && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
@@ -48,12 +49,12 @@ build-r-nightly: ## Build nightly R client.
 build-apps: ## Prepare apps for HAC upload.
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
-	cp -r py/apps/ py/tmp/
+	cp -r py/apps/* py/tmp/
 	find py/tmp -type f -name '*.toml' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	find py/tmp -type f -name 'requirements.txt' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
 	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	rsync -a py/examples/theme_generator.py py/tmp/theme-generator --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	cp py/examples/theme_generator.py py/tmp/theme-generator
 	cp tools/vscode-extension/base-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/server/utils.py py/tmp/tour/examples/tour_autocomplete_utils.py
@@ -75,6 +76,9 @@ test-ui-ci: ## Run UI unit tests in CI mode
 
 test-py-ci: ## Run Python unit tests in CI mode
 	cd py && $(MAKE) test
+
+test-vsc-ci: ## Run Python unit tests in CI mode
+	cd tools/vscode-extension && $(MAKE) test
 
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
@@ -193,12 +197,14 @@ publish-pycharm: ## Publish PyCharm plugin
 	cd tools/intellij-plugin && $(MAKE) publish
 	
 publish-vsc-extension: ## Publish VS Code extension
-	cd tools/vscode-extension && $(MAKE) setup && $(MAKE) test && $(MAKE) publish
+	cd tools/vscode-extension && $(MAKE) publish
 	
 .PHONY: tag
 tag: ## Bump version and tag
 	cd py && $(MAKE) tag
 	cd r && $(MAKE) tag
+	cd tools/vscode-extension && $(MAKE) tag
+	cd tools/intellij-plugin && $(MAKE) tag
 	git add .
 	git commit -m "chore: Release v$(VERSION)"
 	git tag v$(VERSION)
