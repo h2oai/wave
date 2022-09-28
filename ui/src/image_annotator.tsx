@@ -2,8 +2,8 @@ import * as Fluent from '@fluentui/react'
 import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
-import { RectAnnotator, getCorner, isIntersectingRect } from './image_annotator_rect'
+import { getPolygonPointCursor, isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
+import { getRectCornerCursor, isIntersectingRect, RectAnnotator } from './image_annotator_rect'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px, rgb } from './theme'
 import { wave } from './ui'
@@ -111,17 +111,23 @@ const
     }
   }),
   eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
-  getCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
-    const corner = getCorner(cursor_x, cursor_y, shape)
-    if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'
-    if (corner === 'bottomLeft' || corner === 'topRight') return 'nesw-resize'
-  },
-  getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape) => {
-    const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
-    if (intersected?.isFocused && intersected.shape.rect) return getCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
-    else if (focused?.shape.rect) return getCornerCursor(focused.shape.rect, cursor_x, cursor_y) || 'crosshair'
-    else if (intersected) return 'pointer'
-    return 'crosshair'
+  getCorrectCursor = (drawnShapes: DrawnShape[], cursor_x: U, cursor_y: U, focused?: DrawnShape, isSelect = false) => {
+    const intersected = drawnShapes.find(({ shape }) => {
+      if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect)
+      if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.items)
+    })
+
+    let cursor = intersected
+      ? 'pointer'
+      : isSelect
+        ? 'auto'
+        : 'crosshair'
+    if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
+    else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y) || cursor
+    else if (intersected?.isFocused && intersected.shape.polygon) cursor = 'move'
+    else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.items, cursor_x, cursor_y) || cursor
+
+    return cursor
   },
   mapShapesToWaveArgs = (shapes: DrawnShape[], aspectRatio: F) => {
     return shapes.map(({ shape, tag }) => {
@@ -210,16 +216,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         clickStartPosition = startPosition.current
 
       if (clickStartPosition) {
-        const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
-        let newShape = null
         clickStartPosition.dragging = true
 
         switch (activeShape) {
           case 'rect': {
-            newShape = rectRef.current?.onMouseMove(clickStartPosition, cursor_x, cursor_y, focused, intersected)
-            if (newShape) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
+            const intersected = drawnShapes.find(shape => isIntersectingRect(cursor_x, cursor_y, shape.shape.rect))
+            const newRect = rectRef.current?.onMouseMove(clickStartPosition, cursor_x, cursor_y, focused, intersected)
+            if (newRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
             redrawExistingShapes()
-            if (newShape?.rect) rectRef.current?.drawRect(newShape.rect, getCurrentTagColor(activeTag))
+            if (newRect?.rect) rectRef.current?.drawRect(newRect.rect, getCurrentTagColor(activeTag))
             break
           }
           case 'polygon': {
@@ -232,7 +237,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
       else {
-        canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, focused)
+        canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, focused, activeShape === 'select')
       }
     },
     onClick = (e: React.MouseEvent) => {
@@ -259,6 +264,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           setDrawnShapes(drawnShapes => drawnShapes.map(s => {
             if (s.shape.rect) s.isFocused = isIntersectingRect(cursor_x, cursor_y, s.shape.rect)
             else if (s.shape.polygon) s.isFocused = isIntersectingPolygon({ x: cursor_x, y: cursor_y }, s.shape.polygon.items)
+
             if (s.isFocused) setActiveTag(s.tag)
             return s
           }))
@@ -268,7 +274,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
 
       if (activeShape !== 'polygon') startPosition.current = undefined
-      canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused))
+      canvas.style.cursor = getCorrectCursor(drawnShapes, cursor_x, cursor_y, drawnShapes.find(({ isFocused }) => isFocused), activeShape === 'select')
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return

@@ -76,30 +76,36 @@ export class PolygonAnnotator {
     this.ctx.fill(path)
   }
 
-
   isIntersectingFirstPoint = (cursor_x: F, cursor_y: F) => {
     if (!this.currPolygonPoints.length) return false
-    const { x, y } = this.currPolygonPoints[0]
-    const offset = 2 * ARC_RADIUS
-    return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
+    return isIntersectingPoint(this.currPolygonPoints[0], cursor_x, cursor_y)
   }
 }
 
 // Credit: https://gist.github.com/vlasky/d0d1d97af30af3191fc214beaf379acc?permalink_comment_id=3658988#gistcomment-3658988
 const cross = (x: ImageAnnotatorPoint, y: ImageAnnotatorPoint, z: ImageAnnotatorPoint) => (y.x - x.x) * (z.y - x.y) - (z.x - x.x) * (y.y - x.y)
-export const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[]) => {
-  let windingNumber = 0
+export
+  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[]) => {
+    let windingNumber = 0
 
-  points.forEach((point, idx) => {
-    const b = points[(idx + 1) % points.length]
-    if (point.y <= p.y) {
-      if (b.y > p.y && cross(point, b, p) > 0) {
-        windingNumber += 1
+    points.forEach((point, idx) => {
+      const b = points[(idx + 1) % points.length]
+      if (point.y <= p.y) {
+        if (b.y > p.y && cross(point, b, p) > 0) {
+          windingNumber += 1
+        }
+      } else if (b.y <= p.y && cross(point, b, p) < 0) {
+        windingNumber -= 1
       }
-    } else if (b.y <= p.y && cross(point, b, p) < 0) {
-      windingNumber -= 1
-    }
-  })
+    })
 
-  return windingNumber !== 0
-}
+    return windingNumber !== 0
+  },
+  isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F) => {
+    const offset = 2 * ARC_RADIUS
+    return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
+  },
+  getPolygonPointCursor = (items: ImageAnnotatorPoint[], cursor_x: F, cursor_y: F) => {
+    const isIntersecting = items.some(p => isIntersectingPoint(p, cursor_x, cursor_y))
+    return isIntersecting ? 'move' : ''
+  }

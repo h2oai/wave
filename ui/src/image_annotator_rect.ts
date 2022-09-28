@@ -162,4 +162,9 @@ export const
     else if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'topRight'
     else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'bottomLeft'
     else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'bottomRight'
+  },
+  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
+    const corner = getCorner(cursor_x, cursor_y, shape)
+    if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'
+    if (corner === 'bottomLeft' || corner === 'topRight') return 'nesw-resize'
   }
