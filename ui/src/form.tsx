@@ -244,7 +244,7 @@ export const
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify || 'start'}
+      alignment={m.justify || 'center'}
       inset={m.inset}
       align={m.align}
     />
