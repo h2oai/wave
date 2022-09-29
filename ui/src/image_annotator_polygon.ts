@@ -44,11 +44,13 @@ export class PolygonAnnotator {
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
     else if (intersected == focused || this.draggedShape) {
-      this.draggedShape = intersected || this.draggedShape
+      this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       this.draggedShape?.shape.polygon?.items.forEach(p => {
-        p.x += cursor_x - p.x
-        p.y += cursor_y - p.y
+        p.x += cursor_x - clickStartPosition!.x
+        p.y += cursor_y - clickStartPosition!.y
       })
+      clickStartPosition.x = cursor_x
+      clickStartPosition.y = cursor_y
     }
   }
 

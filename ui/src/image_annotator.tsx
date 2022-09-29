@@ -129,31 +129,22 @@ const
 
     return cursor
   },
-  mapShapesToWaveArgs = (shapes: DrawnShape[], aspectRatio: F) => {
-    return shapes.map(({ shape, tag }) => {
-      if (shape.rect) return {
-        tag,
-        shape: {
-          rect: {
-            x1: shape.rect.x1 * aspectRatio,
-            x2: shape.rect.x2 * aspectRatio,
-            y1: shape.rect.y1 * aspectRatio,
-            y2: shape.rect.y2 * aspectRatio,
-          }
+  mapShapesToWaveArgs = (shapes: DrawnShape[], aspectRatio: F) => shapes.map(({ shape, tag }) => {
+    if (shape.rect) return {
+      tag,
+      shape: {
+        rect: {
+          x1: shape.rect.x1 * aspectRatio,
+          x2: shape.rect.x2 * aspectRatio,
+          y1: shape.rect.y1 * aspectRatio,
+          y2: shape.rect.y2 * aspectRatio,
         }
       }
-      else if (shape.polygon) return {
-        tag,
-        shape: {
-          polygon: {
-            items: shape.polygon.items.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio }))
-          }
-        }
-      }
-      return { tag, shape }
-    })
+    }
+    else if (shape.polygon) return { tag, shape: { polygon: { items: shape.polygon.items.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })) } } }
+    return { tag, shape }
+  })
 
-  }
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
