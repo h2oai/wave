@@ -86,9 +86,8 @@ export type Position = {
   dragging?: B
 }
 
-export type DrawnShape = ImageAnnotatorItem & {
-  isFocused?: B
-}
+export type DrawnShape = ImageAnnotatorItem & { isFocused?: B }
+export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
 const
   css = stylesheet({
@@ -153,7 +152,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       return [tag.name, `rgba(${R}, ${G}, ${B}, 1)`]
     })), [model.tags]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
-    [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('rect'),
+    [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
+    // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
@@ -223,9 +223,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'select': {
-          if (focused?.shape.rect) rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-          else if (focused?.shape.polygon) polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-          redrawExistingShapes()
+          // If left mouse btn is not held during moving, ignore.
+          if (e.buttons !== 1) break
+          if (focused?.shape.rect) {
+            rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            redrawExistingShapes()
+          }
+          else if (focused?.shape.polygon) {
+            polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            redrawExistingShapes()
+          }
           break
         }
       }

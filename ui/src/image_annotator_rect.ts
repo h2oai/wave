@@ -6,6 +6,7 @@ const
   MIN_RECT_HEIGHT = 5
 export const ARC_RADIUS = 4
 
+// Needs some canvas-related refactoring love.
 export class RectAnnotator {
   private resizedCorner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   private movedRect?: DrawnShape
@@ -13,32 +14,29 @@ export class RectAnnotator {
 
   constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
 
-  drawCircle = (x: U, y: U, fillColor: S) => {
+  drawCircle = (x: U, y: U) => {
     if (!this.ctx) return
-    this.ctx.beginPath()
-    this.ctx.fillStyle = fillColor
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
+    this.ctx.lineWidth = 2
+    this.ctx.strokeStyle = '#000'
+    this.ctx.fillStyle = '#FFF'
     this.ctx.fill(path)
-    this.ctx.closePath()
+    this.ctx.stroke(path)
   }
 
   drawRect = ({ x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
     if (!this.ctx) return
-    this.ctx.beginPath()
     this.ctx.lineWidth = 3
     this.ctx.strokeStyle = strokeColor
     this.ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
-    this.ctx.closePath()
     if (isFocused) {
-      this.ctx.beginPath()
       this.ctx.fillStyle = strokeColor.substring(0, strokeColor.length - 2) + '0.2)'
       this.ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
-      this.ctx.closePath()
-      this.drawCircle(x1, y1, strokeColor)
-      this.drawCircle(x2, y1, strokeColor)
-      this.drawCircle(x2, y2, strokeColor)
-      this.drawCircle(x1, y2, strokeColor)
+      this.drawCircle(x1, y1)
+      this.drawCircle(x2, y1)
+      this.drawCircle(x2, y2)
+      this.drawCircle(x1, y2)
     }
   }
 

@@ -1,5 +1,5 @@
 import { F, S, U } from "h2o-wave"
-import { DrawnShape, ImageAnnotatorPoint, Position } from "./image_annotator"
+import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, Position } from "./image_annotator"
 import { ARC_RADIUS } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
@@ -23,10 +23,8 @@ export class PolygonAnnotator {
       this.currPolygonPoints = []
       return newPolygon
     }
-    if (this.currPolygonPoints.length) {
-      this.drawLine(cursor_x, cursor_y)
-    }
-    this.drawCircle(cursor_x, cursor_y)
+    if (this.currPolygonPoints.length) this.drawLine(cursor_x, cursor_y)
+
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
   }
 
@@ -61,23 +59,42 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawPolygon = (points: ImageAnnotatorPoint[], color: S, joinLastPoint = true, isFocused = false) => {
+  drawPolygon = (points: DrawnPoint[], color: S, joinLastPoint = true, isFocused = false) => {
     if (!points.length || !this.ctx) return
+    if (joinLastPoint && isFocused) {
+      points = points.reduce((prev, curr, idx) => {
+        if (!curr.isAux) prev.push(curr)
+
+        if (idx !== points.length - 1 && !curr.isAux)
+          prev.push({
+            x: (curr.x + points[idx + 1].x) / 2,
+            y: (curr.y + points[idx + 1].y) / 2,
+            isAux: true
+          })
+
+        return prev
+      }, [] as DrawnPoint[])
+
+      // Insert aux also between last and first point.
+      points.push({
+        x: (points[0].x + points.at(-1)!.x) / 2,
+        y: (points[0].y + points.at(-1)!.y) / 2,
+        isAux: true
+      })
+    }
 
     this.ctx.fillStyle = color
     this.ctx.strokeStyle = color
     this.ctx.beginPath()
     this.ctx.moveTo(points[0].x, points[0].y)
 
-    points.forEach(({ x, y }) => {
-      if (isFocused) this.drawCircle(x, y)
-      this.drawLine(x, y)
-    })
-
+    points.forEach(({ x, y }) => this.drawLine(x, y))
     if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
+
     if (isFocused) {
       this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
       this.ctx.fill()
+      points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, isAux))
     }
   }
 
@@ -94,12 +111,16 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawCircle = (x: F, y: F) => {
+  drawPoint = (x: F, y: F, isAux = false) => {
     if (!this.ctx) return
 
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
+    this.ctx.lineWidth = 2
+    this.ctx.strokeStyle = isAux ? '#5e5c5c' : '#000'
+    this.ctx.fillStyle = isAux ? '#e6e6e6' : '#FFF'
     this.ctx.fill(path)
+    this.ctx.stroke(path)
   }
 
   isIntersectingFirstPoint = (cursor_x: F, cursor_y: F) => {
