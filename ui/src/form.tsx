@@ -173,6 +173,8 @@ interface Inline {
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
+  /** Add align prop to Inline component for all flexbox properties */
+  align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
 }
 
 /** Create a form. */
@@ -215,9 +217,10 @@ const
   })
 
 type XComponentAlignment = 'start' | 'end' | 'center' | 'between' | 'around'
+type YComponentAlignment = 'start' | 'end' | 'center' | 'baseline' | 'stretch'
 
 export const
-  XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
+  XComponents = ({ items, alignment, inset, align }: { items: Component[], alignment?: XComponentAlignment, inset?: B, align?: YComponentAlignment }) => {
     const
       components = items.map((m: any, i) => {
         const
@@ -235,13 +238,15 @@ export const
           </div>
         )
       })
-    return <div className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '')} style={{ justifyContent: justifications[alignment || ''] }}>{components}</div>
+      /** Add align prop to return statement */
+    return <div className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '', align ? css.align : '' )} style={{ justifyContent: justifications[alignment || ''] }}>{components}</div>
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify || 'center'}
+      alignment={m.justify || 'start'}
       inset={m.inset}
+      align={m.align}
     />
   )
 
