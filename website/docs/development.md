@@ -97,14 +97,14 @@ You can set up a local [Keycloak](https://www.keycloak.org/) instance for develo
 
 First, create a local directory to persist all the realms, clients, and users you'll be adding to Keycloak:
 
-```
+```sh
 mkdir ~/.keycloak
 ```
 
 Run Keycloak using Docker:
 
-```
-$ docker run \
+```sh
+docker run \
   -p 8080:8080 \
   -e KEYCLOAK_USER=admin \
   -e KEYCLOAK_PASSWORD=admin \
@@ -118,6 +118,10 @@ Keycloak should now be running at <http://localhost:8080/>.
 
 Next, create a *client* in Keycloak to represent our app:
 
+:::tip
+You can also use admin user for logging in with credentials `admin/admin` if you just need a quick testing.
+:::
+
 - Go to Keycloak at <http://localhost:8080/>.
 - Click on "Administration Console".
 - Log in with username `admin`, password `admin`.
@@ -128,6 +132,7 @@ Next, create a *client* in Keycloak to represent our app:
   - In the "Settings" tab, change "Access Type" to `confidential`.
   - Set "Valid Redirect URIs" to `*`.
   - Click "Save".
+  - Click the "Credentials" tab.
   - Copy the "Secret" field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
 
 ### Add test users
