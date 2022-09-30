@@ -376,5 +376,49 @@ describe('ImageAnnotator.tsx', () => {
         { shape: { polygon: { items: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
       ])
     })
+
+    it('Moves polygon by a single point correctly', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForImgLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.mouseDown(canvasEl, { clientX: 105, clientY: 100 })
+      fireEvent.mouseMove(canvasEl, { clientX: 105, clientY: 100, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 100, clientY: 200, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 100, clientY: 200 })
+
+      expect(wave.args[name]).toMatchObject([
+        rect,
+        { shape: { polygon: { items: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+      ])
+    })
+
+    it.only('Moves polygon by a single point, then moves it whole', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForImgLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.mouseDown(canvasEl, { clientX: 105, clientY: 100 })
+      fireEvent.mouseMove(canvasEl, { clientX: 105, clientY: 100, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 100, clientY: 200, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 100, clientY: 200 })
+
+      expect(wave.args[name]).toMatchObject([
+        rect,
+        { shape: { polygon: { items: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+      ])
+
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 150 })
+      fireEvent.mouseDown(canvasEl, { clientX: 180, clientY: 150 })
+      fireEvent.mouseMove(canvasEl, { clientX: 190, clientY: 160, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 190, clientY: 160 })
+
+      expect(wave.args[name]).toMatchObject([
+        rect,
+        { shape: { polygon: { items: [{ x: 110, y: 210 }, { x: 250, y: 110 }, { x: 250, y: 230 },] } }, tag: 'person' },
+      ])
+    })
   })
 })

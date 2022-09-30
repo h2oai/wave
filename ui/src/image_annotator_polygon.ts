@@ -10,6 +10,11 @@ export class PolygonAnnotator {
 
   constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
 
+  resetDragging() {
+    this.draggedPoint = null
+    this.draggedShape = null
+  }
+
   onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
     if (!this.ctx) return
 

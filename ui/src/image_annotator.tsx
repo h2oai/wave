@@ -260,6 +260,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         case 'select': {
           if (intersected) setActiveTag(intersected.tag)
+          polygonRef.current?.resetDragging()
           setDrawnShapes(drawnShapes => drawnShapes.map(s => { s.isFocused = s === intersected; return s }))
           redrawExistingShapes()
           break
