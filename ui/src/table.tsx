@@ -849,7 +849,7 @@ export const
         if (items.length > 10) return 500
 
         const
-          topToolbarHeight = searchableKeys.length || groupable ? (groupable ? 80 : 42) : 0,
+          topToolbarHeight = searchableKeys.length ? 42 : groupable ? 80 : 0,
           headerHeight = 50,
           rowHeight = m.columns.some(c => c.cell_type?.progress) ? 76 : 48,
           footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 46 : 0,
@@ -941,7 +941,7 @@ export const
           componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
-            root: { top: groupable || searchableKeys.length ? (groupable ? 80 : 42) : 0, bottom: shouldShowFooter ? 46 : 0 },
+            root: { top: searchableKeys.length ? 42 : groupable ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
             stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
