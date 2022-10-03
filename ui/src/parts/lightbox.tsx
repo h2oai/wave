@@ -34,12 +34,12 @@ const
             width: '100%',
             height: '100%',
             zIndex: 1,
-            backgroundColor: '#000000', // TODO:
+            backgroundColor: 'rgba(0, 0, 0, 0.9)', // TODO:
             touchAction: 'pinch-zoom' // TODO:
         },
         img: {
             // flexGrow: 1,
-            maxWidth: '100%',
+            maxWidth: '100%', // TODO: 3000x2000 vertical scrollbar
             alignSelf: 'center',
             // objectFit: 'scale-down',
             transformOrigin: 'top left',
@@ -64,20 +64,23 @@ const
             width: '100%'
         },
         imageNav: {
-            height: '180px',
+            height: '142px',
             paddingTop: '20px',
             overflow: 'auto',
             whiteSpace: 'nowrap'
         },
         navImg: {
-            height: '160px',
+            boxSizing: 'border-box',
+            height: '120px',
             objectFit: 'cover',
-            width: '160px',
-            padding: '0px 1px',
-            opacity: 0.6,
+            width: '120px',
+            margin: '0px 2px',
+            filter: 'brightness(30%)',
+            border: '2px solid black',
             $nest: {
                 '&:hover': {
-                    opacity: 1
+                    filter: 'unset',
+                    border: '2px solid red'
                 }
             }
         },
@@ -105,7 +108,7 @@ const
             overflow: 'hidden',
         },
         title: { fontWeight: 500 },
-        description: { opacity: 0.85 }
+        description: { opacity: 0.85 } // TODO: use proper color instead of opacity
     })
 
 interface Props {
@@ -138,12 +141,29 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
     const
         [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
         [zoomLevel, setZoomLevel] = React.useState(0),
-        imageNavRef = React.useRef<HTMLDivElement | undefined>()
-
-    React.useEffect(() => {
-        if (imageNavRef.current) imageNavRef.current.scrollLeft = activeImageIdx * 162
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [imageNavRef.current, activeImageIdx])
+        imageNavRef = React.useRef<HTMLDivElement | undefined>(),
+        handleClickLeft = () => {
+            const nextImgIdx = (activeImageIdx === 0) ? (images.length - 1) : activeImageIdx - 1
+            setActiveImageIdx(nextImgIdx)
+            setZoomLevel(0)
+            if (imageNavRef.current) {
+                // const pageImageCount = Math.floor(imageNavRef.current?.offsetWidth / 124)
+                const isLeft = activeImageIdx <= Math.floor(imageNavRef.current.scrollLeft / 124)
+                if (nextImgIdx === images.length - 1) imageNavRef.current.scrollLeft = imageNavRef.current.scrollWidth - imageNavRef.current?.clientWidth // TODO: fix jump by providing 124x124 placeholder for lazy loaded images
+                else if (isLeft) imageNavRef.current.scrollLeft = (activeImageIdx * 124) - 124
+            }
+        },
+        handleClickRight = () => {
+            const nextImgIdx = (activeImageIdx === images.length - 1) ? 0 : activeImageIdx + 1
+            setActiveImageIdx(nextImgIdx)
+            setZoomLevel(0)
+            if (imageNavRef.current) {
+                const pageImageCount = Math.floor(imageNavRef.current?.clientWidth / 124)
+                const isRight = activeImageIdx >= Math.floor(imageNavRef.current.scrollLeft / 124) + (pageImageCount - 1)
+                if (nextImgIdx === 0) imageNavRef.current.scrollLeft = 0
+                else if (isRight) imageNavRef.current.scrollLeft = ((activeImageIdx + 1 - pageImageCount) * 124) + 124
+            }
+        }
 
     React.useLayoutEffect(() => {
         const lazyImages = [].slice.call(document.querySelectorAll(".lazy"))
@@ -169,10 +189,10 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
                         setZoomLevel(0)
                         onDismiss()
                     }}
-                    iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' } }}
+                    iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' }, }}
                 />
             </div>
-            <div className={css.content} style={{ height: `calc(100% - ${images.length > 1 ? '300px' : '100px'})` }}>
+            <div className={css.content} style={{ height: `calc(100% - ${images.length > 1 ? '262px' : '100px'})` }}>
                 <img
                     className={css.img}
                     alt={title}
@@ -193,20 +213,14 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
                         <div className={css.arrow} style={{ left: 0 }}>
                             <Fluent.ActionButton
                                 styles={iconStyles}
-                                onClick={() => {
-                                    setActiveImageIdx((activeImageIdx === 0) ? (images.length - 1) : activeImageIdx - 1)
-                                    setZoomLevel(0)
-                                }}
+                                onClick={handleClickLeft}
                                 iconProps={{ iconName: 'ChevronLeft', style: { fontSize: '22px' } }}
                             />
                         </div>
                         <div className={css.arrow} style={{ right: 0 }}>
                             <Fluent.ActionButton
                                 styles={iconStyles}
-                                onClick={() => {
-                                    setActiveImageIdx((activeImageIdx === images.length - 1) ? 0 : activeImageIdx + 1)
-                                    setZoomLevel(0)
-                                }}
+                                onClick={handleClickRight}
                                 iconProps={{ iconName: 'ChevronRight', style: { fontSize: '22px' } }}
                             />
                         </div>
@@ -225,7 +239,7 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
                             : (image && type)
                                 ? `data:image/${type};base64,${image}`
                                 : ''
-                        return <img key={idx} className={clas(css.img, css.navImg, 'lazy')} style={activeImageIdx === idx ? { opacity: 1 } : undefined} alt={title} data-src={src} onClick={() => { setActiveImageIdx(idx) }} />
+                        return <div key={idx}><img key={'img' + idx} className={clas(css.img, css.navImg, 'lazy')} style={activeImageIdx === idx ? { filter: 'unset', border: '2px solid red' } : undefined} alt={title} data-src={src} onClick={() => { setActiveImageIdx(idx) }} /></div>
                     })}
                 </div>}
             </div>
