@@ -394,7 +394,7 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    it.only('Moves polygon by a single point, then moves it whole', async () => {
+    it('Moves polygon by a single point, then moves it whole', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForImgLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]

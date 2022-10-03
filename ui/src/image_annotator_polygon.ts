@@ -3,12 +3,11 @@ import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, Position } from "./image_a
 import { ARC_RADIUS } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
-  private ctx: CanvasRenderingContext2D | null
   private currPolygonPoints: ImageAnnotatorPoint[] = []
   private draggedPoint: ImageAnnotatorPoint | null = null
   private draggedShape: DrawnShape | null = null
 
-  constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
+  constructor(private ctx: CanvasRenderingContext2D) { }
 
   resetDragging() {
     this.draggedPoint = null

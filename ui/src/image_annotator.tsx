@@ -306,7 +306,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.parentElement!.style.height = px(height)
 
       rectRef.current = new RectAnnotator(canvas)
-      polygonRef.current = new PolygonAnnotator(canvas)
+      if (ctxRef.current) polygonRef.current = new PolygonAnnotator(ctxRef.current)
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
       if (!drawnShapes.length) {

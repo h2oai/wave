@@ -101,7 +101,6 @@ export class RectAnnotator {
     }
     else if (this.movedRect || intersected?.isFocused) {
       this.movedRect = this.movedRect || intersected
-      this.canvas.style.cursor = 'move'
       if (!this.movedRect?.shape.rect) return
 
       const
