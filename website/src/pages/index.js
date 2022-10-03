@@ -106,6 +106,14 @@ function Home() {
               Get Started
             </Link>
           </div>
+          <div>
+            <a class="github-button" 
+            href="https://github.com/buttons/github-buttons" 
+            data-icon="octicon-star" 
+            data-size="large" 
+            data-show-count="true" 
+            aria-label="Star buttons/github-buttons on GitHub">Star</a>
+          </div>
         </div>
       </header>
       <main>
@@ -120,6 +128,7 @@ function Home() {
             </div>
           </section>
         )}
+       <script async defer src="https://buttons.github.io/buttons.js"></script>
       </main>
     </Layout>
   )
