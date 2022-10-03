@@ -56,6 +56,41 @@ export class PolygonAnnotator {
     }
   }
 
+  addAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+    const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
+    if (clickedPoint?.isAux) clickedPoint.isAux = false
+  }
+
+  getPolygonPointsWithAux = (points: DrawnPoint[]) => {
+    const items = points
+      .filter(p => !p.isAux)
+      .reduce((prev, curr, idx, arr) => {
+        prev.push(curr)
+
+        if (idx !== arr.length - 1) {
+          prev.push({
+            x: (curr.x + arr[idx + 1].x) / 2,
+            y: (curr.y + arr[idx + 1].y) / 2,
+            isAux: true
+          })
+        }
+
+        return prev
+      }, [] as DrawnPoint[])
+
+    // Insert aux also between last and first point.
+    const lastPoint = points.at(-1)?.isAux ? points.at(-2) : points.at(-1)
+    if (lastPoint) {
+      items.push({
+        x: (points[0].x + lastPoint.x) / 2,
+        y: (points[0].y + lastPoint.y) / 2,
+        isAux: true
+      })
+    }
+
+    return items
+  }
+
   drawLine = (x2: F, y2: F) => {
     if (!this.ctx) return
 
@@ -65,27 +100,6 @@ export class PolygonAnnotator {
 
   drawPolygon = (points: DrawnPoint[], color: S, joinLastPoint = true, isFocused = false) => {
     if (!points.length || !this.ctx) return
-    if (joinLastPoint && isFocused) {
-      points = points.reduce((prev, curr, idx) => {
-        if (!curr.isAux) prev.push(curr)
-
-        if (idx !== points.length - 1 && !curr.isAux)
-          prev.push({
-            x: (curr.x + points[idx + 1].x) / 2,
-            y: (curr.y + points[idx + 1].y) / 2,
-            isAux: true
-          })
-
-        return prev
-      }, [] as DrawnPoint[])
-
-      // Insert aux also between last and first point.
-      points.push({
-        x: (points[0].x + points.at(-1)!.x) / 2,
-        y: (points[0].y + points.at(-1)!.y) / 2,
-        isAux: true
-      })
-    }
 
     this.ctx.fillStyle = color
     this.ctx.strokeStyle = color
@@ -122,7 +136,7 @@ export class PolygonAnnotator {
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
     this.ctx.lineWidth = 2
     this.ctx.strokeStyle = isAux ? '#5e5c5c' : '#000'
-    this.ctx.fillStyle = isAux ? '#e6e6e6' : '#FFF'
+    this.ctx.fillStyle = isAux ? '#b8b8b8' : '#FFF'
     this.ctx.fill(path)
     this.ctx.stroke(path)
   }
@@ -157,7 +171,11 @@ export
     const offset = 2 * ARC_RADIUS
     return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
   },
-  getPolygonPointCursor = (items: ImageAnnotatorPoint[], cursor_x: F, cursor_y: F) => {
-    const isIntersecting = items.some(p => isIntersectingPoint(p, cursor_x, cursor_y))
-    return isIntersecting ? 'move' : ''
+  getPolygonPointCursor = (items: DrawnPoint[], cursor_x: F, cursor_y: F) => {
+    const intersectedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
+    return intersectedPoint?.isAux
+      ? 'pointer'
+      : intersectedPoint
+        ? 'move'
+        : ''
   }

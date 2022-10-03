@@ -343,6 +343,18 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([rect])
     })
 
+    it('Adds aux point to polygon when clicked', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.click(canvasEl, { clientX: 240, clientY: 160 })
+      expect(wave.args[name]).toMatchObject([
+        rect,
+        { shape: { polygon: { items: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 160 }, { x: 240, y: 220 },] } }, tag: 'person' }
+      ])
+    })
+
     it('Changes tag of existing polygon when clicked ', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
@@ -369,6 +381,16 @@ describe('ImageAnnotator.tsx', () => {
       expect(canvasEl.style.cursor).toBe('move')
       fireEvent.mouseMove(canvasEl, { clientX: 250, clientY: 250 })
       expect(canvasEl.style.cursor).toBe('auto')
+    })
+
+    it('Displays the correct cursor when hovering over polygon aux point', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      expect(canvasEl.style.cursor).toBe('move')
+      fireEvent.mouseMove(canvasEl, { clientX: 240, clientY: 160 })
+      expect(canvasEl.style.cursor).toBe('pointer')
     })
 
     it('Moves polygon correctly', async () => {

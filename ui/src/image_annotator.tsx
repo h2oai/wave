@@ -123,7 +123,7 @@ const
         : 'crosshair'
     if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
     else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y) || cursor
-    else if (intersected?.isFocused && intersected.shape.polygon) cursor = 'move'
+    else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.items, cursor_x, cursor_y) || 'move'
     else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.items, cursor_x, cursor_y) || cursor
 
     return cursor
@@ -260,8 +260,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         case 'select': {
           if (intersected) setActiveTag(intersected.tag)
+          if (intersected?.shape.polygon) polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.items)
           polygonRef.current?.resetDragging()
-          setDrawnShapes(drawnShapes => drawnShapes.map(s => { s.isFocused = s === intersected; return s }))
+
+          setDrawnShapes(drawnShapes => drawnShapes.map(s => {
+            s.isFocused = s === intersected
+            if (s.isFocused && s.shape.polygon && polygonRef.current) {
+              s.shape.polygon.items = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.items)
+            }
+            return s
+          }))
           redrawExistingShapes()
           break
         }
@@ -334,7 +342,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         tag,
         shape: {
           polygon: {
-            items: shape.polygon.items.map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
+            items: shape.polygon.items
+              .filter((i: DrawnPoint) => !i.isAux)
+              .map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
           }
         }
       }
