@@ -106,13 +106,15 @@ export class PolygonAnnotator {
     this.ctx.beginPath()
     this.ctx.moveTo(points[0].x, points[0].y)
 
-    points.forEach(({ x, y }) => this.drawLine(x, y))
+    const _points = this.draggedPoint ? points.filter(p => !p.isAux) : points
+
+    _points.forEach(({ x, y }) => this.drawLine(x, y))
     if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
 
     if (isFocused) {
       this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
       this.ctx.fill()
-      points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, isAux))
+      _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, isAux))
     }
   }
 
