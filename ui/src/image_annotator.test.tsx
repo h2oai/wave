@@ -48,7 +48,7 @@ const
     ],
     items
   },
-  waitForImgLoad = async () => act(() => new Promise(res => setTimeout(() => res(), 20)))
+  waitForLoad = async () => act(() => new Promise(res => setTimeout(() => res(), 20)))
 
 
 describe('ImageAnnotator.tsx', () => {
@@ -81,16 +81,24 @@ describe('ImageAnnotator.tsx', () => {
 
   it('Displays the correct cursor when hovering over canvas - no intersection', async () => {
     const { container } = render(<XImageAnnotator model={model} />)
-    await waitForImgLoad()
+    await waitForLoad()
     const canvasEl = container.querySelectorAll('canvas')[1]
     fireEvent.mouseMove(canvasEl, { clientX: 250, clientY: 250 })
     expect(canvasEl.style.cursor).toBe('auto')
   })
 
+  it('Removes all shapes after clicking remove all btn', async () => {
+    const { getByText } = render(<XImageAnnotator model={model} />)
+    await waitForLoad()
+    expect(wave.args[name]).toMatchObject(items)
+    fireEvent.click(getByText('Remove all'))
+    expect(wave.args[name]).toMatchObject([])
+  })
+
   describe('Rect', () => {
     it('Draws a new rect', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByText('Rectangle'))
       fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110 })
@@ -101,7 +109,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Draws a new rect with different tag if selected', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByText('Rectangle'))
       fireEvent.click(getByText('Object'))
@@ -113,7 +121,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Does not draw a new rect if active shape is select', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110 })
       fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
@@ -121,9 +129,25 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
-    it('Changes tag of when clicked existing rect', async () => {
+    it('Removes rect after clicking remove btn', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      expect(wave.args[name]).toMatchObject(items)
+
+      const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+      expect(removeBtn).toHaveAttribute('aria-disabled', 'true')
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      await waitForLoad()
+      expect(removeBtn).not.toHaveAttribute('aria-disabled')
+      fireEvent.click(removeBtn!)
+
+      expect(wave.args[name]).toMatchObject([polygon])
+    })
+
+    it('Changes tag when clicked existing rect', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.click(getByText('Object'))
@@ -133,7 +157,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Displays the correct cursor when hovering over rect', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.mouseMove(canvasEl, { clientX: 50, clientY: 50 })
       expect(canvasEl.style.cursor).toBe('pointer')
@@ -141,7 +165,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Displays the correct cursor when hovering over focused rect', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       expect(canvasEl.style.cursor).toBe('move')
@@ -153,7 +177,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Displays the correct cursor when hovering over focused rect corners', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
 
@@ -173,7 +197,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Moves rect correctly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50 })
@@ -185,7 +209,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Does not move rect if left mouse btn not pressed (dragging)', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50 })
@@ -197,7 +221,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Resizes top left corner properly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: 10, clientY: 10 })
@@ -212,7 +236,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Resizes top right corner properly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: 100, clientY: 10 })
@@ -227,7 +251,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Resizes bottom left corner properly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: 10, clientY: 100 })
@@ -242,7 +266,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Resizes bottom right corner properly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: 100, clientY: 100 })
@@ -258,7 +282,7 @@ describe('ImageAnnotator.tsx', () => {
   describe('Polygon', () => {
     it('Draws a new polygon', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByText('Polygon'))
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
@@ -274,7 +298,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Draws a new polygon with different tag if selected', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByText('Polygon'))
       fireEvent.click(getByText('Object'))
@@ -292,7 +316,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Does not draw a new polygon if active shape is select', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
 
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
@@ -303,9 +327,25 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
+    it('Removes polygon after clicking remove btn', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      expect(wave.args[name]).toMatchObject(items)
+
+      const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+      expect(removeBtn).toHaveAttribute('aria-disabled', 'true')
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      await waitForLoad()
+      expect(removeBtn).not.toHaveAttribute('aria-disabled')
+      fireEvent.click(removeBtn!)
+
+      expect(wave.args[name]).toMatchObject([rect])
+    })
+
     it('Changes tag of existing polygon when clicked ', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
       fireEvent.click(getByText('Object'))
@@ -315,7 +355,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Displays the correct cursor when hovering over polygon', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.mouseMove(canvasEl, { clientX: 180, clientY: 120 })
       expect(canvasEl.style.cursor).toBe('pointer')
@@ -323,7 +363,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Displays the correct cursor when hovering over focused polygon', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
       expect(canvasEl.style.cursor).toBe('move')
@@ -333,7 +373,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Moves polygon correctly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
 
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
@@ -349,7 +389,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Does not move polygon if left mouse btn not pressed (dragging)', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
 
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
@@ -362,7 +402,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Moves polygon by a single point correctly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
 
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
@@ -379,7 +419,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Moves polygon by a single point correctly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
 
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
@@ -396,7 +436,7 @@ describe('ImageAnnotator.tsx', () => {
 
     it('Moves polygon by a single point, then moves it whole', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
-      await waitForImgLoad()
+      await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
 
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
