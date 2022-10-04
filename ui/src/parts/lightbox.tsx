@@ -108,7 +108,8 @@ const
             overflow: 'hidden',
         },
         title: { fontWeight: 500 },
-        description: { opacity: 0.85 } // TODO: use proper color instead of opacity
+        description: { opacity: 0.85 }, // TODO: use proper color instead of opacity
+        navImgPlaceholder: { display: 'inline-block', width: '124px' }
     })
 
 interface Props {
@@ -147,9 +148,8 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
             setActiveImageIdx(nextImgIdx)
             setZoomLevel(0)
             if (imageNavRef.current) {
-                // const pageImageCount = Math.floor(imageNavRef.current?.offsetWidth / 124)
                 const isLeft = activeImageIdx <= Math.floor(imageNavRef.current.scrollLeft / 124)
-                if (nextImgIdx === images.length - 1) imageNavRef.current.scrollLeft = imageNavRef.current.scrollWidth - imageNavRef.current?.clientWidth // TODO: fix jump by providing 124x124 placeholder for lazy loaded images
+                if (nextImgIdx === images.length - 1) imageNavRef.current.scrollLeft = imageNavRef.current.scrollWidth - imageNavRef.current?.clientWidth
                 else if (isLeft) imageNavRef.current.scrollLeft = (activeImageIdx * 124) - 124
             }
         },
@@ -163,6 +163,11 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
                 if (nextImgIdx === 0) imageNavRef.current.scrollLeft = 0
                 else if (isRight) imageNavRef.current.scrollLeft = ((activeImageIdx + 1 - pageImageCount) * 124) + 124
             }
+        },
+        onClose = () => {
+            setZoomLevel(0)
+            onDismiss()
+            setActiveImageIdx(defaultImageIdx || 0)
         }
 
     React.useLayoutEffect(() => {
@@ -185,10 +190,7 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
             <div className={css.header}>
                 <Fluent.ActionButton
                     styles={iconStyles}
-                    onClick={() => {
-                        setZoomLevel(0)
-                        onDismiss()
-                    }}
+                    onClick={onClose}
                     iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' }, }}
                 />
             </div>
@@ -239,7 +241,16 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
                             : (image && type)
                                 ? `data:image/${type};base64,${image}`
                                 : ''
-                        return <div key={idx}><img key={'img' + idx} className={clas(css.img, css.navImg, 'lazy')} style={activeImageIdx === idx ? { filter: 'unset', border: '2px solid red' } : undefined} alt={title} data-src={src} onClick={() => { setActiveImageIdx(idx) }} /></div>
+                        return <div key={idx} className={css.navImgPlaceholder}>
+                            <img
+                                key={'img' + idx}
+                                className={clas(css.img, css.navImg, 'lazy')}
+                                style={activeImageIdx === idx ? { filter: 'unset', border: '2px solid red' } : undefined}
+                                alt={title}
+                                data-src={src}
+                                onClick={() => { setActiveImageIdx(idx) }}
+                            />
+                        </div>
                     })}
                 </div>}
             </div>
