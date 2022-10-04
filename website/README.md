@@ -15,7 +15,7 @@ cd ../tools/showcase
 make setup
 make generate
 cd ../../website
-make ci
+npm ci
 ```
 
 ## Local Development
