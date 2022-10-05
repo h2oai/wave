@@ -36,7 +36,7 @@ export interface FileUpload {
   max_file_size?: F
   /** Maximum allowed size (Mb) for all files combined. No limit by default. */
   max_size?: F
-  /** The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px. */
+  /** The height of the file upload, e.g. '400px', '50%', etc. Defaults to '300px'. */
   height?: S
   /** The width of the file upload, e.g. '100px'. Defaults to '100%'. */
   width?: S

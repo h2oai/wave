@@ -60,7 +60,7 @@ export interface Image {
   path?: S
   /** The width of the image, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 

@@ -813,7 +813,7 @@ ui_checklist <- function(
 #' @param width The width of the dropdown, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-#' @param popup Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices.
+#' @param popup Whether to present the choices using a pop-up dialog. By default pops up a dialog only for more than 100 choices. Defaults to 'auto'.
 #'   One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
 #' @return A Dropdown instance.
 #' @export
@@ -1007,10 +1007,10 @@ ui_slider <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param min The minimum value of the spinbox. Defaults to "0".
-#' @param max The maximum value of the spinbox. Defaults to "100".
-#' @param step The difference between two adjacent values of the spinbox. Defaults to "1".
-#' @param value The current value of the spinbox. Defaults to "0".
+#' @param min The minimum value of the spinbox. Defaults to 0.
+#' @param max The maximum value of the spinbox. Defaults to 100.
+#' @param step The difference between two adjacent values of the spinbox. Defaults to 1.
+#' @param value The current value of the spinbox. Defaults to 0.
 #' @param disabled True if this field is disabled.
 #' @param width The width of the spinbox, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
@@ -1319,7 +1319,7 @@ ui_mini_buttons <- function(
 #' @param file_extensions List of allowed file extensions, e.g. `pdf`, `docx`, etc.
 #' @param max_file_size Maximum allowed size (Mb) per file. No limit by default.
 #' @param max_size Maximum allowed size (Mb) for all files combined. No limit by default.
-#' @param height The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px.
+#' @param height The height of the file upload, e.g. '400px', '50%', etc. Defaults to '300px'.
 #' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
 #' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
 #' @param visible True if the component should be visible. Defaults to True.

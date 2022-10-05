@@ -1776,7 +1776,7 @@ class Dropdown:
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.popup = popup
-        """Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices. One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup."""
+        """Whether to present the choices using a pop-up dialog. By default pops up a dialog only for more than 100 choices. Defaults to 'auto'. One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2204,13 +2204,13 @@ class Spinbox:
         self.label = label
         """Text to be displayed alongside the component."""
         self.min = min
-        """The minimum value of the spinbox. Defaults to "0"."""
+        """The minimum value of the spinbox. Defaults to 0."""
         self.max = max
-        """The maximum value of the spinbox. Defaults to "100"."""
+        """The maximum value of the spinbox. Defaults to 100."""
         self.step = step
-        """The difference between two adjacent values of the spinbox. Defaults to "1"."""
+        """The difference between two adjacent values of the spinbox. Defaults to 1."""
         self.value = value
-        """The current value of the spinbox. Defaults to "0"."""
+        """The current value of the spinbox. Defaults to 0."""
         self.disabled = disabled
         """True if this field is disabled."""
         self.width = width
@@ -2919,7 +2919,7 @@ class FileUpload:
         self.max_size = max_size
         """Maximum allowed size (Mb) for all files combined. No limit by default."""
         self.height = height
-        """The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px."""
+        """The height of the file upload, e.g. '400px', '50%', etc. Defaults to '300px'."""
         self.width = width
         """The width of the file upload, e.g. '100px'. Defaults to '100%'."""
         self.compact = compact

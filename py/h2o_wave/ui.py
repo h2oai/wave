@@ -703,7 +703,7 @@ def dropdown(
         width: The width of the dropdown, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-        popup: Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices. One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
+        popup: Whether to present the choices using a pop-up dialog. By default pops up a dialog only for more than 100 choices. Defaults to 'auto'. One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
     Returns:
         A `h2o_wave.types.Dropdown` instance.
     """
@@ -863,10 +863,10 @@ def spinbox(
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        min: The minimum value of the spinbox. Defaults to "0".
-        max: The maximum value of the spinbox. Defaults to "100".
-        step: The difference between two adjacent values of the spinbox. Defaults to "1".
-        value: The current value of the spinbox. Defaults to "0".
+        min: The minimum value of the spinbox. Defaults to 0.
+        max: The maximum value of the spinbox. Defaults to 100.
+        step: The difference between two adjacent values of the spinbox. Defaults to 1.
+        value: The current value of the spinbox. Defaults to 0.
         disabled: True if this field is disabled.
         width: The width of the spinbox, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
@@ -1135,7 +1135,7 @@ def file_upload(
         file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
         max_file_size: Maximum allowed size (Mb) per file. No limit by default.
         max_size: Maximum allowed size (Mb) for all files combined. No limit by default.
-        height: The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px.
+        height: The height of the file upload, e.g. '400px', '50%', etc. Defaults to '300px'.
         width: The width of the file upload, e.g. '100px'. Defaults to '100%'.
         compact: True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
         visible: True if the component should be visible. Defaults to True.
