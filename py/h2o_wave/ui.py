@@ -3058,6 +3058,51 @@ def image_card(
     )
 
 
+def grid_image(
+        title: str,
+        path: str,
+) -> GridImage:
+    """No documentation available.
+
+    Args:
+        title: No documentation available.
+        path: No documentation available.
+    Returns:
+        A `h2o_wave.types.GridImage` instance.
+    """
+    return GridImage(
+        title,
+        path,
+    )
+
+
+def image_grid_card(
+        box: str,
+        images: List[GridImage],
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> ImageGridCard:
+    """No documentation available.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        images: Images
+        width: No documentation available.
+        height: No documentation available.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ImageGridCard` instance.
+    """
+    return ImageGridCard(
+        box,
+        images,
+        width,
+        height,
+        commands,
+    )
+
+
 def large_bar_stat_card(
         box: str,
         title: str,

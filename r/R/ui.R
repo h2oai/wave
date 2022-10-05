@@ -3554,6 +3554,55 @@ ui_image_card <- function(
   return(.o)
 }
 
+#' No documentation available.
+#'
+#' @param title No documentation available.
+#' @param path No documentation available.
+#' @return A GridImage instance.
+#' @export
+ui_grid_image <- function(
+  title,
+  path) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("path", "character", path)
+  .o <- list(
+    title=title,
+    path=path)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveGridImage"))
+  return(.o)
+}
+
+#' No documentation available.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param images Images
+#' @param width No documentation available.
+#' @param height No documentation available.
+#' @param commands Contextual menu commands for this component.
+#' @return A ImageGridCard instance.
+#' @export
+ui_image_grid_card <- function(
+  box,
+  images,
+  width = NULL,
+  height = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("images", "WaveGridImage", images)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("height", "character", height)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    images=images,
+    width=width,
+    height=height,
+    commands=commands,
+    view='image_grid')
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageGridCard"))
+  return(.o)
+}
+
 #' Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
 #'
 #' @param box A string indicating how to place this component on the page.
