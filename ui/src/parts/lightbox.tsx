@@ -70,12 +70,7 @@ const
             margin: '0px 2px',
             filter: 'brightness(30%)',
             border: '2px solid black',
-            $nest: {
-                '&:hover': {
-                    filter: 'unset',
-                    border: '2px solid red'
-                }
-            }
+            $nest: { '&:hover': { filter: 'unset', border: '2px solid red' } }
         },
         arrow: {
             cursor: "pointer",
@@ -98,7 +93,7 @@ const
         navImgPlaceholder: { display: 'inline-block', width: '124px' }
     })
 
-interface Props {
+interface LightboxProps {
     visible: B,
     onDismiss: () => void,
     images: { title: S, description?: S, type?: S, image?: S, path?: S, }[],
@@ -106,8 +101,8 @@ interface Props {
 }
 
 const
-    keys = { esc: 27, left: 37, right: 39 } as const,
-    lazyImageObserver = new IntersectionObserver(entries => {
+    keys = { esc: 27, left: 37, right: 39 },
+    lazyImageObserver = new IntersectionObserver(entries =>
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const lazyImage = entry.target as HTMLImageElement
@@ -116,19 +111,42 @@ const
                 lazyImageObserver.unobserve(lazyImage)
             }
         })
-    })
+    )
 
-export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props) => {
+export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: LightboxProps) => {
     const
         [activeImageIdx, _setActiveImageIdx] = React.useState(defaultImageIdx || 0),
-        activeImageRef = React.useRef(defaultImageIdx || 0),
+        activeImageIdxRef = React.useRef(defaultImageIdx || 0),
         setActiveImageIdx = (idx: U) => {
-            activeImageRef.current = idx
+            // Store activeImageIdx inside ref to make it accessible from window key event closure.
+            activeImageIdxRef.current = idx
             _setActiveImageIdx(idx)
         },
-        imageNavRef = React.useRef<HTMLDivElement | undefined>()
+        imageNavRef = React.useRef<HTMLDivElement | null>(null)
 
-    // handle image navigation scroll
+    // Initialize intersection observer for lazy images.
+    React.useLayoutEffect(() => {
+        const lazyImages = [].slice.call(document.querySelectorAll(".lazy"))
+        lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // Add keyboard events listener.
+    React.useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+        return () => window.removeEventListener("keydown", handleKeyDown)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // Set initial scroll position when defaultImageIdx is specified.
+    React.useEffect(() => {
+        if (defaultImageIdx && imageNavRef.current) {
+            imageNavRef.current.scrollLeft = (activeImageIdx * 124) - 124 - imageNavRef.current.scrollLeft
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [visible])
+
+    // Handle image navigation scroll.
     React.useEffect(() => {
         const navRef = imageNavRef.current
         if (navRef) {
@@ -143,28 +161,6 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
             else if (isActiveImageRight) navRef.scrollBy({ left: (activeImageIdx + 2 - viewportImageCount) * 124 - navRef.scrollLeft, behavior: 'smooth' })
         }
     }, [activeImageIdx, images.length])
-
-    // initialize intersection observer for lazy images
-    React.useLayoutEffect(() => {
-        const lazyImages = [].slice.call(document.querySelectorAll(".lazy"))
-        lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    // set initial scroll position when defaultImageIdx is specified
-    React.useEffect(() => {
-        if (defaultImageIdx && imageNavRef.current) {
-            imageNavRef.current.scrollLeft = (activeImageIdx * 124) - 124 - imageNavRef.current.scrollLeft
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [visible])
-
-    // Add keyboard events listener
-    React.useEffect(() => {
-        window.addEventListener("keydown", handleKeyDown)
-        return () => window.removeEventListener("keydown", handleKeyDown)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     if (images.length === 0) throw new Error('No images passed to image lightbox component.')
     if (activeImageIdx >= images.length) throw new Error(`Image with defaultImageIdx:${activeImageIdx} does not exist.`)
@@ -183,21 +179,11 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
             if (imageNavRef.current) imageNavRef.current.scrollLeft = 0
         },
         handleKeyDown = React.useCallback((ev: KeyboardEvent) => {
-            switch (ev.keyCode) {
-                case keys.right:
-                    setActiveImageIdx(activeImageRef.current === images.length - 1 ? 0 : activeImageRef.current + 1)
-                    break
-                case keys.left:
-                    setActiveImageIdx(activeImageRef.current === 0 ? images.length - 1 : activeImageRef.current - 1)
-                    break
-                case keys.esc:
-                    onClose()
-                    break
-                default:
-                    break
-            }
+            if (ev.keyCode === keys.right) setActiveImageIdx(activeImageIdxRef.current === images.length - 1 ? 0 : activeImageIdxRef.current + 1)
+            else if (ev.keyCode === keys.left) setActiveImageIdx(activeImageIdxRef.current === 0 ? images.length - 1 : activeImageIdxRef.current - 1)
+            else if (ev.keyCode === keys.esc) onClose()
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [activeImageIdx, images.length])
+        }, [activeImageIdxRef.current, images.length])
 
     return (
         <div aria-hidden={true} className={css.body} style={visible ? undefined : { display: 'none' }}>
