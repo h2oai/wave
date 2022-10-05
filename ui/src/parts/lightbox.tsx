@@ -40,11 +40,11 @@ const
         img: {
             // flexGrow: 1,
             maxWidth: '100%', // TODO: 3000x2000 vertical scrollbar
-            alignSelf: 'center',
-            // objectFit: 'scale-down',
-            transformOrigin: 'top left',
-            transition: 'transform 0.25s ease',
-            cursor: 'pointer',
+            // alignSelf: 'center',
+            objectFit: 'scale-down',
+            // transformOrigin: 'top left',
+            // transition: 'transform 0.25s ease',
+            // cursor: 'pointer',
         },
         header: {
             width: '100%',
@@ -108,7 +108,7 @@ const
             overflow: 'hidden',
         },
         title: { fontWeight: 500 },
-        description: { opacity: 0.85 }, // TODO: use proper color instead of opacity
+        description: { color: '#bbbbbb' }, // TODO: theme colors
         navImgPlaceholder: { display: 'inline-block', width: '124px' }
     })
 
@@ -125,49 +125,44 @@ interface Props {
     defaultImageIdx?: U
 }
 
-const
-    zoomLevels: { [key: U]: U } = { 0: 1, 1: 1.5, 2: 2, 3: 3, 4: 4 },
-    lazyImageObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const lazyImage = entry.target as HTMLImageElement
-                lazyImage.src = lazyImage.dataset.src!
-                lazyImage.classList.remove("lazy")
-                lazyImageObserver.unobserve(lazyImage)
-            }
-        })
+const lazyImageObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const lazyImage = entry.target as HTMLImageElement
+            lazyImage.src = lazyImage.dataset.src!
+            lazyImage.classList.remove("lazy")
+            lazyImageObserver.unobserve(lazyImage)
+        }
     })
+})
 
 export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props) => {
     const
         [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
-        [zoomLevel, setZoomLevel] = React.useState(0),
         imageNavRef = React.useRef<HTMLDivElement | undefined>(),
         handleClickLeft = () => {
             const nextImgIdx = (activeImageIdx === 0) ? (images.length - 1) : activeImageIdx - 1
             setActiveImageIdx(nextImgIdx)
-            setZoomLevel(0)
             if (imageNavRef.current) {
                 const isLeft = activeImageIdx <= Math.floor(imageNavRef.current.scrollLeft / 124)
                 if (nextImgIdx === images.length - 1) imageNavRef.current.scrollLeft = imageNavRef.current.scrollWidth - imageNavRef.current?.clientWidth
-                else if (isLeft) imageNavRef.current.scrollLeft = (activeImageIdx * 124) - 124
+                else if (isLeft) imageNavRef.current.scrollBy({ left: (activeImageIdx * 124) - 124 - imageNavRef.current.scrollLeft, top: 0, behavior: 'smooth' })
             }
         },
         handleClickRight = () => {
             const nextImgIdx = (activeImageIdx === images.length - 1) ? 0 : activeImageIdx + 1
             setActiveImageIdx(nextImgIdx)
-            setZoomLevel(0)
             if (imageNavRef.current) {
                 const pageImageCount = Math.floor(imageNavRef.current?.clientWidth / 124)
                 const isRight = activeImageIdx >= Math.floor(imageNavRef.current.scrollLeft / 124) + (pageImageCount - 1)
                 if (nextImgIdx === 0) imageNavRef.current.scrollLeft = 0
-                else if (isRight) imageNavRef.current.scrollLeft = ((activeImageIdx + 1 - pageImageCount) * 124) + 124
+                else if (isRight) imageNavRef.current.scrollBy({ left: ((activeImageIdx + 1 - pageImageCount) * 124) + 124 - imageNavRef.current.scrollLeft, top: 0, behavior: 'smooth' })
             }
         },
         onClose = () => {
-            setZoomLevel(0)
             onDismiss()
             setActiveImageIdx(defaultImageIdx || 0)
+            if (imageNavRef.current) imageNavRef.current.scrollLeft = 0
         }
 
     React.useLayoutEffect(() => {
@@ -200,14 +195,8 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Props)
                     alt={title}
                     src={src}
                     style={{
-                        transform: `scale(${zoomLevels[zoomLevel]})`, // TODO:
-                        cursor: zoomLevel < 4 ? 'zoom-in' : 'zoom-out',
-                        maxHeight: 'inherit',
+                        // maxHeight: 'inherit',
                         // objectFit: 'none'
-                    }}
-                    onClick={(_ev) => {
-                        const zoom = zoomLevel === 4 ? 0 : zoomLevel + 1
-                        setZoomLevel(zoom)
                     }}
                 />
                 {images.length > 1 &&
