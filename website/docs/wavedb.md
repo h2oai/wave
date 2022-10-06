@@ -70,6 +70,7 @@ $ ./wavedb -dir /path/to/my/db/files
 ## Examples
 
 - [Using WaveDB from a Wave app - A To-do list](https://github.com/h2oai/wave/blob/master/py/examples/db_todo.py)
+- [Using WaveDB from a Wave app - Paginated table](https://github.com/h2oai/wave/blob/master/py/examples/table_pagination_wavedb.py)
 - [Using WaveDB from a standalone script](https://github.com/h2oai/wave/blob/master/py/examples/db.py)
 
 ## Usage
