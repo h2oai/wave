@@ -166,7 +166,7 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
       if (ev.keyCode === keys.right) setActiveImageIdx(imgIdx === images.length - 1 ? 0 : imgIdx + 1)
       else if (ev.keyCode === keys.left) setActiveImageIdx(imgIdx === 0 ? images.length - 1 : imgIdx - 1)
     },
-    imageNav = images.map((image, idx) =>
+    imageNav = isGallery ? images.map((image, idx) =>
       <div key={idx} className={css.navImgPlaceholder}>
         <img
           className={clas(css.img, css.navImg, 'lazy')}
@@ -177,11 +177,11 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
           onClick={() => setActiveImageIdx(idx)}
         />
       </div>
-    )
+    ) : undefined
 
   React.useEffect(() => {
     // Set initial scroll position.
-    navImgRefs[activeImageIdx].current!.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'center' })
+    if (isGallery) navImgRefs[activeImageIdx].current!.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'center' })
     // Add keyboard events listener.
     if (visible) window.addEventListener("keydown", handleKeyDown)
     else window.removeEventListener("keydown", handleKeyDown)
@@ -190,11 +190,14 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
   }, [visible])
 
   // Handle image navigation scroll.
-  React.useEffect(() => navImgRefs[activeImageIdx].current!.scrollIntoView({
-    behavior: (activeImageIdx === 0 || activeImageIdx === images.length - 1) ? 'auto' : 'smooth',
-    inline: 'center',
-    block: 'center'
-  }), [activeImageIdx, images.length, navImgRefs])
+  React.useEffect(() => {
+    if (isGallery) navImgRefs[activeImageIdx].current!.scrollIntoView({
+      behavior: (activeImageIdx === 0 || activeImageIdx === images.length - 1) ? 'auto' : 'smooth',
+      inline: 'center',
+      block: 'center'
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeImageIdx, images.length, navImgRefs])
 
   React.useLayoutEffect(() => {
     // Initialize intersection observer for lazy images.
