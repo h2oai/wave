@@ -40,7 +40,6 @@ module.exports = {
         { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/wave/discussions', label: 'Discuss', position: 'left' },
         { to: 'https://h2oai.github.io/h2o-ai-cloud/', label: 'Enterprise', position: 'left', },
-        { to: 'https://github.com/h2oai/wave/releases', label: 'Download', position: 'right', },
         {
           href: 'https://github.com/h2oai/wave',
           position: 'right',
@@ -116,6 +115,10 @@ module.exports = {
             {
               label: 'Twitter',
               href: 'https://twitter.com/h2o_wave',
+            },
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/V8GZFAy3WM',
             },
             {
               label: 'Code of Conduct',
