@@ -6709,19 +6709,23 @@ class Menu:
             icon: Optional[str] = None,
             image: Optional[str] = None,
             name: Optional[str] = None,
+            label: Optional[str] = None,
     ):
         _guard_vector('Menu.items', items, (Command,), False, False, False)
         _guard_scalar('Menu.icon', icon, (str,), False, True, False)
         _guard_scalar('Menu.image', image, (str,), False, True, False)
         _guard_scalar('Menu.name', name, (str,), True, True, False)
+        _guard_scalar('Menu.label', label, (str,), False, True, False)
         self.items = items
         """Commands to render."""
         self.icon = icon
-        """The card's icon. Mutually exclusive with the image."""
+        """The card's icon. Mutually exclusive with the image and label."""
         self.image = image
-        """The card’s image, preferably user avatar. Mutually exclusive with the icon."""
+        """The card’s image, preferably user avatar. Mutually exclusive with the icon and label."""
         self.name = name
         """An identifying name for this component."""
+        self.label = label
+        """The card's label. Mutually exclusive with the icon and image."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6729,11 +6733,13 @@ class Menu:
         _guard_scalar('Menu.icon', self.icon, (str,), False, True, False)
         _guard_scalar('Menu.image', self.image, (str,), False, True, False)
         _guard_scalar('Menu.name', self.name, (str,), True, True, False)
+        _guard_scalar('Menu.label', self.label, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             icon=self.icon,
             image=self.image,
             name=self.name,
+            label=self.label,
         )
 
     @staticmethod
@@ -6747,15 +6753,19 @@ class Menu:
         _guard_scalar('Menu.image', __d_image, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Menu.name', __d_name, (str,), True, True, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Menu.label', __d_label, (str,), False, True, False)
         items: List[Command] = [Command.load(__e) for __e in __d_items]
         icon: Optional[str] = __d_icon
         image: Optional[str] = __d_image
         name: Optional[str] = __d_name
+        label: Optional[str] = __d_label
         return Menu(
             items,
             icon,
             image,
             name,
+            label,
         )
 
 

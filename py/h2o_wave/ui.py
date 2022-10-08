@@ -2502,14 +2502,16 @@ def menu(
         icon: Optional[str] = None,
         image: Optional[str] = None,
         name: Optional[str] = None,
+        label: Optional[str] = None,
 ) -> Component:
     """Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
 
     Args:
         items: Commands to render.
-        icon: The card's icon. Mutually exclusive with the image.
-        image: The card’s image, preferably user avatar. Mutually exclusive with the icon.
+        icon: The card's icon. Mutually exclusive with the image and label.
+        image: The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
         name: An identifying name for this component.
+        label: The card's label. Mutually exclusive with the icon and image
     Returns:
         A `h2o_wave.types.Menu` instance.
     """
@@ -2518,6 +2520,7 @@ def menu(
         icon,
         image,
         name,
+        label,
     ))
 
 
