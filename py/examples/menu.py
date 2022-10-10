@@ -28,6 +28,7 @@ async def serve(q: Q):
         q.page['example'].items = [
             ui.menu(image=image, items=commands),
             ui.menu(icon='Add', items=commands),
+            ui.menu(title='App', items=commands),
             ui.menu(items=commands)
         ]
     await q.page.save()

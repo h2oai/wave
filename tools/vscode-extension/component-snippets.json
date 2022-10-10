@@ -1276,7 +1276,7 @@
   "Wave Full Menu": {
     "prefix": "w_full_menu",
     "body": [
-      "ui.menu(icon='$1', image='$2', name='$3', items=[\n\t\t$4\t\t\n]),$0"
+      "ui.menu(icon='$1', image='$2', name='$3', title='$4', items=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Menu."
   },
