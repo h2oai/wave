@@ -36,7 +36,7 @@ module.exports = {
         { to: 'docs/guide', label: 'Guide', position: 'left', },
         { to: 'docs/widgets/overview', label: 'Widgets', position: 'left' },
         { to: 'docs/examples', label: 'Examples', position: 'left', },
-        { to: 'docs/api', label: 'API', position: 'left' },
+        { to: 'docs/api/', label: 'API', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/wave/discussions', label: 'Discuss', position: 'left' },
         { to: 'https://h2oai.github.io/h2o-ai-cloud/', label: 'Enterprise', position: 'left', },
@@ -98,7 +98,7 @@ module.exports = {
             },
             {
               label: 'API',
-              to: 'docs/api/index',
+              to: 'docs/api/',
             },
           ],
         },
