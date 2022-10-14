@@ -33,6 +33,27 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
+## With column alignment
+
+With this option, you can align the values of a particular column to `left`, `right`, `center` or `justify`. This is optional and the default alignment is set to `left`
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+    ui.table(
+        name='table',
+        columns=[
+            ui.table_column(name='name', label='Name', alignment='center'),
+            ui.table_column(name='surname', label='Surname', alignment='right'),
+        ], 
+        rows=[
+            ui.table_row(name='row1', cells=['John', 'Doe']),
+            ui.table_row(name='row2', cells=['Alice', 'Smith']),
+            ui.table_row(name='row3', cells=['Bob', 'Adams']),
+        ]
+    )
+])
+```
+
 ## With selection
 
 If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked,
