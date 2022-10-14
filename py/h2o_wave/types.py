@@ -3641,7 +3641,8 @@ class Table:
     This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
     display a non-interactive table of information, use a markdown table.
 
-    If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+    If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+    (defaults to first column) is clicked or the row is doubleclicked, the form is
     submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
     the table, and `row_name` is the `name` of the row that was clicked on.
 
@@ -3973,7 +3974,7 @@ class Links:
         self.label = label
         """The name of the link group."""
         self.inline = inline
-        """Render links horizontally. Defaults to 'false'."""
+        """Render links horizontally. Defaults to False."""
         self.width = width
         """The width of the links, e.g. '100px'."""
 
@@ -5850,7 +5851,7 @@ class Stats:
         self.width = width
         """The width of the stats, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5983,7 +5984,7 @@ class Image:
         self.width = width
         """The width of the image, e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

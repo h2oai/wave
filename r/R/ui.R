@@ -1619,7 +1619,8 @@ ui_table_pagination <- function(
 #' This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
 #' display a non-interactive table of information, use a markdown table.
 #' 
-#' If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+#' If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+#' (defaults to first column) is clicked or the row is doubleclicked, the form is
 #' submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
 #' the table, and `row_name` is the `name` of the row that was clicked on.
 #' 
@@ -1764,7 +1765,7 @@ ui_link <- function(
 #'
 #' @param items The links contained in this group.
 #' @param label The name of the link group.
-#' @param inline Render links horizontally. Defaults to 'false'.
+#' @param inline Render links horizontally. Defaults to False.
 #' @param width The width of the links, e.g. '100px'.
 #' @return A Links instance.
 #' @export
@@ -2542,7 +2543,7 @@ ui_stat <- function(
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
 #' @param width The width of the stats, e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
@@ -2596,7 +2597,7 @@ ui_inline <- function(
 #' @param image Image data, base64-encoded.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param width The width of the image, e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Image instance.
 #' @export
 ui_image <- function(

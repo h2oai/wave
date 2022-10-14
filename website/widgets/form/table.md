@@ -35,9 +35,11 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 
 ## With selection
 
-If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked,
-the form is submitted automatically and `q.args.table_name` is set to `[row_name]`, where
+If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+(defaults to first column) is clicked or the row is doubleclicked, the form is
+submitted automatically and `q.args.table_name` is set to `[row_name]`, where
 `table_name` is the `name` of the table, and `row_name` is the `name` of the row that was clicked.
+Note that doubleclicking the row if single selection is active results in submission as well.
 
 If `multiple` is set to `True`, each row in the table is selectable. A row can be selected by
 clicking on it.

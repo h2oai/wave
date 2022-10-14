@@ -1414,7 +1414,8 @@ def table(
     This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
     display a non-interactive table of information, use a markdown table.
 
-    If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+    If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+    (defaults to first column) is clicked or the row is doubleclicked, the form is
     submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
     the table, and `row_name` is the `name` of the row that was clicked on.
 
@@ -1525,7 +1526,7 @@ def links(
     Args:
         items: The links contained in this group.
         label: The name of the link group.
-        inline: Render links horizontally. Defaults to 'false'.
+        inline: Render links horizontally. Defaults to False.
         width: The width of the links, e.g. '100px'.
     Returns:
         A `h2o_wave.types.Links` instance.
@@ -2177,7 +2178,7 @@ def stats(
         justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
         inset: Whether to display the stats with a contrasting background.
         width: The width of the stats, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Stats` instance.
     """
@@ -2227,7 +2228,7 @@ def image(
         image: Image data, base64-encoded.
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         width: The width of the image, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Image` instance.
     """

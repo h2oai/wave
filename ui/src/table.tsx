@@ -102,7 +102,8 @@ interface TableGroup {
  * This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
  * display a non-interactive table of information, use a markdown table.
  *
- * If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+ * If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+ * (defaults to first column) is clicked or the row is doubleclicked, the form is
  * submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
  * the table, and `row_name` is the `name` of the row that was clicked on.
  *
