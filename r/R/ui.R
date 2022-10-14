@@ -1511,7 +1511,7 @@ ui_markdown_table_cell_type <- function(
 #'   One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
 #' @param filters List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
 #' @param alignment Defines how to align values in a column.
-#'   One of 'left', 'center', 'right', 'justify'. See enum h2o_wave.ui.TableColumnAlignment.
+#'   One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlignment.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(

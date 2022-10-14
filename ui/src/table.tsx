@@ -73,7 +73,7 @@ interface TableColumn {
   /** List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns. */
   filters?: S[]
   /** Defines how to align values in a column. */
-  alignment?: 'left' | 'center' | 'right' | 'justify'
+  alignment?: 'left' | 'center' | 'right'
 }
 
 /** Create a table row. */
@@ -159,7 +159,7 @@ type WaveColumn = Fluent.IColumn & {
   isSortable?: B
   cellOverflow?: 'tooltip' | 'wrap'
   filters?: S[]
-  alignment?: 'left' | 'center' | 'right' | 'justify'
+  alignment?: 'left' | 'center' | 'right'
 }
 
 type DataTable = {
@@ -224,7 +224,7 @@ const
     'on-hover': Fluent.CheckboxVisibility.onHover,
     'hidden': Fluent.CheckboxVisibility.hidden,
   },
-  getColumnHeaderStyle = function (sortable?: B, alignment?: 'left' | 'right' | 'center' | 'justify'): string | undefined {
+  getColumnHeaderStyle = function (sortable?: B, alignment?: 'left' | 'right' | 'center'): string | undefined {
     const style: any = {}
 
     if (sortable) {

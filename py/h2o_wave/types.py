@@ -3358,14 +3358,13 @@ class TableColumnCellOverflow:
     WRAP = 'wrap'
 
 
-_TableColumnAlignment = ['left', 'center', 'right', 'justify']
+_TableColumnAlignment = ['left', 'center', 'right']
 
 
 class TableColumnAlignment:
     LEFT = 'left'
     CENTER = 'center'
     RIGHT = 'right'
-    JUSTIFY = 'justify'
 
 
 class TableColumn:
@@ -3425,7 +3424,7 @@ class TableColumn:
         self.filters = filters
         """List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns."""
         self.alignment = alignment
-        """Defines how to align values in a column. One of 'left', 'center', 'right', 'justify'. See enum h2o_wave.ui.TableColumnAlignment."""
+        """Defines how to align values in a column. One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlignment."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
