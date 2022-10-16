@@ -73,7 +73,7 @@ interface TableColumn {
   /** List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns. */
   filters?: S[]
   /** Defines how to align values in a column. */
-  alignment?: 'left' | 'center' | 'right'
+  align?: 'left' | 'center' | 'right'
 }
 
 /** Create a table row. */
@@ -159,7 +159,7 @@ type WaveColumn = Fluent.IColumn & {
   isSortable?: B
   cellOverflow?: 'tooltip' | 'wrap'
   filters?: S[]
-  alignment?: 'left' | 'center' | 'right'
+  align?: 'left' | 'center' | 'right'
 }
 
 type DataTable = {
@@ -203,6 +203,14 @@ type PaginationProps = {
 const
   // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
+    sortableHeader: {
+      $nest: {
+        '.ms-DetailsHeader-cellName': {
+          position: 'relative',
+          paddingRight: 15
+        }
+      }
+    },
     sortingIcon: {
       marginLeft: 10,
       fontSize: rem(1.1),
@@ -223,25 +231,6 @@ const
     'always': Fluent.CheckboxVisibility.always,
     'on-hover': Fluent.CheckboxVisibility.onHover,
     'hidden': Fluent.CheckboxVisibility.hidden,
-  },
-  getColumnHeaderStyle = function (sortable?: B, alignment?: 'left' | 'right' | 'center'): string | undefined {
-    const style: any = {}
-
-    if (sortable) {
-      // HACK: Put sorting icon on right (same as filter).
-      style['.ms-DetailsHeader-cellName'] = {
-        position: 'relative',
-        paddingRight: 15
-      }
-    }
-    style['.ms-DetailsHeader-cellTitle'] = {
-      justifyContent: alignment ? alignment: 'left'
-    }
-
-    const css = stylesheet({ columnHeader: { $nest: style }, })
-
-    return css.columnHeader
-
   },
   groupByF = function <T extends Dict<any>>(arr: T[], key: S): Dict<any> {
     return arr.reduce((rv, x: T) => {
@@ -359,13 +348,13 @@ const
           fieldName: c.name,
           minWidth,
           maxWidth,
-          headerClassName: getColumnHeaderStyle(c.sortable, c.alignment),
+          headerClassName: c.sortable ? css.sortableHeader: undefined,
           iconClassName: c.sortable ? css.sortingIcon : undefined,
           onColumnClick,
           columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
           cellType: c.cell_type,
           dataType: c.data_type,
-          alignment: c.alignment,
+          align: c.align,
           isSortable: c.sortable,
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
@@ -473,15 +462,16 @@ const
         wave.args[m.name] = [item.key as S]
         wave.push()
       },
-      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
+      getItemColumnStyle = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
         const TooltipWrapper = ({ children }: { children: S }) => {
+          const align = col.align || 'left'
           if (col.cellOverflow === 'tooltip') return (
             <Fluent.TooltipHost
               id={item.key as S}
               // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
-              styles={{ root: { '::after': { content: '', display: 'block' } } }}
+              styles={{ root: { '::after': { content: '', display: 'block' }, display: 'flex', justifyContent: align, textAlign: align } }}
               content={children}
               overflowMode={Fluent.TooltipOverflowMode.Parent}
               title={children}
@@ -490,33 +480,42 @@ const
           return <>{children}</>
         }
 
-        const AlignmentWrapper = ({ children }: { children: any }) => {
-          const alignment = col.alignment ? col.alignment : 'left'
-          return <div style={{ display: 'flex', justifyContent: alignment, textAlign: alignment }}>{children}</div>
-        }
-
         let v = item[col.fieldName as S]
-        if (col.cellType?.progress) return <AlignmentWrapper><XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} /></AlignmentWrapper>
-        if (col.cellType?.icon) return <AlignmentWrapper> <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} /></AlignmentWrapper>
-        if (col.cellType?.tag) return <AlignmentWrapper><XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} /></AlignmentWrapper>
-        if (col.cellType?.menu) return <AlignmentWrapper><XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} /></AlignmentWrapper>
-        if (col.cellType?.markdown) return <AlignmentWrapper><XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} /></AlignmentWrapper>
+        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
+        if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
+        if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
+        if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
+        if (col.cellType?.markdown) return <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
         if (col.dataType === 'time') {
           const epoch = Number(v)
           v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
         }
-
-        const wrappedItem = <AlignmentWrapper><TooltipWrapper>{v}</TooltipWrapper></AlignmentWrapper>
 
         if (col.key === primaryColumnKey) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
             wave.push()
           }
-          return <AlignmentWrapper><Fluent.Link onClick={onClick}>{wrappedItem}</Fluent.Link></AlignmentWrapper>
+          const align = col.align || 'left'
+          return (
+            <Fluent.Link onClick={onClick}>
+              <div style={{ display: 'flex', justifyContent: align, textAlign: align }}>
+                <TooltipWrapper>{v}</TooltipWrapper>
+              </div>
+            </Fluent.Link>)
         }
 
-        return wrappedItem
+        return <TooltipWrapper>{v}</TooltipWrapper>
+      },
+      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
+        if (!item || !col) return <span />
+
+        const AlignmentWrapper = ({ children }: { children: any }) => {
+          const align = col.align || 'left'
+          return <div style={{ display: 'flex', justifyContent: align, textAlign: align }}>{children}</div>
+        }
+
+        return <AlignmentWrapper>{getItemColumnStyle(item, _idx, col)}</AlignmentWrapper>
       },
       // HACK: fixed jumping scrollbar issue when scrolling into the end of list with all groups expanded - https://github.com/microsoft/fluentui/pull/5204 
       getGroupHeight = (group: Fluent.IGroup) => {

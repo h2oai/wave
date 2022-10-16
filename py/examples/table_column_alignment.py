@@ -1,8 +1,7 @@
-# Table
-# Use a #table to display tabular data.
+# Table / Column Alignment
+# Allow table values to be aligned per column as left (default), right or center
+# #table
 # ---
-import random
-
 from faker import Faker
 
 from h2o_wave import main, app, Q, ui
@@ -11,67 +10,45 @@ fake = Faker()
 
 _id = 0
 
-
-class Issue:
-    def __init__(self, text: str, status: str, progress: float, icon: str, state: str, created: str):
+# Create some names
+class User:
+    def __init__(self, first_name: str, last_name: str, username: str, company: str):
         global _id
         _id += 1
         self.id = f'I{_id}'
-        self.text = text
-        self.status = status
-        self.views = 0
-        self.progress = progress
-        self.icon = icon
-        self.created = created
-        self.state = state
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
+        self.company = company
 
-
-# Create some issues
-issues = [
-    Issue(
-        text=fake.sentence(),
-        status=('Closed' if i % 2 == 0 else 'Open'),
-        progress=random.random(),
-        icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
-        state=('RUNNING' if random.random() > 0.5 else 'DONE,SUCCESS'),
-        created='1655927271') for i in range(100)
+users = [
+    User(
+        first_name=fake.first_name(),
+        last_name=fake.last_name(),
+        username=fake.user_name(),
+        company=fake.company()
+    ) for i in range (100)
 ]
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width='300', cell_overflow='wrap', alignment='center'),
-    ui.table_column(name='status', label='Status', filterable=True),
-    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type(), alignment='right'),
-    ui.table_column(name='views', label='Views', sortable=True, data_type='number'),
-    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
-    ui.table_column(name='tag', label='State', min_width='170px', cell_type=ui.tag_table_cell_type(name='tags', tags=[
-                    ui.tag(label='RUNNING', color='#D2E3F8'),
-                    ui.tag(label='DONE', color='$red'),
-                    ui.tag(label='SUCCESS', color='$mint'),
-                    ]
-    ), alignment='left'),
-    ui.table_column(name='created', label='Created', sortable=True, data_type='time'),
+    ui.table_column(name='first_name', label='First Name', align='center'),
+    ui.table_column(name='last_name', label='Last Name', align='right'),
+    ui.table_column(name='username', label='Username', align='left'),
+    ui.table_column(name='company', label='Company'),
 ]
 
 
 @app('/demo')
 async def serve(q: Q):
-    if q.args.issues:
-        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
-            ui.text(f'You clicked on: {q.args.issues}'),
-            ui.button(name='back', label='Back'),
-        ])
-    else:
-        q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
+    q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
             ui.table(
-                name='issues',
+                name='users',
                 columns=columns,
                 rows=[ui.table_row(
-                    name=issue.id,
-                    cells=[issue.text, issue.status, issue.icon, str(issue.views), str(issue.progress),
-                          issue.state, issue.created]
-                ) for issue in issues],
-                groupable=True,
+                    name=user.id,
+                    cells=[user.first_name, user.last_name, user.username, user.company]
+                ) for user in users],
                 downloadable=True,
                 resettable=True,
                 height='800px'

@@ -1510,8 +1510,8 @@ ui_markdown_table_cell_type <- function(
 #' @param cell_overflow Defines what to do with a cell's contents in case it does not fit inside the cell.
 #'   One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
 #' @param filters List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
-#' @param alignment Defines how to align values in a column.
-#'   One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlignment.
+#' @param align Defines how to align values in a column.
+#'   One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(
@@ -1527,7 +1527,7 @@ ui_table_column <- function(
   cell_type = NULL,
   cell_overflow = NULL,
   filters = NULL,
-  alignment = NULL) {
+  align = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("min_width", "character", min_width)
@@ -1540,7 +1540,7 @@ ui_table_column <- function(
   .guard_scalar("cell_type", "WaveTableCellType", cell_type)
   # TODO Validate cell_overflow
   .guard_vector("filters", "character", filters)
-  # TODO Validate alignment
+  # TODO Validate align
   .o <- list(
     name=name,
     label=label,
@@ -1554,7 +1554,7 @@ ui_table_column <- function(
     cell_type=cell_type,
     cell_overflow=cell_overflow,
     filters=filters,
-    alignment=alignment)
+    align=align)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableColumn"))
   return(.o)
 }

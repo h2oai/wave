@@ -42,13 +42,15 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
     ui.table(
         name='table',
         columns=[
-            ui.table_column(name='name', label='Name', alignment='center'),
-            ui.table_column(name='surname', label='Surname', alignment='right'),
+            ui.table_column(name='first_name', label='First Name', align='center'),
+            ui.table_column(name='last_name', label='Last Name', align='right'),
+            ui.table_column(name='username', label='Username', align='left'),
+            ui.table_column(name='company', label='Company'),
         ], 
         rows=[
-            ui.table_row(name='row1', cells=['John', 'Doe']),
-            ui.table_row(name='row2', cells=['Alice', 'Smith']),
-            ui.table_row(name='row3', cells=['Bob', 'Adams']),
+            ui.table_row(name='row1', cells=['John', 'Doe', 'johndoe', 'Stephens LLC']),
+            ui.table_row(name='row2', cells=['Alice', 'Smith', 'alicesmith', 'Walker and Sons']),
+            ui.table_row(name='row3', cells=['Bob', 'Adams', 'bobadams', 'Frank Ltd']),
         ]
     )
 ])
