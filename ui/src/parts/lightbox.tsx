@@ -14,9 +14,15 @@
 
 import { B, S, U } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
+import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
-import { clas } from '../theme'
+import { clas, cssVar } from '../theme'
+import { getColorFromString, isDark } from '@fluentui/react'
+
+const
+  HEADER_HEIGHT = 40,
+  IMAGE_CAPTIONS_HEIGHT = 60,
+  IMAGE_NAV_HEIGHT = 142
 
 const
   iconStyles: Fluent.IButtonStyles = {
@@ -31,8 +37,6 @@ const
     body: {
       position: 'fixed',
       inset: '0px',
-      width: '100%',
-      height: '100%',
       zIndex: 1,
       backgroundColor: 'rgba(0, 0, 0, 0.9)',
     },
@@ -41,8 +45,7 @@ const
       objectFit: 'scale-down',
     },
     header: {
-      width: '100%',
-      height: '40px',
+      height: HEADER_HEIGHT,
       textAlign: 'right'
     },
     content: {
@@ -54,11 +57,9 @@ const
     footer: {
       textAlign: 'center',
       color: '#fff',
-      width: '100%'
     },
     imageNav: {
-      height: '142px',
-      paddingTop: '20px',
+      height: IMAGE_NAV_HEIGHT,
       overflow: 'auto',
       whiteSpace: 'nowrap'
     },
@@ -70,28 +71,24 @@ const
       margin: '0px 2px',
       cursor: 'pointer',
       filter: 'brightness(30%)',
-      border: '2px solid black',
-      $nest: { '&:hover': { filter: 'unset', border: '2px solid red' } }
+      border: '2px solid black'
     },
     arrow: {
-      cursor: "pointer",
       position: "absolute",
       top: "50%",
       width: "auto",
       padding: "16px",
       marginTop: "-50px",
       color: "#fff",
-      userSelect: "none",
     },
-    imgCaptions: { whiteSpace: 'nowrap', padding: '10px 40px', height: '20px' },
+    imgCaptions: { whiteSpace: 'nowrap', padding: '10px 40px', height: '40px' },
     text: { textOverflow: 'ellipsis', overflow: 'hidden' },
     title: { fontWeight: 500 },
     description: { color: '#bbb' },
-    navImgPlaceholder: { display: 'inline-block', width: '124px' }
+    navImgContainer: { display: 'inline-block', width: '124px' }
   })
 
 type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
-type ArrowControlProps = { activeImageIdx: U, setActiveImageIdx: (idx: U) => void, images: Image[] }
 
 interface LightboxProps {
   visible: B,
@@ -100,8 +97,13 @@ interface LightboxProps {
   defaultImageIdx?: U
 }
 
+export const getImageSrc = ({ type, image, path }: Image) => path
+  ? path
+  : (image && type)
+    ? `data:image/${type};base64,${image}`
+    : ''
+
 const
-  keys = { esc: 27, left: 37, right: 39 },
   lazyImageObserver = new IntersectionObserver(entries =>
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -111,73 +113,28 @@ const
         lazyImageObserver.unobserve(lazyImage)
       }
     })
-  ),
-  getImageSrc = ({ type, image, path }: Image) => path
-    ? path
-    : (image && type)
-      ? `data:image/${type};base64,${image}`
-      : '',
-  ArrowControls = ({ activeImageIdx, setActiveImageIdx, images }: ArrowControlProps) =>
-    <>
-      <div className={css.arrow} style={{ left: 0 }}>
-        <Fluent.ActionButton
-          styles={iconStyles}
-          onClick={() => setActiveImageIdx(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
-          iconProps={{ iconName: 'ChevronLeft', style: { fontSize: '22px' } }}
-        />
-      </div>
-      <div className={css.arrow} style={{ right: 0 }}>
-        <Fluent.ActionButton
-          styles={iconStyles}
-          onClick={() => setActiveImageIdx(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
-          iconProps={{ iconName: 'ChevronRight', style: { fontSize: '22px' } }}
-        />
-      </div>
-    </>,
-  CloseButton = ({ onClose }: { onClose: () => void }) =>
-    <Fluent.ActionButton
-      styles={iconStyles}
-      onClick={onClose}
-      iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' } }}
-    />
+  )
 
 export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: LightboxProps) => {
   const
-    [activeImageIdx, _setActiveImageIdx] = React.useState(defaultImageIdx || 0),
+    [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
     { title, description } = images[activeImageIdx],
     isGallery = images.length > 1,
-    src = getImageSrc(images[activeImageIdx]),
+    FOOTER_HEIGHT = isGallery ? IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_HEIGHT : IMAGE_CAPTIONS_HEIGHT,
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     navImgRefs: React.RefObject<HTMLImageElement>[] = images.map(() => React.createRef()),
-    activeImageIdxRef = React.useRef(activeImageIdx),
-    setActiveImageIdx = (idx: U) => {
-      // Store activeImageIdx inside ref to make it accessible from window key event closure.
-      _setActiveImageIdx(idx)
-      activeImageIdxRef.current = idx
-    },
+    activeColor = isDark(getColorFromString(cssVar('$neutralPrimary'))!) ? cssVar('$card') : cssVar('$neutralPrimary'),
+    imageHighlightStyle = { filter: 'unset', border: '2px solid', borderColor: activeColor },
     onClose = () => {
       onDismiss()
       setActiveImageIdx(defaultImageIdx || 0)
       if (imageNavRef.current) imageNavRef.current.scrollLeft = 0
     },
-    handleKeyDown = (ev: KeyboardEvent) => {
-      if (ev.keyCode === keys.esc) onClose()
-      const imgIdx = activeImageIdxRef.current
-      if (ev.keyCode === keys.right) setActiveImageIdx(imgIdx === images.length - 1 ? 0 : imgIdx + 1)
-      else if (ev.keyCode === keys.left) setActiveImageIdx(imgIdx === 0 ? images.length - 1 : imgIdx - 1)
-    },
-    imageNav = isGallery ? images.map((image, idx) =>
-      <div key={idx} className={css.navImgPlaceholder}>
-        <img
-          className={clas(css.img, css.navImg, 'lazy')}
-          ref={navImgRefs[idx]}
-          style={activeImageIdx === idx ? { filter: 'unset', border: '2px solid red' } : undefined}
-          alt={title}
-          data-src={getImageSrc(image)}
-          onClick={() => setActiveImageIdx(idx)}
-        />
-      </div>
-    ) : undefined
+    handleKeyDown = ({ key }: KeyboardEvent) => {
+      if (key === 'Escape') onClose()
+      if (key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
+      else if (key === 'ArrowLeft') setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
+    }
 
   React.useEffect(() => {
     // Set initial scroll position.
@@ -197,7 +154,7 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
       block: 'center'
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeImageIdx, images.length, navImgRefs])
+  }, [activeImageIdx, images.length])
 
   React.useLayoutEffect(() => {
     // Initialize intersection observer for lazy images.
@@ -205,24 +162,54 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
     lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
   }, [])
 
-  if (images.length === 0) throw new Error('No images passed to image lightbox component.')
-  if (activeImageIdx >= images.length) throw new Error(`Image with defaultImageIdx:${activeImageIdx} does not exist.`)
-
   return (
-    <div className={css.body} style={visible ? undefined : { display: 'none' }}>
+    <div className={css.body} style={{ display: visible ? 'block' : 'none' }}>
       <div className={css.header}>
-        <CloseButton onClose={onClose} />
+        <Fluent.ActionButton
+          styles={iconStyles}
+          onClick={onClose}
+          iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' } }}
+        />
       </div>
-      <div className={css.content} style={{ height: `calc(100% - ${isGallery ? '262px' : '100px'})` }}>
-        <img className={css.img} alt={title} src={src} />
-        {isGallery && <ArrowControls activeImageIdx={activeImageIdx} setActiveImageIdx={setActiveImageIdx} images={images} />}
+      <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
+        <img className={css.img} alt={title} src={getImageSrc(images[activeImageIdx])} />
+        {isGallery &&
+          <>
+            <div className={css.arrow} style={{ left: 0 }}>
+              <Fluent.ActionButton
+                styles={iconStyles}
+                onClick={() => setActiveImageIdx(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
+                iconProps={{ iconName: 'ChevronLeft', style: { fontSize: '22px' } }}
+              />
+            </div>
+            <div className={css.arrow} style={{ right: 0 }}>
+              <Fluent.ActionButton
+                styles={iconStyles}
+                onClick={() => setActiveImageIdx(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
+                iconProps={{ iconName: 'ChevronRight', style: { fontSize: '22px' } }}
+              />
+            </div>
+          </>
+        }
       </div>
-      <div className={css.footer} style={{ height: isGallery ? '260px' : '60px' }}>
+      <div className={css.footer} style={{ height: FOOTER_HEIGHT }}>
         <div className={css.imgCaptions}>
           <div title={title} className={clas(css.text, css.title)}>{title}</div>
           <div title={description} className={clas(css.text, css.description)}>{description || ''}</div>
         </div>
-        {isGallery && <div className={css.imageNav} ref={imageNavRef}>{imageNav}</div>}
+        {isGallery && <div className={css.imageNav} ref={imageNavRef}>
+          {images.map((image, idx) =>
+            <div key={idx} className={css.navImgContainer}>
+              <img
+                className={clas(css.img, css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
+                ref={navImgRefs[idx]}
+                style={activeImageIdx === idx ? imageHighlightStyle : undefined}
+                alt={title}
+                data-src={getImageSrc(image)}
+                onClick={() => setActiveImageIdx(idx)}
+              />
+            </div>
+          )}</div>}
       </div>
     </div>
   )
