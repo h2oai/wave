@@ -122,7 +122,6 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
     isGallery = images.length > 1,
     FOOTER_HEIGHT = isGallery ? IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_HEIGHT : IMAGE_CAPTIONS_HEIGHT,
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
-    navImgRefs: React.RefObject<HTMLImageElement>[] = images.map(() => React.createRef()),
     activeColor = isDark(getColorFromString(cssVar('$neutralPrimary'))!) ? cssVar('$card') : cssVar('$neutralPrimary'),
     imageHighlightStyle = { filter: 'unset', border: '2px solid', borderColor: activeColor },
     onClose = () => {
@@ -138,7 +137,12 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
 
   React.useEffect(() => {
     // Set initial scroll position.
-    if (isGallery) navImgRefs[activeImageIdx].current!.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'center' })
+    if (isGallery && imageNavRef.current) {
+      const
+        half = (imageNavRef.current.clientWidth / 2) - 62,
+        imageScroll = activeImageIdx * 124
+      if (imageScroll > half) imageNavRef.current.scrollLeft = imageScroll - half
+    }
     // Add keyboard events listener.
     if (visible) window.addEventListener("keydown", handleKeyDown)
     else window.removeEventListener("keydown", handleKeyDown)
@@ -148,11 +152,17 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
 
   // Handle image navigation scroll.
   React.useEffect(() => {
-    if (isGallery) navImgRefs[activeImageIdx].current!.scrollIntoView({
-      behavior: (activeImageIdx === 0 || activeImageIdx === images.length - 1) ? 'auto' : 'smooth',
-      inline: 'center',
-      block: 'center'
-    })
+    if (isGallery) {
+      const navRef = imageNavRef.current
+      if (navRef) {
+        const
+          half = (navRef.clientWidth / 2) - 62,
+          imageScroll = activeImageIdx * 124
+        if (activeImageIdx === 0) navRef.scrollLeft = 0
+        else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
+        else if (imageScroll > half) navRef.scrollTo({ left: imageScroll - half, behavior: 'smooth' })
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeImageIdx, images.length])
 
@@ -202,7 +212,6 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
             <div key={idx} className={css.navImgContainer}>
               <img
                 className={clas(css.img, css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
-                ref={navImgRefs[idx]}
                 style={activeImageIdx === idx ? imageHighlightStyle : undefined}
                 alt={title}
                 data-src={getImageSrc(image)}
