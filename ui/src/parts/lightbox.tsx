@@ -129,22 +129,22 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
       setActiveImageIdx(defaultImageIdx || 0)
       if (imageNavRef.current) imageNavRef.current.scrollLeft = 0
     },
-    handleKeyDown = ({ key }: KeyboardEvent) => {
-      if (key === 'Escape') onClose()
-      if (key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
-      else if (key === 'ArrowLeft') setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
+    handleKeyDown = (ev: KeyboardEvent) => {
+      if (['Escape', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) >= 0) ev.preventDefault()
+      if (ev.key === 'Escape') onClose()
+      if (ev.key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
+      else if (ev.key === 'ArrowLeft') setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
     }
 
   React.useEffect(() => {
     // Set initial scroll position.
     if (isGallery && imageNavRef.current) {
-      const
-        half = (imageNavRef.current.clientWidth / 2) - 62,
-        imageScroll = activeImageIdx * 124
+      const half = (imageNavRef.current.clientWidth / 2) - 62
+      const imageScroll = activeImageIdx * 124
       if (imageScroll > half) imageNavRef.current.scrollLeft = imageScroll - half
     }
     // Add keyboard events listener.
-    if (visible) window.addEventListener("keydown", handleKeyDown)
+    if (visible) window.addEventListener("keydown", handleKeyDown, { capture: true, passive: false })
     else window.removeEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,16 +152,14 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
 
   // Handle image navigation scroll.
   React.useEffect(() => {
-    if (isGallery) {
-      const navRef = imageNavRef.current
-      if (navRef) {
-        const
-          half = (navRef.clientWidth / 2) - 62,
-          imageScroll = activeImageIdx * 124
-        if (activeImageIdx === 0) navRef.scrollLeft = 0
-        else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
-        else if (imageScroll > half) navRef.scrollTo({ left: imageScroll - half, behavior: 'smooth' })
-      }
+    if (isGallery && imageNavRef.current) {
+      const
+        navRef = imageNavRef.current,
+        half = (navRef.clientWidth / 2) - 62,
+        imageScroll = activeImageIdx * 124
+      if (activeImageIdx === 0) navRef.scrollLeft = 0
+      else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
+      else if (imageScroll > half) navRef.scrollTo({ left: imageScroll - half, behavior: 'smooth' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeImageIdx, images.length])
