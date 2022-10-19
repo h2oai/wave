@@ -203,6 +203,7 @@ type PaginationProps = {
 const
   // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
+    // HACK: Put sorting icon on right (same as filter).
     sortableHeader: {
       $nest: {
         '.ms-DetailsHeader-cellName': {
@@ -462,16 +463,15 @@ const
         wave.args[m.name] = [item.key as S]
         wave.push()
       },
-      getItemColumnStyle = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
+      getCellComponent = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
         const TooltipWrapper = ({ children }: { children: S }) => {
-          const align = col.align || 'left'
           if (col.cellOverflow === 'tooltip') return (
             <Fluent.TooltipHost
               id={item.key as S}
               // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
-              styles={{ root: { '::after': { content: '', display: 'block' }, display: 'flex', justifyContent: align, textAlign: align } }}
+              styles={{ root: { '::after': { content: '', display: 'block' } } }}
               content={children}
               overflowMode={Fluent.TooltipOverflowMode.Parent}
               title={children}
@@ -508,14 +508,8 @@ const
         return <TooltipWrapper>{v}</TooltipWrapper>
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
-        if (!item || !col) return <span />
-
-        const AlignmentWrapper = ({ children }: { children: any }) => {
-          const align = col.align || 'left'
-          return <div style={{ display: 'flex', justifyContent: align, textAlign: align }}>{children}</div>
-        }
-
-        return <AlignmentWrapper>{getItemColumnStyle(item, _idx, col)}</AlignmentWrapper>
+        const align = col?.align || 'left'
+        return <div style={{ display: 'flex', justifyContent: align, textAlign: align }}>{getCellComponent(item, _idx, col)}</div>
       },
       // HACK: fixed jumping scrollbar issue when scrolling into the end of list with all groups expanded - https://github.com/microsoft/fluentui/pull/5204 
       getGroupHeight = (group: Fluent.IGroup) => {
