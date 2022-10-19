@@ -164,6 +164,41 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
+## Custom scales
+
+You can format your scales any way you want basically since `x` and `y` can be [expressions](/docs/expressions). The following example displays a way to show date and time from timestamp data.
+
+```py
+from h2o_wave import data
+
+q.page['example'] = ui.plot_card(
+    box='1 1 4 5',
+    title='Line',
+    data=data('year value', 9, rows=[
+        ('2020-05-04T10:22:21', 3),
+        ('2020-05-04T11:22:21', 4),
+        ('2020-05-04T12:22:21', 3.5),
+        ('2020-05-04T13:22:21', 5),
+        ('2020-05-04T14:22:21', 4.9),
+        ('2020-05-04T15:22:21', 6),
+        ('2020-05-04T16:22:21', 7),
+        ('2020-05-04T17:22:21', 9),
+        ('2020-05-04T18:22:21', 13),
+    ]),
+    plot=ui.plot([
+        ui.mark(
+            type='line',
+            x_scale='time',
+            x='={{intl year type="time" month="numeric" day="numeric" hour="numeric" minute="numeric" hourCycle="h24" }}',
+            y='=value',
+            y_min=0
+        )
+    ])
+)
+```
+
+See [formatting options](/docs/expressions#functions) for more info.
+
 ## Horizontal
 
 By default, all the plot cards are rendered vertically. However, there might be cases when you also want to provide a plot caption and conserve the space.

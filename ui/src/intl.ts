@@ -66,13 +66,13 @@ export const
     if (!isFormatExpr(s)) return null
 
     // "=foo"
-    s = s.substr(1) // lop off leading '='
+    s = s.substring(1) // lop off leading '='
 
     // "foo"
     if (isBareExpr(s)) return [s, undefined]
 
     // "{{func foo-bar ..."
-    const invocation = s.match(/\{\{\s*(\w+)\s+(\S+)/)
+    const invocation = s.match(/\{\{\s*(\w+)\s+(\w+)(.+)\}\}/)
     if (invocation) return [invocation[2], compile(s)]
 
     // "{{foo-bar ..."

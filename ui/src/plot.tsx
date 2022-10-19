@@ -901,7 +901,7 @@ const
     }
     return t
   },
-  makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
+  makeScale = (type?: S, format?: Fmt, title?: S, min?: S | F, max?: S | F, nice?: B): [ScaleOption, AxisOption | null] => {
     const
       scale: ScaleOption = {},
       axis: AxisOption = {
@@ -914,7 +914,7 @@ const
         // Manually set title to null to avoid the title being automatically displayed in v4.1.49+.
         title: null
       }
-    if (isS(typ)) scale.type = fixScaleType(typ) as any
+    if (isS(type)) scale.type = fixScaleType(type) as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
       scale.alias = title
