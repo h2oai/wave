@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { formItemWidth } from './theme'
 import { bond } from './ui'
-import { Lightbox } from './parts/lightbox'
+import { getImageSrc, lightboxB } from './parts/lightbox'
 
 const
   css = stylesheet({
@@ -67,18 +67,14 @@ export interface Image {
 }
 
 export const
-  XImage = ({ model: { title, type, image, path, width } }: { model: Image }) => {
+  XImage = ({ model: m }: { model: Image }) => {
     const
-      [lightboxVisible, setLightboxVisible] = React.useState(false),
-      src = path
-        ? path
-        : (image && type)
-          ? `data:image/${type};base64,${image}`
-          : ''
-    return <>
-      <img className={css.img} alt={title} src={src} width={formItemWidth(width)} onClick={() => setLightboxVisible(true)} />
-      <Lightbox images={[{ title, type, image, path }]} visible={lightboxVisible} onDismiss={() => setLightboxVisible(false)} />
-    </>
+      { title, type, image, path, width } = m,
+      src = getImageSrc(m),
+      lightboxProps = { images: [{ title, type, image, path }] }
+
+    return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} onClick={src ? () => lightboxB(lightboxProps) : undefined} />
+
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {

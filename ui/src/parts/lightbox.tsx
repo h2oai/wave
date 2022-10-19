@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, S, U } from 'h2o-wave'
+import { box, Box, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
+
+export const lightboxB: Box<LightboxProps | null> = box(null)
 
 const
   HEADER_HEIGHT = 40,
@@ -91,8 +93,6 @@ const
 type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
 
 interface LightboxProps {
-  visible: B,
-  onDismiss: () => void,
   images: Image[],
   defaultImageIdx?: U
 }
@@ -115,7 +115,7 @@ const
     })
   )
 
-export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: LightboxProps) => {
+export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
   const
     [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
     { title, description } = images[activeImageIdx],
@@ -125,7 +125,7 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
     activeColor = isDark(getColorFromString(cssVar('$neutralPrimary'))!) ? cssVar('$card') : cssVar('$neutralPrimary'),
     imageHighlightStyle = { filter: 'unset', border: '2px solid', borderColor: activeColor },
     onClose = () => {
-      onDismiss()
+      lightboxB(null)
       setActiveImageIdx(defaultImageIdx || 0)
       if (imageNavRef.current) imageNavRef.current.scrollLeft = 0
     },
@@ -143,12 +143,16 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
       const imageScroll = activeImageIdx * 124
       if (imageScroll > half) imageNavRef.current.scrollLeft = imageScroll - half
     }
+
+    // Initialize intersection observer for lazy images.
+    const lazyImages = [].slice.call(document.querySelectorAll(".lazy"))
+    lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
+
     // Add keyboard events listener.
-    if (visible) window.addEventListener("keydown", handleKeyDown, { capture: true, passive: false })
-    else window.removeEventListener("keydown", handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown, { capture: true, passive: false })
     return () => window.removeEventListener("keydown", handleKeyDown)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible])
+  }, [])
 
   // Handle image navigation scroll.
   React.useEffect(() => {
@@ -164,14 +168,8 @@ export const Lightbox = ({ visible, onDismiss, images, defaultImageIdx }: Lightb
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeImageIdx, images.length])
 
-  React.useLayoutEffect(() => {
-    // Initialize intersection observer for lazy images.
-    const lazyImages = [].slice.call(document.querySelectorAll(".lazy"))
-    lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
-  }, [])
-
   return (
-    <div className={css.body} style={{ display: visible ? 'block' : 'none' }}>
+    <div className={css.body}>
       <div className={css.header}>
         <Fluent.ActionButton
           styles={iconStyles}
