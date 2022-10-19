@@ -58,7 +58,7 @@ export const
   substitute = (formatString?: S, data?: Rec, defaultValue: any = null) => {
     return (formatString !== undefined && formatString !== null)
       ? isFormatExpr(formatString)
-        ? format(formatString.substr(1), data)
+        ? format(formatString.substring(1), data)
         : formatString
       : (defaultValue !== undefined && defaultValue !== null)
         ? defaultValue

@@ -40,7 +40,7 @@ export const XPersona = ({ model }: { model: Persona }) => {
   const onClick = () => {
     if (model.name) {
       if (model.name.startsWith('#')) {
-        window.location.hash = model.name.substr(1)
+        window.location.hash = model.name.substring(1)
         return
       }
       wave.args[model.name] = true
