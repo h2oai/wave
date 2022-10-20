@@ -103,18 +103,6 @@ export const getImageSrc = ({ type, image, path }: Image) => path
     ? `data:image/${type};base64,${image}`
     : ''
 
-const
-  lazyImageObserver = new IntersectionObserver(entries =>
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const lazyImage = entry.target as HTMLImageElement
-        lazyImage.src = lazyImage.dataset.src!
-        lazyImage.classList.remove("lazy")
-        lazyImageObserver.unobserve(lazyImage)
-      }
-    })
-  )
-
 export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
   const
     [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
@@ -124,6 +112,16 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     activeColor = isDark(getColorFromString(cssVar('$neutralPrimary'))!) ? cssVar('$card') : cssVar('$neutralPrimary'),
     imageHighlightStyle = { filter: 'unset', border: '2px solid', borderColor: activeColor },
+    lazyImageObserver = new window.IntersectionObserver(entries =>
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const lazyImage = entry.target as HTMLImageElement
+          lazyImage.src = lazyImage.dataset.src!
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      })
+    ),
     onClose = () => {
       lightboxB(null)
       setActiveImageIdx(defaultImageIdx || 0)
