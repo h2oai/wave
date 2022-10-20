@@ -159,11 +159,11 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     if (isGallery && imageNavRef.current) {
       const
         navRef = imageNavRef.current,
-        half = (navRef.clientWidth / 2) - 62,
-        imageScroll = activeImageIdx * 124
+        scrollLeftMiddle = (navRef.clientWidth / 2) - 62,
+        scrollLeftActiveImage = activeImageIdx * 124
       if (activeImageIdx === 0) navRef.scrollLeft = 0
       else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
-      else if (imageScroll > half) navRef.scrollTo({ left: imageScroll - half, behavior: 'smooth' })
+      else if (scrollLeftActiveImage > scrollLeftMiddle) navRef.scrollTo({ left: scrollLeftActiveImage - scrollLeftMiddle, behavior: 'smooth' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeImageIdx, images.length])

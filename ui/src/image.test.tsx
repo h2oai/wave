@@ -27,9 +27,25 @@ const
 
 describe('Image.tsx', () => {
 
+  beforeEach(() => { jest.clearAllMocks() })
+
+  beforeAll(() => {
+    const mockIntersectionObserver = {
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+    }
+    // @ts-ignore
+    window.IntersectionObserver = jest.fn(() => mockIntersectionObserver)
+  })
+
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...imageProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Opens image lightbox after clicking on image', () => {
+    const { queryByTestId } = render(<View {...imageProps} />)
+    expect(queryByTestId('lightbox')).toBeInTheDocument()
   })
 
 })
