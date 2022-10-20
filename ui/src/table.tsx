@@ -349,7 +349,7 @@ const
           fieldName: c.name,
           minWidth,
           maxWidth,
-          headerClassName: c.sortable ? css.sortableHeader: undefined,
+          headerClassName: c.sortable ? css.sortableHeader : undefined,
           iconClassName: c.sortable ? css.sortingIcon : undefined,
           onColumnClick,
           columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
@@ -466,7 +466,7 @@ const
       getCellComponent = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
-        const TooltipWrapper = ({ children }: { children: S }) => {
+        const TooltipWrapper = ({ children }: { children: JSX.Element }) => {
           if (col.cellOverflow === 'tooltip') return (
             <Fluent.TooltipHost
               id={item.key as S}
@@ -474,7 +474,6 @@ const
               styles={{ root: { '::after': { content: '', display: 'block' } } }}
               content={children}
               overflowMode={Fluent.TooltipOverflowMode.Parent}
-              title={children}
             >{children}</Fluent.TooltipHost>
           )
           return <>{children}</>
@@ -496,13 +495,7 @@ const
             wave.args[m.name] = [item.key as S]
             wave.push()
           }
-          const align = col.align || 'left'
-          return (
-            <Fluent.Link onClick={onClick}>
-              <div style={{ display: 'flex', justifyContent: align, textAlign: align }}>
-                <TooltipWrapper>{v}</TooltipWrapper>
-              </div>
-            </Fluent.Link>)
+          return <TooltipWrapper><Fluent.Link onClick={onClick} styles={{ root: { textAlign: col?.align || 'left' } }}>{v}</Fluent.Link></TooltipWrapper>
         }
 
         return <TooltipWrapper>{v}</TooltipWrapper>
