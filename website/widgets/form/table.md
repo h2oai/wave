@@ -35,7 +35,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 
 ## With column alignment
 
-With this option, you can align the values of a particular column to `left`, `right` or `center`. This is optional and the default alignment is set to `left`
+With this option, you can align the values of a particular column to `left`, `right` or `center`. This is optional and the default alignment is set to `left`.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
