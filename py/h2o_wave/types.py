@@ -3358,6 +3358,15 @@ class TableColumnCellOverflow:
     WRAP = 'wrap'
 
 
+_TableColumnAlign = ['left', 'center', 'right']
+
+
+class TableColumnAlign:
+    LEFT = 'left'
+    CENTER = 'center'
+    RIGHT = 'right'
+
+
 class TableColumn:
     """Create a table column.
     """
@@ -3375,6 +3384,7 @@ class TableColumn:
             cell_type: Optional[TableCellType] = None,
             cell_overflow: Optional[str] = None,
             filters: Optional[List[str]] = None,
+            align: Optional[str] = None,
     ):
         _guard_scalar('TableColumn.name', name, (str,), True, False, False)
         _guard_scalar('TableColumn.label', label, (str,), False, False, False)
@@ -3388,6 +3398,7 @@ class TableColumn:
         _guard_scalar('TableColumn.cell_type', cell_type, (TableCellType,), False, True, False)
         _guard_enum('TableColumn.cell_overflow', cell_overflow, _TableColumnCellOverflow, True)
         _guard_vector('TableColumn.filters', filters, (str,), False, True, False)
+        _guard_enum('TableColumn.align', align, _TableColumnAlign, True)
         self.name = name
         """An identifying name for this column."""
         self.label = label
@@ -3412,6 +3423,8 @@ class TableColumn:
         """Defines what to do with a cell's contents in case it does not fit inside the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow."""
         self.filters = filters
         """List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns."""
+        self.align = align
+        """Defines how to align values in a column. One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3427,6 +3440,7 @@ class TableColumn:
         _guard_scalar('TableColumn.cell_type', self.cell_type, (TableCellType,), False, True, False)
         _guard_enum('TableColumn.cell_overflow', self.cell_overflow, _TableColumnCellOverflow, True)
         _guard_vector('TableColumn.filters', self.filters, (str,), False, True, False)
+        _guard_enum('TableColumn.align', self.align, _TableColumnAlign, True)
         return _dump(
             name=self.name,
             label=self.label,
@@ -3440,6 +3454,7 @@ class TableColumn:
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
             cell_overflow=self.cell_overflow,
             filters=self.filters,
+            align=self.align,
         )
 
     @staticmethod
@@ -3469,6 +3484,8 @@ class TableColumn:
         _guard_enum('TableColumn.cell_overflow', __d_cell_overflow, _TableColumnCellOverflow, True)
         __d_filters: Any = __d.get('filters')
         _guard_vector('TableColumn.filters', __d_filters, (str,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('TableColumn.align', __d_align, _TableColumnAlign, True)
         name: str = __d_name
         label: str = __d_label
         min_width: Optional[str] = __d_min_width
@@ -3481,6 +3498,7 @@ class TableColumn:
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         cell_overflow: Optional[str] = __d_cell_overflow
         filters: Optional[List[str]] = __d_filters
+        align: Optional[str] = __d_align
         return TableColumn(
             name,
             label,
@@ -3494,6 +3512,7 @@ class TableColumn:
             cell_type,
             cell_overflow,
             filters,
+            align,
         )
 
 
