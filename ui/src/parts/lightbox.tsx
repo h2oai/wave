@@ -27,14 +27,6 @@ const
   IMAGE_NAV_HEIGHT = 142
 
 const
-  iconStyles: Fluent.IButtonStyles = {
-    flexContainer: { justifyContent: 'center' },
-    root: { margin: '4px 4px', width: 38, height: 38, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
-    rootHovered: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
-    icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4 },
-    iconHovered: { color: '#fff' },
-    iconPressed: { color: 'rgba(255, 255, 255, 0.7)' },
-  },
   css = stylesheet({
     body: {
       position: 'fixed',
@@ -75,20 +67,21 @@ const
       filter: 'brightness(30%)',
       border: '2px solid black'
     },
-    arrow: {
-      position: "absolute",
-      top: "50%",
-      width: "auto",
-      padding: "16px",
-      marginTop: "-50px",
-      color: "#fff",
-    },
     imgCaptions: { whiteSpace: 'nowrap', padding: '10px 40px', height: '40px' },
     text: { textOverflow: 'ellipsis', overflow: 'hidden' },
     title: { fontWeight: 500 },
     description: { color: '#bbb' },
     navImgContainer: { display: 'inline-block', width: '124px' }
-  })
+  }),
+  iconStyles: Fluent.IButtonStyles = {
+    flexContainer: { justifyContent: 'center' },
+    rootHovered: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
+    icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4 },
+    iconHovered: { color: '#fff' },
+    iconPressed: { color: 'rgba(255, 255, 255, 0.7)' },
+  },
+  iconStylesRoot: Fluent.IStyle = { margin: '4px 4px', width: 38, height: 38, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
+  iconStylesRootArrow: Fluent.IStyle = { ...iconStylesRoot, position: "absolute", top: "50%", padding: "16px", marginTop: "-50px", }
 
 type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
 
@@ -170,7 +163,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     <div className={css.body}>
       <div className={css.header}>
         <Fluent.ActionButton
-          styles={iconStyles}
+          styles={{ ...iconStyles, root: iconStylesRoot }}
           onClick={onClose}
           iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' } }}
         />
@@ -179,20 +172,18 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         <img className={css.img} alt={title} src={getImageSrc(images[activeImageIdx])} />
         {isGallery &&
           <>
-            <div className={css.arrow} style={{ left: 0 }}>
-              <Fluent.ActionButton
-                styles={iconStyles}
-                onClick={() => setActiveImageIdx(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
-                iconProps={{ iconName: 'ChevronLeft', style: { fontSize: '22px' } }}
-              />
-            </div>
-            <div className={css.arrow} style={{ right: 0 }}>
-              <Fluent.ActionButton
-                styles={iconStyles}
-                onClick={() => setActiveImageIdx(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
-                iconProps={{ iconName: 'ChevronRight', style: { fontSize: '22px' } }}
-              />
-            </div>
+            <Fluent.ActionButton
+              styles={{ ...iconStyles, root: iconStylesRootArrow }}
+              style={{ left: 0 }}
+              onClick={() => setActiveImageIdx(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
+              iconProps={{ iconName: 'ChevronLeft', style: { fontSize: '22px' } }}
+            />
+            <Fluent.ActionButton
+              styles={{ ...iconStyles, root: iconStylesRootArrow }}
+              style={{ right: 0 }}
+              onClick={() => setActiveImageIdx(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
+              iconProps={{ iconName: 'ChevronRight', style: { fontSize: '22px' } }}
+            />
           </>
         }
       </div>
