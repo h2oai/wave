@@ -19,7 +19,7 @@ import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
 
-export const lightboxB: Box<LightboxProps | null> = box(null)
+export const lightboxB: Box<LightboxProps | null> = box()
 
 const
   HEADER_HEIGHT = 40,

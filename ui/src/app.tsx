@@ -114,6 +114,7 @@ const
             case WaveEventType.Page:
               {
                 const page = e.page
+                const lightbox = lightboxB()
                 return (
                   <Fluent.Fabric applyTheme>
                     <div className={css.app}>
@@ -122,7 +123,7 @@ const
                       <Dialog />
                       <SidePanel />
                       <NotificationBar />
-                      {lightboxB() ? <Lightbox {...lightboxB()} /> : null}
+                      {lightbox && <Lightbox {...lightbox} />}
                     </div>
                   </Fluent.Fabric>
                 )
