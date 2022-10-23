@@ -18,6 +18,7 @@ import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
+import { getImageSrc } from '../image'
 
 export const lightboxB: Box<LightboxProps | null> = box()
 
@@ -107,12 +108,6 @@ export interface LightboxProps {
   images: Image[],
   defaultImageIdx?: U
 }
-
-export const getImageSrc = ({ type, image, path }: Image) => path
-  ? path
-  : (image && type)
-    ? `data:image/${type};base64,${image}`
-    : ''
 
 export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
   const

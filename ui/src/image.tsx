@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { formItemWidth } from './theme'
 import { bond } from './ui'
-import { getImageSrc, lightboxB, LightboxProps } from './parts/lightbox'
+import { lightboxB, LightboxProps } from './parts/lightbox'
 
 const
   css = stylesheet({
@@ -65,6 +65,12 @@ export interface Image {
   /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
+
+export const getImageSrc = ({ type, image, path }: Image) => path
+  ? path
+  : (image && type)
+    ? `data:image/${type};base64,${image}`
+    : ''
 
 export const
   XImage = ({ model: m }: { model: Image }) => {
