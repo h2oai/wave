@@ -93,6 +93,9 @@ const
       marginTop: "-50px"
     }
   }),
+  styles: { [key: S]: React.CSSProperties } = {
+    icon: { fontSize: '22px' }
+  },
   iconStyles: Fluent.IButtonStyles = {
     flexContainer: { justifyContent: 'center' },
     root: { margin: '4px 4px', width: 38, height: 38, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
@@ -171,7 +174,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         <Fluent.ActionButton
           styles={iconStyles}
           onClick={() => lightboxB(null)}
-          iconProps={{ iconName: 'Cancel', style: { fontSize: '22px' } }}
+          iconProps={{ iconName: 'Cancel', style: styles.icon }}
         />
       </div>
       <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
@@ -183,14 +186,14 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
               className={css.iconStylesRootArrow}
               style={{ left: 0 }}
               onClick={() => setActiveImageIdx(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
-              iconProps={{ iconName: 'ChevronLeft', style: { fontSize: '22px' } }}
+              iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
             />
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ right: 0 }}
               onClick={() => setActiveImageIdx(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
-              iconProps={{ iconName: 'ChevronRight', style: { fontSize: '22px' } }}
+              iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
             />
           </>
         }
