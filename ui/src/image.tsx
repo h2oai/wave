@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { formItemWidth } from './theme'
 import { bond } from './ui'
-import { getImageSrc, lightboxB } from './parts/lightbox'
+import { getImageSrc, lightboxB, LightboxProps } from './parts/lightbox'
 
 const
   css = stylesheet({
@@ -71,7 +71,7 @@ export const
     const
       { title, type, image, path, width } = m,
       src = getImageSrc(m),
-      lightboxProps = { images: [{ title, type, image, path }] }
+      lightboxProps: LightboxProps = { images: [{ title, type, image, path }] }
 
     return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} onClick={src ? () => lightboxB(lightboxProps) : undefined} />
 

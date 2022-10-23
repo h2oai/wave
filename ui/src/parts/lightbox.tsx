@@ -103,7 +103,7 @@ const
 
 type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
 
-interface LightboxProps {
+export interface LightboxProps {
   images: Image[],
   defaultImageIdx?: U
 }
