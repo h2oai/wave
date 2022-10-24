@@ -21,6 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { NotificationBar } from './notification_bar'
 import { PageLayout } from './page'
+import { Lightbox, lightboxB } from './parts/lightbox'
 import SidePanel from './side_panel'
 import { clas, cssVar, pc } from './theme'
 import { bond, busyB, config, contentB, listen, wave } from './ui'
@@ -113,6 +114,7 @@ const
             case WaveEventType.Page:
               {
                 const page = e.page
+                const lightbox = lightboxB()
                 return (
                   <Fluent.ThemeProvider>
                     <div className={css.app}>
@@ -121,6 +123,7 @@ const
                       <Dialog />
                       <SidePanel />
                       <NotificationBar />
+                      {lightbox && <Lightbox {...lightbox} />}
                     </div>
                   </Fluent.ThemeProvider>
                 )
@@ -157,7 +160,7 @@ const
         window.removeEventListener('md-link-click', onMdLinkClick)
       }
 
-    return { init, render, dispose, contentB }
+    return { init, render, dispose, contentB, lightboxB }
   })
 
 export default App

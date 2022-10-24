@@ -18,6 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { formItemWidth } from './theme'
 import { bond } from './ui'
+import { lightboxB, LightboxProps } from './parts/lightbox'
 
 const
   css = stylesheet({
@@ -29,7 +30,8 @@ const
     img: {
       flexGrow: 1,
       objectFit: 'contain',
-      maxHeight: 'calc(100% - 20px)'
+      maxHeight: 'calc(100% - 20px)',
+      cursor: 'pointer'
     }
   })
 
@@ -64,15 +66,21 @@ export interface Image {
   visible?: B
 }
 
+export const getImageSrc = ({ type, image, path }: Image) => path
+  ? path
+  : (image && type)
+    ? `data:image/${type};base64,${image}`
+    : ''
+
 export const
-  XImage = ({ model: { title, type, image, path, width } }: { model: Image }) => {
+  XImage = ({ model: m }: { model: Image }) => {
     const
-      src = path
-        ? path
-        : (image && type)
-          ? `data:image/${type};base64,${image}`
-          : ''
-    return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} />
+      { title, type, image, path, width } = m,
+      src = getImageSrc(m),
+      lightboxProps: LightboxProps = { images: [{ title, type, image, path }] }
+
+    return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} onClick={src ? () => lightboxB(lightboxProps) : undefined} />
+
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {
