@@ -25,7 +25,8 @@ export const lightboxB: Box<LightboxProps | null> = box()
 const
   HEADER_HEIGHT = 40,
   IMAGE_CAPTIONS_HEIGHT = 60,
-  IMAGE_NAV_HEIGHT = 142
+  IMAGE_NAV_HEIGHT = 148,
+  IMAGE_SIZE = 120
 
 const
   css = stylesheet({
@@ -60,17 +61,18 @@ const
     navImg: {
       boxSizing: 'border-box',
       objectFit: 'cover',
-      height: '120px',
-      width: '120px',
-      margin: '0px 2px',
+      height: IMAGE_SIZE,
+      width: IMAGE_SIZE,
+      margin: '2px',
       cursor: 'pointer',
       filter: 'brightness(30%)',
       border: '2px solid #000'
     },
     imgCaptions: {
       whiteSpace: 'nowrap',
+      boxSizing: 'border-box',
       padding: '10px 40px',
-      height: IMAGE_CAPTIONS_HEIGHT - 20
+      height: IMAGE_CAPTIONS_HEIGHT
     },
     text: {
       textOverflow: 'ellipsis',
@@ -84,7 +86,7 @@ const
     },
     navImgContainer: {
       display: 'inline-block',
-      width: '124px'
+      width: IMAGE_SIZE
     },
     iconStylesRootArrow: {
       position: "absolute",
@@ -118,6 +120,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     { title, description } = images[activeImageIdx],
     isGallery = images.length > 1,
     FOOTER_HEIGHT = isGallery ? IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_HEIGHT : IMAGE_CAPTIONS_HEIGHT,
+    rootElementRef = React.useRef<HTMLDivElement | null>(null),
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     defaultScrollSetRef = React.useRef(false),
     activeColor = isDark(getColorFromString(cssVar('$neutralPrimary'))!) ? cssVar('$card') : cssVar('$neutralPrimary'),
@@ -132,21 +135,18 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         }
       })
     ),
-    handleKeyDown = (ev: KeyboardEvent) => {
-      if (['Escape', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) >= 0) ev.preventDefault()
+    handleKeyDown = (ev: any) => {
       if (ev.key === 'Escape') lightboxB(null)
-      if (ev.key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
+      else if (ev.key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
       else if (ev.key === 'ArrowLeft') setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
     }
 
   React.useEffect(() => {
     // Initialize intersection observer for lazy images.
-    const lazyImages = [].slice.call(document.querySelectorAll(".lazy"))
-    lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
+    document.querySelectorAll(".lazy").forEach(lazyImage => lazyImageObserver.observe(lazyImage))
 
     // Add keyboard events listener.
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+    rootElementRef?.current?.focus()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -155,8 +155,8 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     if (isGallery && imageNavRef.current) {
       const
         navRef = imageNavRef.current,
-        scrollLeftMiddle = (navRef.clientWidth / 2) - 62,
-        scrollLeftActiveImage = activeImageIdx * 124,
+        scrollLeftMiddle = (navRef.clientWidth / 2) - (IMAGE_SIZE / 2),
+        scrollLeftActiveImage = activeImageIdx * IMAGE_SIZE,
         scrollBehavior = defaultScrollSetRef.current ? 'smooth' : 'auto'
       if (activeImageIdx === 0) navRef.scrollLeft = 0
       else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
@@ -169,7 +169,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
   }, [activeImageIdx])
 
   return (
-    <div className={css.body}>
+    <div className={css.body} onKeyDown={handleKeyDown} tabIndex={0} ref={rootElementRef}>
       <div className={css.header}>
         <Fluent.ActionButton
           styles={iconStyles}
@@ -185,14 +185,14 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ left: 0 }}
-              onClick={() => setActiveImageIdx(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
+              onClick={() => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)}
               iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
             />
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ right: 0 }}
-              onClick={() => setActiveImageIdx(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
+              onClick={() => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)}
               iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
             />
           </>
