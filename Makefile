@@ -64,6 +64,7 @@ build-apps: ## Prepare apps for HAC upload.
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
 	rm -rf py/tmp
 	cd studio && $(MAKE) build
+	cd university && $(MAKE) build
 
 generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
@@ -122,7 +123,7 @@ build-docker:
 		.
 
 run: ## Run server
-	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy -public-dir /assets/@./assets
+	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy
 
 run-db: ## Run database server
 	go run cmd/wavedb/main.go
