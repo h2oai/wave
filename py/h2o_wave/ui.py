@@ -3058,27 +3058,9 @@ def image_card(
     )
 
 
-def grid_image(
-        title: str,
-        path: str,
-) -> GridImage:
-    """No documentation available.
-
-    Args:
-        title: No documentation available.
-        path: No documentation available.
-    Returns:
-        A `h2o_wave.types.GridImage` instance.
-    """
-    return GridImage(
-        title,
-        path,
-    )
-
-
 def image_grid_card(
         box: str,
-        images: List[GridImage],
+        images: List[Component],
         width: Optional[str] = None,
         height: Optional[str] = None,
         commands: Optional[List[Command]] = None,

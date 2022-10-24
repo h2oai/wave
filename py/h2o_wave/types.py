@@ -8688,58 +8688,19 @@ class ImageCard:
         )
 
 
-class GridImage:
-    """No documentation available.
-    """
-    def __init__(
-            self,
-            title: str,
-            path: str,
-    ):
-        _guard_scalar('GridImage.title', title, (str,), False, False, False)
-        _guard_scalar('GridImage.path', path, (str,), False, False, False)
-        self.title = title
-        """No documentation available."""
-        self.path = path
-        """No documentation available."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('GridImage.title', self.title, (str,), False, False, False)
-        _guard_scalar('GridImage.path', self.path, (str,), False, False, False)
-        return _dump(
-            title=self.title,
-            path=self.path,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'GridImage':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_title: Any = __d.get('title')
-        _guard_scalar('GridImage.title', __d_title, (str,), False, False, False)
-        __d_path: Any = __d.get('path')
-        _guard_scalar('GridImage.path', __d_path, (str,), False, False, False)
-        title: str = __d_title
-        path: str = __d_path
-        return GridImage(
-            title,
-            path,
-        )
-
-
 class ImageGridCard:
     """No documentation available.
     """
     def __init__(
             self,
             box: str,
-            images: List[GridImage],
+            images: List[Component],
             width: Optional[str] = None,
             height: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageGridCard.box', box, (str,), False, False, False)
-        _guard_vector('ImageGridCard.images', images, (GridImage,), False, False, False)
+        _guard_vector('ImageGridCard.images', images, (Component,), False, False, False)
         _guard_scalar('ImageGridCard.width', width, (str,), False, True, False)
         _guard_scalar('ImageGridCard.height', height, (str,), False, True, False)
         _guard_vector('ImageGridCard.commands', commands, (Command,), False, True, False)
@@ -8757,7 +8718,7 @@ class ImageGridCard:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageGridCard.box', self.box, (str,), False, False, False)
-        _guard_vector('ImageGridCard.images', self.images, (GridImage,), False, False, False)
+        _guard_vector('ImageGridCard.images', self.images, (Component,), False, False, False)
         _guard_scalar('ImageGridCard.width', self.width, (str,), False, True, False)
         _guard_scalar('ImageGridCard.height', self.height, (str,), False, True, False)
         _guard_vector('ImageGridCard.commands', self.commands, (Command,), False, True, False)
@@ -8784,7 +8745,7 @@ class ImageGridCard:
         __d_commands: Any = __d.get('commands')
         _guard_vector('ImageGridCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
-        images: List[GridImage] = [GridImage.load(__e) for __e in __d_images]
+        images: List[Component] = [Component.load(__e) for __e in __d_images]
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]

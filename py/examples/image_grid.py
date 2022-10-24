@@ -8,7 +8,7 @@ path = "https://images.unsplash.com/photo-1664136535720-ce2cd0087987?ixlib=rb-1.
 @app("/demo")
 async def serve(q: Q) -> None:
     q.page["grid"] = ui.image_grid_card(box="1 1 5 6", height="100px", images=[
-        ui.grid_image(title="hello", path=f"https://source.unsplash.com/random/sig={i}") for i in range(100)
+        ui.image(title="hello-{i}", path=f"https://source.unsplash.com/random/sig={i}") for i in range(40)
     ])
 
     await q.page.save()

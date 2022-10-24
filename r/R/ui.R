@@ -3556,24 +3556,6 @@ ui_image_card <- function(
 
 #' No documentation available.
 #'
-#' @param title No documentation available.
-#' @param path No documentation available.
-#' @return A GridImage instance.
-#' @export
-ui_grid_image <- function(
-  title,
-  path) {
-  .guard_scalar("title", "character", title)
-  .guard_scalar("path", "character", path)
-  .o <- list(
-    title=title,
-    path=path)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveGridImage"))
-  return(.o)
-}
-
-#' No documentation available.
-#'
 #' @param box A string indicating how to place this component on the page.
 #' @param images Images
 #' @param width No documentation available.
@@ -3588,7 +3570,7 @@ ui_image_grid_card <- function(
   height = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("images", "WaveGridImage", images)
+  .guard_vector("images", "WaveComponent", images)
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
   .guard_vector("commands", "WaveCommand", commands)

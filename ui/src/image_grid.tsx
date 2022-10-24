@@ -14,11 +14,14 @@
 // limitations under the License.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import * as Fluent from '@fluentui/react'
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { XImage } from './image'
+import { Component } from './form'
+// import { Image } from './image'
 import { cards } from './layout'
+import { lightboxB } from './parts/lightbox'
 import { bond } from './ui'
 
 const css = stylesheet({
@@ -32,40 +35,64 @@ const css = stylesheet({
   },
 })
 
+interface ImageGrid {
+  images: Component[]
+  width?: S,
+  height?: S,
+}
 export interface State {
   /** Images */
-  images: GridImage[]
+  // images: Image[]
+  images: Component[],
   width?: S
   height?: S
 }
 
-export interface GridImage {
-  title: S
-  path: S
-}
+export const
+  XImageGrid = ({ model: m }: { model: ImageGrid }) => {
+    const
+      { width, height, images } = m,
+      onRenderCell = React.useCallback((image, index: number | undefined) => {
+        return (
+          <div key={index} style={{ height: height }}>
+            <img
+              width={width}
+              height={height}
+              style={{ flex: `0 0 ${width}px`, objectFit: 'contain', cursor: 'pointer' }}
+              src={image.path}
+              onClick={image.path ? () => lightboxB({ images: images, defaultImageIdx: index }) : undefined}
+            />
+          </div>
+        )
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
 
-export const View = bond(({ name, state, changed }: Model<State>) => {
-  const rowHeight = 90 // random number, docs says 76 but usually it's more than that
-  const rows = state.box.substring(6)
-  const viewportHeight = rowHeight * rows
+    console.log('images:', images)
 
-  const shouldRenderImage = () => true
+    return (
+      <Fluent.FocusZone>
+        <Fluent.List
+          // className={classNames.listGridExample}
+          // style={{ display: 'inline-block' }}
+          items={images.length ? images : undefined}
+          // getItemCountForPage={getItemCountForPage}
+          // getPageHeight={getPageHeight}
+          // renderedWindowsAhead={4}
+          onRenderCell={onRenderCell}
+        />
+      </Fluent.FocusZone>
+    )
 
+  },
+  View = bond(({ name, state: { width, height, images }, changed }: Model<State>) => {
+    // const rowHeight = 90 // random number, docs says 76 but usually it's more than that
+    // const rows = state.box.substring(6)
+    // const viewportHeight = rowHeight * rows
+    // const shouldRenderImage = () => true
 
-  const render = () => {
-      return (
-        <div data-test={name} className={css.container}>
-          {state.images?.length && state.images.map((i, idx) =>
-            (
-              <div key={idx} style={{ height: state.height }}>
-                <img width={state.width} height={state.height} style={{ flex: `0 0 ${state.width}px`, objectFit: 'contain' }}  src={i.path} /> 
-              </div>
-            )
-          )}
-        </div >
-      )
-    }
+    const render = () => <XImageGrid model={{ width, height, images: images.flatMap(({ image }) => image) }} />
+
     return { render, changed }
-})
+  })
 
 cards.register('image_grid', View)

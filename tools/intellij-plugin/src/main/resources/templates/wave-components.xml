@@ -256,16 +256,15 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_image_grid_card" value="ui.image_grid_card(box='$box$',images=[&#10;	$images$	&#10;])$END$" description="Create a minimal Wave ImageGridCard." toReformat="true" toShortenFQNames="true">
-    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+  <template name="w_image_grid" value="ui.image_grid(images=[&#10;	$images$	&#10;]),$END$" description="Create a minimal Wave ImageGrid." toReformat="true" toShortenFQNames="true">
     <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_grid_image" value="ui.grid_image(title='$title$',path='$path$'),$END$" description="Create a minimal Wave GridImage." toReformat="true" toShortenFQNames="true">
-    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
+  <template name="w_image_grid_card" value="ui.image_grid_card(box='$box$',images=[&#10;	$images$	&#10;])$END$" description="Create a minimal Wave ImageGridCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -1452,19 +1451,20 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_full_image_grid" value="ui.image_grid(width='$width$',height='$height$',images=[&#10;	$images$	&#10;]),$END$" description="Create Wave ImageGrid with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_full_image_grid_card" value="ui.image_grid_card(box='$box$',width='$width$',height='$height$',images=[&#10;	$images$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ImageGridCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
-  <template name="w_full_grid_image" value="ui.grid_image(title='$title$',path='$path$'),$END$" description="Create Wave GridImage with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
