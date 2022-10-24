@@ -72,19 +72,13 @@ export const
     white: '#fff',
     yellow: '#ffeb3b',
   },
-  // Src: https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
   getContrast = (color: S) => {
-    if (color.startsWith('$')) color = cssVarValue(color)
-    if (color.startsWith('#')) color = color.slice(1)
-    if (color.length === 3) color = color.split('').map(hex => `${hex}${hex}`).join('')
+    const colorFromString = Fluent.getColorFromString(color.startsWith('$') ? cssVarValue(color) : color)
+    if (!colorFromString) return 'black'
 
-    const
-      r = parseInt(color.substr(0, 2), 16),
-      g = parseInt(color.substr(2, 2), 16),
-      b = parseInt(color.substr(4, 2), 16),
-      yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
-
-    return yiq >= 128 ? 'black' : 'white'
+    const { r, g, b } = colorFromString
+    // Src: https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
+    return ((r * 299) + (g * 587) + (b * 114)) / 1000 >= 128 ? 'black' : 'white'
   }
 
 const
