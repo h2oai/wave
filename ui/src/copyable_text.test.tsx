@@ -25,4 +25,13 @@ describe('CopyableText.tsx', () => {
     const { queryByTestId } = render(<XCopyableText model={copyableTextProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
+
+  it('Display new value when "value" prop changes', () => {
+    const { getByTestId, rerender } = render(<XCopyableText model={{ ...copyableTextProps, value: 'A' }} />)
+    expect(getByTestId(name).querySelector('input')).toHaveValue('A')
+
+    rerender(<XCopyableText model={{ ...copyableTextProps, value: 'B' }} />)
+    expect(getByTestId(name).querySelector('input')).toHaveValue('B')
+  })
+
 })
