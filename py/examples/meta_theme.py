@@ -24,7 +24,7 @@ async def serve(q: Q):
             ui.slider(name='slider', label='Slider'),
             ui.button(name='toggle_theme', label='Toggle Theme', primary=True)
         ])
-        q.client.theme = 'default'
+        q.client.theme = 'neon'
         q.client.initialized = True
 
     meta = q.page['meta']

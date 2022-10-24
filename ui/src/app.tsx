@@ -114,7 +114,7 @@ const
               {
                 const page = e.page
                 return (
-                  <Fluent.Fabric applyTheme>
+                  <Fluent.ThemeProvider>
                     <div className={css.app}>
                       <PageLayout key={page.key} page={page} />
                       <BusyOverlay />
@@ -122,7 +122,7 @@ const
                       <SidePanel />
                       <NotificationBar />
                     </div>
-                  </Fluent.Fabric>
+                  </Fluent.ThemeProvider>
                 )
               }
             case WaveEventType.Error:
