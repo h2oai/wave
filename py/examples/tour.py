@@ -208,6 +208,7 @@ def get_wave_completions(line, character, file_content):
         js_code = f.read()
     template = Template(js_code).substitute(
         tour_assets=q.app.tour_assets,
+        base_url=_base_url,
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
         py_content=py_content

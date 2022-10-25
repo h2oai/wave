@@ -14,8 +14,8 @@ build: # Prepare bundle for HAIC.
 		rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
 		cp ../tools/vscode-extension/server/parser.py tmp/autocomplete_parser.py
 		cp ../tools/vscode-extension/server/utils.py tmp/autocomplete_utils.py
-		cp ../tools/vscode-extension/base-snippets.json tmp/base-snippets.json
-		cp ../tools/vscode-extension/component-snippets.json tmp/component-snippets.json
+		cp ../tools/vscode-extension/base-snippets.json tmp/static/base-snippets.json
+		cp ../tools/vscode-extension/component-snippets.json tmp/static/component-snippets.json
 		$(SED) -i -r -e "s/\{\{VERSION\}\}/$(VERSION)/g" tmp/app.toml
 		mkdir -p ../build/apps/wave-university
 		cd tmp && zip -r wave-university-$(VERSION).wave * && cd -
