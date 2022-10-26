@@ -584,6 +584,8 @@ const
           dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
           data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
+          // Add BOM prefix to data. This is required to export unicode characters in the table correctly
+          // Reference: https://stackoverflow.com/a/18251283/1970068
           blob = new Blob(['\uFEFF', data], { type: "text/csv;charset=utf-8," }),
           url = window.URL.createObjectURL(blob)
 
