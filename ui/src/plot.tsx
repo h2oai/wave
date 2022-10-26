@@ -877,18 +877,16 @@ const
     for (const m of marks) {
       if (m.x_field) {
         const [x_scale, x_axis] = makeScale(m.x_scale, m.x_format, m.x_title, m.x_min, m.x_max, m.x_nice)
-        scales[m.x_field] = x_scale
+        scales[m.x_field] = scales[m.x_field] ? { ...scales[m.x_field], ...x_scale } : x_scale
         if (x_axis) axes[m.x_field] = x_axis
-        break
       }
     }
 
     for (const m of marks) {
       if (m.y_field) {
         const [y_scale, y_axis] = makeScale(m.y_scale, m.y_format, m.y_title, m.y_min, m.y_max, m.y_nice)
-        scales[m.y_field] = y_scale
+        scales[m.y_field] = scales[m.y_field] ? { ...scales[m.y_field], ...y_scale } : y_scale
         if (y_axis) axes[m.y_field] = y_axis
-        break
       }
     }
 
