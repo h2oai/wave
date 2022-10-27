@@ -65,7 +65,8 @@ const
     },
     uploadLabel: {
       ...centerMixin(),
-      padding: padding(7, 10),
+      textAlign: 'center',
+      padding: padding(5, 10),
       fontSize: 14,
       fontWeight: 600,
       borderRadius: 2,
