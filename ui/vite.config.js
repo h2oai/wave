@@ -38,7 +38,7 @@ export default defineConfig({
         ws: true
       },
       '/_f': {
-        target: 'http://localhost:10101/_f/',
+        target: 'http://localhost:10101',
       }
     }
   }
