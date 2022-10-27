@@ -579,7 +579,7 @@ const
           wave.emit(m.name, 'download', true)
           return
         }
-        // TODO: Prompt a dialog for name, encoding, etc.
+        // TODO: Prompt a dialog for encoding, etc.
         const
           dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
           data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
@@ -587,10 +587,12 @@ const
           // Add BOM prefix to data. This is required to export unicode characters in the table correctly
           // Reference: https://stackoverflow.com/a/18251283/1970068
           blob = new Blob(['\uFEFF', data], { type: "text/csv;charset=utf-8," }),
-          url = window.URL.createObjectURL(blob)
+          url = window.URL.createObjectURL(blob),
+          // Prompt user for download file name
+          fileName = window.prompt('Please enter download file name', 'exported_data')
 
         a.href = url
-        a.download = 'exported_data.csv'
+        a.download = fileName + '.csv'
         a.click()
 
         window.URL.revokeObjectURL(url)
