@@ -4,8 +4,6 @@ title: Introduction
 
 H2O Wave lets you build and deploy amazing, realtime analytics with dramatically less effort.
 
-<iframe src="https://ghbtns.com/github-btn.html?user=h2oai&repo=wave&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
-
 ## What is H2O Wave?
 
 H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript, or CSS.

@@ -106,6 +106,8 @@ function Home() {
               Get Started
             </Link>
           </div>
+          <p className="hero__subtitle"></p>
+          <iframe src="https://ghbtns.com/github-btn.html?user=h2oai&repo=wave&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
         </div>
       </header>
       <main>
