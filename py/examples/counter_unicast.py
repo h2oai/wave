@@ -9,7 +9,7 @@ async def serve(q: Q):
     count = q.client.count or 0
 
     if not q.client.initialized:
-        q.page['example'] = ui.form_card(box='1 1 12 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 2 1', items=[
             ui.button(name='increment', label=f'Count={count}')
         ])
         q.client.initialized = True

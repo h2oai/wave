@@ -19,7 +19,7 @@ async def serve(q: Q):
             get_tab_content(q.args.menu),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.tabs(name='menu', value='email', items=tabs),
             get_tab_content('email'),
         ])

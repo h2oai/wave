@@ -23,7 +23,7 @@ async def serve(q: Q):
             ui.button(name='back', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.text_xl('Upload some files'),
             ui.file_upload(name='user_files', label='Upload', multiple=True),
         ])

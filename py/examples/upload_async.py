@@ -31,7 +31,7 @@ async def serve(q: Q):
         ]
     else:
         # Accept a row count from the user
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.text_xl('Square Generator'),
             ui.slider(name='row_count', label='Squares to generate', min=0, max=100, step=10, value=30),
             ui.button(name='generate_csv', label='Generate', primary=True),

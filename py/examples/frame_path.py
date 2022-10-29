@@ -6,7 +6,7 @@ from h2o_wave import site, ui
 page = site['/demo']
 
 page['example'] = ui.frame_card(
-    box='1 1 6 5',
+    box='1 1 6 7',
     title='Example',
     path='https://example.com',
 )

@@ -9,7 +9,7 @@ from h2o_wave import site, ui
 page = site['/demo']
 
 page['example'] = ui.form_card(
-    box='1 1 4 10',
+    box='1 1 4 7',
     items=[
         ui.progress(label='Basic Progress'),
     ]

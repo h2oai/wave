@@ -13,7 +13,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 5', items=[
             ui.picker(name='picker', label='Place an order (try Spam, Eggs or Ham):', choices=[
                 ui.choice(name='spam', label='Spam'),
                 ui.choice(name='eggs', label='Eggs'),

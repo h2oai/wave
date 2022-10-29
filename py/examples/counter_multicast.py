@@ -18,6 +18,6 @@ async def serve(q: Q):
         form = q.page['example']
         form.items = items
     else:
-        q.page['example'] = ui.form_card(box='1 1 12 10', items=items)
+        q.page['example'] = ui.form_card(box='1 1 2 1', items=items)
 
     await q.page.save()

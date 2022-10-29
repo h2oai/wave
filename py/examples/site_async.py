@@ -43,7 +43,7 @@ async def serve(q: Q):
         await stats_page.save()
 
         # Set up this app's UI
-        q.page['form'] = ui.form_card(box='1 1 12 10', items=[
+        q.page['form'] = ui.form_card(box='1 1 6 5', items=[
             ui.frame(path='/stats', height='110px'),
             ui.button(name='toggle', label='Start updates', primary=True),
         ])
