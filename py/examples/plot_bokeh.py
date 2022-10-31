@@ -33,7 +33,7 @@ html = file_html(p, CDN, "plot")
 
 page = site['/demo']
 page['example'] = ui.frame_card(
-    box='1 1 5 8',
+    box='1 1 -1 -1',
     title='Hexbin for 500 points',
     content=html,
 )

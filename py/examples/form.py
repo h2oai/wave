@@ -40,7 +40,7 @@ def rnd():
 
 @app('/demo')
 async def serve(q: Q):
-    q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+    q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
         ui.text_xl(content='Extra-large text, for headings.'),
         ui.text_l(content='Large text, for sub-headings.'),
         ui.text_m(content='Body text, for paragraphs and other content.'),

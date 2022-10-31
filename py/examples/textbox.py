@@ -25,7 +25,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.textbox(name='textbox', label='Standard'),
             ui.textbox(name='textbox_disabled', label='Disabled', value='I am disabled', disabled=True),
             ui.textbox(name='textbox_readonly', label='Read-only', value='I am read-only', readonly=True),

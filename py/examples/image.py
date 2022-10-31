@@ -41,7 +41,7 @@ image = base64.b64encode(buf.read()).decode('utf-8')
 
 page = site['/demo']
 page['example1'] = ui.image_card(
-    box='1 1 3 5',
+    box='1 1 1 2',
     title='An image',
     type='png',
     image=image,
@@ -51,7 +51,7 @@ page['example1'] = ui.image_card(
 # The example below constructs the data URL from the base64-encoded
 #   used in the previous example.
 page['example2'] = ui.image_card(
-    box='1 6 3 5',
+    box='1 3 1 2',
     title='An image',
     path=f"data:image/png;base64,{image}",
 )
