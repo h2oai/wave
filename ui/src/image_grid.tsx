@@ -25,13 +25,35 @@ import { clas } from './theme'
 import { bond } from './ui'
 
 const css = stylesheet({
-  // container: {
-  //   display: 'grid', // inline-grid
-  //   gridAutoRows: '300px',
-  //   gridGap: '10px',
-  //   gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))'
-  // }
+  gridItem: {
+    // height: image.height,
+    // display: 'inline-block',
+    // breakInside: 'avoid',
+    width: '100%',
+    height: 'auto',
+    // overflow: 'hidden',
+    // gridRow: 'span 1'
+    // gridColumn: 1
+  },
+  image: {
+    // flex: `0 0 ${width}px`,
+    width: '100%',
+    objectFit: 'contain',
+    cursor: 'pointer',
+  }
 })
+const styles = {
+  gridContainer: {
+    // display: 'grid', // inline-grid
+    // gridAutoRows: '300px',
+    // gridAutoRows: 'minmax(min-content, max-content)',
+    gridAutoRows: 'min-content',
+    gridGap: '10px',
+    // gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))',
+    columnCount: 3
+    // columnCount: 3
+  }
+}
 
 /** Create an image grid. */
 interface ImageGrid {
@@ -59,31 +81,26 @@ export interface State {
   height?: S
 }
 
+// TODO: handle unconventional aspect ratios (like 1:10)
+// make it responsive
+
 export const
   XImageGrid = ({ model: m }: { model: ImageGrid }) => {
     const
       { width, height, images } = m,
       onRenderCell = React.useCallback((image, index: number | undefined) => {
-        console.log('w, h', image.width, image.height)
+        // console.log('w, h', image.width, image.height)
+        const column = (index + 1) % 3 === 0
+          ? 3
+          : (index + 1) % 2 === 0
+            ? 2
+            : 1
         return (
-          <div key={index} style={{
-            // height: image.height,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.3em',
-            fontWeight: 'bold',
-            color: 'white',
-            gridRow: 'span 1'
-          }}>
+          <div key={index} className={css.gridItem} style={{ gridColumn: column }}>
             <img
-              width={'250px' || image.width}
+              // width={'250px' || image.width}
               // height={image.height}
-              style={{
-                flex: `0 0 ${width}px`,
-                objectFit: 'contain',
-                cursor: 'pointer',
-              }}
+              className={css.image}
               src={image.path}
               onClick={image.path ? () => lightboxB({ images: images, defaultImageIdx: index }) : undefined}
             />
@@ -106,15 +123,11 @@ export const
           //     {props?.pageElements}
           //   </div>
           // }}
-          getPageStyle={page => {
-            console.log(page)
+          style={{ boxSizing: 'inherit' }}
+          getPageStyle={() => {
+            // console.log(page)
             // return css.container
-            return {
-              display: 'grid', // inline-grid
-              gridAutoRows: '300px',
-              gridGap: '10px',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))'
-            }
+            return styles.gridContainer
           }}
           items={images.length ? images : undefined}
           // getItemCountForPage={getItemCountForPage}
