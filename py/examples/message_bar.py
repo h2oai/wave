@@ -7,7 +7,7 @@ from h2o_wave import site, ui
 page = site['/demo']
 
 page['example'] = ui.form_card(
-    box='1 1 3 10',
+    box='1 1 3 7',
     items=[
         ui.message_bar(type='blocked', text='This action is blocked.'),
         ui.message_bar(type='error', text='This is an error message'),

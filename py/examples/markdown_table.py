@@ -35,7 +35,7 @@ def make_markdown_table(fields, rows):
 page = site['/demo']
 
 v = page.add('example', ui.form_card(
-    box='1 1 4 5',
+    box='1 1 4 8',
     items=[
         ui.text(make_markdown_table(
             fields=air_passengers_fields,

@@ -25,7 +25,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 8', items=[
             ui.button(name='basic_button', label='Basic'),
             ui.button(name='primary_button', label='Primary', primary=True),
             ui.button(name='link_button', label='Link', link=True),

@@ -18,7 +18,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.checkbox(name='checkbox_unchecked', label='Not checked'),
             ui.checkbox(name='checkbox_checked', label='Checked', value=True),
             ui.checkbox(name='checkbox_indeterminate', label='Indeterminate', indeterminate=True),

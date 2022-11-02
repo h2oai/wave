@@ -12,7 +12,7 @@ fake = Faker()
 page = site['/demo']
 
 page.add('example', ui.stat_table_card(
-    box='1 1 4 7',
+    box='1 1 4 8',
     title='Contacts',
     subtitle=f'Last updated: {fake.date()}',
     columns=['Name', 'Job', 'City'],

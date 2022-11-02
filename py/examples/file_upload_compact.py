@@ -14,7 +14,7 @@ async def serve(q: Q):
         ])
     else:
         q.page['example'] = ui.form_card(
-            box='1 1 4 10',
+            box='1 1 4 7',
             items=[
                 ui.file_upload(name='file_upload', label='Select one or more files to upload', compact=True,
                                multiple=True, file_extensions=['jpg', 'png'], max_file_size=1, max_size=15),

@@ -45,7 +45,7 @@ async def show_todos(q: Q):
     not_done = [ui.checkbox(name=todo.id, label=todo.label, trigger=True) for todo in todos if not todo.done]
 
     # Display list
-    q.page['form'] = ui.form_card(box='1 1 4 10', items=[
+    q.page['form'] = ui.form_card(box='1 1 4 3', items=[
         ui.text_l('To Do'),
         ui.button(name='new_todo', label='Add To Do...', primary=True),
         *not_done,
@@ -65,7 +65,7 @@ async def add_todo(q: Q):
 
 async def new_todo(q: Q):
     # Display an input form
-    q.page['form'] = ui.form_card(box='1 1 4 10', items=[
+    q.page['form'] = ui.form_card(box='1 1 4 3', items=[
         ui.text_l('Add To Do'),
         ui.textbox(name='label', label='What needs to be done?', multiline=True),
         ui.buttons([

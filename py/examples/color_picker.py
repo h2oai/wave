@@ -13,7 +13,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.color_picker(name='color', label='Pick a color', value='#F25F5C'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])

@@ -35,7 +35,7 @@ def rnd():
 
 
 page['example'] = ui.form_card(
-    box='1 1 2 10',
+    box='1 1 -1 -1',
     items=[
         ui.text_xl('Example 1'),
         ui.vega_visualization(

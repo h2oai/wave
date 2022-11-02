@@ -19,7 +19,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.combobox(name='combobox', label='Enter or choose a color', placeholder='Color...', value='Blue',
                         choices=combobox_choices),
             ui.combobox(name='combobox_required', label='Enter or choose a color', placeholder='Color...', value='Blue',
