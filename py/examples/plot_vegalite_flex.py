@@ -11,11 +11,11 @@ page['meta'] = ui.meta_card(box='', layouts=[
         breakpoint='xs',
         width='100%',
         zones=[
-            ui.zone('top', size='250px', direction=ui.ZoneDirection.ROW, zones=[
+            ui.zone('top', size='350px', direction=ui.ZoneDirection.ROW, zones=[
                 ui.zone('top_left', size='75%'),
                 ui.zone('top_right', size='1'),
             ]),
-            ui.zone('bottom', size='250px', direction=ui.ZoneDirection.ROW, zones=[
+            ui.zone('bottom', size='350px', direction=ui.ZoneDirection.ROW, zones=[
                 ui.zone('bottom_left', size='1'),
                 ui.zone('bottom_center', size='2'),
                 ui.zone('bottom_right', size='3'),

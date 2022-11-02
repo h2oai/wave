@@ -74,7 +74,7 @@ async def serve(q: Q):
                 groupable=True,
                 downloadable=True,
                 resettable=True,
-                height='800px'
+                height='600px'
             )
         ])
 
