@@ -2912,25 +2912,29 @@ ui_copyable_text <- function(
 #' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
 #'
 #' @param items Commands to render.
-#' @param icon The card's icon. Mutually exclusive with the image.
-#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon.
+#' @param icon The card's icon. Mutually exclusive with the image and label.
+#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
 #' @param name An identifying name for this component.
+#' @param label The text displayed next to the chevron. Mutually exclusive with the icon and image.
 #' @return A Menu instance.
 #' @export
 ui_menu <- function(
   items,
   icon = NULL,
   image = NULL,
-  name = NULL) {
+  name = NULL,
+  label = NULL) {
   .guard_vector("items", "WaveCommand", items)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
   .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
   .o <- list(menu=list(
     items=items,
     icon=icon,
     image=image,
-    name=name))
+    name=name,
+    label=label))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

@@ -27,7 +27,7 @@ q.page['form'] = ui.form_card(
 
 ## With image
 
-Use the `image` attribute when you want to inline an image (preferably a user avatar) with the context menu. This attribute is mutually exclusive with the `icon` attribute.
+Use the `image` attribute when you want to inline an image (preferably a user avatar) with the context menu. This attribute is mutually exclusive with the `icon` and `label` attributes.
 
 ```py
 q.page['form'] = ui.form_card(
@@ -46,7 +46,7 @@ q.page['form'] = ui.form_card(
 
 ## With icon
 
-Use the `icon` attribute when you want to inline an icon. This attribute is mutually exclusive with the `image` attribute.
+Use the `icon` attribute when you want to inline an icon. This attribute is mutually exclusive with the `image` and `label` attributes.
 
 ```py
 q.page['form'] = ui.form_card(
@@ -54,6 +54,25 @@ q.page['form'] = ui.form_card(
     items=[
         ui.menu(
             icon='Heart',
+            items=[
+                ui.command(name='profile', label='Profile', icon='Contact'),
+                ui.command(name='preferences', label='Preferences', icon='Settings'),
+                ui.command(name='logout', label='Logout', icon='SignOut'),
+            ])
+    ]
+)
+```
+
+## With label
+
+Use the `label` attribute when you want to inline a menu label. This attribute is mutually exclusive with the `icon` and `image` attributes.
+
+```py
+q.page['form'] = ui.form_card(
+    box='1 1 2 2',
+    items=[
+        ui.menu(
+            label='App',
             items=[
                 ui.command(name='profile', label='Profile', icon='Contact'),
                 ui.command(name='preferences', label='Preferences', icon='Settings'),
