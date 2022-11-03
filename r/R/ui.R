@@ -1764,7 +1764,7 @@ ui_link <- function(
 #'
 #' @param items The links contained in this group.
 #' @param label The name of the link group.
-#' @param inline Render links horizontally. Defaults to 'false'.
+#' @param inline Render links horizontally. Defaults to False.
 #' @param width The width of the links, e.g. '100px'.
 #' @return A Links instance.
 #' @export
@@ -2542,7 +2542,7 @@ ui_stat <- function(
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
 #' @param width The width of the stats, e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
@@ -2596,7 +2596,7 @@ ui_inline <- function(
 #' @param image Image data, base64-encoded.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param width The width of the image, e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
@@ -2906,10 +2906,10 @@ ui_copyable_text <- function(
 #' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
 #'
 #' @param items Commands to render.
-#' @param icon The card's icon. Mutually exclusive with the image and title.
-#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon and title.
+#' @param icon The card's icon. Mutually exclusive with the image and label.
+#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
 #' @param name An identifying name for this component.
-#' @param title The text displayed next to the chevron. Mutually exclusive with the icon and image.
+#' @param label The text displayed next to the chevron. Mutually exclusive with the icon and image.
 #' @return A Menu instance.
 #' @export
 ui_menu <- function(
@@ -2917,18 +2917,18 @@ ui_menu <- function(
   icon = NULL,
   image = NULL,
   name = NULL,
-  title = NULL) {
+  label = NULL) {
   .guard_vector("items", "WaveCommand", items)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
   .guard_scalar("name", "character", name)
-  .guard_scalar("title", "character", title)
+  .guard_scalar("label", "character", label)
   .o <- list(menu=list(
     items=items,
     icon=icon,
     image=image,
     name=name,
-    title=title))
+    label=label))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

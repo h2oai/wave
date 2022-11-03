@@ -1157,7 +1157,7 @@
   "Wave Full Image": {
     "prefix": "w_full_image",
     "body": [
-      "ui.image(title='$1', type='$2', image='$3', path='$4', width='$5', visible=${6:true}),$0"
+      "ui.image(title='$1', type='$2', image='$3', path='$4', width='$5', visible=${6:True}),$0"
     ],
     "description": "Create a full Wave Image."
   },
@@ -1227,7 +1227,7 @@
   "Wave Full Links": {
     "prefix": "w_full_links",
     "body": [
-      "ui.links(label='$1', inline=${2:false}, width='$3', items=[\n\t\t$4\t\t\n]),$0"
+      "ui.links(label='$1', inline=${2:False}, width='$3', items=[\n\t\t$4\t\t\n]),$0"
     ],
     "description": "Create a full Wave Links."
   },
@@ -1276,7 +1276,7 @@
   "Wave Full Menu": {
     "prefix": "w_full_menu",
     "body": [
-      "ui.menu(icon='$1', image='$2', name='$3', title='$4', items=[\n\t\t$5\t\t\n]),$0"
+      "ui.menu(icon='$1', image='$2', name='$3', label='$4', items=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Menu."
   },
@@ -1570,7 +1570,7 @@
   "Wave Full Stats": {
     "prefix": "w_full_stats",
     "body": [
-      "ui.stats(justify='${1:start}', inset=${2:False}, width='$3', visible=${4:true}, items=[\n\t\t$5\t\t\n]),$0"
+      "ui.stats(justify='${1:start}', inset=${2:False}, width='$3', visible=${4:True}, items=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Stats."
   },

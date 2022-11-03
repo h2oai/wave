@@ -31,19 +31,19 @@ const css = stylesheet({
 export interface Menu {
   /** Commands to render. */
   items: Command[]
-  /** The card's icon. Mutually exclusive with the image and title. */
+  /** The card's icon. Mutually exclusive with the image and label. */
   icon?: S
-  /** The card’s image, preferably user avatar. Mutually exclusive with the icon and title. */
+  /** The card’s image, preferably user avatar. Mutually exclusive with the icon and label. */
   image?: S
   /** An identifying name for this component. */
   name?: Id
   /** The text displayed next to the chevron. Mutually exclusive with the icon and image. */
-  title?: S
+  label?: S
 }
 
 export const XMenu = ({ model }: { model: Menu }) => {
   const
-    { name, items, icon, image, title } = model,
+    { name, items, icon, image, label } = model,
     ref = React.useRef<HTMLDivElement>(null),
     [isMenuHidden, setIsMenuHidden] = React.useState(true),
     toggleMenu = () => setIsMenuHidden(isHidden => !isHidden)
@@ -53,7 +53,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
     <div data-test={name} className={clas(css.card, 'w-menu')} ref={ref} onClick={toggleMenu}>
       {image && <Fluent.Persona imageUrl={image} size={Fluent.PersonaSize.size48} styles={{ details: { padding: 0 } }} />}
       {icon && <Fluent.FontIcon className={css.icon} iconName={icon} />}
-      {title && <Fluent.Text variant='mediumPlus' styles={{ root: { color: cssVar('$text') } }}>{title}</Fluent.Text>}
+      {label && <Fluent.Text variant='mediumPlus' styles={{ root: { color: cssVar('$text') } }}>{label}</Fluent.Text>}
       <Fluent.ContextualMenu
         items={toCommands(items)}
         target={ref}

@@ -1525,7 +1525,7 @@ def links(
     Args:
         items: The links contained in this group.
         label: The name of the link group.
-        inline: Render links horizontally. Defaults to 'false'.
+        inline: Render links horizontally. Defaults to False.
         width: The width of the links, e.g. '100px'.
     Returns:
         A `h2o_wave.types.Links` instance.
@@ -2177,7 +2177,7 @@ def stats(
         justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
         inset: Whether to display the stats with a contrasting background.
         width: The width of the stats, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Stats` instance.
     """
@@ -2227,7 +2227,7 @@ def image(
         image: Image data, base64-encoded.
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         width: The width of the image, e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
+        visible: True if the component should be visible. Defaults to True.
     Returns:
         A `h2o_wave.types.Image` instance.
     """
@@ -2502,16 +2502,16 @@ def menu(
         icon: Optional[str] = None,
         image: Optional[str] = None,
         name: Optional[str] = None,
-        title: Optional[str] = None,
+        label: Optional[str] = None,
 ) -> Component:
     """Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
 
     Args:
         items: Commands to render.
-        icon: The card's icon. Mutually exclusive with the image and title.
-        image: The card’s image, preferably user avatar. Mutually exclusive with the icon and title.
+        icon: The card's icon. Mutually exclusive with the image and label.
+        image: The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
         name: An identifying name for this component.
-        title: The text displayed next to the chevron. Mutually exclusive with the icon and image.
+        label: The text displayed next to the chevron. Mutually exclusive with the icon and image.
     Returns:
         A `h2o_wave.types.Menu` instance.
     """
@@ -2520,7 +2520,7 @@ def menu(
         icon,
         image,
         name,
-        title,
+        label,
     ))
 
 
