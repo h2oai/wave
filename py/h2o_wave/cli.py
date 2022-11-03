@@ -23,6 +23,7 @@ from pathlib import Path
 import platform
 import uvicorn
 import click
+import inquirer
 import os
 from urllib import request
 from urllib.parse import urlparse
@@ -31,6 +32,13 @@ from .metadata import __platform__, __arch__
 
 _localhost = '127.0.0.1'
 
+def read_file(file: str) -> str:
+    with open(file, 'r') as f:
+        return f.read()
+
+def write_file(file: str, content: str) -> None:
+    with open(file, 'w') as f:
+        f.write(content)
 
 def _scan_free_port(port: int = 8000):
     while True:
@@ -189,3 +197,44 @@ def fetch():
 
     for label, location in everything:
         print(f"{label} {resolved_path.joinpath(location)}")
+
+@main.command()
+def init():
+    """Initial scaffolding for your Wave project.
+
+    \b
+    $ wave init
+    """
+    try:
+        theme = inquirer.themes.load_theme_from_dict({"List": {"selection_color": "yellow"}})
+        project = inquirer.prompt([inquirer.List('project', message="Choose a starter template",
+              choices=[
+                  'Hello World app (for beginners)',
+                  'App with header',
+                  'App with header + navigation',
+                  'App with sidebar + navigation',
+                  'App with header & sidebar + navigation'
+              ]),
+        ], theme=theme)['project']
+    # Ctrl-C causes TypeError within inquirer, resulting in ugly stacktrace. Catch the error and return early on CTRL-C.
+    except (KeyboardInterrupt, TypeError):
+        return
+    
+    app_content = ''
+    base_path = os.path.join(sys.exec_prefix, 'project_templates')
+    if 'Hello World' in project:
+        app_content = read_file(os.path.join(base_path, 'hello_world.py'))
+    elif 'header & sidebar' in project:
+        app_content = read_file(os.path.join(base_path, 'header_sidebar_nav.py'))
+    elif 'header +' in project:
+        app_content = read_file(os.path.join(base_path, 'header_nav.py'))
+    elif 'header' in project:
+        app_content = read_file(os.path.join(base_path, 'header.py'))
+    elif 'sidebar +' in project:
+        app_content = read_file(os.path.join(base_path, 'sidebar_nav.py'))
+
+    write_file('app.py', app_content)
+    write_file('requirements.txt', f'h2o-wave=={__version__}')
+    write_file('README.md', read_file(os.path.join(base_path, 'README.md')))
+
+    print('Run \x1b[7;30;43mwave run app\x1b[0m to start your Wave app at \x1b[7;30;43mhttp://localhost:10101\x1b[0m.')
