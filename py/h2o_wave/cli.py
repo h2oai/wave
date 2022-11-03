@@ -205,15 +205,20 @@ def init():
     \b
     $ wave init
     """
-    project = inquirer.prompt([inquirer.List('project', message="Choose a starter template",
-          choices=[
-              'Hello World app (for beginners)',
-              'App with header',
-              'App with header + navigation',
-              'App with sidebar + navigation',
-              'App with header & sidebar + navigation'
-          ]),
-    ])['project']
+    try:
+        theme = inquirer.themes.load_theme_from_dict({"List": {"selection_color": "yellow"}})
+        project = inquirer.prompt([inquirer.List('project', message="Choose a starter template",
+              choices=[
+                  'Hello World app (for beginners)',
+                  'App with header',
+                  'App with header + navigation',
+                  'App with sidebar + navigation',
+                  'App with header & sidebar + navigation'
+              ]),
+        ], theme=theme)['project']
+    # Ctrl-C causes TypeError within inquirer, resulting in ugly stacktrace. Catch the error and return early on CTRL-C.
+    except (KeyboardInterrupt, TypeError):
+        return
     
     app_content = ''
     base_path = os.path.join(sys.exec_prefix, 'project_templates')
