@@ -2,7 +2,7 @@
 Name = "ai.h2o.wave.university"
 Version = "{{VERSION}}"
 Title = "Wave University"
-Description = "Wave interactive learning experience."
+Description = "Interactive Wave learning experience."
 Tags = ["APP_DEV"]
 
 [Runtime]
