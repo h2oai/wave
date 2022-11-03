@@ -2797,6 +2797,38 @@ ui_image_annotator_rect <- function(
   return(.o)
 }
 
+#' Create a polygon annotation point with x and y coordinates..
+#'
+#' @param x `x` coordinate of the point.
+#' @param y `y` coordinate of the point.
+#' @return A ImageAnnotatorPoint instance.
+#' @export
+ui_image_annotator_point <- function(
+  x,
+  y) {
+  .guard_scalar("x", "numeric", x)
+  .guard_scalar("y", "numeric", y)
+  .o <- list(
+    x=x,
+    y=y)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorPoint"))
+  return(.o)
+}
+
+#' Create a polygon annotation shape.
+#'
+#' @param vertices List of points of the polygon.
+#' @return A ImageAnnotatorPolygon instance.
+#' @export
+ui_image_annotator_polygon <- function(
+  vertices) {
+  .guard_vector("vertices", "WaveImageAnnotatorPoint", vertices)
+  .o <- list(polygon=list(
+    vertices=vertices))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
+  return(.o)
+}
+
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
 #' @param shape The annotation shape.

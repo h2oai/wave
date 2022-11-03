@@ -2398,6 +2398,39 @@ def image_annotator_rect(
     ))
 
 
+def image_annotator_point(
+        x: float,
+        y: float,
+) -> ImageAnnotatorPoint:
+    """Create a polygon annotation point with x and y coordinates..
+
+    Args:
+        x: `x` coordinate of the point.
+        y: `y` coordinate of the point.
+    Returns:
+        A `h2o_wave.types.ImageAnnotatorPoint` instance.
+    """
+    return ImageAnnotatorPoint(
+        x,
+        y,
+    )
+
+
+def image_annotator_polygon(
+        vertices: List[ImageAnnotatorPoint],
+) -> ImageAnnotatorShape:
+    """Create a polygon annotation shape.
+
+    Args:
+        vertices: List of points of the polygon.
+    Returns:
+        A `h2o_wave.types.ImageAnnotatorPolygon` instance.
+    """
+    return ImageAnnotatorShape(polygon=ImageAnnotatorPolygon(
+        vertices,
+    ))
+
+
 def image_annotator_item(
         shape: ImageAnnotatorShape,
         tag: str,

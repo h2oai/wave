@@ -6441,22 +6441,96 @@ class ImageAnnotatorRect:
         )
 
 
+class ImageAnnotatorPoint:
+    """Create a polygon annotation point with x and y coordinates..
+    """
+    def __init__(
+            self,
+            x: float,
+            y: float,
+    ):
+        _guard_scalar('ImageAnnotatorPoint.x', x, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorPoint.y', y, (float, int,), False, False, False)
+        self.x = x
+        """`x` coordinate of the point."""
+        self.y = y
+        """`y` coordinate of the point."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ImageAnnotatorPoint.x', self.x, (float, int,), False, False, False)
+        _guard_scalar('ImageAnnotatorPoint.y', self.y, (float, int,), False, False, False)
+        return _dump(
+            x=self.x,
+            y=self.y,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageAnnotatorPoint':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_x: Any = __d.get('x')
+        _guard_scalar('ImageAnnotatorPoint.x', __d_x, (float, int,), False, False, False)
+        __d_y: Any = __d.get('y')
+        _guard_scalar('ImageAnnotatorPoint.y', __d_y, (float, int,), False, False, False)
+        x: float = __d_x
+        y: float = __d_y
+        return ImageAnnotatorPoint(
+            x,
+            y,
+        )
+
+
+class ImageAnnotatorPolygon:
+    """Create a polygon annotation shape.
+    """
+    def __init__(
+            self,
+            vertices: List[ImageAnnotatorPoint],
+    ):
+        _guard_vector('ImageAnnotatorPolygon.vertices', vertices, (ImageAnnotatorPoint,), False, False, False)
+        self.vertices = vertices
+        """List of points of the polygon."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('ImageAnnotatorPolygon.vertices', self.vertices, (ImageAnnotatorPoint,), False, False, False)
+        return _dump(
+            vertices=[__e.dump() for __e in self.vertices],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageAnnotatorPolygon':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_vertices: Any = __d.get('vertices')
+        _guard_vector('ImageAnnotatorPolygon.vertices', __d_vertices, (dict,), False, False, False)
+        vertices: List[ImageAnnotatorPoint] = [ImageAnnotatorPoint.load(__e) for __e in __d_vertices]
+        return ImageAnnotatorPolygon(
+            vertices,
+        )
+
+
 class ImageAnnotatorShape:
     """Create a shape to be rendered as an annotation on an image annotator.
     """
     def __init__(
             self,
             rect: Optional[ImageAnnotatorRect] = None,
+            polygon: Optional[ImageAnnotatorPolygon] = None,
     ):
         _guard_scalar('ImageAnnotatorShape.rect', rect, (ImageAnnotatorRect,), False, True, False)
+        _guard_scalar('ImageAnnotatorShape.polygon', polygon, (ImageAnnotatorPolygon,), False, True, False)
         self.rect = rect
+        """No documentation available."""
+        self.polygon = polygon
         """No documentation available."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageAnnotatorShape.rect', self.rect, (ImageAnnotatorRect,), False, True, False)
+        _guard_scalar('ImageAnnotatorShape.polygon', self.polygon, (ImageAnnotatorPolygon,), False, True, False)
         return _dump(
             rect=None if self.rect is None else self.rect.dump(),
+            polygon=None if self.polygon is None else self.polygon.dump(),
         )
 
     @staticmethod
@@ -6464,9 +6538,13 @@ class ImageAnnotatorShape:
         """Creates an instance of this class using the contents of a dict."""
         __d_rect: Any = __d.get('rect')
         _guard_scalar('ImageAnnotatorShape.rect', __d_rect, (dict,), False, True, False)
+        __d_polygon: Any = __d.get('polygon')
+        _guard_scalar('ImageAnnotatorShape.polygon', __d_polygon, (dict,), False, True, False)
         rect: Optional[ImageAnnotatorRect] = None if __d_rect is None else ImageAnnotatorRect.load(__d_rect)
+        polygon: Optional[ImageAnnotatorPolygon] = None if __d_polygon is None else ImageAnnotatorPolygon.load(__d_polygon)
         return ImageAnnotatorShape(
             rect,
+            polygon,
         )
 
 
