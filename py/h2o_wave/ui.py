@@ -2417,17 +2417,17 @@ def image_annotator_point(
 
 
 def image_annotator_polygon(
-        items: List[ImageAnnotatorPoint],
+        vertices: List[ImageAnnotatorPoint],
 ) -> ImageAnnotatorShape:
     """Create a polygon annotation shape.
 
     Args:
-        items: List of points of the polygon.
+        vertices: List of points of the polygon.
     Returns:
         A `h2o_wave.types.ImageAnnotatorPolygon` instance.
     """
     return ImageAnnotatorShape(polygon=ImageAnnotatorPolygon(
-        items,
+        vertices,
     ))
 
 

@@ -39,7 +39,7 @@ export class PolygonAnnotator {
       return
     }
 
-    const clickedPolygonPoint = focused.shape.polygon.items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
+    const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = clickedPolygonPoint || this.draggedPoint
     if (this.draggedPoint) {
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
@@ -47,7 +47,7 @@ export class PolygonAnnotator {
     }
     else if (intersected == focused || this.draggedShape) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
-      this.draggedShape?.shape.polygon?.items.forEach(p => {
+      this.draggedShape?.shape.polygon?.vertices.forEach(p => {
         p.x += cursor_x - clickStartPosition!.x
         p.y += cursor_y - clickStartPosition!.y
       })

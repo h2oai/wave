@@ -2817,14 +2817,14 @@ ui_image_annotator_point <- function(
 
 #' Create a polygon annotation shape.
 #'
-#' @param items List of points of the polygon.
+#' @param vertices List of points of the polygon.
 #' @return A ImageAnnotatorPolygon instance.
 #' @export
 ui_image_annotator_polygon <- function(
-  items) {
-  .guard_vector("items", "WaveImageAnnotatorPoint", items)
+  vertices) {
+  .guard_vector("vertices", "WaveImageAnnotatorPoint", vertices)
   .o <- list(polygon=list(
-    items=items))
+    vertices=vertices))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
   return(.o)
 }

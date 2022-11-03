@@ -6485,27 +6485,27 @@ class ImageAnnotatorPolygon:
     """
     def __init__(
             self,
-            items: List[ImageAnnotatorPoint],
+            vertices: List[ImageAnnotatorPoint],
     ):
-        _guard_vector('ImageAnnotatorPolygon.items', items, (ImageAnnotatorPoint,), False, False, False)
-        self.items = items
+        _guard_vector('ImageAnnotatorPolygon.vertices', vertices, (ImageAnnotatorPoint,), False, False, False)
+        self.vertices = vertices
         """List of points of the polygon."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_vector('ImageAnnotatorPolygon.items', self.items, (ImageAnnotatorPoint,), False, False, False)
+        _guard_vector('ImageAnnotatorPolygon.vertices', self.vertices, (ImageAnnotatorPoint,), False, False, False)
         return _dump(
-            items=[__e.dump() for __e in self.items],
+            vertices=[__e.dump() for __e in self.vertices],
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ImageAnnotatorPolygon':
         """Creates an instance of this class using the contents of a dict."""
-        __d_items: Any = __d.get('items')
-        _guard_vector('ImageAnnotatorPolygon.items', __d_items, (dict,), False, False, False)
-        items: List[ImageAnnotatorPoint] = [ImageAnnotatorPoint.load(__e) for __e in __d_items]
+        __d_vertices: Any = __d.get('vertices')
+        _guard_vector('ImageAnnotatorPolygon.vertices', __d_vertices, (dict,), False, False, False)
+        vertices: List[ImageAnnotatorPoint] = [ImageAnnotatorPoint.load(__e) for __e in __d_vertices]
         return ImageAnnotatorPolygon(
-            items,
+            vertices,
         )
 
 

@@ -19,7 +19,7 @@ export interface ImageAnnotatorPoint {
 /** Create a polygon annotation shape. */
 export interface ImageAnnotatorPolygon {
   /** List of points of the polygon. */
-  items: ImageAnnotatorPoint[]
+  vertices: ImageAnnotatorPoint[]
 }
 
 /** Create a rectangular annotation shape. */
@@ -113,7 +113,7 @@ const
   eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
   getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
     if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
-    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.items, isFocused)
+    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
   }),
   getCorrectCursor = (cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
     let cursor = intersected
@@ -123,8 +123,8 @@ const
         : 'crosshair'
     if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
     else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y) || cursor
-    else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.items, cursor_x, cursor_y) || 'move'
-    else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.items, cursor_x, cursor_y) || cursor
+    else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.vertices, cursor_x, cursor_y) || 'move'
+    else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.vertices, cursor_x, cursor_y) || cursor
 
     return cursor
   },
@@ -140,7 +140,7 @@ const
         }
       }
     }
-    else if (shape.polygon) return { tag, shape: { polygon: { items: shape.polygon.items.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })) } } }
+    else if (shape.polygon) return { tag, shape: { polygon: { vertices: shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })) } } }
     return { tag, shape }
   })
 
@@ -172,7 +172,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       setDrawnShapes(shapes => {
         shapes.forEach(({ shape, isFocused, tag }) => {
           if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(tag), isFocused)
-          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.items, getCurrentTagColor(tag), true, isFocused)
+          else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.vertices, getCurrentTagColor(tag), true, isFocused)
         })
         return shapes
       })
@@ -260,13 +260,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         case 'select': {
           if (intersected) setActiveTag(intersected.tag)
-          if (intersected?.shape.polygon) polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.items)
+          if (intersected?.shape.polygon) polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.vertices)
           polygonRef.current?.resetDragging()
 
           setDrawnShapes(drawnShapes => drawnShapes.map(s => {
             s.isFocused = s === intersected
             if (s.isFocused && s.shape.polygon && polygonRef.current) {
-              s.shape.polygon.items = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.items)
+              s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
             }
             return s
           }))
@@ -342,7 +342,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         tag,
         shape: {
           polygon: {
-            items: shape.polygon.items
+            vertices: shape.polygon.vertices
               .filter((i: DrawnPoint) => !i.isAux)
               .map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
           }
