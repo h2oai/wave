@@ -142,6 +142,14 @@ const
     }
     else if (shape.polygon) return { tag, shape: { polygon: { vertices: shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })) } } }
     return { tag, shape }
+  }),
+  getFarItem = (key: S, text: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S) => ({
+    key,
+    text,
+    onClick,
+    canCheck: true,
+    checked: activeShape === key,
+    iconProps: { iconName, styles: { root: { fontSize: 20 } } },
   })
 
 
@@ -375,31 +383,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           },
         ]}
         farItems={[
-          {
-            key: 'select',
-            text: 'Select',
-            onClick: chooseShape,
-            canCheck: true,
-            checked: activeShape === 'select',
-            iconProps: { iconName: 'TouchPointer', styles: { root: { fontSize: 20 } } },
-          },
-          {
-            key: 'rect',
-            text: 'Rectangle',
-            onClick: chooseShape,
-            canCheck: true,
-            checked: activeShape === 'rect',
-            iconProps: { iconName: 'RectangleShape', styles: { root: { fontSize: 20 } } },
-          },
-          {
-            key: 'polygon',
-            text: 'Polygon',
-            onClick: chooseShape,
-            canCheck: true,
-            checked: activeShape === 'polygon',
-            iconProps: { iconName: 'SixPointStar', styles: { root: { fontSize: 20 } } },
-          },
-        ]} />
+          getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer'),
+          getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'),
+          getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'),
+        ]}
+      />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
         <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onClick={onClick} />
