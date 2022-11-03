@@ -230,6 +230,6 @@ def init():
 
     write_file('app.py', app_content)
     write_file('requirements.txt', f'h2o-wave=={__version__}')
-    # TODO: Add readme.
+    write_file('README.md', read_file(os.path.join(base_path, 'README.md')))
 
     print('Run \x1b[7;30;43mwave run app\x1b[0m to start your Wave app at \x1b[7;30;43mhttp://localhost:10101\x1b[0m.')
