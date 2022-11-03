@@ -25,12 +25,28 @@ import { clas } from './theme'
 import { bond } from './ui'
 
 const css = stylesheet({
+  gridContainer: {
+    // display: 'grid', // inline-grid
+    // gridAutoRows: '300px',
+    // gridAutoRows: 'minmax(min-content, max-content)',
+    gridAutoRows: 'min-content',
+    gridGap: '6px',
+    // gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))',
+    columnCount: 3,
+    // display: 'grid',
+    // gap: '10px',
+    // gridTemplate: 'repeat(auto-fit, minmax(0,1fr)) / repeat(6, 1fr)',
+    // gridTemplateColumns: 'repeat(6, 1fr)',
+    // gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
+    // gridAutoFlow: 'dense' /* or 'row', 'row dense', 'column dense' */
+  },
   gridItem: {
     // height: image.height,
     // display: 'inline-block',
     // breakInside: 'avoid',
     width: '100%',
     height: 'auto',
+    display: 'inline-block',
     // overflow: 'hidden',
     // gridRow: 'span 1'
     // gridColumn: 1
@@ -42,18 +58,6 @@ const css = stylesheet({
     cursor: 'pointer',
   }
 })
-const styles = {
-  gridContainer: {
-    // display: 'grid', // inline-grid
-    // gridAutoRows: '300px',
-    // gridAutoRows: 'minmax(min-content, max-content)',
-    gridAutoRows: 'min-content',
-    gridGap: '10px',
-    // gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))',
-    columnCount: 3
-    // columnCount: 3
-  }
-}
 
 /** Create an image grid. */
 interface ImageGrid {
@@ -87,55 +91,39 @@ export interface State {
 export const
   XImageGrid = ({ model: m }: { model: ImageGrid }) => {
     const
-      { width, height, images } = m,
-      onRenderCell = React.useCallback((image, index: number | undefined) => {
-        // console.log('w, h', image.width, image.height)
-        const column = (index + 1) % 3 === 0
-          ? 3
-          : (index + 1) % 2 === 0
-            ? 2
-            : 1
-        return (
-          <div key={index} className={css.gridItem} style={{ gridColumn: column }}>
-            <img
-              // width={'250px' || image.width}
-              // height={image.height}
-              className={css.image}
-              src={image.path}
-              onClick={image.path ? () => lightboxB({ images: images, defaultImageIdx: index }) : undefined}
-            />
-          </div>
-        )
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [])
+      { width, height, images } = m
 
     // console.log('images:', images)
 
     return (
-      <Fluent.FocusZone>
-        <Fluent.List
-          // onRenderSurface={(props: Fluent.IListOnRenderSurfaceProps<Component> | undefined) => {
-          //   // console.log(props)
-          //   // eslint-disable-next-line react/prop-types
-          //   return <div
-          //     {...props?.divProps}
-          //     className={clas(css.container)}>
-          //     {props?.pageElements}
-          //   </div>
-          // }}
-          style={{ boxSizing: 'inherit' }}
-          getPageStyle={() => {
-            // console.log(page)
-            // return css.container
-            return styles.gridContainer
-          }}
-          items={images.length ? images : undefined}
-          // getItemCountForPage={getItemCountForPage}
-          // getPageHeight={getPageHeight}
-          // renderedWindowsAhead={4}
-          onRenderCell={onRenderCell}
-        />
-      </Fluent.FocusZone>
+      <div
+        className={css.gridContainer}
+        style={{ boxSizing: 'inherit' }}
+      >
+        {images.length && images.map((image, idx) => {
+          // const column = (idx + 1) % 3 === 0
+          //   ? 3
+          //   : (idx + 1) % 2 === 0
+          //     ? 2
+          //     : 1
+          return (
+            <div
+              key={idx}
+              className={css.gridItem}
+            // style={{ gridColumn: column }}
+            // style={idx === 3 ? { order: -1 } : undefined}
+            >
+              <img
+                // width={'250px' || image.width}
+                // height={image.height}
+                className={css.image}
+                src={image.path}
+                onClick={image.path ? () => lightboxB({ images: images, defaultImageIdx: idx }) : undefined}
+              />
+            </div>
+          )
+        })}
+      </div>
     )
 
   },
