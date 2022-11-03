@@ -162,8 +162,8 @@ def get_wave_completions(line, character, file_content):
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
                 ui.zone('main', size='calc(100vh - 80px)', direction=ui.ZoneDirection.ROW, zones=[
-                    ui.zone('description', size='50%'),
-                    ui.zone('rhs')
+                    ui.zone('description', size='30%'),
+                    ui.zone('rhs', size='70%')
                 ])
             ])
         ])
