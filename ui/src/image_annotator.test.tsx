@@ -36,7 +36,7 @@ class MockedRenderingContext extends window.CanvasRenderingContext2D {
 const
   name = 'image_annotator',
   rect = { shape: { rect: { x1: 10, x2: 100, y1: 10, y2: 100 } }, tag: 'person' },
-  polygon = { shape: { polygon: { items: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+  polygon = { shape: { polygon: { vertices: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
   items = [rect, polygon],
   model: ImageAnnotator = {
     name,
@@ -291,7 +291,7 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject([
-        { tag: 'person', shape: { polygon: { items: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
+        { tag: 'person', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
         ...items
       ])
     })
@@ -309,7 +309,7 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject([
-        { tag: 'object', shape: { polygon: { items: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
+        { tag: 'object', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
         ...items
       ])
     })
@@ -351,7 +351,7 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 240, clientY: 160 })
       expect(wave.args[name]).toMatchObject([
         rect,
-        { shape: { polygon: { items: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 160 }, { x: 240, y: 220 },] } }, tag: 'person' }
+        { shape: { polygon: { vertices: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 160 }, { x: 240, y: 220 },] } }, tag: 'person' }
       ])
     })
 
@@ -405,7 +405,7 @@ describe('ImageAnnotator.tsx', () => {
 
       expect(wave.args[name]).toMatchObject([
         rect,
-        { shape: { polygon: { items: [{ x: 115, y: 110 }, { x: 250, y: 110 }, { x: 250, y: 230 }] } }, tag: 'person' },
+        { shape: { polygon: { vertices: [{ x: 115, y: 110 }, { x: 250, y: 110 }, { x: 250, y: 230 }] } }, tag: 'person' },
       ])
     })
 
@@ -435,7 +435,7 @@ describe('ImageAnnotator.tsx', () => {
 
       expect(wave.args[name]).toMatchObject([
         rect,
-        { shape: { polygon: { items: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+        { shape: { polygon: { vertices: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
       ])
     })
 
@@ -452,7 +452,7 @@ describe('ImageAnnotator.tsx', () => {
 
       expect(wave.args[name]).toMatchObject([
         rect,
-        { shape: { polygon: { items: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+        { shape: { polygon: { vertices: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
       ])
     })
 
@@ -469,7 +469,7 @@ describe('ImageAnnotator.tsx', () => {
 
       expect(wave.args[name]).toMatchObject([
         rect,
-        { shape: { polygon: { items: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+        { shape: { polygon: { vertices: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
       ])
 
       fireEvent.click(canvasEl, { clientX: 180, clientY: 150 })
@@ -479,7 +479,7 @@ describe('ImageAnnotator.tsx', () => {
 
       expect(wave.args[name]).toMatchObject([
         rect,
-        { shape: { polygon: { items: [{ x: 110, y: 210 }, { x: 250, y: 110 }, { x: 250, y: 230 },] } }, tag: 'person' },
+        { shape: { polygon: { vertices: [{ x: 110, y: 210 }, { x: 250, y: 110 }, { x: 250, y: 230 },] } }, tag: 'person' },
       ])
     })
   })

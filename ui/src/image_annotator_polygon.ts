@@ -23,7 +23,7 @@ export class PolygonAnnotator {
     if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) {
       const { x, y } = this.currPolygonPoints[0]
       this.drawLine(x, y)
-      const newPolygon = { shape: { polygon: { items: [...this.currPolygonPoints] } }, tag }
+      const newPolygon = { shape: { polygon: { vertices: [...this.currPolygonPoints] } }, tag }
       this.currPolygonPoints = []
       return newPolygon
     }
