@@ -1,4 +1,4 @@
-# Tall Aricle Preview
+# Tall Article Preview
 # Create a tall article preview card if you intend to show a little preview
 # and allow user to click through to more content (specify 'name' attr).
 # ---
