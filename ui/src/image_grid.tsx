@@ -29,27 +29,52 @@ const css = stylesheet({
     // display: 'grid', // inline-grid
     // gridAutoRows: '300px',
     // gridAutoRows: 'minmax(min-content, max-content)',
-    gridAutoRows: 'min-content',
-    gridGap: '6px',
+    // gridAutoRows: 'min-content',
+    // gridGap: '6px',
     // gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))',
-    columnCount: 3,
+    // columnCount: 3,
     // display: 'grid',
     // gap: '10px',
     // gridTemplate: 'repeat(auto-fit, minmax(0,1fr)) / repeat(6, 1fr)',
     // gridTemplateColumns: 'repeat(6, 1fr)',
     // gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr))',
     // gridAutoFlow: 'dense' /* or 'row', 'row dense', 'column dense' */
+    position: 'relative'
   },
   gridItem: {
     // height: image.height,
     // display: 'inline-block',
     // breakInside: 'avoid',
-    width: '100%',
-    height: 'auto',
-    display: 'inline-block',
+
+    // width: '100%',
+    // height: 'auto',
+
+    // display: 'inline-block',
     // overflow: 'hidden',
     // gridRow: 'span 1'
     // gridColumn: 1
+    position: 'absolute',
+    width: '25%',
+    float: 'left',
+    boxSizing: 'border-box',
+    // $nest: {
+    //   '&:nth-child(4n+1)': {
+    //     // clear: 'left'
+    //     left: '75%'
+    //   },
+    //   '&:nth-child(3n+1)': {
+    //     // clear: 'left'
+    //     left: '50%'
+    //   },
+    //   '&:nth-child(2n+1)': {
+    //     // clear: 'left'
+    //     left: '25%'
+    //   },
+    //   '&::nth-child(n+1)': {
+    //     // clear: 'left'
+    //     left: '0%'
+    //   }
+    // }
   },
   image: {
     // flex: `0 0 ${width}px`,
@@ -91,7 +116,26 @@ export interface State {
 export const
   XImageGrid = ({ model: m }: { model: ImageGrid }) => {
     const
-      { width, height, images } = m
+      { width, height, images } = m,
+      [imagesMetadata, setImagesMetadata] = React.useState(Array(...Array(images.length))),
+      // TODO: import from lightbox
+      lazyImageObserver = new window.IntersectionObserver(entries =>
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const lazyImage = entry.target as HTMLImageElement
+            lazyImage.src = lazyImage.dataset.src!
+            lazyImage.classList.remove("lazy")
+            lazyImageObserver.unobserve(lazyImage)
+          }
+        })
+      )
+
+    React.useLayoutEffect(() => {
+      // Initialize intersection observer for lazy images.
+      // document.querySelectorAll(".lazy").forEach((lazyImage, idx) => { if (idx < 4) lazyImageObserver.observe(lazyImage) }) // TODO: 4 - columnCount
+      if (document.querySelectorAll(".lazy")?.[0]) lazyImageObserver.observe(document.querySelectorAll(".lazy")[0])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // console.log('images:', images)
 
@@ -101,26 +145,56 @@ export const
         style={{ boxSizing: 'inherit' }}
       >
         {images.length && images.map((image, idx) => {
-          // const column = (idx + 1) % 3 === 0
-          //   ? 3
-          //   : (idx + 1) % 2 === 0
-          //     ? 2
-          //     : 1
+          const columnCount = 4 // TODO
+          const row = Math.floor(idx / columnCount)
+          const column = idx - (row * columnCount)
           return (
-            <div
+            <span
               key={idx}
               className={css.gridItem}
+              style={{
+                left: `${column * (100 / columnCount)}%`,
+                height: '160px',
+                top: row * 150
+              }}
+
             // style={{ gridColumn: column }}
             // style={idx === 3 ? { order: -1 } : undefined}
             >
               <img
                 // width={'250px' || image.width}
                 // height={image.height}
-                className={css.image}
-                src={image.path}
+                id={`img-${idx}`}
+                onLoad={(ev) => {
+                  setImagesMetadata(metaData => {
+                    metaData[idx] = {
+                      column: column,
+                      height: ev.target.height,
+                      width: ev.target.width,
+                      naturalHeight: ev.target.naturalHeight,
+                      naturalWidth: ev.target.naturalWidth,
+                      weightH: ev.target.naturalHeight / ev.target.naturalWidth,
+                      weightW: ev.target.naturalWidth / ev.target.naturalHeight
+                    }
+                    ev.target.parentElement.style.height = 'auto'
+                    const top = imagesMetadata.filter((meta, id) => meta && id !== idx && meta.column === column).reduce((a, b) => a + b.height, 0)
+                    ev.target.parentElement.style.top = top + 'px'
+                    return metaData
+                  })
+                  if (document.getElementById(`img-${idx + 1}`)) {
+                    lazyImageObserver.observe(document.getElementById(`img-${idx + 1}`))
+                  }
+                }}
+                onError={() => {
+                  // TODO: 
+                }}
+                className={clas(css.image, 'lazy')}
+                alt={image.title}
+                data-src={image.path}
+                // src={image.path}
                 onClick={image.path ? () => lightboxB({ images: images, defaultImageIdx: idx }) : undefined}
               />
-            </div>
+            </span>
           )
         })}
       </div>
