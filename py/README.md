@@ -18,7 +18,8 @@ Installing
 Install and update using conda
 
 ```bash
-conda install -c h2oai h2o_wave
+conda config --append channels conda-forge
+conda install -c h2oai h2o-wave
 ```
 
 Hello world
