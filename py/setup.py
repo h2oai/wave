@@ -23,9 +23,9 @@ with open('README.rst', 'r') as readme:
 with open('README.md', 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
-platform = os.getenv('OS', 'darwin')
+platform = os.getenv('H2O_WAVE_BUILD_OS', 'darwin')
 version = os.getenv('VERSION', 'DEV')
-arch = os.getenv('ARCH', 'amd64')
+arch = os.getenv('H2O_WAVE_BUILD_ARCH', 'amd64')
 base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-{arch}')
 
 # Create a metadata file to get easy access to platform/OS arch when needed.
