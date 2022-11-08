@@ -143,8 +143,6 @@ export const
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // console.log('images:', images)
-
     return (
       <div
         className={css.gridContainer}
@@ -152,16 +150,16 @@ export const
       >
         {images.length && images.map((image, idx) => {
           const columnCount = 4 // TODO
-          const row = Math.floor(idx / columnCount)
-          const column = idx - (row * columnCount)
+          const placeholder_row = Math.floor(idx / columnCount)
+          const placeholder_column = idx - (placeholder_row * columnCount)
           return (
             <span
               key={idx}
               className={css.gridItem}
               style={{
-                left: `${column * (100 / columnCount)}%`,
+                left: `${placeholder_column * (100 / columnCount)}%`,
                 height: '160px',
-                top: row * 150
+                top: placeholder_row * 150
               }}
 
             // style={{ gridColumn: column }}
@@ -171,36 +169,29 @@ export const
                 // width={'250px' || image.width}
                 // height={image.height}
                 id={`img-${idx}`}
-                style={idx > 15 ? { visibility: 'hidden' } : undefined}
+                // style={idx > 15 ? { visibility: 'hidden' } : undefined}
                 onLoad={(ev) => {
                   setImagesMetadata(metaData => {
+                    const containerWidth = ev.target.parentElement.parentElement.clientWidth
                     const height = ev.target.height
                     const width = ev.target.width
-                    const left = (column !== 0 && imagesMetadata[idx - 1].row === row) ? (imagesMetadata[idx - 1].left + imagesMetadata[idx - 1].width) : 0
+                    const left = (idx !== 0 && (imagesMetadata[idx - 1].left + imagesMetadata[idx - 1].width + width) < containerWidth) ? (imagesMetadata[idx - 1].left + imagesMetadata[idx - 1].width) : 0
+                    // TODO: handle case when the first row image is wider than containerWidth
 
                     // const top = imagesMetadata.filter((meta, id) => meta && id !== idx && meta.column === column).reduce((a, b) => a + b.height, 0) // with column count specified // TODO:
 
-                    // const image = imagesMetadata[idx - column - columnCount]
+                    const row = idx === 0
+                      ? 0
+                      : left === 0
+                        ? imagesMetadata[idx - 1].row + 1
+                        : imagesMetadata[idx - 1].row
 
                     const prevRowBottom = imagesMetadata
                       .filter((meta, id) => meta && id !== idx && meta.row === row - 1)
                     const prevRowBottomAscending = prevRowBottom.sort((a, b) => (a.top + a.height) - (b.top + b.height))
 
-                    console.log('prevRowBottomAscending', prevRowBottomAscending)
 
-                    const conImage = prevRowBottomAscending.find(prImage => { // TODO: 
-                      // console.log(
-                      //   'idx:', idx,
-                      //   '\n---',
-                      //   '\nimage1 x1', left,
-                      //   '\nimage1 y1', prImage.top + prImage.height,
-                      //   '\nimage1 x2', left + width,
-                      //   '\nimage1 y2', prImage.top + prImage.height + height,
-                      //   '\nimage2 x1', prImage.left,
-                      //   '\nimage2 y1', prImage.top,
-                      //   '\nimage2 x2', prImage.left + prImage.width,
-                      //   '\nimage2 y2', prImage.top + prImage.height)
-
+                    const connectingImage = prevRowBottomAscending.find(prImage => { // TODO: 
                       return prevRowBottom.find(i => {
                         return isImageOverlap(
                           left,
@@ -212,40 +203,23 @@ export const
                           i.left + i.width,
                           i.top + i.height
                         )
-                      }
-                      ) === undefined
+                      }) === undefined
+                    })
 
-                    }
-                    )
 
-                    console.log('conImage', conImage)
-
-                    const top = idx < columnCount
+                    const top = row === 0
                       ? 0
-                      : conImage
-                        ? conImage.top + conImage.height
+                      : connectingImage
+                        ? connectingImage.top + connectingImage.height
                         : 0
-
-                    console.log('idx, left, top', idx, left, top)
-
-                    // console.log('idx, intersectingImages', idx, intersectingImages)
-
-                    // const intersectingImagesBottomAscending = intersectingImages.sort((a, b) => (a.top + a.height) - (b.top + b.height))
-                    // console.log('asc', intersectingImagesBottomAscending)
-
-                    // const top = idx < columnCount
-                    //   ? 0
-                    //   : intersectingImages.length
-                    //     ? Math.max(...intersectingImages.map(image => image.top + image.height))
-                    //     : image.top + image.height
-
 
                     ev.target.parentElement.style.height = 'auto'
                     ev.target.parentElement.style.left = left + 'px'
                     ev.target.parentElement.style.top = top + 'px'
 
                     metaData[idx] = {
-                      column: column,
+                      // column: column,
+                      // row: row,
                       row: row,
                       height: height,
                       width: width,
