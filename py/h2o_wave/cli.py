@@ -120,7 +120,10 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         waved_process = None
         # OS agnostic wheels do not have waved - needed for HAC.
         is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
-        autostart = (not no_autostart) or os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
+        if no_autostart:
+            autostart = False
+        else:
+            autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['true', '1', 't']
         if autostart and is_waved_present and server_not_running:
             waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
@@ -139,7 +142,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
                 if waved_process:
                     waved_process.kill()
         else:
-            print('Wave server not found. Please start the Wave server (waved or waved.exe) prior to running any app.')
+            print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
 
 
 @main.command()
