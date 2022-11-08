@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   build: {
     outDir: 'build',
-    assetsDir: 'static',
+    assetsDir: 'wave-static',
     chunkSizeWarningLimit: 900
   },
   server: {
