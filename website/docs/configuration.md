@@ -146,8 +146,8 @@ H2O_WAVE_WEB_DIR
 
 Notes:
 
-- [1] `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
-- [2] Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
+* [1] `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
+* [2] Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
 
 ### Public/Private dirs
 
@@ -181,7 +181,7 @@ The [realtime sync mode](realtime.md) of the app server. One of `unicast` (defau
 
 ### H2O_WAVE_ADDRESS
 
-The public host/port of the Wave server. Defaults to `http://127.0.0.1:10101`. Set this variable if you are running the Wave server on a remote machine or container.
+The public host/port of the Wave server. Defaults to `http://127.0.0.1:10101`. Set this variable if you are running the Wave server on a remote machine or container. Another common usage for this var is changing the app port together with `H2O_WAVE_LISTEN`.
 
 ### H2O_WAVE_CONNECTION_TIMEOUT
 
@@ -247,8 +247,8 @@ By default, Wave apps do not load any third-party trackers or capture usage data
 
 Once enabled, your app's UI will send events every time the user performs some kind of action that triggers a request from the browser to your app. Only two kinds of information are sent to the third-party trackers:
 
-- The names of the elements that were possibly interacted with (and not values). For example, if a button named `foo` was clicked on, the value `foo=true` is tracked.
-- The hash part of the URL, if any. For example if the page `/foo/bar` was navigated to, the value `#=/foo/bar` is tracked.
+* The names of the elements that were possibly interacted with (and not values). For example, if a button named `foo` was clicked on, the value `foo=true` is tracked.
+* The hash part of the URL, if any. For example if the page `/foo/bar` was navigated to, the value `#=/foo/bar` is tracked.
 
 ### Google Analytics
 
@@ -258,4 +258,14 @@ To enable usage tracking via Google Analytics, create and set a `ui.tracker()` o
 q.page['meta'] = ui.meta_card('',
     tracker=ui.tracker(type=ui.TrackerType.GA, id='G-XXXXXXXXXX')
 )
+```
+
+## FAQ
+
+### How to start a Wave app on a different port?
+
+You first need to set `H2O_WAVE_LISTEN` env variable, which is a string prefixed with `:` to make your Wave server expose the port you want. Afterwards set `H2O_WAVE_ADDRESS='http://127.0.0.1:10102'` to tell your Wave app where it should connect to.
+
+```sh
+H2O_WAVE_LISTEN=":10102" H2O_WAVE_ADDRESS='http://127.0.0.1:10102' wave run app.py
 ```
