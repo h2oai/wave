@@ -7,7 +7,7 @@
 # a dropdown option for example.
 # 
 # Notice that the example provided is a bit clunky - the text you type disappears after it's submitted.
-# We will demystify and fix this behavior later on (in [lesson10](/#lesson10)) so no worries. For
+# We will demystify and fix this behavior later on (in [lesson10](#lesson10)) so no worries. For
 # simplicity sake, the example is good enough as is currently.
 # ## Your task
 # There is not much to play around with here so give yourself a pat on shoulder for making it this far!

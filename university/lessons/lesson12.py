@@ -6,7 +6,7 @@
 # You can either pick one of our [predefined themes](https://wave.h2o.ai/docs/color-theming) or
 # [create a new one](https://wave.h2o.ai/docs/color-theming#custom-user-defined-themes) by picking a few main colors.
 # 
-# The theme is configured in "meta_card", that we introduced in [lesson3](/#lesson3).
+# The theme is configured in "meta_card", that we introduced in [lesson3](#lesson3).
 # 
 # See [docs](https://wave.h2o.ai/docs/arguments) for more info.
 # ## Your task

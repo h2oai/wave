@@ -1,6 +1,6 @@
 # Lesson 10: State II
 # # Create once, update afterwards
-# Remember how the input we typed in [lesson5](/#lesson5) disappeared after submit?
+# Remember how the input we typed in [lesson5](#lesson5) disappeared after submit?
 # It was because we recreated the markdown card by assigning q.page['form'] a new card reference
 # after every submit instead of creating it just once.
 # 
@@ -13,10 +13,10 @@
 # like training a small model or q.user to make something once per user session.
 # 
 # ## Simple example
-# This app will do the exact same thing as [lesson5](/#lesson5) did, but this time, the textbox input
+# This app will do the exact same thing as [lesson5](#lesson5) did, but this time, the textbox input
 # will keep the value.
 # ## Your task
-# Try to fix the example from [lesson6](/#lesson6).
+# Try to fix the example from [lesson6](#lesson6).
 # ---
 
 from h2o_wave import main, app, Q, ui
