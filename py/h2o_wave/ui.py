@@ -2222,6 +2222,7 @@ def image(
         path: Optional[str] = None,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        path_popup: Optional[str] = None,
 ) -> Component:
     """Create an image.
 
@@ -2232,6 +2233,7 @@ def image(
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         width: The width of the image, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        path_popup: The path or URL or data URL of the high resolution image. Enables image zoom popup when clicking on the image. E.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
     Returns:
         A `h2o_wave.types.Image` instance.
     """
@@ -2242,6 +2244,7 @@ def image(
         path,
         width,
         visible,
+        path_popup,
     ))
 
 
@@ -3068,6 +3071,7 @@ def image_card(
         image: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         path: Optional[str] = None,
+        path_popup: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ImageCard:
     """Create a card that displays a base64-encoded image.
@@ -3079,6 +3083,7 @@ def image_card(
         image: Image data, base64-encoded.
         data: Data for this card.
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+        path_popup: The path or URL or data URL of the high resolution image. Enables image zoom popup when clicking on the image. E.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ImageCard` instance.
@@ -3090,6 +3095,7 @@ def image_card(
         image,
         data,
         path,
+        path_popup,
         commands,
     )
 

@@ -107,7 +107,7 @@ const
     iconPressed: { color: 'rgba(255, 255, 255, 0.7)' },
   }
 
-type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
+type Image = { title: S, description?: S, type?: S, image?: S, path_popup?: S }
 
 export interface LightboxProps {
   images: Image[],
@@ -178,7 +178,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         />
       </div>
       <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
-        <img className={css.img} alt={title} src={getImageSrc(images[activeImageIdx])} />
+        <img className={css.img} alt={title} src={images[activeImageIdx].path_popup} />
         {isGallery &&
           <>
             <Fluent.ActionButton

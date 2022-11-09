@@ -45,6 +45,7 @@ page['example1'] = ui.image_card(
     title='An image',
     type='png',
     image=image,
+    path_popup=f"data:image/png;base64,{image}"
 )
 
 # Another way to achieve the same result is to use a data URL for the path:
