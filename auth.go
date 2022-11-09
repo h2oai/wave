@@ -427,7 +427,11 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		// Reload all of this user's browser tabs
 		h.broker.resetClients(session)
-		idToken, _ = session.token.Extra("id_token").(string) // raw id_token (required by Okta)
+
+		// A token may not be present if the oauth2 workflow failed, so check before access.
+		if session.token != nil {
+			idToken, _ = session.token.Extra("id_token").(string) // raw id_token (required by Okta)
+		}
 	}
 
 	h.redirect(w, r, idToken)
