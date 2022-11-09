@@ -111,8 +111,11 @@ export interface State {
   height?: S
 }
 
-// TODO: handle unconventional aspect ratios (like 1:10)
-// make it responsive
+// TODO: handle resize
+// TODO: check intersection with images in previous row (include in comparison only prev. row images with matching width against the width of image to be placed)
+// TODO: align top (in iterations comparing previous rows one after another) and left
+
+// TODO: check if unconventional aspect ratios are properly working (like 1:10)
 
 export const
   XImageGrid = ({ model: m }: { model: ImageGrid }) => {
@@ -169,7 +172,7 @@ export const
                 // width={'250px' || image.width}
                 // height={image.height}
                 id={`img-${idx}`}
-                // style={idx > 15 ? { visibility: 'hidden' } : undefined}
+                // style={idx > 17 ? { visibility: 'hidden' } : undefined}
                 onLoad={(ev) => {
                   setImagesMetadata(metaData => {
                     const containerWidth = ev.target.parentElement.parentElement.clientWidth
