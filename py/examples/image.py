@@ -45,7 +45,6 @@ page['example1'] = ui.image_card(
     title='An image',
     type='png',
     image=image,
-    path_popup=f"data:image/png;base64,{image}"
 )
 
 # Another way to achieve the same result is to use a data URL for the path:
@@ -55,6 +54,7 @@ page['example2'] = ui.image_card(
     box='3 1 2 4',
     title='An image',
     path=f"data:image/png;base64,{image}",
+    path_popup=f"data:image/png;base64,{image}"
 )
 
 page.save()

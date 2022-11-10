@@ -46,7 +46,7 @@ interface State {
   data?: Rec
   /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
   path?: S
-  /** The path or URL or data URL of the high resolution image. Enables image zoom popup when clicking on the image. E.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.  */
+  /** The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property. */
   path_popup?: S
 }
 
@@ -65,21 +65,20 @@ export interface Image {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
-  /** The path or URL or data URL of the high resolution image. Enables image zoom popup when clicking on the image. E.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.  */
+  /** The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property. */
   path_popup?: S
 }
-
-export const getImageSrc = ({ type, image, path }: Image) => path
-  ? path
-  : (image && type)
-    ? `data:image/${type};base64,${image}`
-    : ''
 
 export const
   XImage = ({ model: m }: { model: Image }) => {
     const
       { title, type, image, width, path_popup } = m,
-      lightboxProps: LightboxProps = { images: [{ title, type, image, path_popup }] }
+      lightboxProps: LightboxProps = { images: [{ title, type, image, path: path_popup }] },
+      getImageSrc = ({ type, image, path }: Image) => path
+        ? path
+        : (image && type)
+          ? `data:image/${type};base64,${image}`
+          : ''
 
     return <img className={css.img} alt={title} src={getImageSrc(m)} width={formItemWidth(width)} onClick={path_popup ? () => lightboxB(lightboxProps) : undefined} style={{ cursor: path_popup ? 'pointer' : 'default' }} />
 

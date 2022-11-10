@@ -18,7 +18,6 @@ import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
-import { getImageSrc } from '../image'
 
 export const lightboxB: Box<LightboxProps | null> = box()
 
@@ -107,7 +106,7 @@ const
     iconPressed: { color: 'rgba(255, 255, 255, 0.7)' },
   }
 
-type Image = { title: S, description?: S, type?: S, image?: S, path_popup?: S }
+type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
 
 export interface LightboxProps {
   images: Image[],
@@ -178,7 +177,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         />
       </div>
       <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
-        <img className={css.img} alt={title} src={images[activeImageIdx].path_popup} />
+        <img className={css.img} alt={title} src={images[activeImageIdx].path} />
         {isGallery &&
           <>
             <Fluent.ActionButton
@@ -211,7 +210,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
                   className={clas(css.img, css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
                   style={activeImageIdx === idx ? imageHighlightStyle : undefined}
                   alt={title}
-                  data-src={getImageSrc(image)}
+                  data-src={image.path}
                   onClick={() => setActiveImageIdx(idx)}
                 />
               </div>
