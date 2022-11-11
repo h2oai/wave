@@ -107,12 +107,18 @@ q.page['example'] = ui.image_card(
 )
 ```
 
-## Image zoom
+## Image popup
 
-Sometimes it can be handy to show a bigger version of the image in a popup window when clicking on the image. You can enable it by providing a `path_popup` property with a path (or the URL or the data URL) of the high resolution version of the image. Note, that this does not replace a `path` property.
+Sometimes it can be handy to show a bigger version of the image in a popup window when clicking on the image. You can enable it by providing a `path_popup` property with a path or the URL or the [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) of the high resolution version of the image. Note, that this does not replace a `path` property.
 
-```py
-q.page['example'] = ui.form_card(box='1 1 4 4', items=[
-    ui.image(title='Image zoom', path='https://www.fillmurray.com/640/360', path_popup='https://www.fillmurray.com/1280/720'),
+![image popup gif](/img/widgets/image_popup.gif)
+
+```py ignore
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
+    ui.image(
+        title='Image popup', 
+        path='https://via.placeholder.com/600x400', 
+        path_popup='https://via.placeholder.com/1200x800'
+    ),
 ])
 ```

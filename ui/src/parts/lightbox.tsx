@@ -25,7 +25,8 @@ const
   HEADER_HEIGHT = 40,
   IMAGE_CAPTIONS_HEIGHT = 60,
   IMAGE_NAV_HEIGHT = 148,
-  IMAGE_SIZE = 120
+  IMAGE_SIZE = 120,
+  ICON_SIZE = 38
 
 const
   css = stylesheet({
@@ -36,17 +37,18 @@ const
       backgroundColor: 'rgba(0, 0, 0, 0.9)',
     },
     img: {
+      position: 'absolute',
+      inset: '0px',
+      margin: 'auto',
+      maxHeight: '100%',
       maxWidth: '100%',
-      objectFit: 'scale-down',
     },
     header: {
       height: HEADER_HEIGHT,
       textAlign: 'right'
     },
     content: {
-      display: 'flex',
       position: 'relative',
-      justifyContent: 'center',
     },
     footer: {
       textAlign: 'center',
@@ -91,7 +93,7 @@ const
       position: "absolute",
       top: "50%",
       padding: "16px",
-      marginTop: "-50px"
+      marginTop: -ICON_SIZE / 2
     }
   }),
   styles: { [key: S]: React.CSSProperties } = {
@@ -99,7 +101,7 @@ const
   },
   iconStyles: Fluent.IButtonStyles = {
     flexContainer: { justifyContent: 'center' },
-    root: { margin: '4px 4px', width: 38, height: 38, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
+    root: { margin: '4px 4px', width: ICON_SIZE, height: ICON_SIZE, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
     rootHovered: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
     icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4 },
     iconHovered: { color: '#fff' },
@@ -176,22 +178,28 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
           iconProps={{ iconName: 'Cancel', style: styles.icon }}
         />
       </div>
-      <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
-        <img className={css.img} alt={title} src={images[activeImageIdx].path} />
+      <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }} onClick={() => lightboxB(null)}>
+        <img className={css.img} alt={title} src={images[activeImageIdx].path} onClick={ev => ev.stopPropagation()} />
         {isGallery &&
           <>
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ left: 0 }}
-              onClick={() => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)}
+              onClick={ev => {
+                ev.stopPropagation()
+                setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
+              }}
               iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
             />
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ right: 0 }}
-              onClick={() => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)}
+              onClick={ev => {
+                ev.stopPropagation()
+                setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
+              }}
               iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
             />
           </>
@@ -207,7 +215,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
             {images.map((image, idx) =>
               <div key={idx} className={css.navImgContainer}>
                 <img
-                  className={clas(css.img, css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
+                  className={clas(css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
                   style={activeImageIdx === idx ? imageHighlightStyle : undefined}
                   alt={title}
                   data-src={image.path}

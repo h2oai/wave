@@ -21,7 +21,7 @@ const
   name = 'image',
   imageProps: T.Model<any> = {
     name,
-    state: { title: name, path: 'https://www.fillmurray.com/640/360', path_popup: 'https://www.fillmurray.com/640/360' },
+    state: {},
     changed: T.box(false)
   }
 
