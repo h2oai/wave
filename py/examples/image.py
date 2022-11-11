@@ -1,5 +1,5 @@
 # Image
-# Use an image card to display a base64-encoded #image.
+# Use an image card to display an image by specifying the URL or the data URL of the base64-encoded #image.
 # ---
 from h2o_wave import site, ui
 import io
@@ -54,7 +54,6 @@ page['example2'] = ui.image_card(
     box='3 1 2 4',
     title='An image',
     path=f"data:image/png;base64,{image}",
-    path_popup=f"data:image/png;base64,{image}"
 )
 
 page.save()

@@ -73,7 +73,7 @@ export const
   XImage = ({ model: m }: { model: Image }) => {
     const
       { title, type, image, width, path_popup } = m,
-      lightboxProps: LightboxProps = { images: [{ title, type, image, path: path_popup }, { title, type, image, path: 'https://via.placeholder.com/1200x800' }] },
+      lightboxProps: LightboxProps = { images: [{ title, type, image, path: path_popup }] },
       getImageSrc = ({ type, image, path }: Image) => path
         ? path
         : (image && type)
