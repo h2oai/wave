@@ -51,11 +51,13 @@ export interface CopyableText {
   name?: S
   /** True if the component should allow multi-line text entry. */
   multiline?: B
+  /** The adjustable height of the textbox. */
+  height?: S
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
-    { name, multiline, label, value } = model,
+    { name, multiline, label, value, height } = model,
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -80,7 +82,14 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
 
   return (
     <div data-test={name} className={multiline ? css.multiContainer : css.compactContainer}>
-      <Fluent.TextField componentRef={ref} value={value} label={label} multiline={multiline} styles={{ root: { width: pc(100) } }} readOnly />
+      <Fluent.TextField 
+        componentRef={ref}
+        value={value}
+        label={label}
+        multiline={multiline}
+        styles={ multiline ? { root: { width: pc(100), height: height} } : { root: { width: pc(100) } } }
+        readOnly
+      />
       <Fluent.PrimaryButton
         title='Copy to clipboard'
         onClick={onClick}

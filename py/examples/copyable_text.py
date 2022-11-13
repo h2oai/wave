@@ -13,6 +13,7 @@ page = site['/demo']
 page['hello'] = ui.form_card(box='1 1 3 3', items=[
     ui.copyable_text(label='Copyable text', value='Hello world!'),
     ui.copyable_text(label='Copyable text', value=multiline_content, multiline=True),
+    ui.copyable_text(label='Copyable text', value=multiline_content, multiline=True, height='200px'),
 ])
 
 page.save()
