@@ -194,7 +194,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
     }, [redrawExistingShapes]),
     onMouseDown = (e: React.MouseEvent) => {
-      if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
       if (!canvas) return
 
@@ -202,10 +201,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
+      if (e.buttons !== 1 && !intersected?.shape.polygon) return // Ignore right-click.
+
       if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected.shape.rect)
-      if (intersected?.shape.polygon) {
-        polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.vertices)
-        polygonRef.current?.resetDragging()
+      if (intersected?.shape.polygon && polygonRef.current) {
+        const vertices = intersected.shape.polygon.vertices
+        polygonRef.current.tryToAddAuxPoint(cursor_x, cursor_y, vertices)
+        polygonRef.current.resetDragging()
+        // Remove polygon vertex on right click.
+        if (e.buttons === 2) {
+          intersected.shape.polygon.vertices = polygonRef.current.tryToRemovePoint(cursor_x, cursor_y, vertices)
+        }
         setDrawnShapes(drawnShapes => drawnShapes.map(s => {
           if (s === intersected && s.shape.polygon && polygonRef.current) {
             s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
@@ -414,6 +420,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDown}
           onKeyDown={onKeyDown}
+          // Do not show context menu on right click.
+          onContextMenu={e => e.preventDefault()}
           onClick={onClick}
         />
       </div>

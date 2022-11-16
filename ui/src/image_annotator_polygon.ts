@@ -60,9 +60,13 @@ export class PolygonAnnotator {
     }
   }
 
-  addAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+  tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
     const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     if (clickedPoint?.isAux) clickedPoint.isAux = false
+  }
+
+  tryToRemovePoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+    return items.filter(p => !isIntersectingPoint(p, cursor_x, cursor_y))
   }
 
   getPolygonPointsWithAux = (points: DrawnPoint[]) => {
