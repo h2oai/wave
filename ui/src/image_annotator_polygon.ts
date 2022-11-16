@@ -44,7 +44,7 @@ export class PolygonAnnotator {
     }
 
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
-    this.draggedPoint = clickedPolygonPoint || this.draggedPoint
+    this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
