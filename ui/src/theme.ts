@@ -578,15 +578,6 @@ const
     },
   },
   themeRules = Fluent.themeRulesStandardCreator(),
-  rgbToRelativeLuminance = (R8bit: U, G8bit: U, B8bit: U) => {
-    // Measures relative luminance for calculating contrast ratio accesability standard: https://www.w3.org/TR/2010/NOTE-WCAG20-TECHS-20101014/G18.
-    const RsRGB = R8bit / 255, GsRGB = G8bit / 255, BsRGB = B8bit / 255
-    const
-      R = (RsRGB <= 0.03928) ? RsRGB / 12.92 : Math.pow((RsRGB + 0.055) / 1.055, 2.4),
-      G = (GsRGB <= 0.03928) ? GsRGB / 12.92 : Math.pow((GsRGB + 0.055) / 1.055, 2.4),
-      B = (BsRGB <= 0.03928) ? BsRGB / 12.92 : Math.pow((BsRGB + 0.055) / 1.055, 2.4)
-    return 0.2126 * R + 0.7152 * G + 0.0722 * B
-  },
   changeTheme = (themeName: S) => {
     const
       theme = themes[themeName] ?? themes[defaultThemeName],
@@ -617,22 +608,21 @@ const
         fluentCard = Fluent.getColorFromString(palette.card)
 
       if (fluentPrimary && fluentCard) {
-        // Calculates a primary to card color contrast ratio.
         const
-          fluentPrimaryRL = rgbToRelativeLuminance(fluentPrimary.r, fluentPrimary.g, fluentPrimary.b),
+          rgbToRelativeLuminance = (R8bit: U, G8bit: U, B8bit: U) => {
+            // Measures relative luminance for calculating contrast ratio accesability standard: https://www.w3.org/TR/2010/NOTE-WCAG20-TECHS-20101014/G18.
+            const RsRGB = R8bit / 255, GsRGB = G8bit / 255, BsRGB = B8bit / 255
+            const adjustGama = (s: U) => (s <= 0.03928) ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)
+            return 0.2126 * adjustGama(RsRGB) + 0.7152 * adjustGama(GsRGB) + 0.0722 * adjustGama(BsRGB)
+          },
           fluentCardRL = rgbToRelativeLuminance(fluentCard.r, fluentCard.g, fluentCard.b),
-          L1 = Math.max(fluentPrimaryRL, fluentCardRL), // L1 is the relative luminance of the lighter of the foreground or background colors.
-          L2 = Math.min(fluentPrimaryRL, fluentCardRL), // L2 is the relative luminance of the darker of the foreground or background colors.
           // Note that contrast ratio should be 4.5:1 or greater. If it is not, it is good to readjust a theme's card and/or primary color.
-          primaryToCardContrastRatio = (L1 + 0.05) / (L2 + 0.05),
           getSpectrumToCardContrastRatio = (fluentCardRL: U, spectrumRL: U) => {
-            const L1 = Math.max(spectrumRL, fluentCardRL)
-            const L2 = Math.min(spectrumRL, fluentCardRL)
+            const L1 = Math.max(spectrumRL, fluentCardRL) // L1 is the relative luminance of the lighter of the foreground or background colors.
+            const L2 = Math.min(spectrumRL, fluentCardRL) // L2 is the relative luminance of the darker of the foreground or background colors.
             return (L1 + 0.05) / (L2 + 0.05)
-          }
-
-        const desiredContrastRatio = primaryToCardContrastRatio // 4.5
-        console.log('--- PRIMARY TO CARD ---', primaryToCardContrastRatio)
+          },
+          MINIMUM_CONTRAST_RATIO = 4.5
 
         Object.keys(spectrum).forEach(spectrumColor => {
           // Calculates a spectrum to card color contrast ratio.
@@ -641,58 +631,46 @@ const
             spectrumRL = rgbToRelativeLuminance(r, g, b),
             spectrumToCardContrastRatio = getSpectrumToCardContrastRatio(fluentCardRL, spectrumRL)
 
-          if (spectrumColor === 'mint' || spectrumColor === 'red') console.log('SPECTRUM TO CARD:', spectrumColor, spectrumToCardContrastRatio)
-
           // Calculates a new spectrum color's saturation and luminance for "spectrum to card contrast ratio" to match the "primary to card contrast ratio".
           const
-            spectrumHsl = Fluent.hsv2hsl(h, s, v),
-            toChange = desiredContrastRatio - spectrumToCardContrastRatio,
+            toChange = MINIMUM_CONTRAST_RATIO - spectrumToCardContrastRatio,
             isSpectrumLighterThanCard = spectrumRL > fluentCardRL,
             getNewSpectrumColorSL = (increaseSpectrumRL: B) => {
               const
-                increment = increaseSpectrumRL ? -0.01 : 0.01,
-                { h, s, v } = Fluent.getColorFromString(spectrum[spectrumColor])!,
-                spectrumHsl = Fluent.hsv2hsl(h, s, v),
-                H = spectrumHsl.h
-              let S = spectrumHsl.s, L = spectrumHsl.l
-              // if (increment > 0) return { s: S, l: L }
-              if (spectrumColor === 'mint' || spectrumColor === 'red') console.log('ORIGINAL SPECTRUM TO CARD S, L:', spectrumColor, S, L)
-              const { r, g, b } = Fluent.hsl2rgb(H, S, L)
+                increment = 0.01,
+                spectrumHsv = Fluent.getColorFromString(spectrum[spectrumColor])!,
+                spectrumHsl = Fluent.hsv2hsl(spectrumHsv.h, spectrumHsv.s, spectrumHsv.v)
+              let
+                S = spectrumHsl.s,
+                L = spectrumHsl.l
+              const { r, g, b } = Fluent.hsl2rgb(spectrumHsl.h, S, L)
               let spectrumRL = rgbToRelativeLuminance(r, g, b)
-              while (Math.abs(desiredContrastRatio - getSpectrumToCardContrastRatio(fluentCardRL, spectrumRL)) > 0.05 && !(Math.abs(L - 100) < 1 || 100 && Math.abs(L - 100) > 99) && S) {
-                // Decrease spectrumRL: S ++, L --; Increase spectrumRL: S --, L ++ .
-                if (increment > 0) {
-                  // prioritize S
-                  if ((S + increment) >= 0 && (S + increment <= 100)) {
-                    S = S + increment
-                  } else {
-                    L = (L - increment) >= 0 && (L - increment <= 100) ? L - increment : L
-                  }
-                } else {
-                  // prioritize L
-                  if ((L - increment) >= 0 && (L - increment <= 100)) {
-                    L = L - increment
-                  } else {
-                    S = (S + increment) >= 0 && (S + increment <= 100) ? S + increment : S
-                  }
+
+              while (
+                Math.abs(MINIMUM_CONTRAST_RATIO - getSpectrumToCardContrastRatio(fluentCardRL, spectrumRL)) > 0.05
+                && ((!increaseSpectrumRL && L !== 0) || (increaseSpectrumRL && S !== 0))
+              ) {
+                if (increaseSpectrumRL) {  // Increase spectrumRL: S --, L ++ .
+                  if (L !== 100) L = (L + increment) > 100 ? 100 : L + increment // prioritize L //1
+                  else S = (S - increment) < 0 ? 0 : S - increment //2
+                } else { // Decrease spectrumRL: S ++, L --; 
+                  if (S !== 100) S = (S + increment) > 100 ? 100 : S + increment // prioritize S //1
+                  else L = (L - increment) < 0 ? 0 : L - increment //2
                 }
-                // S = (S + increment) >= 0 && (S + increment <= 100) ? S + increment : S
-                // L = (L - increment) >= 0 && (L - increment <= 100) ? L - increment : L
-                const { r, g, b } = Fluent.hsl2rgb(H, S, L)
+                const { r, g, b } = Fluent.hsl2rgb(spectrumHsl.h, S, L)
                 spectrumRL = rgbToRelativeLuminance(r, g, b)
               }
-              if (spectrumColor === 'mint' || spectrumColor === 'red') console.log('NEW SPECTRUM TO CARD S, L:', spectrumColor, S, L)
-              // console.log('NEW SPECTRUM TO CARD:', S, L, getSpectrumToCardContrastRatio(fluentCardRL, spectrumRL))
+
               return { s: S, l: L }
             }
 
-          const newSpectrumColorSL = getNewSpectrumColorSL(
-            toChange < 0
-              // Decrease spectrum to card contrast ratio.
-              ? !isSpectrumLighterThanCard
-              // Increase spectrum to card contrast ratio.
-              : isSpectrumLighterThanCard
-          )
+          const
+            spectrumHsl = Fluent.hsv2hsl(h, s, v),
+            newSpectrumColorSl = getNewSpectrumColorSL(
+              toChange < 0
+                ? !isSpectrumLighterThanCard // Decrease spectrum to card contrast ratio.
+                : isSpectrumLighterThanCard // Increase spectrum to card contrast ratio.
+            )
 
           document.body.style.setProperty(
             `--${spectrumColor}`,
@@ -701,7 +679,7 @@ const
               // Note that spectrum colors for 'default' theme are initially defined in index.scss's ':root and does not pass through this function.
               // Recomputing them would make 'default' theme spectrum colors inconsistent when switching from 'default' theme into another one and then switching back.
               ? spectrum[spectrumColor]
-              : `hsl(${spectrumHsl.h}, ${newSpectrumColorSL.s}%, ${newSpectrumColorSL.l}%)`
+              : `hsl(${spectrumHsl.h}, ${newSpectrumColorSl.s}%, ${newSpectrumColorSl.l}%)`
           )
         })
       }
