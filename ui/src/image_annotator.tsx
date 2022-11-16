@@ -299,6 +299,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
     },
     chooseShape = (_e?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, i?: Fluent.IContextualMenuItem) => {
+      polygonRef.current?.cancelAnnotating()
       setActiveShape(i?.key as keyof ImageAnnotatorShape)
       startPosition.current = undefined
       setDrawnShapes(shapes => shapes.map(s => { s.isFocused = false; return s }))
