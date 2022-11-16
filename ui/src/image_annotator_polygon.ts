@@ -87,7 +87,8 @@ export class PolygonAnnotator {
       }, [] as DrawnPoint[])
 
     // Insert aux also between last and first point.
-    const lastPoint = points.at(-1)?.isAux ? points.at(-2) : points.at(-1)
+    const pointsLength = points.length
+    const lastPoint = points[pointsLength - 1]?.isAux ? points[pointsLength - 2] : points[pointsLength - 1]
     if (lastPoint) {
       items.push({
         x: (points[0].x + lastPoint.x) / 2,
@@ -130,7 +131,7 @@ export class PolygonAnnotator {
     if (!this.ctx || !this.currPolygonPoints.length) return
 
     this.drawPolygon(this.currPolygonPoints, color, false)
-    const { x, y } = this.currPolygonPoints.at(-1)!
+    const { x, y } = this.currPolygonPoints[this.currPolygonPoints.length - 1]
 
     this.ctx.beginPath()
     this.ctx.fillStyle = color
