@@ -18,7 +18,7 @@ export interface ImageAnnotatorPoint {
 
 /** Create a polygon annotation shape. */
 export interface ImageAnnotatorPolygon {
-  /** List of points of the polygon. */
+  /** List of polygon points. */
   vertices: ImageAnnotatorPoint[]
 }
 
@@ -78,6 +78,8 @@ export interface ImageAnnotator {
   trigger?: B
   /** The card’s image height. The actual image size is used by default. */
   image_height?: S
+  /** List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default. */
+  allowed_shapes?: S[]
 }
 
 export type Position = {
@@ -159,6 +161,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const [R, G, B] = rgb(cssVarValue(tag.color))
       return [tag.name, `rgba(${R}, ${G}, ${B}, 1)`]
     })), [model.tags]),
+    allowedShapes = React.useMemo(() => (model.allowed_shapes || ['rect', 'polygon']).reduce((acc, curr) => {
+      acc.add(curr)
+      return acc
+    }, new Set()), [model.allowed_shapes]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
     // TODO: Think about making this a ref instead of state.
@@ -420,6 +426,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items])
 
+  const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
+  if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
+  if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
+
   return (
     <div data-test={model.name}>
       <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
@@ -442,11 +452,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             iconProps: { iconName: 'DependencyRemove', styles: { root: { fontSize: 20 } } },
           },
         ]}
-        farItems={[
-          getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer'),
-          getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'),
-          getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'),
-        ]}
+        farItems={farItems}
       />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />

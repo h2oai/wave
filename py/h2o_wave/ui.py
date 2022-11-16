@@ -2422,7 +2422,7 @@ def image_annotator_polygon(
     """Create a polygon annotation shape.
 
     Args:
-        vertices: List of points of the polygon.
+        vertices: List of polygon points.
     Returns:
         A `h2o_wave.types.ImageAnnotatorPolygon` instance.
     """
@@ -2457,6 +2457,7 @@ def image_annotator(
         items: Optional[List[ImageAnnotatorItem]] = None,
         trigger: Optional[bool] = None,
         image_height: Optional[str] = None,
+        allowed_shapes: Optional[List[str]] = None,
 ) -> Component:
     """Create an image annotator component.
 
@@ -2470,6 +2471,7 @@ def image_annotator(
         items: Annotations to display on the image, if any.
         trigger: True if the form should be submitted as soon as an annotation is drawn.
         image_height: The card’s image height. The actual image size is used by default.
+        allowed_shapes: List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
     Returns:
         A `h2o_wave.types.ImageAnnotator` instance.
     """
@@ -2481,6 +2483,7 @@ def image_annotator(
         items,
         trigger,
         image_height,
+        allowed_shapes,
     ))
 
 

@@ -2817,7 +2817,7 @@ ui_image_annotator_point <- function(
 
 #' Create a polygon annotation shape.
 #'
-#' @param vertices List of points of the polygon.
+#' @param vertices List of polygon points.
 #' @return A ImageAnnotatorPolygon instance.
 #' @export
 ui_image_annotator_polygon <- function(
@@ -2858,6 +2858,7 @@ ui_image_annotator_item <- function(
 #' @param items Annotations to display on the image, if any.
 #' @param trigger True if the form should be submitted as soon as an annotation is drawn.
 #' @param image_height The card’s image height. The actual image size is used by default.
+#' @param allowed_shapes List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
 #' @return A ImageAnnotator instance.
 #' @export
 ui_image_annotator <- function(
@@ -2867,7 +2868,8 @@ ui_image_annotator <- function(
   tags,
   items = NULL,
   trigger = NULL,
-  image_height = NULL) {
+  image_height = NULL,
+  allowed_shapes = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("image", "character", image)
   .guard_scalar("title", "character", title)
@@ -2875,6 +2877,7 @@ ui_image_annotator <- function(
   .guard_vector("items", "WaveImageAnnotatorItem", items)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("image_height", "character", image_height)
+  .guard_vector("allowed_shapes", "character", allowed_shapes)
   .o <- list(image_annotator=list(
     name=name,
     image=image,
@@ -2882,7 +2885,8 @@ ui_image_annotator <- function(
     tags=tags,
     items=items,
     trigger=trigger,
-    image_height=image_height))
+    image_height=image_height,
+    allowed_shapes=allowed_shapes))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
