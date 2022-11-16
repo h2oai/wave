@@ -2514,6 +2514,7 @@ def copyable_text(
         label: str,
         name: Optional[str] = None,
         multiline: Optional[bool] = None,
+        height: Optional[str] = None,
 ) -> Component:
     """Create a copyable text component.
     Use this component when you want to enable your users to quickly copy paste sections of text.
@@ -2531,6 +2532,7 @@ def copyable_text(
         label,
         name,
         multiline,
+        height,
     ))
 
 
