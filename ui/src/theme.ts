@@ -146,7 +146,7 @@ const
         themePrimary: '#cddc39',
         themeSecondary: '#b3c132',
         themeTertiary: '#7a8422',
-        white: '#0d0e0f'
+        white: '#0d0e0f',
       },
     },
     'h2o-dark': {
@@ -602,14 +602,22 @@ const
     if (fluentPalette.themePrimary) {
       updateTones('primary', fluentPalette.themePrimary)
 
-      // Handle saturation/desaturation.
+      // Adjust saturation of spectrum colors based on the current theme.
       const fluentPrimary = Fluent.getColorFromString(fluentPalette.themePrimary)
       if (fluentPrimary) {
         const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
         Object.keys(spectrum).forEach(spectrumColor => {
-          const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
+          const { h, s, v } = Fluent.getColorFromString(spectrum[spectrumColor])!
           const spectrumHsl = Fluent.hsv2hsl(h, s, v)
-          document.body.style.setProperty(`--${spectrumColor}`, `hsl(${spectrumHsl.h}, ${primaryHsl.s}%, ${spectrumHsl.l}%)`)
+          document.body.style.setProperty(
+            `--${spectrumColor}`,
+            themeName === 'default'
+              // Prevents saturation adjustment for 'default' theme and sets back the initial spectrum colors. 
+              // Initial values of spectrum colors are already adjusted for 'default' theme.
+              // Recomputing them would make 'default' theme spectrum colors inconsistent when switching from 'default' theme into another one and then switching back.
+              ? spectrum[spectrumColor]
+              : `hsl(${spectrumHsl.h}, ${primaryHsl.s}%, ${spectrumHsl.l}%)`
+          )
         })
       }
     }
