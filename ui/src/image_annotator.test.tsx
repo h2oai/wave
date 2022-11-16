@@ -348,7 +348,7 @@ describe('ImageAnnotator.tsx', () => {
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
-      fireEvent.click(canvasEl, { clientX: 240, clientY: 160 })
+      fireEvent.mouseDown(canvasEl, { clientX: 240, clientY: 160 })
       expect(wave.args[name]).toMatchObject([
         rect,
         { shape: { polygon: { vertices: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 160 }, { x: 240, y: 220 },] } }, tag: 'person' }

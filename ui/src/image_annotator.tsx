@@ -200,9 +200,21 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
-        focused = drawnShapes.find(({ isFocused }) => isFocused)
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
-      if (focused?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, focused.shape.rect)
+      if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected.shape.rect)
+      if (intersected?.shape.polygon) {
+        polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.vertices)
+        polygonRef.current?.resetDragging()
+        setDrawnShapes(drawnShapes => drawnShapes.map(s => {
+          if (s === intersected && s.shape.polygon && polygonRef.current) {
+            s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
+          }
+          return s
+        }))
+        redrawExistingShapes()
+      }
+
       startPosition.current = { x: cursor_x, y: cursor_y, dragging: true }
     },
     onMouseMove = (e: React.MouseEvent) => {
@@ -268,8 +280,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         case 'select': {
           if (intersected) setActiveTag(intersected.tag)
-          if (intersected?.shape.polygon) polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.vertices)
-          polygonRef.current?.resetDragging()
 
           setDrawnShapes(drawnShapes => drawnShapes.map(s => {
             s.isFocused = s === intersected
