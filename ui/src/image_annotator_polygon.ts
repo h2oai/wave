@@ -14,6 +14,10 @@ export class PolygonAnnotator {
     this.draggedShape = null
   }
 
+  cancelAnnotating() {
+    this.currPolygonPoints = []
+  }
+
   onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
     if (!this.ctx) return
 

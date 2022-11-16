@@ -287,6 +287,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
+    onKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape' && activeShape === 'polygon') {
+        polygonRef.current?.cancelAnnotating()
+        redrawExistingShapes()
+      }
+    },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
       setDrawnShapes(shapes => item.key === 'remove-selected' ? shapes.filter(s => !s.isFocused) : [])
@@ -390,7 +396,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
-        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onClick={onClick} />
+        <canvas
+          tabIndex={0}
+          ref={canvasRef}
+          className={css.canvas}
+          onMouseMove={onMouseMove}
+          onMouseDown={onMouseDown}
+          onKeyDown={onKeyDown}
+          onClick={onClick}
+        />
       </div>
     </div >
   )

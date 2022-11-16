@@ -482,5 +482,19 @@ describe('ImageAnnotator.tsx', () => {
         { shape: { polygon: { vertices: [{ x: 110, y: 210 }, { x: 250, y: 110 }, { x: 250, y: 230 },] } }, tag: 'person' },
       ])
     })
+
+    it('Cancels polygon drawing when hitting escape', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      fireEvent.keyDown(canvasEl, { key: 'Escape' })
+      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+
+      expect(wave.args[name]).toMatchObject(items)
+    })
   })
 })
