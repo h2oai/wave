@@ -355,7 +355,7 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    it('Removes aux point from polygon when right-clicked', async () => {
+    it('Removes point from polygon when right-clicked', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
@@ -451,23 +451,6 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    it('Moves polygon by a single point correctly', async () => {
-      const { container } = render(<XImageAnnotator model={model} />)
-      await waitForLoad()
-      const canvasEl = container.querySelectorAll('canvas')[1]
-
-      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
-      fireEvent.mouseDown(canvasEl, { clientX: 105, clientY: 100 })
-      fireEvent.mouseMove(canvasEl, { clientX: 105, clientY: 100, buttons: 1 })
-      fireEvent.mouseMove(canvasEl, { clientX: 100, clientY: 200, buttons: 1 })
-      fireEvent.click(canvasEl, { clientX: 100, clientY: 200 })
-
-      expect(wave.args[name]).toMatchObject([
-        rect,
-        { shape: { polygon: { vertices: [{ x: 100, y: 200 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
-      ])
-    })
-
     it('Moves polygon by a single point, then moves it whole', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
@@ -508,5 +491,138 @@ describe('ImageAnnotator.tsx', () => {
 
       expect(wave.args[name]).toMatchObject(items)
     })
+  })
+
+  describe('Trigger attribute', () => {
+    const pushMock = jest.fn()
+
+    beforeAll(() => wave.push = pushMock)
+    beforeEach(() => pushMock.mockReset())
+
+    it('Calls sync after remove all', async () => {
+      const { getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      fireEvent.click(getByText('Remove all'))
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after drawing rect', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Rectangle'))
+      fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after drawing polygon', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after moving rect', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after resizing rect', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 10, clientY: 10, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 5, clientY: 5, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 5, clientY: 5 })
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after removing rect', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      await waitForLoad()
+      fireEvent.click(getByText('Remove selection').parentElement?.parentElement?.parentElement!)
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+
+    it('Calls sync after removing polygon', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      expect(wave.args[name]).toMatchObject(items)
+
+      const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+      expect(removeBtn).toHaveAttribute('aria-disabled', 'true')
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      await waitForLoad()
+      expect(removeBtn).not.toHaveAttribute('aria-disabled')
+      fireEvent.click(removeBtn!)
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after adding aux point to polygon', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.mouseDown(canvasEl, { clientX: 240, clientY: 160 })
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after removing point in polygon', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.mouseDown(canvasEl, { clientX: 105, clientY: 100, buttons: 2 })
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after changing polygon tag', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.click(getByText('Object'))
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
+    it('Calls sync after moving polygon', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.mouseDown(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.mouseMove(canvasEl, { clientX: 105, clientY: 100, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 100, clientY: 200, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 100, clientY: 200 })
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
   })
 })
