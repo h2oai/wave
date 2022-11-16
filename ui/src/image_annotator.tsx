@@ -315,13 +315,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
               s.isFocused = s === intersected
               if (s.isFocused && s.shape.polygon && polygonRef.current) {
                 s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
-                polygonRef.current.resetDragging()
               }
               return s
             })
             if (start?.dragging) setWaveArgs(newShapes)
             return newShapes
           })
+
+          polygonRef.current?.resetDragging()
+          rectRef.current?.resetDragging()
           redrawExistingShapes()
           break
         }
