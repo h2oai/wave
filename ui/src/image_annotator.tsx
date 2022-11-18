@@ -157,14 +157,12 @@ const
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
+    { allowed_shapes = ['rect', 'polygon'] } = model,
     colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => {
       const [R, G, B] = rgb(cssVarValue(tag.color))
       return [tag.name, `rgba(${R}, ${G}, ${B}, 1)`]
     })), [model.tags]),
-    allowedShapes = React.useMemo(() => (model.allowed_shapes || ['rect', 'polygon']).reduce((acc, curr) => {
-      acc.add(curr)
-      return acc
-    }, new Set()), [model.allowed_shapes]),
+    allowedShapes = React.useMemo(() => allowed_shapes.reduce((acc, curr) => acc.add(curr), new Set()), [allowed_shapes]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
     // TODO: Think about making this a ref instead of state.
