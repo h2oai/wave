@@ -6489,7 +6489,7 @@ class ImageAnnotatorPolygon:
     ):
         _guard_vector('ImageAnnotatorPolygon.vertices', vertices, (ImageAnnotatorPoint,), False, False, False)
         self.vertices = vertices
-        """List of points of the polygon."""
+        """List of polygon points."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6601,6 +6601,7 @@ class ImageAnnotator:
             items: Optional[List[ImageAnnotatorItem]] = None,
             trigger: Optional[bool] = None,
             image_height: Optional[str] = None,
+            allowed_shapes: Optional[List[str]] = None,
     ):
         _guard_scalar('ImageAnnotator.name', name, (str,), True, False, False)
         _guard_scalar('ImageAnnotator.image', image, (str,), False, False, False)
@@ -6609,6 +6610,7 @@ class ImageAnnotator:
         _guard_vector('ImageAnnotator.items', items, (ImageAnnotatorItem,), False, True, False)
         _guard_scalar('ImageAnnotator.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('ImageAnnotator.image_height', image_height, (str,), False, True, False)
+        _guard_vector('ImageAnnotator.allowed_shapes', allowed_shapes, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.image = image
@@ -6623,6 +6625,8 @@ class ImageAnnotator:
         """True if the form should be submitted as soon as an annotation is drawn."""
         self.image_height = image_height
         """The card’s image height. The actual image size is used by default."""
+        self.allowed_shapes = allowed_shapes
+        """List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6633,6 +6637,7 @@ class ImageAnnotator:
         _guard_vector('ImageAnnotator.items', self.items, (ImageAnnotatorItem,), False, True, False)
         _guard_scalar('ImageAnnotator.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('ImageAnnotator.image_height', self.image_height, (str,), False, True, False)
+        _guard_vector('ImageAnnotator.allowed_shapes', self.allowed_shapes, (str,), False, True, False)
         return _dump(
             name=self.name,
             image=self.image,
@@ -6641,6 +6646,7 @@ class ImageAnnotator:
             items=None if self.items is None else [__e.dump() for __e in self.items],
             trigger=self.trigger,
             image_height=self.image_height,
+            allowed_shapes=self.allowed_shapes,
         )
 
     @staticmethod
@@ -6660,6 +6666,8 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.trigger', __d_trigger, (bool,), False, True, False)
         __d_image_height: Any = __d.get('image_height')
         _guard_scalar('ImageAnnotator.image_height', __d_image_height, (str,), False, True, False)
+        __d_allowed_shapes: Any = __d.get('allowed_shapes')
+        _guard_vector('ImageAnnotator.allowed_shapes', __d_allowed_shapes, (str,), False, True, False)
         name: str = __d_name
         image: str = __d_image
         title: str = __d_title
@@ -6667,6 +6675,7 @@ class ImageAnnotator:
         items: Optional[List[ImageAnnotatorItem]] = None if __d_items is None else [ImageAnnotatorItem.load(__e) for __e in __d_items]
         trigger: Optional[bool] = __d_trigger
         image_height: Optional[str] = __d_image_height
+        allowed_shapes: Optional[List[str]] = __d_allowed_shapes
         return ImageAnnotator(
             name,
             image,
@@ -6675,6 +6684,7 @@ class ImageAnnotator:
             items,
             trigger,
             image_height,
+            allowed_shapes,
         )
 
 

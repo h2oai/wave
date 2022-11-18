@@ -14,6 +14,10 @@ export class PolygonAnnotator {
     this.draggedShape = null
   }
 
+  cancelAnnotating() {
+    this.currPolygonPoints = []
+  }
+
   onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
     if (!this.ctx) return
 
@@ -40,7 +44,7 @@ export class PolygonAnnotator {
     }
 
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
-    this.draggedPoint = clickedPolygonPoint || this.draggedPoint
+    this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
@@ -56,9 +60,16 @@ export class PolygonAnnotator {
     }
   }
 
-  addAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+  tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
     const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
-    if (clickedPoint?.isAux) clickedPoint.isAux = false
+    if (clickedPoint?.isAux) {
+      clickedPoint.isAux = false
+      return true
+    }
+  }
+
+  tryToRemovePoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+    return items.filter(p => !isIntersectingPoint(p, cursor_x, cursor_y))
   }
 
   getPolygonPointsWithAux = (points: DrawnPoint[]) => {
@@ -79,7 +90,8 @@ export class PolygonAnnotator {
       }, [] as DrawnPoint[])
 
     // Insert aux also between last and first point.
-    const lastPoint = points.at(-1)?.isAux ? points.at(-2) : points.at(-1)
+    const pointsLength = points.length
+    const lastPoint = points[pointsLength - 1]?.isAux ? points[pointsLength - 2] : points[pointsLength - 1]
     if (lastPoint) {
       items.push({
         x: (points[0].x + lastPoint.x) / 2,
@@ -122,7 +134,7 @@ export class PolygonAnnotator {
     if (!this.ctx || !this.currPolygonPoints.length) return
 
     this.drawPolygon(this.currPolygonPoints, color, false)
-    const { x, y } = this.currPolygonPoints.at(-1)!
+    const { x, y } = this.currPolygonPoints[this.currPolygonPoints.length - 1]
 
     this.ctx.beginPath()
     this.ctx.fillStyle = color

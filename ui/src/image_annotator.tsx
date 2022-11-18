@@ -18,7 +18,7 @@ export interface ImageAnnotatorPoint {
 
 /** Create a polygon annotation shape. */
 export interface ImageAnnotatorPolygon {
-  /** List of points of the polygon. */
+  /** List of polygon points. */
   vertices: ImageAnnotatorPoint[]
 }
 
@@ -78,6 +78,8 @@ export interface ImageAnnotator {
   trigger?: B
   /** The card’s image height. The actual image size is used by default. */
   image_height?: S
+  /** List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default. */
+  allowed_shapes?: S[]
 }
 
 export type Position = {
@@ -155,10 +157,12 @@ const
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
+    { allowed_shapes = ['rect', 'polygon'] } = model,
     colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => {
       const [R, G, B] = rgb(cssVarValue(tag.color))
       return [tag.name, `rgba(${R}, ${G}, ${B}, 1)`]
     })), [model.tags]),
+    allowedShapes = React.useMemo(() => allowed_shapes.reduce((acc, curr) => acc.add(curr), new Set()), [allowed_shapes]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
     // TODO: Think about making this a ref instead of state.
@@ -187,22 +191,50 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     }, [getCurrentTagColor]),
     activateTag = React.useCallback((tagName: S) => () => {
       setActiveTag(tagName)
-      setDrawnShapes(shapes => shapes.map(s => {
-        if (s.isFocused) s.tag = tagName
-        return s
-      }))
+      setDrawnShapes(shapes => {
+        const newShapes = shapes.map(s => {
+          if (s.isFocused) s.tag = tagName
+          return s
+        })
+        setWaveArgs(newShapes)
+        return newShapes
+      })
       redrawExistingShapes()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redrawExistingShapes]),
     onMouseDown = (e: React.MouseEvent) => {
-      if (e.button !== 0) return // Ignore right-click.
       const canvas = canvasRef.current
       if (!canvas) return
 
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
-        focused = drawnShapes.find(({ isFocused }) => isFocused)
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
-      if (focused?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, focused.shape.rect)
+      if (e.buttons !== 1 && !intersected?.shape.polygon) return // Ignore right-click.
+
+      if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected.shape.rect)
+      if (intersected?.shape.polygon && polygonRef.current) {
+        const vertices = intersected.shape.polygon.vertices
+
+        const auxAdded = polygonRef.current.tryToAddAuxPoint(cursor_x, cursor_y, vertices)
+        polygonRef.current.resetDragging()
+        // Remove polygon vertex on right click.
+        if (e.buttons === 2) {
+          intersected.shape.polygon.vertices = polygonRef.current.tryToRemovePoint(cursor_x, cursor_y, vertices)
+        }
+        setDrawnShapes(drawnShapes => {
+          const newShapes = drawnShapes.map(s => {
+            if (s === intersected && s.shape.polygon && polygonRef.current) {
+              s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
+            }
+            return s
+          })
+          if (e.buttons === 2 || auxAdded) setWaveArgs(newShapes)
+          return newShapes
+        })
+        redrawExistingShapes()
+      }
+
       startPosition.current = { x: cursor_x, y: cursor_y, dragging: true }
     },
     onMouseMove = (e: React.MouseEvent) => {
@@ -218,10 +250,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
       switch (activeShape) {
         case 'rect': {
-          const newRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-          if (newRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
+          const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+          if (currentlyDrawnRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
-          if (newRect?.rect) rectRef.current?.drawRect(newRect.rect, getCurrentTagColor(activeTag))
+          if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
           break
         }
         case 'polygon': {
@@ -257,27 +289,45 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       switch (activeShape) {
         case 'rect': {
-          rectRef.current?.onClick(e, cursor_x, cursor_y, setDrawnShapes, activeTag, start)
+          const newRect = rectRef.current?.onClick(cursor_x, cursor_y, activeTag, start)
+          if (newRect) {
+            setDrawnShapes(prevShapes => {
+              const newShapes = [newRect, ...prevShapes]
+              setWaveArgs(newShapes)
+              return newShapes
+            })
+          }
           redrawExistingShapes()
           break
         }
         case 'polygon': {
           const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(activeTag), activeTag)
-          if (newPolygon) setDrawnShapes([newPolygon, ...drawnShapes])
+          if (newPolygon) {
+            setDrawnShapes(prevShapes => {
+              const newShapes = [newPolygon, ...prevShapes]
+              setWaveArgs(newShapes)
+              return newShapes
+            })
+          }
           break
         }
         case 'select': {
           if (intersected) setActiveTag(intersected.tag)
-          if (intersected?.shape.polygon) polygonRef.current?.addAuxPoint(cursor_x, cursor_y, intersected.shape.polygon.vertices)
-          polygonRef.current?.resetDragging()
 
-          setDrawnShapes(drawnShapes => drawnShapes.map(s => {
-            s.isFocused = s === intersected
-            if (s.isFocused && s.shape.polygon && polygonRef.current) {
-              s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
-            }
-            return s
-          }))
+          setDrawnShapes(drawnShapes => {
+            const newShapes = drawnShapes.map(s => {
+              s.isFocused = s === intersected
+              if (s.isFocused && s.shape.polygon && polygonRef.current) {
+                s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
+              }
+              return s
+            })
+            if (start?.dragging) setWaveArgs(newShapes)
+            return newShapes
+          })
+
+          polygonRef.current?.resetDragging()
+          rectRef.current?.resetDragging()
           redrawExistingShapes()
           break
         }
@@ -287,17 +337,58 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
+    onKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape' && activeShape === 'polygon') {
+        polygonRef.current?.cancelAnnotating()
+        redrawExistingShapes()
+      }
+    },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
-      setDrawnShapes(shapes => item.key === 'remove-selected' ? shapes.filter(s => !s.isFocused) : [])
+      setDrawnShapes(shapes => {
+        const newShapes = item.key === 'remove-selected' ? shapes.filter(s => !s.isFocused) : []
+        setWaveArgs(newShapes)
+        return newShapes
+      })
       redrawExistingShapes()
     },
     chooseShape = (_e?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, i?: Fluent.IContextualMenuItem) => {
+      polygonRef.current?.cancelAnnotating()
       setActiveShape(i?.key as keyof ImageAnnotatorShape)
       startPosition.current = undefined
       setDrawnShapes(shapes => shapes.map(s => { s.isFocused = false; return s }))
       redrawExistingShapes()
+    },
+    setWaveArgs = (shapes: DrawnShape[]) => {
+      wave.args[model.name] = shapes.map(({ tag, shape }) => {
+        if (shape.rect) return {
+          tag,
+          shape: {
+            rect: {
+              x1: shape.rect.x1 / aspectRatio,
+              x2: shape.rect.x2 / aspectRatio,
+              y1: shape.rect.y1 / aspectRatio,
+              y2: shape.rect.y2 / aspectRatio,
+            }
+          }
+        }
+        else if (shape.polygon) return {
+          tag,
+          shape: {
+            polygon: {
+              vertices: shape.polygon.vertices
+                .filter((i: DrawnPoint) => !i.isAux)
+                .map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
+            }
+          }
+        }
+        return { tag, shape }
+      }) as unknown as Rec[]
+      if (model.trigger) wave.push()
     }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [])
 
   React.useEffect(() => {
     const img = new Image()
@@ -333,32 +424,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items])
 
-  React.useEffect(() => {
-    wave.args[model.name] = drawnShapes.map(({ tag, shape }) => {
-      if (shape.rect) return {
-        tag,
-        shape: {
-          rect: {
-            x1: shape.rect.x1 / aspectRatio,
-            x2: shape.rect.x2 / aspectRatio,
-            y1: shape.rect.y1 / aspectRatio,
-            y2: shape.rect.y2 / aspectRatio,
-          }
-        }
-      }
-      else if (shape.polygon) return {
-        tag,
-        shape: {
-          polygon: {
-            vertices: shape.polygon.vertices
-              .filter((i: DrawnPoint) => !i.isAux)
-              .map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
-          }
-        }
-      }
-      return { tag, shape }
-    }) as unknown as Rec[]
-  }, [aspectRatio, drawnShapes, model.name])
+  const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
+  if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
+  if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
 
   return (
     <div data-test={model.name}>
@@ -382,15 +450,21 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             iconProps: { iconName: 'DependencyRemove', styles: { root: { fontSize: 20 } } },
           },
         ]}
-        farItems={[
-          getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer'),
-          getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'),
-          getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'),
-        ]}
+        farItems={farItems}
       />
       <div className={css.canvasContainer}>
         <canvas ref={imgRef} className={css.canvas} />
-        <canvas ref={canvasRef} className={css.canvas} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onClick={onClick} />
+        <canvas
+          tabIndex={0}
+          ref={canvasRef}
+          className={css.canvas}
+          onMouseMove={onMouseMove}
+          onMouseDown={onMouseDown}
+          onKeyDown={onKeyDown}
+          // Do not show context menu on right click.
+          onContextMenu={e => e.preventDefault()}
+          onClick={onClick}
+        />
       </div>
     </div >
   )
