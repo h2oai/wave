@@ -136,10 +136,15 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         }
       })
     ),
-    handleKeyDown = (ev: any) => {
+    handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
+    handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
+    handleKeyDown = (ev: React.KeyboardEvent) => {
       if (ev.key === 'Escape') lightboxB(null)
-      else if (ev.key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
-      else if (ev.key === 'ArrowLeft') setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
+      else if (ev.key === 'ArrowRight') handleShowNextImage()
+      else if (ev.key === 'ArrowLeft') handleShowPrevImage()
+    },
+    handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
+      if ((ev.target as HTMLElement).parentElement === ev.currentTarget) lightboxB(null)
     }
 
   React.useEffect(() => {
@@ -175,8 +180,8 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
       onKeyDown={handleKeyDown}
       tabIndex={0}
       ref={rootElementRef}
-      onClick={ev => { if ((ev.target as HTMLElement).parentElement === ev.currentTarget) lightboxB(null) }
-      }>
+      onClick={handleCloseOnFreeSpaceClick}
+    >
       <div className={css.header}>
         <Fluent.ActionButton
           styles={iconStyles}
@@ -192,14 +197,14 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ left: 0 }}
-              onClick={() => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)}
+              onClick={handleShowPrevImage}
               iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
             />
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ right: 0 }}
-              onClick={() => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)}
+              onClick={handleShowNextImage}
               iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
             />
           </>
