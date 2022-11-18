@@ -93,7 +93,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 
 ## Image popup
 
-Sometimes it can be handy to show a bigger version of the image in a popup window when clicking on the image. You can enable it by providing a `path_popup` property with a path or the URL or the [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) of the high resolution version of the image. Note, that this does not replace a `path` property.
+Displaying images comes with an inherent performance cost due to their file size. Wouldn't it be nice if you could display a smaller image on the initial render to give your users a "preview" and if it catches their attention, allow them to click the image and show it in its full size throughout the whole screen? The good news is you can thanks to a `path_popup` attribute that accepts a path or a URL or a [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) of the high-resolution version of your image. Note, that this does not replace a `path` property.
 
 ![image popup gif](/img/widgets/image_popup.gif)
 

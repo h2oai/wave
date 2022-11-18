@@ -1,5 +1,5 @@
 # Image / Popup
-# Display a popup with the large image after clicking on the #image.
+# Display a popup with the large image after clicking on the #image. It's recommended to use a smaller image for `path` and larger (higher quality) image for the `path_popup`.
 # ---
 from h2o_wave import site, ui
 

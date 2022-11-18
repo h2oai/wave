@@ -101,7 +101,7 @@ const
   },
   iconStyles: Fluent.IButtonStyles = {
     flexContainer: { justifyContent: 'center' },
-    root: { margin: '4px 4px', width: ICON_SIZE, height: ICON_SIZE, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
+    root: { margin: 4, width: ICON_SIZE, height: ICON_SIZE, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
     rootHovered: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
     icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4 },
     iconHovered: { color: '#fff' },
