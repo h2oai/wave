@@ -74,7 +74,7 @@ const
       color: cssVar('$page'),
       minWidth: 80,
       boxSizing: 'border-box',
-      height: 32,
+      height: 28,
       display: 'inline-block',
       $nest: {
         '&:hover': {
