@@ -2233,7 +2233,7 @@ def image(
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         width: The width of the image, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
-        path_popup: The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property.
+        path_popup: The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
     Returns:
         A `h2o_wave.types.Image` instance.
     """
@@ -3083,7 +3083,7 @@ def image_card(
         image: Image data, base64-encoded.
         data: Data for this card.
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
-        path_popup: The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property.
+        path_popup: The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ImageCard` instance.

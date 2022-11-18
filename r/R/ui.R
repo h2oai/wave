@@ -2603,7 +2603,7 @@ ui_inline <- function(
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param width The width of the image, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
-#' @param path_popup The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property.
+#' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
@@ -3563,7 +3563,7 @@ ui_header_card <- function(
 #' @param image Image data, base64-encoded.
 #' @param data Data for this card.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
-#' @param path_popup The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property.
+#' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
 #' @export

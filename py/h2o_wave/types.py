@@ -6007,7 +6007,7 @@ class Image:
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
         self.path_popup = path_popup
-        """The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property."""
+        """The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8733,7 +8733,7 @@ class ImageCard:
         self.path = path
         """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
         self.path_popup = path_popup
-        """The path or URL or data URL of the high resolution image. It is displayed inside the popup when clicking on the image. This does not replace a `path` property."""
+        """The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
