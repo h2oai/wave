@@ -23,7 +23,8 @@ export const lightboxB: Box<LightboxProps | null> = box()
 
 const
   HEADER_HEIGHT = 40,
-  IMAGE_CAPTIONS_HEIGHT = 60,
+  IMAGE_CAPTIONS_HEIGHT = 40, // Total height of title and decription.
+  FOOTER_VERTICAL_PADDING = 10,
   IMAGE_NAV_HEIGHT = 148,
   IMAGE_SIZE = 120,
   ICON_SIZE = 38
@@ -51,11 +52,15 @@ const
       position: 'relative',
     },
     footer: {
+      boxSizing: 'border-box',
+      padding: `${FOOTER_VERTICAL_PADDING}px 0`,
       textAlign: 'center',
       color: '#fff',
     },
     imageNav: {
+      marginTop: 10,
       height: IMAGE_NAV_HEIGHT,
+      boxSizing: 'border-box',
       overflow: 'auto',
       whiteSpace: 'nowrap'
     },
@@ -69,15 +74,15 @@ const
       filter: 'brightness(30%)',
       border: '2px solid #000'
     },
-    imgCaptions: {
+    text: {
       whiteSpace: 'nowrap',
       boxSizing: 'border-box',
-      padding: '10px 40px',
-      height: IMAGE_CAPTIONS_HEIGHT
-    },
-    text: {
+      width: 'fit-content',
+      margin: '0 auto',
+      maxWidth: 'calc(100% - 40px)',
       textOverflow: 'ellipsis',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      height: IMAGE_CAPTIONS_HEIGHT / 2
     },
     title: {
       fontWeight: 500
@@ -120,7 +125,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
     { title, description } = images[activeImageIdx],
     isGallery = images.length > 1,
-    FOOTER_HEIGHT = isGallery ? IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_HEIGHT : IMAGE_CAPTIONS_HEIGHT,
+    FOOTER_HEIGHT = FOOTER_VERTICAL_PADDING * 2 + IMAGE_CAPTIONS_HEIGHT + (isGallery ? IMAGE_NAV_HEIGHT : 0),
     rootElementRef = React.useRef<HTMLDivElement | null>(null),
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     defaultScrollSetRef = React.useRef(false),
@@ -211,10 +216,8 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         }
       </div>
       <div className={css.footer} style={{ height: FOOTER_HEIGHT }}>
-        <div className={css.imgCaptions}>
-          <div title={title} className={clas(css.text, css.title)}>{title}</div>
-          <div title={description} className={clas(css.text, css.description)}>{description || ''}</div>
-        </div>
+        <div title={title} className={clas(css.text, css.title)}>{title}</div>
+        <div title={description} className={clas(css.text, css.description)}>{description || ''}</div>
         {isGallery &&
           <div className={css.imageNav} ref={imageNavRef}>
             {images.map((image, idx) =>
