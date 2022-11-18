@@ -375,7 +375,7 @@ class TestPythonServer(unittest.TestCase):
 
 
     def test_multipart_server(self):
-        file_handle = open('../assets/brand/wave.svg', 'r')
+        file_handle = open('../assets/brand/wave.svg', 'rb')
         p = site.uplink('test_stream', 'image/svg+xml', file_handle)
         site.unlink('test_stream')
         file_handle.close()
