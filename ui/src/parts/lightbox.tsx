@@ -170,7 +170,13 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
   }, [activeImageIdx])
 
   return (
-    <div className={css.body} onKeyDown={handleKeyDown} tabIndex={0} ref={rootElementRef}>
+    <div
+      className={css.body}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      ref={rootElementRef}
+      onClick={ev => { if ((ev.target as HTMLElement).parentElement === ev.currentTarget) lightboxB(null) }
+      }>
       <div className={css.header}>
         <Fluent.ActionButton
           styles={iconStyles}
@@ -178,28 +184,22 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
           iconProps={{ iconName: 'Cancel', style: styles.icon }}
         />
       </div>
-      <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }} onClick={() => lightboxB(null)}>
-        <img className={css.img} alt={title} src={images[activeImageIdx].path} onClick={ev => ev.stopPropagation()} />
+      <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
+        <img className={css.img} alt={title} src={images[activeImageIdx].path} />
         {isGallery &&
           <>
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ left: 0 }}
-              onClick={ev => {
-                ev.stopPropagation()
-                setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
-              }}
+              onClick={() => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)}
               iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
             />
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ right: 0 }}
-              onClick={ev => {
-                ev.stopPropagation()
-                setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
-              }}
+              onClick={() => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)}
               iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
             />
           </>
