@@ -123,7 +123,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         if no_autostart:
             autostart = False
         else:
-            autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['true', '1', 't']
+            autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
         if autostart and is_waved_present and server_not_running:
             waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
