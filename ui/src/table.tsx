@@ -943,16 +943,22 @@ export const
     }), [filteredItems, groups, expandedRefs, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
-      <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
-        <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
-          {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
-        </Fluent.Stack >
+      <div data-test={m.name} style={{ position: 'relative', height: computeHeight()  }}>
+        <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign="end"  >
+           <Fluent.Stack.Item align='start' styles={{ root: { width: '50%', maxWidth: 500, margin: "28px 0 0 0"} }}>
+          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} /> }
+           </Fluent.Stack.Item>
+          
+          <Fluent.Stack.Item align='end' styles={{ root: { width:300,}}}  >
+          {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions}/>}
+           </Fluent.Stack.Item>
+       </Fluent.Stack >
         <Fluent.ScrollablePane
           componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
-            root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },
+            /* root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },*/
+            root: { top: groupable || searchableKeys.length ? (groupable ? 120 : 100) : 0, bottom: shouldShowFooter ? 46 : 0 },
             stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
