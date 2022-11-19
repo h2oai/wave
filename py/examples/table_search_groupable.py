@@ -97,7 +97,7 @@ async def serve(q: Q):
             groupable=True,
         )
     ])
-    # del q.page["form3"]
-   #  del q.page["form2"]
+    del q.page["form3"]
+    del q.page["form2"]
     await q.page.save()
 
