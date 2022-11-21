@@ -5985,6 +5985,7 @@ class Image:
             path: Optional[str] = None,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            path_popup: Optional[str] = None,
     ):
         _guard_scalar('Image.title', title, (str,), False, False, False)
         _guard_scalar('Image.type', type, (str,), False, True, False)
@@ -5992,6 +5993,7 @@ class Image:
         _guard_scalar('Image.path', path, (str,), False, True, False)
         _guard_scalar('Image.width', width, (str,), False, True, False)
         _guard_scalar('Image.visible', visible, (bool,), False, True, False)
+        _guard_scalar('Image.path_popup', path_popup, (str,), False, True, False)
         self.title = title
         """The image title, typically displayed as a tooltip."""
         self.type = type
@@ -6004,6 +6006,8 @@ class Image:
         """The width of the image, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.path_popup = path_popup
+        """The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6013,6 +6017,7 @@ class Image:
         _guard_scalar('Image.path', self.path, (str,), False, True, False)
         _guard_scalar('Image.width', self.width, (str,), False, True, False)
         _guard_scalar('Image.visible', self.visible, (bool,), False, True, False)
+        _guard_scalar('Image.path_popup', self.path_popup, (str,), False, True, False)
         return _dump(
             title=self.title,
             type=self.type,
@@ -6020,6 +6025,7 @@ class Image:
             path=self.path,
             width=self.width,
             visible=self.visible,
+            path_popup=self.path_popup,
         )
 
     @staticmethod
@@ -6037,12 +6043,15 @@ class Image:
         _guard_scalar('Image.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Image.visible', __d_visible, (bool,), False, True, False)
+        __d_path_popup: Any = __d.get('path_popup')
+        _guard_scalar('Image.path_popup', __d_path_popup, (str,), False, True, False)
         title: str = __d_title
         type: Optional[str] = __d_type
         image: Optional[str] = __d_image
         path: Optional[str] = __d_path
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        path_popup: Optional[str] = __d_path_popup
         return Image(
             title,
             type,
@@ -6050,6 +6059,7 @@ class Image:
             path,
             width,
             visible,
+            path_popup,
         )
 
 
@@ -8710,6 +8720,7 @@ class ImageCard:
             image: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             path: Optional[str] = None,
+            path_popup: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageCard.box', box, (str,), False, False, False)
@@ -8717,6 +8728,7 @@ class ImageCard:
         _guard_scalar('ImageCard.type', type, (str,), False, True, False)
         _guard_scalar('ImageCard.image', image, (str,), False, True, False)
         _guard_scalar('ImageCard.path', path, (str,), False, True, False)
+        _guard_scalar('ImageCard.path_popup', path_popup, (str,), False, True, False)
         _guard_vector('ImageCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8730,6 +8742,8 @@ class ImageCard:
         """Data for this card."""
         self.path = path
         """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+        self.path_popup = path_popup
+        """The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8740,6 +8754,7 @@ class ImageCard:
         _guard_scalar('ImageCard.type', self.type, (str,), False, True, False)
         _guard_scalar('ImageCard.image', self.image, (str,), False, True, False)
         _guard_scalar('ImageCard.path', self.path, (str,), False, True, False)
+        _guard_scalar('ImageCard.path_popup', self.path_popup, (str,), False, True, False)
         _guard_vector('ImageCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='image',
@@ -8749,6 +8764,7 @@ class ImageCard:
             image=self.image,
             data=self.data,
             path=self.path,
+            path_popup=self.path_popup,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8766,6 +8782,8 @@ class ImageCard:
         __d_data: Any = __d.get('data')
         __d_path: Any = __d.get('path')
         _guard_scalar('ImageCard.path', __d_path, (str,), False, True, False)
+        __d_path_popup: Any = __d.get('path_popup')
+        _guard_scalar('ImageCard.path_popup', __d_path_popup, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ImageCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -8774,6 +8792,7 @@ class ImageCard:
         image: Optional[str] = __d_image
         data: Optional[PackedRecord] = __d_data
         path: Optional[str] = __d_path
+        path_popup: Optional[str] = __d_path_popup
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ImageCard(
             box,
@@ -8782,6 +8801,7 @@ class ImageCard:
             image,
             data,
             path,
+            path_popup,
             commands,
         )
 

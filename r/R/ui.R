@@ -2603,6 +2603,7 @@ ui_inline <- function(
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param width The width of the image, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
@@ -2611,20 +2612,23 @@ ui_image <- function(
   image = NULL,
   path = NULL,
   width = NULL,
-  visible = NULL) {
+  visible = NULL,
+  path_popup = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   .guard_scalar("path", "character", path)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("path_popup", "character", path_popup)
   .o <- list(image=list(
     title=title,
     type=type,
     image=image,
     path=path,
     width=width,
-    visible=visible))
+    visible=visible,
+    path_popup=path_popup))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3563,6 +3567,7 @@ ui_header_card <- function(
 #' @param image Image data, base64-encoded.
 #' @param data Data for this card.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
 #' @export
@@ -3573,6 +3578,7 @@ ui_image_card <- function(
   image = NULL,
   data = NULL,
   path = NULL,
+  path_popup = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3580,6 +3586,7 @@ ui_image_card <- function(
   .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
   .guard_scalar("path", "character", path)
+  .guard_scalar("path_popup", "character", path_popup)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3588,6 +3595,7 @@ ui_image_card <- function(
     image=image,
     data=data,
     path=path,
+    path_popup=path_popup,
     commands=commands,
     view='image')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))

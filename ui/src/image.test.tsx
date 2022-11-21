@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './image'
@@ -29,12 +29,5 @@ describe('Image.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...imageProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Opens image lightbox after clicking on image', () => {
-    const { queryByTestId } = render(<View {...imageProps} />)
-    expect(queryByTestId('lightbox')).not.toBeInTheDocument()
-    fireEvent.click(queryByTestId(name)!)
-    waitFor(() => expect(queryByTestId('lightbox')).toBeVisible())
   })
 })

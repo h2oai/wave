@@ -18,15 +18,16 @@ import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
-import { getImageSrc } from '../image'
 
 export const lightboxB: Box<LightboxProps | null> = box()
 
 const
   HEADER_HEIGHT = 40,
-  IMAGE_CAPTIONS_HEIGHT = 60,
+  IMAGE_CAPTIONS_HEIGHT = 40, // Total height of title and decription.
+  FOOTER_VERTICAL_PADDING = 10,
   IMAGE_NAV_HEIGHT = 148,
-  IMAGE_SIZE = 120
+  IMAGE_SIZE = 120,
+  ICON_SIZE = 38
 
 const
   css = stylesheet({
@@ -37,24 +38,29 @@ const
       backgroundColor: 'rgba(0, 0, 0, 0.9)',
     },
     img: {
+      position: 'absolute',
+      inset: '0px',
+      margin: 'auto',
+      maxHeight: '100%',
       maxWidth: '100%',
-      objectFit: 'scale-down',
     },
     header: {
       height: HEADER_HEIGHT,
       textAlign: 'right'
     },
     content: {
-      display: 'flex',
       position: 'relative',
-      justifyContent: 'center',
     },
     footer: {
+      boxSizing: 'border-box',
+      padding: `${FOOTER_VERTICAL_PADDING}px 0`,
       textAlign: 'center',
       color: '#fff',
     },
     imageNav: {
+      marginTop: 10,
       height: IMAGE_NAV_HEIGHT,
+      boxSizing: 'border-box',
       overflow: 'auto',
       whiteSpace: 'nowrap'
     },
@@ -68,15 +74,15 @@ const
       filter: 'brightness(30%)',
       border: '2px solid #000'
     },
-    imgCaptions: {
+    text: {
       whiteSpace: 'nowrap',
       boxSizing: 'border-box',
-      padding: '10px 40px',
-      height: IMAGE_CAPTIONS_HEIGHT
-    },
-    text: {
+      width: 'fit-content',
+      margin: '0 auto',
+      maxWidth: 'calc(100% - 40px)',
       textOverflow: 'ellipsis',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      height: IMAGE_CAPTIONS_HEIGHT / 2
     },
     title: {
       fontWeight: 500
@@ -92,7 +98,7 @@ const
       position: "absolute",
       top: "50%",
       padding: "16px",
-      marginTop: "-50px"
+      marginTop: -ICON_SIZE / 2
     }
   }),
   styles: { [key: S]: React.CSSProperties } = {
@@ -100,7 +106,7 @@ const
   },
   iconStyles: Fluent.IButtonStyles = {
     flexContainer: { justifyContent: 'center' },
-    root: { margin: '4px 4px', width: 38, height: 38, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
+    root: { margin: 4, width: ICON_SIZE, height: ICON_SIZE, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
     rootHovered: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
     icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4 },
     iconHovered: { color: '#fff' },
@@ -119,7 +125,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
     { title, description } = images[activeImageIdx],
     isGallery = images.length > 1,
-    FOOTER_HEIGHT = isGallery ? IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_HEIGHT : IMAGE_CAPTIONS_HEIGHT,
+    FOOTER_HEIGHT = FOOTER_VERTICAL_PADDING * 2 + IMAGE_CAPTIONS_HEIGHT + (isGallery ? IMAGE_NAV_HEIGHT : 0),
     rootElementRef = React.useRef<HTMLDivElement | null>(null),
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     defaultScrollSetRef = React.useRef(false),
@@ -135,10 +141,15 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         }
       })
     ),
-    handleKeyDown = (ev: any) => {
+    handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
+    handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
+    handleKeyDown = (ev: React.KeyboardEvent) => {
       if (ev.key === 'Escape') lightboxB(null)
-      else if (ev.key === 'ArrowRight') setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)
-      else if (ev.key === 'ArrowLeft') setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)
+      else if (ev.key === 'ArrowRight') handleShowNextImage()
+      else if (ev.key === 'ArrowLeft') handleShowPrevImage()
+    },
+    handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
+      if ((ev.target as HTMLElement).parentElement === ev.currentTarget) lightboxB(null)
     }
 
   React.useEffect(() => {
@@ -169,7 +180,13 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
   }, [activeImageIdx])
 
   return (
-    <div className={css.body} onKeyDown={handleKeyDown} tabIndex={0} ref={rootElementRef}>
+    <div
+      className={css.body}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      ref={rootElementRef}
+      onClick={handleCloseOnFreeSpaceClick}
+    >
       <div className={css.header}>
         <Fluent.ActionButton
           styles={iconStyles}
@@ -178,40 +195,38 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         />
       </div>
       <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
-        <img className={css.img} alt={title} src={getImageSrc(images[activeImageIdx])} />
+        <img className={css.img} alt={title} src={images[activeImageIdx].path} />
         {isGallery &&
           <>
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ left: 0 }}
-              onClick={() => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1)}
+              onClick={handleShowPrevImage}
               iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
             />
             <Fluent.ActionButton
               styles={iconStyles}
               className={css.iconStylesRootArrow}
               style={{ right: 0 }}
-              onClick={() => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1)}
+              onClick={handleShowNextImage}
               iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
             />
           </>
         }
       </div>
       <div className={css.footer} style={{ height: FOOTER_HEIGHT }}>
-        <div className={css.imgCaptions}>
-          <div title={title} className={clas(css.text, css.title)}>{title}</div>
-          <div title={description} className={clas(css.text, css.description)}>{description || ''}</div>
-        </div>
+        <div title={title} className={clas(css.text, css.title)}>{title}</div>
+        <div title={description} className={clas(css.text, css.description)}>{description || ''}</div>
         {isGallery &&
           <div className={css.imageNav} ref={imageNavRef}>
             {images.map((image, idx) =>
               <div key={idx} className={css.navImgContainer}>
                 <img
-                  className={clas(css.img, css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
+                  className={clas(css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
                   style={activeImageIdx === idx ? imageHighlightStyle : undefined}
                   alt={title}
-                  data-src={getImageSrc(image)}
+                  data-src={image.path}
                   onClick={() => setActiveImageIdx(idx)}
                 />
               </div>
