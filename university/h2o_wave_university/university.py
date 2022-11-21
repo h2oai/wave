@@ -288,7 +288,7 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
-        lesson_files = glob(os.path.join('lessons/*.py'))
+        lesson_files = glob('lessons/*.py')
         lesson_files.sort(key=natural_keys)
         q.app.catalog = load_lessons(lesson_files)
         q.app.initialized = True
