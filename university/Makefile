@@ -23,7 +23,7 @@ build: # Prepare bundle for HAIC.
 		mv tmp/wave-university-$(VERSION).wave ../build/apps/wave-university/
 		rm -rf tmp
 
-build-whl: # For PyPi publish.
+build-pypi: # For PyPi publish.
 	./venv/bin/python3 setup.py bdist_wheel
 
 clean:
