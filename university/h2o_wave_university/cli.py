@@ -1,3 +1,13 @@
+import os
+import subprocess
+import sys
 
-if __name__ == "__main__":
-    print('main')
+
+def main():
+    env = os.environ.copy()
+    env['H2O_WAVE_PUBLIC_DIR'] = '/assets/@./static/'
+    try:
+        subprocess.Popen(['wave', 'run', 'h2o_wave_university.university', '--no-reload'], cwd=sys.exec_prefix, env=env).communicate()
+    except KeyboardInterrupt:
+        pass
+    

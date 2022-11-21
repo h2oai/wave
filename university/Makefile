@@ -6,9 +6,10 @@ setup:
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install -r requirements.txt
+	./venv/bin/python -m pip install wheel
 
 run:
-	H2O_WAVE_PUBLIC_DIR="/assets/@../h2o_wave_university/static/" venv/bin/wave run h2o_wave_university/university.py --no-reload
+	H2O_WAVE_PUBLIC_DIR="/assets/@../static/" venv/bin/wave run h2o_wave_university/university.py --no-reload
 
 build: # Prepare bundle for HAIC.
 		rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
@@ -23,7 +24,7 @@ build: # Prepare bundle for HAIC.
 		rm -rf tmp
 
 build-whl: # For PyPi publish.
-	./venv/bin/python3 setup.py
+	./venv/bin/python3 setup.py bdist_wheel
 
 clean:
-	rm -rf venv university.wave
+	rm -rf venv university.wave dist build

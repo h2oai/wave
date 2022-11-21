@@ -12,8 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import defaultdict
 import setuptools
 import os
+from pathlib import Path
+
+def get_data_files():
+    data_dict = defaultdict(list)
+    data_dict['lessons'] = [str(f) for f in Path('lessons').rglob('*.py')] 
+    for f in Path('static').rglob('*.*'):
+        data_dict[f.parent].append(str(f))
+
+    return list(data_dict.items())
 
 setuptools.setup(
     name='h2o_wave_university',
@@ -22,8 +32,9 @@ setuptools.setup(
     author_email='martin.turoci@h2o.ai',
     description='Interactive tutorials for learning H2O Wave framework.',
     long_description='TODO',
-    url='https://h2o.ai/products/h2o-wave',
+    url='https://wave.h2o.ai/',
     packages=['h2o_wave_university'],
+    data_files=get_data_files(),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
@@ -40,6 +51,6 @@ setuptools.setup(
         'Topic :: System :: Distributed Computing',
     ],
     python_requires='>=3.7.1',
-    install_requires=['h2o_wave>=0.23.1'],
-    entry_points=dict(console_scripts=["wave-university = h2o_wave_university.cli"]),
+    install_requires=['h2o-wave>=0.23.1'],
+    entry_points=dict(console_scripts=["wave-university = h2o_wave_university.cli:main"]),
 )

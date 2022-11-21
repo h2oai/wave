@@ -138,9 +138,10 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         if not server_not_running:
             try:
                 uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
-            except:
+            except Exception as e:
                 if waved_process:
                     waved_process.kill()
+                raise e
         else:
             print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
 
