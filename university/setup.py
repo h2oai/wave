@@ -25,13 +25,16 @@ def get_data_files():
 
     return list(data_dict.items())
 
+with open('README.md', 'r') as readme:
+    long_description = readme.read()
+
 setuptools.setup(
     name='h2o_wave_university',
     version=os.getenv('VERSION', 'DEV'),
     author='Martin Turoci',
     author_email='martin.turoci@h2o.ai',
     description='Interactive tutorials for learning H2O Wave framework.',
-    long_description='TODO',
+    long_description=long_description,
     url='https://wave.h2o.ai/',
     packages=['h2o_wave_university'],
     data_files=get_data_files(),
