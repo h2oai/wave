@@ -35,6 +35,7 @@ setuptools.setup(
     author_email='martin.turoci@h2o.ai',
     description='Interactive tutorials for learning H2O Wave framework.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://wave.h2o.ai/',
     packages=['h2o_wave_university'],
     data_files=get_data_files(),

@@ -3,6 +3,7 @@ Name = "ai.h2o.wave.university"
 Version = "{{VERSION}}"
 Title = "Wave University"
 Description = "Interactive Wave learning experience."
+LongDescription = "README-cloud.md"
 Tags = ["APP_DEV"]
 
 [Runtime]
