@@ -135,7 +135,7 @@ const
         icon: {
           fontSize: 20,
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'center'
         }
       }
 
