@@ -108,3 +108,23 @@ Also, this page was mostly hyperbole, so let's download it and take it for a spi
 [^2] Runs anywhere Go executables run, which is [almost everywhere](https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63).
 
 [^3] Hat tip to [xkcd](https://xkcd.com/297/).
+
+## Interactive learning
+
+If you don't feel like going through the docs because you are more of a hands-on person, you can try our Wave University app.
+
+Within your activated virtual environment, run:
+
+```sh
+wave learn
+```
+
+The command requires `h2o_wave_university` to be installed. To do that, run:
+
+```sh
+pip install h2o_wave_university
+```
+
+:::tip
+Wave University is a standalone package that can be pip-installed and run independently. After installation, you will be able to launch it via `wave-university` command within your python environment.
+:::
