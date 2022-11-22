@@ -945,7 +945,7 @@ export const
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight()  }}>
         <Fluent.Stack horizontal horizontalAlign='space-between'>
-           <Fluent.Stack.Item align='end' styles={{ root: { width: '50%', maxWidth: 500, margin: "28px 0 0 0"} }}>
+           <Fluent.Stack.Item align='end' styles={{ root: { width: '50%', maxWidth: 500} }}>
           {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} /> }
            </Fluent.Stack.Item>
           
