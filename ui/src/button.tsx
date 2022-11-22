@@ -136,9 +136,6 @@ const
           fontSize: 20,
           display: 'flex',
           alignItems: 'center',
-        },
-        iconDisabled: {
-          color: 'unset'
         }
       }
 
