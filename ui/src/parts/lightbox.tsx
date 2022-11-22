@@ -22,12 +22,12 @@ import { getColorFromString, isDark } from '@fluentui/react'
 export const lightboxB: Box<LightboxProps | null> = box()
 
 const
-  HEADER_HEIGHT = 40,
-  IMAGE_CAPTIONS_HEIGHT = 40, // Total height of title and decription.
-  FOOTER_VERTICAL_PADDING = 10,
-  IMAGE_NAV_HEIGHT = 148,
-  IMAGE_SIZE = 120,
-  ICON_SIZE = 38
+  IMAGE_CAPTIONS_HEIGHT = 46, // Total height of title and decription.
+  NAV_IMAGE_SIZE = 120,
+  IMAGE_NAV_HEIGHT = NAV_IMAGE_SIZE + 28, // 28 is the height of the scrollbar.
+  ICON_SIZE = 38,
+  ICON_MARGIN = 8,
+  IMAGE_NAV_BOTTOM_MARGIN = 8
 
 const
   css = stylesheet({
@@ -35,54 +35,51 @@ const
       position: 'fixed',
       inset: '0px',
       zIndex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+      backgroundColor: 'rgba(0, 0, 0, 0.9)'
     },
     img: {
       position: 'absolute',
-      inset: '0px',
       margin: 'auto',
-      maxHeight: '100%',
-      maxWidth: '100%',
+      left: 0,
+      right: 0,
+      top: ICON_SIZE + ICON_MARGIN * 2,
+      maxWidth: '100%'
     },
-    header: {
-      height: HEADER_HEIGHT,
-      textAlign: 'right'
-    },
-    content: {
-      position: 'relative',
-    },
-    footer: {
-      boxSizing: 'border-box',
-      padding: `${FOOTER_VERTICAL_PADDING}px 0`,
-      textAlign: 'center',
-      color: '#fff',
+    closeButton: {
+      position: 'absolute',
+      right: ICON_MARGIN,
+      top: ICON_MARGIN
     },
     imageNav: {
-      marginTop: 10,
+      position: 'absolute',
+      left: '50%',
+      bottom: IMAGE_NAV_BOTTOM_MARGIN,
       height: IMAGE_NAV_HEIGHT,
-      boxSizing: 'border-box',
-      overflow: 'auto',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      overflowX: 'auto',
+      maxWidth: '100vw',
+      transform: 'translateX(-50%)'
     },
     navImg: {
+      height: NAV_IMAGE_SIZE,
+      width: NAV_IMAGE_SIZE,
       boxSizing: 'border-box',
       objectFit: 'cover',
-      height: IMAGE_SIZE,
-      width: IMAGE_SIZE,
       margin: '2px',
       cursor: 'pointer',
       filter: 'brightness(30%)',
       border: '2px solid #000'
     },
     text: {
-      whiteSpace: 'nowrap',
-      boxSizing: 'border-box',
-      width: 'fit-content',
-      margin: '0 auto',
+      position: 'absolute',
+      left: '50%',
       maxWidth: 'calc(100% - 40px)',
-      textOverflow: 'ellipsis',
+      boxSizing: 'border-box',
+      color: '#fff',
+      whiteSpace: 'nowrap',
       overflow: 'hidden',
-      height: IMAGE_CAPTIONS_HEIGHT / 2
+      textOverflow: 'ellipsis',
+      transform: 'translateX(-50%)'
     },
     title: {
       fontWeight: 500
@@ -90,25 +87,18 @@ const
     description: {
       color: '#bbb'
     },
-    navImgContainer: {
-      display: 'inline-block',
-      width: IMAGE_SIZE
-    },
     iconStylesRootArrow: {
       position: "absolute",
       top: "50%",
-      padding: "16px",
-      marginTop: -ICON_SIZE / 2
+      border: '1px solid #000',
+      transform: 'translateY(-50%)'
     }
   }),
-  styles: { [key: S]: React.CSSProperties } = {
-    icon: { fontSize: '22px' }
-  },
   iconStyles: Fluent.IButtonStyles = {
     flexContainer: { justifyContent: 'center' },
     root: { margin: 4, width: ICON_SIZE, height: ICON_SIZE, backgroundColor: 'rgba(0, 0, 0, 0.3)' },
     rootHovered: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
-    icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4 },
+    icon: { color: '#fff', lineHeight: 22, height: 'unset', padding: 4, fontSize: '22px' },
     iconHovered: { color: '#fff' },
     iconPressed: { color: 'rgba(255, 255, 255, 0.7)' },
   }
@@ -125,7 +115,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
     { title, description } = images[activeImageIdx],
     isGallery = images.length > 1,
-    FOOTER_HEIGHT = FOOTER_VERTICAL_PADDING * 2 + IMAGE_CAPTIONS_HEIGHT + (isGallery ? IMAGE_NAV_HEIGHT : 0),
+    FOOTER_HEIGHT = IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_BOTTOM_MARGIN + (isGallery ? IMAGE_NAV_HEIGHT : 0),
     rootElementRef = React.useRef<HTMLDivElement | null>(null),
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     defaultScrollSetRef = React.useRef(false),
@@ -149,7 +139,15 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
       else if (ev.key === 'ArrowLeft') handleShowPrevImage()
     },
     handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
-      if ((ev.target as HTMLElement).parentElement === ev.currentTarget) lightboxB(null)
+      if (ev.target === ev.currentTarget) lightboxB(null)
+    },
+    handleOnFreeSpaceHover = (ev: React.MouseEvent<HTMLElement>) => {
+      // Changes the cursor to 'pointer' when hovering over the free space.
+      if (ev.target === ev.currentTarget) ev.currentTarget.style.cursor = 'pointer'
+      else {
+        ev.currentTarget.style.cursor = ''
+        ev.currentTarget.style.cursor = getComputedStyle(ev.currentTarget).cursor
+      }
     }
 
   React.useEffect(() => {
@@ -166,8 +164,8 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     if (isGallery && imageNavRef.current) {
       const
         navRef = imageNavRef.current,
-        scrollLeftMiddle = (navRef.clientWidth / 2) - (IMAGE_SIZE / 2),
-        scrollLeftActiveImage = activeImageIdx * IMAGE_SIZE,
+        scrollLeftMiddle = (navRef.clientWidth / 2) - (NAV_IMAGE_SIZE / 2),
+        scrollLeftActiveImage = activeImageIdx * NAV_IMAGE_SIZE,
         scrollBehavior = defaultScrollSetRef.current ? 'smooth' : 'auto'
       if (activeImageIdx === 0) navRef.scrollLeft = 0
       else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
@@ -186,54 +184,65 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
       tabIndex={0}
       ref={rootElementRef}
       onClick={handleCloseOnFreeSpaceClick}
+      onMouseOver={handleOnFreeSpaceHover}
     >
-      <div className={css.header}>
-        <Fluent.ActionButton
-          styles={iconStyles}
-          onClick={() => lightboxB(null)}
-          iconProps={{ iconName: 'Cancel', style: styles.icon }}
-        />
-      </div>
-      <div className={css.content} style={{ height: `calc(100% - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)` }}>
-        <img className={css.img} alt={title} src={images[activeImageIdx].path} />
-        {isGallery &&
-          <>
-            <Fluent.ActionButton
-              styles={iconStyles}
-              className={css.iconStylesRootArrow}
-              style={{ left: 0 }}
-              onClick={handleShowPrevImage}
-              iconProps={{ iconName: 'ChevronLeft', style: styles.icon }}
-            />
-            <Fluent.ActionButton
-              styles={iconStyles}
-              className={css.iconStylesRootArrow}
-              style={{ right: 0 }}
-              onClick={handleShowNextImage}
-              iconProps={{ iconName: 'ChevronRight', style: styles.icon }}
-            />
-          </>
-        }
-      </div>
-      <div className={css.footer} style={{ height: FOOTER_HEIGHT }}>
-        <div title={title} className={clas(css.text, css.title)}>{title}</div>
-        <div title={description} className={clas(css.text, css.description)}>{description || ''}</div>
-        {isGallery &&
+      <Fluent.ActionButton
+        styles={iconStyles}
+        className={css.closeButton}
+        onClick={() => lightboxB(null)}
+        iconProps={{ iconName: 'Cancel' }}
+      />
+      <img
+        className={css.img}
+        style={{
+          bottom: FOOTER_HEIGHT,
+          maxHeight: `calc(100vh - ${(2 * ICON_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`
+        }}
+        alt={title}
+        src={images[activeImageIdx].path}
+      />
+      <span
+        title={title}
+        className={clas(css.text, css.title)}
+        style={{ bottom: FOOTER_HEIGHT - (IMAGE_CAPTIONS_HEIGHT * 0.4) }}>
+        {title}
+      </span>
+      <span
+        title={description}
+        className={clas(css.text, css.description)}
+        style={{ bottom: FOOTER_HEIGHT - (IMAGE_CAPTIONS_HEIGHT * 0.8) }}>
+        {description || ''}
+      </span>
+      {isGallery &&
+        <>
+          <Fluent.ActionButton
+            styles={iconStyles}
+            className={css.iconStylesRootArrow}
+            style={{ left: ICON_MARGIN }}
+            onClick={handleShowPrevImage}
+            iconProps={{ iconName: 'ChevronLeft' }}
+          />
+          <Fluent.ActionButton
+            styles={iconStyles}
+            className={css.iconStylesRootArrow}
+            style={{ right: ICON_MARGIN }}
+            onClick={handleShowNextImage}
+            iconProps={{ iconName: 'ChevronRight' }}
+          />
           <div className={css.imageNav} ref={imageNavRef}>
             {images.map((image, idx) =>
-              <div key={idx} className={css.navImgContainer}>
-                <img
-                  className={clas(css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
-                  style={activeImageIdx === idx ? imageHighlightStyle : undefined}
-                  alt={title}
-                  data-src={image.path}
-                  onClick={() => setActiveImageIdx(idx)}
-                />
-              </div>
+              <img
+                key={idx}
+                className={clas(css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
+                style={activeImageIdx === idx ? imageHighlightStyle : undefined}
+                alt={title}
+                data-src={image.path}
+                onClick={() => setActiveImageIdx(idx)}
+              />
             )}
           </div>
-        }
-      </div>
+        </>
+      }
     </div>
   )
 }
