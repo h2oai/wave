@@ -3410,7 +3410,7 @@ class TableColumn:
         self.sortable = sortable
         """Indicates whether the column is sortable."""
         self.searchable = searchable
-        """Indicates whether the contents of this column can be searched through. Enables a search box for the table if true. The search box will always be aligned to the left of the table header."""
+        """Indicates whether the contents of this column can be searched through. Enables a search box for the table if true."""
         self.filterable = filterable
         """Indicates whether the contents of this column are displayed as filters in a dropdown."""
         self.link = link
@@ -3719,7 +3719,7 @@ class Table:
         self.multiple = multiple
         """True to allow multiple rows to be selected."""
         self.groupable = groupable
-        """True to allow group by feature. Will enable a dropdown with all the column names listed as options. The dropdown will always be aligned to the right of the table header. Not applicable when `pagination` is set."""
+        """True to allow group by feature. Not applicable when `pagination` is set."""
         self.downloadable = downloadable
         """Indicates whether the table rows can be downloaded as a CSV file. Defaults to False."""
         self.resettable = resettable

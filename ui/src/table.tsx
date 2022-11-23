@@ -943,16 +943,16 @@ export const
     }), [filteredItems, groups, expandedRefs, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
-      <div data-test={m.name} style={{ position: 'relative', height: computeHeight()  }}>
+      <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
         <Fluent.Stack horizontal horizontalAlign='space-between'>
-           <Fluent.Stack.Item align='end' styles={{ root: { width: '50%', maxWidth: 500} }}>
-          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} /> }
-           </Fluent.Stack.Item>
-          
-          <Fluent.Stack.Item align='end' styles={{ root: { width:300,}}}  >
-          {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions}/>}
-           </Fluent.Stack.Item>
-       </Fluent.Stack >
+          <Fluent.Stack.Item align='end' styles={{ root: { width: '50%', maxWidth: 500 } }}>
+            {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} />}
+          </Fluent.Stack.Item>
+
+          <Fluent.Stack.Item align='end' styles={{ root: { width: 300 } }}  >
+            {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} />}
+          </Fluent.Stack.Item>
+        </Fluent.Stack >
         <Fluent.ScrollablePane
           componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}

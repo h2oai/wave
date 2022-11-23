@@ -1307,8 +1307,7 @@ def table_column(
         min_width: The minimum width of this column, e.g. '50px'. Only `px` units are supported at this time.
         max_width: The maximum width of this column, e.g. '100px'. Only `px` units are supported at this time.
         sortable: Indicates whether the column is sortable.
-        searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true. The search box will always be aligned to the left of the table header.
-he search box will always be anchored to the left.
+        searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
         link: Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table.
         data_type: Defines the data type of this column. Time column takes either ISO 8601 date string or unix epoch miliseconds. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
@@ -1438,7 +1437,7 @@ def table(
         columns: The columns in this table.
         rows: The rows in this table. Mutually exclusive with `groups` attr.
         multiple: True to allow multiple rows to be selected.
-        groupable: True to allow group by feature. Not applicable when `pagination` is set. Will enable a dropdown with all the column names listed as options. The dropdown will always be aligned to the right of the table header.
+        groupable: True to allow group by feature. Not applicable when `pagination` is set.
         downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.

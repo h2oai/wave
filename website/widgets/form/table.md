@@ -123,7 +123,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ## With search
 
 As stated above, the table provides a built-in search also. Activation consists of specifying any
-column as `searchable`. This way one can control which columns should affect searched results. The search box will always be aligned to the left of the table header.
+column as `searchable`. This way one can control which columns should affect searched results.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
@@ -163,7 +163,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ## With group by
 
 Another cool feature of the Wave table is group by. All it takes is to specify a `groupable` option
-on the table and a dropdown will render with columns on which a user can group by data. The dropdown will always be aligned to the right of the table header.
+on the table and a dropdown will render with columns on which a user can group by data.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
