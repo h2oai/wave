@@ -35,6 +35,10 @@ build-pypi: purge # For PyPi publish.
 	mv tmp/build .
 	rm -rf tmp
 
+publish:
+	$(MAKE) setup
+	$(MAKE) build-pypi
+
 clean:
 	rm -rf venv university.wave
 	$(MAKE) purge

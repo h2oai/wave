@@ -1,0 +1,37 @@
+name: Publish Wave University
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'
+        required: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: "${{ github.event.inputs.version }}"
+
+jobs:
+  publish:
+    name: Publish Docs
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+
+      - name: Setup
+        run: make all
+
+      - name: Build university
+        run:  make publish-university
+      
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: university/dist
+          password: ${{ secrets.PYPI_API_TOKEN }}
