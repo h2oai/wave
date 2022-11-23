@@ -43,7 +43,7 @@ const
       left: 0,
       right: 0,
       top: ICON_SIZE + ICON_MARGIN * 2,
-      maxWidth: '100%'
+      maxWidth: '100vw'
     },
     closeButton: {
       position: 'absolute',
@@ -73,7 +73,7 @@ const
     text: {
       position: 'absolute',
       left: '50%',
-      maxWidth: 'calc(100% - 40px)',
+      maxWidth: 'calc(100vw - 40px)',
       boxSizing: 'border-box',
       color: '#fff',
       whiteSpace: 'nowrap',
@@ -141,7 +141,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
       if (ev.target === ev.currentTarget) lightboxB(null)
     },
-    handleOnFreeSpaceHover = (ev: React.MouseEvent<HTMLElement>) => {
+    handleCursorOnFreeSpaceHover = (ev: React.MouseEvent<HTMLElement>) => {
       // Changes the cursor to 'pointer' when hovering over the free space.
       if (ev.target === ev.currentTarget) ev.currentTarget.style.cursor = 'pointer'
       else {
@@ -184,7 +184,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
       tabIndex={0}
       ref={rootElementRef}
       onClick={handleCloseOnFreeSpaceClick}
-      onMouseOver={handleOnFreeSpaceHover}
+      onMouseOver={handleCursorOnFreeSpaceHover}
     >
       <Fluent.ActionButton
         styles={iconStyles}
