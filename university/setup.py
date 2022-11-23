@@ -19,8 +19,10 @@ from pathlib import Path
 
 def get_data_files():
     data_dict = defaultdict(list)
-    data_dict['lessons'] = [str(f) for f in Path('lessons').rglob('*.py')] 
-    for f in Path('static').rglob('*.*'):
+
+    for f in Path(os.path.join('h2o_wave_university', 'lessons')).rglob('*.py'):
+        data_dict[f.parent].append(str(f))
+    for f in Path(os.path.join('h2o_wave_university', 'static')).rglob('*.*'):
         data_dict[f.parent].append(str(f))
 
     return list(data_dict.items())

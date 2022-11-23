@@ -7,9 +7,9 @@ LongDescription = "README-cloud.md"
 Tags = ["APP_DEV"]
 
 [Runtime]
-Module = "university"
+Module = "h2o_wave_university.university"
 RoutingMode = "BASE_URL"
 
 [[Env]]
 Name = "H2O_WAVE_PUBLIC_DIR"
-Value = "/assets/@../../app/static/"
+Value = "/assets/@../../app/h2o_wave_university/static/"
