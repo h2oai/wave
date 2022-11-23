@@ -53,7 +53,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
     <div data-test={name} className={clas(css.card, 'w-menu')} ref={ref} onClick={toggleMenu}>
       {image && <Fluent.Persona imageUrl={image} size={Fluent.PersonaSize.size48} styles={{ details: { padding: 0 } }} />}
       {icon && <Fluent.FontIcon className={css.icon} iconName={icon} />}
-      {label && <Fluent.Text variant='mediumPlus' styles={{ root: { color: cssVar('$text') } }}>{label}</Fluent.Text>}
+      {label && <Fluent.Text variant='mediumPlus' className='w-menu-label'>{label}</Fluent.Text>}
       <Fluent.ContextualMenu
         items={toCommands(items)}
         target={ref}

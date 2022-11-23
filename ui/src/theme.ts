@@ -40,7 +40,7 @@ export const
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   // TODO this is ugly - why does the argument need a '$' prefix?
-  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
+  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substring(1)}, var(--gray))` : color,
   cssVarValue = (prop: S) => {
     if (!prop.startsWith('$')) return prop
     prop = prop.substring(1)

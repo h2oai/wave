@@ -247,8 +247,14 @@ const css = stylesheet({
         $nest: {
           '& .ms-Button-icon': {
             color: important(cssVar('$card')),
+          },
+          '&-label': {
+            color: cssVar('$card')
           }
         }
+      },
+      '.w-text': {
+        color: cssVar('$card')
       },
       '.w-tabs': {
         $nest: {
