@@ -142,7 +142,7 @@ export const
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {
-      const { title, subtitle, icon, icon_color = '$text', image, persona, secondary_items, color = 'card' } = state
+      const { title, subtitle, icon, color = 'card', icon_color = color === 'primary' ? '$card' : '$text', image, persona, secondary_items } = state
       return (
         <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: cssVar(`$${color}`) }}>
           <div className={css.header}>
