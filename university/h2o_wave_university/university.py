@@ -112,8 +112,9 @@ app_title = 'H2O Wave University'
 
 async def setup_page(q: Q):
     py_content = ''
-    parser_path = os.path.join('autocomplete_parser.py')
-    utils_path = os.path.join('autocomplete_utils.py')
+    curr_dir = os.path.dirname(os.path.realpath(__file__))
+    parser_path = os.path.join(curr_dir, 'autocomplete_parser.py')
+    utils_path = os.path.join(curr_dir, 'autocomplete_utils.py')
     # In prod.
     if os.path.exists(parser_path) and os.path.exists(utils_path):
         with open(parser_path, 'r') as f:

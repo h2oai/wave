@@ -14,8 +14,8 @@ run:
 .PHONY: build
 build: # Prepare bundle for HAIC.
 		rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
-		cp ../tools/vscode-extension/server/parser.py tmp/autocomplete_parser.py
-		cp ../tools/vscode-extension/server/utils.py tmp/autocomplete_utils.py
+		cp ../tools/vscode-extension/server/parser.py tmp/h2o_wave_university/autocomplete_parser.py
+		cp ../tools/vscode-extension/server/utils.py tmp/h2o_wave_university/autocomplete_utils.py
 		cp ../tools/vscode-extension/base-snippets.json tmp/h2o_wave_university/static/base-snippets.json
 		cp ../tools/vscode-extension/component-snippets.json tmp/h2o_wave_university/static/component-snippets.json
 		$(SED) -i -r -e "s/\{\{VERSION\}\}/$(VERSION)/g" tmp/app.toml
@@ -25,7 +25,15 @@ build: # Prepare bundle for HAIC.
 		rm -rf tmp
 
 build-pypi: purge # For PyPi publish.
-	./venv/bin/python3 setup.py bdist_wheel
+	rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
+	cp ../tools/vscode-extension/server/parser.py tmp/h2o_wave_university/autocomplete_parser.py
+	cp ../tools/vscode-extension/server/utils.py tmp/h2o_wave_university/autocomplete_utils.py
+	cp ../tools/vscode-extension/base-snippets.json tmp/h2o_wave_university/static/base-snippets.json
+	cp ../tools/vscode-extension/component-snippets.json tmp/h2o_wave_university/static/component-snippets.json
+	cd tmp && ../venv/bin/python3 setup.py bdist_wheel
+	mv tmp/dist .
+	mv tmp/build .
+	rm -rf tmp
 
 clean:
 	rm -rf venv university.wave
