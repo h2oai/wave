@@ -34,7 +34,8 @@ const
       position: 'fixed',
       inset: '0px',
       zIndex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.9)'
+      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+      cursor: 'pointer'
     },
     img: {
       position: 'absolute',
@@ -42,7 +43,8 @@ const
       left: 0,
       right: 0,
       top: ICON_SIZE + LIGHTBOX_PAGE_MARGIN * 2,
-      maxWidth: '100vw'
+      maxWidth: '100vw',
+      cursor: 'auto'
     },
     closeButton: {
       position: 'absolute',
@@ -57,7 +59,8 @@ const
       whiteSpace: 'nowrap',
       overflowX: 'auto',
       maxWidth: '100vw',
-      transform: 'translateX(-50%)'
+      transform: 'translateX(-50%)',
+      cursor: 'auto'
     },
     navImg: {
       height: NAV_IMAGE_SIZE,
@@ -78,7 +81,8 @@ const
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      transform: 'translateX(-50%)'
+      transform: 'translateX(-50%)',
+      cursor: 'auto'
     },
     title: {
       fontWeight: 500
@@ -139,14 +143,6 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     },
     handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
       if (ev.target === ev.currentTarget) lightboxB(null)
-    },
-    handleCursorOnFreeSpaceHover = (ev: React.MouseEvent<HTMLElement>) => {
-      // Changes the cursor to 'pointer' when hovering over the free space.
-      if (ev.target === ev.currentTarget) ev.currentTarget.style.cursor = 'pointer'
-      else {
-        ev.currentTarget.style.cursor = ''
-        ev.currentTarget.style.cursor = getComputedStyle(ev.currentTarget).cursor
-      }
     }
 
   React.useEffect(() => {
@@ -183,7 +179,6 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
       tabIndex={0}
       ref={rootElementRef}
       onClick={handleCloseOnFreeSpaceClick}
-      onMouseOver={handleCursorOnFreeSpaceHover}
     >
       <Fluent.ActionButton
         styles={iconStyles}
