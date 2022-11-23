@@ -7,7 +7,9 @@ export class PolygonAnnotator {
   private draggedPoint: ImageAnnotatorPoint | null = null
   private draggedShape: DrawnShape | null = null
 
-  constructor(private ctx: CanvasRenderingContext2D) { }
+  constructor(private ctx: CanvasRenderingContext2D) {
+    this.ctx.lineWidth = 2
+  }
 
   resetDragging() {
     this.draggedPoint = null
@@ -148,7 +150,6 @@ export class PolygonAnnotator {
 
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
-    this.ctx.lineWidth = 2
     this.ctx.strokeStyle = isAux ? '#5e5c5c' : '#000'
     this.ctx.fillStyle = isAux ? '#b8b8b8' : '#FFF'
     this.ctx.fill(path)

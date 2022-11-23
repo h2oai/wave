@@ -12,13 +12,15 @@ export class RectAnnotator {
   private movedRect?: DrawnShape
   private ctx: CanvasRenderingContext2D | null
 
-  constructor(private canvas: HTMLCanvasElement) { this.ctx = canvas.getContext('2d') }
+  constructor(private canvas: HTMLCanvasElement) {
+    this.ctx = canvas.getContext('2d')
+    if (this.ctx) this.ctx.lineWidth = 2
+  }
 
   drawCircle = (x: U, y: U) => {
     if (!this.ctx) return
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
-    this.ctx.lineWidth = 2
     this.ctx.strokeStyle = '#000'
     this.ctx.fillStyle = '#FFF'
     this.ctx.fill(path)
@@ -27,7 +29,6 @@ export class RectAnnotator {
 
   drawRect = ({ x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
     if (!this.ctx) return
-    this.ctx.lineWidth = 3
     this.ctx.strokeStyle = strokeColor
     this.ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
     if (isFocused) {
