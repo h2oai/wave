@@ -944,9 +944,30 @@ export const
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
-        <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
-          {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
+        <Fluent.Stack horizontal>
+          {
+            groupable && !m.pagination && (
+              <Fluent.Dropdown
+                data-test='groupby'
+                label='Group by'
+                selectedKey={groupByKey}
+                onChange={onGroupByChange}
+                options={groupByOptions}
+                styles={{ root: { width: 300, marginRight: 'auto' } }}
+              />
+            )
+          }
+          {
+            !!searchableKeys.length && (
+              <Fluent.SearchBox
+                data-test='search'
+                placeholder='Search'
+                onChange={onSearchChange}
+                value={searchStr}
+                styles={{ root: { width: '50%', maxWidth: 500, marginLeft: 'auto', alignSelf: 'flex-end' } }}
+              />
+            )
+          }
         </Fluent.Stack >
         <Fluent.ScrollablePane
           componentRef={contentRef}
