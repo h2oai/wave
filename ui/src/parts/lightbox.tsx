@@ -26,8 +26,7 @@ const
   NAV_IMAGE_SIZE = 120,
   IMAGE_NAV_HEIGHT = NAV_IMAGE_SIZE + 28, // 28 is the height of the scrollbar.
   ICON_SIZE = 38,
-  ICON_MARGIN = 8,
-  IMAGE_NAV_BOTTOM_MARGIN = 8
+  LIGHTBOX_PAGE_MARGIN = 8
 
 const
   css = stylesheet({
@@ -42,18 +41,18 @@ const
       margin: 'auto',
       left: 0,
       right: 0,
-      top: ICON_SIZE + ICON_MARGIN * 2,
+      top: ICON_SIZE + LIGHTBOX_PAGE_MARGIN * 2,
       maxWidth: '100vw'
     },
     closeButton: {
       position: 'absolute',
-      right: ICON_MARGIN,
-      top: ICON_MARGIN
+      right: LIGHTBOX_PAGE_MARGIN,
+      top: LIGHTBOX_PAGE_MARGIN
     },
     imageNav: {
       position: 'absolute',
       left: '50%',
-      bottom: IMAGE_NAV_BOTTOM_MARGIN,
+      bottom: LIGHTBOX_PAGE_MARGIN,
       height: IMAGE_NAV_HEIGHT,
       whiteSpace: 'nowrap',
       overflowX: 'auto',
@@ -73,7 +72,7 @@ const
     text: {
       position: 'absolute',
       left: '50%',
-      maxWidth: 'calc(100vw - 40px)',
+      maxWidth: `calc(100vw - ${2 * LIGHTBOX_PAGE_MARGIN}px)`,
       boxSizing: 'border-box',
       color: '#fff',
       whiteSpace: 'nowrap',
@@ -115,7 +114,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     [activeImageIdx, setActiveImageIdx] = React.useState(defaultImageIdx || 0),
     { title, description } = images[activeImageIdx],
     isGallery = images.length > 1,
-    FOOTER_HEIGHT = IMAGE_CAPTIONS_HEIGHT + IMAGE_NAV_BOTTOM_MARGIN + (isGallery ? IMAGE_NAV_HEIGHT : 0),
+    FOOTER_HEIGHT = IMAGE_CAPTIONS_HEIGHT + LIGHTBOX_PAGE_MARGIN + (isGallery ? IMAGE_NAV_HEIGHT : 0),
     rootElementRef = React.useRef<HTMLDivElement | null>(null),
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     defaultScrollSetRef = React.useRef(false),
@@ -196,7 +195,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         className={css.img}
         style={{
           bottom: FOOTER_HEIGHT,
-          maxHeight: `calc(100vh - ${(2 * ICON_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`
+          maxHeight: `calc(100vh - ${(2 * LIGHTBOX_PAGE_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`
         }}
         alt={title}
         src={images[activeImageIdx].path}
@@ -218,14 +217,14 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
           <Fluent.ActionButton
             styles={iconStyles}
             className={css.iconStylesRootArrow}
-            style={{ left: ICON_MARGIN }}
+            style={{ left: LIGHTBOX_PAGE_MARGIN }}
             onClick={handleShowPrevImage}
             iconProps={{ iconName: 'ChevronLeft' }}
           />
           <Fluent.ActionButton
             styles={iconStyles}
             className={css.iconStylesRootArrow}
-            style={{ right: ICON_MARGIN }}
+            style={{ right: LIGHTBOX_PAGE_MARGIN }}
             onClick={handleShowNextImage}
             iconProps={{ iconName: 'ChevronRight' }}
           />
