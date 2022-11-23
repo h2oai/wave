@@ -5,7 +5,7 @@ import { stylesheet } from 'typestyle'
 import { getPolygonPointCursor, isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
 import { getRectCornerCursor, isIntersectingRect, RectAnnotator } from './image_annotator_rect'
 import { AnnotatorTags } from './text_annotator'
-import { clas, cssVar, cssVarValue, px, rgb } from './theme'
+import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
 
 /** Create a polygon annotation point with x and y coordinates.. */
@@ -158,10 +158,12 @@ const
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
     { allowed_shapes = ['rect', 'polygon'] } = model,
+    theme = Fluent.useTheme(),
     colorsMap = React.useMemo(() => new Map<S, S>(model.tags.map(tag => {
-      const [R, G, B] = rgb(cssVarValue(tag.color))
-      return [tag.name, `rgba(${R}, ${G}, ${B}, 1)`]
-    })), [model.tags]),
+      const color = Fluent.getColorFromString(cssVarValue(tag.color))
+      return [tag.name, `rgba(${color?.r || 0}, ${color?.g || 0}, ${color?.b || 0}, 1)`]
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    })), [model.tags, theme]),
     allowedShapes = React.useMemo(() => allowed_shapes.reduce((acc, curr) => acc.add(curr), new Set()), [allowed_shapes]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
     [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
