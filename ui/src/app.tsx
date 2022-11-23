@@ -63,7 +63,21 @@ const
       flexDirection: 'column',
       alignItems: 'center',
     },
-  })
+  }),
+  buttonStyles = { styles: { iconDisabled: { color: 'unset' } } },
+  // The global overrides for component styles.
+  customStyles = {
+    components: {
+      DefaultButton: buttonStyles,
+      PrimaryButton: buttonStyles,
+      IconButton: buttonStyles,
+      ActionButton: buttonStyles,
+      CommandButton: buttonStyles,
+      CommandBarButton: buttonStyles,
+      CompoundButton: buttonStyles,
+      SpinButton: buttonStyles
+    }
+  }
 
 const
   BusyOverlay = bond(() => {
@@ -116,7 +130,7 @@ const
                 const page = e.page
                 const lightbox = lightboxB()
                 return (
-                  <Fluent.ThemeProvider>
+                  <Fluent.ThemeProvider theme={customStyles}>
                     <div className={css.app}>
                       <PageLayout key={page.key} page={page} />
                       <BusyOverlay />
