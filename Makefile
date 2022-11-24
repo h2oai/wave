@@ -201,6 +201,9 @@ publish-pycharm: ## Publish PyCharm plugin
 	
 publish-vsc-extension: ## Publish VS Code extension
 	cd tools/vscode-extension && $(MAKE) publish
+
+publish-university:
+	cd university && $(MAKE) publish
 	
 .PHONY: tag
 tag: ## Bump version and tag
