@@ -1,11 +1,25 @@
+# Copyright 2020 H2O.ai, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import collections
-from glob import glob
 import os
 import os.path
 import re
 import shutil
 import subprocess
 import sys
+from glob import glob
 from pathlib import Path
 from string import Template
 from typing import Dict, List, Optional
@@ -14,6 +28,7 @@ from urllib.parse import urlparse
 from h2o_wave import Q, app, main, ui
 
 tmp_dir = '__tmp_apps_dir'
+university_dir = 'h2o_wave_university'
 
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
@@ -84,7 +99,7 @@ def strip_comment(line: str) -> str:
 
 
 def load_lesson(filename: str) -> Lesson:
-    contents = read_file(os.path.join('lessons', filename))
+    contents = read_file(os.path.join(university_dir, 'lessons', filename))
     parts = contents.split('---', maxsplit=1)
     header, source = parts[0].strip().splitlines(), parts[1].strip()
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
@@ -111,8 +126,9 @@ app_title = 'H2O Wave University'
 
 async def setup_page(q: Q):
     py_content = ''
-    parser_path = os.path.join('autocomplete_parser.py')
-    utils_path = os.path.join('autocomplete_utils.py')
+    curr_dir = os.path.dirname(os.path.realpath(__file__))
+    parser_path = os.path.join(curr_dir, 'autocomplete_parser.py')
+    utils_path = os.path.join(curr_dir, 'autocomplete_utils.py')
     # In prod.
     if os.path.exists(parser_path) and os.path.exists(utils_path):
         with open(parser_path, 'r') as f:
@@ -145,7 +161,7 @@ def get_wave_completions(line, character, file_content):
         return [{'label': icon, 'kind': 13, 'sort_text': '0'} for icon in fluent_icons]
         '''
     js_code = ''
-    with open('static/university.js', 'r') as f:
+    with open(os.path.join(university_dir, 'static','university.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(
         baseURL=_base_url,
@@ -276,8 +292,8 @@ async def on_shutdown():
 @app('/', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
-        base_snippets_path = os.path.join('static', 'base-snippets.json')
-        component_snippets_path = os.path.join('static', 'component-snippets.json')
+        base_snippets_path = os.path.join(university_dir, 'static', 'base-snippets.json')
+        component_snippets_path = os.path.join(university_dir, 'static', 'component-snippets.json')
         # Prod.
         if os.path.exists(base_snippets_path) and os.path.exists(component_snippets_path):
             q.app.snippets1 = f'{_base_url}assets/base-snippets.json'
@@ -288,7 +304,7 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
-        lesson_files = glob('lessons/*.py')
+        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py') )
         lesson_files.sort(key=natural_keys)
         q.app.catalog = load_lessons(lesson_files)
         q.app.initialized = True

@@ -141,3 +141,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY : ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
           AWS_REGION: ${{ secrets.MC_AWS_REGION }}
+
+      - name: Build university
+        run:  make publish-university
+      
+      - name: Publish Wave University to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: university/dist
+          password: ${{ secrets.PYPI_API_TOKEN }}
