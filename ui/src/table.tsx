@@ -936,7 +936,12 @@ export const
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    React.useEffect(() => setFilteredItems(items), [items])
+
+    React.useEffect(() => {
+      setFilteredItems(items)
+      if (groups) initGroups()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [items])
 
     React.useEffect(() => {
       if (m.groups) {
