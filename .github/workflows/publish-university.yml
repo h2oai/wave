@@ -20,13 +20,6 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - uses: actions/setup-go@v1
-        with:
-          go-version: '1.16'
-
-      - name: Setup
-        run: make all
-
       - name: Build university
         run:  make publish-university
       
