@@ -33,7 +33,6 @@ example_dir = os.path.dirname(os.path.realpath(__file__))
 async def serve(q: Q):
     # Upload the `styles.css` file to the Wave server and save its path into the `stylesheet_path` variable.
     stylesheet_path, = await q.site.upload([os.path.join(example_dir, 'styles.css')])
-    q.page['my_header'] = ui.header_card(box='1 1 -1 1', title='Title', subtitle='Subtitle')
     # Use the uploaded file path in the `ui.stylesheet`.
     q.page['meta'] = ui.meta_card(
       box='', 
