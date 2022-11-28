@@ -101,13 +101,11 @@ H2O Wave is rapid application development for a more... civilized age[^3].
 
 Also, this page was mostly hyperbole, so let's download it and take it for a spin, shall we.
 
----
+[^1]: The model parallels [retained mode](https://en.wikipedia.org/wiki/Retained_mode) graphics, with compositing performed on an remote server.
 
-[^1] The model parallels [retained mode](https://en.wikipedia.org/wiki/Retained_mode) graphics, with compositing performed on an remote server.
+[^2]: Runs anywhere Go executables run, which is [almost everywhere](https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63).
 
-[^2] Runs anywhere Go executables run, which is [almost everywhere](https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63).
-
-[^3] Hat tip to [xkcd](https://xkcd.com/297/).
+[^3]: Hat tip to [xkcd](https://xkcd.com/297/).
 
 ## Interactive learning
 
