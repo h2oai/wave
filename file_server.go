@@ -70,8 +70,9 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		trimmedPrefix := strings.TrimPrefix(r.URL.Path, fs.baseURL)
+		fsDirPath := path.Join(fs.dir, trimmedPrefix)
 		// Ignore requests for directories and non-existent / unaccessible files.
-		if fileInfo, err := os.Stat(filepath.Join(fs.dir, trimmedPrefix)); err != nil || fileInfo.IsDir() {
+		if fileInfo, err := os.Stat(filepath.FromSlash(fsDirPath)); err != nil || fileInfo.IsDir() {
 			echo(Log{"t": "file_download", "path": r.URL.Path, "error": "not found"})
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
