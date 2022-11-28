@@ -24,6 +24,27 @@ q.page['meta'] = ui.meta_card(
 )
 ```
 
+It is also possible to host a stylesheet on the Wave server itself.
+
+```py
+example_dir = os.path.dirname(os.path.realpath(__file__))
+
+@app('/demo')
+async def serve(q: Q):
+    # Upload the `styles.css` file to the Wave server and save its path into the `stylesheet_path` variable.
+    stylesheet_path, = await q.site.upload([os.path.join(example_dir, 'styles.css')])
+    q.page['my_header'] = ui.header_card(box='1 1 -1 1', title='Title', subtitle='Subtitle')
+    # Use the uploaded file path in the `ui.stylesheet`.
+    q.page['meta'] = ui.meta_card(
+      box='', 
+      stylesheets=[
+        ui.stylesheet(stylesheet_path)
+      ]
+    )
+
+    await q.page.save()
+```
+
 ## Inline stylesheets
 
 On the other hand, if all you want to do is tweak a few things here and there, the simpler solution would be to use the `stylesheet` attribute that accepts a CSS string.
