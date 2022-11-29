@@ -28,8 +28,8 @@ q.page['meta'] = ui.meta_card(
 
 Prior to using your own CSS files, they need to be uploaded to Wave server. There are 2 ways of doing this:
 
-* Uploading the CSS files from your Wave app via [q.site.upload](https://wave.h2o.ai/docs/files/#provide-file-downloads).
-* Serving the CSS files directly from Wave server via [public/private dir](https://wave.h2o.ai/docs/files/#serving-files-directly-from-the-wave-server).
+* Uploading the CSS files from your Wave app via [q.site.upload](/docs/files/#provide-file-downloads).
+* Serving the CSS files directly from Wave server via [public/private dir](/docs/files/#serving-files-directly-from-the-wave-server).
 
 ```py
 from h2o_wave import Q, main, app, ui
