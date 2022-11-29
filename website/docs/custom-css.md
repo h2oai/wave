@@ -24,15 +24,24 @@ q.page['meta'] = ui.meta_card(
 )
 ```
 
-It is also possible to host a stylesheet on the Wave server itself.
+### Using local CSS stylesheet
+
+Prior to using your own CSS files, they need to be uploaded to Wave server. There are 2 ways of doing this:
+
+* Uploading the CSS files from your Wave app via [q.site.upload](https://wave.h2o.ai/docs/files/#provide-file-downloads).
+* Serving the CSS files directly from Wave server via [public/private dir](https://wave.h2o.ai/docs/files/#serving-files-directly-from-the-wave-server).
 
 ```py
-example_dir = os.path.dirname(os.path.realpath(__file__))
+from h2o_wave import Q, main, app, ui
+import os
 
-@app('/demo')
+current_dir = os.path.dirname(os.path.realpath(__file__))
+
+@app('/')
 async def serve(q: Q):
-    # Upload the `styles.css` file to the Wave server and save its path into the `stylesheet_path` variable.
-    stylesheet_path, = await q.site.upload([os.path.join(example_dir, 'styles.css')])
+    # Upload the `styles.css` file to the Wave server 
+    # and save its path into the `stylesheet_path` variable.
+    stylesheet_path, = await q.site.upload([os.path.join(current_dir, 'styles.css')])
     # Use the uploaded file path in the `ui.stylesheet`.
     q.page['meta'] = ui.meta_card(
       box='', 
