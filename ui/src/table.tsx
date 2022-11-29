@@ -431,7 +431,12 @@ const
                   backgroundColor: cssVar('$card'),
                   zIndex: 1
                 },
-                stylesProps.selected ? { background: `${cssVar('$neutralLight')} !important` } : undefined
+                stylesProps.selected
+                  ? {
+                    background: `${cssVar('$neutralLight')} !important`,
+                    '.ms-GroupHeader-check': { opacity: 1 }
+                  }
+                  : undefined
               ]
             })
             } />
@@ -461,8 +466,8 @@ const
               minHeight: 48,
               '&:hover': {
                 background: cssVar('$neutralLight'),
-                border: `${border(2, cssVar('$themePrimary'))} !important`,
-              },
+                border: `${border(2, cssVar('$themePrimary'))} !important`
+              }
             },
             styleProps.isSelected ? { background: cssVar('$neutralLight') } : undefined
           ]
