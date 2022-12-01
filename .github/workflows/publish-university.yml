@@ -27,4 +27,4 @@ jobs:
         uses: pypa/gh-action-pypi-publish@master
         with:
           packages_dir: university/dist
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
