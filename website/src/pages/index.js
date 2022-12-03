@@ -106,6 +106,13 @@ function Home() {
               Get Started
             </Link>
           </div>
+          <iframe
+            src="https://ghbtns.com/github-btn.html?user=h2oai&repo=wave&type=star&count=true&size=large"
+            style={{ marginTop: 15 }}
+            height="30"
+            width='150'
+            title="Wave repo Github stars"
+          />
         </div>
       </header>
       <main>

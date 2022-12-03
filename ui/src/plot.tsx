@@ -877,18 +877,16 @@ const
     for (const m of marks) {
       if (m.x_field) {
         const [x_scale, x_axis] = makeScale(m.x_scale, m.x_format, m.x_title, m.x_min, m.x_max, m.x_nice)
-        scales[m.x_field] = x_scale
+        scales[m.x_field] = scales[m.x_field] ? { ...scales[m.x_field], ...x_scale } : x_scale
         if (x_axis) axes[m.x_field] = x_axis
-        break
       }
     }
 
     for (const m of marks) {
       if (m.y_field) {
         const [y_scale, y_axis] = makeScale(m.y_scale, m.y_format, m.y_title, m.y_min, m.y_max, m.y_nice)
-        scales[m.y_field] = y_scale
+        scales[m.y_field] = scales[m.y_field] ? { ...scales[m.y_field], ...y_scale } : y_scale
         if (y_axis) axes[m.y_field] = y_axis
-        break
       }
     }
 
@@ -901,7 +899,7 @@ const
     }
     return t
   },
-  makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
+  makeScale = (type?: S, format?: Fmt, title?: S, min?: S | F, max?: S | F, nice?: B): [ScaleOption, AxisOption | null] => {
     const
       scale: ScaleOption = {},
       axis: AxisOption = {
@@ -914,7 +912,7 @@ const
         // Manually set title to null to avoid the title being automatically displayed in v4.1.49+.
         title: null
       }
-    if (isS(typ)) scale.type = fixScaleType(typ) as any
+    if (isS(type)) scale.type = fixScaleType(type) as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
       scale.alias = title

@@ -12,6 +12,22 @@
       "webRoot": "${workspaceFolder}/ui"
     },
     {
+      "name": "Debug UI Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "program": "${workspaceRoot}/ui/node_modules/jest/bin/jest.js",
+      "args": [
+        "--no-cache",
+        "--env=jsdom",
+        "${file}"
+      ],
+      "cwd": "${workspaceRoot}/ui",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
       "name": "Debug PY Build",
       "type": "python",
       "request": "launch",
@@ -68,23 +84,6 @@
       "program": "${workspaceFolder}/tools/showcase/showcase.py",
       "python": "${workspaceFolder}/tools/showcase/venv/bin/python",
       "console": "integratedTerminal",
-    },
-    {
-      "name": "Debug UI Tests",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "node",
-      "program": "${workspaceRoot}/ui/node_modules/jest/bin/jest.js",
-      "args": [
-        "--watch",
-        "--runInBand",
-        "--no-cache",
-        "--env=jsdom"
-      ],
-      "cwd": "${workspaceRoot}/ui",
-      "protocol": "inspector",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
     },
     {
       "type": "node",

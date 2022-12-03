@@ -7,13 +7,13 @@ from h2o_wave import main, app, Q, ui
 @app('/demo')
 async def serve(q: Q):
     if q.args.wide_article_preview:
-        q.page['example'] = ui.form_card(box='1 1 4 6', items=[
+        q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.button(name='back', label='Go back', primary=True),
         ])
     else:
         persona_pic = 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=100&w=100'
         q.page['example'] = ui.wide_article_preview_card(
-            box='1 1 6 5',
+            box='1 1 -1 -1',
             name='wide_article_preview',
             persona=ui.persona(title='Jasmine Grand', subtitle='Marketing Executive',
                                image=persona_pic, caption='caption'),

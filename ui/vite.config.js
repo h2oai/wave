@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   build: {
     outDir: 'build',
-    assetsDir: 'static',
+    assetsDir: 'wave-static',
     chunkSizeWarningLimit: 900
   },
   server: {
@@ -38,7 +38,7 @@ export default defineConfig({
         ws: true
       },
       '/_f': {
-        target: 'http://localhost:10101/_f/',
+        target: 'http://localhost:10101',
       }
     }
   }

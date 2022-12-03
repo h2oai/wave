@@ -69,8 +69,8 @@ func mungeIndexPage(baseURL, html string) string {
 	// HACK
 	// set base URL as a body tag attribute, to be used by the front-end for deducing hash-routing and websocket addresses.
 	html = strings.Replace(html, "<body", `<body data-base-url="`+baseURL+`"`, 1)
-	// static/a/b/c.d -> /base-url/static/a/b/c.d
-	html = strings.ReplaceAll(html, `="static/`, `="`+baseURL+"static/")
+	// wave-static/a/b/c.d -> /base-url/wave-static/a/b/c.d
+	html = strings.ReplaceAll(html, `="wave-static/`, `="`+baseURL+"wave-static/")
 	return html
 }
 

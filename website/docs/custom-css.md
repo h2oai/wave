@@ -24,6 +24,35 @@ q.page['meta'] = ui.meta_card(
 )
 ```
 
+### Using local CSS stylesheet
+
+Prior to using your own CSS files, they need to be uploaded to Wave server. There are 2 ways of doing this:
+
+* Uploading the CSS files from your Wave app via [q.site.upload](/docs/files/#provide-file-downloads).
+* Serving the CSS files directly from Wave server via [public/private dir](/docs/files/#serving-files-directly-from-the-wave-server).
+
+```py
+from h2o_wave import Q, main, app, ui
+import os
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+
+@app('/')
+async def serve(q: Q):
+    # Upload the `styles.css` file to the Wave server 
+    # and save its path into the `stylesheet_path` variable.
+    stylesheet_path, = await q.site.upload([os.path.join(current_dir, 'styles.css')])
+    # Use the uploaded file path in the `ui.stylesheet`.
+    q.page['meta'] = ui.meta_card(
+      box='', 
+      stylesheets=[
+        ui.stylesheet(stylesheet_path)
+      ]
+    )
+
+    await q.page.save()
+```
+
 ## Inline stylesheets
 
 On the other hand, if all you want to do is tweak a few things here and there, the simpler solution would be to use the `stylesheet` attribute that accepts a CSS string.

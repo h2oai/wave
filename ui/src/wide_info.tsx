@@ -106,7 +106,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     { title, caption, icon, image, category, name: stateName, subtitle, label, align = 'left' } = state,
     onClick = () => {
       if (stateName.startsWith('#')) {
-        window.location.hash = stateName.substr(1)
+        window.location.hash = stateName.substring(1)
         return
       }
       wave.args[stateName] = stateName

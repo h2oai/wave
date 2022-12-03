@@ -1,0 +1,8 @@
+venv
+__pycache__
+__tmp_apps_dir
+
+# Build artifacts
+build
+dist
+*.egg*

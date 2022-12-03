@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
+import { registerIcons } from '@fluentui/react'
+import * as Icons from '@fluentui/react-icons-mdl2'
 import { configure } from '@testing-library/dom'
 import '@testing-library/jest-dom/extend-expect'
 import 'jest-canvas-mock'
+import React from 'react'
 
 configure({ testIdAttribute: 'data-test' })
-initializeIcons()
+
+const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
+  if ('displayName' in iconComponent) acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
+  return acc
+}, {} as { [key: string]: JSX.Element })
+registerIcons({ icons })

@@ -126,18 +126,27 @@ jobs:
           ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
           ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
+      - name: Publish apps for Cloud
+        run: make build-apps publish-apps-s3-hac
+        env:
+          HAC_S3_BUCKET : ${{ secrets.HAC_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
+
       - name: Publish apps for Managed Cloud
-        run: make build-apps publish-apps-s3-mc
+        run: make publish-apps-s3-mc
         env:
           MC_S3_BUCKET : ${{ secrets.MC_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY : ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
           AWS_REGION: ${{ secrets.MC_AWS_REGION }}
 
-      - name: Publish apps for Cloud
-        run: make publish-apps-s3-hac
-        env:
-          HAC_S3_BUCKET : ${{ secrets.HAC_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
+      - name: Build university
+        run:  make publish-university
+      
+      - name: Publish Wave University to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: university/dist
+          password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}

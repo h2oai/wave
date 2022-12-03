@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { Markdown } from './markdown'
-import { cssVar, margin } from './theme'
+import { margin } from './theme'
 import { Command } from './toolbar'
 
 /** Create text content. */
@@ -132,15 +132,15 @@ const
   },
   toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
-export const
-  XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => {
-    const menuName = name ? `${name}-menu` : name
-    return (
-      <div className={css.text}>
-        <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block styles={{ root: { color: cssVar('$text'), } }}>
-          <Markdown source={content} />
-        </Fluent.Text>
-        {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
-      </div>
-    )
-  }
+export const XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => {
+  const menuName = name ? `${name}-menu` : name
+  return (
+    <div className={css.text}>
+      {/* `w-text` is a marker class. */}
+      <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block className='w-text'>
+        <Markdown source={content} />
+      </Fluent.Text>
+      {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
+    </div>
+  )
+}

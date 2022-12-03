@@ -13,7 +13,3 @@ RoutingMode = "BASE_URL"
 [[Env]]
 Name = "H2O_WAVE_PUBLIC_DIR"
 Value = "/assets/@../../app/static/"
-
-[[Env]]
-Name = "H2O_WAVE_NO_STORE"
-Value = "true"

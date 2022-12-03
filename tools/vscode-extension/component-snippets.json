@@ -51,7 +51,7 @@
   "Wave CanvasCard": {
     "prefix": "w_canvas_card",
     "body": [
-      "ui.canvas_card(box='$1', title='$2', width=${3:None}, height=${4:None}, data=$5)$0"
+      "ui.canvas_card(box='$1', title='$2', width=$3, height=$4, data=$5)$0"
     ],
     "description": "Create a minimal Wave CanvasCard."
   },
@@ -135,7 +135,7 @@
   "Wave EditorCard": {
     "prefix": "w_editor_card",
     "body": [
-      "ui.editor_card(box='$1', mode='${2:public`}')$0"
+      "ui.editor_card(box='$1', mode='${2:public}')$0"
     ],
     "description": "Create a minimal Wave EditorCard."
   },
@@ -230,10 +230,24 @@
     ],
     "description": "Create a minimal Wave Image."
   },
+  "Wave ImageAnnotatorPoint": {
+    "prefix": "w_image_annotator_point",
+    "body": [
+      "ui.image_annotator_point(x=$1, y=$2),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorPoint."
+  },
+  "Wave ImageAnnotatorPolygon": {
+    "prefix": "w_image_annotator_polygon",
+    "body": [
+      "ui.image_annotator_polygon(vertices=[\n\t\t$1\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave ImageAnnotatorPolygon."
+  },
   "Wave ImageAnnotatorRect": {
     "prefix": "w_image_annotator_rect",
     "body": [
-      "ui.image_annotator_rect(x1=${1:None}, y1=${2:None}, x2=${3:None}, y2=${4:None}),$0"
+      "ui.image_annotator_rect(x1=$1, y1=$2, x2=$3, y2=$4),$0"
     ],
     "description": "Create a minimal Wave ImageAnnotatorRect."
   },
@@ -268,7 +282,7 @@
   "Wave LargeBarStatCard": {
     "prefix": "w_large_bar_stat_card",
     "body": [
-      "ui.large_bar_stat_card(box='$1', title='$2', caption='$3', value='$4', aux_value='$5', value_caption='$6', aux_value_caption='$7', progress=${8:None})$0"
+      "ui.large_bar_stat_card(box='$1', title='$2', caption='$3', value='$4', aux_value='$5', value_caption='$6', aux_value_caption='$7', progress=$8)$0"
     ],
     "description": "Create a minimal Wave LargeBarStatCard."
   },
@@ -618,7 +632,7 @@
   "Wave TablePagination": {
     "prefix": "w_table_pagination",
     "body": [
-      "ui.table_pagination(total_rows=${1:None}, rows_per_page=${2:None}),$0"
+      "ui.table_pagination(total_rows=$1, rows_per_page=$2),$0"
     ],
     "description": "Create a minimal Wave TablePagination."
   },
@@ -695,7 +709,7 @@
   "Wave TallGaugeStatCard": {
     "prefix": "w_tall_gauge_stat_card",
     "body": [
-      "ui.tall_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=${5:None})$0"
+      "ui.tall_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=$5)$0"
     ],
     "description": "Create a minimal Wave TallGaugeStatCard."
   },
@@ -863,14 +877,14 @@
   "Wave WideBarStatCard": {
     "prefix": "w_wide_bar_stat_card",
     "body": [
-      "ui.wide_bar_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=${5:None})$0"
+      "ui.wide_bar_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=$5)$0"
     ],
     "description": "Create a minimal Wave WideBarStatCard."
   },
   "Wave WideGaugeStatCard": {
     "prefix": "w_wide_gauge_stat_card",
     "body": [
-      "ui.wide_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=${5:None})$0"
+      "ui.wide_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=$5)$0"
     ],
     "description": "Create a minimal Wave WideGaugeStatCard."
   },
@@ -884,7 +898,7 @@
   "Wave Pie": {
     "prefix": "w_pie",
     "body": [
-      "ui.pie(label='$1', value='$2', fraction=${3:None}, color='$4'),$0"
+      "ui.pie(label='$1', value='$2', fraction=$3, color='$4'),$0"
     ],
     "description": "Create a minimal Wave Pie."
   },
@@ -961,7 +975,7 @@
   "Wave Full CanvasCard": {
     "prefix": "w_full_canvas_card",
     "body": [
-      "ui.canvas_card(box='$1', title='$2', width=${3:None}, height=${4:None}, data=$5, commands=[\n\t\t$6\t\t\n])$0"
+      "ui.canvas_card(box='$1', title='$2', width=$3, height=$4, data=$5, commands=[\n\t\t$6\t\t\n])$0"
     ],
     "description": "Create a full Wave CanvasCard."
   },
@@ -1003,14 +1017,14 @@
   "Wave Full ColorPicker": {
     "prefix": "w_full_color_picker",
     "body": [
-      "ui.color_picker(name='$1', label='$2', value='$3', width='${4:300px'}', alpha=${5:True}, inline=${6:False}, visible=${7:True}, trigger=${8:False}, tooltip='$9', choices=[\n\t\t$10\t\t\n]),$0"
+      "ui.color_picker(name='$1', label='$2', value='$3', width='${4:300px}', alpha=${5:True}, inline=${6:False}, visible=${7:True}, trigger=${8:False}, tooltip='$9', choices=[\n\t\t$10\t\t\n]),$0"
     ],
     "description": "Create a full Wave ColorPicker."
   },
   "Wave Full Combobox": {
     "prefix": "w_full_combobox",
     "body": [
-      "ui.combobox(name='$1', label='$2', placeholder='$3', value='$4', error='$5', disabled=${6:False}, width='${7:100%'}', visible=${8:True}, tooltip='$9', trigger=${10:False}, required=${11:False}, values=[\n\t\t$12\t\t\n], choices=[\n\t\t$13\t\t\n]),$0"
+      "ui.combobox(name='$1', label='$2', placeholder='$3', value='$4', error='$5', disabled=${6:False}, width='${7:100%}', visible=${8:True}, tooltip='$9', trigger=${10:False}, required=${11:False}, values=[\n\t\t$12\t\t\n], choices=[\n\t\t$13\t\t\n]),$0"
     ],
     "description": "Create a full Wave Combobox."
   },
@@ -1024,35 +1038,35 @@
   "Wave Full DatePicker": {
     "prefix": "w_full_date_picker",
     "body": [
-      "ui.date_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, trigger=${6:False}, width='${7:100%'}', visible=${8:True}, tooltip='$9', min='$10', max='$11'),$0"
+      "ui.date_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, trigger=${6:False}, width='${7:100%}', visible=${8:True}, tooltip='$9', min='$10', max='$11'),$0"
     ],
     "description": "Create a full Wave DatePicker."
   },
   "Wave Full Dialog": {
     "prefix": "w_full_dialog",
     "body": [
-      "ui.dialog(title='$1', width='${2:600px'}', closable=${3:False}, blocking=${4:False}, primary=${5:False}, name='$6', items=[\n\t\t$7\t\t\n], events=[\n\t\t$8\t\t\n]),$0"
+      "ui.dialog(title='$1', width='${2:600px}', closable=${3:False}, blocking=${4:False}, primary=${5:False}, name='$6', items=[\n\t\t$7\t\t\n], events=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave Dialog."
   },
   "Wave Full Dropdown": {
     "prefix": "w_full_dropdown",
     "body": [
-      "ui.dropdown(name='$1', label='$2', placeholder='$3', value='$4', required=${5:False}, disabled=${6:False}, trigger=${7:False}, width='${8:100%'}', visible=${9:True}, tooltip='$10', popup='${11:auto`, which pops up a dialog only when there are more than 100 choices}', values=[\n\t\t$12\t\t\n], choices=[\n\t\t$13\t\t\n]),$0"
+      "ui.dropdown(name='$1', label='$2', placeholder='$3', value='$4', required=${5:False}, disabled=${6:False}, trigger=${7:False}, width='${8:100%}', visible=${9:True}, tooltip='$10', popup='${11:auto}', values=[\n\t\t$12\t\t\n], choices=[\n\t\t$13\t\t\n]),$0"
     ],
     "description": "Create a full Wave Dropdown."
   },
   "Wave Full EditorCard": {
     "prefix": "w_full_editor_card",
     "body": [
-      "ui.editor_card(box='$1', mode='${2:public`}', commands=[\n\t\t$3\t\t\n])$0"
+      "ui.editor_card(box='$1', mode='${2:public}', commands=[\n\t\t$3\t\t\n])$0"
     ],
     "description": "Create a full Wave EditorCard."
   },
   "Wave Full Expander": {
     "prefix": "w_full_expander",
     "body": [
-      "ui.expander(name='$1', label='$2', expanded=${3:False}, width='${4:100%'}', visible=${5:True}, items=[\n\t\t$6\t\t\n]),$0"
+      "ui.expander(name='$1', label='$2', expanded=${3:False}, width='${4:100%}', visible=${5:True}, items=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave Expander."
   },
@@ -1066,7 +1080,7 @@
   "Wave Full FileUpload": {
     "prefix": "w_full_file_upload",
     "body": [
-      "ui.file_upload(name='$1', label='${2:Upload\"}', multiple=${3:False}, max_file_size=${4:None}, max_size=${5:None}, height='${6:300px}', width='${7:100%'}', compact=${8:False}, visible=${9:True}, tooltip='$10', required=${11:False}, file_extensions=[\n\t\t$12\t\t\n]),$0"
+      "ui.file_upload(name='$1', label='${2:Upload}', multiple=${3:False}, max_file_size=${4:None}, max_size=${5:None}, height='${6:300px}', width='${7:100%}', compact=${8:False}, visible=${9:True}, tooltip='$10', required=${11:False}, file_extensions=[\n\t\t$12\t\t\n]),$0"
     ],
     "description": "Create a full Wave FileUpload."
   },
@@ -1087,14 +1101,14 @@
   "Wave Full Component": {
     "prefix": "w_full_component",
     "body": [
-      "ui.component(text=$1, text_xl=$2, text_l=$3, text_m=$4, text_s=$5, text_xs=$6, label=$7, separator=$8, progress=$9, message_bar=$10, textbox=$11, checkbox=$12, toggle=$13, choice_group=$14, checklist=$15, dropdown=$16, combobox=$17, slider=$18, spinbox=$19, date_picker=$20, color_picker=$21, button=$22, buttons=$23, mini_button=$24, mini_buttons=$25, file_upload=$26, table=$27, link=$28, links=$29, tabs=$30, expander=$31, frame=$32, markup=$33, template=$34, picker=$35, range_slider=$36, stepper=$37, visualization=$38, vega_visualization=$39, stats=$40, inline=$41, image=$42, persona=$43, text_annotator=$44, image_annotator=$45, facepile=$46, copyable_text=$47, menu=$48, tags=$49, time_picker=$50),$0"
+      "ui.component(text=${1:None}, text_xl=${2:None}, text_l=${3:None}, text_m=${4:None}, text_s=${5:None}, text_xs=${6:None}, label=${7:None}, separator=${8:None}, progress=${9:None}, message_bar=${10:None}, textbox=${11:None}, checkbox=${12:None}, toggle=${13:None}, choice_group=${14:None}, checklist=${15:None}, dropdown=${16:None}, combobox=${17:None}, slider=${18:None}, spinbox=${19:None}, date_picker=${20:None}, color_picker=${21:None}, button=${22:None}, buttons=${23:None}, mini_button=${24:None}, mini_buttons=${25:None}, file_upload=${26:None}, table=${27:None}, link=${28:None}, links=${29:None}, tabs=${30:None}, expander=${31:None}, frame=${32:None}, markup=${33:None}, template=${34:None}, picker=${35:None}, range_slider=${36:None}, stepper=${37:None}, visualization=${38:None}, vega_visualization=${39:None}, stats=${40:None}, inline=${41:None}, image=${42:None}, persona=${43:None}, text_annotator=${44:None}, image_annotator=${45:None}, facepile=${46:None}, copyable_text=${47:None}, menu=${48:None}, tags=${49:None}, time_picker=${50:None}),$0"
     ],
     "description": "Create a full Wave Component."
   },
   "Wave Full Inline": {
     "prefix": "w_full_inline",
     "body": [
-      "ui.inline(justify='${1:start'}', inset=${2:False}, items=[\n\t\t$3\t\t\n]),$0"
+      "ui.inline(justify='${1:start}', inset=${2:False}, items=[\n\t\t$3\t\t\n]),$0"
     ],
     "description": "Create a full Wave Inline."
   },
@@ -1108,7 +1122,7 @@
   "Wave Full Frame": {
     "prefix": "w_full_frame",
     "body": [
-      "ui.frame(path='$1', content='$2', width='${3:100%'}', height='${4:150px'}', name='$5', visible=${6:True}),$0"
+      "ui.frame(path='$1', content='$2', width='${3:100%}', height='${4:150px}', name='$5', visible=${6:True}),$0"
     ],
     "description": "Create a full Wave Frame."
   },
@@ -1122,7 +1136,7 @@
   "Wave Full GraphicsCard": {
     "prefix": "w_full_graphics_card",
     "body": [
-      "ui.graphics_card(box='$1', view_box='$2', stage=$3, scene=$4, width='$5', height='$6', commands=[\n\t\t$7\t\t\n])$0"
+      "ui.graphics_card(box='$1', view_box='$2', stage=${3:None}, scene=${4:None}, width='$5', height='$6', commands=[\n\t\t$7\t\t\n])$0"
     ],
     "description": "Create a full Wave GraphicsCard."
   },
@@ -1136,7 +1150,7 @@
   "Wave Full HeaderCard": {
     "prefix": "w_full_header_card",
     "body": [
-      "ui.header_card(box='$1', title='$2', subtitle='$3', icon='$4', icon_color='$5', image='$6', color='${7:primary'}', nav=[\n\t\t$8\t\t\n], items=[\n\t\t$9\t\t\n], secondary_items=[\n\t\t$10\t\t\n], commands=[\n\t\t$11\t\t\n])$0"
+      "ui.header_card(box='$1', title='$2', subtitle='$3', icon='$4', icon_color='$5', image='$6', color='${7:primary}', nav=[\n\t\t$8\t\t\n], items=[\n\t\t$9\t\t\n], secondary_items=[\n\t\t$10\t\t\n], commands=[\n\t\t$11\t\t\n])$0"
     ],
     "description": "Create a full Wave HeaderCard."
   },
@@ -1150,28 +1164,42 @@
   "Wave Full ImageCard": {
     "prefix": "w_full_image_card",
     "body": [
-      "ui.image_card(box='$1', title='$2', type='$3', image='$4', data=$5, path='$6', commands=[\n\t\t$7\t\t\n])$0"
+      "ui.image_card(box='$1', title='$2', type='$3', image='$4', data=${5:None}, path='$6', path_popup='$7', commands=[\n\t\t$8\t\t\n])$0"
     ],
     "description": "Create a full Wave ImageCard."
   },
   "Wave Full Image": {
     "prefix": "w_full_image",
     "body": [
-      "ui.image(title='$1', type='$2', image='$3', path='$4', width='$5', visible=${6:true}),$0"
+      "ui.image(title='$1', type='$2', image='$3', path='$4', width='$5', visible=${6:True}, path_popup='$7'),$0"
     ],
     "description": "Create a full Wave Image."
+  },
+  "Wave Full ImageAnnotatorPoint": {
+    "prefix": "w_full_image_annotator_point",
+    "body": [
+      "ui.image_annotator_point(x=$1, y=$2),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorPoint."
+  },
+  "Wave Full ImageAnnotatorPolygon": {
+    "prefix": "w_full_image_annotator_polygon",
+    "body": [
+      "ui.image_annotator_polygon(vertices=[\n\t\t$1\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave ImageAnnotatorPolygon."
   },
   "Wave Full ImageAnnotatorRect": {
     "prefix": "w_full_image_annotator_rect",
     "body": [
-      "ui.image_annotator_rect(x1=${1:None}, y1=${2:None}, x2=${3:None}, y2=${4:None}),$0"
+      "ui.image_annotator_rect(x1=$1, y1=$2, x2=$3, y2=$4),$0"
     ],
     "description": "Create a full Wave ImageAnnotatorRect."
   },
   "Wave Full ImageAnnotatorShape": {
     "prefix": "w_full_image_annotator_shape",
     "body": [
-      "ui.image_annotator_shape(rect=$1),$0"
+      "ui.image_annotator_shape(rect=${1:None}, polygon=${2:None}),$0"
     ],
     "description": "Create a full Wave ImageAnnotatorShape."
   },
@@ -1192,7 +1220,7 @@
   "Wave Full ImageAnnotator": {
     "prefix": "w_full_image_annotator",
     "body": [
-      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n]),$0"
+      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n], allowed_shapes=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave ImageAnnotator."
   },
@@ -1206,14 +1234,14 @@
   "Wave Full LargeBarStatCard": {
     "prefix": "w_full_large_bar_stat_card",
     "body": [
-      "ui.large_bar_stat_card(box='$1', title='$2', caption='$3', value='$4', aux_value='$5', value_caption='$6', aux_value_caption='$7', progress=${8:None}, plot_color='$9', data=$10, commands=[\n\t\t$11\t\t\n])$0"
+      "ui.large_bar_stat_card(box='$1', title='$2', caption='$3', value='$4', aux_value='$5', value_caption='$6', aux_value_caption='$7', progress=$8, plot_color='$9', data=${10:None}, commands=[\n\t\t$11\t\t\n])$0"
     ],
     "description": "Create a full Wave LargeBarStatCard."
   },
   "Wave Full LargeStatCard": {
     "prefix": "w_full_large_stat_card",
     "body": [
-      "ui.large_stat_card(box='$1', title='$2', value='$3', aux_value='$4', caption='$5', data=$6, commands=[\n\t\t$7\t\t\n])$0"
+      "ui.large_stat_card(box='$1', title='$2', value='$3', aux_value='$4', caption='$5', data=${6:None}, commands=[\n\t\t$7\t\t\n])$0"
     ],
     "description": "Create a full Wave LargeStatCard."
   },
@@ -1227,7 +1255,7 @@
   "Wave Full Links": {
     "prefix": "w_full_links",
     "body": [
-      "ui.links(label='$1', inline=${2:false'}, width='$3', items=[\n\t\t$4\t\t\n]),$0"
+      "ui.links(label='$1', inline=${2:False}, width='$3', items=[\n\t\t$4\t\t\n]),$0"
     ],
     "description": "Create a full Wave Links."
   },
@@ -1248,7 +1276,7 @@
   "Wave Full MarkdownCard": {
     "prefix": "w_full_markdown_card",
     "body": [
-      "ui.markdown_card(box='$1', title='$2', content='$3', data=$4, commands=[\n\t\t$5\t\t\n])$0"
+      "ui.markdown_card(box='$1', title='$2', content='$3', data=${4:None}, commands=[\n\t\t$5\t\t\n])$0"
     ],
     "description": "Create a full Wave MarkdownCard."
   },
@@ -1276,7 +1304,7 @@
   "Wave Full Menu": {
     "prefix": "w_full_menu",
     "body": [
-      "ui.menu(icon='$1', image='$2', name='$3', items=[\n\t\t$4\t\t\n]),$0"
+      "ui.menu(icon='$1', image='$2', name='$3', label='$4', items=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Menu."
   },
@@ -1290,7 +1318,7 @@
   "Wave Full MessageBar": {
     "prefix": "w_full_message_bar",
     "body": [
-      "ui.message_bar(type='$1', text='$2', name='$3', width='${4:100%'}', visible=${5:True}, buttons=[\n\t\t$6\t\t\n]),$0"
+      "ui.message_bar(type='$1', text='$2', name='$3', width='${4:100%}', visible=${5:True}, buttons=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave MessageBar."
   },
@@ -1311,7 +1339,7 @@
   "Wave Full Layout": {
     "prefix": "w_full_layout",
     "body": [
-      "ui.layout(breakpoint='$1', width='${2:100%`}', min_width='$3', max_width='$4', height='${5:auto`}', min_height='$6', max_height='$7', name='$8', zones=[\n\t\t$9\t\t\n]),$0"
+      "ui.layout(breakpoint='$1', width='${2:100%}', min_width='$3', max_width='$4', height='${5:auto}', min_height='$6', max_height='$7', name='$8', zones=[\n\t\t$9\t\t\n]),$0"
     ],
     "description": "Create a full Wave Layout."
   },
@@ -1332,7 +1360,7 @@
   "Wave Full MetaCard": {
     "prefix": "w_full_meta_card",
     "body": [
-      "ui.meta_card(box='$1', title='$2', refresh=${3:None}, notification='$4', notification_bar=$5, redirect='$6', icon='$7', dialog=$8, side_panel=$9, theme='$10', tracker=$11, script=$12, stylesheet=$13, layouts=[\n\t\t$14\t\t\n], themes=[\n\t\t$15\t\t\n], scripts=[\n\t\t$16\t\t\n], stylesheets=[\n\t\t$17\t\t\n], commands=[\n\t\t$18\t\t\n])$0"
+      "ui.meta_card(box='$1', title='$2', refresh=${3:None}, notification='$4', notification_bar=${5:None}, redirect='$6', icon='$7', dialog=${8:None}, side_panel=${9:None}, theme='$10', tracker=${11:None}, script=${12:None}, stylesheet=${13:None}, layouts=[\n\t\t$14\t\t\n], themes=[\n\t\t$15\t\t\n], scripts=[\n\t\t$16\t\t\n], stylesheets=[\n\t\t$17\t\t\n], commands=[\n\t\t$18\t\t\n])$0"
     ],
     "description": "Create a full Wave MetaCard."
   },
@@ -1353,28 +1381,28 @@
   "Wave Full NavCard": {
     "prefix": "w_full_nav_card",
     "body": [
-      "ui.nav_card(box='$1', value='$2', title='$3', subtitle='$4', icon='$5', icon_color='$6', image='$7', persona=$8, color='${9:card'}', items=[\n\t\t$10\t\t\n], secondary_items=[\n\t\t$11\t\t\n], commands=[\n\t\t$12\t\t\n])$0"
+      "ui.nav_card(box='$1', value='$2', title='$3', subtitle='$4', icon='$5', icon_color='$6', image='$7', persona=${8:None}, color='${9:card}', items=[\n\t\t$10\t\t\n], secondary_items=[\n\t\t$11\t\t\n], commands=[\n\t\t$12\t\t\n])$0"
     ],
     "description": "Create a full Wave NavCard."
   },
   "Wave Full NotificationBar": {
     "prefix": "w_full_notification_bar",
     "body": [
-      "ui.notification_bar(text='$1', type='${2:info'}', timeout=${3:5}, position='${4:top-right'}', name='$5', buttons=[\n\t\t$6\t\t\n], events=[\n\t\t$7\t\t\n]),$0"
+      "ui.notification_bar(text='$1', type='${2:info}', timeout=${3:5}, position='${4:top-right}', name='$5', buttons=[\n\t\t$6\t\t\n], events=[\n\t\t$7\t\t\n]),$0"
     ],
     "description": "Create a full Wave NotificationBar."
   },
   "Wave Full Persona": {
     "prefix": "w_full_persona",
     "body": [
-      "ui.persona(title='$1', subtitle='$2', caption='$3', size='${4:m'}', image='$5', initials='$6', initials_color='$7', name='$8'),$0"
+      "ui.persona(title='$1', subtitle='$2', caption='$3', size='${4:m}', image='$5', initials='$6', initials_color='$7', name='$8'),$0"
     ],
     "description": "Create a full Wave Persona."
   },
   "Wave Full Picker": {
     "prefix": "w_full_picker",
     "body": [
-      "ui.picker(name='$1', label='$2', max_choices=${3:None}, required=${4:False}, disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, tooltip='$9', choices=[\n\t\t$10\t\t\n], values=[\n\t\t$11\t\t\n]),$0"
+      "ui.picker(name='$1', label='$2', max_choices=${3:None}, required=${4:False}, disabled=${5:False}, width='${6:100%}', visible=${7:True}, trigger=${8:False}, tooltip='$9', choices=[\n\t\t$10\t\t\n], values=[\n\t\t$11\t\t\n]),$0"
     ],
     "description": "Create a full Wave Picker."
   },
@@ -1395,14 +1423,14 @@
   "Wave Full Mark": {
     "prefix": "w_full_mark",
     "body": [
-      "ui.mark(coord='$1', type='$2', x=$3, x0=$4, x1=$5, x2=$6, x_q1=$7, x_q2=$8, x_q3=$9, x_min=${10:None}, x_max=${11:None}, x_nice=${12:False}, x_scale='$13', x_title='$14', y=$15, y0=$16, y1=$17, y2=$18, y_q1=$19, y_q2=$20, y_q3=$21, y_min=${22:None}, y_max=${23:None}, y_nice=${24:False}, y_scale='$25', y_title='$26', color='$27', color_range='$28', shape='$29', shape_range='$30', size=$31, size_range='$32', stack='$33', dodge='$34', curve='$35', fill_color='$36', fill_opacity=${37:None}, stroke_color='$38', stroke_opacity=${39:None}, stroke_size=${40:None}, stroke_dash='$41', label='$42', label_offset=${43:None}, label_offset_x=${44:None}, label_offset_y=${45:None}, label_rotation='$46', label_position='$47', label_overlap='$48', label_fill_color='$49', label_fill_opacity=${50:None}, label_stroke_color='$51', label_stroke_opacity=${52:None}, label_stroke_size=${53:None}, label_font_size=${54:None}, label_font_weight='$55', label_line_height=${56:None}, label_align='$57', ref_stroke_color='$58', ref_stroke_opacity=${59:None}, ref_stroke_size=${60:None}, ref_stroke_dash='$61', interactive=${62:True}, color_domain=[\n\t\t$63\t\t\n]),$0"
+      "ui.mark(coord='$1', type='$2', x=${3:None}, x0=${4:None}, x1=${5:None}, x2=${6:None}, x_q1=${7:None}, x_q2=${8:None}, x_q3=${9:None}, x_min=${10:None}, x_max=${11:None}, x_nice=${12:False}, x_scale='$13', x_title='$14', y=${15:None}, y0=${16:None}, y1=${17:None}, y2=${18:None}, y_q1=${19:None}, y_q2=${20:None}, y_q3=${21:None}, y_min=${22:None}, y_max=${23:None}, y_nice=${24:False}, y_scale='$25', y_title='$26', color='$27', color_range='$28', shape='$29', shape_range='$30', size=${31:None}, size_range='$32', stack='$33', dodge='$34', curve='$35', fill_color='$36', fill_opacity=${37:None}, stroke_color='$38', stroke_opacity=${39:None}, stroke_size=${40:None}, stroke_dash='$41', label='$42', label_offset=${43:None}, label_offset_x=${44:None}, label_offset_y=${45:None}, label_rotation='$46', label_position='$47', label_overlap='$48', label_fill_color='$49', label_fill_opacity=${50:None}, label_stroke_color='$51', label_stroke_opacity=${52:None}, label_stroke_size=${53:None}, label_font_size=${54:None}, label_font_weight='$55', label_line_height=${56:None}, label_align='$57', ref_stroke_color='$58', ref_stroke_opacity=${59:None}, ref_stroke_size=${60:None}, ref_stroke_dash='$61', interactive=${62:True}, color_domain=[\n\t\t$63\t\t\n]),$0"
     ],
     "description": "Create a full Wave Mark."
   },
   "Wave Full MarkExt": {
     "prefix": "w_full_mark_ext",
     "body": [
-      "ui.mark_ext(x_field='$1', x_format=$2, x0_field='$3', x0_format=$4, x1_field='$5', x1_format=$6, x2_field='$7', x2_format=$8, x_q1_field='$9', x_q1_format=$10, x_q2_field='$11', x_q2_format=$12, x_q3_field='$13', x_q3__format=$14, y_field='$15', y_format=$16, y0_field='$17', y0_format=$18, y1_field='$19', y1_format=$20, y2_field='$21', y2_format=$22, y_q1_field='$23', y_q1_format=$24, y_q2_field='$25', y_q2_format=$26, y_q3_field='$27', y_q3__format=$28, color_field='$29', color_format=$30, shape_field='$31', shape_format=$32, size_format=$33, size_field='$34', dodge_field='$35', label_field='$36', label_format=$37),$0"
+      "ui.mark_ext(x_field='$1', x_format=${2:None}, x0_field='$3', x0_format=${4:None}, x1_field='$5', x1_format=${6:None}, x2_field='$7', x2_format=${8:None}, x_q1_field='$9', x_q1_format=${10:None}, x_q2_field='$11', x_q2_format=${12:None}, x_q3_field='$13', x_q3__format=${14:None}, y_field='$15', y_format=${16:None}, y0_field='$17', y0_format=${18:None}, y1_field='$19', y1_format=${20:None}, y2_field='$21', y2_format=${22:None}, y_q1_field='$23', y_q1_format=${24:None}, y_q2_field='$25', y_q2_format=${26:None}, y_q3_field='$27', y_q3__format=${28:None}, color_field='$29', color_format=${30:None}, shape_field='$31', shape_format=${32:None}, size_format=${33:None}, size_field='$34', dodge_field='$35', label_field='$36', label_format=${37:None}),$0"
     ],
     "description": "Create a full Wave MarkExt."
   },
@@ -1416,7 +1444,7 @@
   "Wave Full Visualization": {
     "prefix": "w_full_visualization",
     "body": [
-      "ui.visualization(plot=$1, data=$2, width='${3:100%'}', height='${4:300px'}', name='$5', visible=${6:True}, events=[\n\t\t$7\t\t\n], interactions=[\n\t\t$8\t\t\n]),$0"
+      "ui.visualization(plot=$1, data=$2, width='${3:100%}', height='${4:300px}', name='$5', visible=${6:True}, events=[\n\t\t$7\t\t\n], interactions=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave Visualization."
   },
@@ -1451,7 +1479,7 @@
   "Wave Full Progress": {
     "prefix": "w_full_progress",
     "body": [
-      "ui.progress(label='$1', caption='$2', value=${3:None}, width='${4:100%'}', visible=${5:True}, tooltip='$6', name='$7'),$0"
+      "ui.progress(label='$1', caption='$2', value=${3:None}, width='${4:100%}', visible=${5:True}, tooltip='$6', name='$7'),$0"
     ],
     "description": "Create a full Wave Progress."
   },
@@ -1465,7 +1493,7 @@
   "Wave Full RangeSlider": {
     "prefix": "w_full_range_slider",
     "body": [
-      "ui.range_slider(name='$1', label='$2', min=${3:0}, max=${4:100}, step=${5:None}, min_value=${6:None}, max_value=${7:None}, disabled=${8:False}, width='${9:100%'}', trigger=${10:False}, visible=${11:True}, tooltip='$12'),$0"
+      "ui.range_slider(name='$1', label='$2', min=${3:0}, max=${4:100}, step=${5:None}, min_value=${6:None}, max_value=${7:None}, disabled=${8:False}, width='${9:100%}', trigger=${10:False}, visible=${11:True}, tooltip='$12'),$0"
     ],
     "description": "Create a full Wave RangeSlider."
   },
@@ -1500,42 +1528,42 @@
   "Wave Full Separator": {
     "prefix": "w_full_separator",
     "body": [
-      "ui.separator(label='$1', name='$2', width='${3:100%'}', visible=${4:True}),$0"
+      "ui.separator(label='$1', name='$2', width='${3:100%}', visible=${4:True}),$0"
     ],
     "description": "Create a full Wave Separator."
   },
   "Wave Full SidePanel": {
     "prefix": "w_full_side_panel",
     "body": [
-      "ui.side_panel(title='$1', width='${2:600px'}', name='$3', blocking=${4:False}, closable=${5:False}, items=[\n\t\t$6\t\t\n], events=[\n\t\t$7\t\t\n]),$0"
+      "ui.side_panel(title='$1', width='${2:600px}', name='$3', blocking=${4:False}, closable=${5:False}, items=[\n\t\t$6\t\t\n], events=[\n\t\t$7\t\t\n]),$0"
     ],
     "description": "Create a full Wave SidePanel."
   },
   "Wave Full Slider": {
     "prefix": "w_full_slider",
     "body": [
-      "ui.slider(name='$1', label='$2', min=${3:None}, max=${4:None}, step=${5:None}, value=${6:None}, disabled=${7:False}, trigger=${8:False}, width='${9:100%'}', visible=${10:True}, tooltip='$11'),$0"
+      "ui.slider(name='$1', label='$2', min=${3:None}, max=${4:None}, step=${5:None}, value=${6:None}, disabled=${7:False}, trigger=${8:False}, width='${9:100%}', visible=${10:True}, tooltip='$11'),$0"
     ],
     "description": "Create a full Wave Slider."
   },
   "Wave Full SmallSeriesStatCard": {
     "prefix": "w_full_small_series_stat_card",
     "body": [
-      "ui.small_series_stat_card(box='$1', title='$2', value='$3', plot_data=$4, plot_value='$5', plot_zero_value=${6:None}, plot_category='${7:x'}', plot_type='${8:area`}', plot_curve='${9:linear`}', plot_color='$10', data=$11, commands=[\n\t\t$12\t\t\n])$0"
+      "ui.small_series_stat_card(box='$1', title='$2', value='$3', plot_data=$4, plot_value='$5', plot_zero_value=${6:None}, plot_category='${7:x}', plot_type='${8:area}', plot_curve='${9:linear}', plot_color='$10', data=${11:None}, commands=[\n\t\t$12\t\t\n])$0"
     ],
     "description": "Create a full Wave SmallSeriesStatCard."
   },
   "Wave Full SmallStatCard": {
     "prefix": "w_full_small_stat_card",
     "body": [
-      "ui.small_stat_card(box='$1', title='$2', value='$3', data=$4, commands=[\n\t\t$5\t\t\n])$0"
+      "ui.small_stat_card(box='$1', title='$2', value='$3', data=${4:None}, commands=[\n\t\t$5\t\t\n])$0"
     ],
     "description": "Create a full Wave SmallStatCard."
   },
   "Wave Full Spinbox": {
     "prefix": "w_full_spinbox",
     "body": [
-      "ui.spinbox(name='$1', label='$2', min=${3:0\"}, max=${4:100\"}, step=${5:1\"}, value=${6:0\"}, disabled=${7:False}, width='${8:100%'}', visible=${9:True}, trigger=${10:False}, tooltip='$11'),$0"
+      "ui.spinbox(name='$1', label='$2', min=${3:0}, max=${4:100}, step=${5:1}, value=${6:0}, disabled=${7:False}, width='${8:100%}', visible=${9:True}, trigger=${10:False}, tooltip='$11'),$0"
     ],
     "description": "Create a full Wave Spinbox."
   },
@@ -1570,7 +1598,7 @@
   "Wave Full Stats": {
     "prefix": "w_full_stats",
     "body": [
-      "ui.stats(justify='${1:start'}', inset=${2:False}, width='$3', visible=${4:true}, items=[\n\t\t$5\t\t\n]),$0"
+      "ui.stats(justify='${1:start}', inset=${2:False}, width='$3', visible=${4:True}, items=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Stats."
   },
@@ -1591,7 +1619,7 @@
   "Wave Full Stepper": {
     "prefix": "w_full_stepper",
     "body": [
-      "ui.stepper(name='$1', width='${2:100%'}', visible=${3:True}, tooltip='$4', items=[\n\t\t$5\t\t\n]),$0"
+      "ui.stepper(name='$1', width='${2:100%}', visible=${3:True}, tooltip='$4', items=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Stepper."
   },
@@ -1605,21 +1633,21 @@
   "Wave Full TablePagination": {
     "prefix": "w_full_table_pagination",
     "body": [
-      "ui.table_pagination(total_rows=${1:None}, rows_per_page=${2:None}),$0"
+      "ui.table_pagination(total_rows=$1, rows_per_page=$2),$0"
     ],
     "description": "Create a full Wave TablePagination."
   },
   "Wave Full TableCellType": {
     "prefix": "w_full_table_cell_type",
     "body": [
-      "ui.table_cell_type(progress=$1, icon=$2, tag=$3, menu=$4, markdown=$5),$0"
+      "ui.table_cell_type(progress=${1:None}, icon=${2:None}, tag=${3:None}, menu=${4:None}, markdown=${5:None}),$0"
     ],
     "description": "Create a full Wave TableCellType."
   },
   "Wave Full TableColumn": {
     "prefix": "w_full_table_column",
     "body": [
-      "ui.table_column(name='$1', label='$2', min_width='$3', max_width='$4', sortable=${5:False}, searchable=${6:False}, filterable=${7:False}, link=${8:False}, data_type='${9:string`}', cell_type=$10, cell_overflow='$11', filters=[\n\t\t$12\t\t\n]),$0"
+      "ui.table_column(name='$1', label='$2', min_width='$3', max_width='$4', sortable=${5:False}, searchable=${6:False}, filterable=${7:False}, link=${8:False}, data_type='${9:string}', cell_type=${10:None}, cell_overflow='$11', align='$12', filters=[\n\t\t$13\t\t\n]),$0"
     ],
     "description": "Create a full Wave TableColumn."
   },
@@ -1640,7 +1668,7 @@
   "Wave Full Table": {
     "prefix": "w_full_table",
     "body": [
-      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%'}', checkbox_visibility='${8:on-hover'}', visible=${9:True}, tooltip='$10', pagination=$11, columns=[\n\t\t$12\t\t\n], rows=[\n\t\t$13\t\t\n], values=[\n\t\t$14\t\t\n], groups=[\n\t\t$15\t\t\n], events=[\n\t\t$16\t\t\n]),$0"
+      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%}', checkbox_visibility='${8:on-hover}', visible=${9:True}, tooltip='$10', pagination=${11:None}, columns=[\n\t\t$12\t\t\n], rows=[\n\t\t$13\t\t\n], values=[\n\t\t$14\t\t\n], groups=[\n\t\t$15\t\t\n], events=[\n\t\t$16\t\t\n]),$0"
     ],
     "description": "Create a full Wave Table."
   },
@@ -1689,21 +1717,21 @@
   "Wave Full TallGaugeStatCard": {
     "prefix": "w_full_tall_gauge_stat_card",
     "body": [
-      "ui.tall_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=${5:None}, plot_color='$6', data=$7, commands=[\n\t\t$8\t\t\n])$0"
+      "ui.tall_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=$5, plot_color='$6', data=${7:None}, commands=[\n\t\t$8\t\t\n])$0"
     ],
     "description": "Create a full Wave TallGaugeStatCard."
   },
   "Wave Full TallInfoCard": {
     "prefix": "w_full_tall_info_card",
     "body": [
-      "ui.tall_info_card(box='$1', name='$2', title='$3', caption='$4', label='$5', icon='$6', image='$7', image_height='${8:150px'}', category='$9', commands=[\n\t\t$10\t\t\n])$0"
+      "ui.tall_info_card(box='$1', name='$2', title='$3', caption='$4', label='$5', icon='$6', image='$7', image_height='${8:150px}', category='$9', commands=[\n\t\t$10\t\t\n])$0"
     ],
     "description": "Create a full Wave TallInfoCard."
   },
   "Wave Full TallSeriesStatCard": {
     "prefix": "w_full_tall_series_stat_card",
     "body": [
-      "ui.tall_series_stat_card(box='$1', title='$2', value='$3', aux_value='$4', plot_data=$5, plot_value='$6', plot_zero_value=${7:None}, plot_category='${8:x'}', plot_type='${9:area`}', plot_curve='${10:linear`}', plot_color='$11', data=$12, commands=[\n\t\t$13\t\t\n])$0"
+      "ui.tall_series_stat_card(box='$1', title='$2', value='$3', aux_value='$4', plot_data=$5, plot_value='$6', plot_zero_value=${7:None}, plot_category='${8:x}', plot_type='${9:area}', plot_curve='${10:linear}', plot_color='$11', data=${12:None}, commands=[\n\t\t$13\t\t\n])$0"
     ],
     "description": "Create a full Wave TallSeriesStatCard."
   },
@@ -1717,14 +1745,14 @@
   "Wave Full Template": {
     "prefix": "w_full_template",
     "body": [
-      "ui.template(content='$1', data=$2, name='$3', width='$4', visible=${5:True}),$0"
+      "ui.template(content='$1', data=${2:None}, name='$3', width='$4', visible=${5:True}),$0"
     ],
     "description": "Create a full Wave Template."
   },
   "Wave Full TemplateCard": {
     "prefix": "w_full_template_card",
     "body": [
-      "ui.template_card(box='$1', title='$2', content='$3', data=$4, commands=[\n\t\t$5\t\t\n])$0"
+      "ui.template_card(box='$1', title='$2', content='$3', data=${4:None}, commands=[\n\t\t$5\t\t\n])$0"
     ],
     "description": "Create a full Wave TemplateCard."
   },
@@ -1794,14 +1822,14 @@
   "Wave Full Textbox": {
     "prefix": "w_full_textbox",
     "body": [
-      "ui.textbox(name='$1', label='$2', placeholder='$3', value='$4', mask='$5', icon='$6', prefix='$7', suffix='$8', error='$9', required=${10:False}, disabled=${11:False}, readonly=${12:False}, multiline=${13:False}, password=${14:False}, trigger=${15:False}, height='$16', width='${17:100%'}', visible=${18:True}, tooltip='$19', spellcheck=${20:True}),$0"
+      "ui.textbox(name='$1', label='$2', placeholder='$3', value='$4', mask='$5', icon='$6', prefix='$7', suffix='$8', error='$9', required=${10:False}, disabled=${11:False}, readonly=${12:False}, multiline=${13:False}, password=${14:False}, trigger=${15:False}, height='$16', width='${17:100%}', visible=${18:True}, tooltip='$19', spellcheck=${20:True}),$0"
     ],
     "description": "Create a full Wave Textbox."
   },
   "Wave Full TimePicker": {
     "prefix": "w_full_time_picker",
     "body": [
-      "ui.time_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, width='${6:100%'}', visible=${7:True}, trigger=${8:False}, required=${9:False}, hour_format='${10:12`}', min='$11', max='$12', minutes_step=${13:1`}),$0"
+      "ui.time_picker(name='$1', label='$2', placeholder='$3', value='$4', disabled=${5:False}, width='${6:100%}', visible=${7:True}, trigger=${8:False}, required=${9:False}, hour_format='${10:12}', min='$11', max='$12', minutes_step=${13:1}),$0"
     ],
     "description": "Create a full Wave TimePicker."
   },
@@ -1836,14 +1864,14 @@
   "Wave Full VegaVisualization": {
     "prefix": "w_full_vega_visualization",
     "body": [
-      "ui.vega_visualization(specification='$1', data=$2, width='${3:100%'}', height='${4:300px'}', name='$5', visible=${6:True}, grammar='${7:vega-lite'}'),$0"
+      "ui.vega_visualization(specification='$1', data=${2:None}, width='${3:100%}', height='${4:300px}', name='$5', visible=${6:True}, grammar='${7:vega-lite}'),$0"
     ],
     "description": "Create a full Wave VegaVisualization."
   },
   "Wave Full VegaCard": {
     "prefix": "w_full_vega_card",
     "body": [
-      "ui.vega_card(box='$1', title='$2', specification='$3', data=$4, grammar='${5:vega-lite'}', commands=[\n\t\t$6\t\t\n])$0"
+      "ui.vega_card(box='$1', title='$2', specification='$3', data=${4:None}, grammar='${5:vega-lite}', commands=[\n\t\t$6\t\t\n])$0"
     ],
     "description": "Create a full Wave VegaCard."
   },
@@ -1857,28 +1885,28 @@
   "Wave Full WideBarStatCard": {
     "prefix": "w_full_wide_bar_stat_card",
     "body": [
-      "ui.wide_bar_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=${5:None}, plot_color='$6', data=$7, commands=[\n\t\t$8\t\t\n])$0"
+      "ui.wide_bar_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=$5, plot_color='$6', data=${7:None}, commands=[\n\t\t$8\t\t\n])$0"
     ],
     "description": "Create a full Wave WideBarStatCard."
   },
   "Wave Full WideGaugeStatCard": {
     "prefix": "w_full_wide_gauge_stat_card",
     "body": [
-      "ui.wide_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=${5:None}, plot_color='$6', data=$7, commands=[\n\t\t$8\t\t\n])$0"
+      "ui.wide_gauge_stat_card(box='$1', title='$2', value='$3', aux_value='$4', progress=$5, plot_color='$6', data=${7:None}, commands=[\n\t\t$8\t\t\n])$0"
     ],
     "description": "Create a full Wave WideGaugeStatCard."
   },
   "Wave Full WideInfoCard": {
     "prefix": "w_full_wide_info_card",
     "body": [
-      "ui.wide_info_card(box='$1', name='$2', title='$3', caption='$4', label='$5', subtitle='$6', align='${7:left'}', icon='$8', image='$9', category='$10', commands=[\n\t\t$11\t\t\n])$0"
+      "ui.wide_info_card(box='$1', name='$2', title='$3', caption='$4', label='$5', subtitle='$6', align='${7:left}', icon='$8', image='$9', category='$10', commands=[\n\t\t$11\t\t\n])$0"
     ],
     "description": "Create a full Wave WideInfoCard."
   },
   "Wave Full Pie": {
     "prefix": "w_full_pie",
     "body": [
-      "ui.pie(label='$1', value='$2', fraction=${3:None}, color='$4', aux_value='$5'),$0"
+      "ui.pie(label='$1', value='$2', fraction=$3, color='$4', aux_value='$5'),$0"
     ],
     "description": "Create a full Wave Pie."
   },
@@ -1899,7 +1927,7 @@
   "Wave Full WideSeriesStatCard": {
     "prefix": "w_full_wide_series_stat_card",
     "body": [
-      "ui.wide_series_stat_card(box='$1', title='$2', value='$3', aux_value='$4', plot_data=$5, plot_value='$6', plot_zero_value=${7:None}, plot_category='${8:x'}', plot_type='${9:area`}', plot_curve='${10:linear`}', plot_color='$11', data=$12, commands=[\n\t\t$13\t\t\n])$0"
+      "ui.wide_series_stat_card(box='$1', title='$2', value='$3', aux_value='$4', plot_data=$5, plot_value='$6', plot_zero_value=${7:None}, plot_category='${8:x}', plot_type='${9:area}', plot_curve='${10:linear}', plot_color='$11', data=${12:None}, commands=[\n\t\t$13\t\t\n])$0"
     ],
     "description": "Create a full Wave WideSeriesStatCard."
   }

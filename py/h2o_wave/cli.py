@@ -23,6 +23,7 @@ from pathlib import Path
 import platform
 import uvicorn
 import click
+import inquirer
 import os
 from urllib import request
 from urllib.parse import urlparse
@@ -31,6 +32,13 @@ from .metadata import __platform__, __arch__
 
 _localhost = '127.0.0.1'
 
+def read_file(file: str) -> str:
+    with open(file, 'r') as f:
+        return f.read()
+
+def write_file(file: str, content: str) -> None:
+    with open(file, 'w') as f:
+        f.write(content)
 
 def _scan_free_port(port: int = 8000):
     while True:
@@ -39,6 +47,23 @@ def _scan_free_port(port: int = 8000):
                 return port
         port += 1
 
+
+def is_within_directory(directory, target):
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+    prefix = os.path.commonprefix([abs_directory, abs_target])
+    
+    return prefix == abs_directory
+
+
+def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+    for member in tar.getmembers():
+        member_path = os.path.join(path, member.name)
+        if not is_within_directory(path, member_path):
+            raise Exception("Attempted Path Traversal in Tar File")
+
+    tar.extractall(path, members, numeric_owner=numeric_owner) 
+    
 
 @click.group()
 def main():
@@ -95,7 +120,10 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         waved_process = None
         # OS agnostic wheels do not have waved - needed for HAC.
         is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
-        autostart = (not no_autostart) or os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
+        if no_autostart:
+            autostart = False
+        else:
+            autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
         if autostart and is_waved_present and server_not_running:
             waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
@@ -110,11 +138,12 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         if not server_not_running:
             try:
                 uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
-            except:
+            except Exception as e:
                 if waved_process:
                     waved_process.kill()
+                raise e
         else:
-            print('Wave server not found. Please start the Wave server (waved or waved.exe) prior to running any app.')
+            print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
 
 
 @main.command()
@@ -146,7 +175,7 @@ def fetch():
 
     print(f'Extracting...')
     with tarfile.open(tar_file) as tar:
-        tar.extractall()
+        safe_extract(tar)
 
     tar_dir = Path(tar_name)
     if not tar_dir.is_dir():
@@ -172,3 +201,57 @@ def fetch():
 
     for label, location in everything:
         print(f"{label} {resolved_path.joinpath(location)}")
+
+@main.command()
+def init():
+    """Initial scaffolding for your Wave project.
+
+    \b
+    $ wave init
+    """
+    try:
+        theme = inquirer.themes.load_theme_from_dict({"List": {"selection_color": "yellow"}})
+        project = inquirer.prompt([inquirer.List('project', message="Choose a starter template",
+              choices=[
+                  'Hello World app (for beginners)',
+                  'App with header',
+                  'App with header + navigation',
+                  'App with sidebar + navigation',
+                  'App with header & sidebar + navigation'
+              ]),
+        ], theme=theme)['project']
+    # Ctrl-C causes TypeError within inquirer, resulting in ugly stacktrace. Catch the error and return early on CTRL-C.
+    except (KeyboardInterrupt, TypeError):
+        return
+    
+    app_content = ''
+    base_path = os.path.join(sys.exec_prefix, 'project_templates')
+    if 'Hello World' in project:
+        app_content = read_file(os.path.join(base_path, 'hello_world.py'))
+    elif 'header & sidebar' in project:
+        app_content = read_file(os.path.join(base_path, 'header_sidebar_nav.py'))
+    elif 'header +' in project:
+        app_content = read_file(os.path.join(base_path, 'header_nav.py'))
+    elif 'header' in project:
+        app_content = read_file(os.path.join(base_path, 'header.py'))
+    elif 'sidebar +' in project:
+        app_content = read_file(os.path.join(base_path, 'sidebar_nav.py'))
+
+    write_file('app.py', app_content)
+    write_file('requirements.txt', f'h2o-wave=={__version__}')
+    write_file('README.md', read_file(os.path.join(base_path, 'README.md')))
+
+    print('Run \x1b[7;30;43mwave run app\x1b[0m to start your Wave app at \x1b[7;30;43mhttp://localhost:10101\x1b[0m.')
+
+@main.command()
+def learn():
+    """Run interactive learning app - Wave university.
+
+    \b
+    $ wave learn
+    """
+    try:
+        from h2o_wave_university import cli
+        cli.main()
+    except ImportError:
+        print('You need to run \x1b[7;30;43mpip install h2o_wave_university\x1b[0m first.')

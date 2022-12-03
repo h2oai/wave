@@ -16,7 +16,7 @@ df = pd.DataFrame(dict(
 
 # Plot two numeric columns by each other and color based on a third, categorical column
 page['scatter'] = ui.plot_card(
-    box='1 1 4 5',
+    box='1 1 -1 4',
     title='Scatter Plot from Dataframe',
     data=data(
         fields=df.columns.tolist(),
@@ -34,7 +34,7 @@ page['scatter'] = ui.plot_card(
 # Aggregate the data in pandas and plot a bar chart of the average value of one column by some other column
 df_agg = df.groupby(['data_type']).mean().reset_index()
 page['bar'] = ui.plot_card(
-    box='1 6 4 5',
+    box='1 5 -1 4',
     title='Bar Plot from Aggregated Dataframe',
     data=data(
         fields=df_agg.columns.tolist(),

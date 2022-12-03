@@ -813,7 +813,7 @@ ui_checklist <- function(
 #' @param width The width of the dropdown, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-#' @param popup Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices.
+#' @param popup Whether to present the choices using a pop-up dialog. By default pops up a dialog only for more than 100 choices. Defaults to 'auto'.
 #'   One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
 #' @return A Dropdown instance.
 #' @export
@@ -1007,10 +1007,10 @@ ui_slider <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param min The minimum value of the spinbox. Defaults to "0".
-#' @param max The maximum value of the spinbox. Defaults to "100".
-#' @param step The difference between two adjacent values of the spinbox. Defaults to "1".
-#' @param value The current value of the spinbox. Defaults to "0".
+#' @param min The minimum value of the spinbox. Defaults to 0.
+#' @param max The maximum value of the spinbox. Defaults to 100.
+#' @param step The difference between two adjacent values of the spinbox. Defaults to 1.
+#' @param value The current value of the spinbox. Defaults to 0.
 #' @param disabled True if this field is disabled.
 #' @param width The width of the spinbox, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
@@ -1319,7 +1319,7 @@ ui_mini_buttons <- function(
 #' @param file_extensions List of allowed file extensions, e.g. `pdf`, `docx`, etc.
 #' @param max_file_size Maximum allowed size (Mb) per file. No limit by default.
 #' @param max_size Maximum allowed size (Mb) for all files combined. No limit by default.
-#' @param height The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px.
+#' @param height The height of the file upload, e.g. '400px', '50%', etc. Defaults to '300px'.
 #' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
 #' @param compact True if the component should be displayed compactly (without drag-and-drop capabilities). Defaults to False.
 #' @param visible True if the component should be visible. Defaults to True.
@@ -1510,6 +1510,8 @@ ui_markdown_table_cell_type <- function(
 #' @param cell_overflow Defines what to do with a cell's contents in case it does not fit inside the cell.
 #'   One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
 #' @param filters List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
+#' @param align Defines how to align values in a column.
+#'   One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(
@@ -1524,7 +1526,8 @@ ui_table_column <- function(
   data_type = NULL,
   cell_type = NULL,
   cell_overflow = NULL,
-  filters = NULL) {
+  filters = NULL,
+  align = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("min_width", "character", min_width)
@@ -1537,6 +1540,7 @@ ui_table_column <- function(
   .guard_scalar("cell_type", "WaveTableCellType", cell_type)
   # TODO Validate cell_overflow
   .guard_vector("filters", "character", filters)
+  # TODO Validate align
   .o <- list(
     name=name,
     label=label,
@@ -1549,7 +1553,8 @@ ui_table_column <- function(
     data_type=data_type,
     cell_type=cell_type,
     cell_overflow=cell_overflow,
-    filters=filters)
+    filters=filters,
+    align=align)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableColumn"))
   return(.o)
 }
@@ -1619,7 +1624,8 @@ ui_table_pagination <- function(
 #' This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
 #' display a non-interactive table of information, use a markdown table.
 #' 
-#' If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+#' If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+#' (defaults to first column) is clicked or the row is doubleclicked, the form is
 #' submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
 #' the table, and `row_name` is the `name` of the row that was clicked on.
 #' 
@@ -1764,7 +1770,7 @@ ui_link <- function(
 #'
 #' @param items The links contained in this group.
 #' @param label The name of the link group.
-#' @param inline Render links horizontally. Defaults to 'false'.
+#' @param inline Render links horizontally. Defaults to False.
 #' @param width The width of the links, e.g. '100px'.
 #' @return A Links instance.
 #' @export
@@ -2542,7 +2548,7 @@ ui_stat <- function(
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
 #' @param width The width of the stats, e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
@@ -2596,7 +2602,8 @@ ui_inline <- function(
 #' @param image Image data, base64-encoded.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param width The width of the image, e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to True.
+#' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
@@ -2605,20 +2612,23 @@ ui_image <- function(
   image = NULL,
   path = NULL,
   width = NULL,
-  visible = NULL) {
+  visible = NULL,
+  path_popup = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   .guard_scalar("path", "character", path)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("path_popup", "character", path_popup)
   .o <- list(image=list(
     title=title,
     type=type,
     image=image,
     path=path,
     width=width,
-    visible=visible))
+    visible=visible,
+    path_popup=path_popup))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2791,6 +2801,38 @@ ui_image_annotator_rect <- function(
   return(.o)
 }
 
+#' Create a polygon annotation point with x and y coordinates..
+#'
+#' @param x `x` coordinate of the point.
+#' @param y `y` coordinate of the point.
+#' @return A ImageAnnotatorPoint instance.
+#' @export
+ui_image_annotator_point <- function(
+  x,
+  y) {
+  .guard_scalar("x", "numeric", x)
+  .guard_scalar("y", "numeric", y)
+  .o <- list(
+    x=x,
+    y=y)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorPoint"))
+  return(.o)
+}
+
+#' Create a polygon annotation shape.
+#'
+#' @param vertices List of polygon points.
+#' @return A ImageAnnotatorPolygon instance.
+#' @export
+ui_image_annotator_polygon <- function(
+  vertices) {
+  .guard_vector("vertices", "WaveImageAnnotatorPoint", vertices)
+  .o <- list(polygon=list(
+    vertices=vertices))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
+  return(.o)
+}
+
 #' Create an annotator item with initial selected tags or no tag for plaintext.
 #'
 #' @param shape The annotation shape.
@@ -2820,6 +2862,7 @@ ui_image_annotator_item <- function(
 #' @param items Annotations to display on the image, if any.
 #' @param trigger True if the form should be submitted as soon as an annotation is drawn.
 #' @param image_height The card’s image height. The actual image size is used by default.
+#' @param allowed_shapes List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
 #' @return A ImageAnnotator instance.
 #' @export
 ui_image_annotator <- function(
@@ -2829,7 +2872,8 @@ ui_image_annotator <- function(
   tags,
   items = NULL,
   trigger = NULL,
-  image_height = NULL) {
+  image_height = NULL,
+  allowed_shapes = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("image", "character", image)
   .guard_scalar("title", "character", title)
@@ -2837,6 +2881,7 @@ ui_image_annotator <- function(
   .guard_vector("items", "WaveImageAnnotatorItem", items)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("image_height", "character", image_height)
+  .guard_vector("allowed_shapes", "character", allowed_shapes)
   .o <- list(image_annotator=list(
     name=name,
     image=image,
@@ -2844,7 +2889,8 @@ ui_image_annotator <- function(
     tags=tags,
     items=items,
     trigger=trigger,
-    image_height=image_height))
+    image_height=image_height,
+    allowed_shapes=allowed_shapes))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2906,25 +2952,29 @@ ui_copyable_text <- function(
 #' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
 #'
 #' @param items Commands to render.
-#' @param icon The card's icon. Mutually exclusive with the image.
-#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon.
+#' @param icon The card's icon. Mutually exclusive with the image and label.
+#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
 #' @param name An identifying name for this component.
+#' @param label The text displayed next to the chevron. Mutually exclusive with the icon and image.
 #' @return A Menu instance.
 #' @export
 ui_menu <- function(
   items,
   icon = NULL,
   image = NULL,
-  name = NULL) {
+  name = NULL,
+  label = NULL) {
   .guard_vector("items", "WaveCommand", items)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
   .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
   .o <- list(menu=list(
     items=items,
     icon=icon,
     image=image,
-    name=name))
+    name=name,
+    label=label))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3517,6 +3567,7 @@ ui_header_card <- function(
 #' @param image Image data, base64-encoded.
 #' @param data Data for this card.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
 #' @export
@@ -3527,6 +3578,7 @@ ui_image_card <- function(
   image = NULL,
   data = NULL,
   path = NULL,
+  path_popup = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3534,6 +3586,7 @@ ui_image_card <- function(
   .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
   .guard_scalar("path", "character", path)
+  .guard_scalar("path_popup", "character", path_popup)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3542,6 +3595,7 @@ ui_image_card <- function(
     image=image,
     data=data,
     path=path,
+    path_popup=path_popup,
     commands=commands,
     view='image')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))

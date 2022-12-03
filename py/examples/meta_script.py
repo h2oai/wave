@@ -50,7 +50,7 @@ anime.timeline({loop: true})
 
 # Add a placeholder for the animation.
 page['example'] = ui.markup_card(
-    box='1 1 10 8',
+    box='1 1 6 8',
     title='Animation',
     content=html,
 )

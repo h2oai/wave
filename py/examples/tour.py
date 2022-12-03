@@ -208,6 +208,7 @@ def get_wave_completions(line, character, file_content):
         js_code = f.read()
     template = Template(js_code).substitute(
         tour_assets=q.app.tour_assets,
+        base_url=_base_url,
         snippets1=q.app.snippets1,
         snippets2=q.app.snippets2,
         py_content=py_content
@@ -243,7 +244,11 @@ def get_wave_completions(line, character, file_content):
         ]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
-    q.page['code'] = ui.markup_card(box='code', title='', content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>',)
+    q.page['code'] = ui.markup_card(
+        box=ui.box('code', height='calc(100vh - 140px)'),
+        title='',
+        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
+    )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
     await q.page.save()

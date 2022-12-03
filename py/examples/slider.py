@@ -15,7 +15,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 5', items=[
             ui.slider(name='slider', label='Standard slider', min=0, max=100, step=10, value=30),
             ui.slider(name='slider_zero', label='Origin from zero', min=-10, max=10, step=1, value=-3),
             ui.slider(name='slider_disabled', label='Disabled slider', min=0, max=100, step=10, value=30,

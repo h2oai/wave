@@ -24,11 +24,11 @@ async def serve(q: Q):
         y = [random() for y in range(500)]
 
         s1 = ColumnDataSource(data=dict(x=x, y=y))
-        p1 = figure(plot_width=400, plot_height=400, tools="lasso_select", title="Select Here")
+        p1 = figure(plot_width=250, plot_height=300, tools="lasso_select", title="Select Here")
         p1.circle('x', 'y', source=s1, alpha=0.6)
 
         s2 = ColumnDataSource(data=dict(x=[], y=[]))
-        p2 = figure(plot_width=400, plot_height=400, x_range=(0, 1), y_range=(0, 1), tools="", title="Watch Here")
+        p2 = figure(plot_width=250, plot_height=300, x_range=(0, 1), y_range=(0, 1), tools="", title="Watch Here")
         p2.circle('x', 'y', source=s2, alpha=0.6)
 
         s1.selected.js_on_change(
@@ -93,12 +93,12 @@ async def serve(q: Q):
             ),
         )
         q.page['plot'] = ui.markup_card(
-            box='1 1 6 6',
+            box='1 1 4 4',
             title='',
             content=f'<div id="{plot_id}"></div>',
         )
         q.page['details'] = ui.markdown_card(
-            box='1 7 6 2',
+            box='1 5 4 1',
             title='Selected Marks',
             content='Nothing selected.',
         )

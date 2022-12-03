@@ -84,7 +84,7 @@ export interface Links {
   items: Component[]
   /** The name of the link group. */
   label?: S
-  /** Render links horizontally. Defaults to 'false'. */
+  /** Render links horizontally. Defaults to False. */
   inline?: B
   /** The width of the links, e.g. '100px'. */
   width?: S

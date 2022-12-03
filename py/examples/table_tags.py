@@ -33,7 +33,7 @@ columns = [
 
 @app('/demo')
 async def serve(q: Q):
-    q.page['example'] = ui.form_card(box='1 1 6 7', items=[
+    q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
         ui.table(
             name='issues',
             columns=columns,

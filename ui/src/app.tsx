@@ -21,6 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { NotificationBar } from './notification_bar'
 import { PageLayout } from './page'
+import { Lightbox, lightboxB } from './parts/lightbox'
 import SidePanel from './side_panel'
 import { clas, cssVar, pc } from './theme'
 import { bond, busyB, config, contentB, listen, wave } from './ui'
@@ -62,7 +63,21 @@ const
       flexDirection: 'column',
       alignItems: 'center',
     },
-  })
+  }),
+  buttonStyles = { styles: { iconDisabled: { color: 'unset' } } },
+  // The global overrides for component styles.
+  customStyles = {
+    components: {
+      DefaultButton: buttonStyles,
+      PrimaryButton: buttonStyles,
+      IconButton: buttonStyles,
+      ActionButton: buttonStyles,
+      CommandButton: buttonStyles,
+      CommandBarButton: buttonStyles,
+      CompoundButton: buttonStyles,
+      SpinButton: buttonStyles
+    }
+  }
 
 const
   BusyOverlay = bond(() => {
@@ -113,16 +128,18 @@ const
             case WaveEventType.Page:
               {
                 const page = e.page
+                const lightbox = lightboxB()
                 return (
-                  <Fluent.Fabric applyTheme>
+                  <Fluent.ThemeProvider theme={customStyles}>
                     <div className={css.app}>
                       <PageLayout key={page.key} page={page} />
                       <BusyOverlay />
                       <Dialog />
                       <SidePanel />
                       <NotificationBar />
+                      {lightbox && <Lightbox {...lightbox} />}
                     </div>
-                  </Fluent.Fabric>
+                  </Fluent.ThemeProvider>
                 )
               }
             case WaveEventType.Error:
@@ -157,7 +174,7 @@ const
         window.removeEventListener('md-link-click', onMdLinkClick)
       }
 
-    return { init, render, dispose, contentB }
+    return { init, render, dispose, contentB, lightboxB }
   })
 
 export default App

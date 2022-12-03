@@ -16,7 +16,7 @@ def get_form_items(value: Optional[str]):
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=get_form_items(None))
+        q.page['example'] = ui.form_card(box='1 1 4 5', items=get_form_items(None))
         q.client.initialized = True
     else:
         q.page['example'].items = get_form_items(q.args.date_trigger)

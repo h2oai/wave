@@ -18,6 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { formItemWidth } from './theme'
 import { bond } from './ui'
+import { lightboxB } from './parts/lightbox'
 
 const
   css = stylesheet({
@@ -29,7 +30,7 @@ const
     img: {
       flexGrow: 1,
       objectFit: 'contain',
-      maxHeight: 'calc(100% - 20px)'
+      maxHeight: 'calc(100% - 20px)',
     }
   })
 
@@ -45,6 +46,8 @@ interface State {
   data?: Rec
   /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
   path?: S
+  /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
+  path_popup?: S
 }
 
 
@@ -60,27 +63,35 @@ export interface Image {
   path?: S
   /** The width of the image, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
+  path_popup?: S
 }
 
 export const
-  XImage = ({ model: { title, type, image, path, width } }: { model: Image }) => {
+  XImage = ({ model: m }: { model: Image }) => {
     const
-      src = path
+      { title, type, image, width, path_popup } = m,
+      getImageSrc = ({ type, image, path }: Image) => path
         ? path
         : (image && type)
           ? `data:image/${type};base64,${image}`
-          : ''
-    return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} />
+          : '',
+      onImgClick = () => {
+        if (path_popup) lightboxB({ images: [{ title, type, image, path: path_popup }] })
+      }
+
+    return <img className={css.img} alt={title} src={getImageSrc(m)} width={formItemWidth(width)} onClick={onImgClick} style={{ cursor: path_popup ? 'pointer' : 'default' }} />
+
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {
-      const { title, type, image, data, path } = state
+      const { title, type, image, data, path, path_popup } = state
       return (
         <div data-test={name} className={css.card}>
           <Format data={data} format={title} className='wave-s12 wave-w6' />
-          <XImage model={{ title, type, image, path }} />
+          <XImage model={{ title, type, image, path, path_popup }} />
         </div >
       )
     }

@@ -7,7 +7,7 @@ from h2o_wave import main, app, Q, ui
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.text_xl(content='First text'),
             ui.text_l(content='Second text'),
             ui.text_m(content='Third text'),

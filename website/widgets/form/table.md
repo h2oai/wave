@@ -33,11 +33,36 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
+## With column alignment
+
+With this option, you can align the values of a particular column to `left`, `right` or `center`. This is optional and the default alignment is set to `left`.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 5 3', items=[
+    ui.table(
+        name='table',
+        columns=[
+            ui.table_column(name='first_name', label='First Name', align='center'),
+            ui.table_column(name='last_name', label='Last Name', align='right'),
+            ui.table_column(name='username', label='Username', align='left'),
+            ui.table_column(name='company', label='Company'),
+        ], 
+        rows=[
+            ui.table_row(name='row1', cells=['John', 'Doe', 'johndoe', 'Stephens LLC']),
+            ui.table_row(name='row2', cells=['Alice', 'Smith', 'alicesmith', 'Walker and Sons']),
+            ui.table_row(name='row3', cells=['Bob', 'Adams', 'bobadams', 'Frank Ltd']),
+        ]
+    )
+])
+```
+
 ## With selection
 
-If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked,
-the form is submitted automatically and `q.args.table_name` is set to `[row_name]`, where
+If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+(defaults to first column) is clicked or the row is doubleclicked, the form is
+submitted automatically and `q.args.table_name` is set to `[row_name]`, where
 `table_name` is the `name` of the table, and `row_name` is the `name` of the row that was clicked.
+Note that doubleclicking the row if single selection is active results in submission as well.
 
 If `multiple` is set to `True`, each row in the table is selectable. A row can be selected by
 clicking on it.

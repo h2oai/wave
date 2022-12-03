@@ -4,6 +4,8 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ## Installation
 
+Make sure to have your dev environment ready by following [setup instructions](https://wave.h2o.ai/docs/contributing#development-setup).
+
 ```console
 git clone https://github.com/h2oai/wave.git
 cd wave/py
@@ -13,7 +15,7 @@ cd ../tools/showcase
 make setup
 make generate
 cd ../../website
-make ci
+npm ci
 ```
 
 ## Local Development

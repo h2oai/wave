@@ -40,7 +40,7 @@ export const
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   // TODO this is ugly - why does the argument need a '$' prefix?
-  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
+  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substring(1)}, var(--gray))` : color,
   cssVarValue = (prop: S) => {
     if (!prop.startsWith('$')) return prop
     prop = prop.substring(1)
@@ -72,19 +72,13 @@ export const
     white: '#fff',
     yellow: '#ffeb3b',
   },
-  // Src: https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
   getContrast = (color: S) => {
-    if (color.startsWith('$')) color = cssVarValue(color)
-    if (color.startsWith('#')) color = color.slice(1)
-    if (color.length === 3) color = color.split('').map(hex => `${hex}${hex}`).join('')
+    const colorFromString = Fluent.getColorFromString(color.startsWith('$') ? cssVarValue(color) : color)
+    if (!colorFromString) return 'black'
 
-    const
-      r = parseInt(color.substr(0, 2), 16),
-      g = parseInt(color.substr(2, 2), 16),
-      b = parseInt(color.substr(4, 2), 16),
-      yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
-
-    return yiq >= 128 ? 'black' : 'white'
+    const { r, g, b } = colorFromString
+    // Src: https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
+    return ((r * 299) + (g * 587) + (b * 114)) / 1000 >= 128 ? 'black' : 'white'
   }
 
 const
@@ -148,7 +142,7 @@ const
         themePrimary: '#cddc39',
         themeSecondary: '#b3c132',
         themeTertiary: '#7a8422',
-        white: '#0d0e0f'
+        white: '#0d0e0f',
       },
     },
     'h2o-dark': {
@@ -579,10 +573,6 @@ const
       },
     },
   },
-  rgb = (hex: S): [U, U, U] => {
-    const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
-  },
   themeRules = Fluent.themeRulesStandardCreator(),
   changeTheme = (themeName: S) => {
     const
@@ -591,7 +581,7 @@ const
       cardColor = Fluent.getColorFromString(palette.card)!,
       updateTones = (key: S, color: S) => {
         document.body.style.setProperty(`--${key}`, color)
-        const [r, g, b] = rgb(color)
+        const { r, g, b } = Fluent.getColorFromString(cssVarValue(color))!
         let alpha = 0.05
         for (let i = 0; i < 10; i++) {
           document.body.style.setProperty(`--${key}${i}`, `rgba(${r},${g},${b},${alpha})`)
@@ -608,14 +598,22 @@ const
     if (fluentPalette.themePrimary) {
       updateTones('primary', fluentPalette.themePrimary)
 
-      // Handle saturation/desaturation.
+      // Adjust saturation of spectrum colors based on the current theme.
       const fluentPrimary = Fluent.getColorFromString(fluentPalette.themePrimary)
       if (fluentPrimary) {
         const primaryHsl = Fluent.hsv2hsl(fluentPrimary.h, fluentPrimary.s, fluentPrimary.v)
         Object.keys(spectrum).forEach(spectrumColor => {
-          const { h, s, v } = Fluent.getColorFromString(cssVarValue(`$${spectrumColor}`))!
+          const { h, s, v } = Fluent.getColorFromString(spectrum[spectrumColor])!
           const spectrumHsl = Fluent.hsv2hsl(h, s, v)
-          document.body.style.setProperty(`--${spectrumColor}`, `hsl(${spectrumHsl.h}, ${primaryHsl.s}%, ${spectrumHsl.l}%)`)
+          document.body.style.setProperty(
+            `--${spectrumColor}`,
+            themeName === 'default'
+              // Prevents saturation adjustment for 'default' theme and sets back the initial spectrum colors. 
+              // Initial values of spectrum colors are already adjusted for 'default' theme.
+              // Recomputing them would make 'default' theme spectrum colors inconsistent when switching from 'default' theme into another one and then switching back.
+              ? spectrum[spectrumColor]
+              : `hsl(${spectrumHsl.h}, ${primaryHsl.s}%, ${spectrumHsl.l}%)`
+          )
         })
       }
     }

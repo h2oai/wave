@@ -8,7 +8,7 @@ from h2o_wave import main, app, Q, ui
 async def serve(q: Q):
     if not q.client.initialized:
         q.page['meta'] = ui.meta_card(box='')
-        q.page['example'] = ui.form_card(box='1 1 12 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 2 1', items=[
             ui.button(name='show_dialog', label='Order donuts', primary=True)
         ])
         q.client.initialized = True

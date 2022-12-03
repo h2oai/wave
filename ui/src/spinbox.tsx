@@ -27,13 +27,13 @@ export interface Spinbox {
   name: Id
   /** Text to be displayed alongside the component. */
   label?: S
-  /** The minimum value of the spinbox. Defaults to "0". */
+  /** The minimum value of the spinbox. Defaults to 0. */
   min?: F
-  /** The maximum value of the spinbox. Defaults to "100". */
+  /** The maximum value of the spinbox. Defaults to 100. */
   max?: F
-  /** The difference between two adjacent values of the spinbox. Defaults to "1". */
+  /** The difference between two adjacent values of the spinbox. Defaults to 1. */
   step?: F
-  /** The current value of the spinbox. Defaults to "0". */
+  /** The current value of the spinbox. Defaults to 0. */
   value?: F
   /** True if this field is disabled. */
   disabled?: B

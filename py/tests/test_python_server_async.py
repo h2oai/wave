@@ -60,7 +60,7 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
 
 
     async def test_multipart_server(self):
-        file_handle = open('../assets/brand/wave.svg', 'r')
+        file_handle = open('../assets/brand/wave.svg', 'rb')
         p = await self.site.uplink('test_stream', 'image/svg+xml', file_handle)
         await self.site.unlink('test_stream')
         file_handle.close()

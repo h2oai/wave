@@ -72,6 +72,8 @@ interface TableColumn {
   cell_overflow?: 'tooltip' | 'wrap'
   /** List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns. */
   filters?: S[]
+  /** Defines how to align values in a column. */
+  align?: 'left' | 'center' | 'right'
 }
 
 /** Create a table row. */
@@ -102,7 +104,8 @@ interface TableGroup {
  * This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
  * display a non-interactive table of information, use a markdown table.
  *
- * If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+ * If `multiple` is set to False (default), each row in the table is clickable. When a cell in the column with `link=True`
+ * (defaults to first column) is clicked or the row is doubleclicked, the form is
  * submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
  * the table, and `row_name` is the `name` of the row that was clicked on.
  *
@@ -157,6 +160,7 @@ type WaveColumn = Fluent.IColumn & {
   isSortable?: B
   cellOverflow?: 'tooltip' | 'wrap'
   filters?: S[]
+  align?: 'left' | 'center' | 'right'
 }
 
 type DataTable = {
@@ -352,6 +356,7 @@ const
           columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
           cellType: c.cell_type,
           dataType: c.data_type,
+          align: c.align,
           isSortable: c.sortable,
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
@@ -459,10 +464,10 @@ const
         wave.args[m.name] = [item.key as S]
         wave.push()
       },
-      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
+      getCellComponent = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
-        const TooltipWrapper = ({ children }: { children: S }) => {
+        const TooltipWrapper = ({ children }: { children: JSX.Element }) => {
           if (col.cellOverflow === 'tooltip') return (
             <Fluent.TooltipHost
               id={item.key as S}
@@ -470,7 +475,6 @@ const
               styles={{ root: { '::after': { content: '', display: 'block' } } }}
               content={children}
               overflowMode={Fluent.TooltipOverflowMode.Parent}
-              title={children}
             >{children}</Fluent.TooltipHost>
           )
           return <>{children}</>
@@ -486,15 +490,20 @@ const
           const epoch = Number(v)
           v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
         }
+
         if (col.key === primaryColumnKey) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
             wave.push()
           }
-          return <Fluent.Link onClick={onClick}><TooltipWrapper>{v}</TooltipWrapper></Fluent.Link>
+          return <TooltipWrapper><Fluent.Link onClick={onClick} styles={{ root: { textAlign: col?.align || 'left' } }}>{v}</Fluent.Link></TooltipWrapper>
         }
 
         return <TooltipWrapper>{v}</TooltipWrapper>
+      },
+      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
+        const align = col?.align || 'left'
+        return <div style={{ display: 'flex', justifyContent: align, textAlign: align }}>{getCellComponent(item, _idx, col)}</div>
       },
       // HACK: fixed jumping scrollbar issue when scrolling into the end of list with all groups expanded - https://github.com/microsoft/fluentui/pull/5204 
       getGroupHeight = (group: Fluent.IGroup) => {
@@ -583,7 +592,9 @@ const
           dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
           data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
-          blob = new Blob([data], { type: "octet/stream" }),
+          // Add BOM prefix to data. This is required to export unicode characters in the table correctly
+          // Reference: https://stackoverflow.com/a/18251283/1970068
+          blob = new Blob(['\uFEFF', data], { type: "text/csv;charset=utf-8," }),
           url = window.URL.createObjectURL(blob)
 
         a.href = url
@@ -849,7 +860,7 @@ export const
         if (items.length > 10) return 500
 
         const
-          topToolbarHeight = searchableKeys.length || groupable ? 80 : 0,
+          topToolbarHeight = searchableKeys.length || groupable ? (groupable ? 74 : 48) : 0,
           headerHeight = 50,
           rowHeight = m.columns.some(c => c.cell_type?.progress) ? 76 : 48,
           footerHeight = m.downloadable || m.resettable || searchableKeys.length || m.columns.some(c => c.filterable) ? 46 : 0,
@@ -933,15 +944,36 @@ export const
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
-        <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
-          {groupable && !m.pagination && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
+        <Fluent.Stack horizontal>
+          {
+            groupable && !m.pagination && (
+              <Fluent.Dropdown
+                data-test='groupby'
+                label='Group by'
+                selectedKey={groupByKey}
+                onChange={onGroupByChange}
+                options={groupByOptions}
+                styles={{ root: { width: 300, marginRight: 'auto' } }}
+              />
+            )
+          }
+          {
+            !!searchableKeys.length && (
+              <Fluent.SearchBox
+                data-test='search'
+                placeholder='Search'
+                onChange={onSearchChange}
+                value={searchStr}
+                styles={{ root: { width: '50%', maxWidth: 500, marginLeft: 'auto', alignSelf: 'flex-end' } }}
+              />
+            )
+          }
         </Fluent.Stack >
         <Fluent.ScrollablePane
           componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
-            root: { top: groupable || searchableKeys.length ? 80 : 0, bottom: shouldShowFooter ? 46 : 0 },
+            root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },
             stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>

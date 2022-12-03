@@ -36,7 +36,7 @@ export interface FileUpload {
   max_file_size?: F
   /** Maximum allowed size (Mb) for all files combined. No limit by default. */
   max_size?: F
-  /** The height of the file upload, e.g. '400px', '50%', etc. Defaults to 300px. */
+  /** The height of the file upload, e.g. '400px', '50%', etc. Defaults to '300px'. */
   height?: S
   /** The width of the file upload, e.g. '100px'. Defaults to '100%'. */
   width?: S
@@ -65,7 +65,8 @@ const
     },
     uploadLabel: {
       ...centerMixin(),
-      padding: padding(7, 10),
+      textAlign: 'center',
+      padding: padding(5, 10),
       fontSize: 14,
       fontWeight: 600,
       borderRadius: 2,
@@ -73,7 +74,7 @@ const
       color: cssVar('$page'),
       minWidth: 80,
       boxSizing: 'border-box',
-      height: 32,
+      height: 28,
       display: 'inline-block',
       $nest: {
         '&:hover': {

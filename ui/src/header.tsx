@@ -127,11 +127,11 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
     showNav = () => navB(true),
     onLogoClick = () => window.location.hash = '',
     render = () => {
-      const { title, subtitle, icon, icon_color, nav, items, image, secondary_items, color = 'primary' } = state
+      const { title, subtitle, icon, color = 'primary', icon_color = color === 'primary' ? '$card' : '$text', nav, items, image, secondary_items } = state
       return (
         <div data-test={name} className={clas(css.card, getEffectClass(toCardEffect(color)))} style={{ background: color === 'transparent' ? 'transparent' : cssVar(`$${color}`) }}>
           <div className={css.inline}>
-            {nav && <Fluent.Icon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: color === 'primary' ? cssVar('$card') : undefined }} />}
+            {nav && <Fluent.Icon onClick={showNav} className={clas(css.icon, css.burger)} iconName='GlobalNavButton' style={{ color: cssVar(icon_color) }} />}
             {image && <Fluent.Image src={image} className={css.logo} imageFit={Fluent.ImageFit.centerCover} onClick={onLogoClick} />}
             {icon && !image && <Fluent.Icon className={css.icon} iconName={icon} style={{ color: cssVar(icon_color) }} />}
             <div className={css.nudgeUp}>

@@ -993,16 +993,12 @@ const
       mapVariables = (m: Member) => {
         let defaultValue = m.t === MemberT.Singular && m.typeName === 'B'
           ? 'False'
-          : m.t === MemberT.Singular && (m.typeName === 'F' || m.typeName === 'U')
+          : m.t === MemberT.Singular && m.typeName !== 'S' && m.typeName !== 'Id' && m.isOptional
             ? 'None'
             : ''
 
         defaultValue = m.comments.reduce((defaultVal, cur) => {
           const match = /(.+Defaults to )(.+)(\.)/.exec(cur)
-          if (match?.length) {
-            console.log();
-
-          }
           return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/g, '')}` : defaultVal
         }, defaultValue)
 
@@ -1077,13 +1073,17 @@ const
       getDefaultVal = (m: Member) => {
         let defaultValue = m.t === MemberT.Singular && m.typeName === 'B'
           ? 'False'
-          : m.t === MemberT.Singular && (m.typeName === 'F' || m.typeName === 'U')
+          : m.t === MemberT.Singular && m.typeName !== 'S' && m.typeName !== 'Id' && m.isOptional
             ? 'None'
             : ''
 
         defaultValue = m.comments.reduce((defaultVal, cur) => {
           const match = /(.+Defaults to )(.+)(\.)/.exec(cur)
-          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/, '')}` : defaultVal
+
+          if (cur.includes('%')) {
+            console.log();
+          }
+          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/g, '')}` : defaultVal
         }, defaultValue)
         return defaultValue
       },
@@ -1095,6 +1095,9 @@ const
         else if (m.t === MemberT.Repeated) {
           leftSurrounding = `[\n\t\t`
           rightSurrounding = `\t\t\n]`
+        }
+        if (m.name === 'pagination') {
+          console.log();
         }
         const defaultVal = getDefaultVal(m)
         return `${m.name}=${leftSurrounding}$${defaultVal ? `{${idx + 1}:${defaultVal}}` : idx + 1}${rightSurrounding}, `

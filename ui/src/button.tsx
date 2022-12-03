@@ -119,7 +119,7 @@ const
       onClick = (ev: any) => {
         ev.stopPropagation()
         if (path) window.open(path, "_blank")
-        else if (name.startsWith('#')) window.location.hash = name.substr(1)
+        else if (name.startsWith('#')) window.location.hash = name.substring(1)
         else {
           wave.args[name] = value === undefined || value
           wave.push()
@@ -186,7 +186,7 @@ export const
       { name, label, icon } = model,
       onClick = () => {
         if (name.startsWith('#')) {
-          window.location.hash = name.substr(1)
+          window.location.hash = name.substring(1)
           return
         }
         wave.args[name] = true

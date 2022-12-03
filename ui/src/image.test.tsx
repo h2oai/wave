@@ -26,10 +26,8 @@ const
   }
 
 describe('Image.tsx', () => {
-
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...imageProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
-
 })

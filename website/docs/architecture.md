@@ -98,6 +98,4 @@ The Wave server retains content. This is an important concept to understand, and
 
 Different parts of the same page can be updated by different scripts running on different devices. Also, all content is live (or reactive) all the time: browsers always display up-to-date content without the need to reload.
 
----
-
-[^1] Linux, Windows, Darwin, BSD, Solaris, Android on amd64, arm, 386, ppc, mips; [almost everywhere](https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63).
+[^1]: Linux, Windows, Darwin, BSD, Solaris, Android on amd64, arm, 386, ppc, mips; [almost everywhere](https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63).

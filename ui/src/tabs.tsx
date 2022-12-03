@@ -68,7 +68,7 @@ export const
         if (!name) return
         setSelected(name)
         if (name.startsWith('#')) {
-          window.location.hash = name.substr(1)
+          window.location.hash = name.substring(1)
           return
         }
         if (m.name) {
@@ -83,7 +83,7 @@ export const
       },
       tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />),
       [selected, setSelected] = React.useState(m.value)
-    
+
     React.useEffect(() => setSelected(m.value), [m.value])
 
     return (

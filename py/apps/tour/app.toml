@@ -8,7 +8,3 @@ LongDescription = "about.md"
 
 [Runtime]
 Module = "examples.tour"
-
-[[Env]]
-Name = "H2O_WAVE_NO_STORE"
-Value = "true"

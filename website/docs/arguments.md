@@ -51,6 +51,18 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.text_annotator()` | List of lists containing parts of text with accompanying tag (if not annotated, tag is `''`). |
 | `ui.toggle()` | `True` if checked, `False` if unchecked. |
 
+## App-wide global loading spinner
+
+Wave assumes that every user interaction (every time `q.args` or `q.events` is submitted to the app) needs to result in a UI update. The reason is proper UX - you should always inform your user what's going on, give them feedback. With this assumption, we try to make the UI unclickable (to prevent double submission) until server responds with the newest changes.
+
+You should always handle:
+
+* Button clicks.
+* Actions that result in sending events (e.g. plots, dismissing dialogs).
+* Every input into components having `trigger=True` set.
+
+There might be very specific cases when you would want to get around this behavior. The solution is to update any card, even non-existent so simply specifying `q.page['non-existent'].items = []` will result in loading spinner going away. However, you should almost always default to proper UX, thus update the UI properly and inform your user about what's currently happening within the app.
+
 ## Handling interactivity
 
 A common pattern for inspecting query arguments and determining the appropriate response is a simple `if/elif/else` conditional.

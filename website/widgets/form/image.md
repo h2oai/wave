@@ -90,3 +90,19 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.text(content='![Fill Murray](https://www.fillmurray.com/640/360)')
 ])
 ```
+
+## Image popup
+
+Displaying images comes with an inherent performance cost due to their file size. Wouldn't it be nice if you could display a smaller image on the initial render to give your users a "preview" and if it catches their attention, allow them to click the image and show it in its full size throughout the whole screen? The good news is you can thanks to a `path_popup` attribute that accepts a path or a URL or a [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) of the high-resolution version of your image. Note, that this does not replace a `path` property.
+
+![image popup gif](/img/widgets/image_popup.gif)
+
+```py ignore
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
+    ui.image(
+        title='Image popup', 
+        path='https://via.placeholder.com/600x400', 
+        path_popup='https://via.placeholder.com/1200x800'
+    ),
+])
+```

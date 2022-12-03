@@ -19,7 +19,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 8', items=[
             ui.time_picker(name='timepicker', label="Standard time picker"),
             ui.time_picker(name='timepicker_required', label="Time picker - required", required=True),
             ui.time_picker(name='timepicker_disabled', label="Disabled time picker", value='11:15', disabled=True),

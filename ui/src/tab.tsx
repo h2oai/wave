@@ -49,7 +49,7 @@ export const
         const name = item?.props.itemKey
         if (!name) return
         if (name.startsWith('#')) {
-          window.location.hash = name.substr(1)
+          window.location.hash = name.substring(1)
           return
         }
         if (state.name) {

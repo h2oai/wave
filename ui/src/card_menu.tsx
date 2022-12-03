@@ -66,7 +66,7 @@ const
           return
         }
         if (c.name.startsWith('#')) {
-          window.location.hash = c.name.substr(1)
+          window.location.hash = c.name.substring(1)
           return
         }
         wave.args[c.name] = c.value ?? c.data ?? true

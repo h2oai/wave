@@ -13,7 +13,7 @@ async def serve(q: Q):
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.checklist(name='checklist', label='Choices',
                          choices=[ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]),
             ui.button(name='show_inputs', label='Submit', primary=True),

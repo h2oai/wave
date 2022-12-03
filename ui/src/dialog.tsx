@@ -18,7 +18,7 @@ import React from 'react'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'
 
-export const dialogB: Box<Dialog | null> = box(null)
+export const dialogB: Box<Dialog | null> = box()
 
 /**
  * A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app

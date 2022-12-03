@@ -52,7 +52,8 @@ pip install h2o-wave
 If you are using Conda as your package manager,
 
 ```shell
-conda install -c h2oai h2o_wave
+conda config --append channels conda-forge
+conda install -c h2oai h2o-wave
 ```
 
 ## Step 3: Write your program

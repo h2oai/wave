@@ -28,7 +28,7 @@ export interface Stats {
   inset?: B
   /** The width of the stats, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 
@@ -98,7 +98,7 @@ export const
         <div key={`${i}:${label}`} className={css.stat} style={statStyle}>
           {icon && (
             <div className={css.lhs} style={icon_color ? { color: cssVar(icon_color) } : undefined}>
-              <Icon className={css.icon} iconName={icon} styles={{ root: { '> span': { height: '100%', width: '100%'}}}}/>
+              <Icon className={css.icon} iconName={icon} styles={{ root: { '> span': { height: '100%', width: '100%' } } }} />
             </div>
           )}
           <div>

@@ -57,7 +57,7 @@ export const
         text: label,
         onClick: () => {
           if (name.startsWith('#')) {
-            window.location.hash = name.substr(1)
+            window.location.hash = name.substring(1)
             return
           }
           wave.args[name] = true

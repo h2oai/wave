@@ -59,7 +59,7 @@ export interface Dropdown {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
-  /** Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices. */
+  /** Whether to present the choices using a pop-up dialog. By default pops up a dialog only for more than 100 choices. Defaults to 'auto'. */
   popup?: 'auto' | 'always' | 'never'
 }
 
@@ -175,7 +175,7 @@ const
       [items, setItems] = React.useState<DropdownItem[]>(choices.map(({ name, label }, idx) =>
         ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true }))),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) })))
-    
+
     return [items, setItems, onSearchChange] as const
   },
   onRenderCell = (onChecked: any) => (item?: DropdownItem) => item
@@ -189,58 +189,58 @@ const
       onChange={onChecked(item.name)}
       className={item.checked ? css.dialogCheckedRow : ''}
       checked={item.checked} />
-      : null,
+    : null,
 
-  DialogDropdownSingle = ({ model }: { model: Dropdown}) => {
+  DialogDropdownSingle = ({ model }: { model: Dropdown }) => {
     const
       { name, choices = [], disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, model.value),
       toggleDialog = () => setIsDialogHidden(v => !v),
       onChecked = (itemName: S) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
-        setItems(items => items.map(item => (({...item, checked: item.name === itemName ? checked : false, show: true}))))
+        setItems(items => items.map(item => (({ ...item, checked: item.name === itemName ? checked : false, show: true }))))
         wave.args[name] = itemName
         model.value = itemName
         if (trigger) wave.push()
         toggleDialog()
       }
-    
-      React.useEffect(() => {
-        if (model.value !== undefined) {
-          wave.args[name] = model.value ?? null
-          setItems(items => items.map(i => ({ ...i, checked: model.value === i.name })))
-        }
-      }, [name, model.value, setItems])
-    
-      return (
-        <>
-          <Fluent.TextField
-            data-test={name}
-            iconProps={{ iconName: 'ChevronDown' }}
-            readOnly
-            onClick={toggleDialog}
-            label={label}
-            disabled={disabled}
-            required={required}
-            styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
-            placeholder={placeholder}
-            value={items.find(i => i.checked)?.text ?? ''} />
-          <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={toggleDialog} minWidth={600} maxWidth='90vw'>
-            <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
-              <Fluent.Label>Search</Fluent.Label>
-              <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
-              <Fluent.ScrollablePane styles={{ root: { marginTop: 100, boxShadow: `0px 3px 7px ${cssVar('$text3')}` } }}>
-                <Fluent.List
-                  items={items.filter(i => i.show)}
-                  getPageSpecification={getPageSpecification}
-                  renderedWindowsAhead={3}
-                  onRenderCell={onRenderCell(onChecked)}
-                />
-              </Fluent.ScrollablePane>
-            </Fluent.DialogContent>
-          </Fluent.Dialog>
-        </>
-      )
+
+    React.useEffect(() => {
+      if (model.value !== undefined) {
+        wave.args[name] = model.value ?? null
+        setItems(items => items.map(i => ({ ...i, checked: model.value === i.name })))
+      }
+    }, [name, model.value, setItems])
+
+    return (
+      <>
+        <Fluent.TextField
+          data-test={name}
+          iconProps={{ iconName: 'ChevronDown' }}
+          readOnly
+          onClick={toggleDialog}
+          label={label}
+          disabled={disabled}
+          required={required}
+          styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
+          placeholder={placeholder}
+          value={items.find(i => i.checked)?.text ?? ''} />
+        <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={toggleDialog} minWidth={600} maxWidth='90vw'>
+          <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
+            <Fluent.Label>Search</Fluent.Label>
+            <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
+            <Fluent.ScrollablePane styles={{ root: { marginTop: 100, boxShadow: `0px 3px 7px ${cssVar('$text3')}` } }}>
+              <Fluent.List
+                items={items.filter(i => i.show)}
+                getPageSpecification={getPageSpecification}
+                renderedWindowsAhead={3}
+                onRenderCell={onRenderCell(onChecked)}
+              />
+            </Fluent.ScrollablePane>
+          </Fluent.DialogContent>
+        </Fluent.Dialog>
+      </>
+    )
   },
   DialogDropdownMulti = ({ name, choices = [], values = [], disabled, required, trigger, placeholder, label }: Dropdown) => {
     const
@@ -295,10 +295,10 @@ const
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.Label>Search</Fluent.Label>
             <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
-              <div className={clas('wave-s14', css.dialogControls)}>
-                <span className='wave-w5'>Selected: {items.filter(i => i.checked).length}</span>
-                <div><Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link></div>
-              </div>
+            <div className={clas('wave-s14', css.dialogControls)}>
+              <span className='wave-w5'>Selected: {items.filter(i => i.checked).length}</span>
+              <div><Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link></div>
+            </div>
             <Fluent.ScrollablePane styles={{ root: { marginTop: 100, boxShadow: `0px 3px 7px ${cssVar('$text3')}` } }}>
               <Fluent.List
                 items={items.filter(i => i.show)}
@@ -308,21 +308,21 @@ const
               />
             </Fluent.ScrollablePane>
           </Fluent.DialogContent>
-            <Fluent.DialogFooter>
-              <Fluent.DefaultButton text='Cancel' onClick={cancelDialog} />
-              <Fluent.PrimaryButton text='Select' onClick={() => submit(items)} />
-            </Fluent.DialogFooter>
+          <Fluent.DialogFooter>
+            <Fluent.DefaultButton text='Cancel' onClick={cancelDialog} />
+            <Fluent.PrimaryButton text='Select' onClick={() => submit(items)} />
+          </Fluent.DialogFooter>
         </Fluent.Dialog>
       </>
     )
   },
-  DialogDropdown = (props: Dropdown) => props.values ? <DialogDropdownMulti {...props} /> : <DialogDropdownSingle model={{...props}} />
+  DialogDropdown = (props: Dropdown) => props.values ? <DialogDropdownMulti {...props} /> : <DialogDropdownSingle model={{ ...props }} />
 
-export const XDropdown = ({ model: m }: { model: Dropdown }) => 
+export const XDropdown = ({ model: m }: { model: Dropdown }) =>
   m.popup === 'always'
     ? <DialogDropdown {...m} />
     : m.popup === 'never'
-      ? <BaseDropdown model={{...m}} />
+      ? <BaseDropdown model={{ ...m }} />
       : (m.choices?.length || 0) > 100
         ? <DialogDropdown {...m} />
-        : <BaseDropdown model={{...m}} />
+        : <BaseDropdown model={{ ...m }} />

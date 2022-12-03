@@ -6,7 +6,7 @@ from h2o_wave import site, ui, data
 page = site['/demo']
 
 page.add('example', ui.wide_plot_card(
-    box='1 1 6 4',
+    box='1 1 5 5',
     title='Wide Plot Card',
     caption='''
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia aliquam maxime quos facere

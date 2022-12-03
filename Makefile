@@ -64,6 +64,7 @@ build-apps: ## Prepare apps for HAC upload.
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
 	rm -rf py/tmp
 	cd studio && $(MAKE) build
+	cd university && $(MAKE) build
 
 generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
@@ -164,7 +165,9 @@ publish-release-s3:
 	aws s3 sync r/build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 
 publish-apps-s3-mc:
-	for app in build/apps/*; do aws s3 sync $$app $(MC_S3_BUCKET)/`basename $$app`; done
+	aws s3 sync build/apps/wave-dashboard $(MC_S3_BUCKET)/wave-dashboard
+	aws s3 sync build/apps/wave-tour $(MC_S3_BUCKET)/wave-tour
+	aws s3 sync build/apps/wave-theme-generator $(MC_S3_BUCKET)/wave-theme-generator
 
 publish-apps-s3-hac:
 	for app in build/apps/*; do aws s3 sync $$app $(HAC_S3_BUCKET)/`basename $$app`; done
@@ -198,6 +201,9 @@ publish-pycharm: ## Publish PyCharm plugin
 	
 publish-vsc-extension: ## Publish VS Code extension
 	cd tools/vscode-extension && $(MAKE) publish
+
+publish-university:
+	cd university && $(MAKE) publish
 	
 .PHONY: tag
 tag: ## Bump version and tag

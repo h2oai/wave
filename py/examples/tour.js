@@ -7,7 +7,7 @@ require.config({
 window.MonacoEnvironment = {
   getWorkerUrl: function (workerId, label) {
     const { origin } = window.location
-    return `data:text/javascript;charset=utf-8,$${encodeURIComponent(`importScripts('$${origin}$tour_assets' + '/monaco/base/worker/workerMain.js');`)}`
+    return `$${origin}$${'$base_url'}assets/monaco/base/worker/workerMain.js`
   }
 }
 const completionToCompletionItem = item => ({
