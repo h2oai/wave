@@ -3103,6 +3103,30 @@ def image_card(
     )
 
 
+def image_grid(
+        box: str,
+        cols: int,
+        images: List[Component]
+) -> ImageGrid:
+    """Create a card that displays a grid of base64-encoded images.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        cols: How many columns the grid should have.
+        images: The list of Images that will be displayed in the grid, taken in
+                as a list of components which are expected to be images.
+    Returns:
+        A `h2o_wave.types.ImageGrid` instance.
+    """
+    for im in images:
+        assert(im.image is not None)
+    return ImageGrid(
+        box,
+        cols,
+        [im.image for im in images]
+    )
+
+
 def large_bar_stat_card(
         box: str,
         title: str,

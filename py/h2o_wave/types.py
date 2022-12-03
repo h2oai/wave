@@ -8806,6 +8806,58 @@ class ImageCard:
         )
 
 
+class ImageGrid:
+    """Create a card that displays a grid of base64-encoded images.
+    """
+    def __init__(
+            self,
+            box: str,
+            cols: int,
+            images: List[Image]
+    ):
+        _guard_scalar('ImageGrid.box', box, (str,), False, False, False)
+        _guard_scalar('ImageGrid.cols', cols, (int,), False, False, False)
+        _guard_vector('ImageGrid.images', images, (Image,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.cols = cols
+        """How many columns should the images have in a single row of the
+           grid before wraparound is required."""
+        self.images = images
+        """The list of Images that will be displayed in the grid"""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ImageGrid.box', self.box, (str,), False, False, False)
+        _guard_scalar('ImageGrid.cols', self.cols, (int,), False, False, False)
+        _guard_vector('ImageGrid.images', self.images, (Image,), False, True, False)
+        kwargs = {"view": "image", "box": self.box, "cols": self.cols}
+        for i, img in enumerate(self.images):
+            key = f"img_{i}"
+            val = img.dump()
+            kwargs.update({key: val})
+        return _dump(**kwargs)
+
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('ImageGrid.box', __d_box, (str,), False, False, False)
+        __d_cols: Any = __d.get('cols')
+        _guard_scalar('ImageGrid.cols', __d_cols, (int,), False, False, False)
+        __d_images: Any = __d.get('images')
+        _guard_scalar('ImageGrid.images', __d_images, (Images,), False, False, False)
+        box: str = __d_box
+        cols: int = __d_cols
+        images: List[Image] = __d_images
+        return ImageGrid(
+            box,
+            cols,
+            images
+        )
+
+
 class LargeBarStatCard:
     """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
     """
