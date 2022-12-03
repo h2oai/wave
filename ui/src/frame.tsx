@@ -26,6 +26,11 @@ const
       flexDirection: 'column',
       padding: grid.gap,
     },
+    card_no_padding: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 0,
+    },
     body: {
       flexGrow: 1,
       position: 'relative',
@@ -83,6 +88,10 @@ interface State {
    * :value ""
    */
   content?: S
+  /**
+   * True if the component should have paddings. Defaults to True.
+   */
+  has_padding?: B
 }
 
 const
@@ -104,7 +113,7 @@ export const XFrame = ({ model: { name, path, content, width = '100%', height = 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
-      <div data-test={name} className={css.card}>
+      <div data-test={name} className={state.has_padding ? css.card : css.card_no_padding}>
         <div className='wave-s12 wave-w6'>{state.title}</div>
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />

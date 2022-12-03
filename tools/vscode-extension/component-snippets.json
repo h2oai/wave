@@ -1129,7 +1129,7 @@
   "Wave Full FrameCard": {
     "prefix": "w_full_frame_card",
     "body": [
-      "ui.frame_card(box='$1', title='$2', path='$3', content='$4', commands=[\n\t\t$5\t\t\n])$0"
+      "ui.frame_card(box='$1', title='$2', path='$3', content='$4', has_padding=${5:True}, commands=[\n\t\t$6\t\t\n])$0"
     ],
     "description": "Create a full Wave FrameCard."
   },
