@@ -332,9 +332,9 @@ const
           }))
         }
       },
-      [columns, setColumns] = React.useState(m.columns.map((c): WaveColumn => {
+      [columns, setColumns] = React.useState(m.columns.map((c): WaveColumn => {      
         const
-          minWidth = c.min_width
+          initialMinWidth = c.min_width
             ? c.min_width.endsWith('px')
               ? +c.min_width.substring(0, c.min_width.length - 2)
               : +c.min_width
@@ -343,7 +343,10 @@ const
             ? c.max_width.endsWith('px')
               ? +c.max_width.substring(0, c.max_width.length - 2)
               : +c.max_width
-            : undefined
+            : undefined,
+
+          minWidth = (initialMinWidth === 0) ? 0.001 : initialMinWidth
+        
         return {
           key: c.name,
           name: c.label,
