@@ -52,7 +52,7 @@ import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
 import { TextAnnotator, XTextAnnotator } from './text_annotator'
 import { ImageAnnotator, XImageAnnotator } from './image_annotator'
-import { clas, cssVar, justifications, padding } from './theme'
+import { clas, cssVar, justifications, alignments, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'
@@ -173,7 +173,7 @@ interface Inline {
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
-  /** Add align prop to Inline component for all flexbox properties */
+  /** Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. */
   align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
 }
 
@@ -238,15 +238,20 @@ export const
           </div>
         )
       })
-      /** Add align prop to return statement */
-    return <div className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '', align ? css.align : '' )} style={{ justifyContent: justifications[alignment || ''] }}>{components}</div>
+    return <div
+      className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '')}
+      style={{
+        justifyContent: justifications[alignment || ''],
+        alignItems: alignments[align || ''],
+      }}
+    >{components}</div>
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify || 'center'}
+      alignment={m.justify || 'start'}
       inset={m.inset}
-      align={m.align}
+      align={m.align || 'center'}
     />
   )
 
