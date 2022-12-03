@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"log"
 	"math"
 	"net/http"
 	"net/textproto"
@@ -252,47 +253,37 @@ func main() {
 		conf.Proxy = true // IDE won't function without proxy
 	}
 
-	envOIDCEmpty := checkEmptyOIDCValues(auth)
-	warnEmptyOIDCValues(envOIDCEmpty)
-
+	envOIDCEmpty, foundEmptyWithOneSet := checkEmptyOIDCValues(auth)
+	if foundEmptyWithOneSet {
+		log.Println("#", "warning: the following OIDC required params were not set: ", strings.Join(envOIDCEmpty[:], ","))
+	}
 	wave.Run(conf)
 }
 
 // checkEmptyOIDCValues checks if any of the required OIDC values were not set and returns which were not.
-func checkEmptyOIDCValues(auth wave.AuthConf) []string {
+func checkEmptyOIDCValues(auth wave.AuthConf) ([]string, bool) {
 	envOIDC := []string{auth.ClientID, auth.ClientSecret, auth.ProviderURL, auth.RedirectURL}
+	foundEmpty := 0
 	var envOIDCEmpty []string
 	for i, val := range envOIDC {
 		if val == "" {
 			switch i {
 			case 0:
 				envOIDCEmpty = append(envOIDCEmpty, "oidc-client-id")
+				foundEmpty++
 			case 1:
 				envOIDCEmpty = append(envOIDCEmpty, "oidc-client-secret")
+				foundEmpty++
 			case 2:
 				envOIDCEmpty = append(envOIDCEmpty, "oidc-provider-url")
+				foundEmpty++
 			case 3:
 				envOIDCEmpty = append(envOIDCEmpty, "oidc-redirect-url")
+				foundEmpty++
 			}
 		}
 	}
-	return envOIDCEmpty
-}
-
-// warnEmptyOIDCValues warns the user about the required OIDC environment variables that have not been set.
-func warnEmptyOIDCValues(envOIDCEmpty []string) {
-	fmt.Printf("\n*********************\nWARNING!\nThe following OIDC environment values where not set:\n")
-	length := len(envOIDCEmpty)
-	fmt.Printf("\t[ ")
-	for i, val := range envOIDCEmpty {
-		switch i {
-		case length - 1:
-			fmt.Printf("%s", val)
-		default:
-			fmt.Printf("%s, ", val)
-		}
-	}
-	fmt.Printf("]\n*********************\n\n")
+	return envOIDCEmpty, (foundEmpty > 0 && foundEmpty < len(envOIDC))
 }
 
 func getEnv(key, value string) string {
