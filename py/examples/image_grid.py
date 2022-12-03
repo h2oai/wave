@@ -11,8 +11,8 @@ img3 = ui.image(title='img3', path='https://upload.wikimedia.org/wikipedia/commo
 page = site['/demo']
 
 page['im1'] = ui.form_card(box='1 1 2 2', items=[img1,])
-page['im2'] = ui.form_card(box='3 1 2 2', items=[img2])
-page['im3'] = ui.form_card(box='1 3 4 4', items=[img3])
+# page['im2'] = ui.form_card(box='3 1 2 2', items=[img2])
+# page['im3'] = ui.form_card(box='1 3 4 4', items=[img3])
 
 page['grid'] = ui.image_grid(box='1 3 4 4', cols=2, images=[img1, img2, img3, img1, img2, img3])
 
