@@ -35,21 +35,39 @@ const
 
 /** Create a card that displays a grid of base64-encoded images. */
 interface State {
-  /** An identifying name for this component. */
-  name: Id
-  /** Number of columns in the grid. */
-  cols: U
-  /** List of images to be displayed. */
-  images: Image[]
   /** Width of the grid. */
   width?: S
   /** Height of the grid. */
   height?: S
+  /** Number of columns in the grid. */
+  cols: U
+  /** List of images to be displayed. */
+  images: Image[]
 }
 
+/** Create a card that displays a grid of base64-encoded images. */
+interface ImageGrid {
+  /** Width of the grid. */
+  width?: S
+  /** Height of the grid. */
+  height?: S
+  /** Number of columns in the grid. */
+  cols: U
+  /** List of images to be displayed. */
+  images: Image[]
+  /** An identifying name for the grid. */
+  name: Id
+}
+
+
 export const
-  XImageGrid = ({ model: m }: { model: State }) => {
+  XImageGrid = ({ model: m }: { model: ImageGrid }) => {
+    // Extract the specification from the model
     const { name, width, height, cols, images } = m
+
+    // Calculate the number of rows required to display the grid, as well
+    // as the width and height of each image (default width/height of the entire
+    // grid is 100x100)
     const rows = Math.ceil(images.length / cols)
     let cardWidth = Math.floor(100 / cols)
     let cardHeight = Math.floor(100 / rows)
@@ -59,10 +77,14 @@ export const
     if (typeof height != 'undefined') {
       cardHeight = Math.floor(parseInt(height) / rows)
     }
+
+    // Create the div containing the entire grid
     return <div 
       className={css.imageGridDiv}
       id={`%image_grid_${name}%`}>
       {
+        // Create a span for each image where the position is calculated based
+        // on its index within the list of images
         images.map ((image : Image, i : U) => {
             const currentRow = Math.floor(i / cols)
             const currentCol = i % cols
@@ -75,11 +97,14 @@ export const
                 width: cardWidth,
                 height: cardHeight,
               }}>
+
+              {/* Create the image within the span */}
               <img
                 className={css.imageGridImage}
-                alt={image.title}
                 src={image.path}
+                alt={image.title}
               />
+
             </span>
           }
         )
@@ -88,7 +113,7 @@ export const
   },
 
   View = bond(({ name, state: { width, height, cols, images }, changed }: Model<State>) => {
-    const render = () => <XImageGrid model={{ name, width, height, cols, images }} />
+    const render = () => <XImageGrid model={{width, height, cols, images, name}} />
     return { render, changed }
   })
 

@@ -3103,11 +3103,13 @@ def image_card(
     )
 
 
-def image_grid(
+def image_grid_card(
         box: str,
         cols: int,
-        images: List[Component]
-) -> ImageGrid:
+        images: List[Component],
+        width: Optional[str] = None,
+        height: Optional[str] = None
+) -> ImageGridCard:
     """Create a card that displays a grid of base64-encoded images.
 
     Args:
@@ -3116,14 +3118,14 @@ def image_grid(
         images: The list of Images that will be displayed in the grid, taken in
                 as a list of components which are expected to be images.
     Returns:
-        A `h2o_wave.types.ImageGrid` instance.
+        A `h2o_wave.types.ImageGridCard` instance.
     """
-    for im in images:
-        assert(im.image is not None)
-    return ImageGrid(
+    return ImageGridCard(
         box,
+        width,
+        height,
         cols,
-        [im.image for im in images]
+        images
     )
 
 
