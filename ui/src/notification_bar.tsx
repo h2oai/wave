@@ -102,7 +102,7 @@ export const
             <Fluent.MessageBar
               messageBarType={toMessageBarType(currentModel?.type)}
               messageBarIconProps={{ iconName }}
-              actions={buttons?.length ? <XComponents items={buttons || []} alignment='end' /> : undefined}
+              actions={buttons?.length ? <XComponents items={buttons || []} justify='end' /> : undefined}
               isMultiline={isMultiline}
               onDismiss={onDismiss}
               className={css.messageBar}

@@ -216,11 +216,11 @@ const
     },
   })
 
-type XComponentAlignment = 'start' | 'end' | 'center' | 'between' | 'around'
-type YComponentAlignment = 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+type Justification = 'start' | 'end' | 'center' | 'between' | 'around'
+type Alignment = 'start' | 'end' | 'center' | 'baseline' | 'stretch'
 
 export const
-  XComponents = ({ items, alignment, inset, align }: { items: Component[], alignment?: XComponentAlignment, inset?: B, align?: YComponentAlignment }) => {
+  XComponents = ({ items, justify, inset, align }: { items: Component[], justify?: Justification, inset?: B, align?: Alignment }) => {
     const
       components = items.map((m: any, i) => {
         const
@@ -239,9 +239,9 @@ export const
         )
       })
     return <div
-      className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '')}
+      className={clas(justify ? css.horizontal : css.vertical, inset ? css.inset : '')}
       style={{
-        justifyContent: justifications[alignment || ''],
+        justifyContent: justifications[justify || ''],
         alignItems: alignments[align || ''],
       }}
     >{components}</div>
@@ -249,9 +249,9 @@ export const
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify || 'start'}
-      inset={m.inset}
       align={m.align || 'center'}
+      justify={m.justify || 'start'}
+      inset={m.inset}
     />
   )
 

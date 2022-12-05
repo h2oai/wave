@@ -138,7 +138,7 @@ export const
             messageBarType={toMessageBarType(type)}
             className={css.messageBar}
             isMultiline={false}
-            actions={btns?.length ? <XComponents items={btns || []} alignment='end' /> : undefined}
+            actions={btns?.length ? <XComponents items={btns || []} justify='end' /> : undefined}
             messageBarIconProps={{ iconName }}
           >
             <Markdown source={text} />
