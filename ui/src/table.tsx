@@ -423,14 +423,23 @@ const
         return (
           <Fluent.GroupHeader
             {...props}
-            styles={{
-              root: {
-                position: 'sticky',
-                top: 48,
-                backgroundColor: cssVar('$card'),
-                zIndex: 1
-              }
-            }} />
+            styles={stylesProps => ({
+              root: [
+                {
+                  position: 'sticky',
+                  top: 48,
+                  backgroundColor: cssVar('$card'),
+                  zIndex: 1
+                },
+                stylesProps.selected
+                  ? {
+                    background: important(cssVar('$neutralLighter')),
+                    '.ms-GroupHeader-check': { opacity: 1 }
+                  }
+                  : undefined
+              ]
+            })
+            } />
         )
       }, []),
       onToggleCollapseAll = (isAllCollapsed: B) => expandedRefs.current = isAllCollapsed ? {} : null,
@@ -444,21 +453,26 @@ const
         }
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props
-        ? <Fluent.DetailsRow {...props} styles={{
+        ? <Fluent.DetailsRow {...props} styles={styleProps =>
+        ({
           cell: { alignSelf: 'center', fontSize: 14, lineHeight: 20, color: cssVar('$text9') },
           checkCell: { display: 'flex', alignItems: 'center' },
-          root: {
-            width: '100%',
-            border: border(2, 'transparent'),
-            borderTop: border(2, cssVar('$neutralLight')),
-            background: cssVar('$card'),
-            minHeight: 48,
-            '&:hover': {
-              background: cssVar('$neutralLight'),
-              border: `${border(2, cssVar('$themePrimary'))} !important`,
-            }
-          }
-        }} />
+          root: [
+            {
+              width: '100%',
+              border: border(2, 'transparent'),
+              borderTop: border(2, cssVar('$neutralLight')),
+              background: cssVar('$card'),
+              minHeight: 48,
+              '&:hover': {
+                background: cssVar('$neutralLighter'),
+                border: important(border(2, cssVar('$themePrimary')))
+              }
+            },
+            styleProps.isSelected ? { background: cssVar('$neutralLighter') } : undefined
+          ]
+        })
+        } />
         : null,
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
