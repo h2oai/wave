@@ -171,10 +171,10 @@ interface Inline {
   items: Component[]
   /** Specifies how to lay out the individual components. Defaults to 'start'. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
-  /** Whether to display the components inset from the parent form, with a contrasting background. */
-  inset?: B
   /** Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. */
   align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+  /** Whether to display the components inset from the parent form, with a contrasting background. */
+  inset?: B
 }
 
 /** Create a form. */
@@ -220,7 +220,7 @@ type Justification = 'start' | 'end' | 'center' | 'between' | 'around'
 type Alignment = 'start' | 'end' | 'center' | 'baseline' | 'stretch'
 
 export const
-  XComponents = ({ items, justify, inset, align }: { items: Component[], justify?: Justification, inset?: B, align?: Alignment }) => {
+  XComponents = ({ items, justify, align, inset }: { items: Component[], justify?: Justification, align?: Alignment, inset?: B }) => {
     const
       components = items.map((m: any, i) => {
         const
@@ -249,8 +249,8 @@ export const
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      align={m.align || 'center'}
       justify={m.justify || 'start'}
+      align={m.align || 'center'}
       inset={m.inset}
     />
   )
