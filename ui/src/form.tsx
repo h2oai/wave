@@ -228,7 +228,7 @@ export const
           [componentKey] = Object.keys(m),
           { name, visible = true, width = 'auto' } = m[componentKey],
           visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
-          // TODO: Ugly, maybe introduce 'align' prop to ui.inline?
+          // TODO: Ugly, maybe use ui.inline's 'align' prop instead?
           alignSelf = componentKey === 'links' ? 'flex-start' : undefined
 
         return (
