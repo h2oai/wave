@@ -16,7 +16,7 @@ import { B, Model, S, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { formItemWidth } from './theme'
+import { formItemWidth, clas } from './theme'
 import { bond } from './ui'
 
 const
@@ -24,12 +24,9 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
-      padding: grid.gap,
     },
-    card_no_padding: {
-      display: 'flex',
-      flexDirection: 'column',
-      padding: 0,
+    cardPadding: {
+      padding: grid.gap,
     },
     body: {
       flexGrow: 1,
@@ -113,7 +110,7 @@ export const XFrame = ({ model: { name, path, content, width = '100%', height = 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
-      <div data-test={name} className={state.has_padding ? css.card : css.card_no_padding}>
+      <div data-test={name} className={clas(css.card, (state.has_padding ?? true) ? css.cardPadding : '')}>
         <div className='wave-s12 wave-w6'>{state.title}</div>
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />
