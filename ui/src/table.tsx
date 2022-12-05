@@ -433,7 +433,7 @@ const
                 },
                 stylesProps.selected
                   ? {
-                    background: `${cssVar('$neutralLight')} !important`,
+                    background: important(cssVar('$neutralLighter')),
                     '.ms-GroupHeader-check': { opacity: 1 }
                   }
                   : undefined
@@ -465,11 +465,11 @@ const
               background: cssVar('$card'),
               minHeight: 48,
               '&:hover': {
-                background: cssVar('$neutralLight'),
-                border: `${border(2, cssVar('$themePrimary'))} !important`
+                background: cssVar('$neutralLighter'),
+                border: important(border(2, cssVar('$themePrimary')))
               }
             },
-            styleProps.isSelected ? { background: cssVar('$neutralLight') } : undefined
+            styleProps.isSelected ? { background: cssVar('$neutralLighter') } : undefined
           ]
         })
         } />
