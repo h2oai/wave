@@ -939,7 +939,7 @@ export const
 
     React.useEffect(() => {
       setFilteredItems(items)
-      if (groups) initGroups()
+      reset()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items])
 
