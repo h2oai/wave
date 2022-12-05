@@ -1108,7 +1108,7 @@
   "Wave Full Inline": {
     "prefix": "w_full_inline",
     "body": [
-      "ui.inline(justify='${1:start}', inset=${2:False}, align='${3:center}', items=[\n\t\t$4\t\t\n]),$0"
+      "ui.inline(justify='${1:start}', align='${2:center}', inset=${3:False}, items=[\n\t\t$4\t\t\n]),$0"
     ],
     "description": "Create a full Wave Inline."
   },

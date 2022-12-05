@@ -5943,33 +5943,33 @@ class Inline:
             self,
             items: List['Component'],
             justify: Optional[str] = None,
-            inset: Optional[bool] = None,
             align: Optional[str] = None,
+            inset: Optional[bool] = None,
     ):
         _guard_vector('Inline.items', items, (Component,), False, False, False)
         _guard_enum('Inline.justify', justify, _InlineJustify, True)
-        _guard_scalar('Inline.inset', inset, (bool,), False, True, False)
         _guard_enum('Inline.align', align, _InlineAlign, True)
+        _guard_scalar('Inline.inset', inset, (bool,), False, True, False)
         self.items = items
         """The components laid out inline."""
         self.justify = justify
         """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify."""
-        self.inset = inset
-        """Whether to display the components inset from the parent form, with a contrasting background."""
         self.align = align
         """Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.InlineAlign."""
+        self.inset = inset
+        """Whether to display the components inset from the parent form, with a contrasting background."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('Inline.items', self.items, (Component,), False, False, False)
         _guard_enum('Inline.justify', self.justify, _InlineJustify, True)
-        _guard_scalar('Inline.inset', self.inset, (bool,), False, True, False)
         _guard_enum('Inline.align', self.align, _InlineAlign, True)
+        _guard_scalar('Inline.inset', self.inset, (bool,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
-            inset=self.inset,
             align=self.align,
+            inset=self.inset,
         )
 
     @staticmethod
@@ -5979,19 +5979,19 @@ class Inline:
         _guard_vector('Inline.items', __d_items, (dict,), False, False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Inline.justify', __d_justify, _InlineJustify, True)
-        __d_inset: Any = __d.get('inset')
-        _guard_scalar('Inline.inset', __d_inset, (bool,), False, True, False)
         __d_align: Any = __d.get('align')
         _guard_enum('Inline.align', __d_align, _InlineAlign, True)
+        __d_inset: Any = __d.get('inset')
+        _guard_scalar('Inline.inset', __d_inset, (bool,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
-        inset: Optional[bool] = __d_inset
         align: Optional[str] = __d_align
+        inset: Optional[bool] = __d_inset
         return Inline(
             items,
             justify,
-            inset,
             align,
+            inset,
         )
 
 
