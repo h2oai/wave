@@ -267,6 +267,16 @@ const
     const line = JSON.stringify(row)
     return line.substr(1, line.length - 2)
   }).join('\n'),
+  TooltipWrapper = ({ children, cellOverflow }: { children: JSX.Element, cellOverflow?: S }) => {
+    return cellOverflow === 'tooltip' ? (
+      <Fluent.TooltipHost
+        // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
+        styles={{ root: { '::after': { content: '', display: 'block' } } }}
+        content={children}
+        overflowMode={Fluent.TooltipOverflowMode.Parent}
+      >{children}</Fluent.TooltipHost>
+    ) : <>{children}</>
+  },
   ContextualMenu = ({ onFilterChange, col, listProps, selectedFiltersRef, setFiltersInBulk }: ContextualMenuProps) => {
     const
       isFilterChecked = (data: S, key: S) => !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(key),
@@ -481,19 +491,6 @@ const
       getCellComponent = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
-        const TooltipWrapper = ({ children }: { children: JSX.Element }) => {
-          if (col.cellOverflow === 'tooltip') return (
-            <Fluent.TooltipHost
-              id={item.key as S}
-              // HACK: prevent Safari from showing a default tooltip - https://github.com/microsoft/fluentui/issues/13868
-              styles={{ root: { '::after': { content: '', display: 'block' } } }}
-              content={children}
-              overflowMode={Fluent.TooltipOverflowMode.Parent}
-            >{children}</Fluent.TooltipHost>
-          )
-          return <>{children}</>
-        }
-
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
@@ -516,10 +513,14 @@ const
             wave.args[m.name] = [item.key as S]
             wave.push()
           }
-          return <TooltipWrapper><Fluent.Link onClick={onClick} styles={{ root: { textAlign: col?.align || 'left' } }}>{v}</Fluent.Link></TooltipWrapper>
+          return (
+            <TooltipWrapper cellOverflow={col.cellOverflow}>
+              <Fluent.Link onClick={onClick} styles={{ root: { textAlign: col?.align || 'left' } }}>{v}</Fluent.Link>
+            </TooltipWrapper>
+          )
         }
 
-        return <TooltipWrapper>{v}</TooltipWrapper>
+        return <TooltipWrapper cellOverflow={col.cellOverflow}>{v}</TooltipWrapper>
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _idx?: U, col?: WaveColumn) => {
         const align = col?.align || 'left'
