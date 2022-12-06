@@ -245,6 +245,10 @@ func main() {
 
 	conf.Keychain = kc
 
+	if conf.IDE {
+		conf.Proxy = true // IDE won't function without proxy
+	}
+
 	requiredEnvOIDC := map[string]string{
 		"oidc-client-id":     auth.ClientID,
 		"oidc-client-secret": auth.ClientSecret,
