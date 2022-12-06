@@ -670,6 +670,7 @@ const
 export const
   XTable = ({ model: m }: { model: Table }) => {
     const
+      didMountRef = React.useRef(false),
       groupable = !m.groups && m.groupable,
       getItem = React.useCallback((r: TableRow) => {
         const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
@@ -938,8 +939,11 @@ export const
     }, [])
 
     React.useEffect(() => {
-      setFilteredItems(items)
-      reset()
+      // Skip for initial render.
+      if (didMountRef.current) {
+        setFilteredItems(items)
+        reset()
+      } else didMountRef.current = true
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items])
 
