@@ -245,22 +245,18 @@ func main() {
 
 	conf.Keychain = kc
 
-	if conf.IDE {
-		conf.Proxy = true // IDE won't function without proxy
-	}
-
 	requiredEnvOIDC := map[string]string{
 		"oidc-client-id":     auth.ClientID,
 		"oidc-client-secret": auth.ClientSecret,
 		"oidc-provider-url":  auth.ProviderURL,
 		"oidc-redirect-url":  auth.RedirectURL,
 	}
-	envOIDCEmpty := getEmptyOIDCValues(auth, requiredEnvOIDC)
-	emptyRequiredOIDCParams := len(envOIDCEmpty)
-	if emptyRequiredOIDCParams == 0 {
+	emptyRequiredOIDCParams := getEmptyOIDCValues(requiredEnvOIDC)
+	emptyRequiredOIDCParamsCount := len(emptyRequiredOIDCParams)
+	if emptyRequiredOIDCParamsCount == 0 {
 		conf.Auth = &auth
 	}
-	if emptyRequiredOIDCParams > 0 && emptyRequiredOIDCParams != len(requiredEnvOIDC) {
+	if emptyRequiredOIDCParamsCount > 0 && emptyRequiredOIDCParamsCount != len(requiredEnvOIDC) {
 		log.Println("#", "warning: the following OIDC required params were not set: ", emptyRequiredOIDCParams)
 	}
 
@@ -271,21 +267,11 @@ func main() {
 	wave.Run(conf)
 }
 
-// getEmptyOIDCValues checks if any of the required OIDC values were not set and returns which were not.
-func getEmptyOIDCValues(auth wave.AuthConf, requiredEnvOIDC map[string]string) []string {
+func getEmptyOIDCValues(requiredEnvOIDC map[string]string) []string {
 	var emptyRequiredOIDCParams []string
-	for key, val := range requiredEnvOIDC {
+	for param, val := range requiredEnvOIDC {
 		if val == "" {
-			switch key {
-			case "oidc-client-id":
-				emptyRequiredOIDCParams = append(emptyRequiredOIDCParams, "oidc-client-id")
-			case "oidc-client-secret":
-				emptyRequiredOIDCParams = append(emptyRequiredOIDCParams, "oidc-client-secret")
-			case "oidc-provider-url":
-				emptyRequiredOIDCParams = append(emptyRequiredOIDCParams, "oidc-provider-url")
-			case "oidc-redirect-url":
-				emptyRequiredOIDCParams = append(emptyRequiredOIDCParams, "oidc-redirect-url")
-			}
+			emptyRequiredOIDCParams = append(emptyRequiredOIDCParams, param)
 		}
 	}
 	return emptyRequiredOIDCParams
