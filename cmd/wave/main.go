@@ -245,14 +245,6 @@ func main() {
 
 	conf.Keychain = kc
 
-	if auth.ClientID != "" && auth.ClientSecret != "" && auth.ProviderURL != "" && auth.RedirectURL != "" {
-		conf.Auth = &auth
-	}
-
-	if conf.IDE {
-		conf.Proxy = true // IDE won't function without proxy
-	}
-
 	requiredEnvOIDC := map[string]string{
 		"oidc-client-id":     auth.ClientID,
 		"oidc-client-secret": auth.ClientSecret,
@@ -261,9 +253,17 @@ func main() {
 	}
 	envOIDCEmpty := getEmptyOIDCValues(auth, requiredEnvOIDC)
 	emptyRequiredOIDCParams := len(envOIDCEmpty)
+	if emptyRequiredOIDCParams == 0 {
+		conf.Auth = &auth
+	}
 	if emptyRequiredOIDCParams > 0 && emptyRequiredOIDCParams != len(requiredEnvOIDC) {
 		log.Println("#", "warning: the following OIDC required params were not set: ", emptyRequiredOIDCParams)
 	}
+
+	if conf.IDE {
+		conf.Proxy = true // IDE won't function without proxy
+	}
+
 	wave.Run(conf)
 }
 
