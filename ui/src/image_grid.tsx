@@ -35,26 +35,26 @@ const
 
 /** Create a card that displays a grid of base64-encoded images. */
 interface State {
+  /** List of images to be displayed. */
+  images: Image[]
+  /** Number of columns in the grid. */
+  cols: U
   /** Width of the grid. */
   width?: S
   /** Height of the grid. */
   height?: S
-  /** Number of columns in the grid. */
-  cols: U
-  /** List of images to be displayed. */
-  images: Image[]
 }
 
 /** Create a card that displays a grid of base64-encoded images. */
 interface ImageGrid {
+  /** List of images to be displayed. */
+  images: Image[]
+  /** Number of columns in the grid. */
+  cols: U
   /** Width of the grid. */
   width?: S
   /** Height of the grid. */
   height?: S
-  /** Number of columns in the grid. */
-  cols: U
-  /** List of images to be displayed. */
-  images: Image[]
   /** An identifying name for the grid. */
   name: Id
 }
@@ -63,7 +63,7 @@ interface ImageGrid {
 export const
   XImageGrid = ({ model: m }: { model: ImageGrid }) => {
     // Extract the specification from the model
-    const { name, width, height, cols, images } = m
+    const { name, images, cols, width, height } = m
 
     // Calculate the number of rows required to display the grid, as well
     // as the width and height of each image (default width/height of the entire
@@ -112,7 +112,7 @@ export const
     </div>
   },
 
-  View = bond(({ name, state: { width, height, cols, images }, changed }: Model<State>) => {
+  View = bond(({ name, state: { images, cols, width, height }, changed }: Model<State>) => {
     const render = () => <XImageGrid model={{width, height, cols, images, name}} />
     return { render, changed }
   })

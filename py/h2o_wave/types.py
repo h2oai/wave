@@ -8812,69 +8812,77 @@ class ImageGridCard:
     def __init__(
             self,
             box: str,
-            width: Optional[str],
-            height: Optional[str],
+            images: List[Image],
             cols: int,
-            images: List[Component]
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageGridCard.box', box, (str,), False, False, False)
+        _guard_vector('ImageGridCard.images', images, (Image,), False, False, False)
+        _guard_scalar('ImageGridCard.cols', cols, (int,), False, False, False)
         _guard_scalar('ImageGridCard.width', width, (str,), False, True, False)
         _guard_scalar('ImageGridCard.height', height, (str,), False, True, False)
-        _guard_scalar('ImageGridCard.cols', cols, (int,), False, False, False)
-        _guard_vector('ImageGridCard.images', images, (Component,), False, True, False)
+        _guard_vector('ImageGridCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
-        self.width = width
-        """A string indicating the width of the image grid"""
-        self.height = height
-        """A string indicating the height of the image grid"""
-        self.cols = cols
-        """How many columns should the images have in a single row of the
-           grid before wraparound is required."""
         self.images = images
-        """The list of Images that will be displayed in the grid"""
+        """List of images to be displayed."""
+        self.cols = cols
+        """Number of columns in the grid."""
+        self.width = width
+        """Width of the grid."""
+        self.height = height
+        """Height of the grid."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageGridCard.box', self.box, (str,), False, False, False)
+        _guard_vector('ImageGridCard.images', self.images, (Image,), False, False, False)
+        _guard_scalar('ImageGridCard.cols', self.cols, (int,), False, False, False)
         _guard_scalar('ImageGridCard.width', self.width, (str,), False, True, False)
         _guard_scalar('ImageGridCard.height', self.height, (str,), False, True, False)
-        _guard_scalar('ImageGridCard.cols', self.cols, (int,), False, False, False)
-        _guard_vector('ImageGridCard.images', self.images, (Component,), False, True, False)
+        _guard_vector('ImageGridCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
-            view="image_grid",
+            view='image_grid',
             box=self.box,
+            images=[__e.dump() for __e in self.images],
+            cols=self.cols,
             width=self.width,
             height=self.height,
-            cols=self.cols,
-            images=[__e.dump() for __e in self.images]
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
-
 
     @staticmethod
     def load(__d: Dict) -> 'ImageGridCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         _guard_scalar('ImageGridCard.box', __d_box, (str,), False, False, False)
-        __d_width: Any = __d.get('width')
-        _guard_scalar('ImageGridCard.width', __d_width, (str,), False, True, False)
-        __dheight: Any = __d.get('height')
-        _guard_scalar('ImageGridCard.height', __dheight, (str,), False, True, False)
+        __d_images: Any = __d.get('images')
+        _guard_vector('ImageGridCard.images', __d_images, (dict,), False, False, False)
         __d_cols: Any = __d.get('cols')
         _guard_scalar('ImageGridCard.cols', __d_cols, (int,), False, False, False)
-        __d_images: Any = __d.get('images')
-        _guard_scalar('ImageGridCard.images', __d_images, (dict,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('ImageGridCard.width', __d_width, (str,), False, True, False)
+        __d_height: Any = __d.get('height')
+        _guard_scalar('ImageGridCard.height', __d_height, (str,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('ImageGridCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
-        width: Optional[str] = __d_width
-        height: Optional[str] = __dheight
+        images: List[Image] = [Image.load(__e) for __e in __d_images]
         cols: int = __d_cols
-        images: List[Component] = [Component.load(__e) for __e in __d_images]
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ImageGridCard(
             box,
+            images,
+            cols,
             width,
             height,
-            cols,
-            images
+            commands,
         )
 
 

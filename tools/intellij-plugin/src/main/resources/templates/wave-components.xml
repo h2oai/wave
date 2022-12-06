@@ -269,6 +269,22 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_image_grid_card" value="ui.image_grid_card(box='$box$',cols=$cols$,images=[&#10;	$images$	&#10;])$END$" description="Create a minimal Wave ImageGridCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="cols" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_image_grid" value="ui.image_grid(cols=$cols$,name='$name$',images=[&#10;	$images$	&#10;]),$END$" description="Create a minimal Wave ImageGrid." toReformat="true" toShortenFQNames="true">
+    <variable name="cols" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_label" value="ui.label(label='$label$'),$END$" description="Create a minimal Wave Label." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -1464,6 +1480,27 @@
     <variable name="tags" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="allowed_shapes" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_grid_card" value="ui.image_grid_card(box='$box$',cols=$cols$,width='$width$',height='$height$',images=[&#10;	$images$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ImageGridCard with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="cols" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image_grid" value="ui.image_grid(cols=$cols$,width='$width$',height='$height$',name='$name$',images=[&#10;	$images$	&#10;]),$END$" description="Create Wave ImageGrid with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="cols" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="images" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

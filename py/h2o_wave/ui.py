@@ -3105,27 +3105,31 @@ def image_card(
 
 def image_grid_card(
         box: str,
+        images: List[Image],
         cols: int,
-        images: List[Component],
         width: Optional[str] = None,
-        height: Optional[str] = None
+        height: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> ImageGridCard:
     """Create a card that displays a grid of base64-encoded images.
 
     Args:
         box: A string indicating how to place this component on the page.
-        cols: How many columns the grid should have.
-        images: The list of Images that will be displayed in the grid, taken in
-                as a list of components which are expected to be images.
+        images: List of images to be displayed.
+        cols: Number of columns in the grid.
+        width: Width of the grid.
+        height: Height of the grid.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ImageGridCard` instance.
     """
     return ImageGridCard(
         box,
+        images,
+        cols,
         width,
         height,
-        cols,
-        images
+        commands,
     )
 
 

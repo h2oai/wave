@@ -272,6 +272,20 @@
     ],
     "description": "Create a minimal Wave ImageAnnotator."
   },
+  "Wave ImageGridCard": {
+    "prefix": "w_image_grid_card",
+    "body": [
+      "ui.image_grid_card(box='$1', cols=$2, images=[\n\t\t$3\t\t\n])$0"
+    ],
+    "description": "Create a minimal Wave ImageGridCard."
+  },
+  "Wave ImageGrid": {
+    "prefix": "w_image_grid",
+    "body": [
+      "ui.image_grid(cols=$1, name='$2', images=[\n\t\t$3\t\t\n]),$0"
+    ],
+    "description": "Create a minimal Wave ImageGrid."
+  },
   "Wave Label": {
     "prefix": "w_label",
     "body": [
@@ -1223,6 +1237,20 @@
       "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n], allowed_shapes=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave ImageAnnotator."
+  },
+  "Wave Full ImageGridCard": {
+    "prefix": "w_full_image_grid_card",
+    "body": [
+      "ui.image_grid_card(box='$1', cols=$2, width='$3', height='$4', images=[\n\t\t$5\t\t\n], commands=[\n\t\t$6\t\t\n])$0"
+    ],
+    "description": "Create a full Wave ImageGridCard."
+  },
+  "Wave Full ImageGrid": {
+    "prefix": "w_full_image_grid",
+    "body": [
+      "ui.image_grid(cols=$1, width='$2', height='$3', name='$4', images=[\n\t\t$5\t\t\n]),$0"
+    ],
+    "description": "Create a full Wave ImageGrid."
   },
   "Wave Full Label": {
     "prefix": "w_full_label",

@@ -3602,6 +3602,41 @@ ui_image_card <- function(
   return(.o)
 }
 
+#' Create a card that displays a grid of base64-encoded images.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param images List of images to be displayed.
+#' @param cols Number of columns in the grid.
+#' @param width Width of the grid.
+#' @param height Height of the grid.
+#' @param commands Contextual menu commands for this component.
+#' @return A ImageGridCard instance.
+#' @export
+ui_image_grid_card <- function(
+  box,
+  images,
+  cols,
+  width = NULL,
+  height = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("images", "WaveImage", images)
+  .guard_scalar("cols", "numeric", cols)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("height", "character", height)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    images=images,
+    cols=cols,
+    width=width,
+    height=height,
+    commands=commands,
+    view='image_grid')
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageGridCard"))
+  return(.o)
+}
+
 #' Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
 #'
 #' @param box A string indicating how to place this component on the page.
