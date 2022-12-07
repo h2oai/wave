@@ -496,13 +496,12 @@ const
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
-        if (col.cellType?.markdown) {
-          return (
-            <TooltipWrapper>
-              <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
-            </TooltipWrapper>
-          )
-        }
+        if (col.cellType?.markdown) return (
+          <TooltipWrapper cellOverflow={col.cellOverflow}>
+            <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
+          </TooltipWrapper>
+        )
+
         if (col.dataType === 'time') {
           const epoch = Number(v)
           v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
