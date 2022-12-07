@@ -22,6 +22,7 @@ import { MarkdownTableCellType, XMarkdownTableCellType } from './markdown_table_
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
+import useUpdateOnlyEffect from './useUpdateOnlyEffectHook'
 import { wave } from './ui'
 
 /** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
@@ -670,7 +671,6 @@ const
 export const
   XTable = ({ model: m }: { model: Table }) => {
     const
-      didMountRef = React.useRef(false),
       groupable = !m.groups && m.groupable,
       getItem = React.useCallback((r: TableRow) => {
         const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
@@ -938,13 +938,9 @@ export const
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    React.useEffect(() => {
-      // Skip for initial render.
-      if (didMountRef.current) {
-        setFilteredItems(items)
-        reset()
-      } else didMountRef.current = true
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    useUpdateOnlyEffect(() => {
+      setFilteredItems(items)
+      reset()
     }, [items])
 
     React.useEffect(() => {
