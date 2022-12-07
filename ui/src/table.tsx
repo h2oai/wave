@@ -361,7 +361,7 @@ const
           cellOverflow: c.cell_overflow,
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
-          isMultiline: !!c.cell_type?.markdown || c.cell_overflow === 'wrap',
+          isMultiline: c.cell_overflow === 'wrap',
           filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
@@ -499,7 +499,13 @@ const
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
         if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
-        if (col.cellType?.markdown) return <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
+        if (col.cellType?.markdown) {
+          return (
+            <TooltipWrapper>
+              <XMarkdownTableCellType model={{ ...col.cellType.markdown, content: item[col.key] }} />
+            </TooltipWrapper>
+          )
+        }
         if (col.dataType === 'time') {
           const epoch = Number(v)
           v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
