@@ -990,6 +990,7 @@ class Textbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             spellcheck: Optional[bool] = None,
+            trigger_on_enter: Optional[bool] = None,
     ):
         _guard_scalar('Textbox.name', name, (str,), True, False, False)
         _guard_scalar('Textbox.label', label, (str,), False, True, False)
@@ -1011,6 +1012,7 @@ class Textbox:
         _guard_scalar('Textbox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Textbox.spellcheck', spellcheck, (bool,), False, True, False)
+        _guard_scalar('Textbox.trigger_on_enter', trigger_on_enter, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1051,6 +1053,8 @@ class Textbox:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.spellcheck = spellcheck
         """True if the text may be checked for spelling errors. Defaults to True."""
+        self.trigger_on_enter = trigger_on_enter
+        """True to make the form submit when the user presses the Enter key. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1074,6 +1078,7 @@ class Textbox:
         _guard_scalar('Textbox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Textbox.spellcheck', self.spellcheck, (bool,), False, True, False)
+        _guard_scalar('Textbox.trigger_on_enter', self.trigger_on_enter, (bool,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -1095,6 +1100,7 @@ class Textbox:
             visible=self.visible,
             tooltip=self.tooltip,
             spellcheck=self.spellcheck,
+            trigger_on_enter=self.trigger_on_enter,
         )
 
     @staticmethod
@@ -1140,6 +1146,8 @@ class Textbox:
         _guard_scalar('Textbox.tooltip', __d_tooltip, (str,), False, True, False)
         __d_spellcheck: Any = __d.get('spellcheck')
         _guard_scalar('Textbox.spellcheck', __d_spellcheck, (bool,), False, True, False)
+        __d_trigger_on_enter: Any = __d.get('trigger_on_enter')
+        _guard_scalar('Textbox.trigger_on_enter', __d_trigger_on_enter, (bool,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -1160,6 +1168,7 @@ class Textbox:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         spellcheck: Optional[bool] = __d_spellcheck
+        trigger_on_enter: Optional[bool] = __d_trigger_on_enter
         return Textbox(
             name,
             label,
@@ -1181,6 +1190,7 @@ class Textbox:
             visible,
             tooltip,
             spellcheck,
+            trigger_on_enter,
         )
 
 

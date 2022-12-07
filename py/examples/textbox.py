@@ -40,6 +40,7 @@ async def serve(q: Q):
                        placeholder='I am disabled'),
             ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True),
             ui.textbox(name='textbox_spellcheck_disabled', label='Spellcheck disabled', spellcheck=False),
+            ui.textbox(name='textbox_enter', label='Submits the textbox value on Enter key', icon='Search'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()

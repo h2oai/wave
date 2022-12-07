@@ -65,6 +65,8 @@ export interface Textbox {
   tooltip?: S
   /** True if the text may be checked for spelling errors. Defaults to True. */
   spellcheck?: B
+  /** True to make the form submit when the user presses the Enter key. Defaults to False. */
+  trigger_on_enter?: B
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -81,6 +83,11 @@ export const
         setValue(v)
         m.value = v
       },
+      onKeyDown = ({ key } : { key: string }) => {
+        if (m.trigger_on_enter && key === 'Enter') {
+          wave.push()
+        }
+      },
       textFieldProps: Fluent.ITextFieldProps & { 'data-test': S } = {
         'data-test': m.name,
         label: m.label,
@@ -90,6 +97,7 @@ export const
         disabled: m.disabled,
         readOnly: m.readonly,
         onChange,
+        onKeyDown,
         iconProps: m.icon ? { iconName: m.icon } : undefined,
         placeholder: m.placeholder,
         prefix: m.prefix,

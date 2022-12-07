@@ -400,6 +400,7 @@ def textbox(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         spellcheck: Optional[bool] = None,
+        trigger_on_enter: Optional[bool] = None,
 ) -> Component:
     """Create a text box.
 
@@ -428,6 +429,7 @@ def textbox(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         spellcheck: True if the text may be checked for spelling errors. Defaults to True.
+        trigger_on_enter: True to make the form submit when the user presses the Enter key. Defaults to False.
     Returns:
         A `h2o_wave.types.Textbox` instance.
     """
@@ -452,6 +454,7 @@ def textbox(
         visible,
         tooltip,
         spellcheck,
+        trigger_on_enter,
     ))
 
 
