@@ -22,6 +22,7 @@ import { MarkdownTableCellType, XMarkdownTableCellType } from './markdown_table_
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
+import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 import { wave } from './ui'
 
 /** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
@@ -936,7 +937,11 @@ export const
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    React.useEffect(() => setFilteredItems(items), [items])
+
+    useUpdateOnlyEffect(() => {
+      setFilteredItems(items)
+      reset()
+    }, [items])
 
     React.useEffect(() => {
       if (m.groups) {
