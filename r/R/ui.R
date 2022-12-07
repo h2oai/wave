@@ -3350,7 +3350,7 @@ ui_form_card <- function(
 #' @param title The title for this card.
 #' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
 #' @param content The HTML content of the page. A string containing `<html>...</html>`.
-#' @param has_padding True if the component should have paddings. Defaults to True.
+#' @param compact True if title and padding should be removed. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A FrameCard instance.
 #' @export
@@ -3359,20 +3359,20 @@ ui_frame_card <- function(
   title,
   path = NULL,
   content = NULL,
-  has_padding = NULL,
+  compact = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("path", "character", path)
   .guard_scalar("content", "character", content)
-  .guard_scalar("has_padding", "logical", has_padding)
+  .guard_scalar("compact", "logical", compact)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     path=path,
     content=content,
-    has_padding=has_padding,
+    compact=compact,
     commands=commands,
     view='frame')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFrameCard"))

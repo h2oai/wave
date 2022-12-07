@@ -86,9 +86,9 @@ interface State {
    */
   content?: S
   /**
-   * True if the component should have paddings. Defaults to True.
+   * True if title and padding should be removed. Defaults to False.
    */
-  has_padding?: B
+  compact?: B
 }
 
 const
@@ -110,8 +110,8 @@ export const XFrame = ({ model: { name, path, content, width = '100%', height = 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
-      <div data-test={name} className={clas(css.card, (state.has_padding ?? true) ? css.cardPadding : '')}>
-        <div className='wave-s12 wave-w6'>{state.title}</div>
+      <div data-test={name} className={clas(css.card, (state.compact ?? false) ? '' : css.cardPadding)}>
+        {!state.compact && <div className='wave-s12 wave-w6'>{state.title}</div>}
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />
         </div>

@@ -2889,7 +2889,7 @@ def frame_card(
         title: str,
         path: Optional[str] = None,
         content: Optional[str] = None,
-        has_padding: Optional[bool] = None,
+        compact: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> FrameCard:
     """Render a card containing a HTML page inside an inline frame (an `iframe`).
@@ -2901,7 +2901,7 @@ def frame_card(
         title: The title for this card.
         path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
         content: The HTML content of the page. A string containing `<html>...</html>`.
-        has_padding: True if the component should have paddings. Defaults to True.
+        compact: True if title and padding should be removed. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FrameCard` instance.
@@ -2911,7 +2911,7 @@ def frame_card(
         title,
         path,
         content,
-        has_padding,
+        compact,
         commands,
     )
 

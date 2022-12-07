@@ -8242,14 +8242,14 @@ class FrameCard:
             title: str,
             path: Optional[str] = None,
             content: Optional[str] = None,
-            has_padding: Optional[bool] = None,
+            compact: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('FrameCard.box', box, (str,), False, False, False)
         _guard_scalar('FrameCard.title', title, (str,), False, False, False)
         _guard_scalar('FrameCard.path', path, (str,), False, True, False)
         _guard_scalar('FrameCard.content', content, (str,), False, True, False)
-        _guard_scalar('FrameCard.has_padding', has_padding, (bool,), False, True, False)
+        _guard_scalar('FrameCard.compact', compact, (bool,), False, True, False)
         _guard_vector('FrameCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8259,8 +8259,8 @@ class FrameCard:
         """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`."""
         self.content = content
         """The HTML content of the page. A string containing `<html>...</html>`."""
-        self.has_padding = has_padding
-        """True if the component should have paddings. Defaults to True."""
+        self.compact = compact
+        """True if title and padding should be removed. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8270,7 +8270,7 @@ class FrameCard:
         _guard_scalar('FrameCard.title', self.title, (str,), False, False, False)
         _guard_scalar('FrameCard.path', self.path, (str,), False, True, False)
         _guard_scalar('FrameCard.content', self.content, (str,), False, True, False)
-        _guard_scalar('FrameCard.has_padding', self.has_padding, (bool,), False, True, False)
+        _guard_scalar('FrameCard.compact', self.compact, (bool,), False, True, False)
         _guard_vector('FrameCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='frame',
@@ -8278,7 +8278,7 @@ class FrameCard:
             title=self.title,
             path=self.path,
             content=self.content,
-            has_padding=self.has_padding,
+            compact=self.compact,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8293,22 +8293,22 @@ class FrameCard:
         _guard_scalar('FrameCard.path', __d_path, (str,), False, True, False)
         __d_content: Any = __d.get('content')
         _guard_scalar('FrameCard.content', __d_content, (str,), False, True, False)
-        __d_has_padding: Any = __d.get('has_padding')
-        _guard_scalar('FrameCard.has_padding', __d_has_padding, (bool,), False, True, False)
+        __d_compact: Any = __d.get('compact')
+        _guard_scalar('FrameCard.compact', __d_compact, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FrameCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
-        has_padding: Optional[bool] = __d_has_padding
+        compact: Optional[bool] = __d_compact
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FrameCard(
             box,
             title,
             path,
             content,
-            has_padding,
+            compact,
             commands,
         )
 
