@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"log"
 	"math"
 	"net/http"
 	"net/textproto"
@@ -244,8 +245,19 @@ func main() {
 
 	conf.Keychain = kc
 
-	if auth.ClientID != "" && auth.ClientSecret != "" && auth.ProviderURL != "" && auth.RedirectURL != "" {
+	requiredEnvOIDC := map[string]string{
+		"oidc-client-id":     auth.ClientID,
+		"oidc-client-secret": auth.ClientSecret,
+		"oidc-provider-url":  auth.ProviderURL,
+		"oidc-redirect-url":  auth.RedirectURL,
+	}
+	emptyRequiredOIDCParams := getEmptyOIDCValues(requiredEnvOIDC)
+	emptyRequiredOIDCParamsCount := len(emptyRequiredOIDCParams)
+	if emptyRequiredOIDCParamsCount == 0 {
 		conf.Auth = &auth
+	}
+	if emptyRequiredOIDCParamsCount > 0 && emptyRequiredOIDCParamsCount != len(requiredEnvOIDC) {
+		log.Println("#", "warning: the following OIDC required params were not set: ", emptyRequiredOIDCParams)
 	}
 
 	if conf.IDE {
@@ -253,6 +265,16 @@ func main() {
 	}
 
 	wave.Run(conf)
+}
+
+func getEmptyOIDCValues(requiredEnvOIDC map[string]string) []string {
+	var emptyRequiredOIDCParams []string
+	for param, val := range requiredEnvOIDC {
+		if val == "" {
+			emptyRequiredOIDCParams = append(emptyRequiredOIDCParams, param)
+		}
+	}
+	return emptyRequiredOIDCParams
 }
 
 func getEnv(key, value string) string {
