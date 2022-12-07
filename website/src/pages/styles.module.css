@@ -12,9 +12,43 @@
   overflow: hidden;
 }
 
-@media screen and (max-width: 966px) {
+.showcaseRow {
+  display: flex;
+  width: 100%;
+  padding: 20px 0;
+  height: 33%;
+}
+
+.showcaseRow:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.showcaseRow p, .showcaseRow h2 {
+  margin: 8px;
+}
+
+.showcaseRow h2 {
+  padding-right: 80px;
+}
+
+.underline {
+  box-sizing: border-box;
+  max-width: fit-content;
+  border-bottom: 4px solid #FFE52B;
+}
+
+@media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
+  }
+
+  .showcaseRow {
+    /* TODO: Remove important */
+    flex-direction: column !important;
+  }
+
+  .imageContainer {
+    justify-content: center !important;
   }
 }
 
