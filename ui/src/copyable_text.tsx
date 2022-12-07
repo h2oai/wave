@@ -87,7 +87,9 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         value={value}
         label={label}
         multiline={multiline}
-        styles={ multiline ? { root: { width: pc(100), height: height} } : { root: { width: pc(100) } } }
+        styles={ multiline && height && !height.endsWith('%') 
+          ? { root: { width: pc(100) }, field: {minHeight: height}, fieldGroup: { minHeight: height, height: height} } 
+          : { root: { width: pc(100) } } }
         readOnly
       />
       <Fluent.PrimaryButton

@@ -6764,7 +6764,7 @@ class CopyableText:
         self.multiline = multiline
         """True if the component should allow multi-line text entry."""
         self.height = height
-        """The height of the textbox."""
+        """The adjustable height of the textbox."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
