@@ -129,6 +129,17 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
+    it('Does not draw a new rect if dimensions too small', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Rectangle'))
+      fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 115, clientY: 115 })
+
+      expect(wave.args[name]).toMatchObject(items)
+    })
+
     it('Removes rect after clicking remove btn', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
