@@ -140,7 +140,7 @@ function Home() {
           <div className="container">
             <div className="row" style={{ padding: '0 var(--ifm-spacing-horizontal)', justifyContent: 'center', alignItems: 'center', paddingBottom: 46 }}>
               <div style={{ backgroundColor: '#FFE52B', height: '5px', flex: 1, marginRight: 10 }} />
-              <h1 style={{ margin: 0 }}>App showcase</h1>
+              <h1 style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'center' }}>{`See what you can build\nwith Wave`}</h1>
               <div style={{ backgroundColor: '#FFE52B', height: '5px', flex: 1, marginLeft: 10 }} />
             </div>
             <div className='row' style={{ justifyContent: 'center' }}>
