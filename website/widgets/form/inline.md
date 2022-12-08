@@ -23,17 +23,41 @@ q.page['form'] = ui.form_card(
 
 Check the full API at [ui.inline](/docs/api/ui#inline).
 
-## Customize the alignment
-
-### Horizontal alignment (`justify`)
+## Horizontal alignment (`justify`)
 
 You can specify how the elements should be horizontally aligned using the `justify` parameter. The default value is `start`.
 
-![Supported values for the justify parameter](/img/widgets/inline-justify.svg)
+```py
+items = [
+    ui.button(name='primary_button', label='Primary', primary=True),
+    ui.button(name='basic_caption_button', label='Secondary', caption='Caption'),
+    ui.button(name='icon_button', icon='Heart', caption='Like'),
+]
 
-### Vertical alignment (`align`)
+q.page['justify'] = ui.form_card(box='1 1 3 5', items=[
+    ui.inline(items, justify='start'),
+    ui.inline(items, justify='center'),
+    ui.inline(items, justify='end'),
+    ui.inline(items, justify='between'),
+    ui.inline(items, justify='around'),
+])
+```
+
+## Vertical alignment (`align`)
 
 You can specify how the elements should be horizontally aligned using the `align` parameter. The default value is `center`.
 
-![Supported values for the align parameter](/img/widgets/inline-align.svg)
+```py
+items = [
+    ui.button(name='primary_button', label='Primary', primary=True),
+    ui.button(name='basic_caption_button', label='Secondary', caption='Caption'),
+    ui.button(name='icon_button', icon='Heart', caption='Like'),
+]
 
+q.page['align'] = ui.form_card(box='1 1 3 5', items=[
+    ui.inline(items, align='start'),
+    ui.inline(items, align='baseline'),
+    ui.inline(items, align='center'),
+    ui.inline(items, align='end'),
+])
+```
