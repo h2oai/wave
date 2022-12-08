@@ -204,6 +204,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redrawExistingShapes]),
+
+    onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = canvasRef.current
+      if (!canvas || e.buttons !== 1) return
+
+      setWaveArgs(drawnShapes)
+
+      polygonRef.current?.resetDragging()
+      rectRef.current?.resetDragging()
+      redrawExistingShapes()
+    },
     onMouseDown = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
       if (!canvas) return
@@ -462,6 +473,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           className={css.canvas}
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDown}
+          onMouseLeave={onMouseLeave}
           onKeyDown={onKeyDown}
           // Do not show context menu on right click.
           onContextMenu={e => e.preventDefault()}

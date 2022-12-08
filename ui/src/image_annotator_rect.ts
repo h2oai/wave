@@ -59,7 +59,9 @@ export class RectAnnotator {
   onClick = (cursor_x: U, cursor_y: U, tag: S, start?: Position): DrawnShape | undefined => {
     let newRect
     if (!this.resizedCorner && start?.dragging) {
-      newRect = { shape: { rect: this.createRect(start.x, cursor_x, start.y, cursor_y) }, tag }
+      const rect = this.createRect(start.x, cursor_x, start.y, cursor_y)
+      if (!rect) return
+      newRect = { shape: { rect }, tag }
     }
 
     this.resetDragging()

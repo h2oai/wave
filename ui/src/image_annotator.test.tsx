@@ -129,6 +129,17 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
+    it('Does not draw a new rect if dimensions too small', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Rectangle'))
+      fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 115, clientY: 115 })
+
+      expect(wave.args[name]).toMatchObject(items)
+    })
+
     it('Removes rect after clicking remove btn', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
@@ -205,6 +216,30 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
 
       expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, polygon])
+    })
+
+    it('Moves rect correctly if click happened outside the canvas', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 45, clientY: 50, buttons: 1 })
+      fireEvent.mouseLeave(canvasEl, { clientX: -10, clientY: 60, buttons: 1 })
+
+      expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 5, x2: 95, y1: 10, y2: 100 } } }, polygon])
+    })
+
+    it('Does not move rect if click happened outside the canvas but left mouse btn not pressed', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 45, clientY: 50, buttons: 1 })
+      fireEvent.mouseLeave(canvasEl, { clientX: -10, clientY: 60 })
+
+      expect(wave.args[name]).toMatchObject(items)
     })
 
     it('Does not move rect if left mouse btn not pressed (dragging)', async () => {
@@ -542,6 +577,18 @@ describe('ImageAnnotator.tsx', () => {
       expect(pushMock).toBeCalledTimes(1)
     })
 
+    it('Calls sync after moving rect and finishing outside of canvas', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
+
+      expect(pushMock).toBeCalledTimes(1)
+    })
+
     it('Calls sync after resizing rect', async () => {
       const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
       await waitForLoad()
@@ -560,11 +607,10 @@ describe('ImageAnnotator.tsx', () => {
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       await waitForLoad()
-      fireEvent.click(getByText('Remove selection').parentElement?.parentElement?.parentElement!)
+      fireEvent.click(getByText('Remove selection').parentElement!.parentElement!.parentElement!)
 
       expect(pushMock).toBeCalledTimes(1)
     })
-
 
     it('Calls sync after removing polygon', async () => {
       const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
