@@ -1,7 +1,10 @@
 ---
-title: Color Theming
+title: Colors
 ---
 
+The general idea of Wave is that (almost) all the colors are handled for you meaning you do not have much control over the individual colors for components usually. If you want to tweak all the colors at once, you can reach out for themes.
+
+## Themes
 
 Wave ships with prebuilt themes that are ready to be used. These include:
 
@@ -27,7 +30,7 @@ Setting a theme is very simple:
 q.page['meta'] = ui.meta_card(box='', theme='h2o-dark')
 ```
 
-## Custom user-defined themes
+### Custom user-defined themes
 
 Having only predefined color palettes keeps you from matching your Wave app to your specific color brand, so we have added custom, user-defined palettes.
 
@@ -86,6 +89,39 @@ We would love to see all the beautiful themes our community came up with so don'
 
 In general, the answer is no. Wave tries to be smart and do all the minor decisions for you, e.g. picking a color for primary/secondary buttons, checkboxes, etc. This way, a consistent UX is ensured and you can focus solely on the product itself rather than wasting time on nitpicking small stuff.
 
-However, some cards allow changing colors of particular parts, for example, icons, but this is more of an exception rather than a strict rule.
-
 If full control over colors/typography etc. is needed, going with regular HTML/CSS/JS is probably a better choice.
+
+However, some cards allow changing colors of particular parts, for example, icons or plots, but this is more of an exception rather than a strict rule. You can find available colors in the section below.
+
+## Wave colors
+
+In addition to arbitrary CSS colors, you can use the colors that Wave uses itself.
+
+* Spectrum colors are the most colors common colors with a slightly edited saturation so that they match the current theme.
+* Wave's most used colors (text, card and primary) and their variations with increasing transparency (tone).
+
+| **Spectrum colors** | **Text tones** | **Card tones** | **Primary color tones** |
+|:-------------------:|:--------------:|:--------------:|:------------------------:|
+|        $amber       |      $text     |      $card     |         $primary         |
+|        $azure       |     $text0     |     $card0     |         $primary0        |
+|        $blue        |     $text1     |     $card1     |         $primary1        |
+|        $brown       |     $text2     |     $card2     |         $primary2        |
+|        $cyan        |     $text3     |     $card3     |         $primary3        |
+|        $gray        |     $text4     |     $card4     |         $primary4        |
+|        $green       |     $text5     |     $card5     |         $primary5        |
+|       $indigo       |     $text6     |     $card6     |         $primary6        |
+|        $lime        |     $text7     |     $card7     |         $primary7        |
+|        $mint        |     $text8     |     $card8     |         $primary8        |
+|       $orange       |     $text9     |     $card9     |         $primary9        |
+|        $page        |                |                |                          |
+|        $pink        |                |                |                          |
+|       $purple       |                |                |                          |
+|         $red        |                |                |                          |
+|      $tangerine     |                |                |                          |
+|        $teal        |                |                |                          |
+|       $violet       |                |                |                          |
+|       $yellow       |                |                |                          |
+
+:::tip
+All the above colors are just CSS variables without a `$` prefix which means they can be also used within your custom CSS.
+:::
