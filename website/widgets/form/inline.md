@@ -8,7 +8,7 @@ custom_edit_url: null
 
 By default, all form items are laid out vertically (top to bottom). For more complex forms though, this might not be enough and
 that's where [ui.inline](/docs/api/ui#inline) comes into play. All you need to do is specify the `items` attribute, which accepts any form
-component. Optionally, you can also specify `justify` if you want to control the alignment too.
+component.
 
 ```py
 q.page['form'] = ui.form_card(
@@ -22,3 +22,18 @@ q.page['form'] = ui.form_card(
 ```
 
 Check the full API at [ui.inline](/docs/api/ui#inline).
+
+## Customize the alignment
+
+### Horizontal alignment (`justify`)
+
+You can specify how the elements should be horizontally aligned using the `justify` parameter. The default value is `start`.
+
+![Supported values for the justify parameter](/img/widgets/inline-justify.svg)
+
+### Vertical alignment (`align`)
+
+You can specify how the elements should be horizontally aligned using the `align` parameter. The default value is `center`.
+
+![Supported values for the align parameter](/img/widgets/inline-align.svg)
+
