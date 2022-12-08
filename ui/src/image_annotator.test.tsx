@@ -602,19 +602,15 @@ describe('ImageAnnotator.tsx', () => {
       expect(pushMock).toBeCalledTimes(1)
     })
 
-    it('Calls sync after removing rect and finishing outside canvas', async () => {
-      const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+    it('Calls sync after removing rect', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
-      fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
-      fireEvent.mouseMove(canvasEl, { clientX: 45, clientY: 50, buttons: 1 })
-      fireEvent.mouseLeave(canvasEl, { clientX: -10, clientY: 60, buttons: 1 })
-
       await waitForLoad()
+      fireEvent.click(getByText('Remove selection').parentElement!.parentElement!.parentElement!)
       expect(pushMock).toBeCalledTimes(1)
     })
-
 
     it('Calls sync after removing polygon', async () => {
       const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
