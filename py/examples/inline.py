@@ -4,16 +4,16 @@
 
 from h2o_wave import main, app, Q, ui
 
+all_justify = ['start', 'end', 'center', 'between', 'around']
+all_align = ['start', 'end', 'center']
+
+justify_choices = [ui.choice(opt, opt) for opt in all_justify]
+align_choices = [ui.choice(opt, opt) for opt in all_align]
+
 @app('/demo')
 async def serve(q: Q):
-    all_justify = ['start', 'end', 'center', 'between', 'around']
-    all_align = ['start', 'end', 'center']
-
-    justify_choices = [ui.choice(opt, opt) for opt in all_justify]
-    align_choices = [ui.choice(opt, opt) for opt in all_align]
-
-    justify_current = q.args.justify if q.args.justify in all_justify else 'start'
-    align_current = q.args.align if q.args.align in all_align else 'center'
+    justify_current = q.args.justify if q.args.justify else 'start'
+    align_current = q.args.align if q.args.align else 'center'
 
     q.page['example'] = ui.form_card(box='1 1 -1 3', items=[
         ui.inline([
