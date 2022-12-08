@@ -589,7 +589,6 @@ describe('ImageAnnotator.tsx', () => {
       expect(pushMock).toBeCalledTimes(1)
     })
 
-
     it('Calls sync after resizing rect', async () => {
       const { container } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
       await waitForLoad()
@@ -609,6 +608,7 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
       await waitForLoad()
       fireEvent.click(getByText('Remove selection').parentElement!.parentElement!.parentElement!)
+
       expect(pushMock).toBeCalledTimes(1)
     })
 
