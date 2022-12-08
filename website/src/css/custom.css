@@ -27,6 +27,7 @@ html[data-theme="dark"] {
 .hero .button--outline {
   --ifm-button-background-color: var(--h2o-accent-color);
   --ifm-button-border-color: var(--h2o-accent-color);
+  --ifm-font-color-base: #000;
   box-shadow: 0 4px 14px 0 rgba(255, 255, 0, 0.39);
 }
 .hero h1 {
