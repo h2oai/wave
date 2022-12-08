@@ -6,6 +6,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
 import showcase from '../../static/apps_showcase.json'
+import { Lightbox } from '../components/lightbox'
 
 const features = [
   {
@@ -75,8 +76,15 @@ function Feature({ icon, title, description }) {
 }
 
 function Home() {
-  const context = useDocusaurusContext()
-  const { siteConfig = {} } = context
+  const
+    context = useDocusaurusContext(),
+    { siteConfig = {} } = context,
+    lightboxProps = React.useRef(),
+    [lightboxVisible, setLightboxVisible] = React.useState(false),
+    openLightbox = images => {
+      lightboxProps.current = { images, onDismiss: () => setLightboxVisible(false) }
+      setLightboxVisible(true)
+    }
   return (
     <Layout
       title="Make AI Apps"
@@ -130,24 +138,27 @@ function Home() {
         )}
         <section className={styles.features}>
           <div className="container">
-            <div className="row">
-              <h1>App showcase</h1>
+            <div className="row" style={{ padding: '0 var(--ifm-spacing-horizontal)', justifyContent: 'center', alignItems: 'center', paddingBottom: 46 }}>
+              <div style={{ backgroundColor: '#FFE52B', height: '5px', flex: 1, marginRight: 10 }} />
+              <h1 style={{ margin: 0 }}>App showcase</h1>
+              <div style={{ backgroundColor: '#FFE52B', height: '5px', flex: 1, marginLeft: 10 }} />
             </div>
-            <div className='row'>
-              {showcase.apps.map(({ title, description, images }, idx) =>
-                <div className={clsx(styles.showcaseRow)}>
+            <div className='row' style={{ justifyContent: 'center' }}>
+              {showcase && showcase.apps.length > 0 && (showcase.apps.map(({ title, description, images }, idx) =>
+                <div className={clsx(styles.showcaseRow)} key={`app-${idx}`}>
                   <div style={{ display: 'flex', flex: 3, justifyContent: idx % 2 ? 'flex-end' : 'flex-start' }} className={styles.imageContainer}>
-                    <img src={images[0].src} style={{ objectFit: 'contain' }} />
+                    <img src={images[0].path} style={{ objectFit: 'contain', cursor: 'pointer' }} onClick={() => openLightbox(images)} />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 2 }}>
                     <h2 className={styles.underline} >{title}</h2>
                     <p>{description}</p>
                   </div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </section>
+        {lightboxVisible && <Lightbox {...lightboxProps.current} />}
       </main>
     </Layout >
   )
