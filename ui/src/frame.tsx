@@ -110,7 +110,7 @@ export const XFrame = ({ model: { name, path, content, width = '100%', height = 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
-      <div data-test={name} className={clas(css.card, (state.compact ?? false) ? '' : css.cardPadding)}>
+      <div data-test={name} className={clas(css.card, state.compact ? '' : css.cardPadding)}>
         {!state.compact && <div className='wave-s12 wave-w6'>{state.title}</div>}
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />
