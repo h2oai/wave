@@ -6,7 +6,7 @@ from .synthetic_data import *
 async def show_orange_dashboard(q: Q):
     q.page['meta'] = ui.meta_card(box='', layouts=[
         ui.layout(
-            breakpoint='xl',
+            breakpoint='xs',
             width='1200px',
             zones=[
                 ui.zone('header'),
