@@ -100,10 +100,6 @@
   justify-content: center; 
 }
 
-.showcaseDescription {
-  overflow-y: scroll;
-}
-
 .buttons {
   display: flex;
   align-items: center;

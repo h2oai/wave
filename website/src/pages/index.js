@@ -144,7 +144,7 @@ function Home() {
               <div className={styles.divider} style={{ marginLeft: 10 }} />
             </div>
             <div className={clsx('row', styles.showcaseSubtitleContainer)} >
-              <p>The following are just a few of hundreds of Wave apps built within H2O.ai. The most mind-blowing thing is that all presented apps were built by our data science and machine learning people, no software engineer necessary.</p>
+              <p>The following are just a few of hundreds of Wave apps built within H2O.ai. The most mind-blowing thing is that all <b>presented apps were built by our data science and machine learning people</b>, no software engineer necessary.</p>
             </div>
             <div className={clsx('row', styles.showcaseContainer)}>
               {showcase.apps.map(({ title, description, images }, idx) =>
@@ -152,7 +152,7 @@ function Home() {
                   <img src={images[0].path} onClick={() => openLightbox(images)} className={styles.showcaseImg} />
                   <div className={styles.showcaseDescriptionContainer}>
                     <h3 className={styles.underline} >{title}</h3>
-                    <p className={styles.showcaseDescription}>{description}</p>
+                    <p>{description}</p>
                   </div>
                 </div>
               )}
