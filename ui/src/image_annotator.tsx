@@ -356,28 +356,24 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
       if (e.key === 'ArrowRight') {
-        const increment = e.shiftKey ? 10 : 1
-        setDrawnShapes(shapes => {
-          const movedShapes = shapes.map(s => {
-            if (s.isFocused) {
-              const canvasWidth = canvasRef.current?.width
-              if (canvasWidth && s.shape.rect) {
-                if (s.shape.rect.x1 <= (canvasWidth - increment) && s.shape.rect.x2 <= (canvasWidth - increment))
-                  s.shape.rect.x1 += increment
-                s.shape.rect.x2 += increment
-              }
-              if (canvasWidth && s.shape.polygon?.vertices) {
-                if (s.shape.polygon.vertices.find(vertice => vertice.x >= (canvasWidth - increment))) return s
-                s.shape.polygon?.vertices.forEach(vertice => {
-                  vertice.x += increment
-                  return vertice
-                })
-              }
+        // TODO: move to the end of the canvas when holding shift and less than 10px is left
+        setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
+          const
+            { isFocused, shape } = ds,
+            { polygon, rect } = shape,
+            increment = e.shiftKey ? 10 : 1,
+            xMax = canvasRef.current!.width! - increment
+          if (isFocused) {
+            if (rect && rect.x1 <= xMax && rect.x2 <= xMax) {
+              rect.x1 += increment
+              rect.x2 += increment
             }
-            return s
-          })
-          return movedShapes
-        })
+            if (polygon && !polygon.vertices.find(vertice => vertice.x >= xMax)) {
+              polygon.vertices.forEach(vertice => vertice.x += increment)
+            }
+          }
+          return ds
+        }))
         redrawExistingShapes()
       }
     },
