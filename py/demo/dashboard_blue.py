@@ -9,12 +9,12 @@ async def show_blue_dashboard(q: Q):
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header'),
+                ui.zone('header', size='65px'),
                 ui.zone('title'),
                 ui.zone('top', direction=ui.ZoneDirection.ROW, size='200px'),
                 ui.zone('middle', direction=ui.ZoneDirection.ROW, size='385px'),
                 ui.zone('bottom', direction=ui.ZoneDirection.ROW, size='385px'),
-                ui.zone('footer'),
+                ui.zone('footer', size='80px'),
             ]
         )
     ])
