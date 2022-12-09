@@ -12,44 +12,6 @@
   overflow: hidden;
 }
 
-.showcaseContainer { 
-  justify-content: center
-}
-
-.showcaseRow {
-  display: flex;
-  width: 100%;
-  padding: 20px var(--ifm-spacing-horizontal);
-  height: 33vh;
-  min-height: 440px;
-  max-width: 90vw;
-}
-
-.showcaseRow:nth-child(even) {
-  flex-direction: row-reverse;
-}
-
-.showcaseRow p, .showcaseRow h2 {
-  margin: 8px;
-}
-
-.showcaseRow h2 {
-  padding-right: 80px;
-}
-
-.underline {
-  box-sizing: border-box;
-  max-width: fit-content;
-  border-bottom: 4px solid #FFE52B;
-}
-
-.divider {
-  flex: 1;
-  background-color: #FFE52B;
-  height: 5px;
-}
-
-
 .showcaseTitleContainer { 
   justify-content: center;
   align-items: center; 
@@ -63,26 +25,31 @@
   text-align: center;
 }
 
-.showcaseImgContainer {
-  display: flex; 
-  flex: 3; 
+.divider {
+  flex: 1;
+  background-color: #FFE52B;
+  height: 5px;
 }
 
-.showcaseImg {
-  object-fit: contain; 
-  cursor: pointer;
+.showcaseRow {
+  display: flex;
+  padding: 20px var(--ifm-spacing-horizontal);
+  height: 33vh;
 }
 
 
-.showcaseDescriptionContainer { 
-  display: flex; 
-  flex: 2;
-  flex-direction: column; 
-  justify-content: center; 
-}
+@media screen and (min-width: 997px) {
+  .showcaseRow:nth-child(even) {
+    flex-direction: row-reverse;
+  }
 
-.showcaseDescription {
-  overflow-y: scroll;
+  .showcaseRow:nth-child(even) .showcaseDescriptionContainer {
+    margin-right: 4vw;
+  }
+  
+  .showcaseRow:nth-child(odd) .showcaseDescriptionContainer {
+    margin-left: 4vw;
+  }
 }
 
 @media screen and (max-width: 996px) {
@@ -90,15 +57,45 @@
     padding: 2rem;
   }
 
+  .showcaseContainer { 
+    justify-content: center
+  }
+
   .showcaseRow {
-    /* TODO: Remove important */
-    flex-direction: column !important;
+    flex-direction: column;
     height: unset;
   }
 
-  .showcaseImgContainer {
-    justify-content: flex-start !important;
+  .showcaseDescriptionContainer {
+    margin-top: 1vh;
   }
+}
+
+.showcaseRow h2 {
+  padding-right: 80px;
+}
+
+.underline {
+  box-sizing: border-box;
+  max-width: fit-content;
+  border-bottom: 4px solid #FFE52B;
+}
+
+.showcaseImg {
+  object-fit: contain; 
+  cursor: pointer;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.showcaseDescriptionContainer { 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+}
+
+.showcaseDescription {
+  overflow-y: scroll;
 }
 
 .buttons {

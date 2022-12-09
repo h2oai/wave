@@ -145,14 +145,8 @@ function Home() {
             </div>
             <div className={clsx('row', styles.showcaseContainer)}>
               {showcase.apps.map(({ title, description, images }, idx) =>
-                <div className={styles.showcaseRow} key={`app-${idx}`}>
-                  <div className={styles.showcaseImgContainer} style={{ justifyContent: idx % 2 ? 'flex-end' : 'flex-start' }}>
-                    <img
-                      src={images[0].path}
-                      onClick={() => openLightbox(images)}
-                      className={styles.showcaseImg}
-                    />
-                  </div>
+                <div className={styles.showcaseRow} key={`row-${idx}`}>
+                  <img src={images[0].path} onClick={() => openLightbox(images)} className={styles.showcaseImg} />
                   <div className={styles.showcaseDescriptionContainer}>
                     <h2 className={styles.underline} >{title}</h2>
                     <p className={styles.showcaseDescription}>{description}</p>
