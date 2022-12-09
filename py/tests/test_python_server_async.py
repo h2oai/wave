@@ -19,7 +19,7 @@ import httpx
 
 from .utils import read_file
 
-
+# TODO: Add cleanup (site.unload) to tests that upload files.
 class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
     def __init__(self, methodName: str = ...) -> None:
         super().__init__(methodName)
@@ -68,8 +68,7 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_upload_dir(self):
         upload_path, = await self.site.upload_dir(os.path.join('tests', 'test_folder'))
-        base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
-        download_path = await self.site.download(f'{base_url}{upload_path}test.txt', 'test.txt')
+        download_path = await self.site.download(f'{upload_path}/test.txt', 'test.txt')
         txt = read_file(download_path)
         os.remove(download_path)
         assert len(txt) > 0

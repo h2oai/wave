@@ -40,19 +40,6 @@
       ]
     },
     {
-      "name": "Debug PY App",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/py/venv/bin/wave",
-      "python": "${workspaceFolder}/py/venv/bin/python",
-      "cwd": "${workspaceFolder}/py/examples",
-      "args": [
-        "run",
-        "tour",
-        "--no-reload",
-      ],
-    },
-    {
       "name": "Debug Py Tests",
       "type": "python",
       "cwd": "${workspaceFolder}/py",
@@ -103,6 +90,19 @@
       "outFiles": [
         "${workspaceFolder}/tools/wavegen/build/**/*.js"
       ]
+    },
+    {
+      "name": "Debug Wave App",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/py/venv/bin/wave",
+      "python": "${workspaceFolder}/py/venv/bin/python",
+      "cwd": "${workspaceFolder}/py/examples",
+      "args": [
+        "run",
+        "tour",
+        "--no-reload",
+      ],
     },
     {
       "name": "Debug Wave Server",
