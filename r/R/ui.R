@@ -2921,7 +2921,7 @@ ui_facepile <- function(
 #' @param label The text displayed above the textbox.
 #' @param name An identifying name for this component.
 #' @param multiline True if the component should allow multi-line text entry.
-#' @param height The adjustable height of the textbox.
+#' @param height Custom height in px, e.g. '200px'. Requires `multiline` to be set.
 #' @return A CopyableText instance.
 #' @export
 ui_copyable_text <- function(

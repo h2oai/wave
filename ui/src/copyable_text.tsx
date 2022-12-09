@@ -51,7 +51,7 @@ export interface CopyableText {
   name?: S
   /** True if the component should allow multi-line text entry. */
   multiline?: B
-  /** The adjustable height of the textbox. */
+  /** Custom height in px, e.g. '200px'. Requires `multiline` to be set. */
   height?: S
 }
 
@@ -87,8 +87,8 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         value={value}
         label={label}
         multiline={multiline}
-        styles={ multiline && height && !height.endsWith('%') 
-          ? { root: { width: pc(100) }, field: {minHeight: height}, fieldGroup: { minHeight: height, height: height} } 
+        styles={ multiline && height
+          ? { root: { width: pc(100) }, fieldGroup: { minHeight: height} } 
           : { root: { width: pc(100) } } }
         readOnly
       />
