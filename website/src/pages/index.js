@@ -136,30 +136,32 @@ function Home() {
             </div>
           </section>
         )}
-        <section className={styles.features}>
-          <div className="container">
+        {showcase && showcase.apps.length > 0 && (
+          <section className='container'>
             <div className={clsx('row', styles.showcaseTitleContainer)} >
               <div className={styles.divider} style={{ marginRight: 10 }} />
               <h1 className={styles.showcaseTitle}>{`See what you can build\nwith Wave`}</h1>
               <div className={styles.divider} style={{ marginLeft: 10 }} />
             </div>
-            <div className='row' style={{ justifyContent: 'center' }}>
-              {showcase && showcase.apps.length > 0 && (
-                showcase.apps.map(({ title, description, images }, idx) =>
-                  <div className={clsx(styles.showcaseRow)} key={`app-${idx}`}>
-                    <div className={styles.showcaseImgContainer} style={{ justifyContent: idx % 2 ? 'flex-end' : 'flex-start' }}>
-                      <img src={images[0].path} className={styles.showcaseImg} onClick={() => openLightbox(images)} />
-                    </div>
-                    <div className={styles.showcaseDescriptionContainer}>
-                      <h2 className={styles.underline} >{title}</h2>
-                      <p className={styles.showcaseDescription}>{description}</p>
-                    </div>
+            <div className={clsx('row', styles.showcaseContainer)}>
+              {showcase.apps.map(({ title, description, images }, idx) =>
+                <div className={styles.showcaseRow} key={`app-${idx}`}>
+                  <div className={styles.showcaseImgContainer} style={{ justifyContent: idx % 2 ? 'flex-end' : 'flex-start' }}>
+                    <img
+                      src={images[0].path}
+                      onClick={() => openLightbox(images)}
+                      className={styles.showcaseImg}
+                    />
                   </div>
-                )
+                  <div className={styles.showcaseDescriptionContainer}>
+                    <h2 className={styles.underline} >{title}</h2>
+                    <p className={styles.showcaseDescription}>{description}</p>
+                  </div>
+                </div>
               )}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
         {lightboxVisible && <Lightbox {...lightboxProps.current} />}
       </main>
     </Layout >

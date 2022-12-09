@@ -12,6 +12,10 @@
   overflow: hidden;
 }
 
+.showcaseContainer { 
+  justify-content: center
+}
+
 .showcaseRow {
   display: flex;
   width: 100%;
@@ -44,6 +48,7 @@
   background-color: #FFE52B;
   height: 5px;
 }
+
 
 .showcaseTitleContainer { 
   justify-content: center;
