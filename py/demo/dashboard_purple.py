@@ -8,17 +8,17 @@ async def show_purple_dashboard(q: Q):
         ui.layout(
             breakpoint='xs',
             zones=[
-                ui.zone('header'),
-                ui.zone('title'),
+                ui.zone('header', size='65px'),
+                ui.zone('title', size='60px'),
                 ui.zone('body'),
-                ui.zone('footer'),
+                ui.zone('footer', size='80px'),
             ],
         ),
         ui.layout(
             breakpoint='m',
             zones=[
-                ui.zone('header'),
-                ui.zone('title'),
+                ui.zone('header', size='65px'),
+                ui.zone('title', size='60px'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', zones=[
                         ui.zone('overview'),
@@ -28,16 +28,16 @@ async def show_purple_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='30%'),
                 ]),
-                ui.zone('footer'),
+                ui.zone('footer', size='80px'),
             ],
         ),
         ui.layout(
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header'),
-                ui.zone('title'),
-                ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('header', size='65px'),
+                ui.zone('title', size='60px'),
+                ui.zone('body', size='1150px', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', size='3', zones=[
                         ui.zone('overview', direction=ui.ZoneDirection.ROW, size='200px'),
                         ui.zone('stats', direction=ui.ZoneDirection.ROW, size='150px'),
@@ -46,7 +46,7 @@ async def show_purple_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='30%'),
                 ]),
-                ui.zone('footer'),
+                ui.zone('footer', size='80px'),
             ]
         )
     ])

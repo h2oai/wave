@@ -9,8 +9,8 @@ async def show_cyan_dashboard(q: Q):
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header'),
-                ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('header', size='65px'),
+                ui.zone('body', size='1400px', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('content', size='75%', zones=[
                         ui.zone('top', size='600px'),
                         ui.zone('middle', size='300px', direction=ui.ZoneDirection.ROW, zones=[
@@ -21,7 +21,7 @@ async def show_cyan_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='25%'),
                 ]),
-                ui.zone('footer'),
+                ui.zone('footer', size='80px'),
             ]
         )
     ])
@@ -141,10 +141,10 @@ async def show_cyan_dashboard(q: Q):
     q.page['sidebar_section'] = ui.section_card(
         box=ui.box('sidebar', order=1, size='0'),
         title=next(sample_title),
-        subtitle=next(sample_caption),
+        subtitle='Lorem ipsum dolor sit amet consectetur.',
     )
     q.page['filter'] = ui.form_card(
-        box=ui.box('sidebar', height='335px', order=2),
+        box=ui.box('sidebar', height='500px', order=2),
         title=next(sample_title),
         items=[
             ui.dropdown(name='region', label=next(sample_term), value='option0', choices=[
