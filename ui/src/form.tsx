@@ -172,7 +172,7 @@ interface Inline {
   /** Specifies how to lay out the individual components. Defaults to 'start'. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. */
-  align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+  align?: 'start' | 'end' | 'center' | 'baseline'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
 }
@@ -217,7 +217,7 @@ const
   })
 
 type Justification = 'start' | 'end' | 'center' | 'between' | 'around'
-type Alignment = 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+type Alignment = 'start' | 'end' | 'center' | 'baseline'
 
 export const
   XComponents = ({ items, justify, align, inset }: { items: Component[], justify?: Justification, align?: Alignment, inset?: B }) => {

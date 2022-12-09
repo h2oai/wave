@@ -5925,7 +5925,7 @@ class InlineJustify:
     AROUND = 'around'
 
 
-_InlineAlign = ['start', 'end', 'center', 'baseline', 'stretch']
+_InlineAlign = ['start', 'end', 'center', 'baseline']
 
 
 class InlineAlign:
@@ -5933,7 +5933,6 @@ class InlineAlign:
     END = 'end'
     CENTER = 'center'
     BASELINE = 'baseline'
-    STRETCH = 'stretch'
 
 
 class Inline:
@@ -5955,7 +5954,7 @@ class Inline:
         self.justify = justify
         """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify."""
         self.align = align
-        """Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.InlineAlign."""
+        """Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign."""
         self.inset = inset
         """Whether to display the components inset from the parent form, with a contrasting background."""
 
