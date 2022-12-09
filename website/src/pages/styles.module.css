@@ -16,7 +16,6 @@
   justify-content: center;
   align-items: center; 
   padding: 0 var(--ifm-spacing-horizontal); 
-  padding-bottom: 46px; 
 }
 
 .showcaseTitle { 
@@ -52,14 +51,16 @@
   }
 }
 
+.showcaseContainer { 
+  justify-content: center;
+  padding: 3vh 0
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
   }
 
-  .showcaseContainer { 
-    justify-content: center
-  }
 
   .showcaseRow {
     flex-direction: column;
