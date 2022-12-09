@@ -140,15 +140,18 @@ function Home() {
           <section className='container'>
             <div className={clsx('row', styles.showcaseTitleContainer)} >
               <div className={styles.divider} style={{ marginRight: 10 }} />
-              <h1 className={styles.showcaseTitle}>{`See what you can build\nwith Wave`}</h1>
+              <h2 className={styles.showcaseTitle}>What can Wave achieve?</h2>
               <div className={styles.divider} style={{ marginLeft: 10 }} />
+            </div>
+            <div className={clsx('row', styles.showcaseSubtitleContainer)} >
+              <p>The following are just a few of hundreds of Wave apps built within H2O.ai. The most mind-blowing thing is that all presented apps were built by our data science and machine learning people, no software engineer necessary.</p>
             </div>
             <div className={clsx('row', styles.showcaseContainer)}>
               {showcase.apps.map(({ title, description, images }, idx) =>
-                <div className={styles.showcaseRow} key={`row-${idx}`}>
+                <div className={styles.showcaseRow} key={idx}>
                   <img src={images[0].path} onClick={() => openLightbox(images)} className={styles.showcaseImg} />
                   <div className={styles.showcaseDescriptionContainer}>
-                    <h2 className={styles.underline} >{title}</h2>
+                    <h3 className={styles.underline} >{title}</h3>
                     <p className={styles.showcaseDescription}>{description}</p>
                   </div>
                 </div>

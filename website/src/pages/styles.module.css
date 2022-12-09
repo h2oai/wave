@@ -30,6 +30,11 @@
   height: 5px;
 }
 
+.showcaseSubtitleContainer {
+  text-align: center;
+  padding: 2vh 0;
+}
+
 .showcaseRow {
   display: flex;
   padding: 20px var(--ifm-spacing-horizontal);
@@ -53,7 +58,7 @@
 
 .showcaseContainer { 
   justify-content: center;
-  padding: 3vh 0
+  padding-bottom: 3vh;
 }
 
 @media screen and (max-width: 996px) {
