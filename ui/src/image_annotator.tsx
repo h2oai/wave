@@ -355,6 +355,31 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         polygonRef.current?.cancelAnnotating()
         redrawExistingShapes()
       }
+      if (e.key === 'ArrowRight') {
+        const increment = e.shiftKey ? 10 : 1
+        setDrawnShapes(shapes => {
+          const movedShapes = shapes.map(s => {
+            if (s.isFocused) {
+              const canvasWidth = canvasRef.current?.width
+              if (canvasWidth && s.shape.rect) {
+                if (s.shape.rect.x1 <= (canvasWidth - increment) && s.shape.rect.x2 <= (canvasWidth - increment))
+                  s.shape.rect.x1 += increment
+                s.shape.rect.x2 += increment
+              }
+              if (canvasWidth && s.shape.polygon?.vertices) {
+                if (s.shape.polygon.vertices.find(vertice => vertice.x >= (canvasWidth - increment))) return s
+                s.shape.polygon?.vertices.forEach(vertice => {
+                  vertice.x += increment
+                  return vertice
+                })
+              }
+            }
+            return s
+          })
+          return movedShapes
+        })
+        redrawExistingShapes()
+      }
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
