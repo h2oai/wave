@@ -21,3 +21,20 @@ html = '''
 
 q.page['example'] = ui.frame_card(box='1 1 2 2', title='Example', content=html)
 ```
+
+## Without padding
+
+You can set the `compact` attribute to `True` to remove the title and padding of a frame card.
+
+```py
+html = '''
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Hello World!</h1>
+</body>
+</html>
+'''
+
+q.page['example'] = ui.frame_card(box='1 1 2 2', title='Example', content=html, compact=True)
+```

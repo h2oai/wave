@@ -16,7 +16,7 @@ import { B, Model, S, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { formItemWidth } from './theme'
+import { formItemWidth, clas } from './theme'
 import { bond } from './ui'
 
 const
@@ -24,6 +24,8 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
+    },
+    cardPadding: {
       padding: grid.gap,
     },
     body: {
@@ -83,6 +85,10 @@ interface State {
    * :value ""
    */
   content?: S
+  /**
+   * True if title and padding should be removed. Defaults to False.
+   */
+  compact?: B
 }
 
 const
@@ -104,8 +110,8 @@ export const XFrame = ({ model: { name, path, content, width = '100%', height = 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
-      <div data-test={name} className={css.card}>
-        <div className='wave-s12 wave-w6'>{state.title}</div>
+      <div data-test={name} className={clas(css.card, state.compact ? '' : css.cardPadding)}>
+        {!state.compact && <div className='wave-s12 wave-w6'>{state.title}</div>}
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />
         </div>
