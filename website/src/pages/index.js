@@ -5,7 +5,7 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
-import showcase from '../../static/apps_showcase.json'
+import showcase from '../../static/app_showcase.json'
 import { Lightbox } from '../components/lightbox'
 
 const features = [
