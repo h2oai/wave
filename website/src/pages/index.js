@@ -138,23 +138,25 @@ function Home() {
         )}
         <section className={styles.features}>
           <div className="container">
-            <div className="row" style={{ padding: '0 var(--ifm-spacing-horizontal)', justifyContent: 'center', alignItems: 'center', paddingBottom: 46 }}>
-              <div style={{ backgroundColor: '#FFE52B', height: '5px', flex: 1, marginRight: 10 }} />
-              <h1 style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'center' }}>{`See what you can build\nwith Wave`}</h1>
-              <div style={{ backgroundColor: '#FFE52B', height: '5px', flex: 1, marginLeft: 10 }} />
+            <div className={clsx('row', styles.showcaseTitleContainer)} >
+              <div className={styles.divider} style={{ marginRight: 10 }} />
+              <h1 className={styles.showcaseTitle}>{`See what you can build\nwith Wave`}</h1>
+              <div className={styles.divider} style={{ marginLeft: 10 }} />
             </div>
             <div className='row' style={{ justifyContent: 'center' }}>
-              {showcase && showcase.apps.length > 0 && (showcase.apps.map(({ title, description, images }, idx) =>
-                <div className={clsx(styles.showcaseRow)} key={`app-${idx}`}>
-                  <div style={{ display: 'flex', flex: 3, justifyContent: idx % 2 ? 'flex-end' : 'flex-start' }} className={styles.imageContainer}>
-                    <img src={images[0].path} style={{ objectFit: 'contain', cursor: 'pointer' }} onClick={() => openLightbox(images)} />
+              {showcase && showcase.apps.length > 0 && (
+                showcase.apps.map(({ title, description, images }, idx) =>
+                  <div className={clsx(styles.showcaseRow)} key={`app-${idx}`}>
+                    <div className={styles.showcaseImgContainer} style={{ justifyContent: idx % 2 ? 'flex-end' : 'flex-start' }}>
+                      <img src={images[0].path} className={styles.showcaseImg} onClick={() => openLightbox(images)} />
+                    </div>
+                    <div className={styles.showcaseDescriptionContainer}>
+                      <h2 className={styles.underline} >{title}</h2>
+                      <p className={styles.showcaseDescription}>{description}</p>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 2 }}>
-                    <h2 className={styles.underline} >{title}</h2>
-                    <p>{description}</p>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
         </section>

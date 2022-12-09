@@ -118,20 +118,12 @@ export const Lightbox = ({ images, defaultImageIdx, onDismiss }) => {
           <ChevronLeftIcon
             onClick={handleShowPrevImage}
             className={clsx(styles.iconStylesRootArrow, styles.button)}
-            style={{
-              left: LIGHTBOX_PAGE_MARGIN,
-              width: ICON_SIZE,
-              height: ICON_SIZE,
-            }}
+            style={{ left: LIGHTBOX_PAGE_MARGIN, width: ICON_SIZE, height: ICON_SIZE }}
           />
           <ChevronRightIcon
             onClick={handleShowNextImage}
             className={clsx(styles.iconStylesRootArrow, styles.button)}
-            style={{
-              right: LIGHTBOX_PAGE_MARGIN,
-              width: ICON_SIZE,
-              height: ICON_SIZE,
-            }}
+            style={{ right: LIGHTBOX_PAGE_MARGIN, width: ICON_SIZE, height: ICON_SIZE }}
           />
           <div
             ref={imageNavRef}

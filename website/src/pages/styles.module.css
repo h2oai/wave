@@ -17,6 +17,7 @@
   width: 100%;
   padding: 20px var(--ifm-spacing-horizontal);
   height: 33vh;
+  min-height: 440px;
   max-width: 90vw;
 }
 
@@ -38,6 +39,47 @@
   border-bottom: 4px solid #FFE52B;
 }
 
+.divider {
+  flex: 1;
+  background-color: #FFE52B;
+  height: 5px;
+}
+
+.showcaseTitleContainer { 
+  justify-content: center;
+  align-items: center; 
+  padding: 0 var(--ifm-spacing-horizontal); 
+  padding-bottom: 46px; 
+}
+
+.showcaseTitle { 
+  margin: 0; 
+  white-space: pre-wrap; 
+  text-align: center;
+}
+
+.showcaseImgContainer {
+  display: flex; 
+  flex: 3; 
+}
+
+.showcaseImg {
+  object-fit: contain; 
+  cursor: pointer;
+}
+
+
+.showcaseDescriptionContainer { 
+  display: flex; 
+  flex: 2;
+  flex-direction: column; 
+  justify-content: center; 
+}
+
+.showcaseDescription {
+  overflow-y: scroll;
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
@@ -49,7 +91,7 @@
     height: unset;
   }
 
-  .imageContainer {
+  .showcaseImgContainer {
     justify-content: flex-start !important;
   }
 }
