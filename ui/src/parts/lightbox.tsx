@@ -189,6 +189,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     //new shit
     [zoomed, setZoomed] = React.useState("1"),
     [, setPosition] = React.useState("50% 50%"),
+    
     [scale, setScale] = React.useState("scale(1)"),
     //new shit
 
@@ -207,14 +208,16 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     zoomInPosition = (e: React.MouseEvent) => {
       // this will handle the calculations of the area where the image needs to zoom in depending on the user interaction
       const zoomer = e.currentTarget.getBoundingClientRect()
+
       const offsetX = e.clientX - zoomer.x
       const offsetY = e.clientY - zoomer.y
       const x = (offsetX / zoomer.width) * 100
       const y = (offsetY / zoomer.height) * 100
-      setPosition(`${x}% ${y}% `)
+      console.log("new x and y", x, y)
+      setPosition(`${x}% ${y}%`)
       //images.length = 5
       //img.style.transform = "scale2"
-    }, 
+    },
 
     handleZoom = (e: React.MouseEvent) => {
       //console.log(e)
@@ -223,17 +226,27 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         //console.log("hi")
         setScale("scale(1)")
         setZoomed("1")
+        console.log("zoom out")
       } else {
         //zoom in and set the background position correctly
         setZoomed("0")
         setScale("scale(2)")
         zoomInPosition(e)
+        console.log("zoom in")
         //images.length = 1000
       }
       //console.log(zoomed)
+    },
+    handleMove = (e: React.MouseEvent) => {
+      console.log("mouse move")
+      if (zoomed == "0") {
+        zoomInPosition(e)
+      }
+    },
+    handleLeave = () => {
+      setZoomed("1")
+      setPosition("50% 50%")
     }
-    //new shit
-
 
   React.useEffect(() => {
     // Initialize intersection observer for lazy images.
@@ -289,6 +302,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         className={css.img}
         style={{
           bottom: FOOTER_HEIGHT,
+
           maxHeight: `calc(100vh - ${(2 * LIGHTBOX_PAGE_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`,
           // width: "500px",
           // height: "400px",
@@ -298,8 +312,8 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         alt={title}
         src={images[activeImageIdx].path}
         onClick = {(e) => handleZoom(e)}
-        //onClick = {() => console.log("hello")}
-
+        onMouseMove = {(e) => handleMove(e)}
+        onMouseLeave = {(e) => handleLeave(e)}
       />
       {/* </Figure> */}
       <span
