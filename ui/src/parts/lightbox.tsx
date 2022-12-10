@@ -18,6 +18,57 @@ import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
+//import styled from "styled-components"
+
+
+// const Figure = styled.figure`
+//   position: relative;
+//   display: inline-block;
+//   width: auto;
+//   min-height: 25vh;
+//   background-position: 50% 50%;
+//   background-color: #eee;
+//   margin: 0;
+//   overflow: hidden;
+//   cursor: zoom-in;
+//   &:before {
+//     content: "";
+//     background-color: transparent;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     width: 100%;
+//     height: 100%;
+//     opacity: 1;
+//     transition: opacity 0.2s ease-in-out;
+//     z-index: 1;
+//   }
+//   &:after {
+//     content: "";
+//     position: absolute;
+//     top: calc(50% - 25px);
+//     left: calc(50% - 25px);
+//     width: 50px;
+//     height: 50px;
+//     border-radius: 50%;
+//     border: 5px solid transparent;
+//     border-top-color: #333;
+//     border-right-color: #333;
+//     border-bottom-color: #333;
+//     opacity: 1;
+//     transition: opacity 0.2s ease-in-out;
+//     z-index: 2;
+//   }
+//   &.loaded {
+//     min-height: auto;
+//     &:before {
+//       opacity: 0;
+//     }
+//     &:after {
+//       opacity: 0;
+//     }
+//   }`
 
 export const lightboxB: Box<LightboxProps | null> = box()
 
@@ -44,7 +95,7 @@ const
       right: 0,
       top: ICON_SIZE + LIGHTBOX_PAGE_MARGIN * 2,
       maxWidth: '100vw',
-      cursor: 'auto'
+      cursor: 'zoom-in'
     },
     closeButton: {
       position: 'absolute',
@@ -134,6 +185,13 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         }
       })
     ),
+
+    //new shit
+    [zoomed, setZoomed] = React.useState("1"),
+    [, setPosition] = React.useState("50% 50%"),
+    [scale, setScale] = React.useState("scale(1)"),
+    //new shit
+
     handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
     handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
     handleKeyDown = (ev: React.KeyboardEvent) => {
@@ -143,7 +201,39 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     },
     handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
       if (ev.target === ev.currentTarget) lightboxB(null)
+    },
+
+    //new shit
+    zoomInPosition = (e: React.MouseEvent) => {
+      // this will handle the calculations of the area where the image needs to zoom in depending on the user interaction
+      const zoomer = e.currentTarget.getBoundingClientRect()
+      const offsetX = e.clientX - zoomer.x
+      const offsetY = e.clientY - zoomer.y
+      const x = (offsetX / zoomer.width) * 100
+      const y = (offsetY / zoomer.height) * 100
+      setPosition(`${x}% ${y}% `)
+      //images.length = 5
+      //img.style.transform = "scale2"
+    }, 
+
+    handleZoom = (e: React.MouseEvent) => {
+      //console.log(e)
+      if (zoomed === "0") {
+        // zoom out
+        //console.log("hi")
+        setScale("scale(1)")
+        setZoomed("1")
+      } else {
+        //zoom in and set the background position correctly
+        setZoomed("0")
+        setScale("scale(2)")
+        zoomInPosition(e)
+        //images.length = 1000
+      }
+      //console.log(zoomed)
     }
+    //new shit
+
 
   React.useEffect(() => {
     // Initialize intersection observer for lazy images.
@@ -186,15 +276,32 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         onClick={() => lightboxB(null)}
         iconProps={{ iconName: 'Cancel' }}
       />
+      {/* <Figure
+        className={css.img}
+        style={{
+          backgroundImage: "url(" + images[activeImageIdx].path + ")",
+          backgroundSize: "200%",
+          backgroundPosition: position,
+        }}
+        onClick={(e) => handleZoom(e)}
+      > */}
       <img
         className={css.img}
         style={{
           bottom: FOOTER_HEIGHT,
-          maxHeight: `calc(100vh - ${(2 * LIGHTBOX_PAGE_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`
+          maxHeight: `calc(100vh - ${(2 * LIGHTBOX_PAGE_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`,
+          // width: "500px",
+          // height: "400px",
+          // resizeMode: "stretch",
+          transform: scale
         }}
         alt={title}
         src={images[activeImageIdx].path}
+        onClick = {(e) => handleZoom(e)}
+        //onClick = {() => console.log("hello")}
+
       />
+      {/* </Figure> */}
       <span
         title={title}
         className={clas(css.text, css.title)}
