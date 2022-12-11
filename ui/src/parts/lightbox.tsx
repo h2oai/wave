@@ -18,125 +18,8 @@ import { stylesheet, style } from 'typestyle'
 import * as Fluent from '@fluentui/react'
 import { clas, cssVar } from '../theme'
 import { getColorFromString, isDark } from '@fluentui/react'
-import styled, { keyframes } from "styled-components"
-
-
-//import styled from "styled-components"
-
-
-// const Figure = styled.figure`
-//   position: relative;
-//   display: inline-block;
-//   width: auto;
-//   min-height: 25vh;
-//   background-position: 50% 50%;
-//   background-color: #eee;
-//   margin: 0;
-//   overflow: hidden;
-//   cursor: zoom-in;
-//   &:before {
-//     content: "";
-//     background-color: transparent;
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     width: 100%;
-//     height: 100%;
-//     opacity: 1;
-//     transition: opacity 0.2s ease-in-out;
-//     z-index: 1;
-//   }
-//   &:after {
-//     content: "";
-//     position: absolute;
-//     top: calc(50% - 25px);
-//     left: calc(50% - 25px);
-//     width: 50px;
-//     height: 50px;
-//     border-radius: 50%;
-//     border: 5px solid transparent;
-//     border-top-color: #333;
-//     border-right-color: #333;
-//     border-bottom-color: #333;
-//     opacity: 1;
-//     transition: opacity 0.2s ease-in-out;
-//     z-index: 2;
-//   }
-//   &.loaded {
-//     min-height: auto;
-//     &:before {
-//       opacity: 0;
-//     }
-//     &:after {
-//       opacity: 0;
-//     }
-//   }`
 
 export const lightboxB: Box<LightboxProps | null> = box()
-
-const rotate = keyframes`
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-`;
-
-const Figure = styled.figure`
-  position: relative;
-  display: inline-block;
-  width: auto;
-  min-height: 25vh;
-  background-position: 50% 50%;
-  background-color: #eee;
-  margin: 0;
-  overflow: hidden;
-  cursor: zoom-in;
-  &:before {
-    content: "";
-    background-color: transparent;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-    z-index: 1;
-  }
-  &:after {
-    content: "";
-    position: absolute;
-    top: calc(50% - 25px);
-    left: calc(50% - 25px);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 5px solid transparent;
-    border-top-color: #333;
-    border-right-color: #333;
-    border-bottom-color: #333;
-    animation: ${rotate} 2s linear infinite;
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-    z-index: 2;
-  }
-  &.loaded {
-    min-height: auto;
-    &:before {
-      opacity: 0;
-    }
-    &:after {
-      opacity: 0;
-    }
-  }
-`;
-const Img = styled.img`
-  transition: opacity 0.8s;
-  display: block;
-`;
-
-//END OF ADDED CODE
-
 
 const
   IMAGE_CAPTIONS_HEIGHT = 46, // Total height of title and decription.
@@ -154,15 +37,15 @@ const
       backgroundColor: 'rgba(0, 0, 0, 0.9)',
       cursor: 'pointer'
     },
-    /*img: {
+    img: {
       position: 'absolute',
       margin: 'auto',
       left: 0,
       right: 0,
       top: ICON_SIZE + LIGHTBOX_PAGE_MARGIN * 2,
       maxWidth: '100vw',
-      cursor: 'zoom-in'
-    },*/
+      cursor: 'auto'
+    },
     closeButton: {
       position: 'absolute',
       right: LIGHTBOX_PAGE_MARGIN,
@@ -251,16 +134,8 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         }
       })
     ),
-
-    //new code
     [zoomed, setZoomed] = React.useState("1"),
     [position, setPosition] = React.useState("50% 50%"),
-    [scale, setScale] = React.useState("scale(1)"),
-    [imgData, ] = React.useState(null),
-    figureClass = imgData ? "loaded" : "loading",
-    figureZoomed = zoomed === "0" ? "zoomed" : "fullView",
-    //end of added code
-
     handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
     handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
     handleKeyDown = (ev: React.KeyboardEvent) => {
@@ -271,50 +146,25 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     handleCloseOnFreeSpaceClick = (ev: React.MouseEvent) => {
       if (ev.target === ev.currentTarget) lightboxB(null)
     },
-
-    //new shit
     zoomInPosition = (e: React.MouseEvent) => {
       // this will handle the calculations of the area where the image needs to zoom in depending on the user interaction
       const zoomer = e.currentTarget.getBoundingClientRect()
-
       const offsetX = e.clientX - zoomer.x
       const offsetY = e.clientY - zoomer.y
       const x = (offsetX / zoomer.width) * 100
       const y = (offsetY / zoomer.height) * 100
-      //console.log("new x and y", x, y)
-      setPosition(`${x}% ${y}%`)
-      console.log("position is:", position)
-      //images.length = 5
-      //img.style.transform = "scale2"
-    },
+      setPosition(`${x}% ${y}% `)
+    }, 
 
     handleZoom = (e: React.MouseEvent) => {
-      //console.log(e)
       if (zoomed === "0") {
         // zoom out
-        //console.log("hi")
-        setScale("scale(1)")
         setZoomed("1")
-        console.log("zoom out")
       } else {
-        //zoom in and set the background position correctly
+        // zoom in and set the background position correctly
         setZoomed("0")
-        setScale("scale(2)")
-        zoomInPosition(e)
-        console.log("zoom in")
-        //images.length = 1000
-      }
-      //console.log(zoomed)
-    },
-    handleMove = (e: React.MouseEvent) => {
-      console.log("mouse move")
-      if (zoomed == "0") {
         zoomInPosition(e)
       }
-    },
-    handleLeave = () => {
-      setZoomed("1")
-      setPosition("50% 50%")
     }
 
   React.useEffect(() => {
@@ -358,43 +208,19 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         onClick={() => lightboxB(null)}
         iconProps={{ iconName: 'Cancel' }}
       />
-      
-      <Figure
-            className={[figureClass, figureZoomed].join(" ")}
-            style={{
-              backgroundImage: "url(" + imgData + ")",
-              backgroundPosition: position,
-            }}
-            onClick={(e) => handleClick(e)}
-            onMouseMove={(e) => handleMove(e)}
-            onMouseLeave={() => handleLeave()}
-          >
-            <Img
-              id="imageZoom"
-              src={imgData}
-              style={{ opacity: zoomed }}
-            
-            />
-          </Figure>
-        );
-
-
       <img
         className={css.img}
         style={{
           bottom: FOOTER_HEIGHT,
-
           maxHeight: `calc(100vh - ${(2 * LIGHTBOX_PAGE_MARGIN) + ICON_SIZE + FOOTER_HEIGHT}px)`,
-          // width: "500px",
-          // height: "400px",
-          // resizeMode: "stretch",
-          transform: scale
+          transformOrigin: position,
+          transform: zoomed === "0" ? "scale(2)":"scale(1)",
+          cursor: zoomed === "0" ? "zoom-out":"zoom-in"
+
         }}
         alt={title}
         src={images[activeImageIdx].path}
         onClick = {(e) => handleZoom(e)}
-        onMouseMove = {(e) => handleMove(e)}
-        onMouseLeave = {() => handleLeave()}
       />
       <span
         title={title}
