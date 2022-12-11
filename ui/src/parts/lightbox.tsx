@@ -222,17 +222,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
         src={images[activeImageIdx].path}
         onClick = {(e) => handleZoom(e)}
       />
-      <button
-        style={{
-          backgroundColor: '#f57f17',
-          position: 'absolute',
-          flex: 0.2,
-          marginTop: 20,
-          marginLeft: 20,
-        }}
-      >
-        Test
-      </button>
+      
       <span
         title={title}
         className={clas(css.text, css.title)}
