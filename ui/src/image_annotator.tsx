@@ -351,53 +351,23 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
-      // TODO: move to the end of the canvas when holding shift and less than 10px is left
       setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
         const
           { isFocused, shape } = ds,
           { polygon, rect } = shape,
-          increment = e.shiftKey ? 10 : 1,
-          max = direction === 'left' || direction === 'up'
-            ? 0 + increment
-            : (direction === 'right' ? canvasRef.current!.width! : canvasRef.current!.height!) - increment,
-          isInBoundaries = (c1: U, c2: U = max) => {
-            if (direction === 'right' && c1 <= max && c2 <= max) return true
-            if (direction === 'left' && c1 >= max && c2 >= max) return true
-            if (direction === 'up' && c1 >= max && c2 >= max) return true
-            if (direction === 'down' && c1 <= max && c2 <= max) return true
-          }
+          isAxisHorizontal = direction === 'right' || direction === 'left',
+          isPositiveDirection = direction === 'right' || direction === 'down',
+          increment = (isPositiveDirection ? 1 : -1) * (e.shiftKey ? 10 : 1),
+          border = (isPositiveDirection ? canvasRef.current![direction === 'right' ? 'width' : 'height'] : 0) - increment,
+          isInBoundaries = (c1: U, c2: U = border) => (isPositiveDirection && c1 <= border && c2 <= border) || (!isPositiveDirection && c1 >= border && c2 >= border)
         if (isFocused) {
-          if (rect) {
-            if (isInBoundaries(rect.x1, rect.x2)) {
-              if (direction === 'right') {
-                rect.x1 += increment
-                rect.x2 += increment
-              }
-              if (direction === 'left') {
-                rect.x1 -= increment
-                rect.x2 -= increment
-              }
-            }
-            if (isInBoundaries(rect.y1, rect.y2)) {
-              if (direction === 'up') {
-                rect.y1 -= increment
-                rect.y2 -= increment
-              }
-              if (direction === 'down') {
-                rect.y1 += increment
-                rect.y2 += increment
-              }
-            }
+          if (rect && isInBoundaries(rect[isAxisHorizontal ? 'x1' : 'y1'], rect[isAxisHorizontal ? 'x2' : 'y2'])) {
+            rect[isAxisHorizontal ? 'x1' : 'y1'] += increment
+            rect[isAxisHorizontal ? 'x2' : 'y2'] += increment
           }
-          if (polygon) {
-            if (!polygon.vertices.find(vertice => !isInBoundaries(vertice.x))) {
-              if (direction === 'right') polygon.vertices.forEach(vertice => vertice.x += increment)
-              if (direction === 'left') polygon.vertices.forEach(vertice => vertice.x -= increment)
-            }
-            if (!polygon.vertices.find(vertice => !isInBoundaries(vertice.y))) {
-              if (direction === 'up') polygon.vertices.forEach(vertice => vertice.y -= increment)
-              if (direction === 'down') polygon.vertices.forEach(vertice => vertice.y += increment)
-            }
+          // Do not increment when at least one vertice is out of boundaries.
+          if (polygon && !polygon.vertices.find(v => !isInBoundaries(v[isAxisHorizontal ? 'x' : 'y']))) {
+            polygon.vertices.forEach(v => v[isAxisHorizontal ? 'x' : 'y'] += increment)
           }
         }
         return ds
@@ -410,10 +380,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
       // Available on image focus.
-      if (e.key === 'ArrowRight') moveShape(e, 'right')
-      if (e.key === 'ArrowLeft') moveShape(e, 'left')
       if (e.key === 'ArrowUp') moveShape(e, 'up')
       if (e.key === 'ArrowDown') moveShape(e, 'down')
+      if (e.key === 'ArrowLeft') moveShape(e, 'left')
+      if (e.key === 'ArrowRight') moveShape(e, 'right')
       // Always available.
       // TODO:
     },
