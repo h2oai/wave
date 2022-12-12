@@ -128,11 +128,7 @@ function Home() {
         {features && features.length > 0 && (
           <section className={styles.features}>
             <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
-              </div>
+              <div className="row">{features.map((props, idx) => <Feature key={idx} {...props} />)}</div>
             </div>
           </section>
         )}
@@ -149,6 +145,7 @@ function Home() {
             <div className={clsx('row', styles.showcaseContainer)}>
               {showcase.apps.map(({ title, description, images }, idx) =>
                 <div className={styles.showcaseRow} key={idx}>
+                  {/* TODO: Add support for modern image formats to improve loading perf. */}
                   <img src={images[0].path} onClick={() => openLightbox(images)} className={styles.showcaseImg} />
                   <div className={styles.showcaseDescriptionContainer}>
                     <h3 className={styles.underline} >{title}</h3>

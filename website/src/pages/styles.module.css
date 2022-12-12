@@ -12,15 +12,15 @@
   overflow: hidden;
 }
 
-.showcaseTitleContainer { 
+.showcaseTitleContainer {
   justify-content: center;
-  align-items: center; 
-  padding: 0 var(--ifm-spacing-horizontal); 
+  align-items: center;
+  padding: 0 var(--ifm-spacing-horizontal);
 }
 
-.showcaseTitle { 
-  margin: 0; 
-  white-space: pre-wrap; 
+.showcaseTitle {
+  margin: 0;
+  white-space: pre-wrap;
   text-align: center;
 }
 
@@ -50,13 +50,13 @@
   .showcaseRow:nth-child(even) .showcaseDescriptionContainer {
     margin-right: 4vw;
   }
-  
+
   .showcaseRow:nth-child(odd) .showcaseDescriptionContainer {
     margin-left: 4vw;
   }
 }
 
-.showcaseContainer { 
+.showcaseContainer {
   justify-content: center;
   padding-bottom: 3vh;
 }
@@ -73,7 +73,7 @@
   }
 
   .showcaseDescriptionContainer {
-    margin-top: 1vh;
+    margin-top: 1rem;
   }
 }
 
@@ -88,16 +88,16 @@
 }
 
 .showcaseImg {
-  object-fit: contain; 
+  object-fit: contain;
   cursor: pointer;
   max-width: 100%;
   max-height: 100%;
 }
 
-.showcaseDescriptionContainer { 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
+.showcaseDescriptionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .buttons {
