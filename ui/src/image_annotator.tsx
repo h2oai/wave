@@ -112,7 +112,7 @@ const
       margin: 8
     }
   }),
-  eventToCursor = (event: React.MouseEvent, rect: DOMRect) => ({ cursor_x: event.clientX - rect.left, cursor_y: event.clientY - rect.top }),
+  eventToCursor = (e: React.MouseEvent, rect: DOMRect) => ({ cursor_x: e.clientX - rect.left, cursor_y: e.clientY - rect.top }),
   getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
     if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
     if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
@@ -176,6 +176,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [aspectRatio, setAspectRatio] = React.useState(1),
     startPosition = React.useRef<Position | undefined>(undefined),
     ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
+    mousePositionRef = React.useRef({ x: 0, y: 0 }),
     getCurrentTagColor = React.useCallback((tag: S) => colorsMap.get(tag) || cssVarValue('$red'), [colorsMap]),
     redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
@@ -251,6 +252,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       startPosition.current = { x: cursor_x, y: cursor_y, dragging: true }
     },
     onMouseMove = (e: React.MouseEvent) => {
+      mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
 
@@ -352,40 +354,98 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
       setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
-        const
-          { isFocused, shape } = ds,
-          { polygon, rect } = shape,
-          isAxisHorizontal = direction === 'right' || direction === 'left',
-          isPositiveDirection = direction === 'right' || direction === 'down',
-          increment = (isPositiveDirection ? 1 : -1) * (e.shiftKey ? 10 : 1),
-          border = (isPositiveDirection ? canvasRef.current![direction === 'right' ? 'width' : 'height'] : 0) - increment,
-          isInBoundaries = (c1: U, c2: U = border) => (isPositiveDirection && c1 <= border && c2 <= border) || (!isPositiveDirection && c1 >= border && c2 >= border)
+        const { isFocused, shape } = ds
         if (isFocused) {
-          if (rect && isInBoundaries(rect[isAxisHorizontal ? 'x1' : 'y1'], rect[isAxisHorizontal ? 'x2' : 'y2'])) {
+          const
+            { polygon, rect } = shape,
+            isAxisHorizontal = direction === 'right' || direction === 'left',
+            isPositiveDirection = direction === 'right' || direction === 'down',
+            increment = (isPositiveDirection ? 1 : -1) * (e.shiftKey ? 10 : 1),
+            border = (isPositiveDirection ? canvasRef.current![direction === 'right' ? 'width' : 'height'] : 0) - increment,
+            isInBoundaries = (c1: U, c2: U = border) => (isPositiveDirection && c1 <= border && c2 <= border) || (!isPositiveDirection && c1 >= border && c2 >= border),
+            canMoveRect = rect && isInBoundaries(rect[isAxisHorizontal ? 'x1' : 'y1'], rect[isAxisHorizontal ? 'x2' : 'y2']),
+            canMovePoly = polygon && !polygon.vertices.find(v => !isInBoundaries(v[isAxisHorizontal ? 'x' : 'y']))
+          // TODO: Move multiple selected shapes as a group.
+          if (canMoveRect) {
             rect[isAxisHorizontal ? 'x1' : 'y1'] += increment
             rect[isAxisHorizontal ? 'x2' : 'y2'] += increment
           }
           // Do not increment when at least one vertice is out of boundaries.
-          if (polygon && !polygon.vertices.find(v => !isInBoundaries(v[isAxisHorizontal ? 'x' : 'y']))) {
-            polygon.vertices.forEach(v => v[isAxisHorizontal ? 'x' : 'y'] += increment)
-          }
+          if (canMovePoly) polygon.vertices.forEach(v => v[isAxisHorizontal ? 'x' : 'y'] += increment)
         }
         return ds
       }))
       redrawExistingShapes()
     },
     onKeyDown = (e: React.KeyboardEvent) => {
+      // Cancel polygon annotation.
       if (e.key === 'Escape' && activeShape === 'polygon') {
         polygonRef.current?.cancelAnnotating()
         redrawExistingShapes()
       }
-      // Available on image focus.
+      // Shortcuts available on image focus.
+      // Move selection.
       if (e.key === 'ArrowUp') moveShape(e, 'up')
       if (e.key === 'ArrowDown') moveShape(e, 'down')
-      if (e.key === 'ArrowLeft') moveShape(e, 'left')
       if (e.key === 'ArrowRight') moveShape(e, 'right')
-      // Always available.
-      // TODO:
+      if (e.key === 'ArrowLeft') moveShape(e, 'left')
+      // Always available shortcuts.
+      // Select all shapes.
+      if (e.key === 'a') {
+        setDrawnShapes(shapes => {
+          shapes.forEach(s => s.isFocused = true)
+          return shapes
+        })
+        redrawExistingShapes()
+      }
+      // Copy selected shapes.
+      if (e.key === 'c') {
+        const selectedShapes = drawnShapes.filter(s => s.isFocused)
+        if (selectedShapes.length) {
+          navigator.clipboard.writeText(JSON.stringify(selectedShapes))
+        }
+      }
+      // Paste shapes.
+      // TODO: Move selected shapes by mouse at once.
+      if (e.key === 'v') {
+        navigator.clipboard.readText().then(text => {
+          const shapes = JSON.parse(text)
+          setDrawnShapes(prevShapes => {
+            const newShapes = [...shapes, ...prevShapes]
+            setWaveArgs(newShapes)
+            return newShapes
+          })
+          redrawExistingShapes()
+        })
+      }
+      // Delete selected shapes.
+      if (e.key === 'Delete') {
+        setDrawnShapes(shapes => {
+          const newShapes = shapes.filter(s => !s.isFocused)
+          setWaveArgs(newShapes)
+          return newShapes
+        })
+        redrawExistingShapes()
+      }
+      // Remove last vertice.
+      if (e.key === 'Backspace' && activeShape === 'polygon') {
+        polygonRef.current?.removeLastPoint()
+        const { x, y } = mousePositionRef.current
+        // Re-create the preview line.
+        onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
+      }
+      // Finish polygon annotation.
+      if (e.key === 'Enter' && activeShape === 'polygon') {
+        const newRect = polygonRef.current?.finishPolygon(activeTag)
+        if (newRect) {
+          setDrawnShapes(prevShapes => {
+            const newShapes = [newRect, ...prevShapes]
+            setWaveArgs(newShapes)
+            return newShapes
+          })
+        }
+        redrawExistingShapes()
+      }
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return

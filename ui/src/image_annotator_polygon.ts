@@ -20,19 +20,23 @@ export class PolygonAnnotator {
     this.currPolygonPoints = []
   }
 
+  finishPolygon(tag: S) {
+    const
+      { x, y } = this.currPolygonPoints[0],
+      newPolygon = { shape: { polygon: { vertices: [...this.currPolygonPoints] } }, tag },
+      isPolygon = this.currPolygonPoints.length > 2
+    this.drawLine(x, y)
+    this.currPolygonPoints = []
+    if (isPolygon) return newPolygon
+  }
+
   onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
     if (!this.ctx) return
 
     this.ctx.beginPath()
     this.ctx.fillStyle = color
 
-    if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) {
-      const { x, y } = this.currPolygonPoints[0]
-      this.drawLine(x, y)
-      const newPolygon = { shape: { polygon: { vertices: [...this.currPolygonPoints] } }, tag }
-      this.currPolygonPoints = []
-      return newPolygon
-    }
+    if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) this.finishPolygon(tag)
     if (this.currPolygonPoints.length) this.drawLine(cursor_x, cursor_y)
 
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
@@ -154,6 +158,10 @@ export class PolygonAnnotator {
     this.ctx.fillStyle = isAux ? '#b8b8b8' : '#FFF'
     this.ctx.fill(path)
     this.ctx.stroke(path)
+  }
+
+  removeLastPoint = () => {
+    this.currPolygonPoints.pop()
   }
 
   isIntersectingFirstPoint = (cursor_x: F, cursor_y: F) => {
