@@ -361,32 +361,43 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             ? 0 + increment
             : (direction === 'right' ? canvasRef.current!.width! : canvasRef.current!.height!) - increment,
           isInBoundaries = (c1: U, c2: U = max) => {
-            if (direction === 'right' && c1 <= max && c2 <= max) true
-            if (direction === 'left' && c1 >= max && c2 >= max) true
-            if (direction === 'up' && c1 >= max && c2 >= max) true
-            if (direction === 'down' && c1 <= max && c2 <= max) true
+            if (direction === 'right' && c1 <= max && c2 <= max) return true
+            if (direction === 'left' && c1 >= max && c2 >= max) return true
+            if (direction === 'up' && c1 >= max && c2 >= max) return true
+            if (direction === 'down' && c1 <= max && c2 <= max) return true
           }
         if (isFocused) {
           if (rect) {
-            if (direction === 'right' && rect.x1 <= max && rect.x2 <= max) {
-              rect.x1 += increment
-              rect.x2 += increment
+            if (isInBoundaries(rect.x1, rect.x2)) {
+              if (direction === 'right') {
+                rect.x1 += increment
+                rect.x2 += increment
+              }
+              if (direction === 'left') {
+                rect.x1 -= increment
+                rect.x2 -= increment
+              }
             }
-            if (direction === 'left' && rect.x1 >= max && rect.x2 >= max) {
-              rect.x1 -= increment
-              rect.x2 -= increment
-            }
-            if (direction === 'up' && rect.y1 >= max && rect.y2 >= max) {
-              rect.y1 -= increment
-              rect.y2 -= increment
-            }
-            if (direction === 'down' && rect.y1 <= max && rect.y2 <= max) {
-              rect.y1 += increment
-              rect.y2 += increment
+            if (isInBoundaries(rect.y1, rect.y2)) {
+              if (direction === 'up') {
+                rect.y1 -= increment
+                rect.y2 -= increment
+              }
+              if (direction === 'down') {
+                rect.y1 += increment
+                rect.y2 += increment
+              }
             }
           }
-          if (polygon && !polygon.vertices.find(vertice => vertice.x >= xMax)) {
-            polygon.vertices.forEach(vertice => vertice.x += increment)
+          if (polygon) {
+            if (!polygon.vertices.find(vertice => !isInBoundaries(vertice.x))) {
+              if (direction === 'right') polygon.vertices.forEach(vertice => vertice.x += increment)
+              if (direction === 'left') polygon.vertices.forEach(vertice => vertice.x -= increment)
+            }
+            if (!polygon.vertices.find(vertice => !isInBoundaries(vertice.y))) {
+              if (direction === 'up') polygon.vertices.forEach(vertice => vertice.y -= increment)
+              if (direction === 'down') polygon.vertices.forEach(vertice => vertice.y += increment)
+            }
           }
         }
         return ds
