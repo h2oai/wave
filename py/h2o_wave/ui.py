@@ -2520,6 +2520,7 @@ def copyable_text(
         label: str,
         name: Optional[str] = None,
         multiline: Optional[bool] = None,
+        height: Optional[str] = None,
 ) -> Component:
     """Create a copyable text component.
     Use this component when you want to enable your users to quickly copy paste sections of text.
@@ -2529,6 +2530,7 @@ def copyable_text(
         label: The text displayed above the textbox.
         name: An identifying name for this component.
         multiline: True if the component should allow multi-line text entry.
+        height: Custom height in px, e.g. '200px'. Requires `multiline` to be set.
     Returns:
         A `h2o_wave.types.CopyableText` instance.
     """
@@ -2537,6 +2539,7 @@ def copyable_text(
         label,
         name,
         multiline,
+        height,
     ))
 
 
