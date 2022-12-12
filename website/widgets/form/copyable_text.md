@@ -44,7 +44,7 @@ You should try all the features!
 Like setting the height to 200px!'''
 
 q.page['form'] = ui.form_card(
-    box='1 1 2 2',
+    box='1 1 2 4',
     items=[ui.copyable_text(label='Copyable text', value=multiline_content, multiline=True, height='200px')]
 )
 ```

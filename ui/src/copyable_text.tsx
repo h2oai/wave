@@ -82,14 +82,12 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
 
   return (
     <div data-test={name} className={multiline ? css.multiContainer : css.compactContainer}>
-      <Fluent.TextField 
+      <Fluent.TextField
         componentRef={ref}
         value={value}
         label={label}
         multiline={multiline}
-        styles={ multiline && height
-          ? { root: { width: pc(100) }, fieldGroup: { minHeight: height} } 
-          : { root: { width: pc(100) } } }
+        styles={{ root: { width: pc(100) }, fieldGroup: multiline && height ? { minHeight: height } : undefined }}
         readOnly
       />
       <Fluent.PrimaryButton
