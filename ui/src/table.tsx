@@ -305,7 +305,7 @@ const
       <div style={{ padding: 10 }}>
         <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
         <Fluent.Text variant='small'>
-          <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+          <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselectttttt All</Fluent.Link>
         </Fluent.Text>
         {
           menuFilters.map(({ key, data, checked }) => (
@@ -853,6 +853,7 @@ export const
               return groups
             })
           }
+          console.log(filters.status.length)
           return filters
         })
       }, [filter, initGroups, m.events, m.name, m.pagination, search]),
