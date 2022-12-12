@@ -5,6 +5,8 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
+import showcase from '../../static/app_showcase.json'
+import { Lightbox } from '../components/lightbox'
 
 const features = [
   {
@@ -74,8 +76,15 @@ function Feature({ icon, title, description }) {
 }
 
 function Home() {
-  const context = useDocusaurusContext()
-  const { siteConfig = {} } = context
+  const
+    context = useDocusaurusContext(),
+    { siteConfig = {} } = context,
+    lightboxProps = React.useRef(),
+    [lightboxVisible, setLightboxVisible] = React.useState(false),
+    openLightbox = images => {
+      lightboxProps.current = { images, onDismiss: () => setLightboxVisible(false) }
+      setLightboxVisible(true)
+    }
   return (
     <Layout
       title="Make AI Apps"
@@ -119,16 +128,37 @@ function Home() {
         {features && features.length > 0 && (
           <section className={styles.features}>
             <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
-              </div>
+              <div className="row">{features.map((props, idx) => <Feature key={idx} {...props} />)}</div>
             </div>
           </section>
         )}
+        {showcase && showcase.apps.length > 0 && (
+          <section className='container'>
+            <div className={clsx('row', styles.showcaseTitleContainer)} >
+              <div className={styles.divider} style={{ marginRight: 10 }} />
+              <h2 className={styles.showcaseTitle}>What can Wave achieve?</h2>
+              <div className={styles.divider} style={{ marginLeft: 10 }} />
+            </div>
+            <div className={clsx('row', styles.showcaseSubtitleContainer)} >
+              <p>The following are just a few of hundreds of Wave apps built within H2O.ai. The most mind-blowing thing is that all <b>presented apps were built by our data science and machine learning people</b>, no software engineer necessary.</p>
+            </div>
+            <div className={clsx('row', styles.showcaseContainer)}>
+              {showcase.apps.map(({ title, description, images }, idx) =>
+                <div className={styles.showcaseRow} key={idx}>
+                  {/* TODO: Add support for modern image formats to improve loading perf. */}
+                  <img src={images[0].path} onClick={() => openLightbox(images)} className={styles.showcaseImg} />
+                  <div className={styles.showcaseDescriptionContainer}>
+                    <h3 className={styles.underline} >{title}</h3>
+                    <p>{description}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+        {lightboxVisible && <Lightbox {...lightboxProps.current} />}
       </main>
-    </Layout>
+    </Layout >
   )
 }
 

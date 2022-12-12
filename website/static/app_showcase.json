@@ -1,0 +1,76 @@
+{
+  "apps": [
+    {
+      "title": "H2O Hydrogen Torch",
+      "description": "H2O Hydrogen Torch is an application that allows novice and expert data scientists to build deep learning models for a large set of diverse problem types in computer vision, natural language, and audio. No code is required.",
+      "images": [
+        {
+          "path": "img/apps_showcase/h2o-hydrogen-torch_01.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-hydrogen-torch_02.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-hydrogen-torch_03.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-hydrogen-torch_04.png"
+        }
+      ]
+    },
+    {
+      "title": "H2O Load Forecaster",
+      "description": "This application enables the users to generate load forecasts for multiple historical load series (e.g., AMI meters, substations, etc.) using a combination of industry standard and advanced machine learning algorithms.",
+      "images": [
+        {
+          "path": "img/apps_showcase/h2o-load-forecaster_01.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-load-forecaster_02.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-load-forecaster_03.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-load-forecaster_04.png"
+        }
+      ]
+    },
+    {
+      "title": "H2O Model Validation",
+      "description": "H2O Model Validation is a tool for Data Scientists and Model Validators to analyse robustness and stability of trained models. It helps to reveal weaknesses and vulnurabilities in data and models that can lead to accuracy deterioration.",
+      "images": [
+        {
+          "path": "img/apps_showcase/h2o-model-validation_01.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-model-validation_02.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-model-validation_03.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-model-validation_04.png"
+        }
+      ]
+    },
+    {
+      "title": "H2O Document Signature Checker",
+      "description": "Detect and verify signatures from the documents using deep learning. This H2O wave application uses Deep Learning models trained using H2O Hydrogen Torch Engine and Deployed on H2O MLOps to detect Sigantures and Stamps on the documents.",
+      "images": [
+        {
+          "path": "img/apps_showcase/h2o-document-signature-checker_01.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-document-signature-checker_02.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-document-signature-checker_03.png"
+        },
+        {
+          "path": "img/apps_showcase/h2o-document-signature-checker_04.png"
+        }
+      ]
+    }
+  ]
+}
