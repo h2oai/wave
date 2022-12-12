@@ -350,32 +350,61 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
+    moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
+      // TODO: move to the end of the canvas when holding shift and less than 10px is left
+      setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
+        const
+          { isFocused, shape } = ds,
+          { polygon, rect } = shape,
+          increment = e.shiftKey ? 10 : 1,
+          max = direction === 'left' || direction === 'up'
+            ? 0 + increment
+            : (direction === 'right' ? canvasRef.current!.width! : canvasRef.current!.height!) - increment,
+          isInBoundaries = (c1: U, c2: U = max) => {
+            if (direction === 'right' && c1 <= max && c2 <= max) true
+            if (direction === 'left' && c1 >= max && c2 >= max) true
+            if (direction === 'up' && c1 >= max && c2 >= max) true
+            if (direction === 'down' && c1 <= max && c2 <= max) true
+          }
+        if (isFocused) {
+          if (rect) {
+            if (direction === 'right' && rect.x1 <= max && rect.x2 <= max) {
+              rect.x1 += increment
+              rect.x2 += increment
+            }
+            if (direction === 'left' && rect.x1 >= max && rect.x2 >= max) {
+              rect.x1 -= increment
+              rect.x2 -= increment
+            }
+            if (direction === 'up' && rect.y1 >= max && rect.y2 >= max) {
+              rect.y1 -= increment
+              rect.y2 -= increment
+            }
+            if (direction === 'down' && rect.y1 <= max && rect.y2 <= max) {
+              rect.y1 += increment
+              rect.y2 += increment
+            }
+          }
+          if (polygon && !polygon.vertices.find(vertice => vertice.x >= xMax)) {
+            polygon.vertices.forEach(vertice => vertice.x += increment)
+          }
+        }
+        return ds
+      }))
+      redrawExistingShapes()
+    },
     onKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === 'Escape' && activeShape === 'polygon') {
         polygonRef.current?.cancelAnnotating()
         redrawExistingShapes()
       }
-      if (e.key === 'ArrowRight') {
-        // TODO: move to the end of the canvas when holding shift and less than 10px is left
-        setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
-          const
-            { isFocused, shape } = ds,
-            { polygon, rect } = shape,
-            increment = e.shiftKey ? 10 : 1,
-            xMax = canvasRef.current!.width! - increment
-          if (isFocused) {
-            if (rect && rect.x1 <= xMax && rect.x2 <= xMax) {
-              rect.x1 += increment
-              rect.x2 += increment
-            }
-            if (polygon && !polygon.vertices.find(vertice => vertice.x >= xMax)) {
-              polygon.vertices.forEach(vertice => vertice.x += increment)
-            }
-          }
-          return ds
-        }))
-        redrawExistingShapes()
-      }
+      // Available on image focus.
+      if (e.key === 'ArrowRight') moveShape(e, 'right')
+      if (e.key === 'ArrowLeft') moveShape(e, 'left')
+      if (e.key === 'ArrowUp') moveShape(e, 'up')
+      if (e.key === 'ArrowDown') moveShape(e, 'down')
+      // Always available.
+      // TODO:
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
