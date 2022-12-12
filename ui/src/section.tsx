@@ -61,7 +61,7 @@ export const
           components = unpack<Component[]>(items), // XXX ugly
           form = items && (
             <div className={css.rhs}>
-              <XComponents items={components} alignment='end' />
+              <XComponents items={components} justify='end' />
             </div>
           )
 

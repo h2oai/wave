@@ -2197,6 +2197,7 @@ def stats(
 def inline(
         items: List[Component],
         justify: Optional[str] = None,
+        align: Optional[str] = None,
         inset: Optional[bool] = None,
 ) -> Component:
     """Create an inline (horizontal) list of components.
@@ -2204,6 +2205,7 @@ def inline(
     Args:
         items: The components laid out inline.
         justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify.
+        align: Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
         inset: Whether to display the components inset from the parent form, with a contrasting background.
     Returns:
         A `h2o_wave.types.Inline` instance.
@@ -2211,6 +2213,7 @@ def inline(
     return Component(inline=Inline(
         items,
         justify,
+        align,
         inset,
     ))
 
