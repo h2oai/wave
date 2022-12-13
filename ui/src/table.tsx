@@ -25,6 +25,9 @@ import { border, cssVar, important, margin, rem } from './theme'
 import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 import { wave } from './ui'
 
+/** Create a mapping between the column names and the number of filters selected for that count. */
+const columnFilterCount: { [key: string]: number; } = {}
+
 /** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
 interface TablePagination {
   /** Total count of all the rows in your dataset. */
@@ -305,7 +308,7 @@ const
       <div style={{ padding: 10 }}>
         <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
         <Fluent.Text variant='small'>
-          <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselectttttt All</Fluent.Link>
+          <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
         </Fluent.Text>
         {
           menuFilters.map(({ key, data, checked }) => (
@@ -376,11 +379,26 @@ const
           filters: c.filterable && m.pagination ? c.filters : undefined,
         }
       })),
+      updateColumns = (filterKey: S, filterVal: S, checked?: B) => {
+        onFilterChange(filterKey, filterVal, checked)
+        setColumns(columns.map(c => {
+          if (columnFilterCount[c.key] || columnFilterCount[c.key] == 0) {
+            let filterCount = ""
+            filterCount = columnFilterCount[c.key] 
+                            ? columnFilterCount[c.key] > 9 
+                              ? " (9+) " 
+                              : " (" + columnFilterCount[c.key] + ") "
+                            : ""
+            c.name = c.name.substring(0, c.key.length) + filterCount
+          }
+          return c
+        }))
+      }, 
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         return listProps ?
           <ContextualMenu
-            onFilterChange={onFilterChange}
+            onFilterChange={updateColumns}
             col={col}
             listProps={listProps}
             selectedFiltersRef={selectedFiltersRef}
@@ -853,7 +871,7 @@ export const
               return groups
             })
           }
-          console.log(filters.status.length)
+          columnFilterCount[filterKey] = filters[filterKey].length
           return filters
         })
       }, [filter, initGroups, m.events, m.name, m.pagination, search]),
@@ -954,7 +972,7 @@ export const
       }
     }, [initGroups, m.groups])
 
-    const dataTableProps: DataTable = React.useMemo(() => ({
+    const dataTableProps: DataTable = {
       model: m,
       onFilterChange,
       items,
@@ -966,7 +984,7 @@ export const
       sort,
       isMultiple,
       setFiltersInBulk
-    }), [filteredItems, groups, expandedRefs, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
+    }
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
