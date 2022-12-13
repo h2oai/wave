@@ -28,6 +28,7 @@ export class RectAnnotator {
   }
 
   drawRect = ({ x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
+    // TODO: remove zoom
     if (!this.ctx) return
     this.ctx.strokeStyle = strokeColor
     this.ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
@@ -56,10 +57,10 @@ export class RectAnnotator {
     this.movedRect = undefined
   }
 
-  onClick = (cursor_x: U, cursor_y: U, tag: S, start?: Position): DrawnShape | undefined => {
+  onClick = (cursor_x: U, cursor_y: U, tag: S, zoom: F, start?: Position): DrawnShape | undefined => {
     let newRect
     if (!this.resizedCorner && start?.dragging) {
-      const rect = this.createRect(start.x, cursor_x, start.y, cursor_y)
+      const rect = this.createRect(start.x, cursor_x / zoom, start.y, cursor_y / zoom)
       if (!rect) return
       newRect = { shape: { rect }, tag }
     }
@@ -68,11 +69,11 @@ export class RectAnnotator {
     return newRect
   }
 
-  onMouseDown(cursor_x: U, cursor_y: U, rect: ImageAnnotatorRect) {
-    this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
+  onMouseDown(cursor_x: U, cursor_y: U, rect: ImageAnnotatorRect, zoom: F) {
+    this.resizedCorner = getCorner(cursor_x, cursor_y, rect, zoom, true)
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
+  onMouseMove(cursor_x: U, cursor_y: U, zoom: F, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
     if (!clickStartPosition) return
 
     const
@@ -81,20 +82,20 @@ export class RectAnnotator {
 
     if (focused?.shape.rect && this.resizedCorner) {
       if (this.resizedCorner === 'topLeft') {
-        focused.shape.rect.x1 += cursor_x - x1
-        focused.shape.rect.y1 += cursor_y - y1
+        focused.shape.rect.x1 += (cursor_x - x1) / zoom
+        focused.shape.rect.y1 += (cursor_y - y1) / zoom
       }
       else if (this.resizedCorner === 'topRight') {
-        focused.shape.rect.x1 += cursor_x - x1
-        focused.shape.rect.y2 += cursor_y - y1
+        focused.shape.rect.x1 += (cursor_x - x1) / zoom
+        focused.shape.rect.y2 += (cursor_y - y1) / zoom
       }
       else if (this.resizedCorner === 'bottomLeft') {
-        focused.shape.rect.x2 += cursor_x - x1
-        focused.shape.rect.y1 += cursor_y - y1
+        focused.shape.rect.x2 += (cursor_x - x1) / zoom
+        focused.shape.rect.y1 += (cursor_y - y1) / zoom
       }
       else if (this.resizedCorner === 'bottomRight') {
-        focused.shape.rect.x2 += cursor_x - x1
-        focused.shape.rect.y2 += cursor_y - y1
+        focused.shape.rect.x2 += (cursor_x - x1) / zoom
+        focused.shape.rect.y2 += (cursor_y - y1) / zoom
       }
 
       clickStartPosition.x = cursor_x
@@ -106,8 +107,8 @@ export class RectAnnotator {
 
       const
         rect = this.movedRect.shape.rect,
-        xIncrement = cursor_x - x1,
-        yIncrement = cursor_y - y1,
+        xIncrement = (cursor_x - x1) / zoom,
+        yIncrement = (cursor_y - y1) / zoom,
         newX1 = rect.x1 + xIncrement,
         newX2 = rect.x2 + xIncrement,
         newY1 = rect.y1 + yIncrement,
@@ -141,31 +142,31 @@ export class RectAnnotator {
 }
 
 export const
-  isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect, isFocused = false) => {
+  isIntersectingRect = (cursor_x: U, cursor_y: U, zoom: F, rect?: ImageAnnotatorRect, isFocused = false) => {
     if (!rect) return false
-    if (isFocused && getCorner(cursor_x, cursor_y, rect)) return true
+    if (isFocused && getCorner(cursor_x, cursor_y, rect, zoom)) return true
     const
       { x2, x1, y2, y1 } = rect,
-      x_min = Math.min(x1, x2),
-      x_max = Math.max(x1, x2),
-      y_min = Math.min(y1, y2),
-      y_max = Math.max(y1, y2)
+      x_min = Math.min(x1 * zoom, x2 * zoom),
+      x_max = Math.max(x1 * zoom, x2 * zoom),
+      y_min = Math.min(y1 * zoom, y2 * zoom),
+      y_max = Math.max(y1 * zoom, y2 * zoom)
 
     return cursor_x > x_min && cursor_x < x_max && cursor_y > y_min && cursor_y < y_max
   },
-  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect, ignoreMaxMin = false) => {
+  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect, zoom: F, ignoreMaxMin = false) => {
     const
-      x_min = ignoreMaxMin ? x1 : Math.min(x1, x2),
-      x_max = ignoreMaxMin ? x2 : Math.max(x1, x2),
-      y_min = ignoreMaxMin ? y1 : Math.min(y1, y2),
-      y_max = ignoreMaxMin ? y2 : Math.max(y1, y2)
+      x_min = ignoreMaxMin ? x1 * zoom : Math.min(x1 * zoom, x2 * zoom),
+      x_max = ignoreMaxMin ? x2 * zoom : Math.max(x1 * zoom, x2 * zoom),
+      y_min = ignoreMaxMin ? y1 * zoom : Math.min(y1 * zoom, y2 * zoom),
+      y_max = ignoreMaxMin ? y2 * zoom : Math.max(y1 * zoom, y2 * zoom)
     if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'topLeft'
     else if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'topRight'
     else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'bottomLeft'
     else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'bottomRight'
   },
-  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
-    const corner = getCorner(cursor_x, cursor_y, shape)
+  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U, zoom: F) => {
+    const corner = getCorner(cursor_x, cursor_y, shape, zoom)
     if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'
     if (corner === 'bottomLeft' || corner === 'topRight') return 'nesw-resize'
   }
