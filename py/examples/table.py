@@ -3,11 +3,11 @@
 # ---
 import random
 
-# from faker import Faker
+from faker import Faker
 
 from h2o_wave import main, app, Q, ui
 
-# fake = Faker()
+fake = Faker()
 
 _id = 0
 
@@ -29,8 +29,7 @@ class Issue:
 # Create some issues
 issues = [
     Issue(
-        # text=fake.sentence(),
-        text="Test",
+        text=fake.sentence(),
         status=('Closed' if i % 2 == 0 else 'Open'),
         progress=random.random(),
         icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
