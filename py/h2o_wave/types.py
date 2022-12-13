@@ -8812,14 +8812,14 @@ class ImageGridCard:
     def __init__(
             self,
             box: str,
-            images: List[Image],
+            images: List[Component],
             cols: int,
             width: Optional[str] = None,
             height: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageGridCard.box', box, (str,), False, False, False)
-        _guard_vector('ImageGridCard.images', images, (Image,), False, False, False)
+        _guard_vector('ImageGridCard.images', images, (Component,), False, False, False)
         _guard_scalar('ImageGridCard.cols', cols, (int,), False, False, False)
         _guard_scalar('ImageGridCard.width', width, (str,), False, True, False)
         _guard_scalar('ImageGridCard.height', height, (str,), False, True, False)
@@ -8840,7 +8840,7 @@ class ImageGridCard:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageGridCard.box', self.box, (str,), False, False, False)
-        _guard_vector('ImageGridCard.images', self.images, (Image,), False, False, False)
+        _guard_vector('ImageGridCard.images', self.images, (Component,), False, False, False)
         _guard_scalar('ImageGridCard.cols', self.cols, (int,), False, False, False)
         _guard_scalar('ImageGridCard.width', self.width, (str,), False, True, False)
         _guard_scalar('ImageGridCard.height', self.height, (str,), False, True, False)
@@ -8871,7 +8871,7 @@ class ImageGridCard:
         __d_commands: Any = __d.get('commands')
         _guard_vector('ImageGridCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
-        images: List[Image] = [Image.load(__e) for __e in __d_images]
+        images: List[Component] = [Component.load(__e) for __e in __d_images]
         cols: int = __d_cols
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height

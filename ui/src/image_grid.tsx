@@ -16,7 +16,7 @@ import { Id, Model, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { Image } from './image'
+import { Component } from './form'
 import { bond } from './ui'
 
 const
@@ -26,7 +26,8 @@ const
       boxSizing: 'border-box'
     },
     imageGridSpan: {
-      // TODO: add styling
+      backgroundColor: 'red',
+      position: 'relative'
     },
     imageGridImage: {
       // TODO: add styling
@@ -36,7 +37,7 @@ const
 /** Create a card that displays a grid of base64-encoded images. */
 interface State {
   /** List of images to be displayed. */
-  images: Image[]
+  images: Component[]
   /** Number of columns in the grid. */
   cols: U
   /** Width of the grid. */
@@ -48,7 +49,7 @@ interface State {
 /** Create a card that displays a grid of base64-encoded images. */
 interface ImageGrid {
   /** List of images to be displayed. */
-  images: Image[]
+  images: Component[]
   /** Number of columns in the grid. */
   cols: U
   /** Width of the grid. */
@@ -85,7 +86,7 @@ export const
       {
         // Create a span for each image where the position is calculated based
         // on its index within the list of images
-        images.map ((image : Image, i : U) => {
+        images.map ((image : Component, i : U) => {
             const currentRow = Math.floor(i / cols)
             const currentCol = i % cols
             return <span 
@@ -96,14 +97,27 @@ export const
                 left: currentCol * cardWidth,
                 width: cardWidth,
                 height: cardHeight,
+                backgroundColor: "red"
               }}>
-
               {/* Create the image within the span */}
-              <img
-                className={css.imageGridImage}
-                src={image.path}
-                alt={image.title}
-              />
+              {/* <img
+                  id={typeof image.image}
+                  className={css.imageGridImage}
+                  data-src={typeof image.image  == "undefined" ? dummypath : image.image.path}
+                  // src={image.image.path}
+                /> */}
+              <div style={{
+                width: "45px", 
+                height: "45px", 
+                backgroundColor: "green"
+              }}></div>
+              {/* {(typeof image.image == "undefined" || typeof image.image.path == "undefined") ? 
+                <div></div> : <img
+                  id={typeof image.image}
+                  className={css.imageGridImage}
+                  data-src={typeof image.image  == "undefined" ? dummypath : image.image.path}
+                  // src={image.image.path}
+                />} */}
 
             </span>
           }

@@ -3620,7 +3620,7 @@ ui_image_grid_card <- function(
   height = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("images", "WaveImage", images)
+  .guard_vector("images", "WaveComponent", images)
   .guard_scalar("cols", "numeric", cols)
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)

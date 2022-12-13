@@ -3105,7 +3105,7 @@ def image_card(
 
 def image_grid_card(
         box: str,
-        images: List[Image],
+        images: List[Component],
         cols: int,
         width: Optional[str] = None,
         height: Optional[str] = None,
