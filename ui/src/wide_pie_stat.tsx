@@ -16,25 +16,25 @@ import * as d3 from 'd3'
 import { F, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards } from './layout'
-import { clas, cssVar, pc } from './theme'
+import { cards, grid } from './layout'
+import { clas, cssVar, getContrast, pc } from './theme'
 import { bond } from './ui'
 
 const css = stylesheet({
   card: {
-    padding: 24,
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    padding: grid.gap,
     maxHeight: pc(100)
   },
-  lhs: {
-    maxWidth: pc(50),
-    flexGrow: 1
+  cardContent: {
+    display: 'flex',
+    flexGrow: 1,
+    maxHeight: `calc(100% - ${2 * grid.gap}px)`
   },
   title: {
     color: cssVar('$neutralPrimary'),
-    marginBottom: 24,
-    marginTop: -7
+    marginBottom: grid.gap,
   },
   value: {
     color: cssVar('$neutralPrimary'),
@@ -48,22 +48,38 @@ const css = stylesheet({
     marginTop: -3,
     marginBottom: 4
   },
-  pie: {
-    maxWidth: pc(65),
+  pieContainer: {
+    minWidth: 150,
     flexGrow: 1,
-    display: 'flex',
+    position: 'relative',
+  },
+  pie: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    margin: '0 auto',
+    maxHeight: `calc(100% - ${2 * grid.gap}px)`
   },
   pieText: {
     textAnchor: 'middle',
     fontSize: 10,
-    fill: cssVar('$neutralLighterAlt'),
+  },
+  pieLegendContainer: {
+    display: 'inline-flex',
+    flexWrap: 'wrap',
+    // HACK: https://github.com/philipwalton/flexbugs#flexbug-14.
+    writingMode: 'vertical-lr'
   },
   pieLegend: {
-    display: 'flex'
+    display: 'flex',
+    marginRight: grid.gap,
+    writingMode: 'horizontal-tb'
   },
   colorPreview: {
     borderRadius: 4,
-    minWidth: 16,
+    width: 16,
     height: 16
   }
 })
@@ -100,38 +116,42 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       arc = d3.arc()
     return (
       <div data-test={name} className={css.card}>
-        <div className={css.lhs}>
-          <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
-          {
-            pies.map(({ label, aux_value }, idx) => (
-              <div key={idx} className={css.pieLegend}>
-                <div className={css.colorPreview} style={{ background: cssVar(colorDomain(label)) }}></div>
-                <div className={css.description}>
-                  <div className={clas('wave-s16 wave-w6 wave-t7', css.label)}>{label}</div>
-                  {aux_value && <div className={clas('wave-s24 wave-w7', css.value)}>{aux_value}</div>}
-                </div>
-              </div>
-            ))
-          }
-        </div>
-        <div className={css.pie}>
-          <svg viewBox='0 0 100 100' width='100%' height='100%'>
+        <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
+        <div className={css.cardContent}>
+          <div className={css.pieLegendContainer}>
             {
-              d3.pie<Pie>().value(d => d.fraction)(pies).map(({ startAngle, endAngle, data }, idx) => {
-                const [translateX, translateY] = arc.centroid({ innerRadius, outerRadius, startAngle, endAngle })
-                return (
-                  <React.Fragment key={idx}>
-                    <path
-                      d={arc({ innerRadius, outerRadius, startAngle, endAngle }) as S}
-                      fill={cssVar(colorDomain(data.label))}
-                      transform={`translate(${outerRadius}, ${outerRadius})`}
-                    />
-                    <text className={css.pieText} transform={`translate(${translateX + outerRadius}, ${translateY + outerRadius})`}>{data.value}</text>
-                  </React.Fragment>
-                )
-              })
+              pies.map(({ label, aux_value }, idx) => (
+                <div key={idx} className={css.pieLegend}>
+                  <div className={css.colorPreview} style={{ background: cssVar(colorDomain(label)) }}></div>
+                  <div className={css.description}>
+                    <div className={clas('wave-s16 wave-w6 wave-t7', css.label)}>{label}</div>
+                    {aux_value && <div className={clas('wave-s24 wave-w7', css.value)}>{aux_value}</div>}
+                  </div>
+                </div>
+              ))
             }
-          </svg>
+          </div>
+          {/* HACK: Safari has problems with correct Flexbox layout compute sometimes so position the SVG absolutely.*/}
+          <div className={css.pieContainer}>
+            <svg viewBox='0 0 100 100' className={css.pie}>
+              {
+                d3.pie<Pie>().value(d => d.fraction)(pies).map(({ startAngle, endAngle, data }, idx) => {
+                  const [translateX, translateY] = arc.centroid({ innerRadius, outerRadius, startAngle, endAngle })
+                  const color = colorDomain(data.label)
+                  return (
+                    <React.Fragment key={idx}>
+                      <path
+                        d={arc({ innerRadius, outerRadius, startAngle, endAngle }) as S}
+                        fill={cssVar(color)}
+                        transform={`translate(${outerRadius}, ${outerRadius})`}
+                      />
+                      <text className={css.pieText} fill={getContrast(color)} transform={`translate(${translateX + outerRadius}, ${translateY + outerRadius})`}>{data.value}</text>
+                    </React.Fragment>
+                  )
+                })
+              }
+            </svg>
+          </div>
         </div>
       </div>
     )
