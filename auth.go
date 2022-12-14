@@ -342,7 +342,7 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	oauth2Token, err := h.auth.oauth.Exchange(r.Context(), r.URL.Query().Get("code"))
 	if err != nil {
-		echo(Log{"t": "oauth2_exchange", "error": "failed exchanging code with provider"})
+		echo(Log{"t": "oauth2_exchange", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
