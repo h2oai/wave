@@ -112,21 +112,21 @@ const
       margin: 8
     }
   }),
-  eventToCursor = (e: React.MouseEvent, rect: DOMRect) => ({ cursor_x: e.clientX - rect.left, cursor_y: e.clientY - rect.top }),
-  getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F, zoom: F) => shapes.find(({ shape, isFocused }) => {
-    if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, zoom, shape.rect, isFocused)
-    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused, zoom)
+  eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F) => ({ cursor_x: (e.clientX - rect.left) / scale, cursor_y: (e.clientY - rect.top) / scale }),
+  getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
+    if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
+    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
   }),
-  getCorrectCursor = (cursor_x: U, cursor_y: U, zoom: F, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
+  getCorrectCursor = (cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
     let cursor = intersected
       ? 'pointer'
       : isSelect
         ? 'auto'
         : 'crosshair'
-    if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y, zoom) || 'move'
-    else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y, zoom) || cursor
-    else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.vertices, cursor_x, cursor_y, zoom) || 'move'
-    else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.vertices, cursor_x, cursor_y, zoom) || cursor
+    if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
+    else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y) || cursor
+    else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.vertices, cursor_x, cursor_y) || 'move'
+    else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.vertices, cursor_x, cursor_y) || cursor
 
     return cursor
   },
@@ -169,7 +169,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
-    [zoom, setZoom] = React.useState(1), // TODO: Rename to scale.
+    [scale, setScale] = React.useState(1),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
@@ -222,20 +222,20 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!canvas) return
 
       const
-        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y, zoom)
+        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
       if (e.buttons !== 1 && !intersected?.shape.polygon) return // Ignore right-click.
 
-      if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected.shape.rect, zoom)
+      if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected.shape.rect)
       if (intersected?.shape.polygon && polygonRef.current) {
         const vertices = intersected.shape.polygon.vertices
 
-        const auxAdded = polygonRef.current.tryToAddAuxPoint(cursor_x, cursor_y, vertices, zoom)
+        const auxAdded = polygonRef.current.tryToAddAuxPoint(cursor_x, cursor_y, vertices)
         polygonRef.current.resetDragging()
         // Remove polygon vertex on right click.
         if (e.buttons === 2) {
-          intersected.shape.polygon.vertices = polygonRef.current.tryToRemovePoint(cursor_x, cursor_y, vertices, zoom)
+          intersected.shape.polygon.vertices = polygonRef.current.tryToRemovePoint(cursor_x, cursor_y, vertices)
         }
         setDrawnShapes(drawnShapes => {
           const newShapes = drawnShapes.map(s => {
@@ -258,15 +258,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!canvas) return
 
       const
-        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect()),
+        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
         focused = drawnShapes.find(({ isFocused }) => isFocused),
         clickStartPosition = startPosition.current,
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y, zoom)
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
-      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, zoom, focused, intersected, activeShape === 'select')
+      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
       switch (activeShape) {
         case 'rect': {
-          const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, zoom, focused, intersected, clickStartPosition)
+          const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
           if (currentlyDrawnRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
           redrawExistingShapes()
           if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
@@ -274,19 +274,19 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         case 'polygon': {
           redrawExistingShapes()
-          polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag), zoom)
-          if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y, zoom)) canvas.style.cursor = 'pointer'
+          polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
+          if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
           break
         }
         case 'select': {
           // If left mouse btn is not held during moving, ignore.
           if (e.buttons !== 1) break
           if (focused?.shape.rect) {
-            rectRef.current?.onMouseMove(cursor_x, cursor_y, zoom, focused, intersected, clickStartPosition)
+            rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
             redrawExistingShapes()
           }
           else if (focused?.shape.polygon) {
-            polygonRef.current?.onMouseMove(cursor_x, cursor_y, zoom, focused, intersected, clickStartPosition)
+            polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
             redrawExistingShapes()
           }
           break
@@ -300,12 +300,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         start = startPosition.current,
         rect = canvas.getBoundingClientRect(),
-        { cursor_x, cursor_y } = eventToCursor(e, rect),
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y, zoom)
+        { cursor_x, cursor_y } = eventToCursor(e, rect, scale),
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
       switch (activeShape) {
         case 'rect': {
-          const newRect = rectRef.current?.onClick(cursor_x, cursor_y, activeTag, zoom, start)
+          const newRect = rectRef.current?.onClick(cursor_x, cursor_y, activeTag, start)
           if (newRect) {
             setDrawnShapes(prevShapes => {
               const newShapes = [newRect, ...prevShapes]
@@ -317,7 +317,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'polygon': {
-          const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(activeTag), activeTag, zoom)
+          const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(activeTag), activeTag)
           if (newPolygon) {
             setDrawnShapes(prevShapes => {
               const newShapes = [newPolygon, ...prevShapes]
@@ -351,7 +351,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       startPosition.current = undefined
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
-      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, zoom, focused, intersected, activeShape === 'select')
+      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
       setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
@@ -385,11 +385,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         rect = canvas?.getBoundingClientRect()
       if (!canvas || !rect || !e.ctrlKey) return
       // TODO: Set max zoom according image size.
-      setZoom(zoom =>
+      setScale(scale =>
         e.deltaY < 0
-          ? zoom > 1 ? zoom - 0.1 : zoom
-          : zoom <= 2 ? zoom + 0.1 : zoom
+          ? scale > 1 ? scale - 0.1 : scale
+          : scale <= 2 ? scale + 0.1 : scale
       )
+
+
       // TODO: Fix reappearing of shapes when zooming in.
 
       // TODO: Translate image to cursor position.
@@ -544,17 +546,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       rectRef.current = new RectAnnotator(canvas)
       if (ctxRef.current) {
         polygonRef.current = new PolygonAnnotator(ctxRef.current)
-        ctxRef.current.scale(zoom, zoom)
+        ctxRef.current.scale(scale, scale)
       }
 
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio * zoom, img.height * aspectRatio * zoom)
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
       if (!drawnShapes.length) {
         setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
       }
       redrawExistingShapes()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model.name, model.image, model.image_height, model.items, zoom])
+  }, [model.name, model.image, model.image_height, model.items, scale])
 
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))

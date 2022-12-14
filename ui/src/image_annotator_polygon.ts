@@ -30,51 +30,51 @@ export class PolygonAnnotator {
     if (isPolygon) return newPolygon
   }
 
-  onClick(cursor_x: U, cursor_y: U, color: S, tag: S, zoom: F): DrawnShape | undefined {
+  onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
     if (!this.ctx) return
 
     this.ctx.beginPath()
     this.ctx.fillStyle = color
-    if (this.isIntersectingFirstPoint(cursor_x, cursor_y, zoom)) return this.finishPolygon(tag)
-    if (this.currPolygonPoints.length) this.drawLine(cursor_x / zoom, cursor_y / zoom)
+    if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) return this.finishPolygon(tag)
+    if (this.currPolygonPoints.length) this.drawLine(cursor_x, cursor_y)
 
-    this.currPolygonPoints.push({ x: cursor_x / zoom, y: cursor_y / zoom })
+    this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, zoom: F, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
+  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
     if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
       this.draggedPoint = null
       this.draggedShape = null
       return
     }
 
-    const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y, zoom))
+    const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
-      this.draggedPoint.x += (cursor_x - this.draggedPoint.x) / zoom
-      this.draggedPoint.y += (cursor_y - this.draggedPoint.y) / zoom
+      this.draggedPoint.x += cursor_x - this.draggedPoint.x
+      this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
     else if (intersected == focused || this.draggedShape) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       this.draggedShape?.shape.polygon?.vertices.forEach(p => {
-        p.x += (cursor_x - clickStartPosition!.x) / zoom
-        p.y += (cursor_y - clickStartPosition!.y) / zoom
+        p.x += cursor_x - clickStartPosition!.x
+        p.y += cursor_y - clickStartPosition!.y
       })
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
   }
 
-  tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[], zoom: F) => {
-    const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y, zoom))
+  tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+    const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     if (clickedPoint?.isAux) {
       clickedPoint.isAux = false
       return true
     }
   }
 
-  tryToRemovePoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[], zoom: F) => {
-    return items.filter(p => !isIntersectingPoint(p, cursor_x, cursor_y, zoom))
+  tryToRemovePoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
+    return items.filter(p => !isIntersectingPoint(p, cursor_x, cursor_y))
   }
 
   getPolygonPointsWithAux = (points: DrawnPoint[]) => {
@@ -134,7 +134,7 @@ export class PolygonAnnotator {
     }
   }
 
-  drawPreviewLine = (cursor_x: F, cursor_y: F, color: S, zoom: F) => {
+  drawPreviewLine = (cursor_x: F, cursor_y: F, color: S) => {
     if (!this.ctx || !this.currPolygonPoints.length) return
 
     this.drawPolygon(this.currPolygonPoints, color, false)
@@ -143,7 +143,7 @@ export class PolygonAnnotator {
     this.ctx.beginPath()
     this.ctx.fillStyle = color
     this.ctx.moveTo(x, y)
-    this.ctx.lineTo(cursor_x / zoom, cursor_y / zoom)
+    this.ctx.lineTo(cursor_x, cursor_y)
     this.ctx.stroke()
   }
 
@@ -162,23 +162,22 @@ export class PolygonAnnotator {
     this.currPolygonPoints.pop()
   }
 
-  isIntersectingFirstPoint = (cursor_x: F, cursor_y: F, zoom: F) => {
+  isIntersectingFirstPoint = (cursor_x: F, cursor_y: F) => {
     if (!this.currPolygonPoints.length) return false
-    return isIntersectingPoint(this.currPolygonPoints[0], cursor_x, cursor_y, zoom)
+    return isIntersectingPoint(this.currPolygonPoints[0], cursor_x, cursor_y)
   }
 }
 
 // Credit: https://gist.github.com/vlasky/d0d1d97af30af3191fc214beaf379acc?permalink_comment_id=3658988#gistcomment-3658988
 const cross = (x: ImageAnnotatorPoint, y: ImageAnnotatorPoint, z: ImageAnnotatorPoint) => (y.x - x.x) * (z.y - x.y) - (z.x - x.x) * (y.y - x.y)
 export
-  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[], isFocused = false, zoom: F) => {
-    if (isFocused && points.some(point => isIntersectingPoint(point, p.x, p.y, zoom))) return true
+  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[], isFocused = false) => {
+    if (isFocused && points.some(point => isIntersectingPoint(point, p.x, p.y))) return true
     let windingNumber = 0
 
-    points.forEach((pt, idx) => {
-      const point = { x: pt.x * zoom, y: pt.y * zoom }
-      const bp = points[(idx + 1) % points.length]
-      const b = { x: bp.x * zoom, y: bp.y * zoom }
+    points.forEach((point, idx) => {
+      const { x, y } = points[(idx + 1) % points.length]
+      const b = { x: x, y: y }
       if (point.y <= p.y) {
         if (b.y > p.y && cross(point, b, p) > 0) {
           windingNumber += 1
@@ -190,14 +189,12 @@ export
 
     return windingNumber !== 0
   },
-  isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F, zoom: F) => {
-    // TODO: Think, whether zoom should be applied here or in calling functions.
-    // TODO: Think, if it is better to multiply everywhere.
+  isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F) => {
     const offset = 2 * ARC_RADIUS
-    return cursor_x >= (x * zoom) - offset && cursor_x <= (x * zoom) + offset && cursor_y >= (y * zoom) - offset && cursor_y < (y * zoom) + offset
+    return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
   },
-  getPolygonPointCursor = (items: DrawnPoint[], cursor_x: F, cursor_y: F, zoom: F) => {
-    const intersectedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y, zoom))
+  getPolygonPointCursor = (items: DrawnPoint[], cursor_x: F, cursor_y: F) => {
+    const intersectedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     return intersectedPoint?.isAux
       ? 'pointer'
       : intersectedPoint
