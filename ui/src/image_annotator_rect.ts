@@ -28,7 +28,6 @@ export class RectAnnotator {
   }
 
   drawRect = ({ x1, x2, y1, y2 }: ImageAnnotatorRect, strokeColor: S, isFocused = false) => {
-    // TODO: remove zoom
     if (!this.ctx) return
     this.ctx.strokeStyle = strokeColor
     this.ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
@@ -60,7 +59,7 @@ export class RectAnnotator {
   onClick = (cursor_x: U, cursor_y: U, tag: S, zoom: F, start?: Position): DrawnShape | undefined => {
     let newRect
     if (!this.resizedCorner && start?.dragging) {
-      const rect = this.createRect(start.x, cursor_x / zoom, start.y, cursor_y / zoom)
+      const rect = this.createRect(start.x / zoom, cursor_x / zoom, start.y / zoom, cursor_y / zoom)
       if (!rect) return
       newRect = { shape: { rect }, tag }
     }
@@ -77,25 +76,25 @@ export class RectAnnotator {
     if (!clickStartPosition) return
 
     const
-      x1 = clickStartPosition.x,
-      y1 = clickStartPosition.y
+      x1 = clickStartPosition.x / zoom,
+      y1 = clickStartPosition.y / zoom
 
     if (focused?.shape.rect && this.resizedCorner) {
       if (this.resizedCorner === 'topLeft') {
-        focused.shape.rect.x1 += (cursor_x - x1) / zoom
-        focused.shape.rect.y1 += (cursor_y - y1) / zoom
+        focused.shape.rect.x1 += (cursor_x / zoom) - x1
+        focused.shape.rect.y1 += (cursor_y / zoom) - y1
       }
       else if (this.resizedCorner === 'topRight') {
-        focused.shape.rect.x1 += (cursor_x - x1) / zoom
-        focused.shape.rect.y2 += (cursor_y - y1) / zoom
+        focused.shape.rect.x1 += (cursor_x / zoom) - x1
+        focused.shape.rect.y2 += (cursor_y / zoom) - y1
       }
       else if (this.resizedCorner === 'bottomLeft') {
-        focused.shape.rect.x2 += (cursor_x - x1) / zoom
-        focused.shape.rect.y1 += (cursor_y - y1) / zoom
+        focused.shape.rect.x2 += (cursor_x / zoom) - x1
+        focused.shape.rect.y1 += (cursor_y / zoom) - y1
       }
       else if (this.resizedCorner === 'bottomRight') {
-        focused.shape.rect.x2 += (cursor_x - x1) / zoom
-        focused.shape.rect.y2 += (cursor_y - y1) / zoom
+        focused.shape.rect.x2 += (cursor_x / zoom) - x1
+        focused.shape.rect.y2 += (cursor_y / zoom) - y1
       }
 
       clickStartPosition.x = cursor_x
@@ -107,8 +106,8 @@ export class RectAnnotator {
 
       const
         rect = this.movedRect.shape.rect,
-        xIncrement = (cursor_x - x1) / zoom,
-        yIncrement = (cursor_y - y1) / zoom,
+        xIncrement = (cursor_x / zoom) - x1,
+        yIncrement = (cursor_y / zoom) - y1,
         newX1 = rect.x1 + xIncrement,
         newX2 = rect.x2 + xIncrement,
         newY1 = rect.y1 + yIncrement,
@@ -136,7 +135,7 @@ export class RectAnnotator {
       clickStartPosition.y = cursor_y
     }
     else {
-      return { rect: this.createRect(x1, cursor_x, y1, cursor_y) }
+      return { rect: this.createRect(x1, cursor_x / zoom, y1, cursor_y / zoom) }
     }
   }
 }

@@ -390,6 +390,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           ? zoom > 1 ? zoom - 0.1 : zoom
           : zoom <= 2 ? zoom + 0.1 : zoom
       )
+      // TODO: Fix reappearing of shapes when zooming in.
 
       // TODO: Translate image to cursor position.
       // TODO: Add panning on drag.
