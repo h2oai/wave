@@ -4,6 +4,7 @@ import { DrawnShape, ImageAnnotatorRect, Position } from './image_annotator'
 const
   MIN_RECT_WIDTH = 5,
   MIN_RECT_HEIGHT = 5
+// TODO: Make the ARC_RADIUS offset lower when the image is zoomed in.
 export const ARC_RADIUS = 4
 
 // Needs some canvas-related refactoring love.

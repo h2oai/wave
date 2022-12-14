@@ -112,7 +112,7 @@ const
       margin: 8
     }
   }),
-  eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F) => ({ cursor_x: (e.clientX - rect.left) / scale, cursor_y: (e.clientY - rect.top) / scale }),
+  eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F) => ({ cursor_x: (e.clientX - rect.left) / scale, cursor_y: (e.clientY - rect.top) / scale }), // TODO: Add image position.
   getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
     if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
     if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
@@ -170,6 +170,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [scale, setScale] = React.useState(1),
+    [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }),
+    imgPositionRef = React.useRef({ x: 0, y: 0 }),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
@@ -250,6 +252,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
 
+      imgPositionRef.current = imgPosition
       startPosition.current = { x: cursor_x, y: cursor_y, dragging: true }
     },
     onMouseMove = (e: React.MouseEvent) => {
@@ -261,37 +264,71 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
         focused = drawnShapes.find(({ isFocused }) => isFocused),
         clickStartPosition = startPosition.current,
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y),
+        draggingImg = e.ctrlKey && scale > 1 && clickStartPosition?.dragging
 
-      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
-      switch (activeShape) {
-        case 'rect': {
-          const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-          if (currentlyDrawnRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
-          redrawExistingShapes()
-          if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
-          break
-        }
-        case 'polygon': {
-          redrawExistingShapes()
-          polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
-          if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
-          break
-        }
-        case 'select': {
-          // If left mouse btn is not held during moving, ignore.
-          if (e.buttons !== 1) break
-          if (focused?.shape.rect) {
-            rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            redrawExistingShapes()
+      if (e.ctrlKey && scale > 1) {
+        // TODO: Set correct cursor on key up when Ctrl is unpressed.
+        canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
+        if (draggingImg && imgRef.current) {
+          const
+            { x, y } = clickStartPosition,
+            dx = cursor_x - x,
+            dy = cursor_y - y,
+            newX = imgPositionRef.current.x + dx,
+            newY = imgPositionRef.current.y + dy,
+            realHeight = imgRef.current?.height * scale,
+            realWidth = imgRef.current?.width * scale,
+            canMoveBoth = newX < 0 && newY < 0 && realWidth + newX > canvas.width && realHeight + newY > canvas.height,
+            canMoveX = newX < 0 && realWidth + newX > canvas.width,
+            canMoveY = newY < 0 && realHeight + newY > canvas.height
+          // Prevent moving when image out of boundaries.
+          if (canMoveBoth) setImgPosition({ x: imgPositionRef.current.x + dx, y: imgPositionRef.current.y + dy })
+          else if (canMoveX) setImgPosition({ x: imgPositionRef.current.x + dx, y: imgPositionRef.current.y })
+          else if (canMoveY) setImgPosition({ x: imgPositionRef.current.x, y: imgPositionRef.current.y + dy })
+          else {
+            // TODO: Fix jumping behavior.
+            // if (imgPosition) imgPositionRef.current = imgPosition
+            // startPosition.current = undefined
           }
-          else if (focused?.shape.polygon) {
-            polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+        }
+      } else {
+        canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
+        switch (activeShape) {
+          case 'rect': {
+            const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            if (currentlyDrawnRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
             redrawExistingShapes()
+            if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
+            break
           }
-          break
+          case 'polygon': {
+            redrawExistingShapes()
+            polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
+            if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
+            break
+          }
+          case 'select': {
+            // If left mouse btn is not held during moving, ignore.
+            if (e.buttons !== 1) break
+            if (focused?.shape.rect) {
+              rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+              redrawExistingShapes()
+            }
+            else if (focused?.shape.polygon) {
+              polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+              redrawExistingShapes()
+            }
+            break
+          }
         }
       }
+
+    },
+    onMouseUp = () => {
+      // Reset startPosition here because onClick is not registered while holding Control key.
+      startPosition.current = undefined
+      if (imgPosition) imgPositionRef.current = imgPosition // TODO: Save only in case of dragging.
     },
     onClick = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
@@ -349,7 +386,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
 
-      startPosition.current = undefined
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
@@ -387,14 +423,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // TODO: Set max zoom according image size.
       setScale(scale =>
         e.deltaY < 0
-          ? scale > 1 ? scale - 0.1 : scale
-          : scale <= 2 ? scale + 0.1 : scale
+          ? scale > 1 ? scale - 0.05 : scale
+          : scale <= 2 ? scale + 0.05 : scale
       )
 
 
       // TODO: Fix reappearing of shapes when zooming in.
 
       // TODO: Translate image to cursor position.
+      // { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
+      // startPosition.current = { x: cursor_x, y: cursor_y }
       // TODO: Add panning on drag.
       // const
       //   { x: x1, y: y1 } = intersected?.shape.rect ? getRectCenter(intersected.shape.rect) : getPolygonCenter(focused.shape.polygon),
@@ -547,16 +585,45 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (ctxRef.current) {
         polygonRef.current = new PolygonAnnotator(ctxRef.current)
         ctxRef.current.scale(scale, scale)
+        ctxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
       }
 
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
+      // TODO: Clear previous image if there is any.
+      ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
+      // canvas.onwheel = e => {
+      //   if (!e.ctrlKey) return
+      //   setScale(scale => {
+      //     e.preventDefault()
+      //     // const newScale = Math.max(0.1, Math.min(10, scale + e.deltaY / 100))
+      //     const cv = canvasRef.current
+      //     const image = imgRef.current
+      //     const newScale = e.deltaY < 0
+      //       ? scale > 1 ? scale - 0.1 : scale
+      //       : scale <= 2 ? scale + 0.1 : scale
+      //     if (image && cv) {
+      //       ctxRef.current = cv.getContext('2d')
+      //       const cvx = cv.getContext('2d')
+      //       const imagex = image.getContext('2d')
+      //       if (cvx && imagex) {
+      //         polygonRef.current = new PolygonAnnotator(cvx)
+      //         console.log('newScale', newScale, e)
+      //         cvx.scale(newScale, newScale)
+      //         // TODO: image.width!! 
+      //         imagex.clearRect(0, 0, image.width, image.height)
+      //         imagex.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio * newScale, img.height * aspectRatio * newScale)
+      //       }
+      //     }
+      //     return newScale
+      //   })
+      //   redrawExistingShapes()
+      // }
       if (!drawnShapes.length) {
         setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
       }
       redrawExistingShapes()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model.name, model.image, model.image_height, model.items, scale])
+  }, [model.name, model.image, model.image_height, model.items, scale, imgPosition])
 
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
@@ -594,6 +661,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           className={css.canvas}
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
           onMouseLeave={onMouseLeave}
           onKeyDown={onKeyDown}
           // Do not show context menu on right click.
