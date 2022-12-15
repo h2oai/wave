@@ -109,7 +109,8 @@ const
     },
     canvasContainer: {
       position: 'relative',
-      margin: 8
+      margin: 8,
+      transition: 'transform .3s' // TODO:
     }
   }),
   eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F) => ({ cursor_x: (e.clientX - rect.left) / scale, cursor_y: (e.clientY - rect.top) / scale }), // TODO: Add image position.
@@ -259,39 +260,35 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
-
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
-        focused = drawnShapes.find(({ isFocused }) => isFocused),
-        clickStartPosition = startPosition.current,
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+        clickStartPosition = startPosition.current
 
       if (e.ctrlKey && scale > 1) {
         // TODO: Set correct cursor on key up when Ctrl is unpressed.
+        // TODO: Handle drag end when mouse is out of canvas.
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
-        if (clickStartPosition?.dragging && imgRef.current) {
-          const
-            { x, y } = clickStartPosition,
-            dx = cursor_x - x,
-            dy = cursor_y - y,
-            newX = imgPositionRef.current.x + dx,
-            newY = imgPositionRef.current.y + dy,
-            realHeight = imgRef.current?.height * scale,
-            realWidth = imgRef.current?.width * scale,
-            canMoveBoth = newX < 0 && newY < 0 && realWidth + newX > canvas.width && realHeight + newY > canvas.height,
-            canMoveX = newX < 0 && realWidth + newX > canvas.width,
-            canMoveY = newY < 0 && realHeight + newY > canvas.height
-          // Prevent moving when image out of boundaries.
-          if (canMoveBoth) setImgPosition({ x: imgPositionRef.current.x + dx, y: imgPositionRef.current.y + dy })
-          else if (canMoveX) setImgPosition({ x: imgPositionRef.current.x + dx, y: imgPositionRef.current.y })
-          else if (canMoveY) setImgPosition({ x: imgPositionRef.current.x, y: imgPositionRef.current.y + dy })
-          else {
-            // TODO: Fix jumping behavior.
-            // if (imgPosition) imgPositionRef.current = imgPosition
-            // startPosition.current = undefined
+        setImgPosition(imgPosition => {
+          if (clickStartPosition?.dragging && imgRef.current) {
+            const
+              { x, y } = clickStartPosition,
+              dx = (cursor_x * scale) - x * scale,
+              dy = (cursor_y * scale) - y * scale,
+              newX = imgPositionRef.current.x + dx,
+              newY = imgPositionRef.current.y + dy,
+              realHeight = imgRef.current?.height * scale,
+              realWidth = imgRef.current?.width * scale,
+              canMoveX = newX < 0 && realWidth + newX > imgRef.current?.width,
+              canMoveY = newY < 0 && realHeight + newY > imgRef.current?.height
+            // Prevent moving when image out of boundaries.
+            return { x: canMoveX ? newX : imgPosition.x, y: canMoveY ? newY : imgPosition.y }
           }
-        }
+          return imgPosition
+        })
       } else {
+        const
+          focused = drawnShapes.find(({ isFocused }) => isFocused),
+          intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
         canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
         switch (activeShape) {
           case 'rect': {
@@ -419,30 +416,52 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // Zoom canvas in/out.
     onWheel = (e: React.WheelEvent) => {
+      // document.removeEventListener('wheel', (e: any) => {
+      //   e = e || window.event
+      //   if (e.preventDefault) {
+      //     e.preventDefault()
+      //   }
+      //   e.returnValue = false
+      // }, false)
       const
         canvas = canvasRef.current,
-        rect = canvas?.getBoundingClientRect()
+        rect = canvas?.getBoundingClientRect(),
+        // TODO: Declare in safer way. It can be one cycle behind.
+        newScale = (e.deltaY < 0 ? scale > 1 ? scale - 0.025 : scale : scale <= 2 ? scale + 0.025 : scale),
+        scaleChange = newScale - scale
       if (!canvas || !rect || !e.ctrlKey) return
       // TODO: Set max zoom according image size.
+      // TODO: Rewrite with Math.max(1,Math.min(max_scale,scale))
       setScale(scale =>
         e.deltaY < 0
-          ? scale > 1 ? scale - 0.05 : scale
-          : scale <= 2 ? scale + 0.05 : scale
+          ? scale > 1 ? scale - 0.025 : scale
+          : scale <= 2 ? scale + 0.025 : scale // TODO: Fix when offset is higher.
       )
 
+      // Translate image to cursor position.
+      const start = eventToCursor(e, rect, scale)
+      // // mousePositionRef.current = { x: e.clientX, y: e.clientY }
+
+      // // TODO: Set correct cursor on key up when Ctrl is unpressed.
+      setImgPosition(imgPosition => {
+        if (start && imgRef.current) {
+          const
+            { cursor_x: x, cursor_y: y } = start,
+            dx = -(x * scale * scaleChange),
+            dy = -(y * scale * scaleChange),
+            newX = imgPosition.x + dx,
+            newY = imgPosition.y + dy,
+            realHeight = imgRef.current?.height * newScale,
+            realWidth = imgRef.current?.width * newScale,
+            canMoveX = newX < 0 && realWidth + newX > imgRef.current?.width, // TODO: canvas.width ?
+            canMoveY = newY < 0 && realHeight + newY > imgRef.current?.height // TODO: canvas.height?
+          // Prevent moving when image out of boundaries.
+          return ({ x: canMoveX ? newX : imgPosition.x, y: canMoveY ? newY : imgPosition.y })
+        }
+        return imgPosition
+      })
 
       // TODO: Fix reappearing of shapes when zooming in.
-
-      // TODO: Translate image to cursor position.
-      // { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
-      // startPosition.current = { x: cursor_x, y: cursor_y }
-      // TODO: Add panning on drag.
-      // const
-      //   { x: x1, y: y1 } = intersected?.shape.rect ? getRectCenter(intersected.shape.rect) : getPolygonCenter(focused.shape.polygon),
-      //   { x: x2, y: y2 } = getCanvasCenter(canvas),
-      //   dx = x2 - x1,
-      //   dy = y2 - y1
-      // moveCanvas(dx, dy)
     },
     onKeyDown = (e: React.KeyboardEvent) => {
       // Cancel polygon annotation.
@@ -627,6 +646,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items, scale, imgPosition])
+
+  // Disable page scrolling.
+  // TODO: Apply only when the mouse is over the canvas.
+  React.useEffect(() => {
+    const disableScroll = (e: WheelEvent) => e.preventDefault()
+    window.addEventListener('wheel', disableScroll, { passive: false })
+    return () => window.removeEventListener('wheel', disableScroll)
+  }, [])
 
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
