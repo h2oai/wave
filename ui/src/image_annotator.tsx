@@ -264,13 +264,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale),
         focused = drawnShapes.find(({ isFocused }) => isFocused),
         clickStartPosition = startPosition.current,
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y),
-        draggingImg = e.ctrlKey && scale > 1 && clickStartPosition?.dragging
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
       if (e.ctrlKey && scale > 1) {
         // TODO: Set correct cursor on key up when Ctrl is unpressed.
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
-        if (draggingImg && imgRef.current) {
+        if (clickStartPosition?.dragging && imgRef.current) {
           const
             { x, y } = clickStartPosition,
             dx = cursor_x - x,
@@ -325,10 +324,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
 
     },
-    onMouseUp = () => {
+    onMouseUp = (e: React.MouseEvent) => {
       // Reset startPosition here because onClick is not registered while holding Control key.
-      startPosition.current = undefined
-      if (imgPosition) imgPositionRef.current = imgPosition // TODO: Save only in case of dragging.
+      if (e.ctrlKey && scale > 1 && startPosition.current?.dragging) {
+        startPosition.current = undefined
+        // Save current image position when dragging ends.
+        if (imgPosition) imgPositionRef.current = imgPosition
+      }
     },
     onClick = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
@@ -386,6 +388,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
 
+      startPosition.current = undefined
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
