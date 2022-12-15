@@ -885,7 +885,8 @@ class AsyncSite:
                     raise ValueError(f'{f} is not a file.')
                 dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
-                subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''])
+                p = subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''])
+                p.communicate()
             return [f'/_f/{uuid}/{os.path.basename(f)}' for f in files]
 
         upload_files = []
