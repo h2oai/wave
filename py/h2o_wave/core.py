@@ -13,8 +13,13 @@
 # limitations under the License.
 
 from io import BufferedReader
+import ipaddress
 import json
+import platform
 import secrets
+import subprocess
+from urllib.parse import urlparse
+from uuid import uuid4
 import warnings
 import logging
 import os
@@ -867,6 +872,22 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
+        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
+        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if waved_dir and _is_loopback_address(_config.hub_address):
+            is_windows = 'Windows' in platform.system()
+            cp_command = 'xcopy' if is_windows else 'cp'
+            uuid = str(uuid4())
+            for f in files:
+                if not os.path.isfile(f):
+                    raise ValueError(f'{f} is not a file.')
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
+                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''])
+            return [f'/_f/{uuid}/{os.path.basename(f)}' for f in files]
+
         upload_files = []
         file_handles: List[BufferedReader] = []
         for f in files:
@@ -972,6 +993,7 @@ def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:
             _get_files_in_directory(path, files)
     return files
 
+
 def marshal(d: Any) -> str:
     """
     Marshal to JSON.
@@ -1008,3 +1030,11 @@ def pack(data: Any) -> str:
     The object or value compressed into a string.
     """
     return 'data:' + marshal(_dump(data))
+
+
+def _is_loopback_address(address: str) -> bool:
+    try:
+        hostname = urlparse(address).hostname
+        return ipaddress.ip_address(hostname).is_loopback
+    except ValueError:
+        return False
