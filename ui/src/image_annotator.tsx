@@ -175,7 +175,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [scale, setScale] = React.useState(1),
     // TODO: Rename properly - img position in progress - while dragging or scaling.
     [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }),
-    // TODO: Rename properly - img position after dragging or scaling.
+    // TODO: Rename properly - img position before/after dragging or scaling.
     imgPositionRef = React.useRef({ x: 0, y: 0 }),
     wheelDirectionRef = React.useRef(-1),
     imgRef = React.useRef<HTMLCanvasElement>(null),
@@ -218,6 +218,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
+      // Handle drag end when mouse is out of canvas.
       if (e.ctrlKey && scale > 1 && startPosition.current?.dragging) startPosition.current = undefined
 
       setWaveArgs(drawnShapes)
@@ -271,7 +272,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         clickStartPosition = startPosition.current
 
       if (e.ctrlKey && scale > 1) {
-        // TODO: Handle drag end when mouse is out of canvas.
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
         setImgPosition(imgPosition => {
           if (clickStartPosition?.dragging && imgRef.current) {
@@ -418,30 +418,28 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // Zoom canvas in/out.
     onWheel = (e: React.WheelEvent) => {
-      if (wheelDirectionRef.current < 0 && e.deltaY > 0 || wheelDirectionRef.current > 0 && e.deltaY < 0) {
-        imgPositionRef.current = { x: 0, y: 0 }
-        wheelDirectionRef.current = -wheelDirectionRef.current
-      }
       const
         canvas = canvasRef.current,
-        rect = canvas?.getBoundingClientRect(),
-        // TODO: Declare in safer way. It can be one cycle behind.
-        newScale = Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15))),
-        scaleChange = newScale - scale
+        wheelDirection = wheelDirectionRef.current,
+        rect = canvas?.getBoundingClientRect()
       if (!canvas || !rect || !e.ctrlKey) return
+      if (wheelDirection < 0 && e.deltaY > 0 || wheelDirection > 0 && e.deltaY < 0) {
+        imgPositionRef.current = { x: 0, y: 0 }
+        wheelDirectionRef.current = -wheelDirection
+      }
+      // TODO: Declare in safer way. It can be one cycle behind.
+      const newScale = Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15)))
       setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15))))
 
-
-      const start = eventToCursor(e, rect, scale, imgPositionRef.current)
-      if (canvasRef.current) canvasRef.current.style.cursor = scale > 1 ? 'grab' : 'auto'
+      canvas.style.cursor = scale > 1 ? 'grab' : 'auto'
 
       // Translate image to cursor position.
       setImgPosition(imgPosition => {
-        if (start && imgRef.current) {
+        if (imgRef.current) {
           const
-            { cursor_x, cursor_y } = start,
-            dx = -(cursor_x * scale * scaleChange),
-            dy = -(cursor_y * scale * scaleChange),
+            { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPositionRef.current),
+            dx = -(cursor_x * scale * (newScale - scale)),
+            dy = -(cursor_y * scale * (newScale - scale)),
             newX = imgPosition.x + dx,
             newY = imgPosition.y + dy,
             imgHeight = imgRef.current?.height,
@@ -449,13 +447,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             // Prevent moving when image out of boundaries.
             x = Math.min(0, Math.max(newX, -(imgWidth * (newScale - 1)))),
             y = Math.min(0, Math.max(newY, -(imgHeight * (newScale - 1))))
-          // imgPositionRef.current = { x, y }
           return { x, y }
         }
-        // imgPositionRef.current = imgPosition
         return imgPosition
       })
-
       // TODO: Fix reappearing of shapes when zooming in.
     },
     onKeyDown = (e: React.KeyboardEvent) => {
@@ -516,6 +511,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Remove last vertice.
       if (e.key === 'Backspace' && activeShape === 'polygon') {
         polygonRef.current?.removeLastPoint()
+        // TODO: Get rid of mousePositionRef if possible.
         const { x, y } = mousePositionRef.current
         // Re-create the preview line.
         onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
@@ -538,7 +534,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'Control') {
         // Set correct cursor on key up when Ctrl is unpressed.
         if (canvasRef.current) canvasRef.current.style.cursor = 'auto'
-        // TODO: Apply on every change of scaling direction.
         // Apply new image position after image scaling.
         imgPositionRef.current = imgPosition
       }
