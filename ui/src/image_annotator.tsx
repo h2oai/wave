@@ -466,6 +466,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'ArrowDown') moveShape(e, 'down')
       if (e.key === 'ArrowRight') moveShape(e, 'right')
       if (e.key === 'ArrowLeft') moveShape(e, 'left')
+      // Set active shape.
+      if (e.key === 'p') setActiveShape('polygon')
+      if (e.key === 'r') setActiveShape('rect')
+      if (e.key === 's') setActiveShape('select')
       // Change cursor to indicate that user can drag image.
       // TODO: Move to other place.
       if (e.key === 'Control') {
