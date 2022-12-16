@@ -91,6 +91,8 @@ export type Position = {
 export type DrawnShape = ImageAnnotatorItem & { isFocused?: B }
 export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
+const MAX_IMAGE_SCALE = 2.5
+
 const
   css = stylesheet({
     title: {
@@ -171,8 +173,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [scale, setScale] = React.useState(1),
+    // TODO: Rename properly - img position in progress - while dragging or scaling.
     [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }),
+    // TODO: Rename properly - img position after dragging or scaling.
     imgPositionRef = React.useRef({ x: 0, y: 0 }),
+    wheelDirectionRef = React.useRef(-1),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
@@ -213,6 +218,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
+      if (e.ctrlKey && scale > 1 && startPosition.current?.dragging) startPosition.current = undefined
 
       setWaveArgs(drawnShapes)
 
@@ -225,7 +231,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!canvas) return
 
       const
-        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgPositionRef.current),
+        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgPosition),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
       if (e.buttons !== 1 && !intersected?.shape.polygon) return // Ignore right-click.
@@ -265,7 +271,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         clickStartPosition = startPosition.current
 
       if (e.ctrlKey && scale > 1) {
-        // TODO: Set correct cursor on key up when Ctrl is unpressed.
         // TODO: Handle drag end when mouse is out of canvas.
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
         setImgPosition(imgPosition => {
@@ -317,7 +322,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           }
         }
       }
-
     },
     onMouseUp = (e: React.MouseEvent) => {
       // Reset startPosition here because onClick is not registered while holding Control key.
@@ -334,7 +338,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         start = startPosition.current,
         rect = canvas.getBoundingClientRect(),
-        { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPositionRef.current),
+        { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPosition),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
       switch (activeShape) {
@@ -414,51 +418,43 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // Zoom canvas in/out.
     onWheel = (e: React.WheelEvent) => {
-      // document.removeEventListener('wheel', (e: any) => {
-      //   e = e || window.event
-      //   if (e.preventDefault) {
-      //     e.preventDefault()
-      //   }
-      //   e.returnValue = false
-      // }, false)
+      if (wheelDirectionRef.current < 0 && e.deltaY > 0 || wheelDirectionRef.current > 0 && e.deltaY < 0) {
+        imgPositionRef.current = { x: 0, y: 0 }
+        wheelDirectionRef.current = -wheelDirectionRef.current
+      }
       const
         canvas = canvasRef.current,
-        rect = canvas?.getBoundingClientRect()
-      // TODO: Declare in safer way. It can be one cycle behind.
-      // newScale = (e.deltaY < 0 ? scale > 1 ? scale - 0.025 : scale : scale <= 2 ? scale + 0.025 : scale),
-      // scaleChange = newScale - scale
+        rect = canvas?.getBoundingClientRect(),
+        // TODO: Declare in safer way. It can be one cycle behind.
+        newScale = Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15))),
+        scaleChange = newScale - scale
       if (!canvas || !rect || !e.ctrlKey) return
-      // TODO: Set max zoom according image size.
-      // TODO: Rewrite with Math.max(1,Math.min(max_scale,scale))
-      setScale(scale =>
-        e.deltaY < 0
-          ? scale > 1 ? scale - 0.025 : scale
-          : scale <= 2 ? scale + 0.025 : scale // TODO: Fix when offset is higher.
-      )
+      setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15))))
+
+
+      const start = eventToCursor(e, rect, scale, imgPositionRef.current)
+      if (canvasRef.current) canvasRef.current.style.cursor = scale > 1 ? 'grab' : 'auto'
 
       // Translate image to cursor position.
-      // const start = eventToCursor(e, rect, scale, imgPositionRef.current)
-      // mousePositionRef.current = { x: e.clientX, y: e.clientY }
-
-      // TODO: Set correct cursor on key up when Ctrl is unpressed.
-      // TODO: If dx, dy are bigger, use maximum possible value.
-      // setImgPosition(imgPosition => {
-      //   if (start && imgRef.current) {
-      //     const
-      //       { cursor_x: x, cursor_y: y } = start,
-      //       dx = -(x * scale * scaleChange),
-      //       dy = -(y * scale * scaleChange),
-      //       newX = imgPosition.x + dx,
-      //       newY = imgPosition.y + dy,
-      //       realHeight = imgRef.current?.height * newScale,
-      //       realWidth = imgRef.current?.width * newScale,
-      //       canMoveX = newX < 0 && realWidth + newX > imgRef.current?.width, // TODO: canvas.width ?
-      //       canMoveY = newY < 0 && realHeight + newY > imgRef.current?.height // TODO: canvas.height?
-      //     // Prevent moving when image out of boundaries.
-      //     return ({ x: canMoveX ? newX : imgPosition.x, y: canMoveY ? newY : imgPosition.y })
-      //   }
-      //   return imgPosition
-      // })
+      setImgPosition(imgPosition => {
+        if (start && imgRef.current) {
+          const
+            { cursor_x, cursor_y } = start,
+            dx = -(cursor_x * scale * scaleChange),
+            dy = -(cursor_y * scale * scaleChange),
+            newX = imgPosition.x + dx,
+            newY = imgPosition.y + dy,
+            imgHeight = imgRef.current?.height,
+            imgWidth = imgRef.current?.width,
+            // Prevent moving when image out of boundaries.
+            x = Math.min(0, Math.max(newX, -(imgWidth * (newScale - 1)))),
+            y = Math.min(0, Math.max(newY, -(imgHeight * (newScale - 1))))
+          // imgPositionRef.current = { x, y }
+          return { x, y }
+        }
+        // imgPositionRef.current = imgPosition
+        return imgPosition
+      })
 
       // TODO: Fix reappearing of shapes when zooming in.
     },
@@ -475,7 +471,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'ArrowDown') moveShape(e, 'down')
       if (e.key === 'ArrowRight') moveShape(e, 'right')
       if (e.key === 'ArrowLeft') moveShape(e, 'left')
-      // Always available shortcuts.
+      // Change cursor to indicate that user can drag image.
+      // TODO: Move to other place.
+      if (e.key === 'Control') {
+        if (canvasRef.current && scale > 1) canvasRef.current.style.cursor = 'grab'
+      }
       // Select all shapes.
       if (e.key === 'a') {
         setDrawnShapes(shapes => {
@@ -531,6 +531,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           })
         }
         redrawExistingShapes()
+      }
+      // Always available shortcuts. // TODO:
+    },
+    onKeyUp = (e: React.KeyboardEvent) => {
+      if (e.key === 'Control') {
+        // Set correct cursor on key up when Ctrl is unpressed.
+        if (canvasRef.current) canvasRef.current.style.cursor = 'auto'
+        // TODO: Apply on every change of scaling direction.
+        // Apply new image position after image scaling.
+        imgPositionRef.current = imgPosition
       }
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
@@ -693,6 +703,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           onMouseUp={onMouseUp}
           onMouseLeave={onMouseLeave}
           onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
           // Do not show context menu on right click.
           onContextMenu={e => e.preventDefault()}
           onClick={onClick}
