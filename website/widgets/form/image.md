@@ -13,8 +13,9 @@ Check the full API at [ui.image](/docs/api/ui#image).
 ## Basic image
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 4 4', items=[
-    ui.image(title='Image title', path='https://www.fillmurray.com/640/360'),
+path = 'https://raw.githubusercontent.com/h2oai/wave/master/assets/brand/wave-university-wide.png'
+q.page['example'] = ui.form_card(box='1 1 8 6', items=[
+    ui.image(title='Image title', path=path),
 ])
 ```
 
@@ -86,8 +87,9 @@ Apart from using a dedicated [ui.image](/docs/api/ui#image) component, one can a
 using any textual component that supports Markdown. This way requires regular image URLs (no base64).
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 4 4', items=[
-    ui.text(content='![Fill Murray](https://www.fillmurray.com/640/360)')
+content = '![Wave University](https://raw.githubusercontent.com/h2oai/wave/master/assets/brand/wave-university-wide.png)'
+q.page['example'] = ui.form_card(box='1 1 8 6', items=[
+    ui.text(content=content)
 ])
 ```
 
