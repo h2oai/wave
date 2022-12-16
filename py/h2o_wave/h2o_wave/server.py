@@ -16,6 +16,7 @@ import os
 import datetime
 import asyncio
 from concurrent.futures import Executor
+import re
 
 try:
     import contextvars  # Python 3.7+ only.
@@ -112,6 +113,7 @@ class Query:
             client_state: Expando,
             args: Expando,
             events: Expando,
+            forwarded_headers: Dict[str, str],
     ):
         self.mode = mode
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
@@ -135,6 +137,8 @@ class Query:
         """The route served by the server."""
         self.auth = auth
         """The authentication / authorization details of the user who initiated this query."""
+        self.forwarded_headers = forwarded_headers
+        """Forwarded HTTP headers from the initial browser connection."""
 
     async def sleep(self, delay: float, result=None) -> Any:
         """
@@ -311,12 +315,15 @@ class _App:
         access_token = req.headers.get('Wave-Access-Token')
         refresh_token = req.headers.get('Wave-Refresh-Token')
         session_id = req.headers.get('Wave-Session-ID')
+
+        forwarded_headers = {k: v for k, v in req.headers.items() if not re.match('wave-', k, re.I)}
+
         auth = Auth(username, subject, access_token, refresh_token, session_id)
         args = await req.json()
 
-        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))
+        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args, forwarded_headers))
 
-    async def _process(self, client_id: str, auth: Auth, args: dict):
+    async def _process(self, client_id: str, auth: Auth, args: dict, forwarded_headers: dict):
         logger.debug(f'user: {auth.username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = self._state
@@ -335,6 +342,7 @@ class _App:
             client_state=_session_for(client_state, client_id),
             args=Expando(args),
             events=Expando(events_state),
+            forwarded_headers=forwarded_headers,
         )
         # noinspection PyBroadException,PyPep8
         try:
