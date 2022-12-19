@@ -59,6 +59,7 @@ export const
     return (
       <Fluent.Toggle
         data-test={m.name}
+        styles={{ root: { marginBottom: 0 } }}
         label={m.label}
         defaultChecked={m.value}
         onChange={onChange}
