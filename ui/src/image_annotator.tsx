@@ -470,6 +470,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'p') setActiveShape('polygon')
       if (e.key === 'r') setActiveShape('rect')
       if (e.key === 's') setActiveShape('select')
+      // Change active tag.
+      if (e.key === 'l') {
+        const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
+        const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
+        activateTag(nextTag)()
+      }
       // Change cursor to indicate that user can drag image.
       // TODO: Move to other place.
       if (e.key === 'Control') {
