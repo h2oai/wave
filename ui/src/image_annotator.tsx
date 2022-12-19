@@ -467,14 +467,21 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'ArrowRight') moveShape(e, 'right')
       if (e.key === 'ArrowLeft') moveShape(e, 'left')
       // Set active shape.
-      if (e.key === 'p') setActiveShape('polygon')
-      if (e.key === 'r') setActiveShape('rect')
+      if (e.key === 'p' && allowedShapes.has('polygon')) setActiveShape('polygon')
+      if (e.key === 'r' && allowedShapes.has('rect')) setActiveShape('rect')
       if (e.key === 's') setActiveShape('select')
       // Change active tag.
       if (e.key === 'l') {
         const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
         const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
         activateTag(nextTag)()
+      }
+      // Change active shape.
+      if (e.key === 'b') {
+        // TODO: Refactor.
+        const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
+        const activeShapeIdx = shapes.findIndex(s => s === activeShape)
+        setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
       }
       // Change cursor to indicate that user can drag image.
       // TODO: Move to other place.
@@ -499,6 +506,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Paste shapes.
       // TODO: Move selected shapes by mouse at once.
       if (e.key === 'v') {
+        // TODO: Do not paste shapes if clipboard is empty.
         navigator.clipboard.readText().then(text => {
           const shapes = JSON.parse(text)
           setDrawnShapes(prevShapes => {
