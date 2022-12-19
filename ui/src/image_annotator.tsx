@@ -7,6 +7,7 @@ import { getRectCornerCursor, isIntersectingRect, RectAnnotator } from './image_
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
+import { useBoolean, useId } from '@fluentui/react-hooks'
 
 /** Create a polygon annotation point with x and y coordinates.. */
 export interface ImageAnnotatorPoint {
@@ -95,9 +96,13 @@ const MAX_IMAGE_SCALE = 2.5
 
 const
   css = stylesheet({
+    titleContainer: {
+      marginBottom: 8,
+      display: 'flex',
+    },
     title: {
+      alignSelf: 'center',
       color: cssVar('$primary'),
-      marginBottom: 8
     },
     canvas: {
       display: 'block',
@@ -113,8 +118,43 @@ const
       position: 'relative',
       margin: 8,
       transition: 'transform .3s' // TODO:
+    },
+    tableBody: {
+      $nest: {
+        '& > tr > td': {
+          // TODO: Remove gaps between cells.
+          boxSizing: 'border-box',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          borderColor: cssVar('$neutralPrimaryAlt'),
+          padding: '8px 12px',
+        },
+        '& > tr > td:first-child': {
+          width: 190, // TODO: Comment magic number.
+          fontWeight: 600,
+        },
+        '& > tr:nth-child(odd)': {
+          backgroundColor: cssVar('$neutralDark'),
+        }
+      }
     }
   }),
+  helpTableRows = [
+    { key: 'Arrow keys (↑ ↓ → ←)', description: 'Move selected shapes by 1px (or 10px when holding Shift key)' },
+    { key: 'a', description: 'Select all shapes' },
+    { key: 'c', description: 'Copy selected shapes' },
+    { key: 'v', description: 'Paste selected shapes' },
+    { key: 'd', description: 'Delete selected shapes' },
+    { key: 'Ctrl + Mouse wheel', description: 'Zoom in/out' },
+    { key: 'l', description: 'Toggle label' },
+    { key: 'b', description: 'Toggle drawing function' },
+    { key: 'Enter', description: 'Finish drawing polyshape' },
+    { key: 'Backspace', description: 'Delete last polyshape vertex' },
+    { key: 'Esc', description: 'Cancel ongoing task' },
+    { key: 'r', description: 'Select rectangle tool' },
+    { key: 'p', description: 'Select polygon tool' },
+    { key: 's', description: 'Activate selection tool' }
+  ],
   eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F, position: { x: F, y: F }) => ({ cursor_x: (e.clientX - rect.left - position.x) / scale, cursor_y: (e.clientY - rect.top - position.y) / scale }), // TODO: Add image position.
   getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
     if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
@@ -177,6 +217,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }),
     // TODO: Rename properly - img position before/after dragging or scaling.
     imgPositionRef = React.useRef({ x: 0, y: 0 }),
+    buttonId = useId('targetButton'),
+    [teachingBubbleVisible, { toggle: toggleTeachingBubbleVisible }] = useBoolean(false),
     wheelDirectionRef = React.useRef(-1),
     imgRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
@@ -467,6 +509,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'ArrowRight') moveShape(e, 'right')
       if (e.key === 'ArrowLeft') moveShape(e, 'left')
       // Set active shape.
+      // TODO: Handle edge cases. E.g. using polygon and then switching to rect or select. Or changing active tag.
       if (e.key === 'p' && allowedShapes.has('polygon')) setActiveShape('polygon')
       if (e.key === 'r' && allowedShapes.has('rect')) setActiveShape('rect')
       if (e.key === 's') setActiveShape('select')
@@ -482,6 +525,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
         const activeShapeIdx = shapes.findIndex(s => s === activeShape)
         setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
+        redrawExistingShapes()
       }
       // Change cursor to indicate that user can drag image.
       // TODO: Move to other place.
@@ -683,7 +727,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
   return (
     <div data-test={model.name}>
-      <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
+      <div className={css.titleContainer}>
+        <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
+        {/* TODO: Test table for all themes. */}
+        <Fluent.IconButton id={buttonId} iconProps={{ iconName: 'Info', styles: { root: { fontSize: 20 } } }} onClick={toggleTeachingBubbleVisible} />
+      </div>
       <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
       <Fluent.CommandBar
         styles={{ root: { padding: 0 } }}
@@ -723,6 +771,34 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           onWheel={onWheel}
         />
       </div>
+      {teachingBubbleVisible && (
+        <Fluent.TeachingBubble
+          target={`#${buttonId}`}
+          isWide
+          hasCloseButton
+          closeButtonAriaLabel="Close"
+          onDismiss={toggleTeachingBubbleVisible}
+          calloutProps={{ directionalHint: Fluent.DirectionalHint.bottomLeftEdge }}
+          headline="Keyboard shortcuts"
+        >
+          <table>
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody className={css.tableBody}>
+              {helpTableRows.map(row =>
+                <tr key={row.key}>
+                  <td>{row.key}</td>
+                  <td>{row.description}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </Fluent.TeachingBubble>
+      )}
     </div >
   )
 }
