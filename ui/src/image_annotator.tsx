@@ -155,7 +155,8 @@ const
     { key: 'p', description: 'Select polygon tool' },
     { key: 's', description: 'Activate selection tool' }
   ],
-  eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F, position: { x: F, y: F }) => ({ cursor_x: (e.clientX - rect.left - position.x) / scale, cursor_y: (e.clientY - rect.top - position.y) / scale }), // TODO: Add image position.
+  eventToCursor = (e: React.MouseEvent, rect: DOMRect, scale: F, position: ImageAnnotatorPoint) =>
+    ({ cursor_x: (e.clientX - rect.left - position.x) / scale, cursor_y: (e.clientY - rect.top - position.y) / scale }),
   getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
     if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
     if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
@@ -543,16 +544,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Copy selected shapes.
       if (e.key === 'c') {
         const selectedShapes = drawnShapes.filter(s => s.isFocused)
-        if (selectedShapes.length) {
-          navigator.clipboard.writeText(JSON.stringify(selectedShapes))
-        }
+        if (selectedShapes.length) navigator.clipboard.writeText(JSON.stringify(selectedShapes))
       }
       // Paste shapes.
       // TODO: Move selected shapes by mouse at once.
       if (e.key === 'v') {
-        // TODO: Do not paste shapes if clipboard is empty.
         navigator.clipboard.readText().then(text => {
-          const shapes = JSON.parse(text)
+          let shapes: DrawnShape[]
+          try { shapes = JSON.parse(text) }
+          catch (e) { return }
           setDrawnShapes(prevShapes => {
             const newShapes = [...shapes, ...prevShapes]
             setWaveArgs(newShapes)
@@ -590,7 +590,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         redrawExistingShapes()
       }
-      // Always available shortcuts. // TODO:
     },
     onKeyUp = (e: React.KeyboardEvent) => {
       if (e.key === 'Control') {
