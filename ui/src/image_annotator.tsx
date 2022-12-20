@@ -257,7 +257,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redrawExistingShapes]),
-
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
@@ -677,6 +676,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       // TODO: Clear previous image if there is any.
       ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
+      // Prevent page scroll when mouse is on the canvas.
+      canvas.onwheel = e => {
+        e.preventDefault()
+      }
       // canvas.onwheel = e => {
       //   if (!e.ctrlKey) return
       //   setScale(scale => {
@@ -711,14 +714,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items, scale, imgPosition])
-
-  // Disable page scrolling.
-  // TODO: Apply only when the mouse is over the canvas.
-  React.useEffect(() => {
-    const disableScroll = (e: WheelEvent) => e.preventDefault()
-    window.addEventListener('wheel', disableScroll, { passive: false })
-    return () => window.removeEventListener('wheel', disableScroll)
-  }, [])
 
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
