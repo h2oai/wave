@@ -4,94 +4,67 @@ title: Configuration
 
 ## Configuring the server
 
-### Command line options
+Wave allows starting Wave server in 2 ways:
 
-Run `waved -help` to view all available command line options:
+* via `wave run` command - this automatically starts Wave server (waved) under the hood, useful for development.
+* via Wave server binary (waved) - useful during deployment or when you need to run your Wave server on a different machine than your app.
 
-```
-$ ./waved -help
-Usage of ./waved:
-  -access-key-id string
-        default API access key ID (default "access_key_id")
-  -access-key-secret string
-        default API access key secret (default "access_key_secret")
-  -access-keychain string
-        path to file containing API access keys (default ".wave-keychain")
-  -compact string
-        compact AOF log
-  -create-access-key
-        generate and add a new API access key ID and secret pair to the keychain
-  -data-dir string
-        directory to store site data (default "./data")
-  -debug
-        enable debug mode (profiling, inspection, etc.)
-  -editable
-        allow users to edit web pages
-  -http-headers-file string
-        path to a MIME-formatted file containing additional HTTP headers to add to responses from the server
-  -init string
-        initialize site content from AOF log
-  -list-access-keys
-        list all the access key IDs in the keychain
-  -listen string
-        listen on this address (default ":10101")
-  -base-url string
-        the base URL (path prefix) to be used for resolving relative URLs (e.g. /foo/ or /foo/bar/, without the host (default "/")
-  -max-cache-request-size string
-        maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB) (default "5M")
-  -max-proxy-request-size string
-        maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB) (default "5M")
-  -max-proxy-response-size string
-        maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB) (default "5M")
-  -max-request-size string
-        maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB) (default "5M")
-  -no-store
-        disable storage (scripts and multicast/broadcast apps will not work)
-  -no-log
-        disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)
-  -oidc-auth-url-params string
-        additional URL parameters to pass during OIDC authorization, in the format "key:value", comma-separated, e.g. "foo:bar,qux:42"
-  -oidc-client-id string
-        OIDC client ID
-  -oidc-client-secret string
-        OIDC client secret
-  -oidc-end-session-url string
-        OIDC end session URL
-  -oidc-provider-url string
-        OIDC provider URL
-  -oidc-redirect-url string
-        OIDC redirect URL
-  -oidc-post-logout-redirect-url string
-        OIDC post logout redirect URL
-  -oidc-scopes
-        OIDC scopes separated by comma (default "openid,profile")
-  -oidc-skip-login
-        don't show the built-in login form during OIDC authorization
-  -private-dir value
-        additional directory to serve files from (authenticated users only), in the format "[url-path]@[filesystem-path]", e.g. "/public/files/@/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed; paths need to be relative to Wave server binary location
-  -proxy
-        enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)
-  -public-dir value
-        additional directory to serve files from, in the format "[url-path]@[filesystem-path]", e.g. "/public/files/@/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed; paths need to be relative to Wave server binary location
-  -remove-access-key string
-        remove the specified API access key ID from the keychain
-  -session-expiry string
-        session cookie lifetime duration (e.g. 1800s or 30m or 0.5h) (default "720h")
-  -session-inactivity-timeout string
-        session inactivity timeout duration (e.g. 1800s or 30m or 0.5h) (default "30m")
-  -tls-cert-file string
-        path to certificate file (TLS only)
-  -tls-key-file string
-        path to private key file (TLS only)
-  -no-tls-verify
-        do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION
-  -version
-        print version and exit
-  -web-dir string
-        directory to serve web assets from (default "./www")
-```
+You can either configure your Wave server via environment variables (works for both options ^^) or command line arguments (only when using `waved` directly).
 
-Supported size units (case insensitive):
+<!-- CREDIT: https://kdelmonte.github.io/json-to-markdown-table/ -->
+
+| ENV var (wave run or waved)           | CLI args (waved)                     | Description                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| H2O_WAVE_ACCESS_KEY_ID                 | -access-key-id string                 | default API access key ID (default "access_key_id")                                                                                                                                                                                                                                                                 |
+| H2O_WAVE_ACCESS_KEY_SECRET             | -access-key-secret string             | default API access key secret (default "access_key_secret")                                                                                                                                                                                                                                                          |
+| H2O_WAVE_ACCESS_KEYCHAIN               | -access-keychain string               | path to file containing API access keys (default ".wave-keychain")                                                                                                                                                                                                                                                   |
+|                                        | -compact string                       | compact AOF log                                                                                                                                                                                                                                                                                                      |
+|                                        | -create-access-key                    | generate and add a new API access key ID and secret pair to the keychain                                                                                                                                                                                                                                             |
+| H2O_WAVE_DATA_DIR                      | -data-dir string                      | directory to store site data (default "./data").                                                                                                                                                                                                                                                                      |
+| H2O_WAVE_DEBUG [^1]                     | -debug                                | enable debug mode (profiling, inspection, etc.)                                                                                                                                                                                                                                                                      |
+| H2O_WAVE_EDITABLE [^1]                  | -editable                             | allow users to edit web pages                                                                                                                                                                                                                                                                                        |
+| H2O_WAVE_HTTP_HEADERS_FILE             | -http-headers-file string             | path to a MIME-formatted file containing additional HTTP headers to add to responses from the server                                                                                                                                                                                                                 |
+| H2O_WAVE_INIT                          | -init string                          | initialize site content from AOF log                                                                                                                                                                                                                                                                                 |
+| H2O_WAVE_LISTEN                        | -listen string                        | listen on this address (default ":10101")                                                                                                                                                                                                                                                                            |
+|                                        | -list-access-keys                     | list all the access key IDs in the keychain                                                                                                                                                                                                                                                                          |
+| H2O_WAVE_BASE_URL                      | -base-url string                      | the base URL (path prefix) to be used for resolving relative URLs (e.g. /foo/ or /foo/bar/, without the host (default "/")                                                                                                                                                                                           |
+| H2O_WAVE_MAX_CACHE_REQUEST_SIZE        | -max-cache-request-size string        | maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB) (default "5M")                                                                                                                                                                                                                    |
+| H2O_WAVE_MAX_PROXY_REQUEST_SIZE        | -max-proxy-request-size string        | maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB) (default "5M")                                                                                                                                                                                                                                |
+| H2O_WAVE_MAX_PROXY_RESPONSE_SIZE       | -max-proxy-response-size string       | maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB) (default "5M")                                                                                                                                                                                                                               |
+| H2O_WAVE_MAX_REQUEST_SIZE              | -max-request-size string              | maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB) (default "5M")                                                                                                                                                                                                                          |
+| H2O_WAVE_NO_STORE [^1]                      | -no-store                             | disable storage (scripts and multicast/broadcast apps will not work)                                                                                                                                                                                                                                                 |
+| H2O_WAVE_NO_LOG [^1]                     | -no-log                               | disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)                                                                                                                                                                                                                            |
+| H2O_WAVE_OIDC_AUTH_URL_PARAMS          | -oidc-auth-url-params string          | additional URL parameters to pass during OIDC authorization, in the format "key:value", comma-separated, e.g. "foo:bar,qux:42"                                                                                                                                                                                       |
+| H2O_WAVE_OIDC_CLIENT_ID                | -oidc-client-id string                | OIDC client ID                                                                                                                                                                                                                                                                                                       |
+| H2O_WAVE_OIDC_CLIENT_SECRET            | -oidc-client-secret string            | OIDC client secret                                                                                                                                                                                                                                                                                                   |
+| H2O_WAVE_OIDC_END_SESSION_URL          | -oidc-end-session-url string          | OIDC end session URL                                                                                                                                                                                                                                                                                                 |
+| H2O_WAVE_OIDC_PROVIDER_URL             | -oidc-provider-url string             | OIDC provider URL                                                                                                                                                                                                                                                                                                    |
+| H2O_WAVE_OIDC_REDIRECT_URL             | -oidc-redirect-url string             | OIDC redirect URL                                                                                                                                                                                                                                                                                                    |
+| H2O_WAVE_OIDC_POST_LOGOUT_REDIRECT_URL | -oidc-post-logout-redirect-url string | OIDC post logout redirect URL                                                                                                                                                                                                                                                                                        |
+| H2O_WAVE_OIDC_SCOPES                   | -oidc-scopes                          | OIDC scopes separated by comma (default "openid,profile")                                                                                                                                                                                                                                                            |
+| H2O_WAVE_OIDC_SKIP_LOGIN [^1]           | -oidc-skip-login                      | don't show the built -in login form during OIDC authorization                                                                                                                                                                                                                                                        |
+| H2O_WAVE_PRIVATE_DIR [^2]               | -private-dir value                    | additional directory to serve files from (authenticated users only), in the format "[url-path]@[filesystem-path]", e.g. "/public/files/@/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed; paths need to be relative to Wave server binary location |
+| H2O_WAVE_PUBLIC_DIR [^2]                | -public-dir value                     | additional directory to serve files from, in the format "[url-path]@[filesystem-path]", e.g. "/public/files/@/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed; paths need to be relative to Wave server binary location                            |
+| H2O_WAVE_PROXY [^1]                     | -proxy                                | enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)                                                                                                                                                                                                            |
+|                                        | -remove-access-key string             | remove the specified API access key ID from the keychain                                                                                                                                                                                                                                                             |
+| H2O_WAVE_SESSION_EXPIRY                | -session-expiry string                | session cookie lifetime duration (e.g. 1800s or 30m or 0.5h) (default "720h")                                                                                                                                                                                                                                        |
+| H2O_WAVE_SESSION_INACTIVITY_TIMEOUT    | -session-inactivity-timeout string    | session inactivity timeout duration (e.g. 1800s or 30m or 0.5h) (default "30m")                                                                                                                                                                                                                                      |
+| H2O_WAVE_TLS_CERT_FILE                 | -tls-cert-file string                 | path to certificate file (TLS only)                                                                                                                                                                                                                                                                                  |
+| H2O_WAVE_TLS_KEY_FILE                  | -tls-key-file string                  | path to private key file (TLS only)                                                                                                                                                                                                                                                                                  |
+| H2O_WAVE_NO_TLS_VERIFY [^1]                 | -no-tls-verify                        | do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION                                                                                                                                                                                                                              |
+|                                        | -version                              | print version and exit                                                                                                                                                                                                                                                                                               |
+| H2O_WAVE_WEB_DIR                       | -web-dir string                       | directory to serve web assets from (default "./www")                                                                                                                                                                                                                                                                 |
+
+[^1]: `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
+[^2]: Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
+
+### File paths
+
+All the configuration options that expect a path as value (public/private dir, data dir etc.) need the path provided to be either absolute or relative to a directory where `waved` is stored.
+
+Those that do not start `waved` manually (but use `wave run` instead) and would like to use relative paths need to know that `waved` is stored in their 'virtualenv' (venv) folder (when installed via `pip`). If the `venv` folder is within the project root, then all the paths relative to your project dir need to be prepended with `../` (up one directory).
+
+### Supported size units (case insensitive)
 
 * Exabyte: `E` / `EB` / `EIB`.
 * Petabyte: `P` / `PB` / `PIB`.
@@ -101,53 +74,14 @@ Supported size units (case insensitive):
 * Kilobyte: `K` / `KB` / `KIB`.
 * Byte: `B`
 
-Valid time units: `ns`, `us` (or `µs`), `ms`, `s`, `m`, `h`.
+### Suported time units
 
-### Environment variables
-
-Almost all of the command line arguments listed above can be set using environment variables (with the exception of actions like `-version`, `-create-access-key`, `-list-access-key`, etc.).
-
-```
-H2O_WAVE_ACCESS_KEY_ID
-H2O_WAVE_ACCESS_KEY_SECRET
-H2O_WAVE_ACCESS_KEYCHAIN
-H2O_WAVE_BASE_URL
-H2O_WAVE_DATA_DIR
-H2O_WAVE_DEBUG [1]
-H2O_WAVE_EDITABLE [1]
-H2O_WAVE_HTTP_HEADERS_FILE
-H2O_WAVE_INIT
-H2O_WAVE_LISTEN
-H2O_WAVE_MAX_CACHE_REQUEST_SIZE
-H2O_WAVE_MAX_PROXY_REQUEST_SIZE
-H2O_WAVE_MAX_PROXY_RESPONSE_SIZE
-H2O_WAVE_MAX_REQUEST_SIZE
-H2O_WAVE_NO_STORE
-H2O_WAVE_NO_LOG
-H2O_WAVE_OIDC_AUTH_URL_PARAMS
-H2O_WAVE_OIDC_CLIENT_ID
-H2O_WAVE_OIDC_CLIENT_SECRET
-H2O_WAVE_OIDC_END_SESSION_URL
-H2O_WAVE_OIDC_PROVIDER_URL
-H2O_WAVE_OIDC_REDIRECT_URL
-H2O_WAVE_OIDC_POST_LOGOUT_REDIRECT_URL
-H2O_WAVE_OIDC_SCOPES
-H2O_WAVE_OIDC_SKIP_LOGIN [1]
-H2O_WAVE_SESSION_EXPIRY
-H2O_WAVE_SESSION_INACTIVITY_TIMEOUT
-H2O_WAVE_PROXY [1]
-H2O_WAVE_PUBLIC_DIR [2]
-H2O_WAVE_PRIVATE_DIR [2]
-H2O_WAVE_TLS_CERT_FILE
-H2O_WAVE_TLS_KEY_FILE
-H2O_WAVE_NO_TLS_VERIFY
-H2O_WAVE_WEB_DIR
-```
-
-Notes:
-
-* [1] `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
-* [2] Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
+* Nanosecond: `ns`.
+* Microsecond: `us` (or `µs`).
+* Milisecond `ms`.
+* Second: `s`.
+* Minute: `m`.
+* Hour: `h`.
 
 ### Public/Private dirs
 
