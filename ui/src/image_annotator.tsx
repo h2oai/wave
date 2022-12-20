@@ -140,10 +140,12 @@ const
     }
   }),
   helpTableRows = [
+    // TODO: Reorder.
     { key: 'Arrow keys (↑ ↓ → ←)', description: 'Move selected shapes by 1px (or 10px when holding Shift key)' },
     { key: 'a', description: 'Select all shapes' },
     { key: 'c', description: 'Copy selected shapes' },
     { key: 'v', description: 'Paste selected shapes' },
+    { key: 'Shift + Click', description: 'Select multiple shapes when in the selection mode' },
     { key: 'd', description: 'Delete selected shapes' },
     { key: 'Ctrl + Mouse wheel', description: 'Zoom in/out' },
     { key: 'l', description: 'Toggle label' },
@@ -412,7 +414,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
           setDrawnShapes(drawnShapes => {
             const newShapes = drawnShapes.map(s => {
-              s.isFocused = s === intersected
+              // Allow multiple shapes to be selected by holding Shift key.
+              s.isFocused = e.shiftKey ? s === intersected || s.isFocused : s === intersected
               if (s.isFocused && s.shape.polygon && polygonRef.current) {
                 s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
               }
@@ -674,7 +677,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         ctxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
       }
 
-      // TODO: Clear previous image if there is any.
       ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
       // Prevent page scroll when mouse is on the canvas.
       canvas.onwheel = e => {
