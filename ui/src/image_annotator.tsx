@@ -220,21 +220,23 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }),
     // TODO: Rename properly - img position before/after dragging or scaling.
     imgPositionRef = React.useRef({ x: 0, y: 0 }),
+    imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
+    imgRef = React.useRef(new Image()),
     buttonId = useId('targetButton'),
-    [teachingBubbleVisible, { toggle: toggleTeachingBubbleVisible }] = useBoolean(false),
     wheelDirectionRef = React.useRef(-1),
-    imgRef = React.useRef<HTMLCanvasElement>(null),
+    imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
     polygonRef = React.useRef<PolygonAnnotator | null>(null),
     [aspectRatio, setAspectRatio] = React.useState(1),
     startPosition = React.useRef<Position | undefined>(undefined),
-    ctxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
+    canvasCtxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     mousePositionRef = React.useRef({ x: 0, y: 0 }),
+    [teachingBubbleVisible, { toggle: toggleTeachingBubbleVisible }] = useBoolean(false),
     getCurrentTagColor = React.useCallback((tag: S) => colorsMap.get(tag) || cssVarValue('$red'), [colorsMap]),
     redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
-      const ctx = ctxRef.current
+      const ctx = canvasCtxRef.current
       if (!ctx || !canvas) return
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -318,14 +320,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.ctrlKey && scale > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
         setImgPosition(imgPosition => {
-          if (clickStartPosition?.dragging && imgRef.current) {
+          if (clickStartPosition?.dragging && imgCanvasRef.current) {
             const
               dx = (cursor_x * scale) - clickStartPosition.x * scale,
               dy = (cursor_y * scale) - clickStartPosition.y * scale,
               newX = imgPositionRef.current.x + dx,
               newY = imgPositionRef.current.y + dy,
-              imgWidth = imgRef.current?.width,
-              imgHeight = imgRef.current?.height,
+              imgWidth = imgCanvasRef.current?.width,
+              imgHeight = imgCanvasRef.current?.height,
               x = Math.min(0, Math.max(newX, -(imgWidth * (scale - 1)))),
               y = Math.min(0, Math.max(newY, -(imgHeight * (scale - 1))))
             return { x, y }
@@ -480,15 +482,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       // Translate image to cursor position.
       setImgPosition(imgPosition => {
-        if (imgRef.current) {
+        if (imgCanvasRef.current) {
           const
             { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPositionRef.current),
             dx = -(cursor_x * scale * (newScale - scale)),
             dy = -(cursor_y * scale * (newScale - scale)),
             newX = imgPosition.x + dx,
             newY = imgPosition.y + dy,
-            imgHeight = imgRef.current?.height,
-            imgWidth = imgRef.current?.width,
+            imgHeight = imgCanvasRef.current?.height,
+            imgWidth = imgCanvasRef.current?.width,
             // Prevent moving when image out of boundaries.
             x = Math.min(0, Math.max(newX, -(imgWidth * (newScale - 1)))),
             y = Math.min(0, Math.max(newY, -(imgHeight * (newScale - 1))))
@@ -496,7 +498,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         return imgPosition
       })
-      // TODO: Fix reappearing of shapes when zooming in.
     },
     onKeyDown = (e: React.KeyboardEvent) => {
       // Cancel polygon annotation.
@@ -652,10 +653,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     const img = new Image()
     img.src = model.image
     img.onload = () => {
-      const imgCanvas = imgRef.current
+      const imgCanvas = imgCanvasRef.current
       const canvas = canvasRef.current
       if (!imgCanvas || !canvas) return
-      ctxRef.current = canvas.getContext('2d')
+      canvasCtxRef.current = canvas.getContext('2d')
 
       const ctx = imgCanvas.getContext('2d')
       if (!ctx) return
@@ -671,10 +672,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.parentElement!.style.height = px(height)
 
       rectRef.current = new RectAnnotator(canvas)
-      if (ctxRef.current) {
-        polygonRef.current = new PolygonAnnotator(ctxRef.current)
-        ctxRef.current.scale(scale, scale)
-        ctxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
+      if (canvasCtxRef.current) {
+        polygonRef.current = new PolygonAnnotator(canvasCtxRef.current)
+        canvasCtxRef.current.scale(scale, scale)
+        canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
       }
 
       ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
@@ -682,40 +683,39 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.onwheel = e => {
         e.preventDefault()
       }
-      // canvas.onwheel = e => {
-      //   if (!e.ctrlKey) return
-      //   setScale(scale => {
-      //     e.preventDefault()
-      //     // const newScale = Math.max(0.1, Math.min(10, scale + e.deltaY / 100))
-      //     const cv = canvasRef.current
-      //     const image = imgRef.current
-      //     const newScale = e.deltaY < 0
-      //       ? scale > 1 ? scale - 0.1 : scale
-      //       : scale <= 2 ? scale + 0.1 : scale
-      //     if (image && cv) {
-      //       ctxRef.current = cv.getContext('2d')
-      //       const cvx = cv.getContext('2d')
-      //       const imagex = image.getContext('2d')
-      //       if (cvx && imagex) {
-      //         polygonRef.current = new PolygonAnnotator(cvx)
-      //         console.log('newScale', newScale, e)
-      //         cvx.scale(newScale, newScale)
-      //         // TODO: image.width!! 
-      //         imagex.clearRect(0, 0, image.width, image.height)
-      //         imagex.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio * newScale, img.height * aspectRatio * newScale)
-      //       }
-      //     }
-      //     return newScale
-      //   })
-      //   redrawExistingShapes()
-      // }
+
+      imgRef.current = img
+      imgCanvasCtxRef.current = ctx
+
       if (!drawnShapes.length) {
+        // TODO: Fix reappearing of shapes when zooming in.
         setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
       }
       redrawExistingShapes()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items, scale, imgPosition])
+
+  // React.useEffect(() => {
+
+  //   const canvas = canvasRef.current
+  //   if (!canvas) return
+  //   canvas.height = canvasRef.current.height
+
+  //   rectRef.current = new RectAnnotator(canvasRef.current)
+  //   // TODO: Move to onWheel.
+  //   if (canvasCtxRef.current && imgCanvasCtxRef.current) {
+  //     polygonRef.current = new PolygonAnnotator(canvasCtxRef.current)
+  //     canvasCtxRef.current.scale(scale, scale)
+  //     canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
+  //   }
+
+  //   const img = imgRef.current
+  //   if (imgCanvasCtxRef.current && img) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
+  //   redrawExistingShapes()
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [scale, imgPosition])
 
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
@@ -750,7 +750,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         farItems={farItems}
       />
       <div className={css.canvasContainer}>
-        <canvas ref={imgRef} className={css.canvas} />
+        <canvas ref={imgCanvasRef} className={css.canvas} />
         <canvas
           tabIndex={0}
           ref={canvasRef}
