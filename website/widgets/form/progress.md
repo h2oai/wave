@@ -32,3 +32,14 @@ q.page['example'] = ui.form_card(
     items=[ui.progress(label='Indeterminate Progress', caption='Goes on forever')]
 )
 ```
+
+## Spinner progress
+
+Use this kind of progress as a last resort only. The UX it provides is only slightly better than displaying nothing.
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.progress(label='Indeterminate Progress', type='spinner')]
+)
+```

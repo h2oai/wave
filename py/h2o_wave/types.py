@@ -789,6 +789,7 @@ class Progress:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
+            type: Optional[str] = None,
     ):
         _guard_scalar('Progress.label', label, (str,), False, False, False)
         _guard_scalar('Progress.caption', caption, (str,), False, True, False)
@@ -797,6 +798,7 @@ class Progress:
         _guard_scalar('Progress.visible', visible, (bool,), False, True, False)
         _guard_scalar('Progress.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Progress.name', name, (str,), False, True, False)
+        _guard_scalar('Progress.type', type, (str,), False, True, False)
         self.label = label
         """The text displayed above the bar."""
         self.caption = caption
@@ -811,6 +813,8 @@ class Progress:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
         """An identifying name for this component."""
+        self.type = type
+        """The type of progress bar to be displayed"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -821,6 +825,7 @@ class Progress:
         _guard_scalar('Progress.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Progress.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Progress.name', self.name, (str,), False, True, False)
+        _guard_scalar('Progress.type', self.type, (str,), False, True, False)
         return _dump(
             label=self.label,
             caption=self.caption,
@@ -829,6 +834,7 @@ class Progress:
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
+            type=self.type,
         )
 
     @staticmethod
@@ -848,6 +854,8 @@ class Progress:
         _guard_scalar('Progress.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Progress.name', __d_name, (str,), False, True, False)
+        __d_type: Any = __d.get('type')
+        _guard_scalar('Progress.type', __d_type, (str,), False, True, False)
         label: str = __d_label
         caption: Optional[str] = __d_caption
         value: Optional[float] = __d_value
@@ -855,6 +863,7 @@ class Progress:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
+        type: Optional[str] = __d_type
         return Progress(
             label,
             caption,
@@ -863,6 +872,7 @@ class Progress:
             visible,
             tooltip,
             name,
+            type,
         )
 
 

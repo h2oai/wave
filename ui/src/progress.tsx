@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, S } from 'h2o-wave'
 import React from 'react'
-
 /**
  * Create a progress bar.
  *
@@ -52,15 +51,21 @@ export interface Progress {
   tooltip?: S
   /** An identifying name for this component. */
   name?: S
+  /** The type of progress bar to be displayed */
+  type?: S
 }
 
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { label, caption = 'Please wait...', value, name } = model
+      {type, label, caption = 'Please wait...', value, name } = model
     return (
       <div data-test={name}>
-        <Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />
+        {type === 'spinner' ?
+        <div>
+        <Fluent.Spinner label={label} size={Fluent.SpinnerSize.medium} labelPosition='top'/>
+        </div>
+        :<Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />}
       </div>
     )
   }

@@ -302,6 +302,7 @@ def progress(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
+        type: Optional[str] = None,
 ) -> Component:
     """Create a progress bar.
 
@@ -331,6 +332,7 @@ def progress(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
+        type: The type of progress bar to be displayed
     Returns:
         A `h2o_wave.types.Progress` instance.
     """
@@ -342,6 +344,7 @@ def progress(
         visible,
         tooltip,
         name,
+        type,
     ))
 
 
