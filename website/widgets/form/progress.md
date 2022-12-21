@@ -40,6 +40,6 @@ Use this kind of progress as a last resort only. The UX it provides is only slig
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
-    items=[ui.progress(label='Indeterminate Progress', type='spinner')]
+    items=[ui.progress(label='Spinner Progress', type='spinner')]
 )
 ```
