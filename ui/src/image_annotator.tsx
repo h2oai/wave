@@ -262,6 +262,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redrawExistingShapes]),
+    recreatePreviewLine = () => {
+      // TODO: Get rid of mousePositionRef if possible.
+      const { x, y } = mousePositionRef.current
+      // Re-create the preview line.
+      onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
+      // TODO: Change line color.
+    },
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
@@ -441,28 +448,36 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
-      setDrawnShapes(drawnShapes => drawnShapes.map(ds => {
-        const { isFocused, shape } = ds
-        if (isFocused) {
+      const
+        isAxisHorizontal = direction === 'right' || direction === 'left',
+        isPositiveDirection = direction === 'right' || direction === 'down',
+        increment = (isPositiveDirection ? 1 : -1) * (e.shiftKey ? 10 : 1),
+        // Check if all selected shapes can move.
+        canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(({ shape }) => {
           const
             { polygon, rect } = shape,
-            isAxisHorizontal = direction === 'right' || direction === 'left',
-            isPositiveDirection = direction === 'right' || direction === 'down',
-            increment = (isPositiveDirection ? 1 : -1) * (e.shiftKey ? 10 : 1),
             border = (isPositiveDirection ? canvasRef.current![direction === 'right' ? 'width' : 'height'] : 0) - increment,
             isInBoundaries = (c1: U, c2: U = border) => (isPositiveDirection && c1 <= border && c2 <= border) || (!isPositiveDirection && c1 >= border && c2 >= border),
             canMoveRect = rect && isInBoundaries(rect[isAxisHorizontal ? 'x1' : 'y1'], rect[isAxisHorizontal ? 'x2' : 'y2']),
-            // Do not move when at least one vertice is out of boundaries.
-            canMovePoly = polygon && !polygon.vertices.find(v => !isInBoundaries(v[isAxisHorizontal ? 'x' : 'y']))
-          // TODO: Move multiple selected shapes as a group.
-          if (canMoveRect) {
-            rect[isAxisHorizontal ? 'x1' : 'y1'] += increment
-            rect[isAxisHorizontal ? 'x2' : 'y2'] += increment
-          }
-          if (canMovePoly) polygon.vertices.forEach(v => v[isAxisHorizontal ? 'x' : 'y'] += increment)
-        }
-        return ds
-      }))
+            canMovePoly = polygon && polygon.vertices.every(v => isInBoundaries(v[isAxisHorizontal ? 'x' : 'y']))
+          return canMoveRect || canMovePoly
+        })
+      if (canMoveAllSelectedShapes) {
+        setDrawnShapes(drawnShapes =>
+          drawnShapes.map(ds => {
+            const { isFocused, shape } = ds
+            if (isFocused) {
+              const { polygon, rect } = shape
+              if (rect) {
+                rect[isAxisHorizontal ? 'x1' : 'y1'] += increment
+                rect[isAxisHorizontal ? 'x2' : 'y2'] += increment
+              }
+              if (polygon) polygon.vertices.forEach(v => v[isAxisHorizontal ? 'x' : 'y'] += increment)
+            }
+            return ds
+          })
+        )
+      }
       redrawExistingShapes()
     },
     // Zoom canvas in/out.
@@ -502,6 +517,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
         const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
         activateTag(nextTag)()
+        recreatePreviewLine()
       }
       // Change active shape.
       if (e.key === 'b') {
@@ -556,10 +572,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Remove last vertice.
       if (e.key === 'Backspace' && activeShape === 'polygon') {
         polygonRef.current?.removeLastPoint()
-        // TODO: Get rid of mousePositionRef if possible.
-        const { x, y } = mousePositionRef.current
-        // Re-create the preview line.
-        onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
+        recreatePreviewLine()
       }
       // Finish polygon annotation.
       if (e.key === 'Enter' && activeShape === 'polygon') {
@@ -665,10 +678,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgRef.current = img
       imgCanvasCtxRef.current = ctx
 
-      if (!drawnShapes.length) {
-        // TODO: Fix reappearing of shapes when zooming in.
-        setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
-      }
+      if (!drawnShapes.length) setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
       redrawExistingShapes()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -710,7 +720,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
     }
     const img = imgRef.current
-    if (imgCanvasCtxRef.current && img) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
+    if (img && imgCanvasCtxRef.current) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
     redrawExistingShapes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgPosition])
