@@ -118,17 +118,19 @@ const
     canvasContainer: {
       position: 'relative',
       margin: 8,
-      transition: 'transform .3s' // TODO:
+    },
+    table: {
+      borderSpacing: 0,
     },
     tableBody: {
       $nest: {
         '& > tr > td': {
           // TODO: Remove gaps between cells.
           boxSizing: 'border-box',
-          borderWidth: 1,
+          borderWidth: 0.5,
           borderStyle: 'solid',
           borderColor: cssVar('$neutralPrimaryAlt'),
-          padding: '8px 12px',
+          padding: '0.4rem',
         },
         '& > tr > td:first-child': {
           width: 190, // TODO: Comment magic number.
@@ -141,19 +143,18 @@ const
     }
   }),
   helpTableRows = [
-    // TODO: Reorder.
-    { key: 'Arrow keys (↑ ↓ → ←)', description: 'Move selected shapes by 1px (or 10px when holding Shift key)' },
     { key: 'a', description: 'Select all shapes' },
     { key: 'c', description: 'Copy selected shapes' },
     { key: 'v', description: 'Paste selected shapes' },
-    { key: 'Shift + Click', description: 'Select multiple shapes when in the selection mode' },
     { key: 'd', description: 'Delete selected shapes' },
+    { key: 'Shift + Click', description: 'Select multiple shapes when in the selection mode' },
+    { key: 'Arrow keys (↑ ↓ → ←)', description: 'Move selected shapes by 1px (or 10px while holding Shift key)' },
     { key: 'Ctrl + Mouse wheel', description: 'Zoom in/out' },
-    { key: 'l', description: 'Toggle label' },
-    { key: 'b', description: 'Toggle drawing function' },
     { key: 'Enter', description: 'Finish drawing polyshape' },
     { key: 'Backspace', description: 'Delete last polyshape vertex' },
     { key: 'Esc', description: 'Cancel ongoing task' },
+    { key: 'l', description: 'Toggle label' },
+    { key: 'b', description: 'Toggle drawing function' },
     { key: 'r', description: 'Select rectangle tool' },
     { key: 'p', description: 'Select polygon tool' },
     { key: 's', description: 'Activate selection tool' }
@@ -785,7 +786,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           calloutProps={{ directionalHint: Fluent.DirectionalHint.bottomLeftEdge }}
           headline="Keyboard shortcuts"
         >
-          <table>
+          <table className={css.table}>
             <thead>
               <tr>
                 <th>Key</th>
