@@ -93,6 +93,7 @@ export type DrawnShape = ImageAnnotatorItem & { isFocused?: B }
 export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
 const MAX_IMAGE_SCALE = 2.5
+const ZOOM_STEP = 0.15
 
 const
   css = stylesheet({
@@ -319,6 +320,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       if (e.ctrlKey && scale > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
+        // TODO: Reuse.
         setImgPosition(imgPosition => {
           if (clickStartPosition?.dragging && imgCanvasRef.current) {
             const
@@ -467,37 +469,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onWheel = (e: React.WheelEvent) => {
       const
         canvas = canvasRef.current,
-        wheelDirection = wheelDirectionRef.current,
-        rect = canvas?.getBoundingClientRect()
-      if (!canvas || !rect || !e.ctrlKey) return
+        wheelDirection = wheelDirectionRef.current
+      if (!canvas || !e.ctrlKey) return
       if (wheelDirection < 0 && e.deltaY > 0 || wheelDirection > 0 && e.deltaY < 0) {
         imgPositionRef.current = { x: 0, y: 0 }
         wheelDirectionRef.current = -wheelDirection
       }
-      // TODO: Declare in safer way. It can be one cycle behind.
-      const newScale = Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15)))
-      setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -0.15 : 0.15))))
+      setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -ZOOM_STEP : ZOOM_STEP))))
 
       canvas.style.cursor = scale > 1 ? 'grab' : 'auto'
-
-      // Translate image to cursor position.
-      setImgPosition(imgPosition => {
-        if (imgCanvasRef.current) {
-          const
-            { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPositionRef.current),
-            dx = -(cursor_x * scale * (newScale - scale)),
-            dy = -(cursor_y * scale * (newScale - scale)),
-            newX = imgPosition.x + dx,
-            newY = imgPosition.y + dy,
-            imgHeight = imgCanvasRef.current?.height,
-            imgWidth = imgCanvasRef.current?.width,
-            // Prevent moving when image out of boundaries.
-            x = Math.min(0, Math.max(newX, -(imgWidth * (newScale - 1)))),
-            y = Math.min(0, Math.max(newY, -(imgHeight * (newScale - 1))))
-          return { x, y }
-        }
-        return imgPosition
-      })
     },
     onKeyDown = (e: React.KeyboardEvent) => {
       // Cancel polygon annotation.
@@ -680,9 +660,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
       // Prevent page scroll when mouse is on the canvas.
-      canvas.onwheel = e => {
-        e.preventDefault()
-      }
+      canvas.onwheel = e => e.preventDefault()
 
       imgRef.current = img
       imgCanvasCtxRef.current = ctx
@@ -694,28 +672,48 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model.name, model.image, model.image_height, model.items, scale, imgPosition])
+  }, [model.name, model.image, model.image_height, model.items])
 
-  // React.useEffect(() => {
+  // Translate image to cursor position on scale change.
+  React.useEffect(() => {
+    const
+      canvas = canvasRef.current,
+      rect = canvas?.getBoundingClientRect(),
+      { x, y } = mousePositionRef.current,
+      e = { clientX: x, clientY: y } as React.MouseEvent
+    if (canvas && rect && scale !== MAX_IMAGE_SCALE) {
+      setImgPosition(imgPosition => {
+        if (imgCanvasRef.current) {
+          const
+            { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPositionRef.current),
+            dx = -(cursor_x * scale * (wheelDirectionRef.current * ZOOM_STEP)),
+            dy = -(cursor_y * scale * (wheelDirectionRef.current * ZOOM_STEP)),
+            newX = imgPosition.x + dx,
+            newY = imgPosition.y + dy,
+            imgHeight = imgCanvasRef.current?.height,
+            imgWidth = imgCanvasRef.current?.width,
+            // Prevent moving when image out of boundaries.
+            x = Math.min(0, Math.max(newX, -(imgWidth * (scale - 1)))),
+            y = Math.min(0, Math.max(newY, -(imgHeight * (scale - 1))))
+          return { x, y }
+        }
+        return imgPosition
+      })
+    }
+  }, [scale])
 
-  //   const canvas = canvasRef.current
-  //   if (!canvas) return
-  //   canvas.height = canvasRef.current.height
-
-  //   rectRef.current = new RectAnnotator(canvasRef.current)
-  //   // TODO: Move to onWheel.
-  //   if (canvasCtxRef.current && imgCanvasCtxRef.current) {
-  //     polygonRef.current = new PolygonAnnotator(canvasCtxRef.current)
-  //     canvasCtxRef.current.scale(scale, scale)
-  //     canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
-  //   }
-
-  //   const img = imgRef.current
-  //   if (imgCanvasCtxRef.current && img) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
-  //   redrawExistingShapes()
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [scale, imgPosition])
+  React.useEffect(() => {
+    // TODO: Move to onWheel.
+    if (canvasCtxRef.current && imgCanvasCtxRef.current) {
+      canvasCtxRef.current.setTransform(1, 0, 0, 1, 0, 0) // Reset transofmations before applying other.
+      canvasCtxRef.current.scale(scale, scale)
+      canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
+    }
+    const img = imgRef.current
+    if (imgCanvasCtxRef.current && img) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
+    redrawExistingShapes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imgPosition])
 
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))

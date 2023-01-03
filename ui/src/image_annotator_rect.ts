@@ -117,6 +117,7 @@ export class RectAnnotator {
 
       // Prevent moving behind image boundaries.
       // FIXME: Hitting boundary repeatedly causes rect to increase in size.
+      // TODO: Prevent moving shapes outside of canvas when scale > 1.
       if (newX1 < rect.x1 && newX1 < 0) rect.x1 = Math.max(0, newX1)
       else if (newX2 < rect.x2 && newX2 < 0) rect.x2 = Math.max(0, newX2)
       else if (newY1 < rect.y1 && newY1 < 0) rect.y1 = Math.max(0, newY1)
