@@ -468,20 +468,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           return canMoveRect || canMovePoly
         })
       if (canMoveAllSelectedShapes) {
-        setDrawnShapes(drawnShapes =>
-          drawnShapes.map(ds => {
-            const { isFocused, shape } = ds
-            if (isFocused) {
-              const { polygon, rect } = shape
-              if (rect) {
-                rect[isAxisHorizontal ? 'x1' : 'y1'] += increment
-                rect[isAxisHorizontal ? 'x2' : 'y2'] += increment
-              }
-              if (polygon) polygon.vertices.forEach(v => v[isAxisHorizontal ? 'x' : 'y'] += increment)
-            }
-            return ds
-          })
-        )
+        drawnShapes.filter(ds => ds.isFocused).forEach(ds => {
+          const shape = ds.shape.rect ? rectRef.current : polygonRef.current
+          shape?.onMouseMove(isAxisHorizontal ? increment : 0, isAxisHorizontal ? 0 : increment, ds, ds, { x: 0, y: 0, dragging: true })
+        })
       }
       redrawExistingShapes()
     },
@@ -507,7 +497,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
       // Shortcuts available on image focus.
       // Move selection.
-      // TODO: Think, whether we can reuse the logic from onMouseMove.
       if (e.key === 'ArrowUp') moveShape(e, 'up')
       if (e.key === 'ArrowDown') moveShape(e, 'down')
       if (e.key === 'ArrowRight') moveShape(e, 'right')
