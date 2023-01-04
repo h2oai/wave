@@ -369,14 +369,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           case 'select': {
             // If left mouse btn is not held during moving, ignore.
             if (e.buttons !== 1) break
-            if (focused?.shape.rect) {
-              rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-              redrawExistingShapes()
-            }
-            else if (focused?.shape.polygon) {
-              polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-              redrawExistingShapes()
-            }
+            moveShape(cursor_x, cursor_y, clickStartPosition)
+            // if (focused?.shape.rect) {
+            //   rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            //   redrawExistingShapes()
+            // }
+            // else if (focused?.shape.polygon) {
+            //   polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            //   redrawExistingShapes()
+            // }
             break
           }
         }
@@ -451,26 +452,31 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
-    moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
-      // TODO: Reuse. image_annotator_rect.ts
-      const
-        isAxisHorizontal = direction === 'right' || direction === 'left',
-        isPositiveDirection = direction === 'right' || direction === 'down',
-        increment = (isPositiveDirection ? 1 : -1) * (e.shiftKey ? 10 : 1),
-        // Check if all selected shapes can move.
-        canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(({ shape }) => {
-          const
-            { polygon, rect } = shape,
-            border = (isPositiveDirection ? canvasRef.current![direction === 'right' ? 'width' : 'height'] : 0) - increment,
-            isInBoundaries = (c1: U, c2: U = border) => (isPositiveDirection && c1 <= border && c2 <= border) || (!isPositiveDirection && c1 >= border && c2 >= border),
-            canMoveRect = rect && isInBoundaries(rect[isAxisHorizontal ? 'x1' : 'y1'], rect[isAxisHorizontal ? 'x2' : 'y2']),
-            canMovePoly = polygon && polygon.vertices.every(v => isInBoundaries(v[isAxisHorizontal ? 'x' : 'y']))
-          return canMoveRect || canMovePoly
-        })
+    // TODO: Rename to moveAllSelectedShapes
+    // TODO: Allow moving when there is 0 - 10 gap.
+    moveShape = (dx: U = 0, dy: U = 0, clickStartPosition?: Position) => {
+      const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(({ shape }) => {
+        // TODO: Implement shape.canMove function instead?
+        const
+          { polygon, rect } = shape,
+          maxX = canvasRef.current!.width,
+          maxY = canvasRef.current!.height,
+          isInBoundaries = (x1: U, x2?: U, y1?: U, y2?: U) => {
+            if (x1 !== undefined && (x1 < 0 || x1 > maxX)) return false
+            if (x2 !== undefined && (x2 < 0 || x2 > maxX)) return false
+            if (y1 !== undefined && (y1 < 0 || y1 > maxY)) return false
+            if (y2 !== undefined && (y2 < 0 || y2 > maxY)) return false
+            return true
+          },
+          canMoveRect = rect && isInBoundaries(rect.x1 + dx - (clickStartPosition?.x || 0), rect.x2 + dx - (clickStartPosition?.x || 0), rect.y1 + dy - (clickStartPosition?.y || 0), rect.y2 + dy - (clickStartPosition?.y || 0)),
+          canMovePoly = polygon && polygon.vertices.every(v => isInBoundaries(v.x + dx - (clickStartPosition?.x || 0), undefined, v.y + dy - (clickStartPosition?.y || 0)))
+        return canMoveRect || canMovePoly
+      })
+      console.log(canMoveAllSelectedShapes)
       if (canMoveAllSelectedShapes) {
-        drawnShapes.filter(ds => ds.isFocused).forEach(ds => {
-          const shape = ds.shape.rect ? rectRef.current : polygonRef.current
-          shape?.onMouseMove(isAxisHorizontal ? increment : 0, isAxisHorizontal ? 0 : increment, ds, ds, { x: 0, y: 0, dragging: true })
+        drawnShapes.filter(shape => shape.isFocused).forEach(s => {
+          const shape = s.shape.rect ? rectRef.current : polygonRef.current
+          shape?.onMouseMove(dx, dy, s, s, clickStartPosition || { x: 0, y: 0, dragging: true })
         })
       }
       redrawExistingShapes()
@@ -490,17 +496,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = scale > 1 ? 'grab' : 'auto'
     },
     onKeyDown = (e: React.KeyboardEvent) => {
+      // Move selection.
+      const increment = e.shiftKey ? 10 : 1
+      if (e.key === 'ArrowLeft') moveShape(-increment)
+      if (e.key === 'ArrowRight') moveShape(increment)
+      if (e.key === 'ArrowUp') moveShape(undefined, -increment)
+      if (e.key === 'ArrowDown') moveShape(undefined, increment)
       // Cancel polygon annotation.
       if (e.key === 'Escape' && activeShape === 'polygon') {
         polygonRef.current?.cancelAnnotating()
         redrawExistingShapes()
       }
-      // Shortcuts available on image focus.
-      // Move selection.
-      if (e.key === 'ArrowUp') moveShape(e, 'up')
-      if (e.key === 'ArrowDown') moveShape(e, 'down')
-      if (e.key === 'ArrowRight') moveShape(e, 'right')
-      if (e.key === 'ArrowLeft') moveShape(e, 'left')
       // Set active shape.
       // TODO: Handle edge cases. E.g. using polygon and then switching to rect or select. Or changing active tag.
       if (e.key === 'p' && allowedShapes.has('polygon')) setActiveShape('polygon')
