@@ -95,6 +95,8 @@ export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 const MAX_IMAGE_SCALE = 2.5
 const ZOOM_STEP = 0.15
 
+// TODO: Write tests for shortcuts.
+
 const
   css = stylesheet({
     titleContainer: {
@@ -231,6 +233,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     rectRef = React.useRef<RectAnnotator | null>(null),
     polygonRef = React.useRef<PolygonAnnotator | null>(null),
     [aspectRatio, setAspectRatio] = React.useState(1),
+    // TODO: Rename to clickStartPosition?
     startPosition = React.useRef<Position | undefined>(undefined),
     canvasCtxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     mousePositionRef = React.useRef({ x: 0, y: 0 }),
@@ -269,6 +272,19 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Re-create the preview line.
       onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
       // TODO: Change line color.
+    },
+    translateImage = (dx: U, dy: U) => {
+      if (!imgCanvasRef.current) return
+      setImgPosition(imgPosition => {
+        const
+          newX = imgPosition.x + dx,
+          newY = imgPosition.y + dy,
+          imgWidth = imgCanvasRef.current?.width,
+          imgHeight = imgCanvasRef.current?.height,
+          x = Math.min(0, Math.max(newX, -(imgWidth! * (scale - 1)))),
+          y = Math.min(0, Math.max(newY, -(imgHeight! * (scale - 1))))
+        return { x, y }
+      })
     },
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
@@ -322,28 +338,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
-      const
-        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgPositionRef.current),
-        clickStartPosition = startPosition.current
+      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgPositionRef.current)
+      const clickStartPosition = startPosition.current
 
       if (e.ctrlKey && scale > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
-        // TODO: Reuse.
-        setImgPosition(imgPosition => {
-          if (clickStartPosition?.dragging && imgCanvasRef.current) {
-            const
-              dx = (cursor_x * scale) - clickStartPosition.x * scale,
-              dy = (cursor_y * scale) - clickStartPosition.y * scale,
-              newX = imgPositionRef.current.x + dx,
-              newY = imgPositionRef.current.y + dy,
-              imgWidth = imgCanvasRef.current?.width,
-              imgHeight = imgCanvasRef.current?.height,
-              x = Math.min(0, Math.max(newX, -(imgWidth * (scale - 1)))),
-              y = Math.min(0, Math.max(newY, -(imgHeight * (scale - 1))))
-            return { x, y }
-          }
-          return imgPosition
-        })
+        if (clickStartPosition?.dragging && imgCanvasRef.current) {
+          translateImage((cursor_x - clickStartPosition.x) * scale, (cursor_y - clickStartPosition.y) * scale)
+          startPosition.current = { x: cursor_x, y: cursor_y, dragging: clickStartPosition?.dragging }
+        }
       } else {
         const
           focused = drawnShapes.find(({ isFocused }) => isFocused),
@@ -449,6 +452,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     moveShape = (e: React.KeyboardEvent, direction: 'left' | 'right' | 'up' | 'down') => {
+      // TODO: Reuse. image_annotator_rect.ts
       const
         isAxisHorizontal = direction === 'right' || direction === 'left',
         isPositiveDirection = direction === 'right' || direction === 'down',
@@ -687,38 +691,21 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
   // Translate image to cursor position on scale change.
   React.useEffect(() => {
-    const
-      canvas = canvasRef.current,
-      rect = canvas?.getBoundingClientRect(),
-      { x, y } = mousePositionRef.current,
-      e = { clientX: x, clientY: y } as React.MouseEvent
-    if (canvas && rect && scale !== MAX_IMAGE_SCALE) {
-      setImgPosition(imgPosition => {
-        if (imgCanvasRef.current) {
-          const
-            { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPositionRef.current),
-            dx = -(cursor_x * scale * (wheelDirectionRef.current * ZOOM_STEP)),
-            dy = -(cursor_y * scale * (wheelDirectionRef.current * ZOOM_STEP)),
-            newX = imgPosition.x + dx,
-            newY = imgPosition.y + dy,
-            imgHeight = imgCanvasRef.current?.height,
-            imgWidth = imgCanvasRef.current?.width,
-            // Prevent moving when image out of boundaries.
-            x = Math.min(0, Math.max(newX, -(imgWidth * (scale - 1)))),
-            y = Math.min(0, Math.max(newY, -(imgHeight * (scale - 1))))
-          return { x, y }
-        }
-        return imgPosition
-      })
+    const rect = canvasRef.current?.getBoundingClientRect()
+    if (rect && scale !== MAX_IMAGE_SCALE) {
+      const
+        { x, y } = mousePositionRef.current,
+        { cursor_x, cursor_y } = eventToCursor({ clientX: x, clientY: y } as React.MouseEvent, rect, scale, imgPositionRef.current),
+        translateFactor = scale * -wheelDirectionRef.current * ZOOM_STEP
+      translateImage(cursor_x * translateFactor, cursor_y * translateFactor)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scale])
 
   React.useEffect(() => {
-    // TODO: Move to onWheel.
+    // TODO: Move to onWheel?
     if (canvasCtxRef.current && imgCanvasCtxRef.current) {
-      canvasCtxRef.current.setTransform(1, 0, 0, 1, 0, 0) // Reset transofmations before applying other.
-      canvasCtxRef.current.scale(scale, scale)
-      canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
+      canvasCtxRef.current.setTransform(scale, 0, 0, scale, imgPosition.x, imgPosition.y)
     }
     const img = imgRef.current
     if (img && imgCanvasCtxRef.current) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
