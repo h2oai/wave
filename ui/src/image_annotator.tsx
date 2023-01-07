@@ -369,15 +369,19 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           case 'select': {
             // If left mouse btn is not held during moving, ignore.
             if (e.buttons !== 1) break
-            moveShape(cursor_x, cursor_y, clickStartPosition)
-            // if (focused?.shape.rect) {
-            //   rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            //   redrawExistingShapes()
-            // }
-            // else if (focused?.shape.polygon) {
-            //   polygonRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            //   redrawExistingShapes()
-            // }
+            // TODO: Not all shapes are moving.
+            const { x, y } = startPosition.current || { x: 0, y: 0 }
+            const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
+              const shape = s.shape.rect ? rectRef.current : polygonRef.current
+              return shape?.canMove(s, cursor_x - x, cursor_y - y)
+            })
+            if (canMoveAllSelectedShapes) {
+              drawnShapes.filter(ds => ds.isFocused).forEach(s => {
+                const shape = s.shape.rect ? rectRef.current : polygonRef.current
+                shape?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)                // shape?.onMouseMove(dx, dy, s, s, startPosition.current || { x, y, dragging: true })
+                redrawExistingShapes()
+              })
+            }
             break
           }
         }
@@ -454,29 +458,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // TODO: Rename to moveAllSelectedShapes
     // TODO: Allow moving when there is 0 - 10 gap.
-    moveShape = (dx: U = 0, dy: U = 0, clickStartPosition?: Position) => {
-      const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(({ shape }) => {
-        // TODO: Implement shape.canMove function instead?
-        const
-          { polygon, rect } = shape,
-          maxX = canvasRef.current!.width,
-          maxY = canvasRef.current!.height,
-          isInBoundaries = (x1: U, x2?: U, y1?: U, y2?: U) => {
-            if (x1 !== undefined && (x1 < 0 || x1 > maxX)) return false
-            if (x2 !== undefined && (x2 < 0 || x2 > maxX)) return false
-            if (y1 !== undefined && (y1 < 0 || y1 > maxY)) return false
-            if (y2 !== undefined && (y2 < 0 || y2 > maxY)) return false
-            return true
-          },
-          canMoveRect = rect && isInBoundaries(rect.x1 + dx - (clickStartPosition?.x || 0), rect.x2 + dx - (clickStartPosition?.x || 0), rect.y1 + dy - (clickStartPosition?.y || 0), rect.y2 + dy - (clickStartPosition?.y || 0)),
-          canMovePoly = polygon && polygon.vertices.every(v => isInBoundaries(v.x + dx - (clickStartPosition?.x || 0), undefined, v.y + dy - (clickStartPosition?.y || 0)))
-        return canMoveRect || canMovePoly
+    moveShape = (dx: U = 0, dy: U = 0) => {
+      const { x, y } = startPosition.current || { x: 0, y: 0 }
+      const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
+        const shape = s.shape.rect ? rectRef.current : polygonRef.current
+        return shape?.canMove(s, dx, dy)
       })
-      console.log(canMoveAllSelectedShapes)
       if (canMoveAllSelectedShapes) {
-        drawnShapes.filter(shape => shape.isFocused).forEach(s => {
+        drawnShapes.filter(ds => ds.isFocused).forEach(s => {
           const shape = s.shape.rect ? rectRef.current : polygonRef.current
-          shape?.onMouseMove(dx, dy, s, s, clickStartPosition || { x: 0, y: 0, dragging: true })
+          // TODO: Why startPosition.current is necessary here?
+          shape?.onMouseMove(dx, dy, s, s, startPosition.current || { x, y, dragging: true })
         })
       }
       redrawExistingShapes()
@@ -666,7 +658,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       rectRef.current = new RectAnnotator(canvas)
       if (canvasCtxRef.current) {
-        polygonRef.current = new PolygonAnnotator(canvasCtxRef.current)
+        polygonRef.current = new PolygonAnnotator(canvas)
         canvasCtxRef.current.scale(scale, scale)
         canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
       }

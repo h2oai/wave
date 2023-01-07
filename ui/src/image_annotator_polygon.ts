@@ -6,9 +6,11 @@ export class PolygonAnnotator {
   private currPolygonPoints: ImageAnnotatorPoint[] = []
   private draggedPoint: ImageAnnotatorPoint | null = null
   private draggedShape: DrawnShape | null = null
+  private ctx: CanvasRenderingContext2D | null
 
-  constructor(private ctx: CanvasRenderingContext2D) {
-    this.ctx.lineWidth = 2
+  constructor(private canvas: HTMLCanvasElement) {
+    this.ctx = canvas.getContext('2d')
+    if (this.ctx) this.ctx.lineWidth = 2
   }
 
   resetDragging() {
@@ -41,6 +43,16 @@ export class PolygonAnnotator {
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
   }
 
+  canMove = (focused: DrawnShape, dx: U, dy: U) => {
+    if (focused.shape.polygon) {
+      const { width, height } = this.canvas
+      return focused.shape.polygon.vertices.every(v =>
+        v.x + dx >= 0 && v.x + dx <= width &&
+        v.y + dy >= 0 && v.y + dy <= height
+      )
+    }
+  }
+
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
     // TODO: Prevent moving shapes outside of canvas when scale > 1.
     if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
@@ -49,13 +61,14 @@ export class PolygonAnnotator {
       return
     }
 
+    const canMovePolygon = this.canMove(focused, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
-    else if (intersected == focused || this.draggedShape) {
+    else if ((intersected == focused || this.draggedShape) && canMovePolygon) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       this.draggedShape?.shape.polygon?.vertices.forEach(p => {
         p.x += cursor_x - clickStartPosition!.x

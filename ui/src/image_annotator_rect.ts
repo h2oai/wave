@@ -73,6 +73,19 @@ export class RectAnnotator {
     this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
   }
 
+  canMove = (focused: DrawnShape, dx: U, dy: U) => {
+    if (focused.shape.rect) {
+      const { x1, x2, y1, y2 } = focused.shape.rect
+      const { width, height } = this.canvas
+      return (
+        x1 + dx >= 0 && x1 + dx <= width &&
+        x2 + dx >= 0 && x2 + dx <= width &&
+        y1 + dy >= 0 && y1 + dy <= height &&
+        y2 + dy >= 0 && y2 + dy <= height
+      )
+    }
+  }
+
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
     if (!clickStartPosition) return
 
@@ -109,24 +122,16 @@ export class RectAnnotator {
         rect = this.movedRect.shape.rect,
         xIncrement = cursor_x - x1,
         yIncrement = cursor_y - y1,
-        newX1 = rect.x1 + xIncrement,
-        newX2 = rect.x2 + xIncrement,
-        newY1 = rect.y1 + yIncrement,
-        newY2 = rect.y2 + yIncrement,
-        { width, height } = this.canvas
+        canMoveRect = this.canMove(this.movedRect, xIncrement, yIncrement)
 
       // Prevent moving behind image boundaries.
       // FIXME: Hitting boundary repeatedly causes rect to increase in size.
-      // TODO: Prevent moving shapes outside of canvas when scale > 1.
-      if (newX1 < rect.x1 && newX1 < 0) rect.x1 = Math.max(0, newX1)
-      else if (newX2 < rect.x2 && newX2 < 0) rect.x2 = Math.max(0, newX2)
-      else if (newY1 < rect.y1 && newY1 < 0) rect.y1 = Math.max(0, newY1)
-      else if (newY2 < rect.y2 && newY2 < 0) rect.y2 = Math.max(0, newY2)
-      else if (newX1 > rect.x1 && newX1 > width) rect.x1 = Math.min(newX1, width)
-      else if (newX2 > rect.x2 && newX2 > width) rect.x2 = Math.min(newX2, width)
-      else if (newY1 > rect.y1 && newY1 > height) rect.y1 = Math.min(newY1, height)
-      else if (newY2 > rect.y2 && newY2 > height) rect.y2 = Math.min(newY2, height)
-      else {
+      if (canMoveRect) {
+        const
+          newX1 = rect.x1 + xIncrement,
+          newX2 = rect.x2 + xIncrement,
+          newY1 = rect.y1 + yIncrement,
+          newY2 = rect.y2 + yIncrement
         rect.x1 = newX1
         rect.x2 = newX2
         rect.y1 = newY1
