@@ -127,7 +127,6 @@ const
     tableBody: {
       $nest: {
         '& > tr > td': {
-          // TODO: Remove gaps between cells.
           boxSizing: 'border-box',
           borderWidth: 0.5,
           borderStyle: 'solid',
@@ -370,7 +369,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             // If left mouse btn is not held during moving, ignore.
             if (e.buttons !== 1) break
             // TODO: Not all shapes are moving.
-            const { x, y } = startPosition.current || { x: 0, y: 0 }
+            const { x, y } = clickStartPosition || { x: 0, y: 0, dragging: true }
             const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
               const shape = s.shape.rect ? rectRef.current : polygonRef.current
               return shape?.canMove(s, cursor_x - x, cursor_y - y)
@@ -378,10 +377,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             if (canMoveAllSelectedShapes) {
               drawnShapes.filter(ds => ds.isFocused).forEach(s => {
                 const shape = s.shape.rect ? rectRef.current : polygonRef.current
-                shape?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)                // shape?.onMouseMove(dx, dy, s, s, startPosition.current || { x, y, dragging: true })
-                redrawExistingShapes()
+                shape?.onMouseMove(cursor_x, cursor_y, s, s, { x, y, dragging: true })
               })
+              // TODO: Refactor
+              if (startPosition.current) {
+                startPosition.current.x = cursor_x
+                startPosition.current.y = cursor_y
+              }
             }
+            redrawExistingShapes()
             break
           }
         }
@@ -456,9 +460,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
-    // TODO: Rename to moveAllSelectedShapes
     // TODO: Allow moving when there is 0 - 10 gap.
-    moveShape = (dx: U = 0, dy: U = 0) => {
+    moveAllSelectedShapes = (dx: U = 0, dy: U = 0) => {
       const { x, y } = startPosition.current || { x: 0, y: 0 }
       const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
@@ -490,10 +493,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onKeyDown = (e: React.KeyboardEvent) => {
       // Move selection.
       const increment = e.shiftKey ? 10 : 1
-      if (e.key === 'ArrowLeft') moveShape(-increment)
-      if (e.key === 'ArrowRight') moveShape(increment)
-      if (e.key === 'ArrowUp') moveShape(undefined, -increment)
-      if (e.key === 'ArrowDown') moveShape(undefined, increment)
+      if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment)
+      if (e.key === 'ArrowRight') moveAllSelectedShapes(increment)
+      if (e.key === 'ArrowUp') moveAllSelectedShapes(undefined, -increment)
+      if (e.key === 'ArrowDown') moveAllSelectedShapes(undefined, increment)
       // Cancel polygon annotation.
       if (e.key === 'Escape' && activeShape === 'polygon') {
         polygonRef.current?.cancelAnnotating()

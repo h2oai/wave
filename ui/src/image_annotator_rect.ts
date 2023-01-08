@@ -74,6 +74,7 @@ export class RectAnnotator {
   }
 
   canMove = (focused: DrawnShape, dx: U, dy: U) => {
+    // TODO: Rework to prevent canvas edges from being sticky.
     if (focused.shape.rect) {
       const { x1, x2, y1, y2 } = focused.shape.rect
       const { width, height } = this.canvas
@@ -114,7 +115,7 @@ export class RectAnnotator {
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
-    else if (this.movedRect || intersected?.isFocused) {
+    else if (intersected?.isFocused) {
       this.movedRect = this.movedRect || intersected
       if (!this.movedRect?.shape.rect) return
 
