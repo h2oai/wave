@@ -83,8 +83,8 @@ export const
         data = unpack<Rec>(s.data),
         value = substitute(s.value, s.data),
         auxValue = substitute(s.aux_value, s.data),
-        valueNonDigitCharCount = value.match(/[^0-9-]/g).length,
-        auxValueNonDigitCharCount = auxValue.match(/[^0-9-]/g).length,
+        valueNonDigitCharCount = (value.match(/[^0-9-]/g) || []).length,
+        auxValueNonDigitCharCount = (auxValue.match(/[^0-9-]/g) || []).length,
         // This prevents the jumping layout in the most common scenarios when numbers are changing between ones to tens. 
         valueContainerWidth = MAX_CHAR_WIDTH * Math.max(value.length, MIN_CHAR_COUNT + valueNonDigitCharCount),
         auxValueContainerWidth = MAX_CHAR_AUX_WIDTH * Math.max(auxValue.length, MIN_CHAR_COUNT + auxValueNonDigitCharCount)
