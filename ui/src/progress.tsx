@@ -52,7 +52,7 @@ export interface Progress {
   /** An identifying name for this component. */
   name?: S
   /** The type of progress bar to be displayed */
-  type?: S
+  type?: 'spinner'
 }
 
 export const
