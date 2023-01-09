@@ -62,13 +62,4 @@ describe('Link.tsx', () => {
     expect(getByTestId(name).getAttribute('target')).toEqual('_blank')
   })
 
-  // Needed for FF - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
-  it('Downloads from a new tab', () => {
-    const { getByText } = render(<XLink model={{ ...linkProps, download: true }} />)
-
-    fireEvent.click(getByText(name))
-    expect(windowOpenMock).toHaveBeenCalled()
-    expect(windowOpenMock).toHaveBeenCalledWith(name, '_blank')
-  })
-
 })

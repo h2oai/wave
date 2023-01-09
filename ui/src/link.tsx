@@ -33,7 +33,7 @@ export interface Link {
   path?: S
   /** True if the link should be disabled. */
   disabled?: B
-  /** True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false. */
+  /** True if the link should prompt the user to save the linked URL instead of navigating to it. */
   download?: B
   /** True if the link should be rendered as a button. */
   button?: B
@@ -89,28 +89,28 @@ export interface Links {
   /** The width of the links, e.g. '100px'. */
   width?: S
 }
-
+const forceFileDownload = (path: S) => {
+  const anchor = document.createElement('a')
+  anchor.href = path
+  anchor.download = path.split('/').pop()!
+  anchor.click()
+}
 export const
   XLinks = ({ model: { label, items, inline } }: { model: Links }) => (
     <div className={inline ? css.inline : css.linkGroup}>
       {label && <div className={clas('wave-s20 wave-w6', css.linkGroupLabel)}>{label}</div>}
-      {items.filter(({ link }) => link).map((link, i) => <XLink key={i} model={link.link!} />)}
+      {items.filter(({ link }) => link).map(({ link }, i) => <XLink key={i} model={link!} />)}
     </div>
   ),
-  XLink = ({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
+  XLink = ({ model: { name, disabled, path, label = path, download, target, button } }: { model: Link }) => {
     const
-      _label = label || path,
       _target = target === '' ? '_blank' : target,
-      onBtnClick = React.useCallback(() => window.open(path, _target), [_target, path]),
-      onLinkClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLElement>) => {
-        // HACK: Perform download in a new tab because FF drops WS connection - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
-        if (download && path) {
-          ev.preventDefault()
-          window.open(path, '_blank')
-        }
-      }, [download, path])
+      onClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLElement>) => {
+        ev.preventDefault()
+        download && path ? forceFileDownload(path) : window.open(path, _target)
+      }, [_target, download, path])
 
     return button
-      ? <Fluent.DefaultButton data-test={name} text={_label} disabled={disabled} onClick={onBtnClick} />
-      : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={_target}>{_label}</Fluent.Link>
+      ? <Fluent.DefaultButton data-test={name} text={label} disabled={disabled} onClick={onClick} />
+      : <Fluent.Link onClick={onClick} data-test={name} href={path} disabled={disabled} target={_target}>{label}</Fluent.Link>
   }

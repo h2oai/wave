@@ -38,7 +38,7 @@ After a file is uploaded from the browser, it is stored forever on the Wave serv
 
 ## Provide file downloads
 
-Use `q.site.upload()` to upload files from your app to the Wave server. Use the returned paths to display download links in the browser.
+Use `q.site.upload()` to upload files from your app to the Wave server. Use the returned paths to display download links in the browser and a `download` attribute to initiate the download process right after the click.
 
 ```py {5,7}
 from h2o_wave import Q, main, app, ui
@@ -47,10 +47,12 @@ from h2o_wave import Q, main, app, ui
 async def serve(q: Q):
     download_path, = await q.site.upload(['results.csv'])
     q.page['download'] = ui.form_card(box='1 1 2 2', items = [
-        ui.link(label='Download Results', path=download_path),
+        ui.link(label='Download Results', path=download_path, download=True),
     ])
     await q.page.save()
 ```
+
+See [download link](/docs/widgets/form/link/#download-link) for more info.
 
 :::tip
 `q.site.upload()` accepts a list of file paths, so you can upload multiple files at a time.
