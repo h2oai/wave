@@ -11,7 +11,7 @@ page['example'] = ui.form_card(
     items=[
         ui.progress(label='Indeterminate Progress', caption='Goes on forever'),
         ui.progress(label='Standard Progress', caption='Downloading the interwebs...', value=0.25),
-        ui.progress(label='Spinner Progress', type = 'spinner'),
+        ui.progress(label='Spinner Progress', type='spinner'),
     ]
 )
 page.save()
