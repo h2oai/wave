@@ -51,7 +51,7 @@ def form_unsupported():
     # display when app is not running on cloud
     return [
         ui.text('''This example requires access to Driverless AI running on
-            <a href="https://h2oai.github.io/h2o-ai-cloud" target="_blank">H2O AI Hybrid Cloud</a> 
+            <a href="https://h2oai.github.io/h2o-ai-cloud" target="_blank">H2O AI Cloud</a> 
             and does not support standalone app instances.'''),
         ui.text('''Sign up at <a href="https://h2o.ai/free" target="_blank">https://h2o.ai/free</a>
             to run apps on cloud.''')
