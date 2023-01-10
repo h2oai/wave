@@ -53,6 +53,13 @@ export class PolygonAnnotator {
     }
   }
 
+  move = (shape: DrawnShape, dx: U, dy: U) => {
+    shape.shape.polygon?.vertices.forEach(p => {
+      p.x += dx
+      p.y += dy
+    })
+  }
+
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
     if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
       this.draggedPoint = null
@@ -69,10 +76,10 @@ export class PolygonAnnotator {
     }
     else if ((intersected == focused || this.draggedShape) && canMovePolygon) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
-      this.draggedShape?.shape.polygon?.vertices.forEach(p => {
-        p.x += cursor_x - clickStartPosition!.x
-        p.y += cursor_y - clickStartPosition!.y
-      })
+      if (!this.draggedShape) return
+
+      this.move(this.draggedShape, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
+
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }

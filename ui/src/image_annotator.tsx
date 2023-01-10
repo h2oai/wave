@@ -453,8 +453,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // TODO: Allow moving when there is 0 - 10 gap.
     moveAllSelectedShapes = (dx: U = 0, dy: U = 0) => {
-      // TODO: Move more than one rectangle at the time - handle this.movedRect
-      const { x, y } = startPosition.current || { x: 0, y: 0 }
       const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
         return shape?.canMove(s, dx, dy)
@@ -462,8 +460,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (canMoveAllSelectedShapes) {
         drawnShapes.filter(ds => ds.isFocused).forEach(s => {
           const shape = s.shape.rect ? rectRef.current : polygonRef.current
-          // TODO: Why startPosition.current is necessary here?
-          shape?.onMouseMove(dx, dy, s, s, startPosition.current || { x, y, dragging: true })
+          shape?.move(s, dx, dy)
         })
       }
       redrawExistingShapes()
