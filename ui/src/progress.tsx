@@ -15,6 +15,8 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, S } from 'h2o-wave'
 import React from 'react'
+import { stylesheet } from 'typestyle'
+// import { stylesheet } from 'typestyle'
 /**
  * Create a progress bar.
  *
@@ -36,6 +38,15 @@ import React from 'react'
  * Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
  * Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 */
+
+const
+  css = stylesheet({
+    leftAlign: {
+      position:'absolute',
+      marginLeft:0
+    },
+  })
+
 export interface Progress {
   /** The text displayed above the bar. */
   label: S
@@ -52,7 +63,7 @@ export interface Progress {
   /** An identifying name for this component. */
   name?: S
   /** The type of progress bar to be displayed */
-  type?: 'spinner'
+  type?: 'bar'|'spinner'
 }
 
 export const
@@ -62,9 +73,7 @@ export const
     return (
       <div data-test={name}>
         {type === 'spinner' ?
-        <div>
-        <Fluent.Spinner label={label} size={Fluent.SpinnerSize.medium} labelPosition='top'/>
-        </div>
+          <Fluent.Spinner className={css.leftAlign}  label={label} size={Fluent.SpinnerSize.medium} labelPosition='right'/>
         :<Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />}
       </div>
     )

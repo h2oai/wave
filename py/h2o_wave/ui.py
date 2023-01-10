@@ -304,25 +304,7 @@ def progress(
         name: Optional[str] = None,
         type: Optional[str] = None,
 ) -> Component:
-    """Create a progress bar.
-
-    Progress bars are used to show the completion status of an operation lasting more than 2 seconds.
-    If the state of progress cannot be determined, do not set a value.
-    Progress bars feature a bar showing total units to completion, and total units finished.
-    The label appears above the bar, and the caption appears below.
-    The label should tell someone exactly what the operation is doing.
-
-    Examples of formatting include:
-    [Object] is being [operation name], or
-    [Object] is being [operation name] to [destination name] or
-    [Object] is being [operation name] from [source name] to [destination name]
-
-    Status text is generally in units elapsed and total units.
-    Real-world examples include copying files to a storage location, saving edits to a file, and more.
-    Use units that are informative and relevant to give the best idea to users of how long the operation will take to complete.
-    Avoid time units as they are rarely accurate enough to be trustworthy.
-    Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
-    Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
+    """No documentation available.
 
     Args:
         label: The text displayed above the bar.
@@ -332,7 +314,7 @@ def progress(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
-        type: The type of progress bar to be displayed
+        type: The type of progress bar to be displayed One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType.
     Returns:
         A `h2o_wave.types.Progress` instance.
     """

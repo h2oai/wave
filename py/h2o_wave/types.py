@@ -759,26 +759,16 @@ class Separator:
         )
 
 
+_ProgressType = ['bar', 'spinner']
+
+
+class ProgressType:
+    BAR = 'bar'
+    SPINNER = 'spinner'
+
+
 class Progress:
-    """Create a progress bar.
-
-    Progress bars are used to show the completion status of an operation lasting more than 2 seconds.
-    If the state of progress cannot be determined, do not set a value.
-    Progress bars feature a bar showing total units to completion, and total units finished.
-    The label appears above the bar, and the caption appears below.
-    The label should tell someone exactly what the operation is doing.
-
-    Examples of formatting include:
-    [Object] is being [operation name], or
-    [Object] is being [operation name] to [destination name] or
-    [Object] is being [operation name] from [source name] to [destination name]
-
-    Status text is generally in units elapsed and total units.
-    Real-world examples include copying files to a storage location, saving edits to a file, and more.
-    Use units that are informative and relevant to give the best idea to users of how long the operation will take to complete.
-    Avoid time units as they are rarely accurate enough to be trustworthy.
-    Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
-    Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
+    """No documentation available.
     """
     def __init__(
             self,
@@ -798,7 +788,7 @@ class Progress:
         _guard_scalar('Progress.visible', visible, (bool,), False, True, False)
         _guard_scalar('Progress.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Progress.name', name, (str,), False, True, False)
-        _guard_scalar('Progress.type', type, (str,), False, True, False)
+        _guard_enum('Progress.type', type, _ProgressType, True)
         self.label = label
         """The text displayed above the bar."""
         self.caption = caption
@@ -814,7 +804,7 @@ class Progress:
         self.name = name
         """An identifying name for this component."""
         self.type = type
-        """The type of progress bar to be displayed"""
+        """The type of progress bar to be displayed One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -825,7 +815,7 @@ class Progress:
         _guard_scalar('Progress.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Progress.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Progress.name', self.name, (str,), False, True, False)
-        _guard_scalar('Progress.type', self.type, (str,), False, True, False)
+        _guard_enum('Progress.type', self.type, _ProgressType, True)
         return _dump(
             label=self.label,
             caption=self.caption,
@@ -855,7 +845,7 @@ class Progress:
         __d_name: Any = __d.get('name')
         _guard_scalar('Progress.name', __d_name, (str,), False, True, False)
         __d_type: Any = __d.get('type')
-        _guard_scalar('Progress.type', __d_type, (str,), False, True, False)
+        _guard_enum('Progress.type', __d_type, _ProgressType, True)
         label: str = __d_label
         caption: Optional[str] = __d_caption
         value: Optional[float] = __d_value
