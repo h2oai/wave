@@ -693,7 +693,6 @@ class Site:
                 return uploaded_files
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
-                pass
 
         uploaded_files = []
         file_handles: List[BufferedReader] = []
@@ -724,6 +723,34 @@ class Site:
         """
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
+
+        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
+        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
+        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+            try:
+                is_windows = 'Windows' in platform.system()
+                # TODO: https://stackoverflow.com/questions/4601161/copying-all-contents-of-folder-to-another-folder-using-batch-file
+                cp_command = 'xcopy' if is_windows else 'cp'
+                uuid = str(uuid4())
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                os.makedirs(dst, exist_ok=True)
+
+                if is_windows:
+                    args = [cp_command, os.path.join(directory, '.'), dst, '/K/O/X']
+                else:
+                    args = [cp_command, '-a', os.path.join(directory, '.'), dst]
+
+                _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
+                if err:
+                    raise ValueError(err.decode())
+
+                return [f'/_f/{uuid}']
+            except Exception as e:
+                print(f'Error during local copy, falling back to HTTP upload: {e}')
 
         upload_files = []
         file_handles: List[BufferedReader] = []
@@ -879,6 +906,34 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
+        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
+        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
+        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+            try:
+                is_windows = 'Windows' in platform.system()
+                # TODO: https://stackoverflow.com/questions/4601161/copying-all-contents-of-folder-to-another-folder-using-batch-file
+                cp_command = 'xcopy' if is_windows else 'cp'
+                uuid = str(uuid4())
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                os.makedirs(dst, exist_ok=True)
+
+                if is_windows:
+                    args = [cp_command, os.path.join(directory, '.'), dst, '/K/O/X']
+                else:
+                    args = [cp_command, '-a', os.path.join(directory, '.'), dst]
+
+                _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
+                if err:
+                    raise ValueError(err.decode())
+
+                return [f'/_f/{uuid}']
+            except Exception as e:
+                print(f'Error during local copy, falling back to HTTP upload: {e}')
+
         upload_files = []
         file_handles: List[BufferedReader] = []
         for f in _get_files_in_directory(directory, []):
@@ -936,7 +991,6 @@ class AsyncSite:
                 return uploaded_files
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
-                pass
 
         upload_files = []
         file_handles: List[BufferedReader] = []
