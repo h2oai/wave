@@ -368,24 +368,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           case 'select': {
             // If left mouse btn is not held during moving, ignore.
             if (e.buttons !== 1) break
-            // TODO: Not all shapes are moving.
-            const { x, y } = clickStartPosition || { x: 0, y: 0, dragging: true }
-            const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
-              const shape = s.shape.rect ? rectRef.current : polygonRef.current
-              return shape?.canMove(s, cursor_x - x, cursor_y - y)
-            })
-            if (canMoveAllSelectedShapes) {
-              drawnShapes.filter(ds => ds.isFocused).forEach(s => {
-                const shape = s.shape.rect ? rectRef.current : polygonRef.current
-                shape?.onMouseMove(cursor_x, cursor_y, s, s, { x, y, dragging: true })
-              })
-              // TODO: Refactor
-              if (startPosition.current) {
-                startPosition.current.x = cursor_x
-                startPosition.current.y = cursor_y
+            const shape = focused?.shape.rect ? rectRef.current : polygonRef.current
+            if (shape) {
+              shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+              // Deselect all other shapes when one starts moving.
+              if (drawnShapes.some(ds => ds.isFocused && ds !== intersected)) {
+                setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: intersected === ds })))
               }
+              redrawExistingShapes()
             }
-            redrawExistingShapes()
             break
           }
         }
@@ -462,6 +453,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // TODO: Allow moving when there is 0 - 10 gap.
     moveAllSelectedShapes = (dx: U = 0, dy: U = 0) => {
+      // TODO: Move more than one rectangle at the time - handle this.movedRect
       const { x, y } = startPosition.current || { x: 0, y: 0 }
       const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
@@ -493,6 +485,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onKeyDown = (e: React.KeyboardEvent) => {
       // Move selection.
       const increment = e.shiftKey ? 10 : 1
+      const resetDragging = () => {
+        // TODO: Handle deselect.
+        // TODO: Prevent onClick when switching from 'select' to 'rect' or 'poly'
+        // setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: false })))
+        polygonRef.current?.cancelAnnotating()
+        redrawExistingShapes()
+        // polygonRef.current?.resetDragging()
+        // rectRef.current?.resetDragging()
+      }
       if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment)
       if (e.key === 'ArrowRight') moveAllSelectedShapes(increment)
       if (e.key === 'ArrowUp') moveAllSelectedShapes(undefined, -increment)
@@ -504,9 +505,18 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
       // Set active shape.
       // TODO: Handle edge cases. E.g. using polygon and then switching to rect or select. Or changing active tag.
-      if (e.key === 'p' && allowedShapes.has('polygon')) setActiveShape('polygon')
-      if (e.key === 'r' && allowedShapes.has('rect')) setActiveShape('rect')
-      if (e.key === 's') setActiveShape('select')
+      if (e.key === 'p' && allowedShapes.has('polygon')) {
+        setActiveShape('polygon')
+        resetDragging()
+      }
+      if (e.key === 'r' && allowedShapes.has('rect')) {
+        setActiveShape('rect')
+        resetDragging()
+      }
+      if (e.key === 's') {
+        setActiveShape('select')
+        resetDragging()
+      }
       // Change active tag.
       if (e.key === 'l') {
         const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
@@ -520,7 +530,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
         const activeShapeIdx = shapes.findIndex(s => s === activeShape)
         setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
-        redrawExistingShapes()
+        resetDragging()
       }
       // Change cursor to indicate that user can drag image.
       // TODO: Move to other place.

@@ -672,3 +672,16 @@ describe('ImageAnnotator.tsx', () => {
 
   })
 })
+describe('Keyboard shortcuts', () => {
+  const pushMock = jest.fn()
+
+  beforeAll(() => wave.push = pushMock)
+  beforeEach(() => pushMock.mockReset())
+
+  it('Calls sync after remove all', async () => {
+    const { getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+    await waitForLoad()
+    fireEvent.click(getByText('Remove all'))
+    expect(pushMock).toBeCalledTimes(1)
+  })
+})

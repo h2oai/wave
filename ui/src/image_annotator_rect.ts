@@ -123,16 +123,23 @@ export class RectAnnotator {
         rect = this.movedRect.shape.rect,
         xIncrement = cursor_x - x1,
         yIncrement = cursor_y - y1,
-        canMoveRect = this.canMove(this.movedRect, xIncrement, yIncrement)
+        newX1 = rect.x1 + xIncrement,
+        newX2 = rect.x2 + xIncrement,
+        newY1 = rect.y1 + yIncrement,
+        newY2 = rect.y2 + yIncrement,
+        { width, height } = this.canvas
 
       // Prevent moving behind image boundaries.
       // FIXME: Hitting boundary repeatedly causes rect to increase in size.
-      if (canMoveRect) {
-        const
-          newX1 = rect.x1 + xIncrement,
-          newX2 = rect.x2 + xIncrement,
-          newY1 = rect.y1 + yIncrement,
-          newY2 = rect.y2 + yIncrement
+      if (newX1 < rect.x1 && newX1 < 0) rect.x1 = Math.max(0, newX1)
+      else if (newX2 < rect.x2 && newX2 < 0) rect.x2 = Math.max(0, newX2)
+      else if (newY1 < rect.y1 && newY1 < 0) rect.y1 = Math.max(0, newY1)
+      else if (newY2 < rect.y2 && newY2 < 0) rect.y2 = Math.max(0, newY2)
+      else if (newX1 > rect.x1 && newX1 > width) rect.x1 = Math.min(newX1, width)
+      else if (newX2 > rect.x2 && newX2 > width) rect.x2 = Math.min(newX2, width)
+      else if (newY1 > rect.y1 && newY1 > height) rect.y1 = Math.min(newY1, height)
+      else if (newY2 > rect.y2 && newY2 > height) rect.y2 = Math.min(newY2, height)
+      else {
         rect.x1 = newX1
         rect.x2 = newX2
         rect.y1 = newY1

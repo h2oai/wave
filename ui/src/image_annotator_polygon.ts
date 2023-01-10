@@ -54,7 +54,6 @@ export class PolygonAnnotator {
   }
 
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
-    // TODO: Prevent moving shapes outside of canvas when scale > 1.
     if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
       this.draggedPoint = null
       this.draggedShape = null
