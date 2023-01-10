@@ -19,6 +19,7 @@ import httpx
 
 from .utils import read_file
 
+
 # TODO: Add cleanup (site.unload) to tests that upload files.
 class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
     def __init__(self, methodName: str = ...) -> None:
@@ -38,14 +39,12 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
         os.remove(f2)
         assert s1 == s2
 
-
     async def test_public_dir(self):
         base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
         p = await self.site.download(f'{base_url}assets/brand/h2o.svg', 'h2o.svg')
         svg = read_file(p)
         os.remove(p)
         assert svg.index('<svg') == 0
-
 
     async def test_cache(self):
         d1 = dict(foo='bar', qux=42)
@@ -57,7 +56,6 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
         assert isinstance(d2, dict)
         assert d2['foo'] == d1['foo']
         assert d2['qux'] == d1['qux']
-
 
     async def test_multipart_server(self):
         file_handle = open('../assets/brand/wave.svg', 'rb')

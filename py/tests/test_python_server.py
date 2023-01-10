@@ -330,7 +330,6 @@ class TestPythonServer(unittest.TestCase):
             i=2,
         ))))
 
-
     def test_proxy(self):
         # waved -proxy must be set
         url = 'https://wave.h2o.ai'
@@ -341,7 +340,6 @@ class TestPythonServer(unittest.TestCase):
             result = Expando(response.result)
             assert result.code == 400
             assert len(result.headers) > 0
-
 
     def test_file_server(self):
         f1 = 'temp_file1.txt'
@@ -356,13 +354,11 @@ class TestPythonServer(unittest.TestCase):
         os.remove(f2)
         assert s1 == s2
 
-
     def test_public_dir(self):
         p = site.download(f'{base_url}assets/brand/h2o.svg', 'h2o.svg')
         svg = read_file(p)
         os.remove(p)
         assert svg.index('<svg') == 0
-
 
     def test_cache(self):
         d1 = dict(foo='bar', qux=42)
@@ -374,7 +370,6 @@ class TestPythonServer(unittest.TestCase):
         assert isinstance(d2, dict)
         assert d2['foo'] == d1['foo']
         assert d2['qux'] == d1['qux']
-
 
     def test_multipart_server(self):
         file_handle = open('../assets/brand/wave.svg', 'rb')
@@ -389,7 +384,6 @@ class TestPythonServer(unittest.TestCase):
         txt = read_file(download_path)
         os.remove(download_path)
         assert len(txt) > 0
-
 
     def test_deleting_files(self):
         upload_path, = site.upload([os.path.join('tests', 'test_folder', 'test.txt')])

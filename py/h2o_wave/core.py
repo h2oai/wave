@@ -662,14 +662,42 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        upload_files = []
+        for f in files:
+            if not os.path.isfile(f):
+                raise ValueError(f'{f} is not a file.')
+
+        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
+        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
+        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', None)
+
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+            try:
+                is_windows = 'Windows' in platform.system()
+                cp_command = 'xcopy' if is_windows else 'cp'
+                uploaded_files = []
+                for f in files:
+                    uuid = str(uuid4())
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
+                    os.makedirs(os.path.dirname(dst), exist_ok=True)
+                    p = subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''], stderr=subprocess.PIPE)
+                    _, err = p.communicate()
+                    if err:
+                        raise ValueError(err.decode())
+                    uploaded_files.append(f'/_f/{uuid}/{os.path.basename(f)}')
+                return uploaded_files
+            except:
+                pass
+
+        uploaded_files = []
         file_handles: List[BufferedReader] = []
         for f in files:
             file_handle = open(f, 'rb')
-            upload_files.append(('files', (os.path.basename(f), file_handle)))
+            uploaded_files.append(('files', (os.path.basename(f), file_handle)))
             file_handles.append(file_handle)
 
-        res = self._http.post(f'{_config.hub_address}_f/', files=upload_files)
+        res = self._http.post(f'{_config.hub_address}_f/', files=uploaded_files)
 
         for h in file_handles:
             h.close()
@@ -872,22 +900,33 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
+        for f in files:
+            if not os.path.isfile(f):
+                raise ValueError(f'{f} is not a file.')
+
         waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
         data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
+        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', None)
+
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if waved_dir and _is_loopback_address(_config.hub_address):
-            is_windows = 'Windows' in platform.system()
-            cp_command = 'xcopy' if is_windows else 'cp'
-            uuid = str(uuid4())
-            for f in files:
-                if not os.path.isfile(f):
-                    raise ValueError(f'{f} is not a file.')
-                dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
-                os.makedirs(os.path.dirname(dst), exist_ok=True)
-                p = subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''])
-                p.communicate()
-            return [f'/_f/{uuid}/{os.path.basename(f)}' for f in files]
+        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+            try:
+                is_windows = 'Windows' in platform.system()
+                cp_command = 'xcopy' if is_windows else 'cp'
+                uploaded_files = []
+                for f in files:
+                    uuid = str(uuid4())
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
+                    os.makedirs(os.path.dirname(dst), exist_ok=True)
+                    p = subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''], stderr=subprocess.PIPE)
+                    _, err = p.communicate()
+                    if err:
+                        raise ValueError(err.decode())
+                    uploaded_files.append(f'/_f/{uuid}/{os.path.basename(f)}')
+                return uploaded_files
+            except:
+                pass
 
         upload_files = []
         file_handles: List[BufferedReader] = []
@@ -918,6 +957,7 @@ class AsyncSite:
         path = os.path.abspath(path)
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
         async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
             if res.status_code != 200:
                 await res.aread()

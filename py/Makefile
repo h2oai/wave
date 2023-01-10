@@ -37,6 +37,7 @@ docs: ## Build API docs
 test:
 	./venv/bin/python -m tests
 	echo "Testing using BASE_URL" && H2O_WAVE_BASE_URL="/foo/" ./venv/bin/python -m tests
+	echo "Testing using LOCAL UPLOAD" && H2O_WAVE_WAVED_DIR=".." ./venv/bin/python -m tests
 
 purge: ## Purge previous build
 	rm -rf build dist h2o_wave.egg-info
