@@ -668,7 +668,7 @@ class Site:
 
         waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
         data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
-        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', None)
+        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
@@ -679,15 +679,20 @@ class Site:
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
-                    os.makedirs(os.path.dirname(dst), exist_ok=True)
-                    p = subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''], stderr=subprocess.PIPE)
-                    _, err = p.communicate()
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    os.makedirs(dst, exist_ok=True)
+
+                    args = [cp_command, f, dst]
+                    if is_windows:
+                        args.append('/K/O/X')
+
+                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                     if err:
                         raise ValueError(err.decode())
                     uploaded_files.append(f'/_f/{uuid}/{os.path.basename(f)}')
                 return uploaded_files
-            except:
+            except Exception as e:
+                print(f'Error during local copy, falling back to HTTP upload: {e}')
                 pass
 
         uploaded_files = []
@@ -906,7 +911,7 @@ class AsyncSite:
 
         waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
         data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
-        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', None)
+        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
@@ -917,15 +922,20 @@ class AsyncSite:
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(waved_dir, data_dir, 'f', uuid, os.path.basename(f))
-                    os.makedirs(os.path.dirname(dst), exist_ok=True)
-                    p = subprocess.Popen([cp_command, f, dst, '/K/O/X' if is_windows else ''], stderr=subprocess.PIPE)
-                    _, err = p.communicate()
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    os.makedirs(dst, exist_ok=True)
+
+                    args = [cp_command, f, dst]
+                    if is_windows:
+                        args.append('/K/O/X')
+
+                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                     if err:
                         raise ValueError(err.decode())
                     uploaded_files.append(f'/_f/{uuid}/{os.path.basename(f)}')
                 return uploaded_files
-            except:
+            except Exception as e:
+                print(f'Error during local copy, falling back to HTTP upload: {e}')
                 pass
 
         upload_files = []
