@@ -45,6 +45,13 @@ def _get_env(key: str, value: Any):
 
 
 _default_internal_address = 'http://127.0.0.1:8000'
+_waved_dir = _get_env('H2O_WAVE_WAVED_DIR', None)
+_data_dir = _get_env('H2O_WAVE_DATA_DIR', 'data')
+_skip_local_upload = _get_env('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+# If we know the path of waved and running app on the same machine,
+# we can simply copy the files instead of making an HTTP request.
+_use_local_upload = not _skip_local_upload and _waved_dir and _data_dir
 
 
 class _Config:
@@ -666,20 +673,14 @@ class Site:
             if not os.path.isfile(f):
                 raise ValueError(f'{f} is not a file.')
 
-        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
-        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
-        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
-
-        # If we know the path of waved and running app on the same machine,
-        # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+        if _use_local_upload:
             try:
                 is_windows = 'Windows' in platform.system()
                 cp_command = 'xcopy' if is_windows else 'cp'
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
                     args = [cp_command, f, dst]
@@ -724,19 +725,13 @@ class Site:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
-        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
-        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
-
-        # If we know the path of waved and running app on the same machine,
-        # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+        if _use_local_upload:
             try:
                 is_windows = 'Windows' in platform.system()
                 # TODO: https://stackoverflow.com/questions/4601161/copying-all-contents-of-folder-to-another-folder-using-batch-file
                 cp_command = 'xcopy' if is_windows else 'cp'
                 uuid = str(uuid4())
-                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                 os.makedirs(dst, exist_ok=True)
 
                 if is_windows:
@@ -906,19 +901,13 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
-        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
-        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
-
-        # If we know the path of waved and running app on the same machine,
-        # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+        if _use_local_upload:
             try:
                 is_windows = 'Windows' in platform.system()
                 # TODO: https://stackoverflow.com/questions/4601161/copying-all-contents-of-folder-to-another-folder-using-batch-file
                 cp_command = 'xcopy' if is_windows else 'cp'
                 uuid = str(uuid4())
-                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                 os.makedirs(dst, exist_ok=True)
 
                 if is_windows:
@@ -964,20 +953,14 @@ class AsyncSite:
             if not os.path.isfile(f):
                 raise ValueError(f'{f} is not a file.')
 
-        waved_dir = os.environ.get('H2O_WAVE_WAVED_DIR', None)
-        data_dir = os.environ.get('H2O_WAVE_DATA_DIR', 'data')
-        skip_local_upload = os.environ.get('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
-
-        # If we know the path of waved and running app on the same machine,
-        # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and _is_loopback_address(_config.hub_address):
+        if _use_local_upload:
             try:
                 is_windows = 'Windows' in platform.system()
                 cp_command = 'xcopy' if is_windows else 'cp'
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
                     args = [cp_command, f, dst]
