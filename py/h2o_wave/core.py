@@ -45,9 +45,10 @@ def _get_env(key: str, value: Any):
 
 
 _default_internal_address = 'http://127.0.0.1:8000'
-_waved_dir = _get_env('H2O_WAVE_WAVED_DIR', None)
-_data_dir = _get_env('H2O_WAVE_DATA_DIR', 'data')
-_skip_local_upload = _get_env('H2O_WAVE_SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+_waved_dir = _get_env('WAVED_DIR', None)
+_data_dir = _get_env('DATA_DIR', 'data')
+_skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+_base_url = _get_env('BASE_URL', '/')
 
 # If we know the path of waved and running app on the same machine,
 # we can simply copy the files instead of making an HTTP request.
@@ -690,7 +691,7 @@ class Site:
                     _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                     if err:
                         raise ValueError(err.decode())
-                    uploaded_files.append(f'/_f/{uuid}/{os.path.basename(f)}')
+                    uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
                 return uploaded_files
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
@@ -725,6 +726,7 @@ class Site:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
+        # TODO: Keep dir structure.
         if _use_local_upload:
             try:
                 is_windows = 'Windows' in platform.system()
@@ -901,6 +903,7 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
+        # TODO: Keep dir structure.
         if _use_local_upload:
             try:
                 is_windows = 'Windows' in platform.system()
@@ -970,7 +973,7 @@ class AsyncSite:
                     _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                     if err:
                         raise ValueError(err.decode())
-                    uploaded_files.append(f'/_f/{uuid}/{os.path.basename(f)}')
+                    uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
                 return uploaded_files
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')

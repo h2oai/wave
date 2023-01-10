@@ -72,7 +72,9 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
         assert len(txt) > 0
 
     async def test_deleting_files(self):
+        base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
         upload_path, = await self.site.upload([os.path.join('tests', 'test_folder', 'test.txt')])
+        assert base_url in upload_path
         res = httpx.get(f'http://localhost:10101{upload_path}')
         assert res.status_code == 200
         await self.site.unload(upload_path)
