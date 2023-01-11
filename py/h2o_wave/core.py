@@ -17,6 +17,7 @@ import ipaddress
 import json
 import platform
 import secrets
+import shutil
 import subprocess
 from urllib.parse import urlparse
 from uuid import uuid4
@@ -684,11 +685,13 @@ class Site:
                     dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
-                    args = [cp_command, f, dst]
-                    if is_windows:
-                        args.append('/K/O/X')
+                    if is_windows and shutil.which('robocopy'):
+                        src = os.path.dirname(f) or os.getcwd()
+                        args = ['robocopy', src, dst, os.path.basename(f), '/J/W:0']
+                    else:
+                        args = [cp_command, f, dst]
 
-                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
+                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
                     if err:
                         raise ValueError(err.decode())
                     uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
@@ -966,11 +969,13 @@ class AsyncSite:
                     dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
-                    args = [cp_command, f, dst]
-                    if is_windows:
-                        args.append('/K/O/X')
+                    if is_windows and shutil.which('robocopy'):
+                        src = os.path.dirname(f) or os.getcwd()
+                        args = ['robocopy', src, dst, os.path.basename(f), '/J/W:0']
+                    else:
+                        args = [cp_command, f, dst]
 
-                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
+                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
                     if err:
                         raise ValueError(err.decode())
                     uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
