@@ -22,6 +22,10 @@ export class PolygonAnnotator {
     this.currPolygonPoints = []
   }
 
+  hasAnnotationStarted() {
+    return this.currPolygonPoints.length === 1
+  }
+
   finishPolygon(tag: S) {
     const
       { x, y } = this.currPolygonPoints[0],

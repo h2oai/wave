@@ -95,8 +95,6 @@ export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 const MAX_IMAGE_SCALE = 2.5
 const ZOOM_STEP = 0.15
 
-// TODO: Write tests for shortcuts.
-
 const
   tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
@@ -337,8 +335,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
-      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgStartPositionRef.current)
-      const clickStartPosition = clickStartPositionRef.current
+      const
+        { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgStartPositionRef.current),
+        clickStartPosition = clickStartPositionRef.current,
+        deselectAllShapes = () => setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
 
       if (e.ctrlKey && scale > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
@@ -354,7 +354,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         switch (activeShape) {
           case 'rect': {
             const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            if (currentlyDrawnRect) setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
+            if (currentlyDrawnRect) deselectAllShapes()
             redrawExistingShapes()
             if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
             break
@@ -362,6 +362,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           case 'polygon': {
             redrawExistingShapes()
             polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
+            if (polygonRef.current?.hasAnnotationStarted()) deselectAllShapes()
             if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
             break
           }
@@ -483,13 +484,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Move selection.
       const increment = e.shiftKey ? 10 : 1
       const resetDragging = () => {
-        // TODO: Handle deselect when all is selected and statring using "p".
         // TODO: Prevent onClick when switching from 'select' to 'rect' or 'poly'
-        // setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: false })))
         polygonRef.current?.cancelAnnotating()
         redrawExistingShapes()
-        // polygonRef.current?.resetDragging()
-        // rectRef.current?.resetDragging()
       }
       if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment)
       if (e.key === 'ArrowRight') moveAllSelectedShapes(increment)
