@@ -687,7 +687,7 @@ class Site:
 
                     if is_windows and shutil.which('robocopy'):
                         src = os.path.dirname(f) or os.getcwd()
-                        args = ['robocopy', src, dst, os.path.basename(f), '/J/W:0']
+                        args = ['robocopy', src, dst, os.path.basename(f), '/J', '/W:0']
                     else:
                         args = [cp_command, f, dst]
 
@@ -729,26 +729,22 @@ class Site:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        # TODO: Keep dir structure.
         if _use_local_upload:
             try:
-                is_windows = 'Windows' in platform.system()
-                # TODO: https://stackoverflow.com/questions/4601161/copying-all-contents-of-folder-to-another-folder-using-batch-file
-                cp_command = 'xcopy' if is_windows else 'cp'
                 uuid = str(uuid4())
                 dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                 os.makedirs(dst, exist_ok=True)
 
-                if is_windows:
-                    args = [cp_command, os.path.join(directory, '.'), dst, '/K/O/X']
+                if 'Windows' in platform.system():
+                    args = ['robocopy', directory, dst, '/S', '/J', '/W:0', '*.*']
                 else:
-                    args = [cp_command, '-a', os.path.join(directory, '.'), dst]
+                    args = ['rsync', '-a', os.path.join(directory, '.'), dst]
 
                 _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                 if err:
                     raise ValueError(err.decode())
 
-                return [f'/_f/{uuid}']
+                return [f'{_base_url}_f/{uuid}']
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
 
@@ -906,26 +902,22 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        # TODO: Keep dir structure.
         if _use_local_upload:
             try:
-                is_windows = 'Windows' in platform.system()
-                # TODO: https://stackoverflow.com/questions/4601161/copying-all-contents-of-folder-to-another-folder-using-batch-file
-                cp_command = 'xcopy' if is_windows else 'cp'
                 uuid = str(uuid4())
                 dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                 os.makedirs(dst, exist_ok=True)
 
-                if is_windows:
-                    args = [cp_command, os.path.join(directory, '.'), dst, '/K/O/X']
+                if 'Windows' in platform.system():
+                    args = ['robocopy', directory, dst, '/S', '/J', '/W:0', '*.*']
                 else:
-                    args = [cp_command, '-a', os.path.join(directory, '.'), dst]
+                    args = ['rsync', '-a', os.path.join(directory, '.'), dst]
 
                 _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                 if err:
                     raise ValueError(err.decode())
 
-                return [f'/_f/{uuid}']
+                return [f'{_base_url}_f/{uuid}']
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
 
@@ -961,19 +953,17 @@ class AsyncSite:
 
         if _use_local_upload:
             try:
-                is_windows = 'Windows' in platform.system()
-                cp_command = 'xcopy' if is_windows else 'cp'
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
                     dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
-                    if is_windows and shutil.which('robocopy'):
+                    if 'Windows' in platform.system():
                         src = os.path.dirname(f) or os.getcwd()
-                        args = ['robocopy', src, dst, os.path.basename(f), '/J/W:0']
+                        args = ['robocopy', src, dst, os.path.basename(f), '/J', '/W:0']
                     else:
-                        args = [cp_command, f, dst]
+                        args = ['cp', f, dst]
 
                     _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
                     if err:
