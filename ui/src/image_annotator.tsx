@@ -98,6 +98,7 @@ const ZOOM_STEP = 0.15
 // TODO: Write tests for shortcuts.
 
 const
+  tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
     titleContainer: {
       marginBottom: 8,
@@ -128,17 +129,20 @@ const
       $nest: {
         '& > tr > td': {
           boxSizing: 'border-box',
-          borderWidth: 0.5,
-          borderStyle: 'solid',
-          borderColor: cssVar('$neutralPrimaryAlt'),
+          borderBottom: tableBorderStyle,
+          borderRight: tableBorderStyle,
           padding: '0.4rem',
+        },
+        '& > tr:first-child >td': {
+          borderTop: tableBorderStyle,
         },
         '& > tr > td:first-child': {
           width: 180, // A width of the first table column.
           fontWeight: 600,
+          borderLeft: tableBorderStyle,
         },
         '& > tr:nth-child(odd)': {
-          backgroundColor: cssVar('$neutralDark'),
+          backgroundColor: cssVar('$themeSecondary'),
         }
       }
     }
@@ -610,10 +614,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           tag,
           shape: {
             rect: {
-              x1: shape.rect.x1 / aspectRatio,
-              x2: shape.rect.x2 / aspectRatio,
-              y1: shape.rect.y1 / aspectRatio,
-              y2: shape.rect.y2 / aspectRatio,
+              x1: Math.round(shape.rect.x1 / aspectRatio),
+              x2: Math.round(shape.rect.x2 / aspectRatio),
+              y1: Math.round(shape.rect.y1 / aspectRatio),
+              y2: Math.round(shape.rect.y2 / aspectRatio),
             }
           }
         }
@@ -623,7 +627,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             polygon: {
               vertices: shape.polygon.vertices
                 .filter((i: DrawnPoint) => !i.isAux)
-                .map(i => ({ x: i.x / aspectRatio, y: i.y / aspectRatio }))
+                .map(i => ({ x: Math.round(i.x / aspectRatio), y: Math.round(i.y / aspectRatio) }))
             }
           }
         }
@@ -708,13 +712,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
 
-  // TODO: Round the shape position.
-
   return (
     <div data-test={model.name}>
       <div className={css.titleContainer}>
         <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
-        {/* TODO: Test table for all themes. */}
         <Fluent.IconButton id={buttonId} iconProps={{ iconName: 'Info', styles: { root: { fontSize: 20 } } }} onClick={toggleTeachingBubbleVisible} />
       </div>
       <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
