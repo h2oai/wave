@@ -134,7 +134,7 @@ const
           padding: '0.4rem',
         },
         '& > tr > td:first-child': {
-          width: 190, // TODO: Comment magic number.
+          width: 180, // A width of the first table column.
           fontWeight: 600,
         },
         '& > tr:nth-child(odd)': {
@@ -219,10 +219,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [scale, setScale] = React.useState(1),
-    // TODO: Rename properly - img position in progress - while dragging or scaling.
-    [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }),
-    // TODO: Rename properly - img position before/after dragging or scaling.
-    imgPositionRef = React.useRef({ x: 0, y: 0 }),
+    [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }), // Image position while dragging or scaling.
+    imgStartPositionRef = React.useRef({ x: 0, y: 0 }), // Image position before/after dragging or scaling.
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
     buttonId = useId('targetButton'),
@@ -232,8 +230,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     rectRef = React.useRef<RectAnnotator | null>(null),
     polygonRef = React.useRef<PolygonAnnotator | null>(null),
     [aspectRatio, setAspectRatio] = React.useState(1),
-    // TODO: Rename to clickStartPosition?
-    startPosition = React.useRef<Position | undefined>(undefined),
+    clickStartPositionRef = React.useRef<Position | undefined>(undefined),
     canvasCtxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     mousePositionRef = React.useRef({ x: 0, y: 0 }),
     [teachingBubbleVisible, { toggle: toggleTeachingBubbleVisible }] = useBoolean(false),
@@ -268,9 +265,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     recreatePreviewLine = () => {
       // TODO: Get rid of mousePositionRef if possible.
       const { x, y } = mousePositionRef.current
-      // Re-create the preview line.
+      redrawExistingShapes()
       onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
-      // TODO: Change line color.
     },
     translateImage = (dx: U, dy: U) => {
       if (!imgCanvasRef.current) return
@@ -289,7 +285,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
       // Handle drag end when mouse is out of canvas.
-      if (e.ctrlKey && scale > 1 && startPosition.current?.dragging) startPosition.current = undefined
+      if (e.ctrlKey && scale > 1 && clickStartPositionRef.current?.dragging) clickStartPositionRef.current = undefined
 
       setWaveArgs(drawnShapes)
 
@@ -330,21 +326,21 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
 
-      imgPositionRef.current = imgPosition
-      startPosition.current = { x: cursor_x, y: cursor_y, dragging: true }
+      imgStartPositionRef.current = imgPosition
+      clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: true }
     },
     onMouseMove = (e: React.MouseEvent) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
-      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgPositionRef.current)
-      const clickStartPosition = startPosition.current
+      const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgStartPositionRef.current)
+      const clickStartPosition = clickStartPositionRef.current
 
       if (e.ctrlKey && scale > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
         if (clickStartPosition?.dragging && imgCanvasRef.current) {
           translateImage((cursor_x - clickStartPosition.x) * scale, (cursor_y - clickStartPosition.y) * scale)
-          startPosition.current = { x: cursor_x, y: cursor_y, dragging: clickStartPosition?.dragging }
+          clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: clickStartPosition?.dragging }
         }
       } else {
         const
@@ -384,10 +380,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     onMouseUp = (e: React.MouseEvent) => {
       // Reset startPosition here because onClick is not registered while holding Control key.
-      if (e.ctrlKey && scale > 1 && startPosition.current?.dragging) {
-        startPosition.current = undefined
+      if (e.ctrlKey && scale > 1 && clickStartPositionRef.current?.dragging) {
+        clickStartPositionRef.current = undefined
         // Save current image position when dragging ends.
-        if (imgPosition) imgPositionRef.current = imgPosition
+        if (imgPosition) imgStartPositionRef.current = imgPosition
       }
     },
     onClick = (e: React.MouseEvent) => {
@@ -395,7 +391,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!canvas) return
 
       const
-        start = startPosition.current,
+        start = clickStartPositionRef.current,
         rect = canvas.getBoundingClientRect(),
         { cursor_x, cursor_y } = eventToCursor(e, rect, scale, imgPosition),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
@@ -447,7 +443,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
 
-      startPosition.current = undefined
+      clickStartPositionRef.current = undefined
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
@@ -472,7 +468,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         wheelDirection = wheelDirectionRef.current
       if (!canvas || !e.ctrlKey) return
       if (wheelDirection < 0 && e.deltaY > 0 || wheelDirection > 0 && e.deltaY < 0) {
-        imgPositionRef.current = { x: 0, y: 0 }
+        imgStartPositionRef.current = { x: 0, y: 0 }
         wheelDirectionRef.current = -wheelDirection
       }
       setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -ZOOM_STEP : ZOOM_STEP))))
@@ -483,7 +479,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Move selection.
       const increment = e.shiftKey ? 10 : 1
       const resetDragging = () => {
-        // TODO: Handle deselect.
+        // TODO: Handle deselect when all is selected and statring using "p".
         // TODO: Prevent onClick when switching from 'select' to 'rect' or 'poly'
         // setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: false })))
         polygonRef.current?.cancelAnnotating()
@@ -501,7 +497,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
       // Set active shape.
-      // TODO: Handle edge cases. E.g. using polygon and then switching to rect or select. Or changing active tag.
       if (e.key === 'p' && allowedShapes.has('polygon')) {
         setActiveShape('polygon')
         resetDragging()
@@ -519,20 +514,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
         const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
         activateTag(nextTag)()
-        recreatePreviewLine()
       }
       // Change active shape.
       if (e.key === 'b') {
-        // TODO: Refactor.
         const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
         const activeShapeIdx = shapes.findIndex(s => s === activeShape)
         setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
         resetDragging()
       }
       // Change cursor to indicate that user can drag image.
-      // TODO: Move to other place.
-      if (e.key === 'Control') {
-        if (canvasRef.current && scale > 1) canvasRef.current.style.cursor = 'grab'
+      if (e.key === 'Control' && canvasRef.current && scale > 1) {
+        canvasRef.current.style.cursor = 'grab'
       }
       // Select all shapes.
       if (e.key === 'a') {
@@ -548,7 +540,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         if (selectedShapes.length) navigator.clipboard.writeText(JSON.stringify(selectedShapes))
       }
       // Paste shapes.
-      // TODO: Move selected shapes by mouse at once.
       if (e.key === 'v') {
         navigator.clipboard.readText().then(text => {
           let shapes: DrawnShape[]
@@ -594,7 +585,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         // Set correct cursor on key up when Ctrl is unpressed.
         if (canvasRef.current) canvasRef.current.style.cursor = 'auto'
         // Apply new image position after image scaling.
-        imgPositionRef.current = imgPosition
+        imgStartPositionRef.current = imgPosition
       }
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
@@ -609,7 +600,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     chooseShape = (_e?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, i?: Fluent.IContextualMenuItem) => {
       polygonRef.current?.cancelAnnotating()
       setActiveShape(i?.key as keyof ImageAnnotatorShape)
-      startPosition.current = undefined
+      clickStartPositionRef.current = undefined
       setDrawnShapes(shapes => shapes.map(s => { s.isFocused = false; return s }))
       redrawExistingShapes()
     },
@@ -644,6 +635,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [])
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => recreatePreviewLine(), [activeTag])
+
   React.useEffect(() => {
     const img = new Image()
     img.src = model.image
@@ -670,7 +664,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (canvasCtxRef.current) {
         polygonRef.current = new PolygonAnnotator(canvas)
         canvasCtxRef.current.scale(scale, scale)
-        canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale) // TODO: Fix intersections.
+        canvasCtxRef.current.translate(imgPosition.x / scale, imgPosition.y / scale)
       }
 
       ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
@@ -692,15 +686,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     if (rect && scale !== MAX_IMAGE_SCALE) {
       const
         { x, y } = mousePositionRef.current,
-        { cursor_x, cursor_y } = eventToCursor({ clientX: x, clientY: y } as React.MouseEvent, rect, scale, imgPositionRef.current),
+        { cursor_x, cursor_y } = eventToCursor({ clientX: x, clientY: y } as React.MouseEvent, rect, scale, imgStartPositionRef.current),
         translateFactor = scale * -wheelDirectionRef.current * ZOOM_STEP
       translateImage(cursor_x * translateFactor, cursor_y * translateFactor)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scale])
 
+  // Redraw image after image position change.
   React.useEffect(() => {
-    // TODO: Move to onWheel?
     if (canvasCtxRef.current && imgCanvasCtxRef.current) {
       canvasCtxRef.current.setTransform(scale, 0, 0, scale, imgPosition.x, imgPosition.y)
     }
@@ -713,6 +707,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
+
+  // TODO: Round the shape position.
 
   return (
     <div data-test={model.name}>
