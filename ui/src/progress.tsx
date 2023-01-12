@@ -15,8 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, S } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
-// import { stylesheet } from 'typestyle'
+
 /**
  * Create a progress bar.
  *
@@ -39,14 +38,6 @@ import { stylesheet } from 'typestyle'
  * Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 */
 
-const
-  css = stylesheet({
-    leftAlign: {
-      position:'absolute',
-      marginLeft:0
-    },
-  })
-
 export interface Progress {
   /** The text displayed above the bar. */
   label: S
@@ -62,18 +53,23 @@ export interface Progress {
   tooltip?: S
   /** An identifying name for this component. */
   name?: S
-  /** The type of progress bar to be displayed */
+  /** The type of progress bar to be displayed. One of 'bar', 'spinner' */
   type?: 'bar'|'spinner'
 }
 
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      {type, label, caption = 'Please wait...', value, name } = model
+      {type = 'bar', label, caption ,value, name } = model
     return (
       <div data-test={name}>
         {type === 'spinner' ?
-          <Fluent.Spinner className={css.leftAlign}  label={label} size={Fluent.SpinnerSize.medium} labelPosition='right'/>
+          <Fluent.Spinner 
+          styles={{root:{justifyContent:'auto'}}} 
+          label={caption?caption:label} 
+          size={Fluent.SpinnerSize.medium} 
+          labelPosition={caption?'bottom':'right'}
+          />
         :<Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />}
       </div>
     )
