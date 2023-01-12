@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from io import BufferedReader
+import asyncio
 import ipaddress
 import json
 import platform
@@ -672,7 +673,7 @@ class Site:
         data_dir = _get_env('DATA_DIR', 'data')
         skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 
-        # If know the path of waved and running app on the same machine,
+        # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
         if not skip_local_upload and waved_dir and data_dir:
             try:
@@ -732,7 +733,7 @@ class Site:
         data_dir = _get_env('DATA_DIR', 'data')
         skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 
-        # If know the path of waved and running app on the same machine,
+        # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
         if not skip_local_upload and waved_dir and data_dir:
             try:
@@ -908,7 +909,7 @@ class AsyncSite:
         data_dir = _get_env('DATA_DIR', 'data')
         skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 
-        # If know the path of waved and running app on the same machine,
+        # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
         if not skip_local_upload and waved_dir and data_dir:
             try:
@@ -959,11 +960,11 @@ class AsyncSite:
         data_dir = _get_env('DATA_DIR', 'data')
         skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 
-        # If know the path of waved and running app on the same machine,
+        # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
         if not skip_local_upload and waved_dir and data_dir:
             try:
-                uploaded_files = []
+                tasks = []
                 for f in files:
                     uuid = str(uuid4())
                     dst = os.path.join(waved_dir, data_dir, 'f', uuid)
@@ -975,11 +976,9 @@ class AsyncSite:
                     else:
                         args = ['cp', f, dst]
 
-                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
-                    if err:
-                        raise ValueError(err.decode())
-                    uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
-                return uploaded_files
+                    tasks.append(asyncio.create_task(copy_in_subprocess(args, uuid, f)))
+
+                return await asyncio.gather(*tasks)
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
 
@@ -1078,6 +1077,16 @@ class AsyncSite:
         if res.status_code == 200:
             return res.json()
         raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
+
+
+async def copy_in_subprocess(args: List[str], uuid: str, f: str) -> str:
+    p = await asyncio.create_subprocess_exec(*args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL)
+    _, err = await p.communicate()
+
+    if err:
+        raise ValueError(err.decode())
+
+    return f'{_base_url}_f/{uuid}/{os.path.basename(f)}'
 
 
 def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:
