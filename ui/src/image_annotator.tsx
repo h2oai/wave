@@ -352,6 +352,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           focused = drawnShapes.find(({ isFocused }) => isFocused),
           intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
         canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
+        // Prevent creating shapes when active shape is changed with shortcuts during dragging.
+        if (preventClickRef.current) return
         switch (activeShape) {
           case 'rect': {
             const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
