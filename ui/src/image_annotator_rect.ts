@@ -76,53 +76,27 @@ export class RectAnnotator {
   move = (shape: DrawnShape, dx: U, dy: U) => {
     const rect = shape.shape.rect
     if (!rect) return
+    // Prevent moving behind image boundaries.
     const
       newX1 = rect.x1 + dx,
       newX2 = rect.x2 + dx,
       newY1 = rect.y1 + dy,
       newY2 = rect.y2 + dy,
-      { width, height } = this.canvas
+      { width, height } = this.canvas,
+      // Filter out vertices which are outside the boundaries.
+      filteredNewVerticesX = [newX1, newX2].filter(x => x < 0 || x > width),
+      filteredNewVerticesY = [newY1, newY2].filter(y => y < 0 || y > height),
+      // Find vertice which is the most far from the boundary.
+      maxX = filteredNewVerticesX.length ? Math.max(...filteredNewVerticesX.map(Math.abs)) : 0,
+      maxY = filteredNewVerticesY.length ? Math.max(...filteredNewVerticesY.map(Math.abs)) : 0,
+      // Calculate the x/y distance from the boundary.
+      offsetX = maxX ? dx < 0 ? -maxX : maxX - width : maxX,
+      offsetY = maxY ? dy < 0 ? -maxY : maxY - height : maxY
 
-    // Prevent moving behind image boundaries.
-    const
-      x1 = newX1 < 0 ? 0 : newX1 > width ? width : newX1,
-      x2 = newX2 < 0 ? 0 : newX2 > width ? width : newX2,
-      y1 = newY1 < 0 ? 0 : newY1 > height ? height : newY1,
-      y2 = newY2 < 0 ? 0 : newY2 > height ? height : newY2
-
-    // TODO: Refactor.
-    if (dx < 0 && rect.x1 < rect.x2 && rect.x1 !== 0) {
-      rect.x2 = x1 === 0 ? rect.x2 - rect.x1 : x2
-      rect.x1 = x1
-    }
-    if (dx > 0 && rect.x1 < rect.x2 && rect.x2 !== width) {
-      rect.x1 = x2 === width ? rect.x1 + width - rect.x2 : x1
-      rect.x2 = x2
-    }
-    if (dx < 0 && rect.x1 > rect.x2 && rect.x2 !== 0) {
-      rect.x1 = x2 === 0 ? rect.x1 - rect.x2 : x1
-      rect.x2 = x2
-    }
-    if (dx > 0 && rect.x1 > rect.x2 && rect.x1 !== width) {
-      rect.x2 = x1 === width ? rect.x2 + width - rect.x1 : x2
-      rect.x1 = x1
-    }
-    if (dy < 0 && rect.y1 < rect.y2 && rect.y1 !== 0) {
-      rect.y2 = y1 === 0 ? rect.y2 - rect.y1 : y2
-      rect.y1 = y1
-    }
-    if (dy > 0 && rect.y1 < rect.y2 && rect.y2 !== height) {
-      rect.y1 = y2 === height ? rect.y1 + height - rect.y2 : y1
-      rect.y2 = y2
-    }
-    if (dy < 0 && rect.y1 > rect.y2 && rect.y2 !== 0) {
-      rect.y1 = y2 === 0 ? rect.y1 - rect.y2 : y1
-      rect.y2 = y2
-    }
-    if (dy > 0 && rect.y1 > rect.y2 && rect.y1 !== height) {
-      rect.y2 = y1 === height ? rect.y2 + height - rect.y1 : y2
-      rect.y1 = y1
-    }
+    rect.x1 += dx - offsetX
+    rect.x2 += dx - offsetX
+    rect.y1 += dy - offsetY
+    rect.y2 += dy - offsetY
   }
 
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
