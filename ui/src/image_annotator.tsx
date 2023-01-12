@@ -527,10 +527,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
       // Select all shapes.
       if (e.key === 'a') {
-        setDrawnShapes(shapes => {
-          shapes.forEach(s => s.isFocused = true)
-          return shapes
-        })
+        setDrawnShapes(shapes => shapes.map(s => ({ ...s, isFocused: true })))
         redrawExistingShapes()
       }
       // Copy selected shapes.

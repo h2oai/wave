@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { keyboard } from '@testing-library/user-event/dist/keyboard'
 import { U } from 'h2o-wave'
 import React from 'react'
 import { ImageAnnotator, XImageAnnotator } from './image_annotator'
@@ -680,6 +681,20 @@ describe('Keyboard shortcuts', () => {
 
   // SHORTCUTS:
   // Use "a" to select all shapes.
+  it('Use "a" to select all shapes', async () => {
+    const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+    await waitForLoad()
+    const canvasEl = container.querySelectorAll('canvas')[1]
+
+    fireEvent.click(canvasEl, { clientX: 1, clientY: 1 })
+    // TODO: 
+    keyboard('a') // TODO: 
+    const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+    expect(removeBtn).not.toHaveAttribute('aria-disabled')
+    expect(wave.args[name]).toMatchObject(items)
+    fireEvent.click(removeBtn!)
+    expect(wave.args[name]).toMatchObject([])
+  })
   // Use "arrow up" to move up.
   // Use "arrow down" to move down.
   // Use "arrow left" to move left.
@@ -723,13 +738,4 @@ describe('Keyboard shortcuts', () => {
   // Decelect all other shapes when one is being moved.
   // Move only one shape at once when using cursor.
   // Test if the polygon stays in the boundaries of the canvas.
-
-
-  it('Test', async () => {
-    const { getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
-    await waitForLoad()
-    fireEvent.click(getByText('Remove all'))
-    // TODO: 
-    // expect(pushMock).toBeCalledTimes(1)
-  })
 })
