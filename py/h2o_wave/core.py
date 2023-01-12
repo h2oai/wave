@@ -675,7 +675,7 @@ class Site:
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and data_dir:
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
             try:
                 is_windows = 'Windows' in platform.system()
                 cp_command = 'xcopy' if is_windows else 'cp'
@@ -735,7 +735,7 @@ class Site:
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and data_dir:
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
             try:
                 uuid = str(uuid4())
                 dst = os.path.join(waved_dir, data_dir, 'f', uuid)
@@ -911,7 +911,7 @@ class AsyncSite:
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and data_dir:
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
             try:
                 uuid = str(uuid4())
                 dst = os.path.join(waved_dir, data_dir, 'f', uuid)
@@ -959,7 +959,7 @@ class AsyncSite:
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if not skip_local_upload and waved_dir and data_dir:
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
             try:
                 tasks = []
                 for f in files:
@@ -1137,9 +1137,9 @@ def pack(data: Any) -> str:
     return 'data:' + marshal(_dump(data))
 
 
-def _is_loopback_address(address: str) -> bool:
+def _is_loopback_address() -> bool:
     try:
-        hostname = urlparse(address).hostname
+        hostname = urlparse(_config.hub_address).hostname
         return ipaddress.ip_address(hostname).is_loopback
     except ValueError:
         return False
