@@ -452,7 +452,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
-    // TODO: Allow moving when there is 0 - 10 gap.
     moveAllSelectedShapes = (dx: U = 0, dy: U = 0) => {
       drawnShapes.filter(ds => ds.isFocused).forEach(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
