@@ -227,6 +227,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     imgRef = React.useRef(new Image()),
     buttonId = useId('targetButton'),
     wheelDirectionRef = React.useRef(-1),
+    preventClickRef = React.useRef(false),
     imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
@@ -265,7 +266,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redrawExistingShapes]),
     recreatePreviewLine = () => {
-      // TODO: Get rid of mousePositionRef if possible.
       const { x, y } = mousePositionRef.current
       redrawExistingShapes()
       onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
@@ -330,15 +330,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       imgStartPositionRef.current = imgPosition
       clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: true }
+      preventClickRef.current = false
     },
+    deselectAllShapes = () => setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false }))),
     onMouseMove = (e: React.MouseEvent) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), scale, imgStartPositionRef.current),
-        clickStartPosition = clickStartPositionRef.current,
-        deselectAllShapes = () => setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false })))
+        clickStartPosition = clickStartPositionRef.current
 
       if (e.ctrlKey && scale > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
@@ -393,7 +394,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     onClick = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
-      if (!canvas) return
+      if (!canvas || preventClickRef.current) return
 
       const
         start = clickStartPositionRef.current,
@@ -477,9 +478,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Move selection.
       const increment = e.shiftKey ? 10 : 1
       const resetDragging = () => {
-        // TODO: Prevent onClick when switching from 'select' to 'rect' or 'poly'
-        polygonRef.current?.cancelAnnotating()
+        deselectAllShapes()
         redrawExistingShapes()
+        polygonRef.current?.cancelAnnotating()
+        // Prevent 'onClick' when switching between active shapes.
+        preventClickRef.current = true
       }
       if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment)
       if (e.key === 'ArrowRight') moveAllSelectedShapes(increment)
@@ -491,15 +494,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
       // Set active shape.
-      if (e.key === 'p' && allowedShapes.has('polygon')) {
+      if (e.key === 'p' && allowedShapes.has('polygon') && activeShape !== 'polygon') {
         setActiveShape('polygon')
         resetDragging()
       }
-      if (e.key === 'r' && allowedShapes.has('rect')) {
+      if (e.key === 'r' && allowedShapes.has('rect') && activeShape !== 'rect') {
         setActiveShape('rect')
         resetDragging()
       }
-      if (e.key === 's') {
+      if (e.key === 's' && activeShape !== 'select') {
         setActiveShape('select')
         resetDragging()
       }
