@@ -66,14 +66,14 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_upload_dir(self):
         upload_path, = await self.site.upload_dir(os.path.join('tests', 'test_folder'))
-        download_path = await self.site.download(f'{upload_path}/test.txt', 'test.txt')
+        download_path = await self.site.download(f'{upload_path}/dir1/test.txt', 'test.txt')
         txt = read_file(download_path)
         os.remove(download_path)
         assert len(txt) > 0
 
     async def test_deleting_files(self):
         base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
-        upload_path, = await self.site.upload([os.path.join('tests', 'test_folder', 'test.txt')])
+        upload_path, = await self.site.upload([os.path.join('tests', 'test_folder', 'dir1', 'test.txt')])
         assert base_url in upload_path
         res = httpx.get(f'http://localhost:10101{upload_path}')
         assert res.status_code == 200

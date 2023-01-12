@@ -380,13 +380,13 @@ class TestPythonServer(unittest.TestCase):
 
     def test_upload_dir(self):
         upload_path, = site.upload_dir(os.path.join('tests', 'test_folder'))
-        download_path = site.download(f'{upload_path}/test.txt', 'test.txt')
+        download_path = site.download(f'{upload_path}/dir1/test.txt', 'test.txt')
         txt = read_file(download_path)
         os.remove(download_path)
         assert len(txt) > 0
 
     def test_deleting_files(self):
-        upload_path, = site.upload([os.path.join('tests', 'test_folder', 'test.txt')])
+        upload_path, = site.upload([os.path.join('tests', 'test_folder', 'dir1', 'test.txt')])
         res = httpx.get(f'http://localhost:10101{upload_path}')
         assert res.status_code == 200
         site.unload(upload_path)

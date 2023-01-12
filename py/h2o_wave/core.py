@@ -754,16 +754,13 @@ class Site:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
 
         upload_files = []
-        file_handles: List[BufferedReader] = []
         for f in _get_files_in_directory(directory, []):
-            file_handle = open(f, 'rb')
-            upload_files.append(('files', (os.path.relpath(f, directory), file_handle)))
-            file_handles.append(file_handle)
+            upload_files.append(('files', (os.path.relpath(f, directory), open(f, 'rb'))))
 
         res = self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"}, files=upload_files)
 
-        for h in file_handles:
-            h.close()
+        for _, f in upload_files:
+            f[1].close()
 
         if res.status_code == 200:
             return json.loads(res.text)['files']
@@ -932,16 +929,13 @@ class AsyncSite:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
 
         upload_files = []
-        file_handles: List[BufferedReader] = []
         for f in _get_files_in_directory(directory, []):
-            file_handle = open(f, 'rb')
-            upload_files.append(('files', (os.path.relpath(f, directory), file_handle)))
-            file_handles.append(file_handle)
+            upload_files.append(('files', (os.path.relpath(f, directory), open(f, 'rb'))))
 
         res = await self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"}, files=upload_files)
 
-        for h in file_handles:
-            h.close()
+        for _, f in upload_files:
+            f[1].close()
 
         if res.status_code == 200:
             return json.loads(res.text)['files']

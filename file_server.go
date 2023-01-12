@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"mime"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -182,7 +183,15 @@ func (fs *FileServer) storeFilesInSingleDir(files []*multipart.FileHeader) ([]st
 		}
 		defer src.Close()
 
-		dir, file := filepath.Split(file.Filename)
+		// Need to parse the filename from the Content-Disposition header due to HTTP standard saying FileName should be basename.
+		// https://github.com/golang/go/blob/8dbf3e9393400d72d313e5616c88873e07692c70/src/mime/multipart/multipart.go#L82-L84
+		_, params, _ := mime.ParseMediaType(file.Header.Get("Content-Disposition"))
+		filename := params["filename"]
+		if filename == "" {
+			filename = file.Filename
+		}
+
+		dir, file := filepath.Split(filename)
 		uploadPath := filepath.Join(uploadDir, dir)
 
 		if err := os.MkdirAll(uploadPath, 0700); err != nil {
