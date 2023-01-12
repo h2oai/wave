@@ -70,7 +70,7 @@ export const
           size={Fluent.SpinnerSize.medium} 
           labelPosition={caption?'bottom':'right'}
           />
-        :<Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />}
+        :<Fluent.ProgressIndicator label={label} description={caption?caption:'Please wait...'} percentComplete={value} />}
       </div>
     )
   }
