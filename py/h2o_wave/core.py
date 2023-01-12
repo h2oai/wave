@@ -46,14 +46,7 @@ def _get_env(key: str, value: Any):
 
 
 _default_internal_address = 'http://127.0.0.1:8000'
-_waved_dir = _get_env('WAVED_DIR', None)
-_data_dir = _get_env('DATA_DIR', 'data')
-_skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
 _base_url = _get_env('BASE_URL', '/')
-
-# If we know the path of waved and running app on the same machine,
-# we can simply copy the files instead of making an HTTP request.
-_use_local_upload = not _skip_local_upload and _waved_dir and _data_dir
 
 
 class _Config:
@@ -675,14 +668,20 @@ class Site:
             if not os.path.isfile(f):
                 raise ValueError(f'{f} is not a file.')
 
-        if _use_local_upload:
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and data_dir:
             try:
                 is_windows = 'Windows' in platform.system()
                 cp_command = 'xcopy' if is_windows else 'cp'
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
                     if is_windows and shutil.which('robocopy'):
@@ -729,10 +728,16 @@ class Site:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        if _use_local_upload:
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and data_dir:
             try:
                 uuid = str(uuid4())
-                dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
                 os.makedirs(dst, exist_ok=True)
 
                 if 'Windows' in platform.system():
@@ -902,10 +907,16 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
-        if _use_local_upload:
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and data_dir:
             try:
                 uuid = str(uuid4())
-                dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
                 os.makedirs(dst, exist_ok=True)
 
                 if 'Windows' in platform.system():
@@ -916,7 +927,6 @@ class AsyncSite:
                 _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
                 if err:
                     raise ValueError(err.decode())
-
                 return [f'{_base_url}_f/{uuid}']
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
@@ -951,12 +961,18 @@ class AsyncSite:
             if not os.path.isfile(f):
                 raise ValueError(f'{f} is not a file.')
 
-        if _use_local_upload:
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if not skip_local_upload and waved_dir and data_dir:
             try:
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(_waved_dir, _data_dir, 'f', uuid)
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
                     if 'Windows' in platform.system():
