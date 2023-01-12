@@ -922,10 +922,7 @@ class AsyncSite:
                 else:
                     args = ['rsync', '-a', os.path.join(directory, '.'), dst]
 
-                _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
-                if err:
-                    raise ValueError(err.decode())
-                return [f'{_base_url}_f/{uuid}']
+                return [await _copy_in_subprocess(args, uuid)]
             except Exception as e:
                 print(f'Error during local copy, falling back to HTTP upload: {e}')
 
@@ -976,7 +973,7 @@ class AsyncSite:
                     else:
                         args = ['cp', f, dst]
 
-                    tasks.append(asyncio.create_task(copy_in_subprocess(args, uuid, f)))
+                    tasks.append(asyncio.create_task(_copy_in_subprocess(args, uuid, f)))
 
                 return await asyncio.gather(*tasks)
             except Exception as e:
@@ -1079,14 +1076,17 @@ class AsyncSite:
         raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
 
 
-async def copy_in_subprocess(args: List[str], uuid: str, f: str) -> str:
+async def _copy_in_subprocess(args: List[str], uuid: str, f='') -> str:
     p = await asyncio.create_subprocess_exec(*args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL)
     _, err = await p.communicate()
 
     if err:
         raise ValueError(err.decode())
 
-    return f'{_base_url}_f/{uuid}/{os.path.basename(f)}'
+    if f:
+        return f'{_base_url}_f/{uuid}/{os.path.basename(f)}'
+    else:
+        return f'{_base_url}_f/{uuid}'
 
 
 def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:
