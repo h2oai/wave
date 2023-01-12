@@ -686,21 +686,45 @@ describe('Keyboard shortcuts', () => {
     await waitForLoad()
     const canvasEl = container.querySelectorAll('canvas')[1]
 
-    fireEvent.click(canvasEl, { clientX: 1, clientY: 1 })
-    // TODO: 
-    keyboard('a') // TODO: 
+    fireEvent.keyDown(canvasEl, { key: 'a' })
     const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
-    expect(removeBtn).not.toHaveAttribute('aria-disabled')
+    await waitFor(() => expect(removeBtn).not.toHaveAttribute('aria-disabled'))
     expect(wave.args[name]).toMatchObject(items)
     fireEvent.click(removeBtn!)
     expect(wave.args[name]).toMatchObject([])
   })
   // Use "arrow up" to move up.
-  // Use "arrow down" to move down.
-  // Use "arrow left" to move left.
-  // Use "arrow right" to move right.
-  // Move all selected shapes by 1 when using arrows.
+  it('Use arrows to move selected shape.', async () => {
+    const { container } = render(<XImageAnnotator model={model} />)
+    await waitForLoad()
+    const canvasEl = container.querySelectorAll('canvas')[1]
+    fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+    fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
+    fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
+    fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
+    fireEvent.keyDown(canvasEl, { key: 'ArrowDown' })
+    fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
+
+    expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 9, y2: 99 } } }, polygon])
+  })
+
   // Move all selected shapes by 10 when using "shift" + arrows.
+  it('Move all selected shapes by 10 when using "shift" + arrows.', async () => {
+    const { container } = render(<XImageAnnotator model={model} />)
+    await waitForLoad()
+    const canvasEl = container.querySelectorAll('canvas')[1]
+    fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+    // keyboard('{ArrowUp}')
+    fireEvent.keyDown(canvasEl, { key: 'ArrowDown', shiftKey: true })
+    // fireEvent.keyPress(canvasEl, { key: 'ArrowUp', code: 'ArrowUp', charCode: 38 })
+    // fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+    // fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+    // fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
+
+    expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 20, y2: 110 } } }, polygon])
+  })
+
+  // Move multiple selected shapes by arrows at once.
   // Respect canvas boundaries when moving by arrows.
   // Use "c" to copy all selected shapes into the clipboard.
   // Use "p" to paste all selected shapes to the correct position.
