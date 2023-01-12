@@ -283,6 +283,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         return { x, y }
       })
     },
+    deselectAllShapes = () => setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false }))),
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
@@ -332,7 +333,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: true }
       preventClickRef.current = false
     },
-    deselectAllShapes = () => setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false }))),
     onMouseMove = (e: React.MouseEvent) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
@@ -376,7 +376,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             if (shape) {
               shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
               // Deselect all other shapes when one starts moving.
-              if (drawnShapes.some(ds => ds.isFocused && ds !== intersected)) {
+              if (drawnShapes.some(ds => ds.isFocused && ds !== focused)) {
                 setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: intersected === ds })))
               }
               redrawExistingShapes()
