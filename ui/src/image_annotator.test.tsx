@@ -722,6 +722,7 @@ describe('Keyboard shortcuts', () => {
   // OTHER:
   // Decelect all other shapes when one is being moved.
   // Move only one shape at once when using cursor.
+  // Test if the polygon stays in the boundaries of the canvas.
 
 
   it('Test', async () => {

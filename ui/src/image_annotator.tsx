@@ -454,16 +454,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // TODO: Allow moving when there is 0 - 10 gap.
     moveAllSelectedShapes = (dx: U = 0, dy: U = 0) => {
-      const canMoveAllSelectedShapes = drawnShapes.filter(ds => ds.isFocused).every(s => {
+      drawnShapes.filter(ds => ds.isFocused).forEach(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
-        return shape?.canMove(s, dx, dy)
+        shape?.move(s, dx, dy)
       })
-      if (canMoveAllSelectedShapes) {
-        drawnShapes.filter(ds => ds.isFocused).forEach(s => {
-          const shape = s.shape.rect ? rectRef.current : polygonRef.current
-          shape?.move(s, dx, dy)
-        })
-      }
       redrawExistingShapes()
     },
     // Zoom canvas in/out.

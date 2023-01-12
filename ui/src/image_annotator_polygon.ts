@@ -47,20 +47,25 @@ export class PolygonAnnotator {
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
   }
 
-  canMove = (focused: DrawnShape, dx: U, dy: U) => {
-    if (focused.shape.polygon) {
-      const { width, height } = this.canvas
-      return focused.shape.polygon.vertices.every(v =>
-        v.x + dx >= 0 && v.x + dx <= width &&
-        v.y + dy >= 0 && v.y + dy <= height
-      )
-    }
-  }
+  move = (movedShape: DrawnShape, dx: U, dy: U) => {
+    // Keep the polygon in the boundaries.
+    const polygonVertices = movedShape.shape.polygon?.vertices
+    if (!polygonVertices) return
+    const
+      { width, height } = this.canvas,
+      // Filter out vertices which are outside the boundaries.
+      filteredNewVerticesX = polygonVertices.map(p => p.x + dx).filter(p => p < 0 || p > width),
+      filteredNewVerticesY = polygonVertices.map(p => p.y + dy).filter(p => p < 0 || p > height),
+      // Find vertice which is the most far from the boundary.
+      maxX = filteredNewVerticesX.length ? Math.max(...filteredNewVerticesX.map(Math.abs)) : 0,
+      maxY = filteredNewVerticesY.length ? Math.max(...filteredNewVerticesY.map(Math.abs)) : 0,
+      // Calculate the x/y distance from the boundary.
+      offsetX = maxX ? dx < 0 ? -maxX : maxX - width : maxX,
+      offsetY = maxY ? dy < 0 ? -maxY : maxY - height : maxY
 
-  move = (shape: DrawnShape, dx: U, dy: U) => {
-    shape.shape.polygon?.vertices.forEach(p => {
-      p.x += dx
-      p.y += dy
+    movedShape.shape.polygon?.vertices.forEach(p => {
+      p.x += dx - offsetX
+      p.y += dy - offsetY
     })
   }
 
@@ -71,14 +76,14 @@ export class PolygonAnnotator {
       return
     }
 
-    const canMovePolygon = this.canMove(focused, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
+    // const canMovePolygon = this.canMove(focused, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
-    else if ((intersected == focused || this.draggedShape) && canMovePolygon) {
+    else if (intersected == focused || this.draggedShape) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       if (!this.draggedShape) return
 

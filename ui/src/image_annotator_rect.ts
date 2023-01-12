@@ -73,47 +73,55 @@ export class RectAnnotator {
     this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
   }
 
-  canMove = (focused: DrawnShape, dx: U, dy: U) => {
-    // TODO: Rework to prevent canvas edges from being sticky.
-    if (focused.shape.rect) {
-      const { x1, x2, y1, y2 } = focused.shape.rect
-      const { width, height } = this.canvas
-      return (
-        x1 + dx >= 0 && x1 + dx <= width &&
-        x2 + dx >= 0 && x2 + dx <= width &&
-        y1 + dy >= 0 && y1 + dy <= height &&
-        y2 + dy >= 0 && y2 + dy <= height
-      )
-    }
-  }
-
   move = (shape: DrawnShape, dx: U, dy: U) => {
     const rect = shape.shape.rect
     if (!rect) return
     const
-      xIncrement = dx,
-      yIncrement = dy,
-      newX1 = rect.x1 + xIncrement,
-      newX2 = rect.x2 + xIncrement,
-      newY1 = rect.y1 + yIncrement,
-      newY2 = rect.y2 + yIncrement,
+      newX1 = rect.x1 + dx,
+      newX2 = rect.x2 + dx,
+      newY1 = rect.y1 + dy,
+      newY2 = rect.y2 + dy,
       { width, height } = this.canvas
 
     // Prevent moving behind image boundaries.
-    // FIXME: Hitting boundary repeatedly causes rect to increase in size.
-    if (newX1 < rect.x1 && newX1 < 0) rect.x1 = 0
-    else if (newX2 < rect.x2 && newX2 < 0) rect.x2 = 0
-    else if (newY1 < rect.y1 && newY1 < 0) rect.y1 = 0
-    else if (newY2 < rect.y2 && newY2 < 0) rect.y2 = 0
-    else if (newX1 > rect.x1 && newX1 > width) rect.x1 = width
-    else if (newX2 > rect.x2 && newX2 > width) rect.x2 = width
-    else if (newY1 > rect.y1 && newY1 > height) rect.y1 = height
-    else if (newY2 > rect.y2 && newY2 > height) rect.y2 = height
-    else {
-      rect.x1 = newX1
-      rect.x2 = newX2
-      rect.y1 = newY1
-      rect.y2 = newY2
+    const
+      x1 = newX1 < 0 ? 0 : newX1 > width ? width : newX1,
+      x2 = newX2 < 0 ? 0 : newX2 > width ? width : newX2,
+      y1 = newY1 < 0 ? 0 : newY1 > height ? height : newY1,
+      y2 = newY2 < 0 ? 0 : newY2 > height ? height : newY2
+
+    // TODO: Refactor.
+    if (dx < 0 && rect.x1 < rect.x2 && rect.x1 !== 0) {
+      rect.x2 = x1 === 0 ? rect.x2 - rect.x1 : x2
+      rect.x1 = x1
+    }
+    if (dx > 0 && rect.x1 < rect.x2 && rect.x2 !== width) {
+      rect.x1 = x2 === width ? rect.x1 + width - rect.x2 : x1
+      rect.x2 = x2
+    }
+    if (dx < 0 && rect.x1 > rect.x2 && rect.x2 !== 0) {
+      rect.x1 = x2 === 0 ? rect.x1 - rect.x2 : x1
+      rect.x2 = x2
+    }
+    if (dx > 0 && rect.x1 > rect.x2 && rect.x1 !== width) {
+      rect.x2 = x1 === width ? rect.x2 + width - rect.x1 : x2
+      rect.x1 = x1
+    }
+    if (dy < 0 && rect.y1 < rect.y2 && rect.y1 !== 0) {
+      rect.y2 = y1 === 0 ? rect.y2 - rect.y1 : y2
+      rect.y1 = y1
+    }
+    if (dy > 0 && rect.y1 < rect.y2 && rect.y2 !== height) {
+      rect.y1 = y2 === height ? rect.y1 + height - rect.y2 : y1
+      rect.y2 = y2
+    }
+    if (dy < 0 && rect.y1 > rect.y2 && rect.y2 !== 0) {
+      rect.y1 = y2 === 0 ? rect.y1 - rect.y2 : y1
+      rect.y2 = y2
+    }
+    if (dy > 0 && rect.y1 > rect.y2 && rect.y1 !== height) {
+      rect.y2 = y1 === height ? rect.y2 + height - rect.y1 : y2
+      rect.y1 = y1
     }
   }
 
