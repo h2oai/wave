@@ -20,7 +20,7 @@ For Windows:
 
 ```sh
 python3 -m venv venv
-venv\Scripts\activate.bat
+venv\Scripts\activate
 pip install h2o-wave
 ```
 
