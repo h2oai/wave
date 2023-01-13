@@ -3888,7 +3888,7 @@ class Link:
         self.disabled = disabled
         """True if the link should be disabled."""
         self.download = download
-        """True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false."""
+        """True if the link should prompt the user to save the linked URL instead of navigating to it."""
         self.button = button
         """True if the link should be rendered as a button."""
         self.width = width

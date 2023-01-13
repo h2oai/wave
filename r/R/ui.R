@@ -1721,7 +1721,7 @@ ui_table <- function(
 #' @param label The text to be displayed. If blank, the `path` is used as the label.
 #' @param path The path or URL to link to.
 #' @param disabled True if the link should be disabled.
-#' @param download True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false.
+#' @param download True if the link should prompt the user to save the linked URL instead of navigating to it.
 #' @param button True if the link should be rendered as a button.
 #' @param width The width of the link, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.

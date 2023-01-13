@@ -1494,7 +1494,7 @@ def link(
         label: The text to be displayed. If blank, the `path` is used as the label.
         path: The path or URL to link to.
         disabled: True if the link should be disabled.
-        download: True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false.
+        download: True if the link should prompt the user to save the linked URL instead of navigating to it.
         button: True if the link should be rendered as a button.
         width: The width of the link, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
