@@ -796,18 +796,79 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([])
     })
 
-    // TODO:
-    // Use "l" to change active tag/label.
-    // Change color of selected shapes when changing active tag/label. Check wave args.
+    it('Use "l" to change active tag/label', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.keyDown(canvasEl, { key: 'l' })
+      const activeTag = container.querySelector('[class*="active"]')
+      expect(activeTag).toHaveTextContent('Object')
+    })
+
+    it('Change color of the selected shape when changing active tag/label', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.keyDown(canvasEl, { key: 'l' })
+      expect(wave.args[name]).toMatchObject([{ ...rect, tag: 'object' }, polygon])
+    })
+
+    // TODO: Finish; low priority.
     // Change color of the shape while creating rectangle when changing active tag/label.
     // Change color of the shape while creating polygon when changing active tag/label.
 
-    // Use "b" to switch the active shape.
-    // Cancel rectangle creation when switching active shape.
-    // Cancel polygon creation when switching active shape.
-    // Cancel drag moving rectangle when switching active shape.
+    it('Use "b" to switch the active shape', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.keyDown(canvasEl, { key: 'b' })
+
+      await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveTextContent('Rectangle'))
+    })
+
+    it('Cancel rectangle creation when switching active shape', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Rectangle'))
+      fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      fireEvent.keyDown(canvasEl, { key: 'b' })
+      fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
+
+      expect(wave.args[name]).toMatchObject(items)
+    })
+
+    it('Cancel polygon creation when switching active shape', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      fireEvent.keyDown(canvasEl, { key: 'b' })
+      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+
+      expect(wave.args[name]).toMatchObject(items)
+    })
+
+    it('Cancel drag moving rectangle when switching from "select" to rectangle and do not create a new rectangle on the click afterwards', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 55, clientY: 55, buttons: 1 })
+      fireEvent.keyDown(canvasEl, { key: 'b' })
+      fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
+
+      expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 15, x2: 105, y1: 15, y2: 105 } } }, polygon])
+    })
+
+    // TODO:
     // Do not start creating the polygon when switching from "select" to "polygon" while moving the shape.
-    // Do not start creating the rectangle when switching from "select" to "rectangle" while moving the shape.
 
     // Scale image when using "control" + mouse wheel.
     // Drag image when holding "shift" while dragging by mouse.

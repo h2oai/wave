@@ -486,6 +486,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         deselectAllShapes()
         redrawExistingShapes()
         polygonRef.current?.cancelAnnotating()
+        // Set correct wave args when drag moving is interrupted by changing active shape.
+        setWaveArgs(drawnShapes)
         // Prevent 'onClick' when switching between active shapes.
         preventClickRef.current = true
       }
