@@ -93,6 +93,7 @@ const forceFileDownload = (path: S) => {
   const anchor = document.createElement('a')
   anchor.href = path
   anchor.download = path.split('/').pop()!
+  anchor.target = '_blank'
   anchor.click()
 }
 export const
