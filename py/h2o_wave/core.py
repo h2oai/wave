@@ -696,8 +696,8 @@ class Site:
                         raise ValueError(err.decode())
                     uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
                 return uploaded_files
-            except Exception as e:
-                print(f'Error during local copy, falling back to HTTP upload: {e}')
+            except:
+                pass
 
         uploaded_files = []
         file_handles: List[BufferedReader] = []
@@ -751,8 +751,8 @@ class Site:
                     raise ValueError(err.decode())
 
                 return [f'{_base_url}_f/{uuid}']
-            except Exception as e:
-                print(f'Error during local copy, falling back to HTTP upload: {e}')
+            except:
+                pass
 
         upload_files = []
         for f in _get_files_in_directory(directory, []):
@@ -923,8 +923,8 @@ class AsyncSite:
                     args = ['rsync', '-a', os.path.join(directory, '.'), dst]
 
                 return [await _copy_in_subprocess(args, uuid)]
-            except Exception as e:
-                print(f'Error during local copy, falling back to HTTP upload: {e}')
+            except:
+                pass
 
         upload_files = []
         for f in _get_files_in_directory(directory, []):
@@ -976,8 +976,8 @@ class AsyncSite:
                     tasks.append(asyncio.create_task(_copy_in_subprocess(args, uuid, f)))
 
                 return await asyncio.gather(*tasks)
-            except Exception as e:
-                print(f'Error during local copy, falling back to HTTP upload: {e}')
+            except:
+                pass
 
         upload_files = []
         file_handles: List[BufferedReader] = []
