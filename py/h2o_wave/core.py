@@ -677,39 +677,35 @@ class Site:
         # we can simply copy the files instead of making an HTTP request.
         if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
             try:
-                is_windows = 'Windows' in platform.system()
-                cp_command = 'xcopy' if is_windows else 'cp'
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
                     dst = os.path.join(waved_dir, data_dir, 'f', uuid)
                     os.makedirs(dst, exist_ok=True)
 
-                    if is_windows and shutil.which('robocopy'):
+                    if 'Windows' in platform.system():
                         src = os.path.dirname(f) or os.getcwd()
                         args = ['robocopy', src, dst, os.path.basename(f), '/J', '/W:0']
                     else:
-                        args = [cp_command, f, dst]
+                        args = ['cp', f, dst]
 
                     _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
                     if err:
                         raise ValueError(err.decode())
+
                     uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
                 return uploaded_files
             except:
                 pass
 
         uploaded_files = []
-        file_handles: List[BufferedReader] = []
         for f in files:
-            file_handle = open(f, 'rb')
-            uploaded_files.append(('files', (os.path.basename(f), file_handle)))
-            file_handles.append(file_handle)
+            uploaded_files.append(('files', (os.path.basename(f), open(f, 'rb'))))
 
         res = self._http.post(f'{_config.hub_address}_f/', files=uploaded_files)
 
-        for h in file_handles:
-            h.close()
+        for _, f in uploaded_files:
+            f[1].close()
 
         if res.status_code == 200:
             return json.loads(res.text)['files']
