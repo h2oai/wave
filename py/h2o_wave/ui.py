@@ -332,7 +332,7 @@ def progress(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
-        type: The type of progress bar to be displayed. One of 'bar', 'spinner' One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType.
+        type: The type of progress bar to be displayed. One of 'bar', 'spinner'. Defaults to 'bar'. One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType.
     Returns:
         A `h2o_wave.types.Progress` instance.
     """

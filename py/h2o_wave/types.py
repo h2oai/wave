@@ -822,7 +822,7 @@ class Progress:
         self.name = name
         """An identifying name for this component."""
         self.type = type
-        """The type of progress bar to be displayed. One of 'bar', 'spinner' One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType."""
+        """The type of progress bar to be displayed. One of 'bar', 'spinner'. Defaults to 'bar'. One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

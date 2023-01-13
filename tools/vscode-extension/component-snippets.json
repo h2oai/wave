@@ -1479,7 +1479,7 @@
   "Wave Full Progress": {
     "prefix": "w_full_progress",
     "body": [
-      "ui.progress(label='$1', caption='$2', value=${3:None}, width='${4:100%}', visible=${5:True}, tooltip='$6', name='$7', type='$8'),$0"
+      "ui.progress(label='$1', caption='$2', value=${3:None}, width='${4:100%}', visible=${5:True}, tooltip='$6', name='$7', type='${8:bar}'),$0"
     ],
     "description": "Create a full Wave Progress."
   },

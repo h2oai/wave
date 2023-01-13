@@ -53,7 +53,7 @@ export interface Progress {
   tooltip?: S
   /** An identifying name for this component. */
   name?: S
-  /** The type of progress bar to be displayed. One of 'bar', 'spinner' */
+  /** The type of progress bar to be displayed. One of 'bar', 'spinner'. Defaults to 'bar'. */
   type?: 'bar' | 'spinner'
 }
 

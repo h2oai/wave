@@ -390,7 +390,7 @@ ui_separator <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
-#' @param type The type of progress bar to be displayed. One of 'bar', 'spinner'
+#' @param type The type of progress bar to be displayed. One of 'bar', 'spinner'. Defaults to 'bar'.
 #'   One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType.
 #' @return A Progress instance.
 #' @export
