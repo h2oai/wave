@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { keyboard } from '@testing-library/user-event/dist/keyboard'
 import { U } from 'h2o-wave'
 import React from 'react'
 import { ImageAnnotator, XImageAnnotator } from './image_annotator'
@@ -672,94 +671,152 @@ describe('ImageAnnotator.tsx', () => {
     })
 
   })
-})
-describe('Keyboard shortcuts', () => {
-  const pushMock = jest.fn()
 
-  beforeAll(() => wave.push = pushMock)
-  beforeEach(() => pushMock.mockReset())
+  describe('Keyboard shortcuts', () => {
+    const pushMock = jest.fn()
 
-  // SHORTCUTS:
-  // Use "a" to select all shapes.
-  it('Use "a" to select all shapes', async () => {
-    const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
-    await waitForLoad()
-    const canvasEl = container.querySelectorAll('canvas')[1]
+    beforeAll(() => wave.push = pushMock)
+    beforeEach(() => pushMock.mockReset())
 
-    fireEvent.keyDown(canvasEl, { key: 'a' })
-    const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
-    await waitFor(() => expect(removeBtn).not.toHaveAttribute('aria-disabled'))
-    expect(wave.args[name]).toMatchObject(items)
-    fireEvent.click(removeBtn!)
-    expect(wave.args[name]).toMatchObject([])
+    it('Use "a" to select all shapes', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+      await waitFor(() => expect(removeBtn).not.toHaveAttribute('aria-disabled'))
+      expect(wave.args[name]).toMatchObject(items)
+      fireEvent.click(removeBtn!)
+      expect(wave.args[name]).toMatchObject([])
+    })
+
+    it('Use arrows to move selected shape', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowDown' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
+
+      expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 9, y2: 99 } } }, polygon])
+    })
+
+    it('Move selected shape by 10 when using "shift" + arrows', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowDown', shiftKey: true })
+
+      expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 20, y2: 110 } } }, polygon])
+    })
+
+    it('Move multiple selected shapes by arrows at once', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
+
+      expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 10, y2: 100 } } }, { shape: { polygon: { vertices: [{ x: 106, y: 100 }, { x: 241, y: 100 }, { x: 241, y: 220 },] } }, tag: 'person' }])
+    })
+
+    it('Respect canvas boundaries when moving by arrows - top, left', async () => {
+      const items = [
+        { tag: 'person', shape: { rect: { x1: 0, x2: 20, y1: 5, y2: 100 } } },
+        { shape: { polygon: { vertices: [{ x: 0, y: 8 }, { x: 6, y: 40 }, { x: 60, y: 30 },] } }, tag: 'person' }
+      ]
+      const { container } = render(<XImageAnnotator model={{ ...model, items }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowUp', shiftKey: true })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
+
+      expect(wave.args[name]).toMatchObject([
+        { tag: 'person', shape: { rect: { x1: 0, x2: 20, y1: 0, y2: 95 } } },
+        { shape: { polygon: { vertices: [{ x: 0, y: 0 }, { x: 6, y: 32 }, { x: 60, y: 22 }] } }, tag: 'person' }
+      ])
+    })
+
+    it('Respect canvas boundaries when moving by arrows - bottom, right', async () => {
+      const items = [
+        { tag: 'person', shape: { rect: { x1: 590, x2: 600, y1: 200, y2: 292 } } },
+        { shape: { polygon: { vertices: [{ x: 450, y: 100 }, { x: 600, y: 150 }, { x: 500, y: 291 }] } }, tag: 'person' }
+      ]
+      const { container } = render(<XImageAnnotator model={{ ...model, items }} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowDown', shiftKey: true })
+      fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
+
+      expect(wave.args[name]).toMatchObject([
+        { tag: 'person', shape: { rect: { x1: 590, x2: 600, y1: 208, y2: 300 } } },
+        { shape: { polygon: { vertices: [{ x: 450, y: 109 }, { x: 600, y: 159 }, { x: 500, y: 300 }] } }, tag: 'person' }
+      ])
+    })
+
+    // Use "c" to copy all selected shapes into the clipboard.
+    // Use "p" to paste all selected shapes to the correct position.
+
+    it('Use "Delete" to delete selected shapes', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120, shiftKey: true })
+      fireEvent.keyDown(canvasEl, { key: 'Delete' })
+      expect(wave.args[name]).toMatchObject([rect])
+    })
+
+    it('Allow multiple shapes selection while holding "shift" and clicking', async () => {
+      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120, shiftKey: true })
+      const removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+      await waitFor(() => expect(removeBtn).not.toHaveAttribute('aria-disabled'))
+      expect(wave.args[name]).toMatchObject(items)
+      fireEvent.click(removeBtn!)
+      expect(wave.args[name]).toMatchObject([])
+    })
+
+    // TODO:
+    // Use "l" to change active tag/label.
+    // Change color of selected shapes when changing active tag/label. Check wave args.
+    // Change color of the shape while creating rectangle when changing active tag/label.
+    // Change color of the shape while creating polygon when changing active tag/label.
+
+    // Use "b" to switch the active shape.
+    // Cancel rectangle creation when switching active shape.
+    // Cancel polygon creation when switching active shape.
+    // Cancel drag moving rectangle when switching active shape.
+    // Do not start creating the polygon when switching from "select" to "polygon" while moving the shape.
+    // Do not start creating the rectangle when switching from "select" to "rectangle" while moving the shape.
+
+    // Scale image when using "control" + mouse wheel.
+    // Drag image when holding "shift" while dragging by mouse.
+    // Change cursor when using "control" when "scale > 1" to indicate that user can drag image.
+    // Change cursor while dragging the image.
+    // Change cursor back when dragging ends.
+    // Move shapes when canvas is zoomed.
+    // Move all selected shapes by 1 when using arrows and the image is zoomed.
+    // Move all selected shapes by 10 when using "shift" + arrows and the image is zoomed.
+    // Respect canvas boundaries when moving by arrows and the image is zoomed.
+    // Submit correct coordinates when annotating while the image is zoomed.
+    // Check if canvas is empty after all shapes are removed and then the image is zoomed.
+
+    // Use "backspace" to remove last vertice while polygon annotating.
+    // Finish drawing the polygon by pressing "enter".
+
+    // OTHER:
+    // Decelect all other shapes when one is being moved.
+    // Move only one shape at once when using cursor.
+    // Test if the polygon stays in the boundaries of the canvas when moving by mouse.
   })
-  // Use "arrow up" to move up.
-  it('Use arrows to move selected shape.', async () => {
-    const { container } = render(<XImageAnnotator model={model} />)
-    await waitForLoad()
-    const canvasEl = container.querySelectorAll('canvas')[1]
-    fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
-    fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
-    fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
-    fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
-    fireEvent.keyDown(canvasEl, { key: 'ArrowDown' })
-    fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
-
-    expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 9, y2: 99 } } }, polygon])
-  })
-
-  // Move all selected shapes by 10 when using "shift" + arrows.
-  it('Move all selected shapes by 10 when using "shift" + arrows.', async () => {
-    const { container } = render(<XImageAnnotator model={model} />)
-    await waitForLoad()
-    const canvasEl = container.querySelectorAll('canvas')[1]
-    fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
-    // keyboard('{ArrowUp}')
-    fireEvent.keyDown(canvasEl, { key: 'ArrowDown', shiftKey: true })
-    // fireEvent.keyPress(canvasEl, { key: 'ArrowUp', code: 'ArrowUp', charCode: 38 })
-    // fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
-    // fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
-    // fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
-
-    expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 20, y2: 110 } } }, polygon])
-  })
-
-  // Move multiple selected shapes by arrows at once.
-  // Respect canvas boundaries when moving by arrows.
-  // Use "c" to copy all selected shapes into the clipboard.
-  // Use "p" to paste all selected shapes to the correct position.
-  // Use "d" to delete all selected shapes.
-  // Allow multiple shapes selection while holding "shift" and clicking.
-
-  // Use "l" to change active tag/label.
-  // Change color of selected shapes when changing active tag/label.
-  // Change color of the shape while creating rectangle when changing active tag/label.
-  // Change color of the shape while creating polygon when changing active tag/label.
-
-  // Use "b" to switch the active shape.
-  // Cancel rectangle creation when switching active shape.
-  // Cancel polygon creation when switching active shape.
-  // Cancel drag moving rectangle when switching active shape.
-  // Do not start creating the polygon when switching from "select" to "polygon" while moving the shape.
-  // Do not start creating the rectangle when switching from "select" to "rectangle" while moving the shape.
-
-  // Scale image when using "control" + mouse wheel.
-  // Drag image when holding "shift" while dragging by mouse.
-  // Change cursor when using "control" when "scale > 1" to indicate that user can drag image.
-  // Change cursor while dragging the image.
-  // Change cursor back when dragging ends.
-  // Move shapes when canvas is zoomed.
-  // Move all selected shapes by 1 when using arrows and the image is zoomed.
-  // Move all selected shapes by 10 when using "shift" + arrows and the image is zoomed.
-  // Respect canvas boundaries when moving by arrows and the image is zoomed.
-  // Submit correct coordinates when annotating while the image is zoomed.
-  // Check if canvas is empty after all shapes are removed and then the image is zoomed.
-
-  // Use "backspace" to remove last vertice while polygon annotating.
-  // Finish drawing the polygon by pressing "enter".
-
-  // OTHER:
-  // Decelect all other shapes when one is being moved.
-  // Move only one shape at once when using cursor.
-  // Test if the polygon stays in the boundaries of the canvas.
 })
