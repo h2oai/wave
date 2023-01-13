@@ -107,9 +107,14 @@ export const
     const
       _target = target === '' ? '_blank' : target,
       onClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLElement>) => {
-        ev.preventDefault()
-        download && path ? forceFileDownload(path) : window.open(path, _target)
-      }, [_target, download, path])
+        if (download && path) {
+          ev.preventDefault()
+          forceFileDownload(path)
+        }
+        else if (button) {
+          window.open(path, _target)
+        }
+      }, [_target, button, download, path])
 
     return button
       ? <Fluent.DefaultButton data-test={name} text={label} disabled={disabled} onClick={onClick} />
