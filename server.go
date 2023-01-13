@@ -167,6 +167,12 @@ func splitDirMapping(m string) (string, string) {
 	if len(xs) < 2 {
 		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
 	}
+
+	// Windows prepends the drive letter to the path with a leading slash, e.g. "/foo/" => "C:/foo/".
+	if xs[0][1] == ':' {
+		xs[0] = xs[0][2:]
+	}
+
 	return strings.TrimLeft(xs[0], "/"), xs[1]
 }
 
