@@ -383,8 +383,8 @@ ui_separator <- function(
 #' Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
 #' Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 #'
-#' @param label The text displayed above the bar.
-#' @param caption The text displayed below the bar.
+#' @param label The text displayed above the bar or right to the spinner.
+#' @param caption The text displayed below the bar or spinner.
 #' @param value The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
 #' @param width The width of the separator, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.

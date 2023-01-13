@@ -39,9 +39,9 @@ import React from 'react'
 */
 
 export interface Progress {
-  /** The text displayed above the bar. */
+  /** The text displayed above the bar or right to the spinner. */
   label: S
-  /** The text displayed below the bar. */
+  /** The text displayed below the bar or spinner. */
   caption?: S
   /** The progress, between 0.0 and 1.0, or -1 (default) if indeterminate. */
   value?: F
@@ -54,23 +54,22 @@ export interface Progress {
   /** An identifying name for this component. */
   name?: S
   /** The type of progress bar to be displayed. One of 'bar', 'spinner' */
-  type?: 'bar'|'spinner'
+  type?: 'bar' | 'spinner'
 }
 
 export const
   XProgress = ({ model }: { model: Progress }) => {
-    const
-      {type = 'bar', label, caption ,value, name } = model
+    const { type = 'bar', label, caption, value, name } = model
     return (
       <div data-test={name}>
-        {type === 'spinner' ?
-          <Fluent.Spinner 
-          styles={{root:{justifyContent:'auto'}}} 
-          label={caption?caption:label} 
-          size={Fluent.SpinnerSize.medium} 
-          labelPosition={caption?'bottom':'right'}
+        {type === 'spinner'
+          ? <Fluent.Spinner
+            styles={{ root: { justifyContent: 'auto' } }}
+            label={caption || label}
+            size={Fluent.SpinnerSize.medium}
+            labelPosition={caption ? 'bottom' : 'right'}
           />
-        :<Fluent.ProgressIndicator label={label} description={caption?caption:'Please wait...'} percentComplete={value} />}
+          : <Fluent.ProgressIndicator label={label} description={caption || 'Please wait...'} percentComplete={value} />}
       </div>
     )
   }

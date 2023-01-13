@@ -808,9 +808,9 @@ class Progress:
         _guard_scalar('Progress.name', name, (str,), False, True, False)
         _guard_enum('Progress.type', type, _ProgressType, True)
         self.label = label
-        """The text displayed above the bar."""
+        """The text displayed above the bar or right to the spinner."""
         self.caption = caption
-        """The text displayed below the bar."""
+        """The text displayed below the bar or spinner."""
         self.value = value
         """The progress, between 0.0 and 1.0, or -1 (default) if indeterminate."""
         self.width = width
