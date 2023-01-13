@@ -186,10 +186,10 @@ def fetch():
     if more_path.exists() and more_path.is_dir():
         shutil.rmtree(more_dir)
 
+    resolved_path = more_path.resolve()
     # Windows sometimes opens the dir in Quick Access, which prevents renaming.
     try:
         tar_dir.rename(more_dir)
-        resolved_path = more_path.resolve()
     except:
         print(f'Could not rename extracted directory. Using the {tar_name} instead.')
         resolved_path = Path(tar_name).resolve()
