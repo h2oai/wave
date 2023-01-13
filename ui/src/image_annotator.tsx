@@ -226,6 +226,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
     buttonId = useId('targetButton'),
+    clipboardRef = React.useRef<S>(''),
     wheelDirectionRef = React.useRef(-1),
     preventClickRef = React.useRef(false),
     imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
@@ -535,21 +536,19 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Copy selected shapes.
       if (e.key === 'c') {
         const selectedShapes = drawnShapes.filter(s => s.isFocused)
-        if (selectedShapes.length) navigator.clipboard.writeText(JSON.stringify(selectedShapes))
+        if (selectedShapes.length) clipboardRef.current = JSON.stringify(selectedShapes)
       }
       // Paste shapes.
       if (e.key === 'v') {
-        navigator.clipboard.readText().then(text => {
-          let shapes: DrawnShape[]
-          try { shapes = JSON.parse(text) }
-          catch (e) { return }
-          setDrawnShapes(prevShapes => {
-            const newShapes = [...shapes, ...prevShapes]
-            setWaveArgs(newShapes)
-            return newShapes
-          })
-          redrawExistingShapes()
+        let shapes: DrawnShape[]
+        try { shapes = JSON.parse(clipboardRef.current) }
+        catch (e) { return }
+        setDrawnShapes(prevShapes => {
+          const newShapes = [...shapes, ...prevShapes]
+          setWaveArgs(newShapes)
+          return newShapes
         })
+        redrawExistingShapes()
       }
       // Delete selected shapes.
       if (e.key === 'Delete') {

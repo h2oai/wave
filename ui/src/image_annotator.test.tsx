@@ -35,8 +35,8 @@ class MockedRenderingContext extends window.CanvasRenderingContext2D {
 
 const
   name = 'image_annotator',
-  rect = { shape: { rect: { x1: 10, x2: 100, y1: 10, y2: 100 } }, tag: 'person' },
-  polygon = { shape: { polygon: { vertices: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } }, tag: 'person' },
+  rect = { tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 10, y2: 100 } } },
+  polygon = { tag: 'person', shape: { polygon: { vertices: [{ x: 105, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 220 },] } } },
   items = [rect, polygon],
   model: ImageAnnotator = {
     name,
@@ -761,8 +761,18 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    // Use "c" to copy all selected shapes into the clipboard.
-    // Use "p" to paste all selected shapes to the correct position.
+    it('Use "c" and "v" to copy/paste all selected shapes from the clipboard', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.keyDown(canvasEl, { key: 'c' })
+      fireEvent.keyDown(canvasEl, { key: 'Delete' })
+      expect(wave.args[name]).toMatchObject([])
+
+      fireEvent.keyDown(canvasEl, { key: 'v' })
+      expect(wave.args[name]).toMatchObject(items)
+    })
 
     it('Use "Delete" to delete selected shapes', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
