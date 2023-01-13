@@ -671,7 +671,7 @@ class Site:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
@@ -731,7 +731,7 @@ class Site:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
@@ -907,7 +907,7 @@ class AsyncSite:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
@@ -955,7 +955,7 @@ class AsyncSite:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('SKIP_LOCAL_UPLOAD', 'false').lower() in ['true', '1', 't']
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
