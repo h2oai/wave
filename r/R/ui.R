@@ -383,13 +383,15 @@ ui_separator <- function(
 #' Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
 #' Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 #'
-#' @param label The text displayed above the bar.
-#' @param caption The text displayed below the bar.
+#' @param label The text displayed above the bar or right to the spinner.
+#' @param caption The text displayed below the bar or spinner.
 #' @param value The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
 #' @param width The width of the separator, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
+#' @param type The type of progress bar to be displayed. One of 'bar', 'spinner'. Defaults to 'bar'.
+#'   One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType.
 #' @return A Progress instance.
 #' @export
 ui_progress <- function(
@@ -399,7 +401,8 @@ ui_progress <- function(
   width = NULL,
   visible = NULL,
   tooltip = NULL,
-  name = NULL) {
+  name = NULL,
+  type = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("value", "numeric", value)
@@ -407,6 +410,7 @@ ui_progress <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
+  # TODO Validate type
   .o <- list(progress=list(
     label=label,
     caption=caption,
@@ -414,7 +418,8 @@ ui_progress <- function(
     width=width,
     visible=visible,
     tooltip=tooltip,
-    name=name))
+    name=name,
+    type=type))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

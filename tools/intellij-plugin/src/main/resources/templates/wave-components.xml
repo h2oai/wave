@@ -1963,7 +1963,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_progress" value="ui.progress(label='$label$',caption='$caption$',value=$value$,width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave Progress with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_progress" value="ui.progress(label='$label$',caption='$caption$',value=$value$,width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$',type='$type$'),$END$" description="Create Wave Progress with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="value" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
@@ -1971,6 +1971,7 @@
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="&quot;bar&quot;" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

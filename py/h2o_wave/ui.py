@@ -302,6 +302,7 @@ def progress(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
+        type: Optional[str] = None,
 ) -> Component:
     """Create a progress bar.
 
@@ -324,13 +325,14 @@ def progress(
     Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 
     Args:
-        label: The text displayed above the bar.
-        caption: The text displayed below the bar.
+        label: The text displayed above the bar or right to the spinner.
+        caption: The text displayed below the bar or spinner.
         value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
         width: The width of the separator, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
+        type: The type of progress bar to be displayed. One of 'bar', 'spinner'. Defaults to 'bar'. One of 'bar', 'spinner'. See enum h2o_wave.ui.ProgressType.
     Returns:
         A `h2o_wave.types.Progress` instance.
     """
@@ -342,6 +344,7 @@ def progress(
         visible,
         tooltip,
         name,
+        type,
     ))
 
 

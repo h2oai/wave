@@ -32,3 +32,23 @@ q.page['example'] = ui.form_card(
     items=[ui.progress(label='Indeterminate Progress', caption='Goes on forever')]
 )
 ```
+
+## Spinner progress
+
+Same as indeterminate progress UX-wise, just a different look.
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.progress(label='Spinner Progress', type='spinner')]
+)
+```
+
+Use the `caption` attribute to force the text to be at the bottom instead of right.
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.progress(label='', caption='Text at the bottom', type='spinner')]
+)
+```
