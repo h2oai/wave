@@ -173,24 +173,29 @@ def fetch():
     else:
         print(f'{tar_file} already exists. Skipping download.')
 
-    print(f'Extracting...')
+    print('Extracting...')
     with tarfile.open(tar_file) as tar:
         safe_extract(tar)
 
     tar_dir = Path(tar_name)
     if not tar_dir.is_dir():
-        raise click.ClickException(f'Failed extracting archive.')
+        raise click.ClickException('Failed extracting archive.')
 
     more_dir = 'wave'
     more_path = Path(more_dir)
     if more_path.exists() and more_path.is_dir():
         shutil.rmtree(more_dir)
-    tar_dir.rename(more_dir)
 
-    resolved_path = more_path.resolve()
+    # Windows sometimes opens the dir in Quick Access, which prevents renaming.
+    try:
+        tar_dir.rename(more_dir)
+        resolved_path = more_path.resolve()
+    except:
+        print(f'Could not rename extracted directory. Using the {tar_name} instead.')
+        resolved_path = Path(tar_name).resolve()
 
     print('')
-    print(f'All additional files downloaded and extracted successfully!')
+    print('All additional files downloaded and extracted successfully!')
 
     everything = (
         ('Examples and tour.............', 'examples'),
@@ -201,6 +206,7 @@ def fetch():
 
     for label, location in everything:
         print(f"{label} {resolved_path.joinpath(location)}")
+
 
 @main.command()
 def init():
@@ -223,7 +229,7 @@ def init():
     # Ctrl-C causes TypeError within inquirer, resulting in ugly stacktrace. Catch the error and return early on CTRL-C.
     except (KeyboardInterrupt, TypeError):
         return
-    
+
     app_content = ''
     base_path = os.path.join(sys.exec_prefix, 'project_templates')
     if 'Hello World' in project:
@@ -242,6 +248,7 @@ def init():
     write_file('README.md', read_file(os.path.join(base_path, 'README.md')))
 
     print('Run \x1b[7;30;43mwave run app\x1b[0m to start your Wave app at \x1b[7;30;43mhttp://localhost:10101\x1b[0m.')
+
 
 @main.command()
 def learn():
