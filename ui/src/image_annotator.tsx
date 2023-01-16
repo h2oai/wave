@@ -98,10 +98,6 @@ const ZOOM_STEP = 0.15
 const
   tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
-    titleContainer: {
-      marginBottom: 8,
-      display: 'flex',
-    },
     title: {
       alignSelf: 'center',
       color: cssVar('$primary'),
@@ -196,7 +192,8 @@ const
     else if (shape.polygon) return { tag, shape: { polygon: { vertices: shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })) } } }
     return { tag, shape }
   }),
-  getFarItem = (key: S, title: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S) => ({
+  getFarItem = (key: S, title: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S, id?: S) => ({
+    id,
     key,
     title,
     onClick,
@@ -705,14 +702,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
+  farItems.push(getFarItem('info', 'Info', toggleTeachingBubbleVisible, activeShape, 'Info', buttonId))
 
   // TODO: Find another position for the info button.
   return (
     <div data-test={model.name}>
-      <div className={css.titleContainer}>
-        <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
-        <Fluent.IconButton id={buttonId} iconProps={{ iconName: 'Info', styles: { root: { fontSize: 20 } } }} onClick={toggleTeachingBubbleVisible} />
-      </div>
+      <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>
       <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
       <Fluent.CommandBar
         styles={{ root: { padding: 0 } }}
@@ -759,7 +754,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           hasCloseButton
           closeButtonAriaLabel="Close"
           onDismiss={toggleTeachingBubbleVisible}
-          calloutProps={{ directionalHint: Fluent.DirectionalHint.bottomLeftEdge }}
+          calloutProps={{ directionalHint: Fluent.DirectionalHint.bottomRightEdge }}
           headline="Keyboard shortcuts"
         >
           <table className={css.table}>
