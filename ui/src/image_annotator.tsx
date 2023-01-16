@@ -707,6 +707,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
 
+  // TODO: Find another position for the info button.
   return (
     <div data-test={model.name}>
       <div className={css.titleContainer}>
