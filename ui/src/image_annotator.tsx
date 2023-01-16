@@ -196,9 +196,9 @@ const
     else if (shape.polygon) return { tag, shape: { polygon: { vertices: shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })) } } }
     return { tag, shape }
   }),
-  getFarItem = (key: S, text: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S) => ({
+  getFarItem = (key: S, title: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S) => ({
     key,
-    text,
+    title,
     onClick,
     canCheck: true,
     checked: activeShape === key,

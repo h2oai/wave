@@ -97,10 +97,10 @@ describe('ImageAnnotator.tsx', () => {
 
   describe('Rect', () => {
     it('Draws a new rect', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Rectangle'))
+      fireEvent.click(getByTitle('Rectangle'))
       fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
       fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
 
@@ -108,10 +108,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Draws a new rect with different tag if selected', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByText, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Rectangle'))
+      fireEvent.click(getByTitle('Rectangle'))
       fireEvent.click(getByText('Object'))
       fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
       fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
@@ -130,10 +130,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Does not draw a new rect if dimensions too small', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Rectangle'))
+      fireEvent.click(getByTitle('Rectangle'))
       fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
       fireEvent.click(canvasEl, { clientX: 115, clientY: 115 })
 
@@ -316,10 +316,10 @@ describe('ImageAnnotator.tsx', () => {
   })
   describe('Polygon', () => {
     it('Draws a new polygon', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
       fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
       fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
@@ -332,10 +332,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Draws a new polygon with different tag if selected', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByText, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(getByText('Object'))
 
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
@@ -514,10 +514,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Cancels polygon drawing when hitting escape', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
       fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
       fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
@@ -542,10 +542,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Calls sync after drawing rect', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Rectangle'))
+      fireEvent.click(getByTitle('Rectangle'))
       fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
       fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
 
@@ -553,10 +553,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Calls sync after drawing polygon', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={{ ...model, trigger: true }} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
       fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
       fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
@@ -695,10 +695,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Use "Backspace"  while annotating to remove the last polygon vertice', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
       fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
       fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
@@ -713,10 +713,10 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     it('Finish drawing the polygon by pressing "enter"', async () => {
-      const { container, getByText } = render(<XImageAnnotator model={model} />)
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(getByText('Polygon'))
+      fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
       fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
       fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
@@ -854,12 +854,12 @@ describe('ImageAnnotator.tsx', () => {
       })
 
       it('Sets correct wave args when drawing a new rectangle while the image is zoomed', async () => {
-        const { container, getByText } = render(<XImageAnnotator model={model} />)
+        const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         // Zooms in one zoom step.
         fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
-        fireEvent.click(getByText('Rectangle'))
+        fireEvent.click(getByTitle('Rectangle'))
         fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
         fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
 
@@ -868,11 +868,11 @@ describe('ImageAnnotator.tsx', () => {
       })
 
       it('Sets correct wave args when drawing a new polygon while the image is zoomed', async () => {
-        const { container, getByText } = render(<XImageAnnotator model={model} />)
+        const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
-        fireEvent.click(getByText('Polygon'))
+        fireEvent.click(getByTitle('Polygon'))
         fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
         fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
         fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
@@ -923,14 +923,14 @@ describe('ImageAnnotator.tsx', () => {
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.keyDown(canvasEl, { key: 'b' })
 
-        await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveTextContent('Rectangle'))
+        await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveAttribute('title', 'Rectangle'))
       })
 
       it('Cancel rectangle creation when switching the active shape', async () => {
-        const { container, getByText } = render(<XImageAnnotator model={model} />)
+        const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        fireEvent.click(getByText('Rectangle'))
+        fireEvent.click(getByTitle('Rectangle'))
         fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
         fireEvent.keyDown(canvasEl, { key: 'b' })
         fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
@@ -939,10 +939,10 @@ describe('ImageAnnotator.tsx', () => {
       })
 
       it('Cancel polygon creation when switching the active shape', async () => {
-        const { container, getByText } = render(<XImageAnnotator model={model} />)
+        const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        fireEvent.click(getByText('Polygon'))
+        fireEvent.click(getByTitle('Polygon'))
         fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
         fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
         fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
