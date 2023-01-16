@@ -461,7 +461,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
         shape?.move(s, dx, dy)
       })
-      // TODO: Check whether wave args are set where needed.
       setWaveArgs(drawnShapes)
       redrawExistingShapes()
     },

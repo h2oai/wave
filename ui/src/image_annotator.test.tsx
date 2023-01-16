@@ -672,12 +672,16 @@ describe('ImageAnnotator.tsx', () => {
   })
 
   describe('Keyboard shortcuts', () => {
-    const pushMock = jest.fn()
+    it('Use "Delete" to delete selected shapes', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad()
+      const canvasEl = container.querySelectorAll('canvas')[1]
+      fireEvent.click(canvasEl, { clientX: 180, clientY: 120, shiftKey: true })
+      fireEvent.keyDown(canvasEl, { key: 'Delete' })
+      expect(wave.args[name]).toMatchObject([rect])
+    })
 
-    beforeAll(() => wave.push = pushMock)
-    beforeEach(() => pushMock.mockReset())
-
-    it('Use "c" and "v" to copy/paste all selected shapes from the clipboard', async () => {
+    it('Use "c" and "v" to copy/paste all selected shapes', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
@@ -690,16 +694,7 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
-    it('Use "Delete" to delete selected shapes', async () => {
-      const { container } = render(<XImageAnnotator model={model} />)
-      await waitForLoad()
-      const canvasEl = container.querySelectorAll('canvas')[1]
-      fireEvent.click(canvasEl, { clientX: 180, clientY: 120, shiftKey: true })
-      fireEvent.keyDown(canvasEl, { key: 'Delete' })
-      expect(wave.args[name]).toMatchObject([rect])
-    })
-
-    it('Use "backspace" to remove last vertice while polygon annotating', async () => {
+    it('Use "Backspace"  while annotating to remove the last polygon vertice', async () => {
       const { container, getByText } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
@@ -712,7 +707,7 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject([
-        { tag: 'person', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
+        { tag: 'person', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 }] } } },
         ...items
       ])
     })
@@ -733,7 +728,7 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    it('Opens the teaching bubble when clicking the info icon', async () => {
+    it('Opens the teaching bubble when the info icon is clicked', async () => {
       const { container, queryByRole } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
       expect(queryByRole('dialog')).not.toBeInTheDocument()
@@ -770,7 +765,7 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     describe('Movement', () => {
-      it('Use arrows to move selected shape', async () => {
+      it('Use arrows to move the selected shape', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -784,7 +779,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 9, y2: 99 } } }, polygon])
       })
 
-      it('Move selected shape by 10 when using "shift" + arrows', async () => {
+      it('Move the selected shape by 10 when using "Shift" + arrows', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -794,14 +789,17 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 20, y2: 110 } } }, polygon])
       })
 
-      it('Move multiple selected shapes by arrows at once', async () => {
+      it('Move multiple selected shapes at once by arrows', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.keyDown(canvasEl, { key: 'a' })
         fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
 
-        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 10, y2: 100 } } }, { shape: { polygon: { vertices: [{ x: 106, y: 100 }, { x: 241, y: 100 }, { x: 241, y: 220 },] } }, tag: 'person' }])
+        expect(wave.args[name]).toMatchObject([
+          { tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 10, y2: 100 } } },
+          { shape: { polygon: { vertices: [{ x: 106, y: 100 }, { x: 241, y: 100 }, { x: 241, y: 220 },] } }, tag: 'person' }
+        ])
       })
 
       it('Respect canvas boundaries when moving by arrows - top, left', async () => {
@@ -812,6 +810,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container } = render(<XImageAnnotator model={{ ...model, items }} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
+        // Select both rect and polygon to test if both shapes respect canvas boundaries.
         fireEvent.keyDown(canvasEl, { key: 'a' })
         fireEvent.keyDown(canvasEl, { key: 'ArrowUp', shiftKey: true })
         fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
@@ -842,22 +841,19 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     describe('Zoom', () => {
-      // TODO:
-      // Scale image when using "control" + mouse wheel.
-      // it('Scale image when using "control" + mouse wheel', async () => {
-      //   const { container } = render(<XImageAnnotator model={model} />)
-      //   await waitForLoad()
-      //   const canvasEl = container.querySelectorAll('canvas')[1]
-      //   fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+      it('Moves rect correctly when the image is zoomed', async () => {
+        const { container } = render(<XImageAnnotator model={model} />)
+        await waitForLoad()
+        const canvasEl = container.querySelectorAll('canvas')[1]
+        fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+        fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+        fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+        fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
 
-      //   // expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 15, x2: 105, y1: 15, y2: 105 } } }, polygon])
-      // })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, polygon])
+      })
 
-      // TODO:
-      // Drag image when holding "Control" while dragging by mouse.
-      // Move shapes when canvas is zoomed.
-
-      it('Check wave args when drawing a new rectangle when the image is zoomed', async () => {
+      it('Sets correct wave args when drawing a new rectangle while the image is zoomed', async () => {
         const { container, getByText } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -871,7 +867,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 96, x2: 130, y1: 96, y2: 130 } } }, ...items])
       })
 
-      it('Check wave args when drawing a new polygon when the image is zoomed', async () => {
+      it('Sets correct wave args when drawing a new polygon while the image is zoomed', async () => {
         const { container, getByText } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -888,7 +884,7 @@ describe('ImageAnnotator.tsx', () => {
         ])
       })
 
-      it('Change cursor to "grab" while "Control" is pressed if the image is zoomed', async () => {
+      it('Change cursor to "grab", only while the "Control" is pressed and if the image is zoomed', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -909,7 +905,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(canvasEl.style.cursor).toBe('grabbing')
       })
 
-      it('Check if canvas is empty after all shapes are removed and then the image is zoomed', async () => {
+      it('Check if the canvas is empty after all shapes are removed and then the image is zoomed', async () => {
         const { container, getByText } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -930,7 +926,7 @@ describe('ImageAnnotator.tsx', () => {
         await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveTextContent('Rectangle'))
       })
 
-      it('Cancel rectangle creation when switching active shape', async () => {
+      it('Cancel rectangle creation when switching the active shape', async () => {
         const { container, getByText } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -942,7 +938,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject(items)
       })
 
-      it('Cancel polygon creation when switching active shape', async () => {
+      it('Cancel polygon creation when switching the active shape', async () => {
         const { container, getByText } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -956,7 +952,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject(items)
       })
 
-      it('Cancel drag moving rectangle when switching from "select" to rectangle and do not create a new rectangle on the click afterwards', async () => {
+      it('Cancel the rectangle movement when switching from "select" to "rect"', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -998,7 +994,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(activeTag).toHaveTextContent('Object')
       })
 
-      it('Change color of the selected shape when changing active tag/label', async () => {
+      it('Change tag of the selected shape when changing the active tag', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
@@ -1006,10 +1002,6 @@ describe('ImageAnnotator.tsx', () => {
         fireEvent.keyDown(canvasEl, { key: 'l' })
         expect(wave.args[name]).toMatchObject([{ ...rect, tag: 'object' }, polygon])
       })
-
-      // TODO: Finish; low priority.
-      // Change color of the shape while creating rectangle when changing active tag/label.
-      // Change color of the shape while creating polygon when changing active tag/label.
     })
   })
 })
