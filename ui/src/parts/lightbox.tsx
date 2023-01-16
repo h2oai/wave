@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as Fluent from '@fluentui/react'
 import { box, Box, S, U } from 'h2o-wave'
 import React from 'react'
-import { stylesheet, style } from 'typestyle'
-import * as Fluent from '@fluentui/react'
-import { clas, cssVar } from '../theme'
-import { getColorFromString, isDark } from '@fluentui/react'
+import { stylesheet } from 'typestyle'
+import { clas } from '../theme'
 
 export const lightboxB: Box<LightboxProps | null> = box()
 
@@ -29,6 +28,7 @@ const
   LIGHTBOX_PAGE_MARGIN = 8
 
 const
+  imageHighlightStyle = { filter: 'unset', border: '2px solid', borderColor: '#FFF' },
   css = stylesheet({
     body: {
       position: 'fixed',
@@ -98,6 +98,11 @@ const
       top: "50%",
       border: '1px solid #000',
       transform: 'translateY(-50%)'
+    },
+    imgHighlight: {
+      $nest: {
+        '&:hover': imageHighlightStyle,
+      }
     }
   }),
   iconStyles: Fluent.IButtonStyles = {
@@ -125,18 +130,16 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
     rootElementRef = React.useRef<HTMLDivElement | null>(null),
     imageNavRef = React.useRef<HTMLDivElement | null>(null),
     defaultScrollSetRef = React.useRef(false),
-    activeColor = isDark(getColorFromString(cssVar('$neutralPrimary'))!) ? cssVar('$card') : cssVar('$neutralPrimary'),
-    imageHighlightStyle = { filter: 'unset', border: '2px solid', borderColor: activeColor },
-    lazyImageObserver = new window.IntersectionObserver(entries =>
+    lazyImageObserverRef = React.useRef(new IntersectionObserver((entries, observer) =>
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const lazyImage = entry.target as HTMLImageElement
           lazyImage.src = lazyImage.dataset.src!
           lazyImage.classList.remove("lazy")
-          lazyImageObserver.unobserve(lazyImage)
+          observer.unobserve(lazyImage)
         }
       })
-    ),
+    )),
     handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
     handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
     handleKeyDown = (ev: React.KeyboardEvent) => {
@@ -150,10 +153,14 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
 
   React.useEffect(() => {
     // Initialize intersection observer for lazy images.
-    document.querySelectorAll(".lazy").forEach(lazyImage => lazyImageObserver.observe(lazyImage))
+    rootElementRef.current?.querySelectorAll(".lazy").forEach(lazyImage => lazyImageObserverRef.current.observe(lazyImage))
 
     // Add keyboard events listener.
     rootElementRef?.current?.focus()
+
+    const observer = lazyImageObserverRef.current
+    return () => observer.disconnect()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -230,7 +237,7 @@ export const Lightbox = ({ images, defaultImageIdx }: LightboxProps) => {
             {images.map((image, idx) =>
               <img
                 key={idx}
-                className={clas(css.navImg, 'lazy', style({ $nest: { '&:hover': imageHighlightStyle } }))}
+                className={clas(css.navImg, 'lazy', css.imgHighlight)}
                 style={activeImageIdx === idx ? imageHighlightStyle : undefined}
                 alt={title}
                 data-src={image.path}

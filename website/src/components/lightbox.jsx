@@ -19,16 +19,16 @@ export const Lightbox = ({ images, defaultImageIdx, onDismiss }) => {
     rootElementRef = React.useRef(null),
     imageNavRef = React.useRef(null),
     defaultScrollSetRef = React.useRef(false),
-    lazyImageObserver = new window.IntersectionObserver(entries =>
+    lazyImageObserverRef = React.useRef(new IntersectionObserver((entries, observer) =>
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const lazyImage = entry.target
           lazyImage.src = lazyImage.dataset.src
           lazyImage.classList.remove("lazy")
-          lazyImageObserver.unobserve(lazyImage)
+          observer.unobserve(lazyImage)
         }
       })
-    ),
+    )),
     handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
     handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
     handleKeyDown = (ev) => {
@@ -42,10 +42,13 @@ export const Lightbox = ({ images, defaultImageIdx, onDismiss }) => {
 
   React.useEffect(() => {
     // Initialize intersection observer for lazy images.
-    document.querySelectorAll(".lazy").forEach(lazyImage => lazyImageObserver.observe(lazyImage))
+    rootElementRef?.current?.querySelectorAll(".lazy").forEach(lazyImage => lazyImageObserverRef.current.observe(lazyImage))
 
     // Add keyboard events listener.
     rootElementRef?.current?.focus()
+
+    const observer = lazyImageObserverRef.current
+    return () => observer.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
