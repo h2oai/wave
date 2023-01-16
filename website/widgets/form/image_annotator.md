@@ -64,3 +64,25 @@ q.page['example'] = ui.form_card(box='1 1 9 10', items=[
     ui.button(name='submit', label='Submit', primary=True)
 ])
 ```
+
+## Keyboard shortcuts
+
+We also support keyboard shortcuts, so don't waste time and annotate with ease!
+
+|       **Key**            |                         **Description**                       |
+|:------------------------:|:-------------------------------------------------------------:|
+|          **a**           |                        Select all shapes                      |
+|          **c**           |                      Copy selected shapes                     |
+|          **v**           |                      Paste selected shapes                    |
+|          **d**           |                     Delete selected shapes                    |
+|    **Shift + Click**     |       Select multiple shapes when in the selection mode       |
+| **Arrow keys (↑ ↓ → ←)** | Move selected shapes by 1px (or 10px while holding Shift key) |
+|  **Ctrl + Mouse wheel**  |                          Zoom in/out                          |
+|        **Enter**         |                    Finish drawing polyshape                   |
+|      **Backspace**       |                  Delete last polyshape vertex                 |
+|         **Esc**          |                      Cancel ongoing task                      |
+|          **l**           |                          Toggle label                         |
+|          **b**           |                    Toggle drawing function                    |
+|          **r**           |                     Select rectangle tool                     |
+|          **p**           |                       Select polygon tool                     |
+|          **s**           |                     Activate selection tool                   |
