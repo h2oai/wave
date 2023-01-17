@@ -453,7 +453,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
-    moveAllSelectedShapes = (dx: U = 0, dy: U = 0) => {
+    moveAllSelectedShapes = (dx: U, dy: U) => {
       drawnShapes.filter(ds => ds.isFocused).forEach(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
         shape?.move(s, dx, dy)
@@ -476,51 +476,48 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = scale > 1 ? 'grab' : 'auto'
     },
     onKeyDown = (e: React.KeyboardEvent) => {
+      const
+        increment = e.shiftKey ? 10 : 1,
+        cancelOngoingAction = () => {
+          deselectAllShapes()
+          polygonRef.current?.cancelAnnotating()
+          // Set correct wave args when drag moving is interrupted by changing active shape.
+          setWaveArgs(drawnShapes)
+          // Prevent 'onClick' when switching between active shapes.
+          preventClickRef.current = true
+          redrawExistingShapes()
+        }
       // Move selection.
-      const increment = e.shiftKey ? 10 : 1
-      const resetDragging = () => {
-        deselectAllShapes()
-        redrawExistingShapes()
-        polygonRef.current?.cancelAnnotating()
-        // Set correct wave args when drag moving is interrupted by changing active shape.
-        setWaveArgs(drawnShapes)
-        // Prevent 'onClick' when switching between active shapes.
-        preventClickRef.current = true
-      }
-      if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment)
-      if (e.key === 'ArrowRight') moveAllSelectedShapes(increment)
-      if (e.key === 'ArrowUp') moveAllSelectedShapes(undefined, -increment)
-      if (e.key === 'ArrowDown') moveAllSelectedShapes(undefined, increment)
+      if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment, 0)
+      if (e.key === 'ArrowRight') moveAllSelectedShapes(increment, 0)
+      if (e.key === 'ArrowUp') moveAllSelectedShapes(0, -increment)
+      if (e.key === 'ArrowDown') moveAllSelectedShapes(0, increment)
       // Cancel polygon annotation.
-      if (e.key === 'Escape' && activeShape === 'polygon') {
-        polygonRef.current?.cancelAnnotating()
-        redrawExistingShapes()
-      }
-      // Set active shape.
-      if (e.key === 'p' && allowedShapes.has('polygon') && activeShape !== 'polygon') {
-        setActiveShape('polygon')
-        resetDragging()
-      }
-      if (e.key === 'r' && allowedShapes.has('rect') && activeShape !== 'rect') {
-        setActiveShape('rect')
-        resetDragging()
+      if (e.key === 'Escape' && activeShape === 'polygon') cancelOngoingAction()
+      // Change active shape.
+      if (e.key === 'b') {
+        const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
+        const activeShapeIdx = shapes.findIndex(s => s === activeShape)
+        setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
+        cancelOngoingAction()
       }
       if (e.key === 's' && activeShape !== 'select') {
         setActiveShape('select')
-        resetDragging()
+        cancelOngoingAction()
+      }
+      if (e.key === 'r' && allowedShapes.has('rect') && activeShape !== 'rect') {
+        setActiveShape('rect')
+        cancelOngoingAction()
+      }
+      if (e.key === 'p' && allowedShapes.has('polygon') && activeShape !== 'polygon') {
+        setActiveShape('polygon')
+        cancelOngoingAction()
       }
       // Change active tag.
       if (e.key === 'l') {
         const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
         const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
         activateTag(nextTag)()
-      }
-      // Change active shape.
-      if (e.key === 'b') {
-        const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
-        const activeShapeIdx = shapes.findIndex(s => s === activeShape)
-        setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
-        resetDragging()
       }
       // Change cursor to indicate that user can drag image.
       if (e.key === 'Control' && canvasRef.current && scale > 1) {
@@ -678,6 +675,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   // Translate image to cursor position on scale change.
   React.useEffect(() => {
     const rect = canvasRef.current?.getBoundingClientRect()
+    // TODO: scale !== MAX_IMAGE_SCALE - put this before setScale 
     if (rect && scale !== MAX_IMAGE_SCALE) {
       const
         { x, y } = mousePositionRef.current,
@@ -704,7 +702,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
   farItems.push(getFarItem('info', 'Info', toggleTeachingBubbleVisible, activeShape, 'Info', buttonId))
 
-  // TODO: Find another position for the info button.
   return (
     <div data-test={model.name}>
       <div className={clas('wave-s16 wave-w6', css.title)}>{model.title}</div>

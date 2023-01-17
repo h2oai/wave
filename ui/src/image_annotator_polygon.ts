@@ -219,7 +219,7 @@ export
     return windingNumber !== 0
   },
   isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F) => {
-    // TODO: Make offset lower when the image is zoomed in.
+    // TODO: Divide ARC_RADIUS by "scale" to make the offset lower when the image is zoomed in.
     const offset = 2 * ARC_RADIUS
     return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
   },

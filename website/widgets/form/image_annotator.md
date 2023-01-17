@@ -69,7 +69,7 @@ q.page['example'] = ui.form_card(box='1 1 9 10', items=[
 
 We also support keyboard shortcuts, so don't waste time and annotate with ease!
 
-|       **Key**            |                         **Description**                       |
+|         **Key**          |                         **Description**                       |
 |:------------------------:|:-------------------------------------------------------------:|
 |          **a**           |                        Select all shapes                      |
 |          **c**           |                      Copy selected shapes                     |
