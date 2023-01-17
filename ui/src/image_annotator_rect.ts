@@ -126,7 +126,7 @@ export class RectAnnotator {
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
-    else if (intersected?.isFocused) {
+    else if (this.movedRect || intersected?.isFocused) {
       this.movedRect = this.movedRect || intersected
       if (!this.movedRect?.shape.rect) return
 

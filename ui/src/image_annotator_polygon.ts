@@ -205,8 +205,7 @@ export
     let windingNumber = 0
 
     points.forEach((point, idx) => {
-      const { x, y } = points[(idx + 1) % points.length]
-      const b = { x: x, y: y }
+      const b = points[(idx + 1) % points.length]
       if (point.y <= p.y) {
         if (b.y > p.y && cross(point, b, p) > 0) {
           windingNumber += 1
