@@ -661,6 +661,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       ctx.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
       // Prevent page scroll when mouse is on the canvas.
+      // It's not possible to preventDefault in the React onWheel handler because it is the passive event listener - https://github.com/facebook/react/pull/19654.
       canvas.onwheel = e => e.preventDefault()
 
       imgRef.current = img
