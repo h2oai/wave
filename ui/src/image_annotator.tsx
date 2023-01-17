@@ -99,8 +99,8 @@ const
   tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
     title: {
-      alignSelf: 'center',
       color: cssVar('$primary'),
+      marginBottom: 8
     },
     canvas: {
       display: 'block',
@@ -219,11 +219,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [scale, setScale] = React.useState(1),
     [imgPosition, setImgPosition] = React.useState({ x: 0, y: 0 }), // Image position while dragging or scaling.
+    buttonId = useId('infoButton'),
     imgStartPositionRef = React.useRef({ x: 0, y: 0 }), // Image position before/after dragging or scaling.
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
-    buttonId = useId('targetButton'),
-    clipboardRef = React.useRef<S>(''),
+    clipboardRef = React.useRef<DrawnShape[]>([]),
     wheelDirectionRef = React.useRef(-1),
     preventClickRef = React.useRef(false),
     imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
@@ -363,6 +363,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           case 'polygon': {
             redrawExistingShapes()
             polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
+            // Deselect all shapes when polygon drawing starts.
             if (polygonRef.current?.hasAnnotationStarted()) deselectAllShapes()
             if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
             break
@@ -463,17 +464,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     // Zoom canvas in/out.
     onWheel = (e: React.WheelEvent) => {
-      const
-        canvas = canvasRef.current,
-        wheelDirection = wheelDirectionRef.current
-      if (!canvas || !e.ctrlKey) return
-      if (wheelDirection < 0 && e.deltaY > 0 || wheelDirection > 0 && e.deltaY < 0) {
-        imgStartPositionRef.current = { x: 0, y: 0 }
-        wheelDirectionRef.current = -wheelDirection
-      }
-      setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -ZOOM_STEP : ZOOM_STEP))))
+      if (canvasRef.current && e.ctrlKey) {
+        const wheelDirection = wheelDirectionRef.current
+        if (wheelDirection < 0 && e.deltaY > 0 || wheelDirection > 0 && e.deltaY < 0) {
+          imgStartPositionRef.current = { x: 0, y: 0 }
+          wheelDirectionRef.current = -wheelDirection
+        }
+        setScale(scale => Math.max(1, Math.min(MAX_IMAGE_SCALE, scale + (e.deltaY < 0 ? -ZOOM_STEP : ZOOM_STEP))))
 
-      canvas.style.cursor = scale > 1 ? 'grab' : 'auto'
+        canvasRef.current.style.cursor = scale > 1 ? 'grab' : 'auto'
+      }
     },
     onKeyDown = (e: React.KeyboardEvent) => {
       const
@@ -496,9 +496,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.key === 'Escape' && activeShape === 'polygon') cancelOngoingAction()
       // Change active shape.
       if (e.key === 'b') {
-        const shapes = Array.from(allowedShapes) as (keyof ImageAnnotatorShape | 'select')[]
+        const shapes = ['select', ...allowed_shapes] as (keyof ImageAnnotatorShape | 'select')[]
         const activeShapeIdx = shapes.findIndex(s => s === activeShape)
-        setActiveShape(activeShapeIdx === shapes.length - 1 ? 'select' : shapes[(activeShapeIdx + 1) % shapes.length])
+        setActiveShape(shapes[(activeShapeIdx + 1) % shapes.length])
         cancelOngoingAction()
       }
       if (e.key === 's' && activeShape !== 'select') {
@@ -531,15 +531,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Copy selected shapes.
       if (e.key === 'c') {
         const selectedShapes = drawnShapes.filter(s => s.isFocused)
-        if (selectedShapes.length) clipboardRef.current = JSON.stringify(selectedShapes)
+        if (selectedShapes.length) clipboardRef.current = selectedShapes
       }
       // Paste shapes.
-      if (e.key === 'v') {
-        let shapes: DrawnShape[]
-        try { shapes = JSON.parse(clipboardRef.current) }
-        catch (e) { return }
+      if (e.key === 'v' && clipboardRef.current.length) {
         setDrawnShapes(prevShapes => {
-          const newShapes = [...shapes, ...prevShapes]
+          const newShapes = [...clipboardRef.current, ...prevShapes]
           setWaveArgs(newShapes)
           return newShapes
         })
@@ -676,8 +673,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   // Translate image to cursor position on scale change.
   React.useEffect(() => {
     const rect = canvasRef.current?.getBoundingClientRect()
-    // TODO: scale !== MAX_IMAGE_SCALE - put this before setScale 
-    if (rect && scale !== MAX_IMAGE_SCALE) {
+    if (rect && scale < MAX_IMAGE_SCALE && scale > 1) {
       const
         { x, y } = mousePositionRef.current,
         { cursor_x, cursor_y } = eventToCursor({ clientX: x, clientY: y } as React.MouseEvent, rect, scale, imgStartPositionRef.current),
@@ -689,12 +685,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
   // Redraw image after image position change.
   React.useEffect(() => {
-    if (canvasCtxRef.current && imgCanvasCtxRef.current) {
-      canvasCtxRef.current.setTransform(scale, 0, 0, scale, imgPosition.x, imgPosition.y)
+    const imgCanvasCtx = imgCanvasCtxRef.current
+    if (imgCanvasCtx) {
+      const canvasCtx = canvasCtxRef.current
+      const img = imgRef.current
+      const { height, width } = img
+      if (canvasCtx) canvasCtx.setTransform(scale, 0, 0, scale, imgPosition.x, imgPosition.y)
+      if (img) imgCanvasCtx.drawImage(img, 0, 0, width, height, imgPosition.x, imgPosition.y, width * aspectRatio * scale, height * aspectRatio * scale)
+      redrawExistingShapes()
     }
-    const img = imgRef.current
-    if (img && imgCanvasCtxRef.current) imgCanvasCtxRef.current.drawImage(img, 0, 0, img.width, img.height, imgPosition.x, imgPosition.y, img.width * aspectRatio * scale, img.height * aspectRatio * scale)
-    redrawExistingShapes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgPosition])
 
