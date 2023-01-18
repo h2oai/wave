@@ -548,12 +548,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
       // Delete selected shapes.
       if (e.key === 'Delete') {
-        setDrawnShapes(shapes => {
-          const newShapes = shapes.filter(s => !s.isFocused)
-          setWaveArgs(newShapes)
-          return newShapes
-        })
-        redrawExistingShapes()
+        const newShapes = drawnShapes.filter(s => !s.isFocused)
+        if (newShapes.length !== drawnShapes.length) {
+          setDrawnShapes(newShapes)
+          redrawExistingShapes()
+        }
       }
       // Remove last vertice.
       if (e.key === 'Backspace' && activeShape === 'polygon') {
