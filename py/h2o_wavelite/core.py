@@ -441,9 +441,6 @@ class AsyncSite:
     def __init__(self, send: Optional[Callable] = None):
         self.send = send
 
-    def __getitem__(self) -> AsyncPage:
-        return AsyncPage(self)
-
     def __delitem__(self, key: str):
         page = self[key]
         page.drop()

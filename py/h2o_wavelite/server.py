@@ -12,44 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import os
-import datetime
 import asyncio
-from concurrent.futures import Executor
-
-try:
-    import contextvars  # Python 3.7+ only.
-except ImportError:
-    contextvars = None
-
-import logging
+import contextvars
 import functools
-import warnings
+import json
+import logging
+import os
 import pickle
 import traceback
-import base64
-import binascii
-from typing import Dict, Tuple, Callable, Any, Awaitable, Optional
-from urllib.parse import urlparse
+from concurrent.futures import Executor
+from typing import Any, Awaitable, Callable, Dict, Optional, Tuple
 
-import uvicorn
-import httpx
-from starlette.types import Scope, Receive, Send
-from starlette.applications import Router
-from starlette.routing import Route
-from starlette.requests import Request
-from starlette.responses import PlainTextResponse
-from starlette.background import BackgroundTask
-from starlette.applications import Starlette
-from starlette.routing import Mount
-from starlette.staticfiles import StaticFiles
-from starlette.routing import WebSocketRoute
-from starlette.endpoints import WebSocketEndpoint
-from starlette.websockets import WebSocket
-
-from .core import Expando, expando_to_dict, _config, marshal, _content_type_json, AsyncSite, _get_env, UNICAST, \
-    MULTICAST
+from .core import AsyncSite, Expando, expando_to_dict, marshal
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
@@ -66,38 +40,6 @@ def _session_for(sessions: dict, session_id: str):
     return session
 
 
-class Auth:
-    """
-    Represents authentication information for a given query context. Carries valid information only if single sign on is enabled.
-    """
-
-    def __init__(self, username: str, subject: str, access_token: str, refresh_token: str, session_id: str):
-        self.username = username
-        """The username of the user."""
-        self.subject = subject
-        """A unique identifier for the user."""
-        self.access_token = access_token
-        """The access token of the user."""
-        self.refresh_token = refresh_token
-        """The refresh token of the user."""
-        self._session_id = session_id
-        """Session identifier. Do not access, internal use only."""
-    
-    async def ensure_fresh_token(self) -> Optional[str]:
-        """
-        Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs.
-        """
-        async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
-            res = await http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id}) 
-
-            access_token = res.headers.get('Wave-Access-Token', None)
-            refresh_token = res.headers.get('Wave-Refresh-Token', None)
-            if access_token and refresh_token:
-                self.access_token = access_token
-                self.refresh_token = refresh_token
-            return access_token
-
-
 class Query:
     """
     Represents the query context.
@@ -110,21 +52,16 @@ class Query:
     def __init__(
             self,
             site: AsyncSite,
-            mode: str,
-            auth: Auth,
             client_id: str,
-            route: str,
             app_state: Expando,
             user_state: Expando,
             client_state: Expando,
             args: Expando,
             events: Expando,
     ):
-        self.mode = mode
-        """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
         self.site = site
         """A reference to the current site."""
-        self.page = site[f'/{client_id}' if mode == UNICAST else f'/{auth.subject}' if mode == MULTICAST else route]
+        self.page = site[f'/{client_id}']
         """A reference to the current page."""
         self.app = app_state
         """A `h2o_wave.core.Expando` instance to hold application-specific state."""
@@ -136,10 +73,6 @@ class Query:
         """A `h2o_wave.core.Expando` instance containing arguments from the active request."""
         self.events = events
         """A `h2o_wave.core.Expando` instance containing events from the active request."""
-        self.route = route
-        """The route served by the server."""
-        self.auth = auth
-        """The authentication / authorization details of the user who initiated this query."""
 
     async def sleep(self, delay: float, result=None) -> Any:
         """
@@ -210,43 +143,16 @@ HandleAsync = Callable[[Q], Awaitable[Any]]
 WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 
-class _Wave:
-    def __init__(self):
-        self._http = httpx.AsyncClient(
-            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-            verify=False,
-        )
-
-    async def call(self, method: str, **kwargs):
-        return await self._http.post(
-            _config.hub_address,
-            headers=_content_type_json,
-            content=marshal({method: kwargs}),
-        )
-
-
 async def wave_serve(handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
-    await _App('/', handle, send, recv)._run()
+    await _App(handle, send, recv)._run()
 
 
 class _App:
-    def __init__(self, route, handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
-        self._mode = _config.app_mode
+    def __init__(self, handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
         self._recv = recv
-        self._route = route
         self._handle = handle
-        self._wave: _Wave = _Wave()
         self._state: WebAppState = _load_state()
         self._site: AsyncSite = AsyncSite(send)
-
-    async def _parse_msg(self, msg: str) -> Optional[dict]:
-        # protocol: t addr data
-        parts = msg.split(' ', 3)
-
-        if len(parts) != 3:
-            raise ValueError('Invalid message')
-
-        return parts[2]
 
     async def _run(self):
         # Handshake.
@@ -259,7 +165,7 @@ class _App:
         while True:
             data = await self._recv()
             try:
-                data = await self._parse_msg(data)
+                data = await _parse_msg(data)
                 data = json.loads(data)
             except json.JSONDecodeError:
                 raise ValueError('Invalid message')
@@ -273,10 +179,7 @@ class _App:
             del args['']
         q = Q(
             site=self._site,
-            mode=self._mode,
-            auth=None,
             client_id='',
-            route=self._route,
             app_state=app_state,
             user_state=_session_for(user_state, ''),
             client_state=_session_for(client_state, ''),
@@ -367,52 +270,11 @@ def _save_state(state: WebAppState):
     with open(f, 'wb') as p:
         pickle.dump(checkpoint, p)
 
+async def _parse_msg(msg: str) -> Optional[dict]:
+    # protocol: t addr data
+    parts = msg.split(' ', 3)
 
-class _Main:
-    def __init__(self, app: Optional[_App] = None):
-        self._app: Optional[_App] = app
+    if len(parts) != 3:
+        raise ValueError('Invalid message')
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        await self._app.app(scope, receive, send)
-
-
-main = _Main()
-
-
-def app(route: str, mode=None, on_startup: Optional[Callable] = None,
-        on_shutdown: Optional[Callable] = None):
-    """
-    Indicate that a function is a query handler.
-
-    The function this decorator is applied to must accept exactly one argument that represents the query context,
-    of type `Q` or `Query`
-
-    Args:
-        route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
-        mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
-        on_startup: A callback to invoke on app startup. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
-        on_shutdown: A callback to invoke on app shutdown. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
-    """
-
-    def wrap(handle: HandleAsync):
-        main._app = _App(route, handle, mode, on_startup, on_shutdown)
-        return handle
-
-    return wrap
-
-
-def listen(route: str, handle: HandleAsync, mode=None):
-    """
-    Launch an application server.
-
-    Args:
-        route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
-        handle: The handler function.
-        mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
-    """
-    warnings.warn("'listen()' is deprecated. Instead, import 'main' and annotate your 'serve()' function with '@app'.",
-                  DeprecationWarning)
-
-    internal_address = urlparse(_config.internal_address)
-    logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
-    uvicorn.run(_Main(_App(route, handle, mode)), host=internal_address.hostname, port=internal_address.port)
+    return parts[2]
