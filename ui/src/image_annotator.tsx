@@ -7,7 +7,7 @@ import { getRectCornerCursor, isIntersectingRect, RectAnnotator } from './image_
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
-import { useBoolean, useId } from '@fluentui/react-hooks'
+import { useBoolean } from '@fluentui/react-hooks'
 
 /** Create a polygon annotation point with x and y coordinates.. */
 export interface ImageAnnotatorPoint {
@@ -218,7 +218,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [zoom, setZoom] = React.useState(1),
-    buttonId = useId('infoButton'),
     imgPositionRef = React.useRef({ x: 0, y: 0 }), // Image position before/after dragging or scaling.
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
@@ -637,6 +636,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [])
 
+  // Handle case when changing active tag by "l" shortcut while annotating polygon.
+  // TODO: Re-implement this in a more elegant way.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => recreatePreviewLine(), [activeTag])
 
@@ -677,8 +678,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgRef.current = img
       imgCanvasCtxRef.current = ctx
 
-      if (!drawnShapes.length) setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
-      redrawExistingShapes()
+      if (!drawnShapes.length) {
+        setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
+        redrawExistingShapes()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items])
@@ -686,7 +689,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
-  farItems.push(getFarItem('info', 'Info', toggleTeachingBubbleVisible, activeShape, 'Info', buttonId))
+  farItems.push(getFarItem('info', 'Info', toggleTeachingBubbleVisible, activeShape, 'Info', `wave-image-annotator-${model.name}`))
 
   return (
     <div data-test={model.name}>
@@ -732,7 +735,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       </div>
       {teachingBubbleVisible && (
         <Fluent.TeachingBubble
-          target={`#${buttonId}`}
+          target={`#wave-image-annotator-${model.name}`}
           isWide
           hasCloseButton
           closeButtonAriaLabel="Close"

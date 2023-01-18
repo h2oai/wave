@@ -76,7 +76,6 @@ export class PolygonAnnotator {
       return
     }
 
-    // const canMovePolygon = this.canMove(focused, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
