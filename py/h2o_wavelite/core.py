@@ -338,7 +338,8 @@ class PageBase:
         url: The URL of the remote page.
     """
 
-    def __init__(self):
+    def __init__(self, url: str):
+        self.url = url
         self._changes = []
 
     def add(self, key: str, card: Any) -> Ref:
@@ -419,9 +420,9 @@ class AsyncPage(PageBase):
         url: The URL of this page.
     """
 
-    def __init__(self, site: 'AsyncSite'):
+    def __init__(self, site: 'AsyncSite', url: str):
         self.site = site
-        super().__init__()
+        super().__init__(url)
 
     async def save(self):
         """
@@ -440,6 +441,9 @@ class AsyncSite:
 
     def __init__(self, send: Optional[Callable] = None):
         self.send = send
+
+    def __getitem__(self, url) -> AsyncPage:
+        return AsyncPage(self, url)
 
     def __delitem__(self, key: str):
         page = self[key]
