@@ -338,8 +338,7 @@ class PageBase:
         url: The URL of the remote page.
     """
 
-    def __init__(self, url: str):
-        self.url = url
+    def __init__(self):
         self._changes = []
 
     def add(self, key: str, card: Any) -> Ref:
@@ -412,46 +411,20 @@ class PageBase:
 
 class AsyncPage(PageBase):
     """
-    Represents a reference to a remote Wave page. Similar to `h2o_wave.core.Page` except that this class exposes ``async`` methods.
-
-
-    Args:
-        site: The parent site.
-        url: The URL of this page.
+    Represents a reference to a Wave page.
     """
-
-    def __init__(self, site: 'AsyncSite', url: str):
-        self.site = site
-        super().__init__(url)
+    def __init__(self, send: Optional[Callable] = None):
+        self.send = send
+        super().__init__()
 
     async def save(self):
         """
-        Save the page. Sends all local changes made to this page to the remote site.
+        Save the page. Sends all local changes made to this page to the browser.
         """
         p = self._diff()
         if p:
             logger.debug(p)
-            await self.site._save(p)
-
-
-class AsyncSite:
-    """
-    Represents a reference to the remote Wave site. Similar to `h2o_wave.core.Site` except that this class exposes `async` methods.
-    """
-
-    def __init__(self, send: Optional[Callable] = None):
-        self.send = send
-
-    def __getitem__(self, url) -> AsyncPage:
-        return AsyncPage(self, url)
-
-    def __delitem__(self, key: str):
-        page = self[key]
-        page.drop()
-
-    async def _save(self, patch: str):
-        await self.send(patch)
-
+            await self.send(p)
 
 def marshal(d: Any) -> str:
     """

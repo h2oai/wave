@@ -12,24 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio
-import contextvars
-import functools
 import json
 import logging
 import os
 import pickle
 import traceback
-from concurrent.futures import Executor
 from typing import Any, Awaitable, Callable, Dict, Optional, Tuple
 
-from .core import AsyncSite, Expando, expando_to_dict, marshal
+from .core import AsyncPage, Expando
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
-
-
-def _noop(): pass
 
 
 def _session_for(sessions: dict, session_id: str):
@@ -51,17 +44,14 @@ class Query:
 
     def __init__(
             self,
-            site: AsyncSite,
-            client_id: str,
+            page: AsyncPage,
             app_state: Expando,
             user_state: Expando,
             client_state: Expando,
             args: Expando,
             events: Expando,
     ):
-        self.site = site
-        """A reference to the current site."""
-        self.page = site[f'/{client_id}']
+        self.page = page
         """A reference to the current page."""
         self.app = app_state
         """A `h2o_wave.core.Expando` instance to hold application-specific state."""
@@ -73,67 +63,6 @@ class Query:
         """A `h2o_wave.core.Expando` instance containing arguments from the active request."""
         self.events = events
         """A `h2o_wave.core.Expando` instance containing events from the active request."""
-
-    async def sleep(self, delay: float, result=None) -> Any:
-        """
-        Suspend execution for the specified number of seconds.
-        Always use `q.sleep()` instead of `time.sleep()` in Wave apps.
-
-        Args:
-            delay: Number of seconds to sleep.
-            result: Result to return after delay, if any.
-
-        Returns:
-            The `result` argument, if any, as is.
-        """
-        return await asyncio.sleep(delay, result)
-
-    async def exec(self, executor: Optional[Executor], func: Callable, *args: Any, **kwargs: Any) -> Any:
-        """
-        Execute a function in the background using the specified executor.
-
-        To execute a function in-process, use `q.run()`.
-
-        Args:
-            executor: The executor to be used. If None, executes the function in-process.
-            func: The function to to be called.
-            args: Arguments to be passed to the function.
-            kwargs: Keywords arguments to be passed to the function.
-        Returns:
-            The result of the function call.
-        """
-        if asyncio.iscoroutinefunction(func):
-            return await func(*args, **kwargs)
-
-        loop = asyncio.get_event_loop()
-
-        if contextvars is not None:  # Python 3.7+ only.
-            return await loop.run_in_executor(
-                executor,
-                contextvars.copy_context().run,
-                functools.partial(func, *args, **kwargs)
-            )
-
-        if kwargs:
-            return await loop.run_in_executor(executor, functools.partial(func, *args, **kwargs))
-
-        return await loop.run_in_executor(executor, func, *args)
-
-    async def run(self, func: Callable, *args: Any, **kwargs: Any) -> Any:
-        """
-        Execute a function in the background, in-process.
-
-        Equivalent to calling `q.exec()` without an executor.
-
-        Args:
-            func: The function to to be called.
-            args: Arguments to be passed to the function.
-            kwargs: Keywords arguments to be passed to the function.
-
-        Returns:
-            The result of the function call.
-        """
-        return await self.exec(None, func, *args, **kwargs)
 
 
 Q = Query
@@ -152,7 +81,7 @@ class _App:
         self._recv = recv
         self._handle = handle
         self._state: WebAppState = _load_state()
-        self._site: AsyncSite = AsyncSite(send)
+        self._page: AsyncPage = AsyncPage(send)
 
     async def _run(self):
         # Handshake.
@@ -178,8 +107,7 @@ class _App:
             events_state = {k: Expando(v) for k, v in events_state.items()}
             del args['']
         q = Q(
-            site=self._site,
-            client_id='',
+            page=self._page,
             app_state=app_state,
             user_state=_session_for(user_state, ''),
             client_state=_session_for(client_state, ''),
@@ -203,9 +131,6 @@ class _App:
                 await q.page.save()
             except:
                 logger.exception('Failed transmitting unhandled exception')
-
-    def _shutdown(self):
-        _save_state(self._state)
 
 
 _CHECKPOINT_DIR_ENV_VAR = 'H2O_WAVE_CHECKPOINT_DIR'
@@ -255,20 +180,6 @@ def _load_state() -> WebAppState:
         logger.error(f'Failed loading checkpoint: %s', e)
         return _empty_state()
 
-
-def _save_state(state: WebAppState):
-    f = _get_checkpoint_file_path()
-    if not f:
-        return
-
-    app_state, sessions, _ = state
-    checkpoint = (
-        expando_to_dict(app_state),
-        {k: expando_to_dict(v) for k, v in sessions.items()},
-    )
-    logger.info(f'Creating checkpoint at {f} ...')
-    with open(f, 'wb') as p:
-        pickle.dump(checkpoint, p)
 
 async def _parse_msg(msg: str) -> Optional[dict]:
     # protocol: t addr data

@@ -29,7 +29,7 @@ realtime state synchronization between Python and web browsers.
 
 .. include:: ../docs/index.md
 """
-from .core import AsyncSite, Ref, data, pack, Expando, expando_to_dict, clone_expando, copy_expando
+from .core import Ref, data, pack, Expando, expando_to_dict, clone_expando, copy_expando
 from .server import Q, wave_serve
 from .routing import on, handle_on
 from .types import *
