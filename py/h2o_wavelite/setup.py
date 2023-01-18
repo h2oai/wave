@@ -16,18 +16,21 @@ import setuptools
 import os
 from pathlib import Path
 
-with open('README.rst', 'r') as readme:
+curr_dir_path = os.path.dirname(os.path.realpath(__file__))
+
+with open(os.path.join(curr_dir_path, 'README.rst'), 'r') as readme:
     long_description = readme.read()
 
-with open('README.md', 'r') as readme_markdown:
+with open(os.path.join(curr_dir_path, 'README.md'), 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
 version = os.getenv('VERSION', 'DEV')
 
+
 def get_data_files():
     data_dict = {}
 
-    build_path = os.path.join('..', 'ui', 'build')
+    build_path = os.path.join(curr_dir_path, '..', '..', 'ui', 'build')
     for p in Path(build_path).rglob('*'):
         if os.path.isdir(p):
             continue

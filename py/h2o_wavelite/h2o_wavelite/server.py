@@ -91,14 +91,14 @@ class _App:
         await self._process({})
 
         # Event loop.
-        while True:
-            data = await self._recv()
-            try:
+        try:
+            while True:
+                data = await self._recv()
                 data = await _parse_msg(data)
                 data = json.loads(data)
-            except json.JSONDecodeError:
-                raise ValueError('Invalid message')
-            await self._process(data)
+                await self._process(data)
+        except json.JSONDecodeError:
+            print('Wave Error: Invalid message.')
 
     async def _process(self, args: dict):
         app_state, user_state, client_state = self._state
