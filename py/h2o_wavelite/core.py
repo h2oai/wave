@@ -52,10 +52,6 @@ def _guard_key(key: str):
             raise KeyError('invalid key type: want str or int')
 
 
-class ServiceError(Exception):
-    pass
-
-
 DICT = '__kv'
 
 
