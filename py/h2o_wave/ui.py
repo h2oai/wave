@@ -1432,7 +1432,7 @@ def table(
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
 
-    If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+    If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset/select events yourself since
     none of these features will work automatically like in non-paginated table.
 
     Args:
@@ -1451,7 +1451,7 @@ def table(
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
         pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
-        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
+        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
     Returns:
         A `h2o_wave.types.Table` instance.
     """

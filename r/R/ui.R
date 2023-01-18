@@ -1641,7 +1641,7 @@ ui_table_pagination <- function(
 #' set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
 #' submission.
 #' 
-#' If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
+#' If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset/select events yourself since
 #' none of these features will work automatically like in non-paginated table.
 #'
 #' @param name An identifying name for this component.
@@ -1660,7 +1660,7 @@ ui_table_pagination <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param groups Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
 #' @param pagination Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
-#' @param events The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
+#' @param events The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
 #' @return A Table instance.
 #' @export
 ui_table <- function(
