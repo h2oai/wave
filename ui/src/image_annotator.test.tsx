@@ -770,13 +770,18 @@ describe('ImageAnnotator.tsx', () => {
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowDown' })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
 
+        fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 9, y2: 99 } } }, polygon])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 9, y2: 99 } } }, polygon])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowDown' })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 10, y2: 100 } } }, polygon])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
+        expect(wave.args[name]).toMatchObject(items)
       })
 
       it('Move the selected shape by 10 when using "Shift" + arrows', async () => {
@@ -784,9 +789,18 @@ describe('ImageAnnotator.tsx', () => {
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowDown', shiftKey: true })
 
-        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 20, y2: 110 } } }, polygon])
+        fireEvent.keyDown(canvasEl, { key: 'ArrowUp', shiftKey: true })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 0, y2: 90 } } }, polygon])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowRight', shiftKey: true })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 0, y2: 90 } } }, polygon])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowDown', shiftKey: true })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 10, y2: 100 } } }, polygon])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowLeft', shiftKey: true })
+        expect(wave.args[name]).toMatchObject(items)
       })
 
       it('Move multiple selected shapes at once by arrows', async () => {
@@ -794,12 +808,27 @@ describe('ImageAnnotator.tsx', () => {
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.keyDown(canvasEl, { key: 'a' })
-        fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
 
+        fireEvent.keyDown(canvasEl, { key: 'ArrowUp' })
+        expect(wave.args[name]).toMatchObject([
+          { tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 9, y2: 99 } } },
+          { shape: { polygon: { vertices: [{ x: 105, y: 99 }, { x: 240, y: 99 }, { x: 240, y: 219 },] } }, tag: 'person' }
+        ])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowRight' })
+        expect(wave.args[name]).toMatchObject([
+          { tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 9, y2: 99 } } },
+          { shape: { polygon: { vertices: [{ x: 106, y: 99 }, { x: 241, y: 99 }, { x: 241, y: 219 },] } }, tag: 'person' }
+        ])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowDown' })
         expect(wave.args[name]).toMatchObject([
           { tag: 'person', shape: { rect: { x1: 11, x2: 101, y1: 10, y2: 100 } } },
           { shape: { polygon: { vertices: [{ x: 106, y: 100 }, { x: 241, y: 100 }, { x: 241, y: 220 },] } }, tag: 'person' }
         ])
+
+        fireEvent.keyDown(canvasEl, { key: 'ArrowLeft' })
+        expect(wave.args[name]).toMatchObject(items)
       })
 
       it('Respect canvas boundaries when moving by arrows - top, left', async () => {
@@ -841,29 +870,46 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     describe('Zoom', () => {
-      it('Moves rect correctly when the image is zoomed', async () => {
+      it('Moves rect correctly when the image is zoomed - 1 zoom step', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
+        // Zooms in one zoom step.
+        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
         fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
 
-        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, polygon])
+        // Final move distance is calculated in the way that each of the cursor coordinates is divided by the zoom. 
+        // E.g. moveDistanceX = endClientX/zoom - startClientX/zoom; 60/1.15 - 50/1.15 = 8.69 ≈ 9.
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 19, x2: 109, y1: 19, y2: 109 } } }, polygon])
+      })
+
+      it('Moves rect correctly when the image is zoomed - 2 zoom steps', async () => {
+        const { container } = render(<XImageAnnotator model={model} />)
+        await waitForLoad()
+        const canvasEl = container.querySelectorAll('canvas')[1]
+        // Zooms in 2 zoom steps.
+        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+        fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+        fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+        fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
+
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 18, x2: 108, y1: 18, y2: 108 } } }, polygon])
       })
 
       it('Sets correct wave args when drawing a new rectangle while the image is zoomed', async () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        // Zooms in one zoom step.
         fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
         fireEvent.click(getByTitle('Rectangle'))
         fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
         fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
 
-        // Final dimensions are one zoom step percent smaller than original dimensions.
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 96, x2: 130, y1: 96, y2: 130 } } }, ...items])
       })
 
@@ -960,9 +1006,10 @@ describe('ImageAnnotator.tsx', () => {
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 55, clientY: 55, buttons: 1 })
         fireEvent.keyDown(canvasEl, { key: 'b' })
-        fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
-        fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
-
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 15, x2: 105, y1: 15, y2: 105 } } }, polygon])
+        // This movement should not be registered.
+        fireEvent.mouseMove(canvasEl, { clientX: 70, clientY: 70, buttons: 1 })
+        fireEvent.click(canvasEl, { clientX: 70, clientY: 70 })
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 15, x2: 105, y1: 15, y2: 105 } } }, polygon])
       })
 
@@ -974,12 +1021,12 @@ describe('ImageAnnotator.tsx', () => {
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
         fireEvent.keyDown(canvasEl, { key: 'p' })
+        expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, polygon])
         // This polygon should not be created.
         fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
         fireEvent.click(canvasEl, { clientX: 70, clientY: 70 })
         fireEvent.click(canvasEl, { clientX: 80, clientY: 80 })
         fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
-
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, polygon])
       })
     })
