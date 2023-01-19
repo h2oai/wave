@@ -972,6 +972,18 @@ describe('ImageAnnotator.tsx', () => {
         await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveAttribute('title', 'Rectangle'))
       })
 
+      it('Changes cursor with changing active shape', async () => {
+        const { container } = render(<XImageAnnotator model={model} />)
+        await waitForLoad()
+        const canvasEl = container.querySelectorAll('canvas')[1]
+        fireEvent.keyDown(canvasEl, { key: 'b' })
+        expect(canvasEl.style.cursor).toBe('crosshair')
+        fireEvent.keyDown(canvasEl, { key: 'b' })
+        expect(canvasEl.style.cursor).toBe('crosshair')
+        fireEvent.keyDown(canvasEl, { key: 'b' })
+        expect(canvasEl.style.cursor).toBe('auto')
+      })
+
       it('Cancel rectangle creation when switching the active shape', async () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()

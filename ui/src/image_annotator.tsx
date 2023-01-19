@@ -147,7 +147,7 @@ const
     { key: 'v', description: 'Paste selected shapes' },
     { key: 'd', description: 'Delete selected shapes' },
     { key: 'Shift + Click', description: 'Select multiple shapes when in the selection mode' },
-    { key: 'Arrow keys (↑ ↓ → ←)', description: 'Move selected shapes by 1px (or 10px while holding Shift key)' },
+    { key: 'Arrow keys (←↑↓→)', description: 'Move selected shapes by 1px (or 10px while holding Shift key)' },
     { key: 'Ctrl + Mouse wheel', description: 'Zoom in/out' },
     { key: 'Enter', description: 'Finish drawing polyshape' },
     { key: 'Backspace', description: 'Delete last polyshape vertex' },
@@ -260,6 +260,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       redrawExistingShapes()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redrawExistingShapes]),
+    changeActiveShape = (shape: keyof ImageAnnotatorShape | 'select') => {
+      const
+        { x, y } = mousePositionRef.current,
+        canvas = canvasRef.current
+      if (canvas) canvas.style.cursor = getCorrectCursor(x, y, undefined, undefined, shape === 'select')
+      setActiveShape(shape)
+    },
     recreatePreviewLine = () => {
       const { x, y } = mousePositionRef.current
       redrawExistingShapes()
@@ -288,6 +295,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         if (img) imgCanvasCtx.drawImage(img, 0, 0, width, height, imgPositionRef.current.x, imgPositionRef.current.y, width * aspectRatio * zoom, height * aspectRatio * zoom)
         redrawExistingShapes()
       }
+    },
+    cancelOngoingAction = () => {
+      deselectAllShapes()
+      polygonRef.current?.cancelAnnotating()
+      // Set correct wave args when drag moving is interrupted by changing active shape.
+      setWaveArgs(drawnShapes)
+      // Prevent 'onClick' when switching between active shapes.
+      preventClickRef.current = true
+      redrawExistingShapes()
     },
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
@@ -488,17 +504,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
     },
     onKeyDown = (e: React.KeyboardEvent) => {
-      const
-        increment = e.shiftKey ? 10 : 1,
-        cancelOngoingAction = () => {
-          deselectAllShapes()
-          polygonRef.current?.cancelAnnotating()
-          // Set correct wave args when drag moving is interrupted by changing active shape.
-          setWaveArgs(drawnShapes)
-          // Prevent 'onClick' when switching between active shapes.
-          preventClickRef.current = true
-          redrawExistingShapes()
-        }
+      const increment = e.shiftKey ? 10 : 1
       switch (e.key) {
         case 'ArrowLeft': moveAllSelectedShapes(-increment, 0); break
         case 'ArrowRight': moveAllSelectedShapes(increment, 0); break
@@ -513,27 +519,27 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           // Change active shape.
           const shapes = ['select', ...allowed_shapes] as (keyof ImageAnnotatorShape | 'select')[]
           const activeShapeIdx = shapes.findIndex(s => s === activeShape)
-          setActiveShape(shapes[(activeShapeIdx + 1) % shapes.length])
+          changeActiveShape(shapes[(activeShapeIdx + 1) % shapes.length])
           cancelOngoingAction()
           break
         }
         case 's': {
           if (activeShape !== 'select') {
-            setActiveShape('select')
+            changeActiveShape('select')
             cancelOngoingAction()
           }
           break
         }
         case 'r': {
           if (allowedShapes.has('rect') && activeShape !== 'rect') {
-            setActiveShape('rect')
+            changeActiveShape('rect')
             cancelOngoingAction()
           }
           break
         }
         case 'p': {
           if (allowedShapes.has('polygon') && activeShape !== 'polygon') {
-            setActiveShape('polygon')
+            changeActiveShape('polygon')
             cancelOngoingAction()
           }
           break
@@ -625,7 +631,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     chooseShape = (_e?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>, i?: Fluent.IContextualMenuItem) => {
       polygonRef.current?.cancelAnnotating()
-      setActiveShape(i?.key as keyof ImageAnnotatorShape)
+      changeActiveShape(i?.key as keyof ImageAnnotatorShape)
       clickStartPositionRef.current = undefined
       setDrawnShapes(shapes => shapes.map(s => { s.isFocused = false; return s }))
       redrawExistingShapes()
@@ -771,14 +777,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           <table className={css.table}>
             <thead>
               <tr>
-                <th>Key</th>
-                <th>Description</th>
+                <th scope="col">Key</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody className={css.tableBody}>
               {helpTableRows.map(row =>
                 <tr key={row.key}>
-                  <td>{row.key}</td>
+                  <td><kbd>{row.key}</kbd></td>
                   <td>{row.description}</td>
                 </tr>
               )}
