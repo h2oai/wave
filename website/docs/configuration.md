@@ -179,7 +179,7 @@ If the Wave server and Wave app run on the same machine, `q.site.upload()` will 
 
 ### H2O_WAVE_WAVED_DIR
 
-Tell your Wave app the location of your Wave server if running on the same machine. Useful for performance optimizations during file uploads.
+Provides the location of the Wave server's root directory to the Wave app, if both the server and the app are running on the same machine. Useful for performance optimizations during file uploads. Makes `q.site.upload()` copy files instead of using HTTP requests.
 
 ## Web Analytics
 
