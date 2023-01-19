@@ -499,90 +499,115 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           preventClickRef.current = true
           redrawExistingShapes()
         }
-      // Move selection.
-      if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment, 0)
-      if (e.key === 'ArrowRight') moveAllSelectedShapes(increment, 0)
-      if (e.key === 'ArrowUp') moveAllSelectedShapes(0, -increment)
-      if (e.key === 'ArrowDown') moveAllSelectedShapes(0, increment)
-      // Cancel polygon annotation.
-      if (e.key === 'Escape' && activeShape === 'polygon') cancelOngoingAction()
-      // Change active shape.
-      if (e.key === 'b') {
-        const shapes = ['select', ...allowed_shapes] as (keyof ImageAnnotatorShape | 'select')[]
-        const activeShapeIdx = shapes.findIndex(s => s === activeShape)
-        setActiveShape(shapes[(activeShapeIdx + 1) % shapes.length])
-        cancelOngoingAction()
-      }
-      if (e.key === 's' && activeShape !== 'select') {
-        setActiveShape('select')
-        cancelOngoingAction()
-      }
-      if (e.key === 'r' && allowedShapes.has('rect') && activeShape !== 'rect') {
-        setActiveShape('rect')
-        cancelOngoingAction()
-      }
-      if (e.key === 'p' && allowedShapes.has('polygon') && activeShape !== 'polygon') {
-        setActiveShape('polygon')
-        cancelOngoingAction()
-      }
-      // Change active tag.
-      if (e.key === 'l') {
-        const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
-        const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
-        activateTag(nextTag)()
-      }
-      // Change cursor to indicate that user can drag image.
-      if (e.key === 'Control' && canvasRef.current && zoom > 1) {
-        canvasRef.current.style.cursor = 'grab'
-      }
-      // Select all shapes.
-      if (e.key === 'a') {
-        setDrawnShapes(shapes => shapes.map(s => ({ ...s, isFocused: true })))
-        redrawExistingShapes()
-      }
-      // Copy selected shapes.
-      if (e.key === 'c') {
-        const selectedShapes = drawnShapes.filter(s => s.isFocused)
-        if (selectedShapes.length) clipboardRef.current = JSON.stringify(selectedShapes)
-      }
-      // Paste shapes.
-      if (e.key === 'v' && clipboardRef.current.length) {
-        try {
-          const shapes = JSON.parse(clipboardRef.current)
-          setDrawnShapes(prevShapes => {
-            const newShapes = [...shapes, ...prevShapes]
-            setWaveArgs(newShapes)
-            return newShapes
-          })
+      switch (e.key) {
+        case 'ArrowLeft': moveAllSelectedShapes(-increment, 0); break
+        case 'ArrowRight': moveAllSelectedShapes(increment, 0); break
+        case 'ArrowUp': moveAllSelectedShapes(0, -increment); break
+        case 'ArrowDown': moveAllSelectedShapes(0, increment); break
+        // Cancel polygon annotation.
+        case 'Escape': {
+          if (activeShape === 'polygon') cancelOngoingAction()
+          break
+        }
+        case 'b': {
+          // Change active shape.
+          const shapes = ['select', ...allowed_shapes] as (keyof ImageAnnotatorShape | 'select')[]
+          const activeShapeIdx = shapes.findIndex(s => s === activeShape)
+          setActiveShape(shapes[(activeShapeIdx + 1) % shapes.length])
+          cancelOngoingAction()
+          break
+        }
+        case 's': {
+          if (activeShape !== 'select') {
+            setActiveShape('select')
+            cancelOngoingAction()
+          }
+          break
+        }
+        case 'r': {
+          if (allowedShapes.has('rect') && activeShape !== 'rect') {
+            setActiveShape('rect')
+            cancelOngoingAction()
+          }
+          break
+        }
+        case 'p': {
+          if (allowedShapes.has('polygon') && activeShape !== 'polygon') {
+            setActiveShape('polygon')
+            cancelOngoingAction()
+          }
+          break
+        }
+        case 'l': {
+          // Change active tag.
+          const activeTagIdx = model.tags.findIndex(t => t.name === activeTag)
+          const nextTag = model.tags[(activeTagIdx + 1) % model.tags.length].name
+          activateTag(nextTag)()
+          break
+        }
+        case 'Control': {
+          // Change cursor to indicate that user can drag image.
+          if (canvasRef.current && zoom > 1) canvasRef.current.style.cursor = 'grab'
+          break
+        }
+        case 'a': {
+          setDrawnShapes(shapes => shapes.map(s => ({ ...s, isFocused: true })))
           redrawExistingShapes()
+          break
         }
-        catch (e) { return }
-      }
-      // Delete selected shapes.
-      if (e.key === 'Delete') {
-        const newShapes = drawnShapes.filter(s => !s.isFocused)
-        if (newShapes.length !== drawnShapes.length) {
-          setDrawnShapes(newShapes)
-          setWaveArgs(newShapes)
-          redrawExistingShapes()
+        case 'c': {
+          const selectedShapes = drawnShapes.filter(s => s.isFocused)
+          if (selectedShapes.length) clipboardRef.current = JSON.stringify(selectedShapes)
+          break
         }
-      }
-      // Remove last vertice.
-      if (e.key === 'Backspace' && activeShape === 'polygon') {
-        polygonRef.current?.removeLastPoint()
-        recreatePreviewLine()
-      }
-      // Finish polygon annotation.
-      if (e.key === 'Enter' && activeShape === 'polygon') {
-        const newPolygon = polygonRef.current?.finishPolygon(activeTag)
-        if (newPolygon) {
-          setDrawnShapes(prevShapes => {
-            const newShapes = [newPolygon, ...prevShapes]
+        case 'v': {
+          if (clipboardRef.current.length) {
+            try {
+              const shapes = JSON.parse(clipboardRef.current)
+              setDrawnShapes(prevShapes => {
+                const newShapes = [...shapes, ...prevShapes]
+                setWaveArgs(newShapes)
+                return newShapes
+              })
+              redrawExistingShapes()
+            }
+            catch (e) { return }
+          }
+          break
+        }
+        case 'Delete': {
+          const newShapes = drawnShapes.filter(s => !s.isFocused)
+          if (newShapes.length !== drawnShapes.length) {
+            setDrawnShapes(newShapes)
             setWaveArgs(newShapes)
-            return newShapes
-          })
+            redrawExistingShapes()
+          }
+          break
         }
-        redrawExistingShapes()
+        case 'Backspace': {
+          // Remove last polygon vertice.
+          if (activeShape === 'polygon') {
+            polygonRef.current?.removeLastPoint()
+            recreatePreviewLine()
+          }
+          break
+        }
+        case 'Enter': {
+          // Finish polygon annotation.
+          if (activeShape === 'polygon') {
+            const newPolygon = polygonRef.current?.finishPolygon(activeTag)
+            if (newPolygon) {
+              setDrawnShapes(prevShapes => {
+                const newShapes = [newPolygon, ...prevShapes]
+                setWaveArgs(newShapes)
+                return newShapes
+              })
+            }
+            redrawExistingShapes()
+          }
+          break
+        }
+        default: break
       }
     },
     onKeyUp = (e: React.KeyboardEvent) => {
