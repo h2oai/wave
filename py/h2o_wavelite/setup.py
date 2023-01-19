@@ -14,36 +14,11 @@
 
 import setuptools
 import os
-from pathlib import Path
 
-curr_dir_path = os.path.dirname(os.path.realpath(__file__))
-
-with open(os.path.join(curr_dir_path, 'README.rst'), 'r') as readme:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'README.rst'), 'r') as readme:
     long_description = readme.read()
 
-with open(os.path.join(curr_dir_path, 'README.md'), 'r') as readme_markdown:
-    conda_description = readme_markdown.read()
-
 version = os.getenv('VERSION', 'DEV')
-
-
-def get_data_files():
-    data_dict = {}
-
-    build_path = os.path.join(curr_dir_path, '..', '..', 'ui', 'build')
-    for p in Path(build_path).rglob('*'):
-        if os.path.isdir(p):
-            continue
-        *dirs, _ = p.relative_to(build_path).parts
-        key = os.path.join('h2o_wavelite', 'www', *dirs)
-        if key in data_dict:
-            data_dict[key].append(str(p))
-        else:
-            data_dict[key] = [str(p)]
-
-    return list(data_dict.items())
-
-
 setuptools.setup(
     name='h2o_wavelite',
     version=version,
@@ -51,10 +26,9 @@ setuptools.setup(
     author_email='martin.turoci@h2o.ai',
     description='H2O Wave Python driver for integration with arbitrary python web frameworks.',
     long_description=long_description,
-    conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_wavelite'],
-    data_files=get_data_files(),
+    extras_require=dict(web=[f"h2o_wavelite_web=={version}"]),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
@@ -70,5 +44,10 @@ setuptools.setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: System :: Distributed Computing',
     ],
-    python_requires='>=3.7.1'
+    python_requires='>=3.7.1',
+    project_urls={
+        "Documentation": "https://wave.h2o.ai/",
+        "Source": "https://github.com/h2oai/wave",
+        "Issues": "https://github.com/h2oai/wave/issues",
+    },
 )

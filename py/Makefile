@@ -12,8 +12,16 @@ build: purge
 	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_11_0_arm64
 	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_12_0_arm64
 	H2O_WAVE_BUILD_OS=any ./venv/bin/python3 h2o_wave/setup.py bdist_wheel
-	./venv/bin/python3 h2o_wavelite/setup.py bdist_wheel
+	$(MAKE) build-wavelite
+	$(MAKE) build-wavelite-web
 
+.PHONY: build-wavelite
+build-wavelite: 
+	cd h2o_wavelite && $(MAKE) build
+
+.PHONY: build-wavelite-web
+build-wavelite-web: 
+	cd h2o_wavelite_web && $(MAKE) build
 setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
 	python3 -m venv venv
@@ -24,6 +32,7 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable h2o_wave
 	./venv/bin/python -m pip install --editable h2o_wavelite
+	./venv/bin/python -m pip install --editable h2o_wavelite_web
 	rm -f h2o_wave/h2o_wave/metadata.py
 	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
@@ -50,7 +59,9 @@ clean: purge ## Clean
 
 .PHONY: tag
 tag: # Bump version
-	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/version.py
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/h2o_wave/version.py
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wavelite/h2o_wavelite/version.py
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wavelite_web/h2o_wavelite_web/version.py
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
