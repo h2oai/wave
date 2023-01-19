@@ -969,6 +969,7 @@ describe('ImageAnnotator.tsx', () => {
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.keyDown(canvasEl, { key: 'b' })
 
+        // TODO: Use data-testid. 5 minutes or nothing.
         await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveAttribute('title', 'Rectangle'))
       })
 
@@ -1010,6 +1011,7 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject(items)
       })
 
+      // TODO: Not catching the problem, because wave args are not updated directly after changing the active shape.
       it('Cancel the rectangle movement when switching from "select" to "rect"', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()

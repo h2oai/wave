@@ -48,6 +48,10 @@ export class PolygonAnnotator {
   }
 
   move = (movedShape: DrawnShape, dx: U, dy: U) => {
+    // TODO: Keep state about boundary points
+    // One class local for manipulation (creating shapes, adding points,...) 
+    // and one (final after manipulation) inside drawnShapes.
+
     // Keep the polygon in the boundaries.
     const polygonVertices = movedShape.shape.polygon?.vertices
     if (!polygonVertices) return
@@ -86,6 +90,7 @@ export class PolygonAnnotator {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       if (!this.draggedShape) return
 
+      // TODO: Remove first param.
       this.move(this.draggedShape, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
 
       clickStartPosition.x = cursor_x

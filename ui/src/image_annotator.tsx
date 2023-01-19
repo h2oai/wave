@@ -165,6 +165,7 @@ const
     if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
   }),
   getCorrectCursor = (cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
+    // TODO: Use crosshair cursor when intersected is over shape when the active shape is polygon or rect.
     let cursor = intersected
       ? 'pointer'
       : isSelect
@@ -375,6 +376,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
         canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
         // Prevent creating shapes when active shape is changed with shortcuts during dragging.
+        // TODO: Get rid of preventClickRef and use clickStartPositionRef instead.
         if (preventClickRef.current) return
         switch (activeShape) {
           case 'rect': {
@@ -666,6 +668,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       rectRef.current = new RectAnnotator(canvas)
       if (canvasCtxRef.current) {
         polygonRef.current = new PolygonAnnotator(canvas)
+        // TODO: Do not apply scale and translate when model changes. Reset zoom state and imgPositionRef as well?
         canvasCtxRef.current.scale(zoom, zoom)
         canvasCtxRef.current.translate(imgPositionRef.current.x / zoom, imgPositionRef.current.y / zoom)
       }
