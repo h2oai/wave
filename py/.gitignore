@@ -128,7 +128,7 @@ dmypy.json
 # Custom
 *.checkpoint
 *.gz
-h2o_wave/metadata.py
+h2o_wave/h2o_wave/metadata.py
 
 # Wave ML
 /h2o_wave_ml

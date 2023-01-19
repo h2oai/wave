@@ -17,19 +17,21 @@ import os
 from glob import glob
 from pathlib import Path
 
-with open('README.rst', 'r') as readme:
+curr_dir = os.path.dirname(__file__)
+
+with open(os.path.join(curr_dir, 'README.rst'), 'r') as readme:
     long_description = readme.read()
 
-with open('README.md', 'r') as readme_markdown:
+with open(os.path.join(curr_dir, 'README.md'), 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
 platform = os.getenv('H2O_WAVE_BUILD_OS', 'darwin')
 version = os.getenv('VERSION', 'DEV')
 arch = os.getenv('H2O_WAVE_BUILD_ARCH', 'amd64')
-base_path = os.path.join('..', 'build', f'wave-{version}-{platform}-{arch}')
+base_path = os.path.join(curr_dir, '..', '..', 'build', f'wave-{version}-{platform}-{arch}')
 
 # Create a metadata file to get easy access to platform/OS arch when needed.
-with open(os.path.join('h2o_wave', 'metadata.py'), 'w') as f:
+with open(os.path.join(curr_dir, 'h2o_wave', 'metadata.py'), 'w') as f:
     f.write(f'''
 # Generated in setup.py.
 __platform__ = "{platform}"
@@ -38,8 +40,9 @@ __arch__ = "{arch}"
 
 
 def get_data_files():
-    data_dict = dict()
-    data_dict['project_templates'] = [os.path.join('project_templates', f) for f in os.listdir('project_templates')]
+    data_dict = {}
+    templ_path = os.path.join(curr_dir, 'project_templates')
+    data_dict['project_templates'] = [os.path.join(curr_dir, 'project_templates', f) for f in os.listdir(templ_path)]
 
     if platform != 'any':
         data_dict[''] = glob(os.path.join(base_path, 'waved*'))

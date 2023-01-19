@@ -6,12 +6,12 @@ all: build ## Build h2o_wave wheel
 
 .PHONY: build
 build: purge
-	H2O_WAVE_BUILD_OS=windows ./venv/bin/python3 setup.py bdist_wheel --plat-name=win_amd64
-	H2O_WAVE_BUILD_OS=linux ./venv/bin/python3 setup.py bdist_wheel --plat-name=manylinux1_x86_64
-	H2O_WAVE_BUILD_OS=darwin ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_10_9_x86_64
-	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_11_0_arm64
-	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_12_0_arm64
-	H2O_WAVE_BUILD_OS=any ./venv/bin/python3 setup.py bdist_wheel
+	H2O_WAVE_BUILD_OS=windows ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=win_amd64
+	H2O_WAVE_BUILD_OS=linux ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=manylinux1_x86_64
+	H2O_WAVE_BUILD_OS=darwin ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_10_9_x86_64
+	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_11_0_arm64
+	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_12_0_arm64
+	H2O_WAVE_BUILD_OS=any ./venv/bin/python3 h2o_wave/setup.py bdist_wheel
 	./venv/bin/python3 h2o_wavelite/setup.py bdist_wheel
 
 setup: ## Install dependencies
@@ -22,10 +22,10 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install h2o_wave_ml/
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
-	./venv/bin/python -m pip install --editable .
-	./venv/bin/python -m pip install --editable h2o_wavelie
-	rm -f h2o_wave/metadata.py
-	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/metadata.py
+	./venv/bin/python -m pip install --editable h2o_wave
+	./venv/bin/python -m pip install --editable h2o_wavelite
+	rm -f h2o_wave/h2o_wave/metadata.py
+	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
 .PHONY: docs
 docs: ## Build API docs
