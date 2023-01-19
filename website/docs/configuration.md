@@ -175,7 +175,7 @@ The base URL (path prefix) to be used for resolving relative URLs (e.g. /foo/ or
 
 ### H2O_WAVE_NO_COPY_UPLOAD
 
-If your Wave server and Wave app run on the same machine, `q.site.upload` simply copies the files instead of pushing them through an HTTP request due to performance reasons (extra serialization). However, if you would like to force HTTP every time, you can se `H2O_WAVE_NO_COPY_UPLOAD` to `1` or `t` or `true`.
+If the Wave server and Wave app run on the same machine, `q.site.upload()` will copy files instead of using HTTP requests. This is done for performance reasons (avoids serialization overheads). To disable this optimization and force HTTP requests every time, set `H2O_WAVE_NO_COPY_UPLOAD` to `1` or `t` or `true`.
 
 ### H2O_WAVE_WAVED_DIR
 
