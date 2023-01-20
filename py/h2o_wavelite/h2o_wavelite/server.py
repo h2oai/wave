@@ -14,8 +14,6 @@
 
 import json
 import logging
-import os
-import pickle
 import traceback
 from typing import Any, Awaitable, Callable, Dict, Optional, Tuple
 
@@ -46,7 +44,6 @@ class Query:
             self,
             page: AsyncPage,
             app_state: Expando,
-            user_state: Expando,
             client_state: Expando,
             args: Expando,
             events: Expando,
@@ -55,8 +52,6 @@ class Query:
         """A reference to the current page."""
         self.app = app_state
         """A `h2o_wave.core.Expando` instance to hold application-specific state."""
-        self.user = user_state
-        """A `h2o_wave.core.Expando` instance to hold user-specific state."""
         self.client = client_state
         """An `h2o_wave.core.Expando` instance to hold client-specific state."""
         self.args = args
@@ -69,7 +64,7 @@ Q = Query
 """Alias for Query context."""
 
 HandleAsync = Callable[[Q], Awaitable[Any]]
-WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
+WebAppState = Tuple[Expando, Dict[str, Expando]]
 
 
 async def wave_serve(handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
@@ -80,7 +75,7 @@ class _App:
     def __init__(self, handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
         self._recv = recv
         self._handle = handle
-        self._state: WebAppState = _load_state()
+        self._state: WebAppState = Expando(), {}
         self._page: AsyncPage = AsyncPage(send)
 
     async def _run(self):
@@ -101,7 +96,7 @@ class _App:
             print('Wave Error: Invalid message.')
 
     async def _process(self, args: dict):
-        app_state, user_state, client_state = self._state
+        app_state, client_state = self._state
         events_state: Optional[dict] = args.get('', None)
         if isinstance(events_state, dict):
             events_state = {k: Expando(v) for k, v in events_state.items()}
@@ -109,7 +104,6 @@ class _App:
         q = Q(
             page=self._page,
             app_state=app_state,
-            user_state=_session_for(user_state, ''),
             client_state=_session_for(client_state, ''),
             args=Expando(args),
             events=Expando(events_state),
@@ -131,54 +125,6 @@ class _App:
                 await q.page.save()
             except:
                 logger.exception('Failed transmitting unhandled exception')
-
-
-_CHECKPOINT_DIR_ENV_VAR = 'H2O_WAVE_CHECKPOINT_DIR'
-
-
-def _to_checkpoint_file_path(d: str) -> str:
-    return os.path.join(d, 'h2o_wave.checkpoint')
-
-
-def _get_checkpoint_file_path() -> Optional[str]:
-    d = os.environ.get(_CHECKPOINT_DIR_ENV_VAR)
-
-    if not d:
-        return None
-
-    if os.path.exists(d):
-        if os.path.isdir(d):
-            return _to_checkpoint_file_path(d)
-        raise ValueError(f'{_CHECKPOINT_DIR_ENV_VAR} is not a directory: {d}')
-
-    logger.info(f'Creating checkpoint directory {d} ...')
-    os.makedirs(d)
-
-    return _to_checkpoint_file_path(d)
-
-
-def _empty_state() -> WebAppState:
-    return Expando(), {}, {}
-
-
-def _load_state() -> WebAppState:
-    f = _get_checkpoint_file_path()
-    if not f:
-        return _empty_state()
-
-    if not os.path.isfile(f):
-        return _empty_state()
-
-    logger.info(f'Loading checkpoint at {f} ...')
-    # noinspection PyBroadException,PyPep8
-    try:
-        with open(f, 'rb') as p:
-            app_state, sessions = pickle.load(p)
-            return Expando(app_state), {k: Expando(v) for k, v in sessions.items()}, {}
-    except Exception as e:
-        # Log error and start app with a blank slate
-        logger.error(f'Failed loading checkpoint: %s', e)
-        return _empty_state()
 
 
 async def _parse_msg(msg: str) -> Optional[dict]:
