@@ -742,7 +742,7 @@ class Site:
                 else:
                     args = ['rsync', '-a', os.path.join(directory, '.'), dst]
 
-                _, err = subprocess.Popen(args, stderr=subprocess.PIPE).communicate()
+                _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
                 if err:
                     raise ValueError(err.decode())
 
