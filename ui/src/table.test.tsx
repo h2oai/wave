@@ -711,9 +711,19 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(headerRow + tableProps.rows!.length)
     })
 
-    it('Does not render group by dropdown when pagination is set', () => {
-      const { queryByTestId } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 } }} />)
+    it('Does not render group by dropdown when groups are set but pagination is not', () => {
+      const { queryByTestId } = render(<XTable model={{ ...tableProps, groups: [] }} />)
       expect(queryByTestId('groupby')).not.toBeInTheDocument()
+    })
+
+    it('Fires event when pagination enabled', () => {
+      const { getByTestId, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['group_by'] }} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_by', 'colname1')
+      expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
     it('Renders alphabetically sorted group by list - strings', () => {

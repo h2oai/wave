@@ -671,7 +671,7 @@ const
 export const
   XTable = ({ model: m }: { model: Table }) => {
     const
-      groupable = !m.groups && m.groupable,
+      groupable = m.groupable && (!m.groups || m.pagination),
       getItem = React.useCallback((r: TableRow) => {
         const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
         for (let i = 0, n = r.cells.length; i < n; i++) {
@@ -808,8 +808,9 @@ export const
       onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
         if (m.pagination) {
-          wave.emit(m.name, 'group_by', true)
+          wave.emit(m.name, 'group_by', option.key)
           setCurrentPage(1)
+          setGroupByKey(option.key as S)
           return
         }
         reset()
@@ -971,7 +972,7 @@ export const
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
         <Fluent.Stack horizontal>
           {
-            groupable && !m.pagination && (
+            groupable && (
               <Fluent.Dropdown
                 data-test='groupby'
                 label='Group by'
