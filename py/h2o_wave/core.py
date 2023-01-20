@@ -13,8 +13,15 @@
 # limitations under the License.
 
 from io import BufferedReader
+import asyncio
+import ipaddress
 import json
+import platform
 import secrets
+import shutil
+import subprocess
+from urllib.parse import urlparse
+from uuid import uuid4
 import warnings
 import logging
 import os
@@ -40,6 +47,7 @@ def _get_env(key: str, value: Any):
 
 
 _default_internal_address = 'http://127.0.0.1:8000'
+_base_url = _get_env('BASE_URL', '/')
 
 
 class _Config:
@@ -657,17 +665,47 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        upload_files = []
-        file_handles: List[BufferedReader] = []
         for f in files:
-            file_handle = open(f, 'rb')
-            upload_files.append(('files', (os.path.basename(f), file_handle)))
-            file_handles.append(file_handle)
+            if not os.path.isfile(f):
+                raise ValueError(f'{f} is not a file.')
 
-        res = self._http.post(f'{_config.hub_address}_f/', files=upload_files)
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
-        for h in file_handles:
-            h.close()
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+            try:
+                uploaded_files = []
+                for f in files:
+                    uuid = str(uuid4())
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    os.makedirs(dst, exist_ok=True)
+
+                    if 'Windows' in platform.system():
+                        src = os.path.dirname(f) or os.getcwd()
+                        args = ['robocopy', src, dst, os.path.basename(f), '/J', '/W:0']
+                    else:
+                        args = ['cp', f, dst]
+
+                    _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
+                    if err:
+                        raise ValueError(err.decode())
+
+                    uploaded_files.append(f'{_base_url}_f/{uuid}/{os.path.basename(f)}')
+                return uploaded_files
+            except:
+                pass
+
+        uploaded_files = []
+        for f in files:
+            uploaded_files.append(('files', (os.path.basename(f), open(f, 'rb'))))
+
+        res = self._http.post(f'{_config.hub_address}_f/', files=uploaded_files)
+
+        for _, f in uploaded_files:
+            f[1].close()
 
         if res.status_code == 200:
             return json.loads(res.text)['files']
@@ -687,17 +725,39 @@ class Site:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+            try:
+                uuid = str(uuid4())
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                os.makedirs(dst, exist_ok=True)
+
+                if 'Windows' in platform.system():
+                    args = ['robocopy', directory, dst, '/S', '/J', '/W:0', '*.*']
+                else:
+                    args = ['rsync', '-a', os.path.join(directory, '.'), dst]
+
+                _, err = subprocess.Popen(args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
+                if err:
+                    raise ValueError(err.decode())
+
+                return [f'{_base_url}_f/{uuid}']
+            except:
+                pass
+
         upload_files = []
-        file_handles: List[BufferedReader] = []
         for f in _get_files_in_directory(directory, []):
-            file_handle = open(f, 'rb')
-            upload_files.append(('files', (os.path.relpath(f, directory), file_handle)))
-            file_handles.append(file_handle)
+            upload_files.append(('files', (os.path.relpath(f, directory), open(f, 'rb'))))
 
         res = self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"}, files=upload_files)
 
-        for h in file_handles:
-            h.close()
+        for _, f in upload_files:
+            f[1].close()
 
         if res.status_code == 200:
             return json.loads(res.text)['files']
@@ -841,17 +901,35 @@ class AsyncSite:
         if not os.path.isdir(directory):
             raise ValueError(f'{directory} is not a directory.')
 
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+            try:
+                uuid = str(uuid4())
+                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                os.makedirs(dst, exist_ok=True)
+
+                if 'Windows' in platform.system():
+                    args = ['robocopy', directory, dst, '/S', '/J', '/W:0', '*.*']
+                else:
+                    args = ['rsync', '-a', os.path.join(directory, '.'), dst]
+
+                return [await _copy_in_subprocess(args, uuid)]
+            except:
+                pass
+
         upload_files = []
-        file_handles: List[BufferedReader] = []
         for f in _get_files_in_directory(directory, []):
-            file_handle = open(f, 'rb')
-            upload_files.append(('files', (os.path.relpath(f, directory), file_handle)))
-            file_handles.append(file_handle)
+            upload_files.append(('files', (os.path.relpath(f, directory), open(f, 'rb'))))
 
         res = await self._http.post(f'{_config.hub_address}_f/', headers={'Wave-Directory-Upload': "True"}, files=upload_files)
 
-        for h in file_handles:
-            h.close()
+        for _, f in upload_files:
+            f[1].close()
 
         if res.status_code == 200:
             return json.loads(res.text)['files']
@@ -867,6 +945,36 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
+        for f in files:
+            if not os.path.isfile(f):
+                raise ValueError(f'{f} is not a file.')
+
+        waved_dir = _get_env('WAVED_DIR', None)
+        data_dir = _get_env('DATA_DIR', 'data')
+        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
+
+        # If we know the path of waved and running app on the same machine,
+        # we can simply copy the files instead of making an HTTP request.
+        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+            try:
+                tasks = []
+                for f in files:
+                    uuid = str(uuid4())
+                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    os.makedirs(dst, exist_ok=True)
+
+                    if 'Windows' in platform.system():
+                        src = os.path.dirname(f) or os.getcwd()
+                        args = ['robocopy', src, dst, os.path.basename(f), '/J', '/W:0']
+                    else:
+                        args = ['cp', f, dst]
+
+                    tasks.append(asyncio.create_task(_copy_in_subprocess(args, uuid, f)))
+
+                return await asyncio.gather(*tasks)
+            except:
+                pass
+
         upload_files = []
         file_handles: List[BufferedReader] = []
         for f in files:
@@ -896,6 +1004,7 @@ class AsyncSite:
         path = os.path.abspath(path)
         # If path is a directory, get basename from url
         filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
         async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
             if res.status_code != 200:
                 await res.aread()
@@ -963,6 +1072,19 @@ class AsyncSite:
         raise ServiceError(f'Proxy request failed (code={res.status_code}): {res.text}')
 
 
+async def _copy_in_subprocess(args: List[str], uuid: str, f='') -> str:
+    p = await asyncio.create_subprocess_exec(*args, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL)
+    _, err = await p.communicate()
+
+    if err:
+        raise ValueError(err.decode())
+
+    if f:
+        return f'{_base_url}_f/{uuid}/{os.path.basename(f)}'
+    else:
+        return f'{_base_url}_f/{uuid}'
+
+
 def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:
     for f in os.listdir(directory):
         path = os.path.join(directory, f)
@@ -971,6 +1093,7 @@ def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:
         else:
             _get_files_in_directory(path, files)
     return files
+
 
 def marshal(d: Any) -> str:
     """
@@ -1008,3 +1131,11 @@ def pack(data: Any) -> str:
     The object or value compressed into a string.
     """
     return 'data:' + marshal(_dump(data))
+
+
+def _is_loopback_address() -> bool:
+    try:
+        hostname = urlparse(_config.hub_address).hostname
+        return ipaddress.ip_address(hostname).is_loopback
+    except ValueError:
+        return False

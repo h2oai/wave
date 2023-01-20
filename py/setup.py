@@ -36,6 +36,7 @@ __platform__ = "{platform}"
 __arch__ = "{arch}"
 ''')
 
+
 def get_data_files():
     data_dict = dict()
     data_dict['project_templates'] = [os.path.join('project_templates', f) for f in os.listdir('project_templates')]

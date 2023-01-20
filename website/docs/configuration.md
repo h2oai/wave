@@ -173,6 +173,14 @@ Disable/enable Wave server boot during `wave run`. Defaults to `false`. Availabl
 
 The base URL (path prefix) to be used for resolving relative URLs (e.g. /foo/ or /foo/bar/, without the host (default "/"). If you run your Wave server (waved) and Wave app separately, it's necessary to set this env variable for both.
 
+### H2O_WAVE_NO_COPY_UPLOAD
+
+If the Wave server and Wave app run on the same machine, `q.site.upload()` will copy files instead of using HTTP requests. This is done for performance reasons (avoids serialization overheads). To disable this optimization and force HTTP requests every time, set `H2O_WAVE_NO_COPY_UPLOAD` to `1` or `t` or `true`.
+
+### H2O_WAVE_WAVED_DIR
+
+Provides the location of the Wave server's root directory to the Wave app, if both the server and the app are running on the same machine. Useful for performance optimizations during file uploads. Makes `q.site.upload()` copy files instead of using HTTP requests.
+
 ## Web Analytics
 
 You can configure your app's web pages to send basic usage information to a third-party web analytics or tracking site. This lets you measure and analyze how users are interacting with various parts of your app.
