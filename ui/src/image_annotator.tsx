@@ -221,6 +221,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [zoom, setZoom] = React.useState(1),
+    shapeMoveThrottleRef = React.useRef(false),
     imgPositionRef = React.useRef({ x: 0, y: 0 }), // Image position before/after dragging or scaling.
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
@@ -367,10 +368,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (e.ctrlKey && zoom > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
         if (clickStartPosition?.dragging && imgCanvasRef.current) {
-          // TODO: Fix jumpy behavior when dragging image.
           translateImage((cursor_x - clickStartPosition.x) * zoom, (cursor_y - clickStartPosition.y) * zoom, zoom)
           updateCanvas(zoom)
-          clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: clickStartPosition?.dragging }
         }
       } else {
         const
@@ -401,6 +400,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             if (e.buttons !== 1) break
             const shape = focused?.shape.rect ? rectRef.current : polygonRef.current
             if (shape) {
+              // TODO: Refactor.
+              // Throttle onMouseMove event to prevent performance issues.
+              if (!shapeMoveThrottleRef.current) {
+                shapeMoveThrottleRef.current = true
+                setTimeout(() => shapeMoveThrottleRef.current = false, 10)
+              } else break
               shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
               // Deselect all other shapes when one starts moving.
               if (drawnShapes.some(ds => ds.isFocused && ds !== focused)) {

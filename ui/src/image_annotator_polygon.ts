@@ -85,10 +85,14 @@ export class PolygonAnnotator {
       moveX = x1 + dx < 0 ? -x1 : x2 + dx > width ? width - x2 : dx,
       moveY = y1 + dy < 0 ? -y1 : y2 + dy > height ? height - y2 : dy
 
-    boundaryRect.x1 = x1 + moveX
-    boundaryRect.x2 = x2 + moveX
-    boundaryRect.y1 = y1 + moveY
-    boundaryRect.y2 = y2 + moveY
+    if (moveX !== 0) {
+      boundaryRect.x1 = x1 + moveX
+      boundaryRect.x2 = x2 + moveX
+    }
+    if (moveY !== 0) {
+      boundaryRect.y1 = y1 + moveY
+      boundaryRect.y2 = y2 + moveY
+    }
 
     movedPolygon.vertices.forEach(p => {
       p.x += moveX

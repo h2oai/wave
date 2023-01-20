@@ -469,6 +469,7 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
+    // TODO: Fix - not working due to throttling.
     it('Moves polygon by a single point correctly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
@@ -486,6 +487,7 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
+    // TODO: Fix - not working due to throttling.
     it('Moves polygon by a single point, then moves it whole', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()

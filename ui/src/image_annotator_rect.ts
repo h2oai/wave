@@ -73,31 +73,22 @@ export class RectAnnotator {
   }
 
   move = (dx: U, dy: U, shape?: DrawnShape) => {
-    const moved = shape || this.movedRect
-    if (!moved) return
-    const rect = moved.shape.rect
-    if (!rect) return
     // Prevent moving behind image boundaries.
+    const movedRect = (shape || this.movedRect)?.shape.rect
+    if (!movedRect) return
+    // const rect = moved.shape.rect
+    // if (!rect) return
     const
-      newX1 = rect.x1 + dx,
-      newX2 = rect.x2 + dx,
-      newY1 = rect.y1 + dy,
-      newY2 = rect.y2 + dy,
       { width, height } = this.canvas,
-      // Filter out vertices which are outside the boundaries.
-      filteredNewVerticesX = [newX1, newX2].filter(x => x < 0 || x > width),
-      filteredNewVerticesY = [newY1, newY2].filter(y => y < 0 || y > height),
-      // Find vertex which is the most far from the boundary.
-      maxX = filteredNewVerticesX.length ? Math.max(...filteredNewVerticesX.map(Math.abs)) : 0,
-      maxY = filteredNewVerticesY.length ? Math.max(...filteredNewVerticesY.map(Math.abs)) : 0,
-      // Calculate the x/y distance from the boundary.
-      offsetX = maxX ? dx < 0 ? -maxX : maxX - width : maxX,
-      offsetY = maxY ? dy < 0 ? -maxY : maxY - height : maxY
+      { x1, x2, y1, y2 } = movedRect,
+      moveX = x1 + dx < 0 ? -x1 : x2 + dx > width ? width - x2 : dx,
+      moveY = y1 + dy < 0 ? -y1 : y2 + dy > height ? height - y2 : dy
+    // TODO: Not working for pre-defined rects.
 
-    rect.x1 += dx - offsetX
-    rect.x2 += dx - offsetX
-    rect.y1 += dy - offsetY
-    rect.y2 += dy - offsetY
+    movedRect.x1 += moveX
+    movedRect.x2 += moveX
+    movedRect.y1 += moveY
+    movedRect.y2 += moveY
   }
 
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
