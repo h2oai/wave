@@ -14,6 +14,10 @@ export class PolygonAnnotator {
   }
 
   resetDragging() {
+    // Update the boundaries of the polygon when dragging ends.
+    const polygon = this.draggedShape?.shape.polygon
+    if (this.draggedPoint && polygon) polygon.boundaryRect = this.getBoundaries(polygon.vertices)
+
     this.draggedPoint = null
     this.draggedShape = null
   }
@@ -26,10 +30,29 @@ export class PolygonAnnotator {
     return this.currPolygonPoints.length === 1
   }
 
+  getBoundaries(vertices: ImageAnnotatorPoint[]) {
+    const
+      allX = vertices.map(p => p.x),
+      allY = vertices.map(p => p.y),
+      minX = Math.min(...allX),
+      minY = Math.min(...allY),
+      maxX = Math.max(...allX),
+      maxY = Math.max(...allY)
+    return { x1: minX, y1: minY, x2: maxX, y2: maxY }
+  }
+
   finishPolygon(tag: S) {
     const
       { x, y } = this.currPolygonPoints[0],
-      newPolygon = { shape: { polygon: { vertices: [...this.currPolygonPoints] } }, tag },
+      newPolygon = {
+        shape: {
+          polygon: {
+            vertices: [...this.currPolygonPoints],
+            boundaryRect: this.getBoundaries([...this.currPolygonPoints])
+          }
+        },
+        tag
+      },
       isPolygon = this.currPolygonPoints.length > 2
     this.drawLine(x, y)
     this.currPolygonPoints = []
@@ -47,29 +70,29 @@ export class PolygonAnnotator {
     this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
   }
 
-  move = (movedShape: DrawnShape, dx: U, dy: U) => {
-    // TODO: Keep state about boundary points
-    // One class local for manipulation (creating shapes, adding points,...) 
-    // and one (final after manipulation) inside drawnShapes.
-
+  move = (dx: U, dy: U, movedShape?: DrawnShape) => {
     // Keep the polygon in the boundaries.
-    const polygonVertices = movedShape.shape.polygon?.vertices
-    if (!polygonVertices) return
+    const movedPolygon = (this.draggedShape || movedShape)?.shape.polygon
+    if (!movedPolygon) return
+
+    // Set boundary rectangle for polygons from model.items.
+    if (!movedPolygon.boundaryRect) movedPolygon.boundaryRect = this.getBoundaries(movedPolygon.vertices)
+
     const
       { width, height } = this.canvas,
-      // Filter out vertices which are outside the boundaries.
-      filteredNewVerticesX = polygonVertices.map(p => p.x + dx).filter(p => p < 0 || p > width),
-      filteredNewVerticesY = polygonVertices.map(p => p.y + dy).filter(p => p < 0 || p > height),
-      // Find vertice which is the most far from the boundary.
-      maxX = filteredNewVerticesX.length ? Math.max(...filteredNewVerticesX.map(Math.abs)) : 0,
-      maxY = filteredNewVerticesY.length ? Math.max(...filteredNewVerticesY.map(Math.abs)) : 0,
-      // Calculate the x/y distance from the boundary.
-      offsetX = maxX ? dx < 0 ? -maxX : maxX - width : maxX,
-      offsetY = maxY ? dy < 0 ? -maxY : maxY - height : maxY
+      boundaryRect = movedPolygon.boundaryRect,
+      { x1, x2, y1, y2 } = boundaryRect,
+      moveX = x1 + dx < 0 ? -x1 : x2 + dx > width ? width - x2 : dx,
+      moveY = y1 + dy < 0 ? -y1 : y2 + dy > height ? height - y2 : dy
 
-    movedShape.shape.polygon?.vertices.forEach(p => {
-      p.x += dx - offsetX
-      p.y += dy - offsetY
+    boundaryRect.x1 = x1 + moveX
+    boundaryRect.x2 = x2 + moveX
+    boundaryRect.y1 = y1 + moveY
+    boundaryRect.y2 = y2 + moveY
+
+    movedPolygon.vertices.forEach(p => {
+      p.x += moveX
+      p.y += moveY
     })
   }
 
@@ -83,6 +106,7 @@ export class PolygonAnnotator {
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
+      this.draggedShape = focused
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
@@ -90,8 +114,7 @@ export class PolygonAnnotator {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       if (!this.draggedShape) return
 
-      // TODO: Remove first param.
-      this.move(this.draggedShape, cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
+      this.move(cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
 
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y

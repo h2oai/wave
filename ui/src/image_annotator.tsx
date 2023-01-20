@@ -21,6 +21,8 @@ export interface ImageAnnotatorPoint {
 export interface ImageAnnotatorPolygon {
   /** List of polygon points. */
   vertices: ImageAnnotatorPoint[]
+  /** The polygon's boundary rectangle. */
+  boundaryRect?: ImageAnnotatorRect
 }
 
 /** Create a rectangular annotation shape. */
@@ -481,7 +483,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     moveAllSelectedShapes = (dx: U, dy: U) => {
       drawnShapes.filter(ds => ds.isFocused).forEach(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
-        shape?.move(s, dx, dy)
+        // TODO: Set moved/dragged shape and do not pass 3rd argument?
+        shape?.move(dx, dy, s)
       })
       setWaveArgs(drawnShapes)
       redrawExistingShapes()

@@ -72,8 +72,10 @@ export class RectAnnotator {
     this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
   }
 
-  move = (shape: DrawnShape, dx: U, dy: U) => {
-    const rect = shape.shape.rect
+  move = (dx: U, dy: U, shape?: DrawnShape) => {
+    const moved = shape || this.movedRect
+    if (!moved) return
+    const rect = moved.shape.rect
     if (!rect) return
     // Prevent moving behind image boundaries.
     const
@@ -85,7 +87,7 @@ export class RectAnnotator {
       // Filter out vertices which are outside the boundaries.
       filteredNewVerticesX = [newX1, newX2].filter(x => x < 0 || x > width),
       filteredNewVerticesY = [newY1, newY2].filter(y => y < 0 || y > height),
-      // Find vertice which is the most far from the boundary.
+      // Find vertex which is the most far from the boundary.
       maxX = filteredNewVerticesX.length ? Math.max(...filteredNewVerticesX.map(Math.abs)) : 0,
       maxY = filteredNewVerticesY.length ? Math.max(...filteredNewVerticesY.map(Math.abs)) : 0,
       // Calculate the x/y distance from the boundary.
@@ -130,7 +132,7 @@ export class RectAnnotator {
       this.movedRect = this.movedRect || intersected
       if (!this.movedRect?.shape.rect) return
 
-      this.move(this.movedRect, cursor_x - x1, cursor_y - y1)
+      this.move(cursor_x - x1, cursor_y - y1)
 
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
