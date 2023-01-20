@@ -151,8 +151,20 @@ jobs:
       - name: Build university
         run:  make publish-university
       
-      - name: Publish Wave University to PyPI
+      - name: Publish to PyPI - wave_university
         uses: pypa/gh-action-pypi-publish@master
         with:
           packages_dir: university/dist
           password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
+
+      - name: Publish to PyPI - wavelite
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wavelite/dist
+          password: ${{ secrets.PYPI_WAVELITE_TOKEN }}
+
+      - name: Publish to PyPI - wavelite_web
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wavelite_web/dist
+          password: ${{ secrets.PYPI_WAVELITE_WEB_TOKEN }}

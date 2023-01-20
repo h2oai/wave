@@ -1,0 +1,36 @@
+name: Publish Wavelite
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'
+        required: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: "${{ github.event.inputs.version }}"
+
+jobs:
+  publish:
+    name: Publish Wavelite
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Build wavelite
+        run:  make publish-wavelite
+      
+      - name: Publish to PyPI - wavelite
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wavelite/dist
+          password: ${{ secrets.PYPI_WAVELITE_TOKEN }}
+
+      - name: Publish to PyPI - wavelite_web
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wavelite_web/dist
+          password: ${{ secrets.PYPI_WAVELITE_WEB_TOKEN }}

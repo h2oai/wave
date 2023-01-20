@@ -22,6 +22,7 @@ build-wavelite:
 .PHONY: build-wavelite-web
 build-wavelite-web: 
 	cd h2o_wavelite_web && $(MAKE) build
+
 setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
 	python3 -m venv venv
