@@ -15,7 +15,7 @@
 import setuptools
 import os
 
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'README.rst'), 'r') as readme:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'README.md'), 'r') as readme:
     long_description = readme.read()
 
 version = os.getenv('VERSION', 'DEV')
@@ -26,6 +26,7 @@ setuptools.setup(
     author_email='martin.turoci@h2o.ai',
     description='H2O Wave Python driver for integration with arbitrary python web frameworks.',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_wavelite'],
     extras_require=dict(web=[f"h2o_wavelite_web=={version}"]),
