@@ -22,7 +22,7 @@ export interface ImageAnnotatorPolygon {
   /** List of polygon points. */
   vertices: ImageAnnotatorPoint[]
   /** The polygon's boundary rectangle. */
-  boundaryRect?: ImageAnnotatorRect // TODO: Get rid of null.
+  boundaryRect?: ImageAnnotatorRect
 }
 
 /** Create a rectangular annotation shape. */
@@ -205,13 +205,9 @@ const
         }
       }
     }
-    else if (shape.polygon) return {
-      tag, shape: {
-        polygon: {
-          vertices: shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })),
-          boundaryRect: getPolygonBoundaries(shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })))
-        }
-      }
+    else if (shape.polygon) {
+      const vertices = shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio }))
+      return { tag, shape: { polygon: { vertices, boundaryRect: getPolygonBoundaries(vertices) } } }
     }
     return { tag, shape }
   }),
@@ -241,7 +237,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [zoom, setZoom] = React.useState(1),
-    // shapeMoveThrottleRef = React.useRef(false), // TODO: Remove if not needed.
     imgPositionRef = React.useRef({ x: 0, y: 0 }), // Image position before/after dragging or scaling.
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
@@ -420,12 +415,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             if (e.buttons !== 1) break
             const shape = focused?.shape.rect ? rectRef.current : polygonRef.current
             if (shape) {
-              // TODO: Remove if not needed.
-              // Throttle onMouseMove event to prevent performance issues.
-              // if (!shapeMoveThrottleRef.current) {
-              //   shapeMoveThrottleRef.current = true
-              //   setTimeout(() => shapeMoveThrottleRef.current = false, 10)
-              // } else break
               shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
               // Deselect all other shapes when one starts moving.
               if (drawnShapes.some(ds => ds.isFocused && ds !== focused)) {
@@ -519,11 +508,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const rect = canvasRef.current?.getBoundingClientRect()
       if (canvasRef.current && e.ctrlKey && rect) {
         setZoom(zoom => {
-          const newZoom = Math.max(1, Math.min(MAX_IMAGE_ZOOM, zoom + (e.deltaY < 0 ? -ZOOM_STEP : ZOOM_STEP)))
+          const newZoom = Math.max(1, Math.min(MAX_IMAGE_ZOOM, zoom + (e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP)))
           if (zoom !== newZoom) {
             const
               { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
-              translateFactor = (e.deltaY < 0 ? 1 : -1) * Math.abs(newZoom - zoom)
+              translateFactor = (e.deltaY > 0 ? 1 : -1) * Math.abs(newZoom - zoom)
             // Translate image to cursor position on zoom change.
             translateImage(cursor_x * translateFactor, cursor_y * translateFactor, newZoom)
             updateCanvas(newZoom)

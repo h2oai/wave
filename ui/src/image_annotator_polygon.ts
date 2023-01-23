@@ -35,20 +35,17 @@ export class PolygonAnnotator {
   }
 
   hasAnnotationStarted() {
-    // TODO: What if 2 vertices are added and 1 is removed?
     return this.currPolygonPoints.length === 1
   }
 
-  updateBoundaryRect = ({ x, y }: { x: U, y: U }) => {
-    // TODO: Fix decreasing x, y values.
+  updateBoundaryRect({ x, y }: { x: U, y: U }) {
+    // TODO: Update boundary when increasing the x1, y1 or decreasing the x2, y2.
     if (this.boundaryRect) {
       if (x < this.boundaryRect.x1) this.boundaryRect.x1 = x
       if (x > this.boundaryRect.x2) this.boundaryRect.x2 = x
       if (y < this.boundaryRect.y1) this.boundaryRect.y1 = y
       if (y > this.boundaryRect.y2) this.boundaryRect.y2 = y
-    } else {
-      this.boundaryRect = { x1: x, x2: x, y1: y, y2: y }
-    }
+    } else this.boundaryRect = { x1: x, x2: x, y1: y, y2: y }
   }
 
   addCurrPolygonPoint({ x, y }: { x: U, y: U }) {
@@ -56,8 +53,8 @@ export class PolygonAnnotator {
     this.updateBoundaryRect({ x, y })
   }
 
-  removeLastPoint = () => {
-    // TODO: Bondaries not updating on remove. Keep reference to the previous boundaries?
+  removeLastPoint() {
+    // TODO: Update boundaries on remove.
     this.currPolygonPoints.pop()
   }
 
@@ -91,7 +88,7 @@ export class PolygonAnnotator {
     this.addCurrPolygonPoint({ x: cursor_x, y: cursor_y })
   }
 
-  move = (dx: U, dy: U, movedShape?: DrawnShape) => {
+  move(dx: U, dy: U, movedShape?: DrawnShape) {
     // Keep the polygon in the boundaries.
     const movedPolygon = (this.draggedShape || movedShape)?.shape.polygon
     const boundaryRect = movedPolygon?.boundaryRect
@@ -103,11 +100,11 @@ export class PolygonAnnotator {
       moveX = x1 + dx < 0 ? -x1 : x2 + dx > width ? width - x2 : dx,
       moveY = y1 + dy < 0 ? -y1 : y2 + dy > height ? height - y2 : dy
 
-    if (moveX !== 0) {
+    if (moveX) {
       boundaryRect.x1 = x1 + moveX
       boundaryRect.x2 = x2 + moveX
     }
-    if (moveY !== 0) {
+    if (moveY) {
       boundaryRect.y1 = y1 + moveY
       boundaryRect.y2 = y2 + moveY
     }

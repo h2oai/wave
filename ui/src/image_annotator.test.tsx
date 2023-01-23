@@ -877,7 +877,7 @@ describe('ImageAnnotator.tsx', () => {
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         // Zooms in one zoom step.
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
@@ -893,8 +893,8 @@ describe('ImageAnnotator.tsx', () => {
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
         // Zooms in 2 zoom steps.
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
@@ -907,7 +907,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.click(getByTitle('Rectangle'))
         fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
         fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
@@ -919,7 +919,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.click(getByTitle('Polygon'))
         fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
         fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
@@ -936,7 +936,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.keyDown(canvasEl, { key: 'Control' })
         expect(canvasEl.style.cursor).toBe('grab')
         fireEvent.keyUp(canvasEl, { key: 'Control' })
@@ -947,7 +947,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
         const canvasEl = container.querySelectorAll('canvas')[1]
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1, ctrlKey: true })
         fireEvent.mouseMove(canvasEl, { clientX: 55, clientY: 55, buttons: 1, ctrlKey: true })
         expect(canvasEl.style.cursor).toBe('grabbing')
@@ -959,7 +959,7 @@ describe('ImageAnnotator.tsx', () => {
         const canvasEl = container.querySelectorAll('canvas')[1]
         expect(wave.args[name]).toMatchObject(items)
         fireEvent.click(getByText('Remove all'))
-        fireEvent.wheel(canvasEl, { deltaY: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         expect(wave.args[name]).toMatchObject([])
       })
     })

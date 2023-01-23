@@ -76,19 +76,25 @@ export class RectAnnotator {
     // Prevent moving behind image boundaries.
     const movedRect = (shape || this.movedRect)?.shape.rect
     if (!movedRect) return
-    // const rect = moved.shape.rect
-    // if (!rect) return
+
     const
       { width, height } = this.canvas,
       { x1, x2, y1, y2 } = movedRect,
-      moveX = x1 + dx < 0 ? -x1 : x2 + dx > width ? width - x2 : dx,
-      moveY = y1 + dy < 0 ? -y1 : y2 + dy > height ? height - y2 : dy
-    // TODO: Not working for pre-defined rects.
+      xMin = x1 < x2 ? x1 : x2,
+      xMax = x1 > x2 ? x1 : x2,
+      yMin = y1 < y2 ? y1 : y2,
+      yMax = y1 > y2 ? y1 : y2,
+      moveX = xMin + dx < 0 ? -xMin : xMax + dx > width ? width - xMax : dx,
+      moveY = yMin + dy < 0 ? -yMin : yMax + dy > height ? height - yMax : dy
 
-    movedRect.x1 += moveX
-    movedRect.x2 += moveX
-    movedRect.y1 += moveY
-    movedRect.y2 += moveY
+    if (moveX) {
+      movedRect.x1 += moveX
+      movedRect.x2 += moveX
+    }
+    if (moveY) {
+      movedRect.y1 += moveY
+      movedRect.y2 += moveY
+    }
   }
 
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
