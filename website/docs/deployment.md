@@ -21,7 +21,7 @@ These commands are equivalent:
 ```
 
 ```shell
-(venv) $ uvicorn foo:main
+(venv) $ H2O_WAVE_APP_ADDRESS="http://127.0.0.1:8000" uvicorn foo:main
 ```
 
 For more information, see [uvicorn.org/deployment](https://www.uvicorn.org/deployment/) and [starlette.io/#performance](https://www.starlette.io/#performance).
