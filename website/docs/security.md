@@ -15,7 +15,7 @@ The default ID and secret are the strings `access_key_id`/`access_key_secret`, w
 During development, you can change the default ID and secret when you start the Wave server like this:
 
 ```shell
-$ ./waved -access-key-id <id> -access-key-secret <secret>
+./waved -access-key-id <id> -access-key-secret <secret>
 ```
 
 If you change the ID and secret, you'll need to ensure that your app or script uses the new credentials by setting the `H2O_WAVE_ACCESS_KEY_ID` and `H2O_WAVE_ACCESS_KEY_SECRET` environment variables accordingly.
@@ -45,7 +45,7 @@ The above command also stores the credentials in a file named `.wave-keychain` i
 You can also make the `-create-access-key` command use a keychain file located elsewhere, like this:
 
 ```shell
-$ ./waved -create-access-key -access-keychain /path/to/file.extension
+./waved -create-access-key -access-keychain /path/to/file.extension
 ```
 
 The Wave server uses the keychain file to authenticate requests from apps and scripts. By default, it automatically loads the `.wave-keychain` file if present in the current working directory.
@@ -53,7 +53,7 @@ The Wave server uses the keychain file to authenticate requests from apps and sc
 To make the Wave server use a specific keychain file, launch it like this:
 
 ```shell
-$ ./waved -access-keychain /path/to/file.extension
+./waved -access-keychain /path/to/file.extension
 ```
 
 To view a sorted list of all the keys in a keychain file, use `-list-access-keys`, like this:
@@ -70,21 +70,25 @@ VAKQY6QJN3RRQDU5LD0E
 To remove a key from a keychain file, use `-remove-access-key`, like this:
 
 ```shell
-$ ./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ
+./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ
 ```
 
 To remove a key from a keychain file located elsewhere, do this:
 
 ```shell
-$ ./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ -access-keychain /path/to/file.extension
+./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ -access-keychain /path/to/file.extension
 ```
 
 ## HTTPS
 
 To enable HTTP over TLS to secure your Wave server, pass the following flags when starting the Wave server:
 
-- `-tls-cert-file`: path to certificate file.
-- `-tls-key-file`: path to private key file.
+- `-tls-cert-file`: path to certificate file or using `H2O_WAVE_TLS_CERT_FILE` env variable.
+- `-tls-key-file`: path to private key file or using `H2O_WAVE_TLS_KEY_FILE` env variable.
+
+File paths need to be either absolute or relative to the Wave server (waved) location.
+
+Once set, the Wave app needs to know it should talk to the Wave server via `https` and not `http` as it does by default. This can be set using `H2O_WAVE_ADDRESS="https://127.0.0.1:10101"` env variable when starting the Wave app.
 
 ### Self Signed Certificate
 
@@ -92,8 +96,8 @@ To enable TLS during development, use a self-signed certificate.
 
 To create a private key and a self-signed certificate from scratch, use `openssl`:
 
-```
-$ openssl req \
+```shell
+openssl req \
    -newkey rsa:2048 -nodes -keyout domain.key \
    -x509 -days 365 -out domain.crt
 ```
@@ -155,5 +159,3 @@ X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 
 ```
-
-
