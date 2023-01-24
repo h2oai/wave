@@ -470,7 +470,6 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
-    // TODO: Fix - not working due to throttling.
     it('Moves polygon by a single point correctly', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
@@ -488,7 +487,6 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    // TODO: Fix - not working due to throttling.
     it('Moves polygon by a single point, then moves it whole', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
@@ -972,7 +970,7 @@ describe('ImageAnnotator.tsx', () => {
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.keyDown(canvasEl, { key: 'b' })
 
-        // TODO: Use data-testid. 5 minutes or nothing.
+        // TODO: Use data-testid instead.
         await waitFor(() => expect(document.querySelector('[class*="is-checked"]')).toHaveAttribute('title', 'Rectangle'))
       })
 
@@ -1014,7 +1012,6 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject(items)
       })
 
-      // TODO: Not catching the problem, because wave args are not updated directly after changing the active shape.
       it('Cancel the rectangle movement when switching from "select" to "rect"', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad()
