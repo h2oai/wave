@@ -7,7 +7,6 @@ import { getRectCornerCursor, isIntersectingRect, RectAnnotator } from './image_
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
-import { useBoolean } from '@fluentui/react-hooks'
 
 /** Create a polygon annotation point with x and y coordinates.. */
 export interface ImageAnnotatorPoint {
@@ -118,8 +117,12 @@ const
       position: 'relative',
       margin: 8,
     },
+    tableTitle: {
+      padding: 8,
+    },
     table: {
       borderSpacing: 0,
+      padding: 8
     },
     tableBody: {
       $nest: {
@@ -138,7 +141,7 @@ const
           borderLeft: tableBorderStyle,
         },
         '& > tr:nth-child(odd)': {
-          backgroundColor: cssVar('$themeSecondary'),
+          backgroundColor: cssVar('$neutralLighter'),
         }
       }
     }
@@ -160,6 +163,29 @@ const
     { key: 'p', description: 'Select polygon tool' },
     { key: 's', description: 'Activate selection tool' }
   ],
+  tooltipProps: Fluent.ITooltipProps = {
+    onRenderContent: () => (
+      <>
+        <h2 className={css.tableTitle}>Keyboard shortcuts</h2>
+        <table className={css.table}>
+          <thead>
+            <tr>
+              <th scope="col">Key</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody className={css.tableBody}>
+            {helpTableRows.map(row =>
+              <tr key={row.key}>
+                <td><kbd>{row.key}</kbd></td>
+                <td>{row.description}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </>
+    ),
+  },
   eventToCursor = (e: React.MouseEvent, rect: DOMRect, zoom: F, position: ImageAnnotatorPoint) =>
     ({ cursor_x: (e.clientX - rect.left - position.x) / zoom, cursor_y: (e.clientY - rect.top - position.y) / zoom }),
   getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
@@ -205,14 +231,13 @@ const
     }
     return { tag, shape }
   }),
-  getFarItem = (key: S, title: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S, id?: S) => ({
-    id,
+  getFarItem = (key: S, title: S, onClick: () => void, activeShape: keyof ImageAnnotatorShape | 'select', iconName: S) => ({
     key,
     title,
     onClick,
     canCheck: true,
     checked: activeShape === key,
-    iconProps: { iconName, styles: { root: { fontSize: 20 } } },
+    iconProps: { iconName, styles: { root: { fontSize: 20 } } }
   })
 
 
@@ -243,7 +268,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     clickStartPositionRef = React.useRef<Position | undefined>(undefined),
     canvasCtxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     mousePositionRef = React.useRef({ x: 0, y: 0 }),
-    [teachingBubbleVisible, { toggle: toggleTeachingBubbleVisible }] = useBoolean(false),
     getCurrentTagColor = React.useCallback((tag: S) => colorsMap.get(tag) || cssVarValue('$red'), [colorsMap]),
     redrawExistingShapes = React.useCallback(() => {
       const canvas = canvasRef.current
@@ -698,10 +722,25 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.name, model.image, model.image_height, model.items])
 
-  const farItems = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
+  const farItems: Fluent.ICommandBarItemProps[] | undefined = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
   if (allowedShapes.has('polygon')) farItems.push(getFarItem('polygon', 'Polygon', chooseShape, activeShape, 'SixPointStar'))
-  farItems.push(getFarItem('info', 'Info', toggleTeachingBubbleVisible, activeShape, 'Info', `wave-image-annotator-${model.name}`))
+  farItems.push({
+    key: 'info',
+    onRender: () =>
+      <Fluent.TooltipHost
+        tooltipProps={tooltipProps}
+        id={`wave-image-annotator-${model.name}`}
+        delay={Fluent.TooltipDelay.zero}
+        directionalHint={Fluent.DirectionalHint.bottomRightEdge}
+        styles={{ root: { display: 'flex', alignItems: 'center' } }}
+      >
+        <Fluent.IconButton
+          styles={{ root: { height: '100%' } }}
+          iconProps={{ iconName: 'Info', style: { fontSize: 18 } }}
+        />
+      </Fluent.TooltipHost>
+  })
 
   return (
     <div data-test={model.name}>
@@ -745,34 +784,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           onWheel={onWheel}
         />
       </div>
-      {teachingBubbleVisible && (
-        <Fluent.TeachingBubble
-          target={`#wave-image-annotator-${model.name}`}
-          isWide
-          hasCloseButton
-          closeButtonAriaLabel="Close"
-          onDismiss={toggleTeachingBubbleVisible}
-          calloutProps={{ directionalHint: Fluent.DirectionalHint.bottomRightEdge }}
-          headline="Keyboard shortcuts"
-        >
-          <table className={css.table}>
-            <thead>
-              <tr>
-                <th scope="col">Key</th>
-                <th scope="col">Description</th>
-              </tr>
-            </thead>
-            <tbody className={css.tableBody}>
-              {helpTableRows.map(row =>
-                <tr key={row.key}>
-                  <td><kbd>{row.key}</kbd></td>
-                  <td>{row.description}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </Fluent.TeachingBubble>
-      )}
     </div >
   )
 }
