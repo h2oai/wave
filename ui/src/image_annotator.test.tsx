@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { U } from 'h2o-wave'
 import React from 'react'
 import { ImageAnnotator, XImageAnnotator } from './image_annotator'
@@ -320,10 +321,10 @@ describe('ImageAnnotator.tsx', () => {
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByTitle('Polygon'))
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
-      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
-      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      userEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject([
         { tag: 'person', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
@@ -338,10 +339,10 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(getByTitle('Polygon'))
       fireEvent.click(getByText('Object'))
 
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
-      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
-      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      userEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject([
         { tag: 'object', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 },] } } },
@@ -559,10 +560,10 @@ describe('ImageAnnotator.tsx', () => {
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByTitle('Polygon'))
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
-      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
-      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      userEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(pushMock).toBeCalledTimes(1)
     })
@@ -701,12 +702,12 @@ describe('ImageAnnotator.tsx', () => {
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByTitle('Polygon'))
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
-      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
-      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
-      fireEvent.click(canvasEl, { clientX: 40, clientY: 40 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      userEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      userEvent.click(canvasEl, { clientX: 40, clientY: 40 })
       fireEvent.keyDown(canvasEl, { key: 'Backspace' })
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject([
         { tag: 'person', shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 20 }, { x: 30, y: 30 }] } } },
@@ -719,9 +720,9 @@ describe('ImageAnnotator.tsx', () => {
       await waitForLoad()
       const canvasEl = container.querySelectorAll('canvas')[1]
       fireEvent.click(getByTitle('Polygon'))
-      fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
-      fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
-      fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+      userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+      userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+      userEvent.click(canvasEl, { clientX: 30, clientY: 30 })
       fireEvent.keyDown(canvasEl, { key: 'Enter' })
 
       expect(wave.args[name]).toMatchObject([
@@ -921,10 +922,10 @@ describe('ImageAnnotator.tsx', () => {
         const canvasEl = container.querySelectorAll('canvas')[1]
         fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
         fireEvent.click(getByTitle('Polygon'))
-        fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
-        fireEvent.click(canvasEl, { clientX: 20, clientY: 20 })
-        fireEvent.click(canvasEl, { clientX: 30, clientY: 30 })
-        fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+        userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
+        userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
+        userEvent.click(canvasEl, { clientX: 30, clientY: 30 })
+        userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
         expect(wave.args[name]).toMatchObject([
           { tag: 'person', shape: { polygon: { vertices: [{ x: 9, y: 9 }, { x: 17, y: 17 }, { x: 26, y: 26 }] } } },

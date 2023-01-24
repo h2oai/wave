@@ -15,13 +15,12 @@ export class PolygonAnnotator {
   }
 
   resetDragging() {
-    // Update the boundaries of the polygon when dragging ends.
-    // TODO: Refactor.
-    const polygon = this.draggedShape?.shape.polygon
-    if (this.draggedPoint && polygon) {
-      this.boundaryRect = polygon.boundaryRect
+    // Update the boundaries of the polygon when point dragging ends.
+    const draggedPolygon = this.draggedShape?.shape.polygon
+    if (this.draggedPoint && draggedPolygon) {
+      this.boundaryRect = draggedPolygon.boundaryRect
       this.updateBoundaryRect(this.draggedPoint)
-      polygon.boundaryRect = this.boundaryRect
+      draggedPolygon.boundaryRect = this.boundaryRect
       this.boundaryRect = undefined
     }
 
@@ -32,10 +31,6 @@ export class PolygonAnnotator {
   cancelAnnotating() {
     this.currPolygonPoints = []
     this.boundaryRect = undefined
-  }
-
-  hasAnnotationStarted() {
-    return this.currPolygonPoints.length === 1
   }
 
   updateBoundaryRect({ x, y }: { x: U, y: U }) {
@@ -122,6 +117,7 @@ export class PolygonAnnotator {
       return
     }
 
+    // TODO: Find a way to do this without iterating through all points.
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {

@@ -167,12 +167,8 @@ const
     if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
   }),
   getCorrectCursor = (cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
-    // TODO: Use crosshair cursor when intersected is over shape when the active shape is polygon or rect.
-    let cursor = intersected
-      ? 'pointer'
-      : isSelect
-        ? 'auto'
-        : 'crosshair'
+    if (!isSelect) return 'crosshair'
+    let cursor = intersected ? 'pointer' : 'auto'
     if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
     else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y) || cursor
     else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.vertices, cursor_x, cursor_y) || 'move'
@@ -181,7 +177,6 @@ const
     return cursor
   },
   getPolygonBoundaries = (vertices: ImageAnnotatorPoint[]) => {
-    // TODO: Refactor.
     if (!vertices.length) return
     let minX: U, minY: U, maxX: U, maxY: U
     vertices.forEach(({ x, y }) => {
@@ -190,8 +185,7 @@ const
       if (maxX === undefined || x > maxX) maxX = x
       if (maxY === undefined || y > maxY) maxY = y
     })
-    // TODO: Fix types.
-    return { x1: minX, y1: minY, x2: maxX, y2: maxY }
+    return { x1: minX!, y1: minY!, x2: maxX!, y2: maxY! }
   },
   mapShapesToWaveArgs = (shapes: DrawnShape[], aspectRatio: F) => shapes.map(({ shape, tag }) => {
     if (shape.rect) return {
@@ -237,11 +231,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [zoom, setZoom] = React.useState(1),
-    imgPositionRef = React.useRef({ x: 0, y: 0 }), // Image position before/after dragging or scaling.
+    imgPositionRef = React.useRef({ x: 0, y: 0 }),
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
     clipboardRef = React.useRef<S>(''),
-    preventClickRef = React.useRef(false),
     imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
@@ -318,10 +311,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     cancelOngoingAction = () => {
       deselectAllShapes()
       polygonRef.current?.cancelAnnotating()
+      polygonRef.current?.resetDragging()
+      rectRef.current?.resetDragging()
+      // Prevent creating shapes when active shape is changed with shortcuts during dragging.
+      if (clickStartPositionRef.current) clickStartPositionRef.current = undefined
       // Set correct wave args when drag moving is interrupted by changing active shape.
       setWaveArgs(drawnShapes)
-      // Prevent 'onClick' when switching between active shapes.
-      preventClickRef.current = true
       redrawExistingShapes()
     },
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -369,8 +364,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
 
+      // Deselect all shapes when polygon/rect drawing starts.
+      if (activeShape === 'rect' || activeShape === 'polygon') deselectAllShapes()
+
       clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: true }
-      preventClickRef.current = false
     },
     onMouseMove = (e: React.MouseEvent) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
@@ -391,13 +388,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           focused = drawnShapes.find(({ isFocused }) => isFocused),
           intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
         canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
-        // Prevent creating shapes when active shape is changed with shortcuts during dragging.
-        // TODO: Get rid of preventClickRef and use clickStartPositionRef instead.
-        if (preventClickRef.current) return
         switch (activeShape) {
           case 'rect': {
             const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            if (currentlyDrawnRect) deselectAllShapes()
             redrawExistingShapes()
             if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
             break
@@ -405,8 +398,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           case 'polygon': {
             redrawExistingShapes()
             polygonRef.current?.drawPreviewLine(cursor_x, cursor_y, getCurrentTagColor(activeTag))
-            // Deselect all shapes when polygon drawing starts.
-            if (polygonRef.current?.hasAnnotationStarted()) deselectAllShapes()
             if (polygonRef.current?.isIntersectingFirstPoint(cursor_x, cursor_y)) canvas.style.cursor = 'pointer'
             break
           }
@@ -414,6 +405,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             // If left mouse btn is not held during moving, ignore.
             if (e.buttons !== 1) break
             const shape = focused?.shape.rect ? rectRef.current : polygonRef.current
+            // TODO: Move all selected shapes at once.
             if (shape) {
               shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
               // Deselect all other shapes when one starts moving.
@@ -435,7 +427,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     onClick = (e: React.MouseEvent) => {
       const canvas = canvasRef.current
-      if (!canvas || preventClickRef.current) return
+      if (!canvas) return
 
       const
         start = clickStartPositionRef.current,
@@ -457,6 +449,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'polygon': {
+          // Prevent drawing new polygon when switched from 'select' mode during shape dragging.
+          if (!start) break
           const newPolygon = polygonRef.current?.onClick(cursor_x, cursor_y, getCurrentTagColor(activeTag), activeTag)
           if (newPolygon) {
             setDrawnShapes(prevShapes => {
@@ -483,6 +477,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             return newShapes
           })
 
+          clickStartPositionRef.current = undefined
           polygonRef.current?.resetDragging()
           rectRef.current?.resetDragging()
           redrawExistingShapes()
@@ -490,14 +485,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
 
-      clickStartPositionRef.current = undefined
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     moveAllSelectedShapes = (dx: U, dy: U) => {
       drawnShapes.filter(ds => ds.isFocused).forEach(s => {
         const shape = s.shape.rect ? rectRef.current : polygonRef.current
-        // TODO: Set moved/dragged shape and do not pass 3rd argument?
         shape?.move(dx, dy, s)
       })
       setWaveArgs(drawnShapes)
@@ -606,7 +599,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     },
     onKeyUp = (e: React.KeyboardEvent) => {
       // Set correct cursor on key up when Ctrl is unpressed.
-      if (e.key === 'Control' && canvasRef.current) canvasRef.current.style.cursor = 'auto'
+      if (e.key === 'Control' && canvasRef.current) canvasRef.current.style.cursor = activeShape === 'select' ? 'auto' : 'crosshair'
     },
     remove = (_e?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, item?: Fluent.IContextualMenuItem) => {
       if (!item) return
@@ -685,12 +678,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       rectRef.current = new RectAnnotator(canvas)
       if (canvasCtxRef.current) {
         polygonRef.current = new PolygonAnnotator(canvas)
-        // TODO: Do not apply scale and translate when model changes. Reset zoom state and imgPositionRef as well?
-        canvasCtxRef.current.scale(zoom, zoom)
-        canvasCtxRef.current.translate(imgPositionRef.current.x / zoom, imgPositionRef.current.y / zoom)
+        imgPositionRef.current = { x: 0, y: 0 }
+        if (zoom !== 1) setZoom(1)
       }
 
-      ctx.drawImage(img, 0, 0, img.width, img.height, imgPositionRef.current.x, imgPositionRef.current.y, img.width * aspectRatio * zoom, img.height * aspectRatio * zoom)
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
       // Prevent page scroll when mouse is on the canvas.
       // It's not possible to preventDefault in the React onWheel handler because it is the passive event listener - https://github.com/facebook/react/pull/19654.
       canvas.onwheel = e => e.preventDefault()
