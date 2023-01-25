@@ -20,7 +20,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -67,8 +66,8 @@ type Client struct {
 	header   *http.Header
 }
 
-func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
-	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header}
+func newClient(clientID, addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
+	return &Client{clientID, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header}
 }
 
 func (c *Client) refreshToken() error {
@@ -134,7 +133,8 @@ func (c *Client) listen() {
 				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
-			app.forward(c.id, c.session, m.data, c.header)
+			getRequestHeaders := c.broker.site.clientIDToHeaders[c.id]
+			app.forward(c.id, c.session, m.data, mergeHeaders(*getRequestHeaders, *c.header))
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
@@ -153,7 +153,8 @@ func (c *Client) listen() {
 					}
 				}
 
-				app.forward(c.id, c.session, boot, c.header)
+				getRequestHeaders := c.broker.site.clientIDToHeaders[c.id]
+				app.forward(c.id, c.session, boot, mergeHeaders(*getRequestHeaders, *c.header))
 				continue
 			}
 
@@ -230,4 +231,20 @@ func (c *Client) flush() {
 
 func (c *Client) quit() {
 	close(c.data)
+}
+
+// Merge two http.Headers, preferring the first one.
+func mergeHeaders(h1, h2 http.Header) *http.Header {
+	h := make(http.Header)
+	if h2 != nil {
+		for k, v := range h2 {
+			h[k] = v
+		}
+	}
+	if h1 != nil {
+		for k, v := range h1 {
+			h[k] = v
+		}
+	}
+	return &h
 }

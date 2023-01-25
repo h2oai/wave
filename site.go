@@ -17,6 +17,7 @@ package wave
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"sort"
 	"sync"
 )
@@ -28,12 +29,13 @@ const (
 // Site represents the website, and holds a collection of pages.
 type Site struct {
 	sync.RWMutex
-	pages map[string]*Page // url => page
-	ns    *Namespace       // buffer type namespace
+	pages             map[string]*Page        // url => page
+	ns                *Namespace              // buffer type namespace
+	clientIDToHeaders map[string]*http.Header // ClientID => GET index.html headers
 }
 
 func newSite() *Site {
-	return &Site{pages: make(map[string]*Page), ns: newNamespace()}
+	return &Site{pages: make(map[string]*Page), ns: newNamespace(), clientIDToHeaders: make(map[string]*http.Header)}
 }
 
 // at returns the page at url, else nil

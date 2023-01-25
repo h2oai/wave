@@ -113,7 +113,7 @@ class Query:
             client_state: Expando,
             args: Expando,
             events: Expando,
-            forwarded_headers: Dict[str, str],
+            forwarded_headers: Dict[str, str]
     ):
         self.mode = mode
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
@@ -232,6 +232,7 @@ class _App:
         self._handle = handle
         self._wave: _Wave = _Wave()
         self._state: WebAppState = _load_state()
+        self._forwarded_headers: Dict[str, Dict[str, str]] = {}
         self._site: AsyncSite = AsyncSite()
 
         logger.info(f'Server Mode: {mode}')
@@ -316,14 +317,14 @@ class _App:
         refresh_token = req.headers.get('Wave-Refresh-Token')
         session_id = req.headers.get('Wave-Session-ID')
 
-        forwarded_headers = {k: v for k, v in req.headers.items() if not re.match('wave-', k, re.I)}
+        self._forwarded_headers[client_id] = {k: v for k, v in req.headers.items() if not re.match('wave-', k, re.I)}
 
         auth = Auth(username, subject, access_token, refresh_token, session_id)
         args = await req.json()
 
-        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args, forwarded_headers))
+        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))
 
-    async def _process(self, client_id: str, auth: Auth, args: dict, forwarded_headers: dict):
+    async def _process(self, client_id: str, auth: Auth, args: dict):
         logger.debug(f'user: {auth.username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = self._state
@@ -342,7 +343,7 @@ class _App:
             client_state=_session_for(client_state, client_id),
             args=Expando(args),
             events=Expando(events_state),
-            forwarded_headers=forwarded_headers,
+            forwarded_headers=self._forwarded_headers.get(client_id, {}),
         )
         # noinspection PyBroadException,PyPep8
         try:
