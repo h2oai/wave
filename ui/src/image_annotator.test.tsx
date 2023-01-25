@@ -729,12 +729,12 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    it('Opens the teaching bubble when the info icon is clicked', async () => {
-      const { container, queryByRole } = render(<XImageAnnotator model={model} />)
+    it('Shows the shortcuts info in the tooltip when the info icon is hovered', async () => {
+      const { container, queryByText } = render(<XImageAnnotator model={model} />)
       await waitForLoad()
-      expect(queryByRole('dialog')).not.toBeInTheDocument()
-      fireEvent.click(container.querySelector("[data-icon-name='Info']")!)
-      expect(queryByRole('dialog')).toBeInTheDocument()
+      expect(queryByText('Keyboard shortcuts')).not.toBeInTheDocument()
+      fireEvent.mouseOver(container.querySelector("[data-icon-name='Info']")!)
+      expect(queryByText('Keyboard shortcuts')).toBeInTheDocument()
     })
 
     describe('Selection', () => {

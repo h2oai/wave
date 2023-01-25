@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react'
 import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { getPolygonPointCursor, isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
+import { getPolygonBoundaries, getPolygonPointCursor, isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
 import { getRectCornerCursor, isIntersectingRect, RectAnnotator } from './image_annotator_rect'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
@@ -20,8 +20,6 @@ export interface ImageAnnotatorPoint {
 export interface ImageAnnotatorPolygon {
   /** List of polygon points. */
   vertices: ImageAnnotatorPoint[]
-  /** The polygon's boundary rectangle. */
-  boundaryRect?: ImageAnnotatorRect
 }
 
 /** Create a rectangular annotation shape. */
@@ -201,17 +199,6 @@ const
     else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.vertices, cursor_x, cursor_y) || cursor
 
     return cursor
-  },
-  getPolygonBoundaries = (vertices: ImageAnnotatorPoint[]) => {
-    if (!vertices.length) return
-    let minX: U, minY: U, maxX: U, maxY: U
-    vertices.forEach(({ x, y }) => {
-      if (minX === undefined || x < minX) minX = x
-      if (minY === undefined || y < minY) minY = y
-      if (maxX === undefined || x > maxX) maxX = x
-      if (maxY === undefined || y > maxY) maxY = y
-    })
-    return { x1: minX!, y1: minY!, x2: maxX!, y2: maxY! }
   },
   mapShapesToWaveArgs = (shapes: DrawnShape[], aspectRatio: F) => shapes.map(({ shape, tag }) => {
     if (shape.rect) return {
@@ -432,10 +419,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             // TODO: Move all selected shapes at once.
             if (shape) {
               shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-              // Deselect all other shapes when one starts moving.
-              if (drawnShapes.some(ds => ds.isFocused && ds !== focused)) {
-                setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: intersected === ds })))
-              }
+              // Deselect all other shapes when one starts moving and prevent their movement
+              // when mouse is over them while one is being dragged.
+              setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: ds === focused })))
               redrawExistingShapes()
             }
             break
@@ -501,7 +487,6 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             return newShapes
           })
 
-          clickStartPositionRef.current = undefined
           polygonRef.current?.resetDragging()
           rectRef.current?.resetDragging()
           redrawExistingShapes()
@@ -509,6 +494,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
       }
 
+      clickStartPositionRef.current = undefined
       const focused = drawnShapes.find(({ isFocused }) => isFocused)
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
@@ -603,7 +589,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           redrawExistingShapes()
         }
       }
-      // Remove last polygon vertice.
+      // Remove last polygon vertex.
       else if (e.key === 'Backspace' && activeShape === 'polygon') {
         polygonRef.current?.removeLastPoint()
         recreatePreviewLine()
