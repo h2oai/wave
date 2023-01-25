@@ -194,6 +194,7 @@ func handleStatic(indexPage []byte, fs http.Handler, extraHeader http.Header, si
 			Name:     "clientID",
 			Value:    clientID,
 			SameSite: http.SameSiteStrictMode,
+			HttpOnly: true,
 		}
 		http.SetCookie(w, cookie)
 
