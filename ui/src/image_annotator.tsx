@@ -88,7 +88,7 @@ export type Position = {
   dragging?: B
 }
 
-export type DrawnShape = ImageAnnotatorItem & { isFocused?: B }
+export type DrawnShape = ImageAnnotatorItem & { isFocused?: B, boundaryRect?: ImageAnnotatorRect | null }
 export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
 const MAX_IMAGE_ZOOM = 2.5
@@ -214,7 +214,7 @@ const
     }
     else if (shape.polygon) {
       const vertices = shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio }))
-      return { tag, shape: { polygon: { vertices, boundaryRect: getPolygonBoundaries(vertices) } } }
+      return { tag, shape: { polygon: { vertices } }, boundaryRect: getPolygonBoundaries(vertices) }
     }
     return { tag, shape }
   }),

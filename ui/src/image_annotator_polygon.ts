@@ -17,8 +17,12 @@ export class PolygonAnnotator {
   resetDragging() {
     // Update the boundaries of the polygon when point dragging ends.
     const draggedPolygon = this.draggedShape?.shape.polygon
-    if (this.draggedPoint && draggedPolygon) {
-      draggedPolygon.boundaryRect = getPolygonBoundaries(draggedPolygon.vertices)
+    if (this.draggedShape && this.draggedPoint && draggedPolygon) {
+      const { x1, x2, y1, y2 } = getPolygonBoundaries(draggedPolygon.vertices)
+      this.draggedShape.boundaryRect!.x1 = x1
+      this.draggedShape.boundaryRect!.x2 = x2
+      this.draggedShape.boundaryRect!.y1 = y1
+      this.draggedShape.boundaryRect!.y2 = y2
     }
 
     this.draggedPoint = null
@@ -51,12 +55,8 @@ export class PolygonAnnotator {
     const
       { x, y } = this.currPolygonPoints[0],
       newPolygon = {
-        shape: {
-          polygon: {
-            vertices: [...this.currPolygonPoints],
-            boundaryRect: this.boundaryRect
-          }
-        },
+        shape: { polygon: { vertices: [...this.currPolygonPoints] } },
+        boundaryRect: this.boundaryRect,
         tag
       }
     this.drawLine(x, y)
@@ -76,10 +76,12 @@ export class PolygonAnnotator {
     this.addCurrPolygonPoint({ x: cursor_x, y: cursor_y })
   }
 
-  move(dx: U, dy: U, movedShape?: DrawnShape) {
+  move(dx: U, dy: U, shape?: DrawnShape) {
     // Keep the polygon in the boundaries.
-    const movedPolygon = (this.draggedShape || movedShape)?.shape.polygon
-    const boundaryRect = movedPolygon?.boundaryRect
+    const
+      movedShape = (this.draggedShape || shape),
+      boundaryRect = movedShape?.boundaryRect,
+      movedPolygon = movedShape?.shape.polygon
     if (!movedPolygon || !boundaryRect) return
 
     const
