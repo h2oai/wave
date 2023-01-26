@@ -102,6 +102,29 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
+### Select event
+
+Sometimes it can be useful to update other components immediately based on the current row selection (e.g. enable/disable the submit button).
+This is where the `select` event comes into the game. When the `select` event is registered, it is emitted every time when there is a change
+in the current table row selection. It can be accessed through `q.args.table_name` and contains the list of all selected item names, where `table_name`
+is the `name` of the table.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 4', items=[
+    ui.table(
+        name='table',
+        columns=[ui.table_column(name='text', label='Table select event')],
+        rows=[
+            ui.table_row(name='row1', cells=['Row 1']),
+            ui.table_row(name='row2', cells=['Row 2']),
+            ui.table_row(name='row3', cells=['Row 3'])
+        ],
+        multiple=True,
+        events=['select']
+    )
+])
+```
+
 ## With preselection
 
 If you want to see some rows preselected, use the `values` attribute. Note that if this parameter is set,
