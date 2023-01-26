@@ -15,20 +15,12 @@
 import json
 import logging
 import traceback
-from typing import Any, Awaitable, Callable, Dict, Optional
+from typing import Any, Awaitable, Callable, Optional
 
 from .core import AsyncPage, Expando
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
-
-
-def _session_for(sessions: dict, session_id: str):
-    session = sessions.get(session_id, None)
-    if session is None:
-        session = Expando()
-        sessions[session_id] = session
-    return session
 
 
 class Query:
@@ -65,7 +57,7 @@ class _App:
     def __init__(self, handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
         self._recv = recv
         self._handle = handle
-        self._state: Dict[str, Expando] = {}
+        self._state: Expando = Expando()
         self._page: AsyncPage = AsyncPage(send)
 
     async def _run(self):
@@ -89,7 +81,7 @@ class _App:
         if isinstance(events_state, dict):
             events_state = {k: Expando(v) for k, v in events_state.items()}
             del args['']
-        q = Q(self._page, _session_for(self._state, ''), Expando(args), Expando(events_state))
+        q = Q(self._page, self._state, Expando(args), Expando(events_state))
         try:
             await self._handle(q)
         except Exception:
