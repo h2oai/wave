@@ -117,7 +117,7 @@ interface TableGroup {
  * set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
  * submission.
  * 
- * If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset/select events yourself since
+ * If `pagination` is set, you have to handle search/filter/sort/download/page_change/reset events yourself since
  * none of these features will work automatically like in non-paginated table.
  */
 export interface Table {

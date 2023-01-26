@@ -6,20 +6,11 @@ from h2o_wave import main, app, Q, ui
 
 @app('/demo')
 async def serve(q: Q):
-    q.page['meta'] = ui.meta_card(
-    box='',
-    layouts=[
-        ui.layout(breakpoint='xs', zones=[
-            ui.zone('main', direction=ui.ZoneDirection.ROW, zones=[
-                ui.zone('table', size='50%'),
-                ui.zone('selected', size='50%')
-            ])
-        ])
-    ])
-    if q.args.table:
-        q.page['description'].content = f'{q.args.table}'
+    if q.events.table:
+        if q.events.table.select:
+            q.page['description'].content = f'{q.events.table.select}'
     else:
-        q.page['table'] = ui.form_card(box='table', items=[
+        q.page['table'] = ui.form_card(box='1 1 3 4', items=[
                 ui.table(
                     name='table',
                     columns=[ui.table_column(name='text', label='Table select event')],
@@ -32,5 +23,5 @@ async def serve(q: Q):
                     events=['select']
                 )
             ])
-        q.page['description'] = ui.markdown_card(box='selected', title='Selected rows', content='No rows are selected yet.')
+        q.page['description'] = ui.markdown_card(box='4 1 3 4', title='Selected rows', content='No rows are selected yet.')
     await q.page.save()
