@@ -94,7 +94,7 @@ export const
           buttons = currentModel?.buttons?.filter(({ button }) => button),
           isMultiline = isMessagebarMultiline(currentModel?.text, buttons)
 
-        if (model?.timeout !== -1 && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5) * 1000)
+        if (model?.timeout !== -1 && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5000) * 1000)
 
         return (
           currentModel?.text?.length
@@ -120,7 +120,7 @@ export const
                   animationFillMode: 'forwards',
                   maxWidth: 500,
                   width: pc(100),
-                  zIndex: 999,
+                  zIndex: 9999999, // Needs to be higher than Fluent UI Panel's z-index
                   ...getPosition(currentModel?.position, shouldBeOpen)
                 },
                 content: { alignItems: isMultiline ? 'start' : 'center' },
