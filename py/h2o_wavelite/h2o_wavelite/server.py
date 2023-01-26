@@ -15,7 +15,7 @@
 import json
 import logging
 import traceback
-from typing import Any, Awaitable, Callable, Dict, Optional, Tuple
+from typing import Any, Awaitable, Callable, Dict, Optional
 
 from .core import AsyncPage, Expando
 from .ui import markdown_card
@@ -34,24 +34,15 @@ def _session_for(sessions: dict, session_id: str):
 class Query:
     """
     Represents the query context.
-    The query context is passed to the `@app` handler function whenever a query
+    The query context is passed to the handler function whenever a query
     arrives from the browser (page load, user interaction events, etc.).
     The query context contains useful information about the query, including arguments
-    `args` (equivalent to URL query strings) and app-level, user-level and client-level state.
+    `args` (equivalent to URL query strings) and client-level state.
     """
 
-    def __init__(
-            self,
-            page: AsyncPage,
-            app_state: Expando,
-            client_state: Expando,
-            args: Expando,
-            events: Expando,
-    ):
+    def __init__(self, page: AsyncPage, client_state: Expando, args: Expando, events: Expando):
         self.page = page
         """A reference to the current page."""
-        self.app = app_state
-        """A `h2o_wave.core.Expando` instance to hold application-specific state."""
         self.client = client_state
         """An `h2o_wave.core.Expando` instance to hold client-specific state."""
         self.args = args
@@ -64,7 +55,6 @@ Q = Query
 """Alias for Query context."""
 
 HandleAsync = Callable[[Q], Awaitable[Any]]
-WebAppState = Tuple[Expando, Dict[str, Expando]]
 
 
 async def wave_serve(handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
@@ -75,16 +65,15 @@ class _App:
     def __init__(self, handle: HandleAsync, send: Optional[Callable] = None, recv: Optional[Callable] = None):
         self._recv = recv
         self._handle = handle
-        self._state: WebAppState = Expando(), {}
+        self._state: Dict[str, Expando] = {}
         self._page: AsyncPage = AsyncPage(send)
 
     async def _run(self):
         # Handshake.
         received = await self._recv()
         if not received.startswith('+'):
-            raise ValueError('Invalid handshake')
+            raise ValueError('Wave Error: Invalid handshake')
         await self._process({})
-
         # Event loop.
         try:
             while True:
@@ -93,27 +82,18 @@ class _App:
                 data = json.loads(data)
                 await self._process(data)
         except json.JSONDecodeError:
-            print('Wave Error: Invalid message.')
+            raise ValueError('Wave Error: Invalid message.')
 
     async def _process(self, args: dict):
-        app_state, client_state = self._state
         events_state: Optional[dict] = args.get('', None)
         if isinstance(events_state, dict):
             events_state = {k: Expando(v) for k, v in events_state.items()}
             del args['']
-        q = Q(
-            page=self._page,
-            app_state=app_state,
-            client_state=_session_for(client_state, ''),
-            args=Expando(args),
-            events=Expando(events_state),
-        )
-        # noinspection PyBroadException,PyPep8
+        q = Q(self._page, _session_for(self._state, ''), Expando(args), Expando(events_state))
         try:
             await self._handle(q)
-        except:
+        except Exception:
             logger.exception('Unhandled exception')
-            # noinspection PyBroadException,PyPep8
             try:
                 q.page.drop()
                 # TODO replace this with a custom-designed error display
@@ -123,7 +103,7 @@ class _App:
                     content=f'```\n{traceback.format_exc()}\n```',
                 )
                 await q.page.save()
-            except:
+            except Exception:
                 logger.exception('Failed transmitting unhandled exception')
 
 
