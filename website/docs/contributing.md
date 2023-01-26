@@ -56,13 +56,13 @@ If you discover a security vulnerability within H2O Wave, please send an email t
 
 ## Code of Conduct
 
-See https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md.
+See <https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md>.
 
 ## Development Setup
 
 Prerequisites:
 
-- [Go](https://golang.org/) v1.16+
+- [Go](https://golang.org/) v1.19+
 - [Node.js](http://nodejs.org) v16+
 - [Python](https://www.python.org/) 3.7+
 - A C/C++ compiler [XCode](https://developer.apple.com/xcode/) on OSX, `build-essential` on Debian, `base-devel` on Arch, etc.) to build Python/Node.js dependencies.
@@ -77,7 +77,7 @@ cd wave
 make all
 ```
 
-Launch the Wave server at http://localhost:10101/
+Launch the Wave server at <http://localhost:10101/>
 
 ``` bash
 make run
@@ -98,7 +98,7 @@ wave run examples.button
 
 All examples are located in [py/examples](https://github.com/h2oai/wave/tree/master/py/examples) folder.
 
-If you intend to modify the UI (Typescript), also launch the UI development server at http://localhost:3000/ to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
+If you intend to modify the UI (Typescript), also launch the UI development server at <http://localhost:3000/> to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
 
 ``` bash
 make run-ui
