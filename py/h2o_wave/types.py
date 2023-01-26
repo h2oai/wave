@@ -3759,7 +3759,7 @@ class Table:
         self.pagination = pagination
         """Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`."""
         self.events = events
-        """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'."""
+        """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

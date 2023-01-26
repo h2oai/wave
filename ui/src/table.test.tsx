@@ -178,6 +178,27 @@ describe('Table.tsx', () => {
       expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
     })
 
+    it('Fires event - single selection', () => {
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      fireEvent.click(checkboxes[1])
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1'])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Fires event - multiple selection', () => {
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      fireEvent.click(checkboxes[1])
+      fireEvent.click(checkboxes[2])
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1', 'rowname2'])
+      expect(emitMock).toHaveBeenCalledTimes(2)
+    })
+
     it('Clicks a column - link set on second col', () => {
       tableProps = {
         ...tableProps,

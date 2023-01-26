@@ -1451,7 +1451,7 @@ def table(
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
         pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
-        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
+        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
     Returns:
         A `h2o_wave.types.Table` instance.
     """

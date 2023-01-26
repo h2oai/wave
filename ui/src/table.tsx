@@ -151,7 +151,7 @@ export interface Table {
   groups?: TableGroup[]
   /** Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`. */
   pagination?: TablePagination
-  /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'. */
+  /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
   events?: S[]
 }
 
@@ -876,7 +876,13 @@ export const
         filter(null)
         search()
       }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
-      selection = React.useMemo(() => new Fluent.Selection({ onSelectionChanged: () => { wave.args[m.name] = selection.getSelection().map(item => item.key as S) } }), [m.name]),
+      selection = React.useMemo(() => new Fluent.Selection({
+        onSelectionChanged: () => {
+          const selectedItemKeys = selection.getSelection().map(item => item.key as S)
+          wave.args[m.name] = selectedItemKeys
+          if (m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
+        }
+      }), [m.name, m.events]),
       computeHeight = () => {
         if (m.height) return m.height
         if (items.length > 10) return 500
