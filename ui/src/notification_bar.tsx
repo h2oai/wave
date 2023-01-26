@@ -94,7 +94,7 @@ export const
           buttons = currentModel?.buttons?.filter(({ button }) => button),
           isMultiline = isMessagebarMultiline(currentModel?.text, buttons)
 
-        if (model?.timeout !== -1 && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5000) * 1000)
+        if (model?.timeout !== -1 && shouldBeOpen) timeout = window.setTimeout(onDismiss, (model?.timeout || 5) * 1000)
 
         return (
           currentModel?.text?.length
