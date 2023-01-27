@@ -64,7 +64,7 @@ submitted automatically and `q.args.table_name` is set to `[row_name]`, where
 `table_name` is the `name` of the table, and `row_name` is the `name` of the row that was clicked.
 Note that doubleclicking the row if single selection is active results in submission as well.
 
-However, this behavior changes when the multiple or single selection is activated (`multiple` or `isSingle` is set to `True`). In this case each row in the table becomes selectable.
+However, this behavior changes when the multiple or single selection is activated (`multiple` or `single` is set to `True`). In this case each row in the table becomes selectable.
 Also the form is not submitted automatically and one or more buttons in the form are required to trigger submission.
 
 ### With multiple selection
@@ -89,11 +89,11 @@ When the form is submitted, `q.args.<table_name>` is set to `[<row1_name>, <row2
 
 ### With single selection
 
-When `isSingle` is set to `True` only one row at time can be selected.
+When `single` is set to `True` only one row at time can be selected.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
-    ui.table(name='table', isSingle=True, columns=[
+    ui.table(name='table', single=True, columns=[
         ui.table_column(name='name', label='Name'),
         ui.table_column(name='surname', label='Surname'),
     ], rows=[
@@ -109,7 +109,7 @@ When the form is submitted, `q.args.<table_name>` is set to `[<row_name>]` where
 
 ### Checkbox visibility
 
-When `multiple` or `isSingle` is specified, there is an option to control when should row checkboxes be visible.
+When `multiple` or `single` is specified, there is an option to control when should row checkboxes be visible.
 By default, they are only visible on hover. Available options are `always`, `on-hover`, `hidden`.
 
 ```py
@@ -168,7 +168,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 ])
 ```
 
-When specifying the `value` attribute, only one row can be preselected and single selections will be allowed (`isSingle=True` implicitly).
+When specifying the `value` attribute, only one row can be preselected and single selections will be allowed (`single=True` implicitly).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[

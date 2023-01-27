@@ -1414,7 +1414,7 @@ def table(
         groups: Optional[List[TableGroup]] = None,
         pagination: Optional[TablePagination] = None,
         events: Optional[List[str]] = None,
-        isSingle: Optional[bool] = None,
+        single: Optional[bool] = None,
         value: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
@@ -1441,7 +1441,7 @@ def table(
         name: An identifying name for this component.
         columns: The columns in this table.
         rows: The rows in this table. Mutually exclusive with `groups` attr.
-        multiple: True to allow multiple rows to be selected. Mutually exclusive with `isSingle` attr.
+        multiple: True to allow multiple rows to be selected. Mutually exclusive with `single` attr.
         groupable: True to allow group by feature. Not applicable when `pagination` is set.
         downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
@@ -1454,8 +1454,8 @@ def table(
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
         pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
         events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
-        isSingle: True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr.
-        value: The name of the selected row. If this parameter is set, single selection will be allowed (`isSingle` is assumed to be `True`).
+        single: True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr.
+        value: The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`).
     Returns:
         A `h2o_wave.types.Table` instance.
     """
@@ -1476,7 +1476,7 @@ def table(
         groups,
         pagination,
         events,
-        isSingle,
+        single,
         value,
     ))
 

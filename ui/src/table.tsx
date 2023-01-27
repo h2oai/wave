@@ -127,7 +127,7 @@ export interface Table {
   columns: TableColumn[]
   /** The rows in this table. Mutually exclusive with `groups` attr. */
   rows?: TableRow[]
-  /** True to allow multiple rows to be selected. Mutually exclusive with `isSingle` attr. */
+  /** True to allow multiple rows to be selected. Mutually exclusive with `single` attr. */
   multiple?: B
   /** True to allow group by feature. Not applicable when `pagination` is set. */
   groupable?: B
@@ -154,8 +154,8 @@ export interface Table {
   /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
   events?: S[]
   /** True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr. */
-  isSingle?: B
-  /** The name of the selected row. If this parameter is set, single selection will be allowed (`isSingle` is assumed to be `True`). */
+  single?: B
+  /** The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`). */
   value?: S
 }
 
@@ -694,7 +694,7 @@ export const
           : (m.rows || []).map(getItem)
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
-      isSingle = Boolean(m.value || m.isSingle),
+      isSingle = Boolean(m.value || m.single),
       [filteredItems, setFilteredItems] = React.useState(items),
       [currentPage, setCurrentPage] = React.useState(1),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),

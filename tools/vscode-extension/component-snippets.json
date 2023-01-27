@@ -1668,7 +1668,7 @@
   "Wave Full Table": {
     "prefix": "w_full_table",
     "body": [
-      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%}', checkbox_visibility='${8:on-hover}', visible=${9:True}, tooltip='$10', pagination=${11:None}, isSingle=${12:False}, value='$13', columns=[\n\t\t$14\t\t\n], rows=[\n\t\t$15\t\t\n], values=[\n\t\t$16\t\t\n], groups=[\n\t\t$17\t\t\n], events=[\n\t\t$18\t\t\n]),$0"
+      "ui.table(name='$1', multiple=${2:False}, groupable=${3:False}, downloadable=${4:False}, resettable=${5:False}, height='$6', width='${7:100%}', checkbox_visibility='${8:on-hover}', visible=${9:True}, tooltip='$10', pagination=${11:None}, single=${12:False}, value='$13', columns=[\n\t\t$14\t\t\n], rows=[\n\t\t$15\t\t\n], values=[\n\t\t$16\t\t\n], groups=[\n\t\t$17\t\t\n], events=[\n\t\t$18\t\t\n]),$0"
     ],
     "description": "Create a full Wave Table."
   },

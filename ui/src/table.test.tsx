@@ -147,7 +147,7 @@ describe('Table.tsx', () => {
     })
 
     it('Sets args on init - value specified', () => {
-      render(<XTable model={{ ...tableProps, value: 'rowname1', isSingle: true }} />)
+      render(<XTable model={{ ...tableProps, value: 'rowname1', single: true }} />)
       expect(wave.args[name]).toMatchObject(['rowname1'])
     })
 
@@ -184,7 +184,7 @@ describe('Table.tsx', () => {
     })
 
     it('Sets args - single selection', () => {
-      const { getAllByRole } = render(<XTable model={{ ...tableProps, isSingle: true }} />)
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, single: true }} />)
       const radioButtons = getAllByRole('radio')
 
       fireEvent.click(radioButtons[0])
@@ -215,7 +215,7 @@ describe('Table.tsx', () => {
     })
 
     it('Fires event - single selection', () => {
-      const { getAllByRole } = render(<XTable model={{ ...tableProps, isSingle: true, events: ['select'] }} />)
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, single: true, events: ['select'] }} />)
       const radioButtons = getAllByRole('radio')
 
       fireEvent.click(radioButtons[0])
