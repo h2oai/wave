@@ -2265,7 +2265,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_table" value="ui.table(name='$name$',multiple=$multiple$,groupable=$groupable$,downloadable=$downloadable$,resettable=$resettable$,height='$height$',width='$width$',checkbox_visibility='$checkbox_visibility$',visible=$visible$,tooltip='$tooltip$',pagination=$pagination$,columns=[&#10;	$columns$	&#10;],rows=[&#10;	$rows$	&#10;],values=[&#10;	$values$	&#10;],groups=[&#10;	$groups$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave Table with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_table" value="ui.table(name='$name$',multiple=$multiple$,groupable=$groupable$,downloadable=$downloadable$,resettable=$resettable$,height='$height$',width='$width$',checkbox_visibility='$checkbox_visibility$',visible=$visible$,tooltip='$tooltip$',pagination=$pagination$,isSingle=$isSingle$,value='$value$',columns=[&#10;	$columns$	&#10;],rows=[&#10;	$rows$	&#10;],values=[&#10;	$values$	&#10;],groups=[&#10;	$groups$	&#10;],events=[&#10;	$events$	&#10;]),$END$" description="Create Wave Table with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="multiple" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="groupable" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
@@ -2277,6 +2277,8 @@
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="pagination" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="isSingle" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="columns" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="rows" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="values" expression="" defaultValue="" alwaysStopAt="true"/>
