@@ -188,8 +188,9 @@ describe('Table.tsx', () => {
       const radioButtons = getAllByRole('radio')
 
       fireEvent.click(radioButtons[0])
-      fireEvent.click(radioButtons[1])
+      expect(wave.args[name]).toMatchObject(['rowname1'])
 
+      fireEvent.click(radioButtons[1])
       expect(wave.args[name]).toMatchObject(['rowname2'])
     })
 
@@ -222,9 +223,11 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1'])
       expect(emitMock).toHaveBeenCalledTimes(1)
 
+      emitMock.mockClear()
+
       fireEvent.click(radioButtons[1])
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname2'])
-      expect(emitMock).toHaveBeenCalledTimes(2)
+      expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
     it('Clicks a column - link set on second col', () => {
