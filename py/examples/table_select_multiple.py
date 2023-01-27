@@ -9,11 +9,11 @@ from h2o_wave import main, app, Q, ui
 async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
-            ui.text(f'selected={q.args.issues}'),
+            ui.text(f'selected={q.args.table}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['table'] = ui.form_card(box='1 1 -1 5', items=[
+        q.page['example'] = ui.form_card(box='1 1 -1 5', items=[
                 ui.table(
                     name='table',
                     columns=[ui.table_column(name='text', label='Table multiple selection', min_width='300px')],
