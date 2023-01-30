@@ -127,7 +127,7 @@ export interface Table {
   columns: TableColumn[]
   /** The rows in this table. Mutually exclusive with `groups` attr. */
   rows?: TableRow[]
-  /** True to allow multiple rows to be selected. */
+  /** True to allow multiple rows to be selected. Mutually exclusive with `single` attr. */
   multiple?: B
   /** True to allow group by feature. Not applicable when `pagination` is set. */
   groupable?: B
@@ -153,6 +153,10 @@ export interface Table {
   pagination?: TablePagination
   /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
   events?: S[]
+  /** True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr. */
+  single?: B
+  /** The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`). */
+  value?: S
 }
 
 type WaveColumn = Fluent.IColumn & {
@@ -172,7 +176,8 @@ type DataTable = {
   selectedFilters: Dict<S[]> | null
   items: any[]
   selection: Fluent.Selection
-  isMultiple: B
+  isMultiple: B,
+  isSingle: B,
   groups?: Fluent.IGroup[]
   expandedRefs: React.MutableRefObject<{ [key: S]: B } | null>
   setFiltersInBulk: (colKey: S, filters: S[]) => void
@@ -322,7 +327,7 @@ const
       </div>
     )
   },
-  DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, groups, expandedRefs, sort, setFiltersInBulk }: DataTable, ref) => {
+  DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSingle, groups, expandedRefs, sort, setFiltersInBulk }: DataTable, ref) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
@@ -563,9 +568,9 @@ const
           }}
           getGroupHeight={getGroupHeight}
           selection={selection}
-          selectionMode={isMultiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
+          selectionMode={isSingle ? Fluent.SelectionMode.single : isMultiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
           selectionPreservedOnEmptyClick
-          onItemInvoked={isMultiple ? undefined : onItemInvoked}
+          onItemInvoked={isMultiple || isSingle ? undefined : onItemInvoked}
           onRenderRow={onRenderRow}
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
@@ -689,6 +694,7 @@ export const
           : (m.rows || []).map(getItem)
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
+      isSingle = Boolean(m.value || m.single),
       [filteredItems, setFilteredItems] = React.useState(items),
       [currentPage, setCurrentPage] = React.useState(1),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
@@ -938,7 +944,11 @@ export const
 
     React.useEffect(() => {
       wave.args[m.name] = []
-      if (isMultiple && m.values) {
+      if (isSingle && m.value) {
+        selection.setKeySelected(m.value, true, false)
+        wave.args[m.name] = [m.value]
+      }
+      else if (isMultiple && m.values) {
         m.values.forEach(v => selection.setKeySelected(v, true, false))
         wave.args[m.name] = m.values
       }
@@ -971,8 +981,9 @@ export const
       selection,
       sort,
       isMultiple,
+      isSingle,
       setFiltersInBulk
-    }), [filteredItems, groups, expandedRefs, isMultiple, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
+    }), [filteredItems, groups, expandedRefs, isMultiple, isSingle, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>

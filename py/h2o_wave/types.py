@@ -3711,6 +3711,8 @@ class Table:
             groups: Optional[List[TableGroup]] = None,
             pagination: Optional[TablePagination] = None,
             events: Optional[List[str]] = None,
+            single: Optional[bool] = None,
+            value: Optional[str] = None,
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
@@ -3728,6 +3730,8 @@ class Table:
         _guard_vector('Table.groups', groups, (TableGroup,), False, True, False)
         _guard_scalar('Table.pagination', pagination, (TablePagination,), False, True, False)
         _guard_vector('Table.events', events, (str,), False, True, False)
+        _guard_scalar('Table.single', single, (bool,), False, True, False)
+        _guard_scalar('Table.value', value, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
@@ -3735,7 +3739,7 @@ class Table:
         self.rows = rows
         """The rows in this table. Mutually exclusive with `groups` attr."""
         self.multiple = multiple
-        """True to allow multiple rows to be selected."""
+        """True to allow multiple rows to be selected. Mutually exclusive with `single` attr."""
         self.groupable = groupable
         """True to allow group by feature. Not applicable when `pagination` is set."""
         self.downloadable = downloadable
@@ -3760,6 +3764,10 @@ class Table:
         """Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`."""
         self.events = events
         """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'."""
+        self.single = single
+        """True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr."""
+        self.value = value
+        """The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`)."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3779,6 +3787,8 @@ class Table:
         _guard_vector('Table.groups', self.groups, (TableGroup,), False, True, False)
         _guard_scalar('Table.pagination', self.pagination, (TablePagination,), False, True, False)
         _guard_vector('Table.events', self.events, (str,), False, True, False)
+        _guard_scalar('Table.single', self.single, (bool,), False, True, False)
+        _guard_scalar('Table.value', self.value, (str,), False, True, False)
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
@@ -3796,6 +3806,8 @@ class Table:
             groups=None if self.groups is None else [__e.dump() for __e in self.groups],
             pagination=None if self.pagination is None else self.pagination.dump(),
             events=self.events,
+            single=self.single,
+            value=self.value,
         )
 
     @staticmethod
@@ -3833,6 +3845,10 @@ class Table:
         _guard_scalar('Table.pagination', __d_pagination, (dict,), False, True, False)
         __d_events: Any = __d.get('events')
         _guard_vector('Table.events', __d_events, (str,), False, True, False)
+        __d_single: Any = __d.get('single')
+        _guard_scalar('Table.single', __d_single, (bool,), False, True, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('Table.value', __d_value, (str,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: Optional[List[TableRow]] = None if __d_rows is None else [TableRow.load(__e) for __e in __d_rows]
@@ -3849,6 +3865,8 @@ class Table:
         groups: Optional[List[TableGroup]] = None if __d_groups is None else [TableGroup.load(__e) for __e in __d_groups]
         pagination: Optional[TablePagination] = None if __d_pagination is None else TablePagination.load(__d_pagination)
         events: Optional[List[str]] = __d_events
+        single: Optional[bool] = __d_single
+        value: Optional[str] = __d_value
         return Table(
             name,
             columns,
@@ -3866,6 +3884,8 @@ class Table:
             groups,
             pagination,
             events,
+            single,
+            value,
         )
 
 

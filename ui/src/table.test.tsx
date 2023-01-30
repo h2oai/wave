@@ -146,6 +146,11 @@ describe('Table.tsx', () => {
       expect(wave.args[name]).toMatchObject(['rowname1'])
     })
 
+    it('Sets args on init - value specified', () => {
+      render(<XTable model={{ ...tableProps, value: 'rowname1', single: true }} />)
+      expect(wave.args[name]).toMatchObject(['rowname1'])
+    })
+
     it('Sets args and calls sync on doubleclick', () => {
       const pushMock = jest.fn()
       wave.push = pushMock
@@ -168,6 +173,50 @@ describe('Table.tsx', () => {
       expect(pushMock).toHaveBeenCalled()
     })
 
+    it('Sets args and calls sync on first col click - single selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getByText } = render(<XTable model={{ ...tableProps, single: true }} />)
+      fireEvent.click(getByText(cell21))
+
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+      expect(pushMock).toHaveBeenCalled()
+    })
+
+    it('Sets args and calls sync on first col click - multiple selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getByText } = render(<XTable model={{ ...tableProps, multiple: true }} />)
+      fireEvent.click(getByText(cell21))
+
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+      expect(pushMock).toHaveBeenCalled()
+    })
+
+    it('Do not set args and call sync on doubleclick - single selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, single: true }} />)
+      fireEvent.doubleClick(getAllByRole('row')[1])
+
+      expect(wave.args[name]).not.toMatchObject(['rowname1'])
+      expect(pushMock).not.toHaveBeenCalled()
+    })
+
+    it('Do not set args and call sync on doubleclick - multiple selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true }} />)
+      fireEvent.doubleClick(getAllByRole('row')[1])
+
+      expect(wave.args[name]).not.toMatchObject(['rowname1'])
+      expect(pushMock).not.toHaveBeenCalled()
+    })
+
     it('Sets args - multiple selection', () => {
       const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true }} />)
       const checkboxes = getAllByRole('checkbox')
@@ -178,7 +227,18 @@ describe('Table.tsx', () => {
       expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
     })
 
-    it('Fires event - single selection', () => {
+    it('Sets args - single selection', () => {
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, single: true }} />)
+      const radioButtons = getAllByRole('radio')
+
+      fireEvent.click(radioButtons[0])
+      expect(wave.args[name]).toMatchObject(['rowname1'])
+
+      fireEvent.click(radioButtons[1])
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+    })
+
+    it('Fires event - multiple selection - select single', () => {
       const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
       const checkboxes = getAllByRole('checkbox')
 
@@ -188,7 +248,7 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
-    it('Fires event - multiple selection', () => {
+    it('Fires event - multiple selection - select multiple', () => {
       const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
       const checkboxes = getAllByRole('checkbox')
 
@@ -197,6 +257,21 @@ describe('Table.tsx', () => {
 
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1', 'rowname2'])
       expect(emitMock).toHaveBeenCalledTimes(2)
+    })
+
+    it('Fires event - single selection', () => {
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, single: true, events: ['select'] }} />)
+      const radioButtons = getAllByRole('radio')
+
+      fireEvent.click(radioButtons[0])
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1'])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+
+      emitMock.mockClear()
+
+      fireEvent.click(radioButtons[1])
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname2'])
+      expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
     it('Clicks a column - link set on second col', () => {

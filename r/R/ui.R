@@ -1647,7 +1647,7 @@ ui_table_pagination <- function(
 #' @param name An identifying name for this component.
 #' @param columns The columns in this table.
 #' @param rows The rows in this table. Mutually exclusive with `groups` attr.
-#' @param multiple True to allow multiple rows to be selected.
+#' @param multiple True to allow multiple rows to be selected. Mutually exclusive with `single` attr.
 #' @param groupable True to allow group by feature. Not applicable when `pagination` is set.
 #' @param downloadable Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
@@ -1661,6 +1661,8 @@ ui_table_pagination <- function(
 #' @param groups Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
 #' @param pagination Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
 #' @param events The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
+#' @param single True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr.
+#' @param value The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`).
 #' @return A Table instance.
 #' @export
 ui_table <- function(
@@ -1679,7 +1681,9 @@ ui_table <- function(
   tooltip = NULL,
   groups = NULL,
   pagination = NULL,
-  events = NULL) {
+  events = NULL,
+  single = NULL,
+  value = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "WaveTableColumn", columns)
   .guard_vector("rows", "WaveTableRow", rows)
@@ -1696,6 +1700,8 @@ ui_table <- function(
   .guard_vector("groups", "WaveTableGroup", groups)
   .guard_scalar("pagination", "WaveTablePagination", pagination)
   .guard_vector("events", "character", events)
+  .guard_scalar("single", "logical", single)
+  .guard_scalar("value", "character", value)
   .o <- list(table=list(
     name=name,
     columns=columns,
@@ -1712,7 +1718,9 @@ ui_table <- function(
     tooltip=tooltip,
     groups=groups,
     pagination=pagination,
-    events=events))
+    events=events,
+    single=single,
+    value=value))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
