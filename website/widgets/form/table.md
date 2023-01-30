@@ -60,22 +60,15 @@ q.page['example'] = ui.form_card(box='1 1 5 3', items=[
 
 By default, each row in the table is clickable. When a cell in the column with `link=True`
 (defaults to first column) is clicked, the form is submitted automatically and `q.args.table_name` is set to `[row_name]`,
-where `table_name` is the `name` of the table, and `row_name` is the `name` of the row that was clicked.
-Note that double-clicking the row results in submission as well.
+where `table_name` is the `name` attribute of the table, and `row_name` is the `name` attribute of the row that was clicked.
+Double-clicking the row results in submission as well.
 
-However, this behavior changes when the multiple or single selection is activated (`multiple` or `single` is set to `True`).
-In this case each row in the table becomes selectable (clicking the row selects the row). Also the form is not submitted automatically
-and one or more buttons in the form are required to trigger submission (useful e.g. for making the delete action).
-Note that clicking the cell in the column with `link=True` will always submit only the corresponding row (which is useful e.g. for going to detail).
-
-|                                 Selection mode                                      |      Click      |   Double-click  |     Click on the cell in the column with `link=True` (first column by default)     |
-|:-----------------------------------------------------------------------------------:|:---------------:|:---------------:|:----------------------------------------------------------------------------------:|
-|                               **None** (default)                                    |        -        | Submits one row |                                    Submits one row                                 |
-|         **Single or multiple selection** (`multiple=True` or `single=True` )        | Selects one row |         -       |                                    Submits one row                                 |
+If multiple or single selection is activated (`multiple` or `single` is set to `True`), doubleclicking is turned off.
+In addition, each row in the table gets its own checkmark indicating current selection state which can be obtained either by providing a [separate submission button](/docs/examples/table-select-multiple) (populated in `q.args`) or by registering a `'select'` [event](/docs/examples/table-events-select) (populated in `q.events`).
 
 ### With multiple selection
 
-If `multiple` is set to `True`, multiple rows can be selected either by clicking on the checkboxes, shift+clicking or ctrl+clicking anywhere on the row or using marquee selection.
+If `multiple` is set to `True`, multiple rows can be selected either by clicking on the checkmarks, shift+clicking or ctrl+clicking anywhere on the row or using marquee selection.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
