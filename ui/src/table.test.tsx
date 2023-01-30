@@ -173,6 +173,50 @@ describe('Table.tsx', () => {
       expect(pushMock).toHaveBeenCalled()
     })
 
+    it('Sets args and calls sync on first col click - single selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getByText } = render(<XTable model={{ ...tableProps, single: true }} />)
+      fireEvent.click(getByText(cell21))
+
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+      expect(pushMock).toHaveBeenCalled()
+    })
+
+    it('Sets args and calls sync on first col click - multiple selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getByText } = render(<XTable model={{ ...tableProps, multiple: true }} />)
+      fireEvent.click(getByText(cell21))
+
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+      expect(pushMock).toHaveBeenCalled()
+    })
+
+    it('Do not set args and call sync on doubleclick - single selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, single: true }} />)
+      fireEvent.doubleClick(getAllByRole('row')[1])
+
+      expect(wave.args[name]).not.toMatchObject(['rowname1'])
+      expect(pushMock).not.toHaveBeenCalled()
+    })
+
+    it('Do not set args and call sync on doubleclick - multiple selection', () => {
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true }} />)
+      fireEvent.doubleClick(getAllByRole('row')[1])
+
+      expect(wave.args[name]).not.toMatchObject(['rowname1'])
+      expect(pushMock).not.toHaveBeenCalled()
+    })
+
     it('Sets args - multiple selection', () => {
       const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true }} />)
       const checkboxes = getAllByRole('checkbox')
