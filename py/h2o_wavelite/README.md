@@ -23,63 +23,24 @@ Nothing more, nothing less.
 pip install "h2o-wavelite[web]"
 ```
 
-## Starlette Hello world
+Wavelite requires websockets to function properly. Not all libraries comes with them out of the box so you might need to install them additionally. For example Starlette requires:
 
-```py
-import uvicorn
-from starlette.applications import Starlette
-from starlette.routing import Mount, WebSocketRoute
-from starlette.staticfiles import StaticFiles
-from starlette.websockets import WebSocketDisconnect
-from h2o_wavelite import wave_serve, ui, Q
-from h2o_wavelite_web import web_directory
-
-
-# Wavelite callback function.
-async def serve(q: Q):
-    # Paint our UI on the first page visit.
-    if not q.client.initialized:
-        # Create a local state.
-        q.client.count = 0
-        # Add a "card" with a text and a button
-        q.page['hello'] = ui.form_card(box='1 1 2 2', items=[
-            ui.text_xl('Hello world'),
-            ui.button(name='counter', label=f'Current count: {q.client.count}'),
-        ])
-        q.client.initialized = True
-
-    # Handle counter button click.
-    if q.args.counter:
-        # Increment the counter.
-        q.client.count += 1
-        # Update the counter button.
-        q.page['hello'].items[1].button.label = f'Current count: {q.client.count}'
-
-    # Send the UI changes to the browser.
-    await q.page.save()
-
-
-# Starlette boilerplate.
-async def socket(ws):
-    try:
-        await ws.accept()
-        await wave_serve(serve, ws.send_text, ws.receive_text)
-        await ws.close()
-    except WebSocketDisconnect:
-        print('Client disconnected')
-
-
-startlette_app = Starlette(routes=[
-    # Register a websocket.
-    WebSocketRoute('/_s/', socket),
-    # Serve static assets.
-    Mount("/", app=StaticFiles(directory=web_directory, html=True), name="/")
-])
-
-if __name__ == '__main__':
-    uvicorn.run(startlette_app, host='0.0.0.0', port=5000)
-
+```bash
+pip install websockets
 ```
+
+to be able to expose websocket handlers. This might differ from framework to framework.
+
+## Using Wavelite within an existing page
+
+Wavelite can also be used only for certain parts of your pages, e.g. for charts. In addition to the integration steps above:
+
+* Use the `get_web_files` function which HTML links to scripts and styles for you to inject into your existing HTML.
+* Render a `div` with an id `root` (`<div id='root'></div>`) into which you want Wavelite to render.
+
+## Configuration
+
+By default, Wavelite tries to connect to websocket route at `/_s/`. This can be configured by adding a `data-wave-socket-url` attribute on the HTML body element (`<body data-wave-socket-url='/my_socket_url/'>`).
 
 ## Links
 

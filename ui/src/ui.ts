@@ -69,11 +69,16 @@ let _wave: Wave | null = null
 
 const
   args: Rec = {},
-  clearRec = (a: Rec) => {
-    for (const k in a) delete a[k]
+  bodyEl = document.getElementsByTagName('body')[0],
+  clearRec = (a: Rec) => { for (const k in a) delete a[k] },
+  getSocketURL = () => {
+    const url = bodyEl.getAttribute('data-wave-socket-url')
+    if (!url) return '_s/'
+    if (url.startsWith('/')) return url.substring(1)
+    return url
   },
-  baseURL = document.getElementsByTagName('body')[0].getAttribute('data-base-url') ?? '/',
-  socketURL = baseURL + '_s/',
+  baseURL = bodyEl.getAttribute('data-base-url') ?? '/',
+  socketURL = baseURL + getSocketURL(),
   uploadURL = baseURL + '_f/',
   initURL = baseURL + '_auth/init',
   loginURL = baseURL + '_auth/login'

@@ -15,5 +15,23 @@
 from .version import __version__
 
 import pathlib
+import os
+import re
 
 web_directory = str(pathlib.Path(__file__).parent / 'www')
+
+
+# TODO: Inject web_files to this file during build time. No need to read index.html at runtime.
+def get_web_files(prefix: str = '') -> str:
+    if prefix and not prefix.endswith('/'):
+        prefix += '/'
+
+    web_files = []
+    with open(os.path.join(web_directory, 'index.html'), 'r') as f:
+        for line in f:
+            stripped_line = line.strip()
+            if re.search(r'(\.js|\.css)(\'|\")', stripped_line):
+                web_files.append(stripped_line.replace('wave-static/', f'{prefix}wave-static/'))
+    web_files = '\n'.join(web_files)
+
+    return web_files
