@@ -68,10 +68,10 @@ In this case each row in the table becomes selectable (clicking the row selects 
 and one or more buttons in the form are required to trigger submission (useful e.g. for making the delete action).
 Note that clicking the cell in the column with `link=True` will always submit only the corresponding row (which is useful e.g. for going to detail).
 
-|                                 Selection mode                                      |      Click      |   Double-click  | Click on the cell in the column with `link=True` (first column by default) |
+|                                 Selection mode                                      |      Click      |   Double-click  |     Click on the cell in the column with `link=True` (first column by default)     |
 |:-----------------------------------------------------------------------------------:|:---------------:|:---------------:|:----------------------------------------------------------------------------------:|
-|                             **None** (default)                                  |        -        | Submits one row |                                    Submits one row                                 |
-|       **Single or multiple selection** (`multiple=True` or `single=True` )      | Selects one row |         -       |                                    Submits one row                                 |
+|                               **None** (default)                                    |        -        | Submits one row |                                    Submits one row                                 |
+|         **Single or multiple selection** (`multiple=True` or `single=True` )        | Selects one row |         -       |                                    Submits one row                                 |
 
 ### With multiple selection
 
