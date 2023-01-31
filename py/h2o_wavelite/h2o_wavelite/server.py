@@ -70,7 +70,7 @@ class _App:
         try:
             while True:
                 data = await self._recv()
-                data = await _parse_msg(data)
+                data = _parse_msg(data)
                 data = json.loads(data)
                 await self._process(data)
         except json.JSONDecodeError:
@@ -99,7 +99,7 @@ class _App:
                 logger.exception('Failed transmitting unhandled exception')
 
 
-async def _parse_msg(msg: str) -> Optional[dict]:
+def _parse_msg(msg: str) -> Optional[dict]:
     # protocol: t addr data
     parts = msg.split(' ', 3)
 

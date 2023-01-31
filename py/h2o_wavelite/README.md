@@ -36,7 +36,7 @@ to be able to expose websocket handlers. This might differ from framework to fra
 Wavelite can also be used only for certain parts of your pages, e.g. for charts. In addition to the integration steps above:
 
 * Use the `get_web_files` function which HTML links to scripts and styles for you to inject into your existing HTML.
-* Render a `div` with an id `root` (`<div id='root'></div>`) into which you want Wavelite to render.
+* Render a `div` with an id `wave-root` (`<div id='wave-root'></div>`) into which you want Wavelite to render.
 
 ## Configuration
 

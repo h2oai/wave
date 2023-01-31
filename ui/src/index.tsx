@@ -33,7 +33,7 @@ const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
 }, {} as { [key: string]: JSX.Element })
 registerIcons({ icons })
 
-ReactDOM.render(<Router />, document.getElementById('root'))
+ReactDOM.render(<Router />, document.getElementById('wave-root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
