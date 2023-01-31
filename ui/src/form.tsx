@@ -175,6 +175,8 @@ interface Inline {
   align?: 'start' | 'end' | 'center' | 'baseline'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
+  /** Height of the component. Use `px`, `vh` or `rem` CSS units or use '1' to fill all the remaining space. E.g. '100vh', '300px' or '1'. */
+  height?: S
 }
 
 /** Create a form. */
@@ -190,6 +192,7 @@ const
   css = stylesheet({
     card: {
       padding: 15,
+      display: 'flex',
     },
     vertical: {
       display: 'flex',
@@ -214,35 +217,46 @@ const
       background: cssVar('$page'),
       padding: padding(10, 15)
     },
+    fullHeight: {
+      display: 'flex',
+      flexGrow: 1
+    }
   })
 
 type Justification = 'start' | 'end' | 'center' | 'between' | 'around'
 type Alignment = 'start' | 'end' | 'center' | 'baseline'
 
 export const
-  XComponents = ({ items, justify, align, inset }: { items: Component[], justify?: Justification, align?: Alignment, inset?: B }) => {
+  XComponents = ({ items, justify, align, inset, height }: { items: Component[], justify?: Justification, align?: Alignment, inset?: B, height?: S }) => {
     const
       components = items.map((m: any, i) => {
         const
           // All form items are wrapped by their component name (first and only prop of "m").
           [componentKey] = Object.keys(m),
-          { name, visible = true, width = 'auto' } = m[componentKey],
+          { name, visible = true, width = 'auto', height } = m[componentKey],
           visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
           // TODO: Ugly, maybe use ui.inline's 'align' prop instead?
           alignSelf = componentKey === 'links' ? 'flex-start' : undefined
 
         return (
           // Recreate only if name or position within form items changed, update otherwise.
-          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width, alignSelf }}>
+          <div
+            key={name || `${componentKey}-${i}`}
+            data-visible={visible}
+            className={height === '1' ? css.fullHeight : ''}
+            style={{ ...visibleStyles, width, alignSelf }}
+          >
             <XComponent model={m} />
           </div>
         )
       })
+
     return <div
-      className={clas(justify ? css.horizontal : css.vertical, inset ? css.inset : '')}
+      className={clas(justify ? css.horizontal : css.vertical, inset ? css.inset : '', height === '1' ? css.fullHeight : '')}
       style={{
         justifyContent: justifications[justify || ''],
         alignItems: alignments[align || ''],
+        height: height === '1' ? undefined : height,
       }}
     >{components}</div>
   },
@@ -252,6 +266,8 @@ export const
       justify={m.justify || 'start'}
       align={m.align || 'center'}
       inset={m.inset}
+      // Checks for positive float value ending with 'px', 'rem' or 'vh'.
+      height={/^\d+(\.\d+)?(px|rem|vh)$/.test(m.height || '') || m.height === '1' ? m.height : undefined}
     />
   )
 

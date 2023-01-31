@@ -5982,11 +5982,13 @@ class Inline:
             justify: Optional[str] = None,
             align: Optional[str] = None,
             inset: Optional[bool] = None,
+            height: Optional[str] = None,
     ):
         _guard_vector('Inline.items', items, (Component,), False, False, False)
         _guard_enum('Inline.justify', justify, _InlineJustify, True)
         _guard_enum('Inline.align', align, _InlineAlign, True)
         _guard_scalar('Inline.inset', inset, (bool,), False, True, False)
+        _guard_scalar('Inline.height', height, (str,), False, True, False)
         self.items = items
         """The components laid out inline."""
         self.justify = justify
@@ -5995,6 +5997,8 @@ class Inline:
         """Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign."""
         self.inset = inset
         """Whether to display the components inset from the parent form, with a contrasting background."""
+        self.height = height
+        """Height of the component. Use `px`, `vh` or `rem` CSS units or use '1' to fill all the remaining space. E.g. '100vh', '300px' or '1'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6002,11 +6006,13 @@ class Inline:
         _guard_enum('Inline.justify', self.justify, _InlineJustify, True)
         _guard_enum('Inline.align', self.align, _InlineAlign, True)
         _guard_scalar('Inline.inset', self.inset, (bool,), False, True, False)
+        _guard_scalar('Inline.height', self.height, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             align=self.align,
             inset=self.inset,
+            height=self.height,
         )
 
     @staticmethod
@@ -6020,15 +6026,19 @@ class Inline:
         _guard_enum('Inline.align', __d_align, _InlineAlign, True)
         __d_inset: Any = __d.get('inset')
         _guard_scalar('Inline.inset', __d_inset, (bool,), False, True, False)
+        __d_height: Any = __d.get('height')
+        _guard_scalar('Inline.height', __d_height, (str,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         align: Optional[str] = __d_align
         inset: Optional[bool] = __d_inset
+        height: Optional[str] = __d_height
         return Inline(
             items,
             justify,
             align,
             inset,
+            height,
         )
 
 
