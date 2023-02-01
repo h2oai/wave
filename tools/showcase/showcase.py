@@ -65,9 +65,9 @@ def generate_diff_view():
                 content += f'''
 <h2>{str(file).replace('test/diff', '')}</h2>
 <div class='row'>
-  <img src='{src.replace('diff', 'base', 1)}' />
-  <img src='{src.replace('diff', 'compare', 1)}' />
-  <img src='{src}' />
+  <img style="height: fit-content" src='{src.replace('diff', 'base', 1)}' />
+  <img style="height: fit-content" src='{src.replace('diff', 'compare', 1)}' />
+  <img style="height: fit-content" src='{src}' />
 </div>'''
             content += '\n</body>\n</html>'
             f.write(content)
@@ -98,9 +98,11 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, groups: List[s
             path = base_path if is_base else os.path.join('test', 'compare', browser, groups, img_name)
 
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        sub_selector = ' > *' if 'ui.form_card' in code_str else ''
         card_name = match[0][2] if match[0][2] != 'meta' else match[1][2]
-        selector = f'[data-test="{card_name}"]{sub_selector}'
+        selector = f'[data-test="{card_name}"]'
+        if('ui.form_card' in code_str):
+            widget_count = len(page.query_selector_all(f'{selector} > :first-child > *'))
+            selector = f'{selector} > *' if widget_count > 1 else f'{selector} > :first-child > *'
         page.wait_for_selector(selector)
         print(f'Generating {img_name}')
         page.query_selector(selector).screenshot(path=path)
