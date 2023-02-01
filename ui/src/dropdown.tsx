@@ -160,7 +160,7 @@ const
           isMultivalued &&
           <div>
             <Fluent.Text variant='small'>
-              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+              <Fluent.Link disabled={disabled} onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link disabled={disabled} onClick={deselectAll}>Deselect All</Fluent.Link>
             </Fluent.Text>
           </div>
         }

@@ -128,6 +128,14 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['A', 'B', 'D'])
     })
 
+    it('Do not select all options on Select all - dropdown disabled', () => {
+      const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], disabled: true }} />)
+
+      fireEvent.click(getByText('Select All'))
+
+      expect(wave.args[name]).toMatchObject(['A'])
+    })
+
     it('Calls sync on Select all - trigger enabled', () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
 
@@ -144,6 +152,14 @@ describe('Dropdown.tsx', () => {
 
       expect(wave.args[name]).toMatchObject([])
       expect(pushMock).toHaveBeenCalled()
+    })
+
+    it('Do not deselect all options on Deselect all - dropdown disabled', () => {
+      const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], disabled: true }} />)
+
+      fireEvent.click(getByText('Deselect All'))
+
+      expect(wave.args[name]).toMatchObject(['A'])
     })
 
     describe('Prop changes', () => {
@@ -365,7 +381,7 @@ describe('Dropdown.tsx', () => {
 
     it('Shows correct selection in the dropdown dialog - init multi values', () => {
       const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1', '2'] }} />)
-      
+
       fireEvent.click(getByTestId(name))
       expect(getAllByRole('checkbox')[1]).toBeChecked()
       expect(getAllByRole('checkbox')[2]).toBeChecked()
