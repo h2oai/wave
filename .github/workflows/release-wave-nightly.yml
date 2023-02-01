@@ -45,6 +45,8 @@ jobs:
 
       - name: Build Release
         run: make release-nightly
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
 
       - name: Unit Test
         run: |
