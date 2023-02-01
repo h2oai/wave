@@ -28,6 +28,7 @@ async def serve(q: Q):
     await q.page.save()
 
 
+# Run: uvicorn hello_fastapi:app.
 # FastAPI boilerplate.
 app = FastAPI()
 

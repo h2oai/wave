@@ -49,5 +49,6 @@ startlette_app = Starlette(routes=[
     Mount("/", app=StaticFiles(directory=web_directory, html=True), name="/")
 ])
 
+# Run: python hello_starlette.py
 if __name__ == '__main__':
     uvicorn.run(startlette_app, host='0.0.0.0', port=5000)

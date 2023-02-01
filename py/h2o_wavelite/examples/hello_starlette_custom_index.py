@@ -68,5 +68,6 @@ startlette_app = Starlette(routes=[
     Route('/', lambda _r: FileResponse(os.path.join(curr_dir, 'index.html'))),
 ])
 
+# Run: python hello_starlette.py
 if __name__ == '__main__':
     uvicorn.run(startlette_app, host='0.0.0.0', port=5000)

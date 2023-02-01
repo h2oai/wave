@@ -43,6 +43,7 @@ async def serve(q: Q):
     await q.page.save()
 
 
+# Run: uvicorn hello_fastapi_custom_index:app.
 # FastAPI boilerplate.
 app = FastAPI()
 
