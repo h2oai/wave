@@ -23,8 +23,11 @@ web_directory = str(pathlib.Path(__file__).parent / 'www')
 
 # TODO: Inject web_files to this file during build time. No need to read index.html at runtime.
 def get_web_files(prefix: str = '') -> str:
-    if prefix and not prefix.endswith('/'):
-        prefix += '/'
+    if prefix:
+        if not prefix.endswith('/'):
+            prefix += '/'
+        if prefix.startswith('/'):
+            prefix = prefix[1:]
 
     web_files = []
     with open(os.path.join(web_directory, 'index.html'), 'r') as f:
