@@ -266,8 +266,8 @@ export const
       justify={m.justify || 'start'}
       align={m.align || 'center'}
       inset={m.inset}
-      // Checks for positive float value ending with 'px', 'rem' or 'vh'.
-      height={/^\d+(\.\d+)?(px|rem|vh)$/.test(m.height || '') || m.height === '1' ? m.height : undefined}
+      // Checks for '1' or positive float value ending with 'px', 'rem' or 'vh'.
+      height={/^\d+(\.\d+)?(px|rem|vh)$|^1$/.test(m.height || '') ? m.height : undefined}
     />
   )
 
