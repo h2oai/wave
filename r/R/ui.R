@@ -2593,7 +2593,7 @@ ui_stats <- function(
 #' @param align Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'.
 #'   One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
 #' @param inset Whether to display the components inset from the parent form, with a contrasting background.
-#' @param height Height of the component. Use `px`, `vh` or `rem` CSS units or use '1' to fill all the remaining space. E.g. '100vh', '300px' or '1'.
+#' @param height Custom height  in `px`, `vh` or `rem`. Use '1' to fill the height of the remaining space. E.g. '100vh', '300px' or '1'.
 #' @return A Inline instance.
 #' @export
 ui_inline <- function(

@@ -175,7 +175,7 @@ interface Inline {
   align?: 'start' | 'end' | 'center' | 'baseline'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
-  /** Height of the component. Use `px`, `vh` or `rem` CSS units or use '1' to fill all the remaining space. E.g. '100vh', '300px' or '1'. */
+  /** Custom height  in `px`, `vh` or `rem`. Use '1' to fill the height of the remaining space. E.g. '100vh', '300px' or '1'. */
   height?: S
 }
 
@@ -191,8 +191,8 @@ const
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
     card: {
-      padding: 15,
       display: 'flex',
+      padding: 15,
     },
     vertical: {
       display: 'flex',
