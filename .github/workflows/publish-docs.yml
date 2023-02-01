@@ -21,6 +21,8 @@ jobs:
 
       - name: Setup
         run: make all
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
 
       - name: Publish Docs
         run: |
