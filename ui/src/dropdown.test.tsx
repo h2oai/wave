@@ -131,6 +131,8 @@ describe('Dropdown.tsx', () => {
     it('Do not select all options on Select all - dropdown disabled', () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], disabled: true }} />)
 
+      expect(wave.args[name]).toMatchObject(['A'])
+
       fireEvent.click(getByText('Select All'))
 
       expect(wave.args[name]).toMatchObject(['A'])
@@ -156,6 +158,8 @@ describe('Dropdown.tsx', () => {
 
     it('Do not deselect all options on Deselect all - dropdown disabled', () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], disabled: true }} />)
+
+      expect(wave.args[name]).toMatchObject(['A'])
 
       fireEvent.click(getByText('Deselect All'))
 
