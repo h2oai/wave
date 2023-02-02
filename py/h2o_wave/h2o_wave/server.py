@@ -319,6 +319,7 @@ class _App:
         body = await req.json()
         forwarded_headers = body.get('headers', None)
         if forwarded_headers:
+            # TODO: Think about how to clean this up.
             self._forwarded_headers[client_id] = forwarded_headers
 
         auth = Auth(username, subject, access_token, refresh_token, session_id)
