@@ -190,13 +190,12 @@ func handleStatic(indexPage []byte, fs http.Handler, extraHeader http.Header, si
 		clientID := uuid.New().String()
 		site.clientIDToHeaders[clientID] = &r.Header
 
-		cookie := &http.Cookie{
+		http.SetCookie(w, &http.Cookie{
 			Name:     "clientID",
 			Value:    clientID,
 			SameSite: http.SameSiteStrictMode,
 			HttpOnly: true,
-		}
-		http.SetCookie(w, cookie)
+		})
 
 		copyHeaders(extraHeader, header)
 
