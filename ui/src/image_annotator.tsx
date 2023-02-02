@@ -499,9 +499,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
     },
     moveAllSelectedShapes = (dx: U, dy: U) => {
-      drawnShapes.filter(ds => ds.isFocused).forEach(s => {
-        const shape = s.shape.rect ? rectRef.current : polygonRef.current
-        shape?.move(dx, dy, s)
+      drawnShapes.forEach(s => {
+        if (!s.isFocused) return
+        if (s.shape.rect) rectRef.current?.move(dx, dy, s)
+        else if (s.shape.polygon) polygonRef.current?.move(dx, dy, s)
       })
       setWaveArgs(drawnShapes)
       redrawExistingShapes()

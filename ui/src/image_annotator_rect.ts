@@ -80,10 +80,8 @@ export class RectAnnotator {
     const
       { width, height } = this.canvas,
       { x1, x2, y1, y2 } = movedRect,
-      xMin = Math.min(x1, x2),
-      xMax = Math.max(x1, x2),
-      yMin = Math.min(y1, y2),
-      yMax = Math.max(y1, y2),
+      [xMin, xMax] = x1 < x2 ? [x1, x2] : [x2, x1],
+      [yMin, yMax] = y1 < y2 ? [y1, y2] : [y2, y1],
       moveX = xMin + dx < 0 ? -xMin : xMax + dx > width ? width - xMax : dx,
       moveY = yMin + dy < 0 ? -yMin : yMax + dy > height ? height - yMax : dy
 
