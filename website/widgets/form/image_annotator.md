@@ -65,9 +65,9 @@ q.page['example'] = ui.form_card(box='1 1 9 10', items=[
 ])
 ```
 
-## Keyboard shortcuts
+## Supported keyboard shortcuts
 
-We also support keyboard shortcuts, so don't waste time and annotate with ease!
+The legend can be brought up by clicking the Info icon in the top right toolbar.
 
 |         **Key**          |                         **Description**                       |
 |:------------------------:|:-------------------------------------------------------------:|
