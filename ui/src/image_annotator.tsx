@@ -246,7 +246,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     imgPositionRef = React.useRef({ x: 0, y: 0 }),
     imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
     imgRef = React.useRef(new Image()),
-    clipboardRef = React.useRef<S>(''),
+    clipboardRef = React.useRef<DrawnShape[]>([]),
     imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
@@ -526,7 +526,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         canvasRef.current.style.cursor = zoom > 1 ? 'grab' : 'auto'
       }
     },
-    onKeyDown = (e: React.KeyboardEvent) => {
+    onKeyDown = (e: React.KeyboardEvent<HTMLCanvasElement>) => {
       const increment = e.shiftKey ? 10 : 1
       if (e.key === 'ArrowLeft') moveAllSelectedShapes(-increment, 0)
       else if (e.key === 'ArrowRight') moveAllSelectedShapes(increment, 0)
@@ -569,13 +569,37 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
       else if (e.key === 'c') {
         const selectedShapes = drawnShapes.filter(s => s.isFocused)
-        if (selectedShapes.length) clipboardRef.current = JSON.stringify(selectedShapes)
+        // Deep copy.
+        clipboardRef.current = new Array(selectedShapes.length)
+        for (let i = 0; i < selectedShapes.length; i++) {
+          const s = selectedShapes[i]
+          clipboardRef.current[i] = {
+            tag: s.tag,
+            isFocused: true,
+            boundaryRect: s.boundaryRect ? {
+              x1: s.boundaryRect.x1,
+              x2: s.boundaryRect.x2,
+              y1: s.boundaryRect.y1,
+              y2: s.boundaryRect.y2,
+            } : null,
+            shape: {
+              rect: s.shape.rect ? {
+                x1: s.shape.rect.x1 * aspectRatio,
+                x2: s.shape.rect.x2 * aspectRatio,
+                y1: s.shape.rect.y1 * aspectRatio,
+                y2: s.shape.rect.y2 * aspectRatio,
+              } : undefined,
+              polygon: s.shape.polygon ? {
+                vertices: s.shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })),
+              } : undefined,
+            }
+          }
+        }
       }
       else if (e.key === 'v' && clipboardRef.current.length) {
         try {
-          const shapes = JSON.parse(clipboardRef.current)
           setDrawnShapes(prevShapes => {
-            const newShapes = [...shapes, ...prevShapes]
+            const newShapes = [...clipboardRef.current, ...prevShapes]
             setWaveArgs(newShapes)
             return newShapes
           })
@@ -608,7 +632,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
     },
-    onKeyUp = (e: React.KeyboardEvent) => {
+    onKeyUp = (e: React.KeyboardEvent<HTMLCanvasElement>) => {
       // Set correct cursor on key up when Ctrl is unpressed.
       if (e.key === 'Control' && canvasRef.current) canvasRef.current.style.cursor = activeShape === 'select' ? 'auto' : 'crosshair'
     },
@@ -695,7 +719,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
       // Prevent page scroll when mouse is on the canvas.
-      // It's not possible to preventDefault in the React onWheel handler because it is the passive event listener - https://github.com/facebook/react/pull/19654.
+      // It's not possible to preventDefault in the React onWheel handler because React registers JSX listeners as passive - https://github.com/facebook/react/pull/19654.
       canvas.onwheel = e => e.preventDefault()
 
       imgRef.current = img
