@@ -209,7 +209,7 @@ func (b *Broker) resetClients(session *Session) {
 	apps := b.getApps()
 	for _, app := range apps {
 		go func(app *App) {
-			app.forward("", session, logoutMsg, nil)
+			app.forward("", session, logoutMsg)
 		}(app)
 	}
 }

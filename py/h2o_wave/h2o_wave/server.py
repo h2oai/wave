@@ -317,12 +317,14 @@ class _App:
         refresh_token = req.headers.get('Wave-Refresh-Token')
         session_id = req.headers.get('Wave-Session-ID')
 
-        self._forwarded_headers[client_id] = {k: v for k, v in req.headers.items() if not re.match('wave-', k, re.I)}
+        body = await req.json()
+        forwarded_headers = body.get('headers', None)
+        if forwarded_headers:
+            self._forwarded_headers[client_id] = forwarded_headers
 
         auth = Auth(username, subject, access_token, refresh_token, session_id)
-        args = await req.json()
 
-        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))
+        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, body.get('args', {})))
 
     async def _process(self, client_id: str, auth: Auth, args: dict):
         logger.debug(f'user: {auth.username}, client: {client_id}')

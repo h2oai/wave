@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -133,8 +134,19 @@ func (c *Client) listen() {
 				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
-			getRequestHeaders := c.broker.site.clientIDToHeaders[c.id]
-			app.forward(c.id, c.session, m.data, mergeHeaders(*getRequestHeaders, *c.header))
+
+			// TODO: Ugly. Find a better way to wrap m.data into {"args": m.data}.
+			body := map[string]map[string]string{}
+			argsMap := map[string]string{}
+			json.Unmarshal(m.data, &argsMap)
+			body["args"] = argsMap
+
+			data, err := json.Marshal(body)
+			if err != nil {
+				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+				continue
+			}
+			app.forward(c.id, c.session, data)
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
@@ -153,8 +165,26 @@ func (c *Client) listen() {
 					}
 				}
 
-				getRequestHeaders := c.broker.site.clientIDToHeaders[c.id]
-				app.forward(c.id, c.session, boot, mergeHeaders(*getRequestHeaders, *c.header))
+				// TODO: Ugly. Find a better way to wrap m.data into {"args": m.data}.
+				body := map[string]map[string]string{}
+				argsMap := map[string]string{}
+				json.Unmarshal(boot, &argsMap)
+				body["args"] = argsMap
+
+				if getRequestHeaders, ok := c.broker.site.clientIDToHeaders[c.id]; ok {
+					headersMap := map[string]string{}
+					mergeHeaders(headersMap, *getRequestHeaders, *c.header)
+					body["headers"] = headersMap
+					// Send headers just once as they are stored in Wave app anyway.
+					delete(c.broker.site.clientIDToHeaders, c.id)
+				}
+
+				data, err := json.Marshal(body)
+				if err != nil {
+					echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+					continue
+				}
+				app.forward(c.id, c.session, data)
 				continue
 			}
 
@@ -234,17 +264,17 @@ func (c *Client) quit() {
 }
 
 // Merge two http.Headers, preferring the first one.
-func mergeHeaders(h1, h2 http.Header) *http.Header {
-	h := make(http.Header)
+func mergeHeaders(headersMap map[string]string, h1, h2 http.Header) {
 	if h2 != nil {
 		for k, v := range h2 {
-			h[k] = v
+			// HTTP allows multiple headers with the same name, values are comma separated.
+			headersMap[k] = strings.Join(v, ",")
 		}
 	}
 	if h1 != nil {
 		for k, v := range h1 {
-			h[k] = v
+			// HTTP allows multiple headers with the same name, values are comma separated.
+			headersMap[k] = strings.Join(v, ",")
 		}
 	}
-	return &h
 }

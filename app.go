@@ -62,24 +62,17 @@ func newApp(broker *Broker, mode, route, addr, keyID, keySecret string) *App {
 	}
 }
 
-func (app *App) forward(clientID string, session *Session, data []byte, header *http.Header) {
-	if err := app.send(clientID, session, data, header); err != nil {
+func (app *App) forward(clientID string, session *Session, data []byte) {
+	if err := app.send(clientID, session, data); err != nil {
 		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
 		app.broker.dropApp(app.route)
 	}
 }
 
-func (app *App) send(clientID string, session *Session, data []byte, header *http.Header) error {
+func (app *App) send(clientID string, session *Session, data []byte) error {
 	req, err := http.NewRequest("POST", app.addr, bytes.NewReader(data))
 	if err != nil {
 		return fmt.Errorf("failed creating request: %v", err)
-	}
-
-	if header != nil {
-		req.Header = *header
-		// Do not upgrade to websocket.
-		req.Header.Del("Connection")
-		req.Header.Del("Upgrade")
 	}
 
 	req.SetBasicAuth(app.keyID, app.keySecret)
