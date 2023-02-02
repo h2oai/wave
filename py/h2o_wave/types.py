@@ -5998,7 +5998,7 @@ class Inline:
         self.inset = inset
         """Whether to display the components inset from the parent form, with a contrasting background."""
         self.height = height
-        """Custom height  in `px`, `vh` or `rem`. Use '1' to fill the height of the remaining space. E.g. '100vh', '300px' or '1'."""
+        """Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

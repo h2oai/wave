@@ -2217,7 +2217,7 @@ def inline(
         justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify.
         align: Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
         inset: Whether to display the components inset from the parent form, with a contrasting background.
-        height: Custom height  in `px`, `vh` or `rem`. Use '1' to fill the height of the remaining space. E.g. '100vh', '300px' or '1'.
+        height: Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space.
     Returns:
         A `h2o_wave.types.Inline` instance.
     """

@@ -175,7 +175,7 @@ interface Inline {
   align?: 'start' | 'end' | 'center' | 'baseline'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
-  /** Custom height  in `px`, `vh` or `rem`. Use '1' to fill the height of the remaining space. E.g. '100vh', '300px' or '1'. */
+  /** Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space. */
   height?: S
 }
 
@@ -266,8 +266,7 @@ export const
       justify={m.justify || 'start'}
       align={m.align || 'center'}
       inset={m.inset}
-      // Checks for '1' or positive float value ending with 'px', 'rem' or 'vh'.
-      height={/^\d+(\.\d+)?(px|rem|vh)$|^1$/.test(m.height || '') ? m.height : undefined}
+      height={m.height}
     />
   )
 
