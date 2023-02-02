@@ -572,26 +572,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         // Deep copy.
         clipboardRef.current = new Array(selectedShapes.length)
         for (let i = 0; i < selectedShapes.length; i++) {
-          const s = selectedShapes[i]
+          const { tag, shape, boundaryRect } = selectedShapes[i]
           clipboardRef.current[i] = {
-            tag: s.tag,
+            tag,
             isFocused: true,
-            boundaryRect: s.boundaryRect ? {
-              x1: s.boundaryRect.x1,
-              x2: s.boundaryRect.x2,
-              y1: s.boundaryRect.y1,
-              y2: s.boundaryRect.y2,
-            } : null,
+            boundaryRect: boundaryRect ? { x1: boundaryRect.x1, x2: boundaryRect.x2, y1: boundaryRect.y1, y2: boundaryRect.y2 } : null,
             shape: {
-              rect: s.shape.rect ? {
-                x1: s.shape.rect.x1 * aspectRatio,
-                x2: s.shape.rect.x2 * aspectRatio,
-                y1: s.shape.rect.y1 * aspectRatio,
-                y2: s.shape.rect.y2 * aspectRatio,
-              } : undefined,
-              polygon: s.shape.polygon ? {
-                vertices: s.shape.polygon.vertices.map(i => ({ x: i.x * aspectRatio, y: i.y * aspectRatio })),
-              } : undefined,
+              rect: shape.rect ? { x1: shape.rect.x1, x2: shape.rect.x2, y1: shape.rect.y1, y2: shape.rect.y2 } : undefined,
+              polygon: shape.polygon ? { vertices: shape.polygon.vertices.map(({ x, y }) => ({ x, y })) } : undefined,
             }
           }
         }
