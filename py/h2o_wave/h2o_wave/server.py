@@ -16,7 +16,6 @@ import os
 import datetime
 import asyncio
 from concurrent.futures import Executor
-import re
 
 try:
     import contextvars  # Python 3.7+ only.
