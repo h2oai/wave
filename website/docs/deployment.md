@@ -25,3 +25,7 @@ These commands are equivalent:
 ```
 
 For more information, see [uvicorn.org/deployment](https://www.uvicorn.org/deployment/) and [starlette.io/#performance](https://www.starlette.io/#performance).
+
+### Beyond defaults
+
+If different than defaults ports are used for Wave server (<http://localhost:10101>) or Wave app (<http://localhost:8000>) it's necessary to properly set `H2O_WAVE_LISTEN` and `H2O_WAVE_APP_ADDRESS` env variables. More info for configuration options can be found in the [configuration section](https://wave.h2o.ai/docs/configuration).
