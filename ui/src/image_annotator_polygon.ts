@@ -1,23 +1,68 @@
 import { F, S, U } from "h2o-wave"
-import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, Position } from "./image_annotator"
+import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect, Position } from "./image_annotator"
 import { ARC_RADIUS } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
   private currPolygonPoints: ImageAnnotatorPoint[] = []
+  private boundaryRect: ImageAnnotatorRect | null = null
   private draggedPoint: ImageAnnotatorPoint | null = null
   private draggedShape: DrawnShape | null = null
+  private ctx: CanvasRenderingContext2D | null
 
-  constructor(private ctx: CanvasRenderingContext2D) {
-    this.ctx.lineWidth = 2
+  constructor(private canvas: HTMLCanvasElement) {
+    this.ctx = canvas.getContext('2d')
+    if (this.ctx) this.ctx.lineWidth = 2
   }
 
   resetDragging() {
+    // Update the boundaries of the polygon when point dragging ends.
+    const draggedPolygon = this.draggedShape?.shape.polygon
+    if (this.draggedShape && this.draggedPoint && draggedPolygon) {
+      const { x1, x2, y1, y2 } = getPolygonBoundaries(draggedPolygon.vertices)
+      this.draggedShape.boundaryRect!.x1 = x1
+      this.draggedShape.boundaryRect!.x2 = x2
+      this.draggedShape.boundaryRect!.y1 = y1
+      this.draggedShape.boundaryRect!.y2 = y2
+    }
+
     this.draggedPoint = null
     this.draggedShape = null
   }
 
   cancelAnnotating() {
     this.currPolygonPoints = []
+    this.boundaryRect = null
+  }
+
+  addCurrPolygonPoint({ x, y }: { x: U, y: U }) {
+    this.currPolygonPoints.push({ x, y })
+    // Updates the boundaryRect of the polygon.
+    if (this.boundaryRect) {
+      if (x < this.boundaryRect.x1) this.boundaryRect.x1 = x
+      if (x > this.boundaryRect.x2) this.boundaryRect.x2 = x
+      if (y < this.boundaryRect.y1) this.boundaryRect.y1 = y
+      if (y > this.boundaryRect.y2) this.boundaryRect.y2 = y
+    } else this.boundaryRect = { x1: x, x2: x, y1: y, y2: y }
+  }
+
+  removeLastPoint() {
+    this.currPolygonPoints.pop()
+    this.boundaryRect = getPolygonBoundaries(this.currPolygonPoints)
+  }
+
+  finishPolygon(tag: S) {
+    if (this.currPolygonPoints.length < 3) return
+    const
+      { x, y } = this.currPolygonPoints[0],
+      newPolygon = {
+        shape: { polygon: { vertices: [...this.currPolygonPoints] } },
+        boundaryRect: this.boundaryRect,
+        tag
+      }
+    this.drawLine(x, y)
+    this.currPolygonPoints = []
+    this.boundaryRect = null
+    return newPolygon
   }
 
   onClick(cursor_x: U, cursor_y: U, color: S, tag: S): DrawnShape | undefined {
@@ -25,17 +70,39 @@ export class PolygonAnnotator {
 
     this.ctx.beginPath()
     this.ctx.fillStyle = color
-
-    if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) {
-      const { x, y } = this.currPolygonPoints[0]
-      this.drawLine(x, y)
-      const newPolygon = { shape: { polygon: { vertices: [...this.currPolygonPoints] } }, tag }
-      this.currPolygonPoints = []
-      return newPolygon
-    }
+    if (this.isIntersectingFirstPoint(cursor_x, cursor_y)) return this.finishPolygon(tag)
     if (this.currPolygonPoints.length) this.drawLine(cursor_x, cursor_y)
 
-    this.currPolygonPoints.push({ x: cursor_x, y: cursor_y })
+    this.addCurrPolygonPoint({ x: cursor_x, y: cursor_y })
+  }
+
+  move(dx: U, dy: U, shape?: DrawnShape) {
+    // Keep the polygon in the boundaries.
+    const
+      movedShape = (this.draggedShape || shape),
+      boundaryRect = movedShape?.boundaryRect,
+      movedPolygon = movedShape?.shape.polygon
+    if (!movedPolygon || !boundaryRect) return
+
+    const
+      { width, height } = this.canvas,
+      { x1, x2, y1, y2 } = boundaryRect,
+      moveX = x1 + dx < 0 ? -x1 : x2 + dx > width ? width - x2 : dx,
+      moveY = y1 + dy < 0 ? -y1 : y2 + dy > height ? height - y2 : dy
+
+    if (moveX) {
+      boundaryRect.x1 = x1 + moveX
+      boundaryRect.x2 = x2 + moveX
+    }
+    if (moveY) {
+      boundaryRect.y1 = y1 + moveY
+      boundaryRect.y2 = y2 + moveY
+    }
+
+    if (moveX || moveY) movedPolygon.vertices.forEach(p => {
+      p.x += moveX
+      p.y += moveY
+    })
   }
 
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
@@ -45,18 +112,20 @@ export class PolygonAnnotator {
       return
     }
 
+    // TODO: Calculate this in mouseDown handler and store the current result for further use here.
     const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
     this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
+      if (focused.shape.polygon) this.draggedShape = focused
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
     else if (intersected == focused || this.draggedShape) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
-      this.draggedShape?.shape.polygon?.vertices.forEach(p => {
-        p.x += cursor_x - clickStartPosition!.x
-        p.y += cursor_y - clickStartPosition!.y
-      })
+      if (!this.draggedShape) return
+
+      this.move(cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
+
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
@@ -124,7 +193,6 @@ export class PolygonAnnotator {
 
     _points.forEach(({ x, y }) => this.drawLine(x, y))
     if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
-
     if (isFocused) {
       this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
       this.ctx.fill()
@@ -183,6 +251,7 @@ export
     return windingNumber !== 0
   },
   isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F) => {
+    // TODO: Divide ARC_RADIUS by "scale" to make the offset lower when the image is zoomed in.
     const offset = 2 * ARC_RADIUS
     return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
   },
@@ -193,4 +262,15 @@ export
       : intersectedPoint
         ? 'move'
         : ''
+  },
+  // TODO: Refactor using min/max heap.
+  getPolygonBoundaries = (vertices: ImageAnnotatorPoint[]) => {
+    const [firstPoint] = vertices
+    return vertices.reduce((acc, { x, y }) => {
+      if (x < acc.x1) acc.x1 = x
+      if (y < acc.y1) acc.y1 = y
+      if (x > acc.x2) acc.x2 = x
+      if (y > acc.y2) acc.y2 = y
+      return acc
+    }, { x1: firstPoint.x, y1: firstPoint.y, x2: firstPoint.x, y2: firstPoint.y })
   }

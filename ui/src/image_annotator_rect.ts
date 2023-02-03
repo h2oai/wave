@@ -72,6 +72,29 @@ export class RectAnnotator {
     this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
   }
 
+  move = (dx: U, dy: U, shape?: DrawnShape) => {
+    // Prevent moving behind image boundaries.
+    const movedRect = (shape || this.movedRect)?.shape.rect
+    if (!movedRect) return
+
+    const
+      { width, height } = this.canvas,
+      { x1, x2, y1, y2 } = movedRect,
+      [xMin, xMax] = x1 < x2 ? [x1, x2] : [x2, x1],
+      [yMin, yMax] = y1 < y2 ? [y1, y2] : [y2, y1],
+      moveX = xMin + dx < 0 ? -xMin : xMax + dx > width ? width - xMax : dx,
+      moveY = yMin + dy < 0 ? -yMin : yMax + dy > height ? height - yMax : dy
+
+    if (moveX) {
+      movedRect.x1 += moveX
+      movedRect.x2 += moveX
+    }
+    if (moveY) {
+      movedRect.y1 += moveY
+      movedRect.y2 += moveY
+    }
+  }
+
   onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
     if (!clickStartPosition) return
 
@@ -104,32 +127,7 @@ export class RectAnnotator {
       this.movedRect = this.movedRect || intersected
       if (!this.movedRect?.shape.rect) return
 
-      const
-        rect = this.movedRect.shape.rect,
-        xIncrement = cursor_x - x1,
-        yIncrement = cursor_y - y1,
-        newX1 = rect.x1 + xIncrement,
-        newX2 = rect.x2 + xIncrement,
-        newY1 = rect.y1 + yIncrement,
-        newY2 = rect.y2 + yIncrement,
-        { width, height } = this.canvas
-
-      // Prevent moving behind image boundaries.
-      // FIXME: Hitting boundary repeatedly causes rect to increase in size.
-      if (newX1 < rect.x1 && newX1 < 0) rect.x1 = Math.max(0, newX1)
-      else if (newX2 < rect.x2 && newX2 < 0) rect.x2 = Math.max(0, newX2)
-      else if (newY1 < rect.y1 && newY1 < 0) rect.y1 = Math.max(0, newY1)
-      else if (newY2 < rect.y2 && newY2 < 0) rect.y2 = Math.max(0, newY2)
-      else if (newX1 > rect.x1 && newX1 > width) rect.x1 = Math.min(newX1, width)
-      else if (newX2 > rect.x2 && newX2 > width) rect.x2 = Math.min(newX2, width)
-      else if (newY1 > rect.y1 && newY1 > height) rect.y1 = Math.min(newY1, height)
-      else if (newY2 > rect.y2 && newY2 > height) rect.y2 = Math.min(newY2, height)
-      else {
-        rect.x1 = newX1
-        rect.x2 = newX2
-        rect.y1 = newY1
-        rect.y2 = newY2
-      }
+      this.move(cursor_x - x1, cursor_y - y1)
 
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
