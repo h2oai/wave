@@ -7,6 +7,7 @@
   <img alt="License" src="https://img.shields.io/github/license/h2oai/wave?color=yellow">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/h2o-wave?label=current-version">
   <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/h2o_wave">
+  <a href="https://discord.gg/V8GZFAy3WM"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
   <img alt="Contributor covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg">
 </p>
 
@@ -44,7 +45,7 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 
 ![Dashboard](website/blog/assets/2021-01-17/dashboard_purple.png)
 
-Code: https://github.com/h2oai/wave/tree/master/py/demo
+Code: <https://github.com/h2oai/wave/tree/master/py/demo>
 
 ### Themes
 
@@ -58,7 +59,7 @@ Code: https://github.com/h2oai/wave/tree/master/py/demo
 
 ### 80+ components, 175+ examples
 
-More at https://wave.h2o.ai/docs/examples
+More at <https://wave.h2o.ai/docs/examples>
 
 ![Components](assets/visuals/components-1.png)
 
