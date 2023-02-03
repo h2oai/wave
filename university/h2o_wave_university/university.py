@@ -234,7 +234,7 @@ async def show_lesson(q: Q, lesson: Lesson):
     filename = os.path.join(tmp_dir, 'tmp.py')
     code = q.events.editor.change if q.events.editor else lesson.source
     code = code.replace("`", "\\`")
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write(code)
     filename = '.'.join([tmp_dir, 'tmp.py']).split(os.sep)[-1] if code.find('@app(') > 0 else filename
 
