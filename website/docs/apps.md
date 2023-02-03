@@ -11,6 +11,7 @@ A Wave app can publish content and handle user interactions, unlike a [Wave scri
 Here is the skeleton of a Wave app:
 
 ```py title="app.py"
+# Note: Main must be imported even though it is not used.
 from h2o_wave import main, app, Q, ui
 
 @app('/foo')
@@ -32,6 +33,10 @@ An app typically imports four symbols from `h2o_wave`:
 `@app()` has one required argument - the route your app is interested in (in this case `/foo`). Whenever a user performs any action at `/foo` - access the page, reload it, click a button, access a menu, enter text, and so on - the query handler `serve()` is called. The details about what action was performed, and who  performed the action, are available in the argument passed to `serve()`, the *query context* `q` (of type [Q](api/server#q)).
 
 Wave apps are run using the `wave run` command, which accepts the name of the Python module in which `main` is imported from `h2o_wave`.
+
+:::warning
+Do not remove imported `main` despite linters saying it's not used. It is used for marking the entrypoint file of your app.
+:::
 
 If your app is contained in `app.py`, run it like this:
 
@@ -90,10 +95,3 @@ async def serve(q: Q):
 ```
 
 The `on_startup` and `on_shutdown` functions can also be `async`.
-
-
-
-
-
-
-
