@@ -102,7 +102,6 @@ const
           } else {
             setSingleValue(optionKey)
             wave.args[name] = optionKey
-            m.value = optionKey
           }
         }
         if (trigger) wave.push()
