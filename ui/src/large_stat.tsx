@@ -16,7 +16,7 @@ import { Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
-import { clas } from './theme'
+import { clas, cssVar } from './theme'
 import { bond } from './ui'
 
 const
@@ -32,10 +32,10 @@ const
     },
     aux_value: {
       marginLeft: 5,
-      color: 'var(--text6)',
+      color: cssVar('$text6'),
     },
     caption: {
-      color: 'var(--text5)',
+      color: cssVar('$text5'),
     }
   })
 

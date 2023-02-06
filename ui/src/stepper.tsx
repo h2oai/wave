@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { rem } from './theme'
+import { cssVar, rem } from './theme'
 
 /**
  * Create a step for a stepper.
@@ -50,8 +50,8 @@ export interface Stepper {
 const
   css = stylesheet({
     stepNumber: {
-      background: 'var(--text)',
-      color: 'var(--card)',
+      background: cssVar('$text'),
+      color: cssVar('$card'),
       alignItems: 'center',
       borderRadius: '50%',
       display: 'inline-flex',

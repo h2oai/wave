@@ -31,7 +31,7 @@ const
       padding: grid.gap,
     },
     aux_value: {
-      color: 'var(--text7)',
+      color: cssVar('$text7'),
     },
   })
 

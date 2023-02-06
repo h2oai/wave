@@ -33,15 +33,15 @@ const
       justifyContent: 'space-between',
     },
     aux_value: {
-      color: 'var(--text7)',
+      color: cssVar('$text7'),
     },
     caption: {
-      color: 'var(--text5)',
+      color: cssVar('$text5'),
     },
     captions: {
       display: 'flex',
       justifyContent: 'space-between',
-      color: 'var(--text7)',
+      color: cssVar('$text7'),
     },
   })
 

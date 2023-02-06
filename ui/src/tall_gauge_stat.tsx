@@ -42,7 +42,7 @@ const
       alignItems: 'center',
     },
     aux_value: {
-      color: 'var(--text7)',
+      color: cssVar('$text7'),
     },
   })
 

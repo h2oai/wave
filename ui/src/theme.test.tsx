@@ -47,11 +47,11 @@ describe('Theme util functions', () => {
   describe('CSS var func', () => {
 
     it('returns gray theme color by default', () => {
-      expect(cssVar()).toEqual('var(--gray, var(--gray))')
+      expect(cssVar()).toEqual('var(--wave-gray, var(--wave-gray))')
     })
 
     it('returns theme color if prefixed with $', () => {
-      expect(cssVar('$red')).toEqual('var(--red, var(--gray))')
+      expect(cssVar('$red')).toEqual('var(--wave-red, var(--wave-gray))')
     })
 
     it('returns regular CSS color if not prefixed with $', () => {

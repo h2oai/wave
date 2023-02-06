@@ -40,11 +40,11 @@ export const
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   // TODO this is ugly - why does the argument need a '$' prefix?
-  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substring(1)}, var(--gray))` : color,
+  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--wave-${color.substring(1)}, var(--wave-gray))` : color,
   cssVarValue = (prop: S) => {
     if (!prop.startsWith('$')) return prop
     prop = prop.substring(1)
-    return getComputedStyle(document.body).getPropertyValue(`--${prop}`).trim()
+    return getComputedStyle(document.body).getPropertyValue(`--wave-${prop}`).trim()
   },
   // The width is applied to both form item container and component root which is a problem for percentages.
   // E.g. 50% width on both form container and component results in 25% of total form width instead of 50% (component takes 50% of 50% of the form = 25% total).
@@ -580,18 +580,17 @@ const
       { palette, fluentPalette } = theme,
       cardColor = Fluent.getColorFromString(palette.card)!,
       updateTones = (key: S, color: S) => {
-        document.body.style.setProperty(`--${key}`, color)
+        document.body.style.setProperty(`--wave-${key}`, color)
         const { r, g, b } = Fluent.getColorFromString(cssVarValue(color))!
         let alpha = 0.05
         for (let i = 0; i < 10; i++) {
-          document.body.style.setProperty(`--${key}${i}`, `rgba(${r},${g},${b},${alpha})`)
+          document.body.style.setProperty(`--wave-${key}${i}`, `rgba(${r},${g},${b},${alpha})`)
           alpha += i === 0 ? 0.05 : 0.1
         }
       }
 
-    // TODO: This is polluting the global namespace.
-    Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, palette[k as keyof Palette]))
-    Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, fluentPalette[k as keyof Fluent.IPalette] || null))
+    Object.keys(palette).forEach(k => document.body.style.setProperty(`--wave-${k}`, palette[k as keyof Palette]))
+    Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--wave-${k}`, fluentPalette[k as keyof Fluent.IPalette] || null))
 
     if (palette.text) updateTones('text', palette.text)
     if (palette.card) updateTones('card', palette.card)
@@ -606,7 +605,7 @@ const
           const { h, s, v } = Fluent.getColorFromString(spectrum[spectrumColor])!
           const spectrumHsl = Fluent.hsv2hsl(h, s, v)
           document.body.style.setProperty(
-            `--${spectrumColor}`,
+            `--wave-${spectrumColor}`,
             themeName === 'default'
               // Prevents saturation adjustment for 'default' theme and sets back the initial spectrum colors. 
               // Initial values of spectrum colors are already adjusted for 'default' theme.
@@ -623,7 +622,7 @@ const
     // because it is replaced by our new component tree in the meanwhile.
     setTimeout(() => {
       const { semanticColors } = Fluent.loadTheme({ palette: fluentPalette, defaultFontStyle: { fontFamily: 'Inter' }, isInverted: Fluent.isDark(cardColor) })
-      document.body.style.setProperty('--errorText', semanticColors.errorText)
+      document.body.style.setProperty('--wave-errorText', semanticColors.errorText)
     }, 0)
   }
 

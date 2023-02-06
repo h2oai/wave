@@ -123,5 +123,5 @@ In addition to arbitrary CSS colors, you can use the colors that Wave uses itsel
 |       $yellow       |                |                |                          |
 
 :::tip
-All the above colors are just CSS variables without a `$` prefix which means they can be also used within your custom CSS.
+All the above colors are just CSS variables with a `$` prefix replaced with `wave-` which means they can be also used within your custom CSS. E.g. red color would be `--wave-red`.
 :::
