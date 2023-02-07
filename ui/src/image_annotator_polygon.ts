@@ -7,12 +7,9 @@ export class PolygonAnnotator {
   private boundaryRect: ImageAnnotatorRect | null = null
   private draggedPoint: ImageAnnotatorPoint | null = null
   private draggedShape: DrawnShape | null = null
-  private ctx: CanvasRenderingContext2D | null
 
-  constructor(private canvas: HTMLCanvasElement) {
-    this.ctx = canvas.getContext('2d')
-    if (this.ctx) this.ctx.lineWidth = 2
-  }
+
+  constructor(private canvas: HTMLCanvasElement, private ctx: CanvasRenderingContext2D | null) { }
 
   resetDragging() {
     // Update the boundaries of the polygon when point dragging ends.

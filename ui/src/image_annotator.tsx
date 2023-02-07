@@ -91,10 +91,8 @@ export type Position = {
 export type DrawnShape = ImageAnnotatorItem & { isFocused?: B, boundaryRect?: ImageAnnotatorRect | null }
 export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
-const MAX_IMAGE_ZOOM = 2.5
-const ZOOM_STEP = 0.15
-
 const
+  ZOOM_STEP = 0.15,
   tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
     title: {
@@ -109,7 +107,9 @@ const
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0
+      bottom: 0,
+      zIndex: 1,
+      outline: 'none',
     },
     canvasContainer: {
       position: 'relative',
@@ -121,6 +121,16 @@ const
     table: {
       borderSpacing: 0,
       padding: 8
+    },
+    img: {
+      maxHeight: '100%',
+      maxWidth: '100%',
+      transformOrigin: '0px 0px'
+    },
+    imageContainer: {
+      overflow: 'hidden',
+      position: 'relative',
+      margin: '0 auto'
     },
     tableBody: {
       $nest: {
@@ -244,10 +254,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [zoom, setZoom] = React.useState(1),
     imgPositionRef = React.useRef({ x: 0, y: 0 }),
-    imgCanvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null),
-    imgRef = React.useRef(new Image()),
     clipboardRef = React.useRef<DrawnShape[]>([]),
-    imgCanvasRef = React.useRef<HTMLCanvasElement>(null),
+    imgRef = React.useRef<HTMLImageElement>(null),
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
     polygonRef = React.useRef<PolygonAnnotator | null>(null),
@@ -296,28 +304,22 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       onMouseMove({ clientX: x, clientY: y } as React.MouseEvent)
     },
     deselectAllShapes = () => setDrawnShapes(shapes => shapes.map(shape => ({ ...shape, isFocused: false }))),
-    translateImage = (dx: U, dy: U, zoom: F) => {
-      if (!imgCanvasRef.current) return
+    applyZoom = (dx: U, dy: U, zoom: F) => {
+      const canvasCtx = canvasCtxRef.current
+      if (!canvasCtx || !imgRef.current) return
+
       const
         newX = imgPositionRef.current.x + dx,
         newY = imgPositionRef.current.y + dy,
-        imgWidth = imgCanvasRef.current?.width,
-        imgHeight = imgCanvasRef.current?.height,
+        imgWidth = imgRef.current?.width,
+        imgHeight = imgRef.current?.height,
         x = Math.min(0, Math.max(newX, -(imgWidth! * (zoom - 1)))),
         y = Math.min(0, Math.max(newY, -(imgHeight! * (zoom - 1))))
+
       imgPositionRef.current = { x, y }
-    },
-    // Redraw image after image position change.
-    updateCanvas = (zoom: F) => {
-      const imgCanvasCtx = imgCanvasCtxRef.current
-      if (imgCanvasCtx) {
-        const canvasCtx = canvasCtxRef.current
-        const img = imgRef.current
-        const { height, width } = img
-        if (canvasCtx) canvasCtx.setTransform(zoom, 0, 0, zoom, imgPositionRef.current.x, imgPositionRef.current.y)
-        if (img) imgCanvasCtx.drawImage(img, 0, 0, width, height, imgPositionRef.current.x, imgPositionRef.current.y, width * aspectRatio * zoom, height * aspectRatio * zoom)
-        redrawExistingShapes()
-      }
+      canvasCtx.setTransform(zoom, 0, 0, zoom, imgPositionRef.current.x, imgPositionRef.current.y)
+      imgRef.current.style.transform = `translate(${imgPositionRef.current.x}px, ${imgPositionRef.current.y}px) scale(${zoom})`
+      redrawExistingShapes()
     },
     cancelOngoingAction = () => {
       deselectAllShapes()
@@ -390,9 +392,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       if (e.ctrlKey && zoom > 1) {
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
-        if (clickStartPosition?.dragging && imgCanvasRef.current) {
-          translateImage((cursor_x - clickStartPosition.x) * zoom, (cursor_y - clickStartPosition.y) * zoom, zoom)
-          updateCanvas(zoom)
+        if (clickStartPosition?.dragging) {
+          applyZoom((cursor_x - clickStartPosition.x) * zoom, (cursor_y - clickStartPosition.y) * zoom, zoom)
         }
       } else {
         const
@@ -414,16 +415,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           }
           case 'select': {
             // If left mouse btn is not held during moving, ignore.
-            if (e.buttons !== 1) break
-            const shape = focused?.shape.rect ? rectRef.current : polygonRef.current
+            if (e.buttons !== 1 || !focused) break
             // TODO: Move all selected shapes at once.
-            if (shape) {
-              shape.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-              // Deselect all other shapes when one starts moving and prevent their movement
-              // when mouse is over them while one is being dragged.
-              setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: ds === focused })))
-              redrawExistingShapes()
-            }
+            if (focused.shape.rect && rectRef.current) rectRef.current.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            if (focused.shape.polygon && polygonRef.current) polygonRef.current.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            // Deselect all other shapes when one starts moving and prevent their movement
+            // when mouse is over them while one is being dragged.
+            setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: ds === focused })))
+            redrawExistingShapes()
             break
           }
         }
@@ -507,24 +506,22 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       setWaveArgs(drawnShapes)
       redrawExistingShapes()
     },
-    // Zoom canvas in/out.
     onWheel = (e: React.WheelEvent) => {
       const rect = canvasRef.current?.getBoundingClientRect()
-      if (canvasRef.current && e.ctrlKey && rect) {
-        setZoom(zoom => {
-          const newZoom = Math.max(1, Math.min(MAX_IMAGE_ZOOM, zoom + (e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP)))
-          if (zoom !== newZoom) {
-            const
-              { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
-              translateFactor = (e.deltaY > 0 ? 1 : -1) * Math.abs(newZoom - zoom)
-            // Translate image to cursor position on zoom change.
-            translateImage(cursor_x * translateFactor, cursor_y * translateFactor, newZoom)
-            updateCanvas(newZoom)
-          }
-          return newZoom
-        })
-        canvasRef.current.style.cursor = zoom > 1 ? 'grab' : 'auto'
-      }
+      if (!canvasRef.current || !e.ctrlKey || !rect) return
+
+      setZoom(zoom => {
+        const newZoom = Math.max(1, zoom + (e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP))
+        if (zoom !== newZoom) {
+          const
+            { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
+            translateFactor = (e.deltaY > 0 ? 1 : -1) * Math.abs(newZoom - zoom)
+          applyZoom(cursor_x * translateFactor, cursor_y * translateFactor, newZoom)
+        }
+        return newZoom
+      })
+      canvasRef.current.style.cursor = zoom > 1 ? 'grab' : 'auto'
+
     },
     onKeyDown = (e: React.KeyboardEvent<HTMLCanvasElement>) => {
       const increment = e.shiftKey ? 10 : 1
@@ -666,60 +663,47 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         return { tag, shape }
       }) as unknown as Rec[]
       if (model.trigger) wave.push()
+    },
+    onImgLoad = () => {
+      const canvas = canvasRef.current
+      const img = imgRef.current
+      if (!img || !canvas) return
+
+      const height = model.image_height ? +model.image_height.replace('px', '') : img.naturalHeight
+      const aspectRatio = height / img.naturalHeight
+      setAspectRatio(aspectRatio)
+      const imgParent = img.parentElement as HTMLDivElement
+      imgParent.style.height = px(height)
+      imgParent.style.width = px(img.naturalWidth * aspectRatio)
+      canvas.height = height
+      canvas.width = img.naturalWidth * aspectRatio
+
+      canvas.parentElement!.style.height = px(height)
+
+      canvasCtxRef.current = canvas.getContext('2d')
+      if (canvasCtxRef.current) {
+        canvasCtxRef.current.lineWidth = 2
+        rectRef.current = new RectAnnotator(canvas, canvasCtxRef.current)
+        polygonRef.current = new PolygonAnnotator(canvas, canvasCtxRef.current)
+      }
+
+      // Prevent page scroll when mouse is on the canvas.
+      // It's not possible to preventDefault in the React onWheel handler because React registers JSX listeners as passive - https://github.com/facebook/react/pull/19654.
+      canvas.onwheel = e => e.preventDefault()
+
+      imgPositionRef.current = { x: 0, y: 0 }
+      setZoom(1)
+      setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
+      redrawExistingShapes()
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [])
+  React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [model.name, model.items])
 
   // Handle case when changing active tag by "l" shortcut while annotating polygon.
   // TODO: Re-implement this in a more elegant way.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => recreatePreviewLine(), [activeTag])
-
-  React.useEffect(() => {
-    const img = new Image()
-    img.src = model.image
-    img.onload = () => {
-      const imgCanvas = imgCanvasRef.current
-      const canvas = canvasRef.current
-      if (!imgCanvas || !canvas) return
-      canvasCtxRef.current = canvas.getContext('2d')
-
-      const ctx = imgCanvas.getContext('2d')
-      if (!ctx) return
-
-      const height = model.image_height ? +model.image_height.replace('px', '') : img.naturalHeight
-      const aspectRatio = height / img.naturalHeight
-      setAspectRatio(aspectRatio)
-      imgCanvas.height = height
-      imgCanvas.width = img.naturalWidth * aspectRatio
-      canvas.height = height
-      canvas.width = img.naturalWidth * aspectRatio
-      canvas.style.zIndex = '1'
-      canvas.parentElement!.style.height = px(height)
-
-      rectRef.current = new RectAnnotator(canvas)
-      if (canvasCtxRef.current) {
-        polygonRef.current = new PolygonAnnotator(canvas)
-        imgPositionRef.current = { x: 0, y: 0 }
-        if (zoom !== 1) setZoom(1)
-      }
-
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * aspectRatio, img.height * aspectRatio)
-      // Prevent page scroll when mouse is on the canvas.
-      // It's not possible to preventDefault in the React onWheel handler because React registers JSX listeners as passive - https://github.com/facebook/react/pull/19654.
-      canvas.onwheel = e => e.preventDefault()
-
-      imgRef.current = img
-      imgCanvasCtxRef.current = ctx
-
-      if (!drawnShapes.length) {
-        setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
-        redrawExistingShapes()
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model.name, model.image, model.image_height, model.items])
 
   const farItems: Fluent.ICommandBarItemProps[] | undefined = [getFarItem('select', 'Select', chooseShape, activeShape, 'TouchPointer')]
   if (allowedShapes.has('rect')) farItems.push(getFarItem('rect', 'Rectangle', chooseShape, activeShape, 'RectangleShape'))
@@ -766,7 +750,14 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         farItems={farItems}
       />
       <div className={css.canvasContainer}>
-        <canvas ref={imgCanvasRef} className={css.canvas} />
+        <div className={css.imageContainer}>
+          <img
+            ref={imgRef}
+            className={css.img}
+            src={model.image}
+            onLoad={onImgLoad}
+            alt="Image to annotate / with annotations." />
+        </div>
         <canvas
           tabIndex={0}
           ref={canvasRef}

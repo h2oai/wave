@@ -10,12 +10,8 @@ export const ARC_RADIUS = 4
 export class RectAnnotator {
   private resizedCorner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   private movedRect?: DrawnShape
-  private ctx: CanvasRenderingContext2D | null
 
-  constructor(private canvas: HTMLCanvasElement) {
-    this.ctx = canvas.getContext('2d')
-    if (this.ctx) this.ctx.lineWidth = 2
-  }
+  constructor(private canvas: HTMLCanvasElement, private ctx: CanvasRenderingContext2D | null) { }
 
   drawCircle = (x: U, y: U) => {
     if (!this.ctx) return
