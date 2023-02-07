@@ -40,7 +40,10 @@ export default defineConfig({
       },
       '/_f': {
         target: 'http://localhost:10101',
-      }
+      },
+      '/_m': {
+        target: 'http://localhost:10101',
+      },
     }
   }
 })
