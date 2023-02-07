@@ -61,3 +61,20 @@ q.page['align'] = ui.form_card(box='1 1 3 5', items=[
     ui.inline(items, align='end'),
 ])
 ```
+
+## Setting height
+
+Height of the `ui.inline` can be controlled via the `height` attribute, supporting all [valid CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units). However, `%` may not always work as you might expect so it's advised to use static units like `px`, `rem` etc.
+
+It's also possible to specify `1` to fill the remaining card space. Useful for displaying form items in the middle of the card or just making more breathing room.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
+    ui.inline(
+        items=[ui.text('I am in the perfect center!')], 
+        justify='center',
+        align='center',
+        height='1'
+    )
+])
+```

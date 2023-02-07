@@ -2593,22 +2593,26 @@ ui_stats <- function(
 #' @param align Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'.
 #'   One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
 #' @param inset Whether to display the components inset from the parent form, with a contrasting background.
+#' @param height Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space.
 #' @return A Inline instance.
 #' @export
 ui_inline <- function(
   items,
   justify = NULL,
   align = NULL,
-  inset = NULL) {
+  inset = NULL,
+  height = NULL) {
   .guard_vector("items", "WaveComponent", items)
   # TODO Validate justify
   # TODO Validate align
   .guard_scalar("inset", "logical", inset)
+  .guard_scalar("height", "character", height)
   .o <- list(inline=list(
     items=items,
     justify=justify,
     align=align,
-    inset=inset))
+    inset=inset,
+    height=height))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
