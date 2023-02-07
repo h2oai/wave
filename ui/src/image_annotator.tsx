@@ -125,7 +125,9 @@ const
     img: {
       maxHeight: '100%',
       maxWidth: '100%',
-      transformOrigin: '0px 0px'
+      transformOrigin: '0px 0px',
+      display: 'block',
+      margin: '0 auto',
     },
     imageContainer: {
       overflow: 'hidden',
@@ -259,7 +261,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     canvasRef = React.useRef<HTMLCanvasElement>(null),
     rectRef = React.useRef<RectAnnotator | null>(null),
     polygonRef = React.useRef<PolygonAnnotator | null>(null),
-    [aspectRatio, setAspectRatio] = React.useState(1),
+    aspectRatioRef = React.useRef(1),
     clickStartPositionRef = React.useRef<Position | undefined>(undefined),
     canvasCtxRef = React.useRef<CanvasRenderingContext2D | undefined | null>(undefined),
     mousePositionRef = React.useRef({ x: 0, y: 0 }),
@@ -643,10 +645,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           tag,
           shape: {
             rect: {
-              x1: Math.round(shape.rect.x1 / aspectRatio),
-              x2: Math.round(shape.rect.x2 / aspectRatio),
-              y1: Math.round(shape.rect.y1 / aspectRatio),
-              y2: Math.round(shape.rect.y2 / aspectRatio),
+              x1: Math.round(shape.rect.x1 / aspectRatioRef.current),
+              x2: Math.round(shape.rect.x2 / aspectRatioRef.current),
+              y1: Math.round(shape.rect.y1 / aspectRatioRef.current),
+              y2: Math.round(shape.rect.y2 / aspectRatioRef.current),
             }
           }
         }
@@ -656,7 +658,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             polygon: {
               vertices: shape.polygon.vertices
                 .filter((i: DrawnPoint) => !i.isAux)
-                .map(i => ({ x: Math.round(i.x / aspectRatio), y: Math.round(i.y / aspectRatio) }))
+                .map(i => ({ x: Math.round(i.x / aspectRatioRef.current), y: Math.round(i.y / aspectRatioRef.current) }))
             }
           }
         }
@@ -670,13 +672,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!img || !canvas) return
 
       const height = model.image_height ? +model.image_height.replace('px', '') : img.naturalHeight
-      const aspectRatio = height / img.naturalHeight
-      setAspectRatio(aspectRatio)
+      aspectRatioRef.current = height / img.naturalHeight
       const imgParent = img.parentElement as HTMLDivElement
       imgParent.style.height = px(height)
-      imgParent.style.width = px(img.naturalWidth * aspectRatio)
+      imgParent.style.width = px(img.naturalWidth * aspectRatioRef.current)
       canvas.height = height
-      canvas.width = img.naturalWidth * aspectRatio
+      canvas.width = img.naturalWidth * aspectRatioRef.current
 
       canvas.parentElement!.style.height = px(height)
 
@@ -693,12 +694,17 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       imgPositionRef.current = { x: 0, y: 0 }
       setZoom(1)
-      setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatio))
+      setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
       redrawExistingShapes()
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [model.name, model.items])
+
+  React.useEffect(() => {
+    setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
+    redrawExistingShapes()
+  }, [model.items, redrawExistingShapes])
 
   // Handle case when changing active tag by "l" shortcut while annotating polygon.
   // TODO: Re-implement this in a more elegant way.
