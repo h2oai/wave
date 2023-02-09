@@ -56,7 +56,7 @@ If you discover a security vulnerability within H2O Wave, please send an email t
 
 :warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) is recommended.
 
-You will need [Go](https://golang.org/) 1.13+, [Node.js](http://nodejs.org) 16+, [Python](https://www.python.org/) 3.7+. You should already have Python 3.7+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
+You will need [Go](https://golang.org/) 1.19+, [Node.js](http://nodejs.org) 16+, [Python](https://www.python.org/) 3.7+. You should already have Python 3.7+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
 
 ### Getting started
 
