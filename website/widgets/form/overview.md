@@ -85,3 +85,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.text_m(content='I am visible!'),
 ])
 ```
+
+## Laying out components
+
+If placing the form components in a default top-down direction is insufficient, try looking at [ui.inline](/docs/widgets/form/inline/) component that supports various alignment and sizing options.

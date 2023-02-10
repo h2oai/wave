@@ -177,6 +177,8 @@ interface Inline {
   inset?: B
   /** Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space. */
   height?: S
+  /** Container direction. Defaults to 'row'. */
+  direction?: 'row' | 'column'
 }
 
 /** Create a form. */
@@ -192,6 +194,7 @@ const
   css = stylesheet({
     card: {
       display: 'flex',
+      flexDirection: 'column',
       padding: 15,
     },
     vertical: {
@@ -225,9 +228,17 @@ const
 
 type Justification = 'start' | 'end' | 'center' | 'between' | 'around'
 type Alignment = 'start' | 'end' | 'center' | 'baseline'
+type XComponentsProps = {
+  items: Component[]
+  justify?: Justification
+  align?: Alignment
+  inset?: B
+  height?: S
+  direction?: 'row' | 'column'
+}
 
 export const
-  XComponents = ({ items, justify, align, inset, height }: { items: Component[], justify?: Justification, align?: Alignment, inset?: B, height?: S }) => {
+  XComponents = ({ items, justify, align, inset, height, direction = 'column' }: XComponentsProps) => {
     const
       components = items.map((m: any, i) => {
         const
@@ -239,8 +250,8 @@ export const
           alignSelf = componentKey === 'links' ? 'flex-start' : undefined
 
         return (
-          // Recreate only if name or position within form items changed, update otherwise.
           <div
+            // Recreate only if name or position within form items changed, update otherwise.
             key={name || `${componentKey}-${i}`}
             data-visible={visible}
             className={height === '1' ? css.fullHeight : ''}
@@ -251,14 +262,16 @@ export const
         )
       })
 
-    return <div
-      className={clas(justify ? css.horizontal : css.vertical, inset ? css.inset : '', height === '1' ? css.fullHeight : '')}
-      style={{
-        justifyContent: justifications[justify || ''],
-        alignItems: alignments[align || ''],
-        height: height === '1' ? undefined : height,
-      }}
-    >{components}</div>
+    return (
+      <div
+        className={clas(direction === 'row' ? css.horizontal : css.vertical, inset ? css.inset : '', height === '1' ? css.fullHeight : '')}
+        style={{
+          justifyContent: justifications[justify || ''],
+          alignItems: alignments[align || ''],
+          height: height === '1' ? undefined : height,
+        }}
+      >{components}</div>
+    )
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
@@ -267,6 +280,7 @@ export const
       align={m.align || 'center'}
       inset={m.inset}
       height={m.height}
+      direction={m.direction || 'row'}
     />
   )
 
