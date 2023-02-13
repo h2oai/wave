@@ -112,7 +112,7 @@ class Query:
             client_state: Expando,
             args: Expando,
             events: Expando,
-            forwarded_headers: Dict[str, str]
+            headers: Dict[str, str]
     ):
         self.mode = mode
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
@@ -136,7 +136,7 @@ class Query:
         """The route served by the server."""
         self.auth = auth
         """The authentication / authorization details of the user who initiated this query."""
-        self.forwarded_headers = forwarded_headers
+        self.headers = headers
         """Original HTTP connection headers forwarded from the Wave server to this application."""
 
     async def sleep(self, delay: float, result=None) -> Any:
@@ -345,7 +345,7 @@ class _App:
             client_state=_session_for(client_state, client_id),
             args=Expando(args),
             events=Expando(events_state),
-            forwarded_headers=self._headers.get(client_id, {}),
+            headers=self._headers.get(client_id, {}),
         )
         # noinspection PyBroadException,PyPep8
         try:
