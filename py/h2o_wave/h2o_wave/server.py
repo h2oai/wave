@@ -137,7 +137,7 @@ class Query:
         self.auth = auth
         """The authentication / authorization details of the user who initiated this query."""
         self.headers = headers
-        """Original HTTP connection headers forwarded from the Wave server to this application."""
+        """Original Websocket HTTP connection headers forwarded from the Wave server to this application."""
 
     async def sleep(self, delay: float, result=None) -> Any:
         """
