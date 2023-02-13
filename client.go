@@ -49,11 +49,10 @@ var (
 
 // WaveMsg represents the message sent to an app.
 type WaveMsg struct {
-	Data    map[string]interface{} `json:"data"`    // q.args, q.events
-	Headers map[string]string      `json:"headers"` // forwarded headers
+	Data map[string]interface{} `json:"data"` // q.args, q.events
 }
 
-// WaveBootMsg represents the initial message sent to an app when a client first connects to it
+// WaveBootMsg represents the initial message sent to an app when a client first connects to it.
 type WaveBootMsg struct {
 	Data struct {
 		Hash string `json:"#,omitempty"` // location hash
