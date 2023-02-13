@@ -18,9 +18,9 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -47,9 +47,18 @@ var (
 	}
 )
 
-// Boot represents the initial message sent to an app when a client first connects to it
-type Boot struct {
-	Hash string `json:"#,omitempty"` // location hash
+// WaveMsg represents the message sent to an app.
+type WaveMsg struct {
+	Data    map[string]interface{} `json:"data"`    // q.args, q.events
+	Headers map[string]string      `json:"headers"` // forwarded headers
+}
+
+// WaveBootMsg represents the initial message sent to an app when a client first connects to it
+type WaveBootMsg struct {
+	Data struct {
+		Hash string `json:"#,omitempty"` // location hash
+	} `json:"data"`
+	Headers http.Header `json:"headers"` // forwarded headers
 }
 
 // Client represent a websocket (UI) client.
@@ -67,8 +76,8 @@ type Client struct {
 	header   *http.Header
 }
 
-func newClient(clientID, addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
-	return &Client{clientID, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header}
 }
 
 func (c *Client) refreshToken() error {
@@ -135,18 +144,20 @@ func (c *Client) listen() {
 				continue
 			}
 
-			// TODO: Ugly. Find a better way to wrap m.data into {"args": m.data}.
-			body := map[string]map[string]string{}
-			argsMap := map[string]string{}
-			json.Unmarshal(m.data, &argsMap)
-			body["args"] = argsMap
-
-			data, err := json.Marshal(body)
-			if err != nil {
-				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+			// Maybe a simple string concatenation would be enough?
+			var tmpMap map[string]interface{}
+			if err := json.Unmarshal(m.data, &tmpMap); err != nil {
+				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed unmarshaling body"})
 				continue
 			}
-			app.forward(c.id, c.session, data)
+
+			body, err := json.Marshal(WaveMsg{Data: tmpMap})
+			if err != nil {
+				echo(Log{"t": "watch", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+				continue
+			}
+
+			app.forward(c.id, c.session, body)
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
@@ -158,33 +169,19 @@ func (c *Client) listen() {
 					c.subscribe("/" + c.session.subject) // user-level
 				}
 
-				boot := emptyJSON
+				boot := WaveBootMsg{Headers: *c.header}
+
 				if len(m.data) > 0 { // location hash
-					if j, err := json.Marshal(Boot{Hash: string(m.data)}); err == nil {
-						boot = j
-					}
+					boot.Data.Hash = string(m.data)
 				}
 
-				// TODO: Ugly. Find a better way to wrap m.data into {"args": m.data}.
-				body := map[string]map[string]string{}
-				argsMap := map[string]string{}
-				json.Unmarshal(boot, &argsMap)
-				body["args"] = argsMap
-
-				if getRequestHeaders, ok := c.broker.site.clientIDToHeaders[c.id]; ok {
-					headersMap := map[string]string{}
-					mergeHeaders(headersMap, *getRequestHeaders, *c.header)
-					body["headers"] = headersMap
-					// Send headers just once as they are stored in Wave app anyway.
-					delete(c.broker.site.clientIDToHeaders, c.id)
-				}
-
-				data, err := json.Marshal(body)
+				body, err := json.Marshal(boot)
 				if err != nil {
-					echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+					echo(Log{"t": "watch", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
 					continue
 				}
-				app.forward(c.id, c.session, data)
+
+				app.forward(c.id, c.session, body)
 				continue
 			}
 
@@ -261,20 +258,4 @@ func (c *Client) flush() {
 
 func (c *Client) quit() {
 	close(c.data)
-}
-
-// Merge two http.Headers, preferring the first one.
-func mergeHeaders(headersMap map[string]string, h1, h2 http.Header) {
-	if h2 != nil {
-		for k, v := range h2 {
-			// HTTP allows multiple headers with the same name, values are comma separated.
-			headersMap[k] = strings.Join(v, ",")
-		}
-	}
-	if h1 != nil {
-		for k, v := range h1 {
-			// HTTP allows multiple headers with the same name, values are comma separated.
-			headersMap[k] = strings.Join(v, ",")
-		}
-	}
 }

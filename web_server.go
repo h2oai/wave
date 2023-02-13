@@ -23,7 +23,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/h2oai/wave/pkg/keychain"
 )
 
@@ -59,7 +58,7 @@ func newWebServer(
 		return nil, fmt.Errorf("failed reading default index.html page: %v", err)
 	}
 
-	fs := handleStatic([]byte(mungeIndexPage(baseURL, string(indexPage))), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header, site)
+	fs := handleStatic([]byte(mungeIndexPage(baseURL, string(indexPage))), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header)
 	if auth != nil {
 		fs = auth.wrap(fs)
 	}
@@ -171,7 +170,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleStatic(indexPage []byte, fs http.Handler, extraHeader http.Header, site *Site) http.Handler {
+func handleStatic(indexPage []byte, fs http.Handler, extraHeader http.Header) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// if the url has an extension, serve the file
 		if len(path.Ext(r.URL.Path)) > 0 {
@@ -186,16 +185,6 @@ func handleStatic(indexPage []byte, fs http.Handler, extraHeader http.Header, si
 		header.Add("Content-Type", contentTypeHTML)
 		header.Add("Cache-Control", "no-cache, must-revalidate")
 		header.Add("Pragma", "no-cache")
-
-		clientID := uuid.New().String()
-		site.clientIDToHeaders[clientID] = &r.Header
-
-		http.SetCookie(w, &http.Cookie{
-			Name:     "clientID",
-			Value:    clientID,
-			SameSite: http.SameSiteStrictMode,
-			HttpOnly: true,
-		})
 
 		copyHeaders(extraHeader, header)
 

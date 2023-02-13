@@ -51,14 +51,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	clientIDCookie, err := r.Cookie("clientID")
-	if err != nil {
-		echo(Log{"t": "extracting cookie from WS", "err": err.Error()})
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	client := newClient(clientIDCookie.Value, getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &r.Header)
+	client := newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &r.Header)
 	go client.flush()
 	go client.listen()
 }

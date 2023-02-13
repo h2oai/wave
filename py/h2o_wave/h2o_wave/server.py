@@ -231,7 +231,7 @@ class _App:
         self._handle = handle
         self._wave: _Wave = _Wave()
         self._state: WebAppState = _load_state()
-        self._forwarded_headers: Dict[str, Dict[str, str]] = {}
+        self._headers: Dict[str, Dict[str, str]] = {}
         self._site: AsyncSite = AsyncSite()
 
         logger.info(f'Server Mode: {mode}')
@@ -285,7 +285,7 @@ class _App:
                 logger.debug('Register: retrying...')
 
     async def _unregister(self):
-        logger.debug(f'Unregistering app...')
+        logger.debug('Unregistering app...')
         try:
             await self._wave.call('unregister_app', route=self._route)
             logger.debug('Unregister: success!')
@@ -302,7 +302,7 @@ class _App:
             if scheme.lower() != 'basic':
                 return PlainTextResponse(content='Unauthorized', status_code=401)
             decoded = base64.b64decode(credentials).decode("ascii")
-        except (ValueError, UnicodeDecodeError, binascii.Error) as exc:
+        except (ValueError, UnicodeDecodeError, binascii.Error):
             return PlainTextResponse(content='Unauthorized', status_code=401)
 
         key_id, _, key_secret = decoded.partition(":")
@@ -320,11 +320,11 @@ class _App:
         forwarded_headers = body.get('headers', None)
         if forwarded_headers:
             # TODO: Think about how to clean this up.
-            self._forwarded_headers[client_id] = forwarded_headers
+            self._headers[client_id] = forwarded_headers
 
         auth = Auth(username, subject, access_token, refresh_token, session_id)
 
-        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, body.get('args', {})))
+        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, body.get('data', {})))
 
     async def _process(self, client_id: str, auth: Auth, args: dict):
         logger.debug(f'user: {auth.username}, client: {client_id}')
@@ -345,7 +345,7 @@ class _App:
             client_state=_session_for(client_state, client_id),
             args=Expando(args),
             events=Expando(events_state),
-            forwarded_headers=self._forwarded_headers.get(client_id, {}),
+            forwarded_headers=self._headers.get(client_id, {}),
         )
         # noinspection PyBroadException,PyPep8
         try:
