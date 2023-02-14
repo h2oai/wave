@@ -245,6 +245,7 @@ class _App:
         self.app = Router(
             routes=[
                 Route('/', endpoint=self._receive, methods=['POST']),
+                Route('/disconnect', endpoint=self._disconnect, methods=['POST']),
             ],
             on_startup=[
                 self._register,
@@ -293,20 +294,23 @@ class _App:
         except httpx.ConnectError:
             logger.debug('Could not unregister app due to unreachable server.')
 
-    async def _receive(self, req: Request):
-        basic_auth = req.headers.get("Authorization")
-        if basic_auth is None:
-            return PlainTextResponse(content='Unauthorized', status_code=401)
-        try:
-            scheme, credentials = basic_auth.split()
-            if scheme.lower() != 'basic':
-                return PlainTextResponse(content='Unauthorized', status_code=401)
-            decoded = base64.b64decode(credentials).decode("ascii")
-        except (ValueError, UnicodeDecodeError, binascii.Error):
+    async def _disconnect(self, req: Request):
+        if not _is_req_authorized(req):
             return PlainTextResponse(content='Unauthorized', status_code=401)
 
-        key_id, _, key_secret = decoded.partition(":")
-        if key_id != _config.app_access_key_id or key_secret != _config.app_access_key_secret:
+        client_id = req.headers.get('Wave-Client-ID')
+        if not client_id:
+            return PlainTextResponse(content='Bad Request', status_code=400)
+
+        if client_id in self._state[2]:
+            del self._state[2][client_id]
+        if client_id in self._headers:
+            del self._headers[client_id]
+
+        return PlainTextResponse('')
+
+    async def _receive(self, req: Request):
+        if not _is_req_authorized(req):
             return PlainTextResponse(content='Unauthorized', status_code=401)
 
         client_id = req.headers.get('Wave-Client-ID')
@@ -319,7 +323,6 @@ class _App:
         body = await req.json()
         forwarded_headers = body.get('headers', None)
         if forwarded_headers:
-            # TODO: Think about how to clean this up.
             self._headers[client_id] = forwarded_headers
 
         auth = Auth(username, subject, access_token, refresh_token, session_id)
@@ -367,6 +370,25 @@ class _App:
 
     def _shutdown(self):
         _save_state(self._state)
+
+
+def _is_req_authorized(req: Request) -> bool:
+    basic_auth = req.headers.get("Authorization")
+    if basic_auth is None:
+        return False
+    try:
+        scheme, credentials = basic_auth.split()
+        if scheme.lower() != 'basic':
+            return PlainTextResponse(content='Unauthorized', status_code=401)
+        decoded = base64.b64decode(credentials).decode("ascii")
+    except (ValueError, UnicodeDecodeError, binascii.Error):
+        return False
+
+    key_id, _, key_secret = decoded.partition(":")
+    if key_id != _config.app_access_key_id or key_secret != _config.app_access_key_secret:
+        return False
+
+    return True
 
 
 _CHECKPOINT_DIR_ENV_VAR = 'H2O_WAVE_CHECKPOINT_DIR'

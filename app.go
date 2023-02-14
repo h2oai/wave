@@ -62,6 +62,29 @@ func newApp(broker *Broker, mode, route, addr, keyID, keySecret string) *App {
 	}
 }
 
+func (app *App) disconnect(clientID string) error {
+	req, err := http.NewRequest("POST", app.addr+"/disconnect", nil)
+	if err != nil {
+		return fmt.Errorf("failed creating request: %v", err)
+	}
+
+	req.SetBasicAuth(app.keyID, app.keySecret)
+	req.Header.Set("Wave-Client-ID", clientID)
+
+	resp, err := app.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("request failed: %v", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("request failed: %s", http.StatusText(resp.StatusCode))
+	}
+	if _, err := readWithLimit(resp.Body, 0); err != nil { // apps always return empty plain-text responses.
+		return fmt.Errorf("failed reading response: %v", err)
+	}
+	return nil
+}
+
 func (app *App) forward(clientID string, session *Session, data []byte) {
 	if err := app.send(clientID, session, data); err != nil {
 		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})

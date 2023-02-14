@@ -71,12 +71,13 @@ type Client struct {
 	routes   []string        // watched routes
 	data     chan []byte     // send data
 	editable bool            // allow editing? // TODO move to user; tie to role
-	baseURL  string
-	header   *http.Header
+	baseURL  string          // URL prefix of the Wave server
+	header   *http.Header    // forwarded headers from the WS connection
+	appPath  string          // path of the app this client is connected to, doesn't change throughout WS lifetime
 }
 
 func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
-	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header}
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, ""}
 }
 
 func (c *Client) refreshToken() error {
@@ -96,6 +97,12 @@ func (c *Client) refreshToken() error {
 
 func (c *Client) listen() {
 	defer func() {
+		if c.appPath != "" {
+			if err := c.broker.getApp(c.appPath).disconnect(c.id); err != nil {
+				echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
+			}
+		}
+
 		c.broker.unsubscribe <- c
 		c.conn.Close()
 	}()
@@ -161,6 +168,7 @@ func (c *Client) listen() {
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
 			if app := c.broker.getApp(m.addr); app != nil { // do we have an app handling this route?
+				c.appPath = m.addr
 				switch app.mode {
 				case unicastMode:
 					c.subscribe("/" + c.id) // client-level
