@@ -78,3 +78,42 @@ q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
     )
 ])
 ```
+
+## Direction
+
+The inline component allows for laying out the components in 2 directions, `row` (default) and `column`. This might be useful if multiple sections (consisting of more than 1 component) need to be placed next to each other. In such case, `ui.inline` serves as a container grouping multiple components into a single section.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 -1 3', items=[
+    ui.text_xl('Header'),
+    ui.inline(
+        height='1',
+        justify='around',
+        align='center',
+        items=[
+            ui.inline(
+                direction='column',
+                items=[
+                    ui.text_l(content='Sub title 1'),
+                    ui.text(content='Lorem ipsum dolor sit amet'),
+                ]
+            ),
+            ui.inline(
+                direction='column',
+                items=[
+                    ui.text_l(content='Sub title 2'),
+                    ui.text(content='Lorem ipsum dolor sit amet'),
+                ]
+            ),
+            ui.inline(
+                direction='column',
+                items=[
+                    ui.text_l(content='Sub title 3'),
+                    ui.text(content='Lorem ipsum dolor sit amet'),
+                ]
+            ),
+        ]
+    ),
+    ui.text('Footer'),
+])
+```

@@ -2594,6 +2594,8 @@ ui_stats <- function(
 #'   One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
 #' @param inset Whether to display the components inset from the parent form, with a contrasting background.
 #' @param height Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space.
+#' @param direction Container direction. Defaults to 'row'.
+#'   One of 'row', 'column'. See enum h2o_wave.ui.InlineDirection.
 #' @return A Inline instance.
 #' @export
 ui_inline <- function(
@@ -2601,18 +2603,21 @@ ui_inline <- function(
   justify = NULL,
   align = NULL,
   inset = NULL,
-  height = NULL) {
+  height = NULL,
+  direction = NULL) {
   .guard_vector("items", "WaveComponent", items)
   # TODO Validate justify
   # TODO Validate align
   .guard_scalar("inset", "logical", inset)
   .guard_scalar("height", "character", height)
+  # TODO Validate direction
   .o <- list(inline=list(
     items=items,
     justify=justify,
     align=align,
     inset=inset,
-    height=height))
+    height=height,
+    direction=direction))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

@@ -5973,6 +5973,14 @@ class InlineAlign:
     BASELINE = 'baseline'
 
 
+_InlineDirection = ['row', 'column']
+
+
+class InlineDirection:
+    ROW = 'row'
+    COLUMN = 'column'
+
+
 class Inline:
     """Create an inline (horizontal) list of components.
     """
@@ -5983,12 +5991,14 @@ class Inline:
             align: Optional[str] = None,
             inset: Optional[bool] = None,
             height: Optional[str] = None,
+            direction: Optional[str] = None,
     ):
         _guard_vector('Inline.items', items, (Component,), False, False, False)
         _guard_enum('Inline.justify', justify, _InlineJustify, True)
         _guard_enum('Inline.align', align, _InlineAlign, True)
         _guard_scalar('Inline.inset', inset, (bool,), False, True, False)
         _guard_scalar('Inline.height', height, (str,), False, True, False)
+        _guard_enum('Inline.direction', direction, _InlineDirection, True)
         self.items = items
         """The components laid out inline."""
         self.justify = justify
@@ -5999,6 +6009,8 @@ class Inline:
         """Whether to display the components inset from the parent form, with a contrasting background."""
         self.height = height
         """Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space."""
+        self.direction = direction
+        """Container direction. Defaults to 'row'. One of 'row', 'column'. See enum h2o_wave.ui.InlineDirection."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6007,12 +6019,14 @@ class Inline:
         _guard_enum('Inline.align', self.align, _InlineAlign, True)
         _guard_scalar('Inline.inset', self.inset, (bool,), False, True, False)
         _guard_scalar('Inline.height', self.height, (str,), False, True, False)
+        _guard_enum('Inline.direction', self.direction, _InlineDirection, True)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             align=self.align,
             inset=self.inset,
             height=self.height,
+            direction=self.direction,
         )
 
     @staticmethod
@@ -6028,17 +6042,21 @@ class Inline:
         _guard_scalar('Inline.inset', __d_inset, (bool,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('Inline.height', __d_height, (str,), False, True, False)
+        __d_direction: Any = __d.get('direction')
+        _guard_enum('Inline.direction', __d_direction, _InlineDirection, True)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         align: Optional[str] = __d_align
         inset: Optional[bool] = __d_inset
         height: Optional[str] = __d_height
+        direction: Optional[str] = __d_direction
         return Inline(
             items,
             justify,
             align,
             inset,
             height,
+            direction,
         )
 
 

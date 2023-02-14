@@ -2209,6 +2209,7 @@ def inline(
         align: Optional[str] = None,
         inset: Optional[bool] = None,
         height: Optional[str] = None,
+        direction: Optional[str] = None,
 ) -> Component:
     """Create an inline (horizontal) list of components.
 
@@ -2218,6 +2219,7 @@ def inline(
         align: Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
         inset: Whether to display the components inset from the parent form, with a contrasting background.
         height: Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space.
+        direction: Container direction. Defaults to 'row'. One of 'row', 'column'. See enum h2o_wave.ui.InlineDirection.
     Returns:
         A `h2o_wave.types.Inline` instance.
     """
@@ -2227,6 +2229,7 @@ def inline(
         align,
         inset,
         height,
+        direction,
     ))
 
 
