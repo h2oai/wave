@@ -97,8 +97,9 @@ func (c *Client) refreshToken() error {
 
 func (c *Client) listen() {
 	defer func() {
-		if c.appPath != "" {
-			if err := c.broker.getApp(c.appPath).disconnect(c.id); err != nil {
+		app := c.broker.getApp(c.appPath)
+		if app != nil {
+			if err := app.disconnect(c.id); err != nil {
 				echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
 			}
 		}
