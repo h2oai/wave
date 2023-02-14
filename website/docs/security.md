@@ -167,3 +167,5 @@ It's possible to access the HTTP headers that were set on **websocket HTTP conne
 :::important
 Since Wave is websocket-based, the headers retrived do not come from the initial `GET index.html` request, but from the websocket `/_s/` one.
 :::
+
+For a more fine-grained control over which HTTP headers are forwarded or not, check our `H2O_WAVE_FORWARDED_HTTP_HEADERS` [configuration option](/docs/configuration#configuring-the-server).
