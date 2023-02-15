@@ -79,8 +79,11 @@ const
     toolbarLabel: { maxWidth: '70%' }
   }),
   popoverProps: Partial<PopperProps> | undefined = {
+    container: () => document.querySelector(".ms-Panel") || document.body,
     placement: 'bottom-start',
+    style: { pointerEvents: 'auto' },
     sx: {
+      zIndex: 9999998, // Needs to be higher than Fluent UI Panel, but lower than ui.notification_bar.
       '& .MuiPaper-root': {
         borderRadius: '2px',
         boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`
@@ -139,6 +142,7 @@ export const
       [value, setValue] = React.useState(m.value ? parseTimeStringToDate(m.value) : null),
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
+      popperRef = React.useRef<HTMLDivElement | null>(null),
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
@@ -152,6 +156,11 @@ export const
       },
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
       onOpen = () => setTimeout(() => (document.activeElement as HTMLElement)?.blur()),
+      onBlur = (ev: React.FocusEvent) => {
+        if (!ev.relatedTarget || !Fluent.elementContains(popperRef.current, ev.relatedTarget as HTMLElement)) {
+          setIsDialogOpen(false)
+        }
+      },
       { palette: fluentPalette } = Fluent.useTheme(),
       themeObj = {
         palette: {
@@ -218,7 +227,7 @@ export const
                     switchAmPm={switchAmPm}
                   />
                 }
-                PopperProps={{ anchorEl: () => textInputRef.current as VirtualElement, ...popoverProps }}
+                PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
                 minTime={min ? parseTimeStringToDate(min) : undefined}
                 maxTime={max ? parseTimeStringToDate(max) : undefined}
                 minutesStep={allowedMinutesSteps[minutes_step]}
