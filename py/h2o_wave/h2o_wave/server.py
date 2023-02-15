@@ -29,7 +29,7 @@ import pickle
 import traceback
 import base64
 import binascii
-from typing import Dict, Tuple, Callable, Any, Awaitable, Optional
+from typing import Dict, List, Tuple, Callable, Any, Awaitable, Optional
 from urllib.parse import urlparse
 
 import uvicorn
@@ -112,7 +112,7 @@ class Query:
             client_state: Expando,
             args: Expando,
             events: Expando,
-            headers: Dict[str, str]
+            headers: Dict[str, List[str]]
     ):
         self.mode = mode
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
