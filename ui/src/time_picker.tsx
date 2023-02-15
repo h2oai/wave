@@ -210,47 +210,49 @@ export const
         {theme && AdapterDateFns && format
           ? <ThemeProvider theme={theme}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <TimePicker
-                value={value}
-                label={label}
-                open={isDialogOpen}
-                onChange={value => setValue(value as Date)}
-                onAccept={value => onSelectTime(value as Date)}
-                onClose={() => setIsDialogOpen(false)}
-                ampm={hour_format === '12'}
-                showToolbar
-                ToolbarComponent={({ parsedValue, setOpenView, ampm }) =>
-                  <Toolbar
-                    setOpenView={setOpenView}
-                    time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
-                    label={label}
-                    switchAmPm={switchAmPm}
-                  />
-                }
-                PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
-                minTime={min ? parseTimeStringToDate(min) : undefined}
-                maxTime={max ? parseTimeStringToDate(max) : undefined}
-                minutesStep={allowedMinutesSteps[minutes_step]}
-                disabled={disabled}
-                onOpen={onOpen}
-                renderInput={({ inputProps, error }: TextFieldProps) =>
-                  <div ref={textInputRef} data-test={m.name}>
-                    <Fluent.TextField
-                      iconProps={{ iconName: 'Clock' }}
-                      onClick={() => setIsDialogOpen(true)}
-                      onChange={inputProps?.onChange}
-                      placeholder={placeholder}
-                      disabled={disabled}
-                      readOnly
-                      value={value ? formatDateToTimeString(value, hour_format) : ''}
+              <Fluent.FocusTrapZone isClickableOutsideFocusTrap>
+                <TimePicker
+                  value={value}
+                  label={label}
+                  open={isDialogOpen}
+                  onChange={value => setValue(value as Date)}
+                  onAccept={value => onSelectTime(value as Date)}
+                  onClose={() => setIsDialogOpen(false)}
+                  ampm={hour_format === '12'}
+                  showToolbar
+                  ToolbarComponent={({ parsedValue, setOpenView, ampm }) =>
+                    <Toolbar
+                      setOpenView={setOpenView}
+                      time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
                       label={label}
-                      required={required}
-                      styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                      errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
+                      switchAmPm={switchAmPm}
                     />
-                  </div>
-                }
-              />
+                  }
+                  PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
+                  minTime={min ? parseTimeStringToDate(min) : undefined}
+                  maxTime={max ? parseTimeStringToDate(max) : undefined}
+                  minutesStep={allowedMinutesSteps[minutes_step]}
+                  disabled={disabled}
+                  onOpen={onOpen}
+                  renderInput={({ inputProps, error }: TextFieldProps) =>
+                    <div ref={textInputRef} data-test={m.name}>
+                      <Fluent.TextField
+                        iconProps={{ iconName: 'Clock' }}
+                        onClick={() => setIsDialogOpen(true)}
+                        onChange={inputProps?.onChange}
+                        placeholder={placeholder}
+                        disabled={disabled}
+                        readOnly
+                        value={value ? formatDateToTimeString(value, hour_format) : ''}
+                        label={label}
+                        required={required}
+                        styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
+                        errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
+                      />
+                    </div>
+                  }
+                />
+              </Fluent.FocusTrapZone>
             </LocalizationProvider>
           </ThemeProvider>
           : <LazyLoadPlaceholder />
