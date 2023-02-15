@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { Dropdown, XDropdown } from './dropdown'
@@ -21,12 +21,13 @@ import { wave } from './ui'
 describe('Dropdown.tsx', () => {
   const
     name = 'dropdown-test',
-    pushMock = jest.fn()
+    // Need to test if wave.args are correct after calling push so mock the implementation.
+    pushMock = jest.fn(() => wave.args = {})
 
   let defaultProps: Dropdown
   beforeAll(() => { wave.push = pushMock })
   beforeEach(() => {
-    // Because the component mutates props "value" and "values" it can affect the next test so we need to reset it for every test
+    // Reset due to model.value mutations.
     defaultProps = {
       name,
       choices: [
@@ -35,8 +36,8 @@ describe('Dropdown.tsx', () => {
         { name: 'C', label: 'Choice C' },
         { name: 'D', label: 'Choice D' },
       ]
-    },
-      pushMock.mockReset()
+    }
+    pushMock.mockClear()
   })
 
   describe('Base dropdown', () => {
@@ -45,13 +46,15 @@ describe('Dropdown.tsx', () => {
       expect(queryByTestId(name)).toBeInTheDocument()
     })
 
-    it('Calls sync when trigger is on', () => {
+    it('Calls sync when trigger is on', async () => {
       const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
 
       fireEvent.click(getByTestId(name))
       fireEvent.click(getByText('Choice A'))
 
-      expect(pushMock).toHaveBeenCalled()
+      await waitFor(() => expect(pushMock).toHaveBeenCalledTimes(1))
+
+      expect(wave.args[name]).toBe(undefined)
     })
 
     it('Does not call sync when trigger is off', () => {
@@ -138,22 +141,22 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['A'])
     })
 
-    it('Calls sync on Select all - trigger enabled', () => {
+    it('Calls sync on Select all - trigger enabled', async () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
 
       fireEvent.click(getByText('Select All'))
 
-      expect(pushMock).toHaveBeenCalled()
       expect(wave.args[name]).toMatchObject(['A', 'B', 'C', 'D'])
+      await waitFor(() => expect(pushMock).toHaveBeenCalledTimes(1))
     })
 
-    it('Deselects all options on Deselect all', () => {
+    it('Deselects all options on Deselect all - trigger enabled', async () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
 
       fireEvent.click(getByText('Deselect All'))
 
       expect(wave.args[name]).toMatchObject([])
-      expect(pushMock).toHaveBeenCalled()
+      await waitFor(() => expect(pushMock).toHaveBeenCalledTimes(1))
     })
 
     it('Do not deselect all options on Deselect all - dropdown disabled', () => {
@@ -329,7 +332,7 @@ describe('Dropdown.tsx', () => {
       expect(queryByTestId(name)).toBeInTheDocument()
     })
 
-    it('Calls sync on Deselect all - trigger enabled', () => {
+    it('Calls sync on Deselect all - trigger enabled', async () => {
       const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, values: ['1'], trigger: true }} />)
 
       fireEvent.click(getByTestId(name))
@@ -337,10 +340,11 @@ describe('Dropdown.tsx', () => {
       fireEvent.click(getByText('Deselect All'))
       fireEvent.click(getByText('Select'))
       expect(wave.args[name]).toMatchObject([])
+      await waitFor(() => expect(pushMock).toHaveBeenCalledTimes(1))
     })
 
-    it('Sets wave args to empty array when values is empty an empty array - init', () => {
-      render(<XDropdown model={dialogProps} />)
+    it('Sets wave args to empty array when values is an empty array - init', () => {
+      render(<XDropdown model={{ ...dialogProps, values: [] }} />)
       expect(wave.args[name]).toEqual([])
     })
 
