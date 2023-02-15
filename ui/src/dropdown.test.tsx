@@ -174,16 +174,10 @@ describe('Dropdown.tsx', () => {
         it('Displays new value when "value" prop is updated', () => {
           const { getByRole, rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice A')
-
-          rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
-          expect(getByRole('combobox')).toHaveTextContent('Choice B')
-        })
-
-        it('Sets wave args when "value" prop is updated ', () => {
-          const { rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
           expect(wave.args[name]).toBe('A')
 
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
+          expect(getByRole('combobox')).toHaveTextContent('Choice B')
           expect(wave.args[name]).toBe('B')
         })
 
@@ -225,9 +219,11 @@ describe('Dropdown.tsx', () => {
           fireEvent.click(getByRole('combobox'))
           fireEvent.click(getByText('Choice A'))
           expect(getByRole('combobox')).toHaveTextContent('Choice A')
+          expect(wave.args[name]).toBe('A')
 
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(getByRole('combobox')).toHaveTextContent('Choice B')
+          expect(wave.args[name]).toBe('B')
         })
 
         it('Sets wave args when an option is selected and "value" prop updated', () => {
@@ -258,6 +254,19 @@ describe('Dropdown.tsx', () => {
 
           rerender(<XDropdown model={{ ...defaultProps, value: 'B' }} />)
           expect(wave.args[name]).toEqual('B')
+        })
+
+        it('Allows setting the same value multiple times', () => {
+          const { getByRole, getAllByText, rerender } = render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
+
+          fireEvent.click(getByRole('combobox'))
+          fireEvent.click(getAllByText('Choice C')[0])
+          expect(getByRole('combobox')).toHaveTextContent('Choice C')
+          expect(wave.args[name]).toEqual('C')
+
+          rerender(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
+          expect(getByRole('combobox')).toHaveTextContent('Choice A')
+          expect(wave.args[name]).toEqual('A')
         })
       })
 
@@ -638,6 +647,21 @@ describe('Dropdown.tsx', () => {
 
           rerender(<XDropdown model={{ ...dialogProps, value: '2' }} />)
           expect(wave.args[name]).toBe('2')
+        })
+
+        it('Allows setting the same value multiple times', async () => {
+          const { getByText, getByTestId, rerender } = render(<XDropdown model={{ ...dialogProps, value: '1' }} />)
+          expect(wave.args[name]).toEqual('1')
+          await waitFor(() => expect(getByTestId(name)).toHaveValue('Choice 1'))
+
+          fireEvent.click(getByTestId(name))
+          fireEvent.click(getByText('Choice 2'))
+
+          expect(wave.args[name]).toEqual('2')
+          await waitFor(() => expect(getByTestId(name)).toHaveValue('Choice 2'))
+
+          rerender(<XDropdown model={{ ...defaultProps, value: '1' }} />)
+          expect(wave.args[name]).toEqual('1')
         })
       })
 
