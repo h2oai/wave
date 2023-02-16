@@ -7,7 +7,7 @@ In other words, H2O Wave Lite works without the Wave server.
 The integration consists of 2 steps:
 
 * Add Wave's web assets directory to your framework's static file handler.
-* Set up a WebSocket connection and hook `wave_serve` callback function to control the UI.
+* Add a WebSocket handler, and use `wave_serve()` to connect connect Wave to your web UI.
 
 Done. You can render UI elements with nothing but Python. Wavelite aims to be as simplistic as possible and only provides:
 
