@@ -9,7 +9,7 @@ The integration consists of 2 steps:
 * Add Wave's web assets directory to your framework's static file handler.
 * Add a WebSocket handler, and use `wave_serve()` to connect connect Wave to your web UI.
 
-Done. You can render UI elements with nothing but Python. Wavelite aims to be as simplistic as possible and only provides:
+That's it. You can now render UI elements using pure Python. Wave Lite aims to be as minimal as possible and only provides:
 
 * A simple way to render your UI.
 * A simple way of getting the UI inputs (like button clicks, dropdown values etc.)
