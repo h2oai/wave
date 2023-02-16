@@ -1101,7 +1101,6 @@ export const
               },
             },
             customContent: (_title, items) => {
-              console.log(items)
               ReactDOM.render(<PlotTooltip items={items} />, tooltipContainer)
               return tooltipContainer
             }
