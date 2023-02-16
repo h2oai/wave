@@ -1043,18 +1043,14 @@ const PlotTooltip = ({ items }: { items: TooltipItem[] }) =>
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) =>
       Object.keys(data).map((item, idx) =>
-        <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-          <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
-          <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
-            <span style={{ marginRight: 16 }}>{item}:</span>
-            <span>
-              {(Array.isArray(data[item]) ? data[item] : [data[item]]).map((val: any, idx: number) => {
-                const value = val instanceof Date ? val.toISOString().split('T')[0] : val
-                return idx > 0 ? ` - ${value}` : value
-              })}
+        Array.isArray(data[item]) ? null :
+          <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+            <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
+            <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
+              <span style={{ marginRight: 16 }}>{item}:</span>
+              <span>{(data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item])}</span>
             </span>
-          </span>
-        </li>
+          </li>
       )
     )}
   </>
