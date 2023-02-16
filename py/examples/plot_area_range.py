@@ -41,7 +41,7 @@ page.add('example', ui.plot_card(
         (1248912000000, 11.8, 18.5),
         (1248998400000, 10.8, 16.1),
     ]),
-    plot=ui.plot([ui.mark(type='area', x_scale='time', x='=date', y0='=low', y='=high')])
+    plot=ui.plot([ui.mark(type='area', x_scale='time', x='=date', y1='=low', y2='=high')])
 ))
 
 page.save()

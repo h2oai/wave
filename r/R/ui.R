@@ -2167,8 +2167,8 @@ ui_stepper <- function(
 #'   One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType.
 #' @param x X field or value.
 #' @param x0 X base field or value.
-#' @param x1 X bin lower bound field or value. For histograms and box plots.
-#' @param x2 X bin upper bound field or value. For histograms and box plots.
+#' @param x1 X bin lower bound field or value. For histograms, area and box plots.
+#' @param x2 X bin upper bound field or value. For histograms, area and box plots.
 #' @param x_q1 X lower quartile. For box plots.
 #' @param x_q2 X median. For box plots.
 #' @param x_q3 X upper quartile. For box plots.
@@ -2180,8 +2180,8 @@ ui_stepper <- function(
 #' @param x_title X axis title.
 #' @param y Y field or value.
 #' @param y0 Y base field or value.
-#' @param y1 Y bin lower bound field or value. For histograms and box plots.
-#' @param y2 Y bin upper bound field or value. For histograms and box plots.
+#' @param y1 Y bin lower bound field or value. For histograms, area and box plots.
+#' @param y2 Y bin upper bound field or value. For histograms, area and box plots.
 #' @param y_q1 Y lower quartile. For box plots.
 #' @param y_q2 Y median. For box plots.
 #' @param y_q3 Y upper quartile. For box plots.

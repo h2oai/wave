@@ -55,9 +55,9 @@ interface Mark {
   x?: V
   /** X base field or value. */
   x0?: V
-  /** X bin lower bound field or value. For histograms and box plots. */
+  /** X bin lower bound field or value. For histograms, area and box plots. */
   x1?: V
-  /** X bin upper bound field or value. For histograms and box plots. */
+  /** X bin upper bound field or value. For histograms, area and box plots. */
   x2?: V
   /** X lower quartile. For box plots. */
   x_q1?: V
@@ -79,9 +79,9 @@ interface Mark {
   y?: V
   /** Y base field or value. */
   y0?: V
-  /** Y bin lower bound field or value. For histograms and box plots. */
+  /** Y bin lower bound field or value. For histograms, area and box plots. */
   y1?: V
-  /** Y bin upper bound field or value. For histograms and box plots. */
+  /** Y bin upper bound field or value. For histograms, area and box plots. */
   y2?: V
   /** Y lower quartile. For box plots. */
   y_q1?: V
@@ -622,14 +622,14 @@ const
     }
     for (const mark of marks) {
       const { type, x1_field, x2_field, y_field } = mark
-      if (type === 'interval' && isS(x1_field) && isS(x2_field) && isS(y_field)) { // histogram on x
+      if ((type === 'interval' || type === 'area') && isS(x1_field) && isS(x2_field) && isS(y_field)) { // histogram or area on x
         mark.x_field = x1_field + ' - ' + x2_field
         convertToPairs(ds, x1_field, x2_field, mark.x_field)
       }
     }
     for (const mark of marks) {
       const { type, y1_field, y2_field, x_field } = mark
-      if (type === 'interval' && isS(y1_field) && isS(y2_field) && isS(x_field)) { // histogram on y
+      if ((type === 'interval' || type === 'area') && isS(y1_field) && isS(y2_field) && isS(x_field)) { // histogram or area on y
         mark.y_field = y1_field + ' - ' + y2_field
         convertToPairs(ds, y1_field, y2_field, mark.y_field)
       }
@@ -1101,6 +1101,7 @@ export const
               },
             },
             customContent: (_title, items) => {
+              console.log(items)
               ReactDOM.render(<PlotTooltip items={items} />, tooltipContainer)
               return tooltipContainer
             }

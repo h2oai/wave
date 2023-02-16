@@ -1936,8 +1936,8 @@ def mark(
         type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType.
         x: X field or value.
         x0: X base field or value.
-        x1: X bin lower bound field or value. For histograms and box plots.
-        x2: X bin upper bound field or value. For histograms and box plots.
+        x1: X bin lower bound field or value. For histograms, area and box plots.
+        x2: X bin upper bound field or value. For histograms, area and box plots.
         x_q1: X lower quartile. For box plots.
         x_q2: X median. For box plots.
         x_q3: X upper quartile. For box plots.
@@ -1948,8 +1948,8 @@ def mark(
         x_title: X axis title.
         y: Y field or value.
         y0: Y base field or value.
-        y1: Y bin lower bound field or value. For histograms and box plots.
-        y2: Y bin upper bound field or value. For histograms and box plots.
+        y1: Y bin lower bound field or value. For histograms, area and box plots.
+        y2: Y bin upper bound field or value. For histograms, area and box plots.
         y_q1: Y lower quartile. For box plots.
         y_q2: Y median. For box plots.
         y_q3: Y upper quartile. For box plots.
