@@ -660,7 +660,7 @@ describe('Dropdown.tsx', () => {
           expect(wave.args[name]).toEqual('2')
           await waitFor(() => expect(getByTestId(name)).toHaveValue('Choice 2'))
 
-          rerender(<XDropdown model={{ ...defaultProps, value: '1' }} />)
+          rerender(<XDropdown model={{ ...dialogProps, value: '1' }} />)
           expect(wave.args[name]).toEqual('1')
         })
       })
