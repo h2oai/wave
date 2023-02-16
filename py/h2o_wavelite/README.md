@@ -1,6 +1,8 @@
 # H2O Wavelite
 
-H2O Wavelite is a lighter version of [H2O Wave](https://wave.h2o.ai/) consisting of python driver only, no Golang server. This allows for seamless integration into popular existing python web frameworks like Django, Flask, FastAPI, Starlette etc.
+H2O Wave Lite is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular web frameworks like  Django, Flask, FastAPI, Starlette, etc. 
+
+In other words, H2O Wave Lite works without the Wave server.
 
 The integration consists of 2 steps:
 
