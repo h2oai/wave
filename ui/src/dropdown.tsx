@@ -105,7 +105,9 @@ const
             m.value = optionKey
           }
         }
-        if (trigger) wave.push()
+
+        // HACK: Push clears args so run it after useEffect sets them due to model.value change.
+        if (trigger) setTimeout(() => wave.push(), 0)
       },
       selectAll = () => {
         if (!selection) return
@@ -201,7 +203,8 @@ const
         setItems(items => items.map(item => (({ ...item, checked: item.name === itemName ? checked : false, show: true }))))
         wave.args[name] = itemName
         model.value = itemName
-        if (trigger) wave.push()
+        // HACK: Push clears args so run it after useEffect sets them due to model.value change.
+        if (trigger) setTimeout(() => wave.push(), 0)
         toggleDialog()
       }
 
@@ -242,8 +245,9 @@ const
       </>
     )
   },
-  DialogDropdownMulti = ({ name, choices = [], values = [], disabled, required, trigger, placeholder, label }: Dropdown) => {
+  DialogDropdownMulti = ({ model }: { model: Dropdown }) => {
     const
+      { name, choices = [], values = [], disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, values),
       itemsOnDialogOpen = React.useRef(items),
@@ -261,7 +265,8 @@ const
       },
       submit = (items: DropdownItem[]) => {
         wave.args[name] = items.filter(i => i.checked).map(i => i.name)
-        if (trigger) wave.push()
+        // HACK: Push clears args so run it after useEffect sets them due to model.values change.
+        if (trigger) setTimeout(() => wave.push(), 0)
         closeDialog()
       },
       onChecked = (name: S) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
@@ -316,13 +321,13 @@ const
       </>
     )
   },
-  DialogDropdown = (props: Dropdown) => props.values ? <DialogDropdownMulti {...props} /> : <DialogDropdownSingle model={{ ...props }} />
+  DialogDropdown = ({ model }: { model: Dropdown }) => model.values ? <DialogDropdownMulti model={model} /> : <DialogDropdownSingle model={model} />
 
 export const XDropdown = ({ model: m }: { model: Dropdown }) =>
   m.popup === 'always'
-    ? <DialogDropdown {...m} />
+    ? <DialogDropdown model={m} />
     : m.popup === 'never'
-      ? <BaseDropdown model={{ ...m }} />
+      ? <BaseDropdown model={m} />
       : (m.choices?.length || 0) > 100
-        ? <DialogDropdown {...m} />
-        : <BaseDropdown model={{ ...m }} />
+        ? <DialogDropdown model={m} />
+        : <BaseDropdown model={m} />

@@ -19,7 +19,6 @@
       "program": "${workspaceRoot}/ui/node_modules/jest/bin/jest.js",
       "args": [
         "--no-cache",
-        "--env=jsdom",
         "${file}"
       ],
       "cwd": "${workspaceRoot}/ui",
