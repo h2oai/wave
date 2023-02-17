@@ -1040,18 +1040,20 @@ export interface Visualization {
 const tooltipContainer = document.createElement('div')
 tooltipContainer.className = 'g2-tooltip'
 
-const PlotTooltip = ({ items }: { items: TooltipItem[] }) =>
+const PlotTooltip = ({ items, originalItems }: { items: TooltipItem[], originalItems: any[] }) =>
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) =>
-      Object.keys(data).map((item, idx) =>
-        Array.isArray(data[item]) ? null :
-          <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-            <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
-            <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
-              <span style={{ marginRight: 16 }}>{item}:</span>
-              <span>{(data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item])}</span>
-            </span>
-          </li>)
+      Object.keys(originalItems[data.idx]).map((itemKey, idx) => {
+        const item = originalItems[data.idx][itemKey]
+        return <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+          <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
+          <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
+            <span style={{ marginRight: 16 }}>{itemKey}:</span>
+            <span>{(item instanceof Date ? item.toISOString().split('T')[0] : item)}</span>
+          </span>
+        </li>
+      }
+      )
     )}
   </>
 
@@ -1102,9 +1104,8 @@ export const
                 color: cssVar('$text')
               },
             },
-            customItems: (originalItems) => originalItems.map(item => ({ ...item, data: originalDataRef.current[item.data.idx] })),
             customContent: (_title, items) => {
-              ReactDOM.render(<PlotTooltip items={items} />, tooltipContainer)
+              ReactDOM.render(<PlotTooltip items={items} originalItems={originalDataRef.current} />, tooltipContainer)
               return tooltipContainer
             }
           })
