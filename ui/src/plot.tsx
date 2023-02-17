@@ -55,9 +55,9 @@ interface Mark {
   x?: V
   /** X base field or value. */
   x0?: V
-  /** X bin lower bound field or value. For histograms, area and box plots. */
+  /** X bin lower bound field or value. For histograms and box plots. */
   x1?: V
-  /** X bin upper bound field or value. For histograms, area and box plots. */
+  /** X bin upper bound field or value. For histograms and box plots. */
   x2?: V
   /** X lower quartile. For box plots. */
   x_q1?: V
