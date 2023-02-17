@@ -52,8 +52,8 @@ build-apps: ## Prepare apps for HAC upload.
 	cp -r py/apps/* py/tmp/
 	find py/tmp -type f -name '*.toml' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
 	find py/tmp -type f -name 'requirements.txt' -exec $(SED) -i -e "s/{{VERSION}}/$(VERSION)/g" {} \;
-	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
-	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*"
+	rsync -a py/examples py/tmp/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*" --exclude "dist" --exclude "build"
+	rsync -a py/demo py/tmp/dashboard --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*" --exclude "dist" --exclude "build"
 	cp py/examples/theme_generator.py py/tmp/theme-generator
 	cp tools/vscode-extension/base-snippets.json py/tmp/tour/examples
 	cp tools/vscode-extension/component-snippets.json py/tmp/tour/examples

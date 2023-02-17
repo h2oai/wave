@@ -11,7 +11,7 @@ run:
 	H2O_WAVE_PUBLIC_DIR="/assets/@../static" venv/bin/wave run studio.py --no-reload
 
 build: # Prepare bundle for HAIC.
-		rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
+		rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore" --exclude "dist" --exclude "build"
 		cp ../tools/vscode-extension/server/parser.py tmp/autocomplete_parser.py
 		cp ../tools/vscode-extension/server/utils.py tmp/autocomplete_utils.py
 		cp ../tools/vscode-extension/base-snippets.json tmp/base-snippets.json
