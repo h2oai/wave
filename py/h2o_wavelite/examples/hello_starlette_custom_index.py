@@ -5,22 +5,10 @@ from h2o_wavelite import Q, ui, wave_serve
 from h2o_wavelite_web import get_web_files, web_directory
 from jinja2 import Environment, FileSystemLoader
 from starlette.applications import Starlette
-from starlette.responses import FileResponse
+from starlette.responses import HTMLResponse
 from starlette.routing import Mount, Route, WebSocketRoute
 from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
-
-
-assets_path = '/custom/assets/path'
-curr_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Prepare our custom index.html and inject required JS files. Jinja is used for convenience,
-# you can use any templating engine.
-template = Environment(loader=FileSystemLoader(curr_dir)).get_template("index_template.html")
-# Inject JS files into the template. Accepts a path prefix if needed.
-content = template.render(wave_files=get_web_files(assets_path))
-with open(os.path.join(curr_dir, 'index.html'), mode="w", encoding="utf-8") as f:
-    f.write(content)
 
 
 # Wavelite callback function.
@@ -48,7 +36,6 @@ async def serve(q: Q):
 
 
 # Starlette boilerplate.
-
 async def socket(ws):
     try:
         await ws.accept()
@@ -59,15 +46,23 @@ async def socket(ws):
         print('Client disconnected')
 
 
+assets_path = '/custom/assets/path'
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Prepare our custom index.html and inject required JS files. Jinja is used for convenience,
+# you can use any templating engine.
+template = Environment(loader=FileSystemLoader(curr_dir)).get_template("index_template.html")
+
 startlette_app = Starlette(routes=[
     # Register a websocket.
     WebSocketRoute('/custom_socket/', socket),
     # Serve static assets.
     Mount(assets_path, app=StaticFiles(directory=web_directory), name=assets_path),
     # Serve custom index.html at "/" route.
-    Route('/', lambda _r: FileResponse(os.path.join(curr_dir, 'index.html'))),
+    # Inject JS files into the template. Accepts a path prefix if needed.
+    Route('/', lambda _r: HTMLResponse(template.render(wave_files=get_web_files(assets_path)))),
 ])
 
-# Run: python hello_starlette.py
+# Run: python hello_starlette_custom_index.py
 if __name__ == '__main__':
     uvicorn.run(startlette_app, host='0.0.0.0', port=5000)

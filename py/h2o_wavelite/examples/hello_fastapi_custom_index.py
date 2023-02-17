@@ -1,22 +1,11 @@
 import os
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from h2o_wavelite import Q, ui, wave_serve
 from h2o_wavelite_web import get_web_files, web_directory
 from jinja2 import Environment, FileSystemLoader
-
-assets_path = '/custom/assets/path'
-curr_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Prepare our custom index.html and inject required JS files. Jinja is used for convenience,
-# you can use any templating engine.
-template = Environment(loader=FileSystemLoader(curr_dir)).get_template("index_template.html")
-# Inject JS files into the template. Accepts a path prefix if needed.
-content = template.render(wave_files=get_web_files(assets_path))
-with open(os.path.join(curr_dir, 'index.html'), mode="w", encoding="utf-8") as f:
-    f.write(content)
 
 
 # Wavelite callback function.
@@ -59,8 +48,17 @@ async def ws(ws: WebSocket):
         print('Client disconnected')
 
 
+# Where do we want to serve our assets from?
+assets_path = '/custom/assets/path'
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Prepare our custom index.html and inject required JS files.
+# Jinja is used for convenience, you can use any templating engine.
+template = Environment(loader=FileSystemLoader(curr_dir)).get_template("index_template.html")
+
 @app.get("/")
 async def get():
-    return FileResponse(os.path.join(curr_dir, 'index.html'))
+    # Inject JS files into the template. Accepts a path prefix if needed.
+    return HTMLResponse(template.render(wave_files=get_web_files(assets_path)))
 
 app.mount(assets_path, StaticFiles(directory=web_directory, html=True), name=assets_path)
