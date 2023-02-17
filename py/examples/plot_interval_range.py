@@ -16,7 +16,7 @@ page.add('example', ui.plot_card(
         ('psychology', 130000, 22500),
         ('computer science', 151000, 36000),
     ]),
-    plot=ui.plot([ui.mark(type='interval', x='=profession', y1='=min', y2='=max')])
+    plot=ui.plot([ui.mark(type='interval', x='=profession', y0='=min', y='=max')])
 ))
 
 page.save()

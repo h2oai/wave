@@ -1948,8 +1948,8 @@ def mark(
         x_title: X axis title.
         y: Y field or value.
         y0: Y base field or value.
-        y1: Y bin lower bound field or value. For histograms, area and box plots.
-        y2: Y bin upper bound field or value. For histograms, area and box plots.
+        y1: Y bin lower bound field or value. For histograms and box plots.
+        y2: Y bin upper bound field or value. For histograms and box plots.
         y_q1: Y lower quartile. For box plots.
         y_q2: Y median. For box plots.
         y_q3: Y upper quartile. For box plots.

@@ -79,9 +79,9 @@ interface Mark {
   y?: V
   /** Y base field or value. */
   y0?: V
-  /** Y bin lower bound field or value. For histograms, area and box plots. */
+  /** Y bin lower bound field or value. For histograms and box plots. */
   y1?: V
-  /** Y bin upper bound field or value. For histograms, area and box plots. */
+  /** Y bin upper bound field or value. For histograms and box plots. */
   y2?: V
   /** Y lower quartile. For box plots. */
   y_q1?: V
@@ -588,6 +588,7 @@ const
     return mark
   },
   refactorData = (ds: any[], marks: MarkExt[]): any[] => {
+    ds.forEach((d, idx) => d.idx = idx)
     for (const m of marks) {
       if (m.x_scale === 'time') {
         for (const { x_field, x0_field } of marks) {
@@ -622,14 +623,14 @@ const
     }
     for (const mark of marks) {
       const { type, x1_field, x2_field, y_field } = mark
-      if ((type === 'interval' || type === 'area') && isS(x1_field) && isS(x2_field) && isS(y_field)) { // histogram or area on x
+      if (type === 'interval' && isS(x1_field) && isS(x2_field) && isS(y_field)) { // histogram on x
         mark.x_field = x1_field + ' - ' + x2_field
         convertToPairs(ds, x1_field, x2_field, mark.x_field)
       }
     }
     for (const mark of marks) {
       const { type, y1_field, y2_field, x_field } = mark
-      if ((type === 'interval' || type === 'area') && isS(y1_field) && isS(y2_field) && isS(x_field)) { // histogram or area on y
+      if (type === 'interval' && isS(y1_field) && isS(y2_field) && isS(x_field)) { // histogram on y
         mark.y_field = y1_field + ' - ' + y2_field
         convertToPairs(ds, y1_field, y2_field, mark.y_field)
       }
@@ -1050,8 +1051,7 @@ const PlotTooltip = ({ items }: { items: TooltipItem[] }) =>
               <span style={{ marginRight: 16 }}>{item}:</span>
               <span>{(data[item] instanceof Date ? data[item].toISOString().split('T')[0] : data[item])}</span>
             </span>
-          </li>
-      )
+          </li>)
     )}
   </>
 
@@ -1064,6 +1064,7 @@ export const
       currentChart = React.useRef<Chart | null>(null),
       currentPlot = React.useRef<Plot | null>(null),
       themeWatchRef = React.useRef<Disposable | null>(null),
+      originalDataRef = React.useRef<any[]>([]),
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
@@ -1088,6 +1089,7 @@ export const
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
+        originalDataRef.current = unpack<any[]>(model.data)
         currentPlot.current = plot
         if (chart) {
           chart.tooltip({
@@ -1100,6 +1102,7 @@ export const
                 color: cssVar('$text')
               },
             },
+            customItems: (originalItems) => originalItems.map(item => ({ ...item, data: originalDataRef.current[item.data.idx] })),
             customContent: (_title, items) => {
               ReactDOM.render(<PlotTooltip items={items} />, tooltipContainer)
               return tooltipContainer
@@ -1151,8 +1154,8 @@ export const
       const
         raw_data = unpack<any[]>(model.data),
         data = refactorData(raw_data, currentPlot.current.marks)
+      originalDataRef.current = unpack<any[]>(model.data)
       currentChart.current.changeData(data)
-
     }, [currentChart, currentPlot, model])
 
     const

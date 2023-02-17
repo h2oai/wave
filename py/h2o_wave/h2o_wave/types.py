@@ -5130,9 +5130,9 @@ class Mark:
         self.y0 = y0
         """Y base field or value."""
         self.y1 = y1
-        """Y bin lower bound field or value. For histograms, area and box plots."""
+        """Y bin lower bound field or value. For histograms and box plots."""
         self.y2 = y2
-        """Y bin upper bound field or value. For histograms, area and box plots."""
+        """Y bin upper bound field or value. For histograms and box plots."""
         self.y_q1 = y_q1
         """Y lower quartile. For box plots."""
         self.y_q2 = y_q2
