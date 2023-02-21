@@ -141,7 +141,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         try:
             if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
                 os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
-            uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+            uvicorn.run(f'{app}:main', host=host, port=port, reload=not no_reload)
         except Exception as e:
             if waved_process:
                 waved_process.kill()
