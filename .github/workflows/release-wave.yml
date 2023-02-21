@@ -25,6 +25,10 @@ jobs:
         with:
           go-version: '1.19.4'
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
       - name: Setup
         run: make setup
 
