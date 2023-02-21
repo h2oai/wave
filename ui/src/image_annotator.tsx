@@ -477,8 +477,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
           setDrawnShapes(drawnShapes => {
             const newShapes = drawnShapes.map(s => {
-              // Allow multiple shapes to be selected by holding Shift key.
-              s.isFocused = e.shiftKey ? s === intersected || s.isFocused : s === intersected
+              // Allow multiple shapes to be selected or deselected by holding Shift key and clicking.
+              if (e.shiftKey) {
+                s.isFocused = s === intersected ? !s.isFocused : s.isFocused
+              } else {
+                s.isFocused = s === intersected
+              }
               if (s.isFocused && s.shape.polygon && polygonRef.current) {
                 s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
               }

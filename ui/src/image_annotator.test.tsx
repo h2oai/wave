@@ -754,6 +754,18 @@ describe('ImageAnnotator.tsx', () => {
         fireEvent.click(removeBtn!)
         expect(wave.args[name]).toMatchObject([])
       })
+
+      it('Allow shape deselection while holding "shift" and clicking', async () => {
+        const { container, getByText } = render(<XImageAnnotator model={model} />)
+        await waitForLoad(container)
+        const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+        fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+        let removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+        await waitFor(() => expect(removeBtn).not.toHaveAttribute('aria-disabled'))
+        fireEvent.click(canvasEl, { clientX: 50, clientY: 50, shiftKey: true })
+        removeBtn = getByText('Remove selection').parentElement?.parentElement?.parentElement
+        await waitFor(() => expect(removeBtn).toHaveAttribute('aria-disabled'))
+      })
     })
 
     describe('Movement', () => {
