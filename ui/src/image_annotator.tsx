@@ -569,27 +569,28 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         clipboardRef.current = drawnShapes.filter(s => s.isFocused)
       }
       else if (e.key === 'v' && clipboardRef.current.length) {
-        try {
-          setDrawnShapes(prevShapes => {
-            // Deep copy.
-            const newShapes = clipboardRef.current.map<DrawnShape>(({ tag, shape, boundaryRect, isFocused }) => (
-              {
-                tag,
-                isFocused,
-                boundaryRect: boundaryRect ? { x1: boundaryRect.x1, x2: boundaryRect.x2, y1: boundaryRect.y1, y2: boundaryRect.y2 } : null,
-                shape: {
-                  rect: shape.rect ? { x1: shape.rect.x1, x2: shape.rect.x2, y1: shape.rect.y1, y2: shape.rect.y2 } : undefined,
-                  polygon: shape.polygon ? { vertices: shape.polygon.vertices.map(({ x, y }) => ({ x, y })) } : undefined,
-                }
+        setDrawnShapes(prevShapes => {
+          // Deep copy.
+          const newShapes = clipboardRef.current.map<DrawnShape>(({ tag, shape, boundaryRect }) => (
+            {
+              tag,
+              isFocused: true,
+              boundaryRect: boundaryRect ? { x1: boundaryRect.x1, x2: boundaryRect.x2, y1: boundaryRect.y1, y2: boundaryRect.y2 } : null,
+              shape: {
+                rect: shape.rect ? { x1: shape.rect.x1, x2: shape.rect.x2, y1: shape.rect.y1, y2: shape.rect.y2 } : undefined,
+                polygon: shape.polygon ? { vertices: shape.polygon.vertices.map(({ x, y }) => ({ x, y })) } : undefined,
               }
-            ))
-            // May be made more performant by using static Array and idxs instead of dynamic push.
-            prevShapes.forEach(s => newShapes.push(s))
-            setWaveArgs(newShapes)
-            return newShapes
+            }
+          ))
+          // May be made more performant by using static Array and idxs instead of dynamic push.
+          prevShapes.forEach(s => {
+            s.isFocused = false
+            newShapes.push(s)
           })
-          redrawExistingShapes()
-        } catch (e) { return }
+          setWaveArgs(newShapes)
+          return newShapes
+        })
+        redrawExistingShapes()
       }
       else if (e.key === 'd') {
         const newShapes = drawnShapes.filter(s => !s.isFocused)

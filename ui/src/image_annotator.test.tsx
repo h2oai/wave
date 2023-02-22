@@ -725,6 +725,20 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
+    it('Use "c" and "v" to copy/paste multiple times', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      expect(wave.args[name]).toHaveLength(2)
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.keyDown(canvasEl, { key: 'c' })
+      fireEvent.keyDown(canvasEl, { key: 'v' })
+      expect(wave.args[name]).toHaveLength(4)
+      fireEvent.keyDown(canvasEl, { key: 'c' })
+      fireEvent.keyDown(canvasEl, { key: 'v' })
+      expect(wave.args[name]).toHaveLength(6)
+    })
+
     it('Use "Backspace"  while annotating to remove the last polygon vertice', async () => {
       const { container, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad(container)
