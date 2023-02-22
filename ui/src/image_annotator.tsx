@@ -532,7 +532,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       else if (e.key === 'ArrowUp') moveAllSelectedShapes(0, -increment)
       else if (e.key === 'ArrowDown') moveAllSelectedShapes(0, increment)
       // Cancel polygon annotation.
-      else if (e.key === 'Escape' && activeShape === 'polygon') cancelOngoingAction()
+      else if (e.key === 'Escape' && activeShape !== 'select') cancelOngoingAction()
       // Change active shape.
       else if (e.key === 'b') {
         const shapes = ['select', ...allowed_shapes] as (keyof ImageAnnotatorShape | 'select')[]

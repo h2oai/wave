@@ -1064,6 +1064,19 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject(items)
       })
 
+      it('Cancels rectangle drawing when hitting escape', async () => {
+        const { container, getByTitle } = render(<XImageAnnotator model={model} />)
+        await waitForLoad(container)
+        const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+        fireEvent.click(getByTitle('Rectangle'))
+
+        fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+        fireEvent.keyDown(canvasEl, { key: 'Escape' })
+        fireEvent.click(canvasEl, { clientX: 150, clientY: 150 })
+
+        expect(wave.args[name]).toMatchObject(items)
+      })
+
       it('Cancel polygon creation when switching the active shape', async () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
