@@ -39,12 +39,12 @@ page['top_hello'] = ui.markdown_card(
     title='Hello World!',
     content='And now for something completely different!',
 )
-page['rhs_hello'] = ui.markdown_card(
+page['lhs_hello'] = ui.markdown_card(
     box='lhs',
     title='Hello World!',
     content='And now for something completely different!',
 )
-page['lhs_hello'] = ui.markdown_card(
+page['rhs_hello'] = ui.markdown_card(
     box='rhs',
     title='Hello World!',
     content='And now for something completely different!',
