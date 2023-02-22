@@ -1040,11 +1040,20 @@ export interface Visualization {
 const tooltipContainer = document.createElement('div')
 tooltipContainer.className = 'g2-tooltip'
 
-const PlotTooltip = ({ items, originalItems }: { items: TooltipItem[], originalItems: any[] }) =>
+const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalData: any[] }) =>
   <>
-    {items.map(({ data, mappingData, color }: TooltipItem) =>
-      Object.keys(originalItems[data.idx]).map((itemKey, idx) => {
-        const item = originalItems[data.idx][itemKey]
+    {items.map(({ data, mappingData, color }: TooltipItem) => {
+      const originalItems = originalData.length
+        ? originalData[data.idx]
+        : Object.keys(data).reduce((acc, key) => {
+          if (key !== 'idx') {
+            const value = (originalData as Rec).get(data.idx).get(key)
+            if (value) return ({ ...acc, [key]: value })
+          }
+          return acc
+        }, {})
+      return Object.keys(originalItems).map((itemKey, idx) => {
+        const item = originalItems[itemKey]
         return <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
           <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
           <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
@@ -1054,6 +1063,7 @@ const PlotTooltip = ({ items, originalItems }: { items: TooltipItem[], originalI
         </li>
       }
       )
+    }
     )}
   </>
 
@@ -1066,7 +1076,7 @@ export const
       currentChart = React.useRef<Chart | null>(null),
       currentPlot = React.useRef<Plot | null>(null),
       themeWatchRef = React.useRef<Disposable | null>(null),
-      originalDataRef = React.useRef<any[]>([]),
+      originalDataRef = React.useRef<any[]>(typeof model.data === 'string' ? unpack<any>(model.data) : null), // TODO: Refactor?
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
@@ -1091,7 +1101,6 @@ export const
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
-        originalDataRef.current = unpack<any[]>(model.data)
         currentPlot.current = plot
         if (chart) {
           chart.tooltip({
@@ -1105,7 +1114,7 @@ export const
               },
             },
             customContent: (_title, items) => {
-              ReactDOM.render(<PlotTooltip items={items} originalItems={originalDataRef.current} />, tooltipContainer)
+              ReactDOM.render(<PlotTooltip items={items} originalData={originalDataRef.current || model.data} />, tooltipContainer)
               return tooltipContainer
             }
           })
@@ -1155,7 +1164,7 @@ export const
       const
         raw_data = unpack<any[]>(model.data),
         data = refactorData(raw_data, currentPlot.current.marks)
-      originalDataRef.current = unpack<any[]>(model.data)
+      originalDataRef.current = typeof model.data === 'string' ? unpack<any>(model.data) : null
       currentChart.current.changeData(data)
     }, [currentChart, currentPlot, model])
 
