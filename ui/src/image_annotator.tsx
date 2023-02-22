@@ -161,7 +161,7 @@ const
     { key: 'c', description: 'Copy selected shapes' },
     { key: 'v', description: 'Paste selected shapes' },
     { key: 'd', description: 'Delete selected shapes' },
-    { key: 'Shift + Click', description: 'Select multiple shapes when in the selection mode' },
+    { key: 'Shift + Click', description: 'Select/deselect multiple shapes when in the selection mode' },
     { key: 'Arrow keys (←↑↓→)', description: 'Move selected shapes by 1px (or 10px while holding Shift key)' },
     { key: 'Ctrl + Mouse wheel', description: 'Zoom in/out' },
     { key: 'Enter', description: 'Finish drawing polyshape' },
@@ -202,13 +202,11 @@ const
     if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
     if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
   }),
-  getCorrectCursor = (cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, isSelect = false) => {
+  getCorrectCursor = (cursor_x: U, cursor_y: U, intersected?: DrawnShape, isSelect = false) => {
     if (!isSelect) return 'crosshair'
     let cursor = intersected ? 'pointer' : 'auto'
     if (intersected?.isFocused && intersected.shape.rect) cursor = getRectCornerCursor(intersected.shape.rect, cursor_x, cursor_y) || 'move'
-    else if (focused?.shape.rect) cursor = getRectCornerCursor(focused.shape.rect, cursor_x, cursor_y) || cursor
     else if (intersected?.isFocused && intersected.shape.polygon) cursor = getPolygonPointCursor(intersected.shape.polygon.vertices, cursor_x, cursor_y) || 'move'
-    else if (focused?.shape.polygon) cursor = getPolygonPointCursor(focused.shape.polygon.vertices, cursor_x, cursor_y) || cursor
 
     return cursor
   },
@@ -297,7 +295,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       const
         { x, y } = mousePositionRef.current,
         canvas = canvasRef.current
-      if (canvas) canvas.style.cursor = getCorrectCursor(x, y, undefined, undefined, shape === 'select')
+      if (canvas) canvas.style.cursor = getCorrectCursor(x, y, undefined, shape === 'select')
       setActiveShape(shape)
     },
     recreatePreviewLine = () => {
@@ -356,16 +354,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       if (e.buttons !== 1 && !intersected?.shape.polygon) return // Ignore right-click.
 
-      if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected.shape.rect)
+      if (intersected?.isFocused && intersected?.shape.rect) rectRef.current?.onMouseDown(cursor_x, cursor_y, intersected)
       if (intersected?.shape.polygon && polygonRef.current) {
         const vertices = intersected.shape.polygon.vertices
-
         const auxAdded = polygonRef.current.tryToAddAuxPoint(cursor_x, cursor_y, vertices)
         polygonRef.current.resetDragging()
+        polygonRef.current?.onMouseDown(cursor_x, cursor_y, intersected)
+
         // Remove polygon vertex on right click.
-        if (e.buttons === 2) {
-          intersected.shape.polygon.vertices = polygonRef.current.tryToRemovePoint(cursor_x, cursor_y, vertices)
-        }
+        if (e.buttons === 2) intersected.shape.polygon.vertices = polygonRef.current.tryToRemovePoint(cursor_x, cursor_y, vertices)
+
         setDrawnShapes(drawnShapes => {
           const newShapes = drawnShapes.map(s => {
             if (s === intersected && s.shape.polygon && polygonRef.current) {
@@ -382,9 +380,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       // Deselect all shapes when polygon/rect drawing starts.
       if (activeShape === 'rect' || activeShape === 'polygon') deselectAllShapes()
 
-      clickStartPositionRef.current = { x: cursor_x, y: cursor_y, dragging: true }
+      clickStartPositionRef.current = { x: cursor_x, y: cursor_y }
     },
     onMouseMove = (e: React.MouseEvent) => {
+      if (clickStartPositionRef.current) clickStartPositionRef.current.dragging = true
       mousePositionRef.current = { x: e.clientX, y: e.clientY }
       const canvas = canvasRef.current
       if (!canvas) return
@@ -398,13 +397,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           applyZoom((cursor_x - clickStartPosition.x) * zoom, (cursor_y - clickStartPosition.y) * zoom, zoom)
         }
       } else {
-        const
-          focused = drawnShapes.find(({ isFocused }) => isFocused),
-          intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
-        canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
+        const intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+        canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, intersected, activeShape === 'select')
         switch (activeShape) {
           case 'rect': {
-            const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
+            const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, intersected, clickStartPosition)
             redrawExistingShapes()
             if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
             break
@@ -417,13 +414,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           }
           case 'select': {
             // If left mouse btn is not held during moving, ignore.
-            if (e.buttons !== 1 || !focused) break
+            if (e.buttons !== 1 || !drawnShapes.some(s => s.isFocused)) break
             // TODO: Move all selected shapes at once.
-            if (focused.shape.rect && rectRef.current) rectRef.current.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            if (focused.shape.polygon && polygonRef.current) polygonRef.current.onMouseMove(cursor_x, cursor_y, focused, intersected, clickStartPosition)
-            // Deselect all other shapes when one starts moving and prevent their movement
-            // when mouse is over them while one is being dragged.
-            setDrawnShapes(drawnShapes => drawnShapes.map(ds => ({ ...ds, isFocused: ds === focused })))
+            if (rectRef.current) rectRef.current.onMouseMove(cursor_x, cursor_y, intersected, clickStartPosition)
+            if (polygonRef.current) polygonRef.current.onMouseMove(cursor_x, cursor_y, intersected, clickStartPosition)
             redrawExistingShapes()
             break
           }
@@ -477,11 +471,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
           setDrawnShapes(drawnShapes => {
             const newShapes = drawnShapes.map(s => {
-              // Allow multiple shapes to be selected or deselected by holding Shift key and clicking.
-              if (e.shiftKey) {
-                s.isFocused = s === intersected ? !s.isFocused : s.isFocused
-              } else {
-                s.isFocused = s === intersected
+              // Selection should not be changed if moving/resizing.
+              if (!start?.dragging) {
+                if (e.shiftKey && s === intersected) {
+                  s.isFocused = !s.isFocused
+                } else if (!e.shiftKey) {
+                  s.isFocused = s === intersected
+                }
               }
               if (s.isFocused && s.shape.polygon && polygonRef.current) {
                 s.shape.polygon.vertices = polygonRef.current.getPolygonPointsWithAux(s.shape.polygon.vertices)
@@ -500,8 +496,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
 
       clickStartPositionRef.current = undefined
-      const focused = drawnShapes.find(({ isFocused }) => isFocused)
-      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, focused, intersected, activeShape === 'select')
+      canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, intersected, activeShape === 'select')
     },
     moveAllSelectedShapes = (dx: U, dy: U) => {
       drawnShapes.forEach(s => {

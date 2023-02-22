@@ -102,22 +102,24 @@ export class PolygonAnnotator {
     })
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
-    if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
+  onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
+    if (!shape.shape.polygon) return
+    this.draggedPoint = shape.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y)) || null
+    this.draggedShape = shape
+  }
+
+  onMouseMove(cursor_x: U, cursor_y: U, intersected?: DrawnShape, clickStartPosition?: Position) {
+    if (!clickStartPosition?.dragging) {
       this.draggedPoint = null
       this.draggedShape = null
       return
     }
 
-    // TODO: Calculate this in mouseDown handler and store the current result for further use here.
-    const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
-    this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
     if (this.draggedPoint) {
-      if (focused.shape.polygon) this.draggedShape = focused
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
-    else if (intersected == focused || this.draggedShape) {
+    else if (intersected?.isFocused || this.draggedShape) {
       this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
       if (!this.draggedShape) return
 

@@ -64,8 +64,10 @@ export class RectAnnotator {
     return newRect
   }
 
-  onMouseDown(cursor_x: U, cursor_y: U, rect: ImageAnnotatorRect) {
-    this.resizedCorner = getCorner(cursor_x, cursor_y, rect, true)
+  onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
+    if (!shape.shape.rect) return
+    this.movedRect = shape
+    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect, true)
   }
 
   move = (dx: U, dy: U, shape?: DrawnShape) => {
@@ -91,29 +93,29 @@ export class RectAnnotator {
     }
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
+  onMouseMove(cursor_x: U, cursor_y: U, intersected?: DrawnShape, clickStartPosition?: Position) {
     if (!clickStartPosition) return
 
     const
       x1 = clickStartPosition.x,
       y1 = clickStartPosition.y
 
-    if (focused?.shape.rect && this.resizedCorner) {
+    if (this.movedRect?.shape.rect && this.resizedCorner) {
       if (this.resizedCorner === 'topLeft') {
-        focused.shape.rect.x1 += cursor_x - x1
-        focused.shape.rect.y1 += cursor_y - y1
+        this.movedRect.shape.rect.x1 += cursor_x - x1
+        this.movedRect.shape.rect.y1 += cursor_y - y1
       }
       else if (this.resizedCorner === 'topRight') {
-        focused.shape.rect.x1 += cursor_x - x1
-        focused.shape.rect.y2 += cursor_y - y1
+        this.movedRect.shape.rect.x1 += cursor_x - x1
+        this.movedRect.shape.rect.y2 += cursor_y - y1
       }
       else if (this.resizedCorner === 'bottomLeft') {
-        focused.shape.rect.x2 += cursor_x - x1
-        focused.shape.rect.y1 += cursor_y - y1
+        this.movedRect.shape.rect.x2 += cursor_x - x1
+        this.movedRect.shape.rect.y1 += cursor_y - y1
       }
       else if (this.resizedCorner === 'bottomRight') {
-        focused.shape.rect.x2 += cursor_x - x1
-        focused.shape.rect.y2 += cursor_y - y1
+        this.movedRect.shape.rect.x2 += cursor_x - x1
+        this.movedRect.shape.rect.y2 += cursor_y - y1
       }
 
       clickStartPosition.x = cursor_x
