@@ -110,24 +110,22 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
     return wrap
 
 
-async def _invoke_handler(func: Callable, arity: int, q: Q, arg: any):
+async def _invoke_handler(func: Callable, arity: int, q: Q, arg: any)->bool:
     if arity == 0:
-        await func()
+        return await func()
     elif arity == 1:
-        await func(q)
+        return await func(q)
     else:
-        await func(q, arg)
+        return await func(q, arg)
 
 
 async def _match_predicate(predicate: Callable, func: Callable, arity: int, q: Q, arg: any) -> bool:
     if predicate:
         if predicate(arg):
-            await _invoke_handler(func, arity, q, arg)
-            return True
+            return await _invoke_handler(func, arity, q, arg)
     else:
         if arg:
-            await _invoke_handler(func, arity, q, arg)
-            return True
+            return await _invoke_handler(func, arity, q, arg)
     return False
 
 
