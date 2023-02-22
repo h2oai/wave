@@ -11,7 +11,7 @@ know what they are expected to type. Another common UX error is misusing `placeh
 a label which is not correct as the placeholder value should be an example value, e.g. for name field
 the placeholder could be `John Doe`.
 
-Note that if `trigger` is specified, the inputs are submitted after `500ms` of no typing activity. This threshold is currently not configurable.
+Note that if `trigger` is specified, the inputs are submitted after `500ms` of no typing activity. This threshold is currently not configurable. You can also use the `trigger_on_enter` option so that users can submit by pressing the <kbd>Enter</kbd> key.
 
 The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
 

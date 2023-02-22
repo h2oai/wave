@@ -489,6 +489,7 @@ ui_message_bar <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param spellcheck True if the text may be checked for spelling errors. Defaults to True.
+#' @param trigger_on_enter True to make the form submit when the user presses the Enter key. Defaults to False.
 #' @return A Textbox instance.
 #' @export
 ui_textbox <- function(
@@ -511,7 +512,8 @@ ui_textbox <- function(
   width = NULL,
   visible = NULL,
   tooltip = NULL,
-  spellcheck = NULL) {
+  spellcheck = NULL,
+  trigger_on_enter = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -532,6 +534,7 @@ ui_textbox <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("spellcheck", "logical", spellcheck)
+  .guard_scalar("trigger_on_enter", "logical", trigger_on_enter)
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -552,7 +555,8 @@ ui_textbox <- function(
     width=width,
     visible=visible,
     tooltip=tooltip,
-    spellcheck=spellcheck))
+    spellcheck=spellcheck,
+    trigger_on_enter=trigger_on_enter))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

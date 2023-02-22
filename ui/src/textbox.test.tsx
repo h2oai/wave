@@ -157,4 +157,16 @@ describe('Textbox.tsx', () => {
     rerender(<XTextbox model={{...textboxProps, value: '456', mask: '(999)'}} />)
     expect(getByTestId(name)).toHaveValue('(456)')
   })
+
+  it('Doesn\'t submit when the Enter key is pressed by default', () => {
+    const { getByTestId } = render(<XTextbox model={{ ...textboxProps }} />)
+    userEvent.type(getByTestId(name), '123{Enter}')
+    expect(pushMock).not.toBeCalled()
+  })
+
+  it('Submits when the Enter key is pressed using the trigger_on_enter option', () => {
+    const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger_on_enter: true }} />)
+    userEvent.type(getByTestId(name), '123{Enter}')
+    expect(pushMock).toBeCalled()
+  })
 })

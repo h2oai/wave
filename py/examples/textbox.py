@@ -7,7 +7,7 @@ from h2o_wave import main, app, Q, ui
 
 @app('/demo')
 async def serve(q: Q):
-    if q.args.show_inputs:
+    if q.args.textbox is not None:
         q.page['example'].items = [
             ui.text(f'textbox={q.args.textbox}'),
             ui.text(f'textbox_disabled={q.args.textbox_disabled}'),
@@ -22,6 +22,7 @@ async def serve(q: Q):
             ui.text(f'textbox_disabled_placeholder={q.args.textbox_disabled_placeholder}'),
             ui.text(f'textbox_multiline={q.args.textbox_multiline}'),
             ui.text(f'textbox_spellcheck_disabled={q.args.textbox_spellcheck_disabled}'),
+            ui.text(f'textbox_enter={q.args.textbox_enter}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
@@ -40,6 +41,7 @@ async def serve(q: Q):
                        placeholder='I am disabled'),
             ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True),
             ui.textbox(name='textbox_spellcheck_disabled', label='Spellcheck disabled', spellcheck=False),
+            ui.textbox(name='textbox_enter', label='Submit the form when pressing the Enter key', trigger_on_enter=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
