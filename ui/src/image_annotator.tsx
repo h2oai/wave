@@ -168,8 +168,9 @@ const
     ['Arrow keys (←↑↓→)', 'Move selected shapes by 1px (or 10px while holding Shift key)'],
     ['c', 'Copy selected shapes'],
     ['v', 'Paste selected shapes'],
-    ['d', 'Delete selected shapes'],
-    ['Backspace', 'Delete last polyshape vertex'],
+    ['Delete', 'Delete selected shapes'],
+    ['Backspace', 'Delete last polygon vertex'],
+    ['Backspace', 'Delete selected shapes (if not drawing a polygon)'],
     ['Esc', 'Cancel ongoing task'],
     ['Enter', 'Finish drawing polyshape'],
   ],
@@ -185,8 +186,8 @@ const
             </tr>
           </thead>
           <tbody className={css.tableBody}>
-            {helpTableRows.map(([key, desc]) =>
-              <tr key={key}>
+            {helpTableRows.map(([key, desc], idx) =>
+              <tr key={idx}>
                 <td><kbd>{key}</kbd></td>
                 <td>{desc}</td>
               </tr>
@@ -592,18 +593,18 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         })
         redrawExistingShapes()
       }
-      else if (e.key === 'd') {
+      // Remove last polygon vertex.
+      else if (e.key === 'Backspace' && activeShape === 'polygon') {
+        polygonRef.current?.removeLastPoint()
+        recreatePreviewLine()
+      }
+      else if (e.key === 'Delete' || e.key === 'Backspace') {
         const newShapes = drawnShapes.filter(s => !s.isFocused)
         if (newShapes.length !== drawnShapes.length) {
           setDrawnShapes(newShapes)
           setWaveArgs(newShapes)
           redrawExistingShapes()
         }
-      }
-      // Remove last polygon vertex.
-      else if (e.key === 'Backspace' && activeShape === 'polygon') {
-        polygonRef.current?.removeLastPoint()
-        recreatePreviewLine()
       }
       // Finish polygon annotation.
       else if (e.key === 'Enter' && activeShape === 'polygon') {
