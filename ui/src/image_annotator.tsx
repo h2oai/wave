@@ -592,7 +592,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           redrawExistingShapes()
         } catch (e) { return }
       }
-      else if (e.key === 'Delete') {
+      else if (e.key === 'd') {
         const newShapes = drawnShapes.filter(s => !s.isFocused)
         if (newShapes.length !== drawnShapes.length) {
           setDrawnShapes(newShapes)

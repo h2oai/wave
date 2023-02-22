@@ -703,12 +703,12 @@ describe('ImageAnnotator.tsx', () => {
   })
 
   describe('Keyboard shortcuts', () => {
-    it('Use "Delete" to delete selected shapes', async () => {
+    it('Use "d" to delete selected shapes', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad(container)
       const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
       fireEvent.click(canvasEl, { clientX: 180, clientY: 120, shiftKey: true })
-      fireEvent.keyDown(canvasEl, { key: 'Delete' })
+      fireEvent.keyDown(canvasEl, { key: 'd' })
       expect(wave.args[name]).toMatchObject([rect])
     })
 
@@ -718,7 +718,7 @@ describe('ImageAnnotator.tsx', () => {
       const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
       fireEvent.keyDown(canvasEl, { key: 'a' })
       fireEvent.keyDown(canvasEl, { key: 'c' })
-      fireEvent.keyDown(canvasEl, { key: 'Delete' })
+      fireEvent.keyDown(canvasEl, { key: 'd' })
       expect(wave.args[name]).toMatchObject([])
 
       fireEvent.keyDown(canvasEl, { key: 'v' })
