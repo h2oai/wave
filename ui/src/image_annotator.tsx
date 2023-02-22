@@ -566,26 +566,25 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         redrawExistingShapes()
       }
       else if (e.key === 'c') {
-        const selectedShapes = drawnShapes.filter(s => s.isFocused)
-        // Deep copy.
-        clipboardRef.current = new Array(selectedShapes.length)
-        for (let i = 0; i < selectedShapes.length; i++) {
-          const { tag, shape, boundaryRect } = selectedShapes[i]
-          clipboardRef.current[i] = {
-            tag,
-            isFocused: true,
-            boundaryRect: boundaryRect ? { x1: boundaryRect.x1, x2: boundaryRect.x2, y1: boundaryRect.y1, y2: boundaryRect.y2 } : null,
-            shape: {
-              rect: shape.rect ? { x1: shape.rect.x1, x2: shape.rect.x2, y1: shape.rect.y1, y2: shape.rect.y2 } : undefined,
-              polygon: shape.polygon ? { vertices: shape.polygon.vertices.map(({ x, y }) => ({ x, y })) } : undefined,
-            }
-          }
-        }
+        clipboardRef.current = drawnShapes.filter(s => s.isFocused)
       }
       else if (e.key === 'v' && clipboardRef.current.length) {
         try {
           setDrawnShapes(prevShapes => {
-            const newShapes = [...clipboardRef.current, ...prevShapes]
+            // Deep copy.
+            const newShapes = clipboardRef.current.map<DrawnShape>(({ tag, shape, boundaryRect, isFocused }) => (
+              {
+                tag,
+                isFocused,
+                boundaryRect: boundaryRect ? { x1: boundaryRect.x1, x2: boundaryRect.x2, y1: boundaryRect.y1, y2: boundaryRect.y2 } : null,
+                shape: {
+                  rect: shape.rect ? { x1: shape.rect.x1, x2: shape.rect.x2, y1: shape.rect.y1, y2: shape.rect.y2 } : undefined,
+                  polygon: shape.polygon ? { vertices: shape.polygon.vertices.map(({ x, y }) => ({ x, y })) } : undefined,
+                }
+              }
+            ))
+            // May be made more performant by using static Array and idxs instead of dynamic push.
+            prevShapes.forEach(s => newShapes.push(s))
             setWaveArgs(newShapes)
             return newShapes
           })
