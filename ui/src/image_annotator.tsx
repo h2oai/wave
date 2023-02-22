@@ -157,21 +157,21 @@ const
     }
   }),
   helpTableRows = [
-    { key: 'a', description: 'Select all shapes' },
-    { key: 'c', description: 'Copy selected shapes' },
-    { key: 'v', description: 'Paste selected shapes' },
-    { key: 'd', description: 'Delete selected shapes' },
-    { key: 'Shift + Click', description: 'Select/deselect multiple shapes when in the selection mode' },
-    { key: 'Arrow keys (←↑↓→)', description: 'Move selected shapes by 1px (or 10px while holding Shift key)' },
-    { key: 'Ctrl + Mouse wheel', description: 'Zoom in/out' },
-    { key: 'Enter', description: 'Finish drawing polyshape' },
-    { key: 'Backspace', description: 'Delete last polyshape vertex' },
-    { key: 'Esc', description: 'Cancel ongoing task' },
-    { key: 'l', description: 'Toggle label' },
-    { key: 'b', description: 'Toggle drawing function' },
-    { key: 'r', description: 'Select rectangle tool' },
-    { key: 'p', description: 'Select polygon tool' },
-    { key: 's', description: 'Activate selection tool' }
+    ['s', 'Activate selection tool'],
+    ['r', 'Select rectangle tool'],
+    ['p', 'Select polygon tool'],
+    ['b', 'Toggle drawing function'],
+    ['l', 'Toggle label'],
+    ['Shift + Click', 'Select/deselect multiple shapes when in the selection mode'],
+    ['a', 'Select all shapes'],
+    ['Ctrl + Mouse wheel', 'Zoom in/out'],
+    ['Arrow keys (←↑↓→)', 'Move selected shapes by 1px (or 10px while holding Shift key)'],
+    ['c', 'Copy selected shapes'],
+    ['v', 'Paste selected shapes'],
+    ['d', 'Delete selected shapes'],
+    ['Backspace', 'Delete last polyshape vertex'],
+    ['Esc', 'Cancel ongoing task'],
+    ['Enter', 'Finish drawing polyshape'],
   ],
   tooltipProps: Fluent.ITooltipProps = {
     onRenderContent: () => (
@@ -185,10 +185,10 @@ const
             </tr>
           </thead>
           <tbody className={css.tableBody}>
-            {helpTableRows.map(row =>
-              <tr key={row.key}>
-                <td><kbd>{row.key}</kbd></td>
-                <td>{row.description}</td>
+            {helpTableRows.map(([key, desc]) =>
+              <tr key={key}>
+                <td><kbd>{key}</kbd></td>
+                <td>{desc}</td>
               </tr>
             )}
           </tbody>
