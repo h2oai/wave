@@ -5,7 +5,7 @@ import { ARC_RADIUS } from "./image_annotator_rect"
 export class PolygonAnnotator {
   private currPolygonPoints: ImageAnnotatorPoint[] = []
   private boundaryRect: ImageAnnotatorRect | null = null
-  private draggedPoint: ImageAnnotatorPoint | null = null
+  private draggedPoint: DrawnPoint | null = null
   private draggedShape: DrawnShape | null = null
 
 
@@ -106,6 +106,16 @@ export class PolygonAnnotator {
     if (!shape.shape.polygon) return
     this.draggedPoint = shape.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y)) || null
     this.draggedShape = shape
+  }
+
+  isMovedOrResized = () => !!this.draggedPoint || !!this.draggedShape
+  getPointCursor = () => {
+    if (!this.draggedPoint) return
+    return this.draggedPoint?.isAux
+      ? 'pointer'
+      : this.draggedPoint
+        ? 'move'
+        : ''
   }
 
   onMouseMove(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {

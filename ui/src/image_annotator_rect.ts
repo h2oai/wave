@@ -70,6 +70,9 @@ export class RectAnnotator {
     this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect, true)
   }
 
+  isMovedOrResized = () => !!this.movedRect || !!this.resizedCorner
+  getResizedCorner = () => this.resizedCorner
+
   move = (dx: U, dy: U, shape?: DrawnShape) => {
     // Prevent moving behind image boundaries.
     const movedRect = (shape || this.movedRect)?.shape.rect
@@ -156,8 +159,10 @@ export const
     else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'bottomLeft'
     else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'bottomRight'
   },
-  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
-    const corner = getCorner(cursor_x, cursor_y, shape)
+  getRectCursorByCorner = (corner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight') => {
     if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'
     if (corner === 'bottomLeft' || corner === 'topRight') return 'nesw-resize'
+  },
+  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
+    return getRectCursorByCorner(getCorner(cursor_x, cursor_y, shape))
   }

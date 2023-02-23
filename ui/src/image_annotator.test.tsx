@@ -936,12 +936,13 @@ describe('ImageAnnotator.tsx', () => {
     })
 
     describe('Zoom', () => {
+      // TODO: Add polygon version of this test.
       it('Moves rect correctly when the image is zoomed - 1 zoom step', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
         // Zooms in one zoom step.
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
@@ -952,13 +953,14 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 19, x2: 109, y1: 19, y2: 109 } } }, polygon])
       })
 
+      // TODO: Add polygon version of this test.
       it('Moves rect correctly when the image is zoomed - 2 zoom steps', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
         // Zooms in 2 zoom steps.
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
         fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
         fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
@@ -971,7 +973,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
         fireEvent.click(getByTitle('Rectangle'))
         fireEvent.mouseDown(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
         fireEvent.mouseMove(canvasEl, { clientX: 150, clientY: 150, buttons: 1 })
@@ -984,7 +986,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
         fireEvent.click(getByTitle('Polygon'))
         userEvent.click(canvasEl, { clientX: 10, clientY: 10 })
         userEvent.click(canvasEl, { clientX: 20, clientY: 20 })
@@ -1001,7 +1003,7 @@ describe('ImageAnnotator.tsx', () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
         fireEvent.keyDown(canvasEl, { key: 'Control' })
         expect(canvasEl.style.cursor).toBe('grab')
         fireEvent.keyUp(canvasEl, { key: 'Control' })
@@ -1012,9 +1014,9 @@ describe('ImageAnnotator.tsx', () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
-        fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1, ctrlKey: true })
-        fireEvent.mouseMove(canvasEl, { clientX: 55, clientY: 55, buttons: 1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+        fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+        fireEvent.mouseMove(canvasEl, { clientX: 55, clientY: 55, buttons: 1 })
         expect(canvasEl.style.cursor).toBe('grabbing')
       })
 
@@ -1024,7 +1026,7 @@ describe('ImageAnnotator.tsx', () => {
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
         expect(wave.args[name]).toMatchObject(items)
         fireEvent.click(getByText('Remove all'))
-        fireEvent.wheel(canvasEl, { deltaY: -1, ctrlKey: true })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
         expect(wave.args[name]).toMatchObject([])
       })
     })
