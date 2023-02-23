@@ -1,5 +1,5 @@
 import { F, S, U } from "h2o-wave"
-import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect, Position } from "./image_annotator"
+import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect } from "./image_annotator"
 import { ARC_RADIUS } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
@@ -73,10 +73,8 @@ export class PolygonAnnotator {
     this.addCurrPolygonPoint({ x: cursor_x, y: cursor_y })
   }
 
-  move(dx: U, dy: U, shape?: DrawnShape) {
-    // Keep the polygon in the boundaries.
+  move(dx: U, dy: U, movedShape?: DrawnShape) {
     const
-      movedShape = (this.draggedShape || shape),
       boundaryRect = movedShape?.boundaryRect,
       movedPolygon = movedShape?.shape.polygon
     if (!movedPolygon || !boundaryRect) return
@@ -109,8 +107,10 @@ export class PolygonAnnotator {
   }
 
   isMovedOrResized = () => !!this.draggedPoint || !!this.draggedShape
+
+  getDraggedPoint = () => this.draggedPoint
+
   getPointCursor = () => {
-    if (!this.draggedPoint) return
     return this.draggedPoint?.isAux
       ? 'pointer'
       : this.draggedPoint
@@ -118,22 +118,11 @@ export class PolygonAnnotator {
         : ''
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {
-    if (!clickStartPosition?.dragging) {
-      this.draggedPoint = null
-      this.draggedShape = null
-      return
-    }
+  moveDraggedPoint(cursor_x: U, cursor_y: U) {
+    if (!this.draggedPoint) return
 
-    if (this.draggedPoint) {
-      this.draggedPoint.x += cursor_x - this.draggedPoint.x
-      this.draggedPoint.y += cursor_y - this.draggedPoint.y
-    }
-    else if (this.draggedShape) {
-      this.move(cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
-      clickStartPosition.x = cursor_x
-      clickStartPosition.y = cursor_y
-    }
+    this.draggedPoint.x += cursor_x - this.draggedPoint.x
+    this.draggedPoint.y += cursor_y - this.draggedPoint.y
   }
 
   tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {

@@ -96,39 +96,32 @@ export class RectAnnotator {
     }
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {
-    if (!clickStartPosition) return
+  resizeRectCorner(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {
+    if (!clickStartPosition || !this.movedRect?.shape.rect || !this.resizedCorner) return
 
     const
       x1 = clickStartPosition.x,
       y1 = clickStartPosition.y
 
-    if (this.movedRect?.shape.rect && this.resizedCorner) {
-      if (this.resizedCorner === 'topLeft') {
-        this.movedRect.shape.rect.x1 += cursor_x - x1
-        this.movedRect.shape.rect.y1 += cursor_y - y1
-      }
-      else if (this.resizedCorner === 'topRight') {
-        this.movedRect.shape.rect.x1 += cursor_x - x1
-        this.movedRect.shape.rect.y2 += cursor_y - y1
-      }
-      else if (this.resizedCorner === 'bottomLeft') {
-        this.movedRect.shape.rect.x2 += cursor_x - x1
-        this.movedRect.shape.rect.y1 += cursor_y - y1
-      }
-      else if (this.resizedCorner === 'bottomRight') {
-        this.movedRect.shape.rect.x2 += cursor_x - x1
-        this.movedRect.shape.rect.y2 += cursor_y - y1
-      }
+    if (this.resizedCorner === 'topLeft') {
+      this.movedRect.shape.rect.x1 += cursor_x - x1
+      this.movedRect.shape.rect.y1 += cursor_y - y1
+    }
+    else if (this.resizedCorner === 'topRight') {
+      this.movedRect.shape.rect.x1 += cursor_x - x1
+      this.movedRect.shape.rect.y2 += cursor_y - y1
+    }
+    else if (this.resizedCorner === 'bottomLeft') {
+      this.movedRect.shape.rect.x2 += cursor_x - x1
+      this.movedRect.shape.rect.y1 += cursor_y - y1
+    }
+    else if (this.resizedCorner === 'bottomRight') {
+      this.movedRect.shape.rect.x2 += cursor_x - x1
+      this.movedRect.shape.rect.y2 += cursor_y - y1
+    }
 
-      clickStartPosition.x = cursor_x
-      clickStartPosition.y = cursor_y
-    }
-    else if (this.movedRect) {
-      this.move(cursor_x - x1, cursor_y - y1)
-      clickStartPosition.x = cursor_x
-      clickStartPosition.y = cursor_y
-    }
+    clickStartPosition.x = cursor_x
+    clickStartPosition.y = cursor_y
   }
 }
 

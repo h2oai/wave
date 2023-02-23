@@ -257,12 +257,11 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 5, x2: 95, y1: 10, y2: 100 } } }, polygon])
     })
 
-    it('Moves rect correctly if multiple selected', async () => {
+    it('Moves multiple selected rects correctly', async () => {
       const rect1 = { tag: 'person', shape: { rect: { x1: 5, x2: 9, y1: 5, y2: 9 } } }
       const rect2 = { tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 10, y2: 100 } } }
       const rect3 = { tag: 'person', shape: { rect: { x1: 110, x2: 120, y1: 110, y2: 120 } } }
-      const m = { ...model, items: [rect1, rect2, rect3] }
-      const { container } = render(<XImageAnnotator model={m} />)
+      const { container } = render(<XImageAnnotator model={{ ...model, items: [rect1, rect2, rect3] }} />)
       await waitForLoad(container)
       const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
       fireEvent.keyDown(canvasEl, { key: 'a' })
@@ -270,9 +269,12 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
       fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
 
-      expect(wave.args[name]).toMatchObject([rect1, { tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, rect3])
+      expect(wave.args[name]).toMatchObject([
+        { tag: 'person', shape: { rect: { x1: 15, x2: 19, y1: 15, y2: 19 } } },
+        { tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } },
+        { tag: 'person', shape: { rect: { x1: 120, x2: 130, y1: 120, y2: 130 } } },
+      ])
     })
-
 
     it('Does not move rect if click happened outside the canvas but left mouse btn not pressed', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
@@ -528,17 +530,24 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
-    it('Does not move polygon if left mouse btn not pressed (dragging)', async () => {
-      const { container } = render(<XImageAnnotator model={model} />)
+    it('Moves multiple selected polygons correctly', async () => {
+      const p1 = { shape: { polygon: { vertices: [{ x: 100, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 220 }] } }, tag: 'person' }
+      const p2 = { shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 10 }, { x: 20, y: 20 }] } }, tag: 'person' }
+      const { container } = render(<XImageAnnotator model={{ ...model, items: [p1, p2] }} />)
       await waitForLoad(container)
       const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
 
-      fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+      fireEvent.keyDown(canvasEl, { key: 'a' })
       fireEvent.mouseDown(canvasEl, { clientX: 180, clientY: 120 })
-      fireEvent.mouseMove(canvasEl, { clientX: 190, clientY: 130 })
+      fireEvent.mouseMove(canvasEl, { clientX: 190, clientY: 130, buttons: 1 })
       fireEvent.click(canvasEl, { clientX: 190, clientY: 130 })
 
-      expect(wave.args[name]).toMatchObject(items)
+      const p1MovedVertices = p1.shape.polygon.vertices.map(({ x, y }) => ({ x: x + 10, y: y + 10 }))
+      const p2MovedVertices = p2.shape.polygon.vertices.map(({ x, y }) => ({ x: x + 10, y: y + 10 }))
+      expect(wave.args[name]).toMatchObject([
+        { shape: { polygon: { vertices: p1MovedVertices } }, tag: 'person' },
+        { shape: { polygon: { vertices: p2MovedVertices } }, tag: 'person' },
+      ])
     })
 
     it('Moves polygon by a single point correctly', async () => {
@@ -911,7 +920,23 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject(items)
       })
 
-      it('Move multiple selected shapes at once by arrows', async () => {
+      it('Moves multiple selected shapes at once by mouse drag', async () => {
+        const { container } = render(<XImageAnnotator model={model} />)
+        await waitForLoad(container)
+        const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+        fireEvent.keyDown(canvasEl, { key: 'a' })
+        fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+        fireEvent.mouseMove(canvasEl, { clientX: 60, clientY: 60, buttons: 1 })
+        fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
+
+        const movedVertices = polygon.shape.polygon.vertices.map(({ x, y }) => ({ x: x + 10, y: y + 10 }))
+        expect(wave.args[name]).toMatchObject([
+          { tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } },
+          { shape: { polygon: { vertices: movedVertices } }, tag: 'person' }
+        ])
+      })
+
+      it('Moves multiple selected shapes at once by arrows', async () => {
         const { container } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
         const canvasEl = container.querySelector('canvas') as HTMLCanvasElement

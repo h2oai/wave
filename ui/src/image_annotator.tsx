@@ -429,11 +429,28 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'select': {
-          // If left mouse btn is not held during moving, ignore.
-          if (e.buttons !== 1) break
-          // TODO: Move all selected shapes at once.
-          rectRef.current?.onMouseMove(cursor_x, cursor_y, clickStartPosition)
-          polygonRef.current?.onMouseMove(cursor_x, cursor_y, clickStartPosition)
+          if (!clickStartPosition) break
+
+          if (rectRef.current?.getResizedCorner()) {
+            rectRef.current?.resizeRectCorner(cursor_x, cursor_y, clickStartPosition)
+            break
+          }
+          if (polygonRef.current?.getDraggedPoint()) {
+            polygonRef.current?.moveDraggedPoint(cursor_x, cursor_y)
+            break
+          }
+
+          const
+            x1 = clickStartPosition.x,
+            y1 = clickStartPosition.y
+          // Perf: We could store selected shapes in-memory instead of filtering them every time, but this should be fast enough.
+          drawnShapes.filter(s => s.isFocused).forEach(s => {
+            if (s.shape.rect) rectRef.current?.move(cursor_x - x1, cursor_y - y1, s)
+            else if (s.shape.polygon) polygonRef.current?.move(cursor_x - x1, cursor_y - y1, s)
+          })
+          clickStartPosition.x = cursor_x
+          clickStartPosition.y = cursor_y
+
           redrawExistingShapes()
           break
         }
