@@ -108,7 +108,7 @@ export class PolygonAnnotator {
     this.draggedShape = shape
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, intersected?: DrawnShape, clickStartPosition?: Position) {
+  onMouseMove(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {
     if (!clickStartPosition?.dragging) {
       this.draggedPoint = null
       this.draggedShape = null
@@ -119,12 +119,8 @@ export class PolygonAnnotator {
       this.draggedPoint.x += cursor_x - this.draggedPoint.x
       this.draggedPoint.y += cursor_y - this.draggedPoint.y
     }
-    else if (intersected?.isFocused || this.draggedShape) {
-      this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
-      if (!this.draggedShape) return
-
+    else if (this.draggedShape) {
       this.move(cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
-
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }

@@ -398,11 +398,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           applyZoom((cursor_x - clickStartPosition.x) * zoom, (cursor_y - clickStartPosition.y) * zoom, zoom)
         }
       } else {
+        // TODO: Save in onMouseDown.
         const intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
         canvas.style.cursor = getCorrectCursor(cursor_x, cursor_y, intersected, activeShape === 'select')
         switch (activeShape) {
           case 'rect': {
-            const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, intersected, clickStartPosition)
+            const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, clickStartPosition)
             redrawExistingShapes()
             if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
             break
@@ -417,8 +418,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
             // If left mouse btn is not held during moving, ignore.
             if (e.buttons !== 1 || !drawnShapes.some(s => s.isFocused)) break
             // TODO: Move all selected shapes at once.
-            if (rectRef.current) rectRef.current.onMouseMove(cursor_x, cursor_y, intersected, clickStartPosition)
-            if (polygonRef.current) polygonRef.current.onMouseMove(cursor_x, cursor_y, intersected, clickStartPosition)
+            if (rectRef.current) rectRef.current.onMouseMove(cursor_x, cursor_y, clickStartPosition)
+            if (polygonRef.current) polygonRef.current.onMouseMove(cursor_x, cursor_y, clickStartPosition)
             redrawExistingShapes()
             break
           }

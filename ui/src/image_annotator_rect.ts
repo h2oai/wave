@@ -93,7 +93,7 @@ export class RectAnnotator {
     }
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, intersected?: DrawnShape, clickStartPosition?: Position) {
+  onMouseMove(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {
     if (!clickStartPosition) return
 
     const
@@ -121,12 +121,8 @@ export class RectAnnotator {
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
-    else if (this.movedRect || intersected?.isFocused) {
-      this.movedRect = this.movedRect || intersected
-      if (!this.movedRect?.shape.rect) return
-
+    else if (this.movedRect) {
       this.move(cursor_x - x1, cursor_y - y1)
-
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
