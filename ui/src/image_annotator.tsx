@@ -425,8 +425,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         }
         case 'select': {
           // If left mouse btn is not held during moving, ignore.
-          // TODO: This focus check is probably not needed anymore.
-          if (e.buttons !== 1 || !drawnShapes.some(s => s.isFocused)) break
+          if (e.buttons !== 1) break
           // TODO: Move all selected shapes at once.
           rectRef.current?.onMouseMove(cursor_x, cursor_y, clickStartPosition)
           polygonRef.current?.onMouseMove(cursor_x, cursor_y, clickStartPosition)
