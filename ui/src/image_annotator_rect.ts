@@ -129,9 +129,6 @@ export class RectAnnotator {
       clickStartPosition.x = cursor_x
       clickStartPosition.y = cursor_y
     }
-    else {
-      return { rect: this.createRect(x1, cursor_x, y1, cursor_y) }
-    }
   }
 }
 

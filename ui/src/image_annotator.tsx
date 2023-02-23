@@ -412,9 +412,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       switch (activeShape) {
         case 'rect': {
-          const currentlyDrawnRect = rectRef.current?.onMouseMove(cursor_x, cursor_y, clickStartPosition)
           redrawExistingShapes()
-          if (currentlyDrawnRect?.rect) rectRef.current?.drawRect(currentlyDrawnRect.rect, getCurrentTagColor(activeTag))
+          if (rectRef.current && clickStartPosition) {
+            const currentlyDrawnRect = rectRef.current.createRect(clickStartPosition.x, cursor_x, clickStartPosition.y, cursor_y)
+            if (currentlyDrawnRect) rectRef.current?.drawRect(currentlyDrawnRect, getCurrentTagColor(activeTag))
+          }
           break
         }
         case 'polygon': {
