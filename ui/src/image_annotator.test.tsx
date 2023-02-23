@@ -87,6 +87,30 @@ describe('ImageAnnotator.tsx', () => {
     expect(wave.args[name]).toMatchObject([])
   })
 
+  it('Initially renders select, if items are not empty', async () => {
+    const { container, getByTitle } = render(<XImageAnnotator model={model} />)
+    await waitForLoad(container)
+    expect(getByTitle('Select')).toHaveClass('is-checked')
+  })
+
+  it('Initially selects select tool, if items are not empty, but empty allowed shapes specified', async () => {
+    const { container, getByTitle } = render(<XImageAnnotator model={{ ...model, allowed_shapes: [] }} />)
+    await waitForLoad(container)
+    expect(getByTitle('Select')).toHaveClass('is-checked')
+  })
+
+  it('Initially selects rect tool, if items are empty and rect is allowed', async () => {
+    const { container, getByTitle } = render(<XImageAnnotator model={{ ...model, items: [] }} />)
+    await waitForLoad(container)
+    expect(getByTitle('Rectangle')).toHaveClass('is-checked')
+  })
+
+  it('Initially selects polygon tool, if items are empty and only polygon is allowed', async () => {
+    const { container, getByTitle } = render(<XImageAnnotator model={{ ...model, items: [], allowed_shapes: ['polygon'] }} />)
+    await waitForLoad(container)
+    expect(getByTitle('Polygon')).toHaveClass('is-checked')
+  })
+
   describe('Rect', () => {
     it('Draws a new rect', async () => {
       const { container, getByTitle } = render(<XImageAnnotator model={model} />)

@@ -244,8 +244,11 @@ const
     canCheck: true,
     checked: activeShape === key,
     iconProps: { iconName, styles: { root: { fontSize: 20 } } }
-  })
-
+  }),
+  getInitialActiveShape = (allowedShapes: S[], items?: ImageAnnotatorItem[]) => {
+    if (items?.length || !allowedShapes?.length) return 'select'
+    return allowedShapes?.includes('rect') ? 'rect' : 'polygon'
+  }
 
 export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   const
@@ -258,7 +261,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     })), [model.tags, theme]),
     allowedShapes = React.useMemo(() => allowed_shapes.reduce((acc, curr) => acc.add(curr), new Set()), [allowed_shapes]),
     [activeTag, setActiveTag] = React.useState<S>(model.tags[0]?.name || ''),
-    [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>('select'),
+    [activeShape, setActiveShape] = React.useState<keyof ImageAnnotatorShape | 'select'>(getInitialActiveShape(allowed_shapes, model.items)),
     // TODO: Think about making this a ref instead of state.
     [drawnShapes, setDrawnShapes] = React.useState<DrawnShape[]>([]),
     [zoom, setZoom] = React.useState(1),
