@@ -168,6 +168,15 @@ describe('ImageAnnotator.tsx', () => {
       expect(canvasEl.style.cursor).toBe('pointer')
     })
 
+    it('Displays the correct cursor when not hovering over rect, but Rect tool is active', async () => {
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
+      await waitForLoad(container)
+      fireEvent.click(getByTitle('Rectangle'))
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      fireEvent.mouseMove(canvasEl, { clientX: 5, clientY: 5 })
+      expect(canvasEl.style.cursor).toBe('crosshair')
+    })
+
     it('Displays the correct cursor when hovering over focused rect', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad(container)
@@ -448,6 +457,15 @@ describe('ImageAnnotator.tsx', () => {
       const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
       fireEvent.mouseMove(canvasEl, { clientX: 180, clientY: 120 })
       expect(canvasEl.style.cursor).toBe('pointer')
+    })
+
+    it('Displays the correct cursor when not hovering over polygon, but Polygon tool is active', async () => {
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
+      await waitForLoad(container)
+      fireEvent.click(getByTitle('Polygon'))
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      fireEvent.mouseMove(canvasEl, { clientX: 5, clientY: 5 })
+      expect(canvasEl.style.cursor).toBe('crosshair')
     })
 
     it('Displays the correct cursor when hovering over focused polygon', async () => {

@@ -407,7 +407,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       } else {
         canvas.style.cursor = clickStartPosition?.dragging
           ? getCorrectCursorDragging(rectRef.current, polygonRef.current, activeShape === 'select')
-          : getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes)
+          : getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes, activeShape === 'select')
       }
 
       switch (activeShape) {
