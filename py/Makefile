@@ -32,6 +32,7 @@ setup: ## Install dependencies
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable h2o_wave
+	[ -d ../ui/build ] && $(MAKE) build-lightwave-web || echo "WARN: ../ui/build doesn't exist, skipping build-lightwave-web"
 	./venv/bin/python -m pip install --editable h2o_lightwave
 	./venv/bin/python -m pip install --editable h2o_lightwave_web
 	rm -f h2o_wave/h2o_wave/metadata.py
