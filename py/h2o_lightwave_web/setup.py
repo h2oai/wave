@@ -25,7 +25,7 @@ setup(
     license_files=('LICENSE',),
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
-        'Development Status :: 3 - Beta',
+        'Development Status :: 4 - Beta',
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
