@@ -205,6 +205,12 @@ publish-vsc-extension: ## Publish VS Code extension
 publish-university:
 	cd university && $(MAKE) publish
 	
+publish-lightwave:
+	cd ui && npm ci && npm run build
+	cd py && $(MAKE) setup
+	cd py && $(MAKE) build-lightwave
+	cd py && $(MAKE) build-lightwave-web
+	
 .PHONY: tag
 tag: ## Bump version and tag
 	cd py && $(MAKE) tag

@@ -6,12 +6,22 @@ all: build ## Build h2o_wave wheel
 
 .PHONY: build
 build: purge
-	H2O_WAVE_BUILD_OS=windows ./venv/bin/python3 setup.py bdist_wheel --plat-name=win_amd64
-	H2O_WAVE_BUILD_OS=linux ./venv/bin/python3 setup.py bdist_wheel --plat-name=manylinux1_x86_64
-	H2O_WAVE_BUILD_OS=darwin ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_10_9_x86_64
-	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_11_0_arm64
-	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 setup.py bdist_wheel --plat-name=macosx_12_0_arm64
-	H2O_WAVE_BUILD_OS=any ./venv/bin/python3 setup.py bdist_wheel
+	H2O_WAVE_BUILD_OS=windows ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=win_amd64
+	H2O_WAVE_BUILD_OS=linux ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=manylinux1_x86_64
+	H2O_WAVE_BUILD_OS=darwin ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_10_9_x86_64
+	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_11_0_arm64
+	H2O_WAVE_BUILD_OS=darwin H2O_WAVE_BUILD_ARCH=arm64 ./venv/bin/python3 h2o_wave/setup.py bdist_wheel --plat-name=macosx_12_0_arm64
+	H2O_WAVE_BUILD_OS=any ./venv/bin/python3 h2o_wave/setup.py bdist_wheel
+	$(MAKE) build-lightwave
+	$(MAKE) build-lightwave-web
+
+.PHONY: build-lightwave
+build-lightwave: 
+	cd h2o_lightwave && $(MAKE) build
+
+.PHONY: build-lightwave-web
+build-lightwave-web: 
+	cd h2o_lightwave_web && $(MAKE) build
 
 setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
@@ -21,9 +31,12 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install h2o_wave_ml/
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
-	./venv/bin/python -m pip install --editable .
-	rm -f h2o_wave/metadata.py
-	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/metadata.py
+	./venv/bin/python -m pip install --editable h2o_wave
+	[ -d ../ui/build ] && $(MAKE) build-lightwave-web || echo "WARN: ../ui/build doesn't exist, skipping build-lightwave-web"
+	./venv/bin/python -m pip install --editable h2o_lightwave
+	./venv/bin/python -m pip install --editable h2o_lightwave_web
+	rm -f h2o_wave/h2o_wave/metadata.py
+	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
 .PHONY: docs
 docs: ## Build API docs
@@ -48,7 +61,9 @@ clean: purge ## Clean
 
 .PHONY: tag
 tag: # Bump version
-	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/version.py
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/h2o_wave/version.py
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_lightwave/h2o_lightwave/version.py
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_lightwave_web/h2o_lightwave_web/version.py
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
