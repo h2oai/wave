@@ -1,6 +1,6 @@
 # H2O Lightwave
 
-H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular web frameworks like  Django, Flask, FastAPI, Starlette, etc.
+H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular async web frameworks like FastAPI, Starlette, etc.
 
 In other words, H2O Lightwave works without the Wave server.
 

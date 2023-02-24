@@ -13,31 +13,18 @@
 # limitations under the License.
 
 """
-Python package `h2o_wave` provides the Python driver for H2O Wave.
+Python package `h2o_lightwave` provides the Python driver for H2O Wave.
 
-H2O Wave is a lightweight software stack for programming interactive web applications
-entirely in Python (no HTML/Javascript/CSS required).
+H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/)
+that can be embedded in popular async web frameworks like FastAPI, Starlette, etc.
 
-It is designed to make it fast, fun and easy to build low-latency, realtime,
-collaborative, web-based applications. It ships batteries-included with
-a suite of form and data visualization components for rapidly prototyping
-analytical and decision-support applications.
-
-Wave's components work in conjunction with the Wave relay server that facilitates
-realtime state synchronization between Python and web browsers.
-
-
-.. include:: ../docs/index.md
+In other words, H2O Lightwave works without the Wave server.
 """
+
 from .core import Ref, data, pack, Expando, expando_to_dict, clone_expando, copy_expando
 from .server import Q, wave_serve
 from .routing import on, handle_on
 from .types import *
 from .version import __version__
 
-__author__ = 'Prithvi Prabhu'
-
-__pdoc__ = {
-    'cli': False,
-    'ide': False,
-}
+__author__ = 'Martin Turoci'
