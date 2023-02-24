@@ -1,15 +1,15 @@
 # H2O Lightwave
 
-H2O Wave Lite is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular web frameworks like  Django, Flask, FastAPI, Starlette, etc.
+H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular web frameworks like  Django, Flask, FastAPI, Starlette, etc.
 
-In other words, H2O Wave Lite works without the Wave server.
+In other words, H2O Lightwave works without the Wave server.
 
 The integration consists of 2 steps:
 
 * Add Wave's web assets directory to your framework's static file handler.
-* Add a WebSocket handler, and use `wave_serve()` to connect connect Wave to your web UI.
+* Add a WebSocket handler, and use `wave_serve()` to connect Wave to your web UI.
 
-That's it. You can now render UI elements using pure Python. Wave Lite aims to be as minimal as possible and only provides:
+That's it. You can now render UI elements using pure Python. Lightwave aims to be as minimal as possible and only provides:
 
 * A simple way to render your UI.
 * A simple way of getting the UI inputs (like button clicks, dropdown values etc.)
