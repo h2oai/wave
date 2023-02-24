@@ -20,6 +20,10 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
       - name: Build lightwave
         run:  make publish-lightwave
       
