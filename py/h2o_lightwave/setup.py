@@ -20,7 +20,7 @@ with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'README.md')
 
 version = os.getenv('VERSION', 'DEV')
 setuptools.setup(
-    name='h2o_wavelite',
+    name='h2o_lightwave',
     version=version,
     author='Martin Turoci',
     author_email='martin.turoci@h2o.ai',
@@ -28,8 +28,8 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://h2o.ai/products/h2o-wave',
-    packages=['h2o_wavelite'],
-    extras_require=dict(web=[f"h2o_wavelite_web=={version}"]),
+    packages=['h2o_lightwave'],
+    extras_require=dict(web=[f"h2o_lightwave_web=={version}"]),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',

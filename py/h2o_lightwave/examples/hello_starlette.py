@@ -1,10 +1,14 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.staticfiles import StaticFiles
-from h2o_wavelite import Q, ui, wave_serve
-from h2o_wavelite_web import web_directory
+
+import uvicorn
+from starlette.applications import Starlette
+from starlette.routing import Mount, WebSocketRoute
+from starlette.staticfiles import StaticFiles
+from starlette.websockets import WebSocketDisconnect
+from h2o_lightwave import wave_serve, ui, Q
+from h2o_lightwave_web import web_directory
 
 
-# Wavelite callback function.
+# Lightwave callback function.
 async def serve(q: Q):
     # Paint our UI on the first page visit.
     if not q.client.initialized:
@@ -28,14 +32,8 @@ async def serve(q: Q):
     await q.page.save()
 
 
-# Run: uvicorn hello_fastapi:app.
-# FastAPI boilerplate.
-app = FastAPI()
-
-
-# FastAPI: WebSocket must be registered before index.html handler.
-@app.websocket("/_s/")
-async def ws(ws: WebSocket):
+# Starlette boilerplate.
+async def socket(ws):
     try:
         await ws.accept()
         await wave_serve(serve, ws.send_text, ws.receive_text)
@@ -43,4 +41,14 @@ async def ws(ws: WebSocket):
     except WebSocketDisconnect:
         print('Client disconnected')
 
-app.mount("/", StaticFiles(directory=web_directory, html=True), name="/")
+
+startlette_app = Starlette(routes=[
+    # Register a websocket.
+    WebSocketRoute('/_s/', socket),
+    # Serve static assets.
+    Mount("/", app=StaticFiles(directory=web_directory, html=True), name="/")
+])
+
+# Run: python hello_starlette.py
+if __name__ == '__main__':
+    uvicorn.run(startlette_app, host='0.0.0.0', port=5000)

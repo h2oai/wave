@@ -10,15 +10,15 @@ def get_long_description():
 
 
 setup(
-    name="h2o_wavelite_web",
+    name="h2o_lightwave_web",
     version=os.getenv('VERSION', 'DEV'),
     url="https://wave.h2o.ai/",
-    description="Web assets package for H2O Wavelite apps.",
+    description="Web assets package for H2O Lightwave apps.",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     author="Martin Turoci",
     author_email="martin.turoci@h2o.ai",
-    packages=find_namespace_packages(include=["h2o_wavelite_web*"]),
+    packages=find_namespace_packages(include=["h2o_lightwave_web*"]),
     python_requires=">=3.7",
     install_requires=[],
     include_package_data=True,

@@ -1,4 +1,4 @@
-name: Publish Wavelite
+name: Publish Lightwave
 
 on:
   workflow_dispatch:
@@ -13,24 +13,24 @@ env:
 
 jobs:
   publish:
-    name: Publish Wavelite
+    name: Publish Lightwave
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Build wavelite
-        run:  make publish-wavelite
+      - name: Build lightwave
+        run:  make publish-lightwave
       
-      - name: Publish to PyPI - wavelite
+      - name: Publish to PyPI - lightwave
         uses: pypa/gh-action-pypi-publish@master
         with:
-          packages_dir: py/h2o_wavelite/dist
+          packages_dir: py/h2o_lightwave/dist
           password: ${{ secrets.PYPI_WAVELITE_TOKEN }}
 
-      - name: Publish to PyPI - wavelite_web
+      - name: Publish to PyPI - lightwave_web
         uses: pypa/gh-action-pypi-publish@master
         with:
-          packages_dir: py/h2o_wavelite_web/dist
+          packages_dir: py/h2o_lightwave_web/dist
           password: ${{ secrets.PYPI_WAVELITE_WEB_TOKEN }}

@@ -1,6 +1,6 @@
-# H2O Wavelite
+# H2O Lightwave
 
-H2O Wave Lite is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular web frameworks like  Django, Flask, FastAPI, Starlette, etc. 
+H2O Wave Lite is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular web frameworks like  Django, Flask, FastAPI, Starlette, etc.
 
 In other words, H2O Wave Lite works without the Wave server.
 
@@ -22,11 +22,11 @@ Example FastAPI integration:
 ```py
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
-from h2o_wavelite import Q, ui, wave_serve
-from h2o_wavelite_web import web_directory
+from h2o_lightwave import Q, ui, wave_serve
+from h2o_lightwave_web import web_directory
 
 
-# Wavelite callback function.
+# Lightwave callback function.
 async def serve(q: Q):
     # Paint our UI on the first page visit.
     if not q.client.initialized:
@@ -73,10 +73,10 @@ app.mount("/", StaticFiles(directory=web_directory, html=True), name="/")
 ## Installation
 
 ```bash
-pip install "h2o-wavelite[web]"
+pip install "h2o-lightwave[web]"
 ```
 
-Wavelite requires websockets to function properly. Not all libraries come with them out of the box so you might need to install them additionally. For example, Starlette & FastAPI requires
+Lightwave requires websockets to function properly. Not all libraries come with them out of the box so you might need to install them additionally. For example, Starlette & FastAPI requires
 
 ```bash
 pip install websockets
@@ -86,14 +86,14 @@ to be able to expose websocket handlers. This might differ from framework to fra
 
 ## Widgets
 
-All available widgets can be found [here](https://wave.h2o.ai/docs/widgets/overview). We are working on separate docs for Wavelite.
+All available widgets can be found [here](https://wave.h2o.ai/docs/widgets/overview). We are working on separate docs for Lightwave.
 
-## Using Wavelite within an existing HTML page
+## Using Lightwave within an existing HTML page
 
-Wavelite can also be used only for certain parts of your HTML pages, e.g. for charts. In addition to the integration steps above:
+Lightwave can also be used only for certain parts of your HTML pages, e.g. for charts. In addition to the integration steps above:
 
 * Use the `get_web_files` function which HTML links to scripts and styles for you to inject into your existing HTML.
-* Render a `div` with an id `wave-root` (`<div id='wave-root'></div>`) into which you want Wavelite to render.
+* Render a `div` with an id `wave-root` (`<div id='wave-root'></div>`) into which you want Lightwave to render.
 * Render a parent container for `wave-root` that has `position: relative` and has some dimensions attached.
 
 ```html
@@ -131,7 +131,7 @@ Wavelite can also be used only for certain parts of your HTML pages, e.g. for ch
 
 ## Configuration
 
-By default, Wavelite tries to connect to websocket route at `/_s/`. This can be configured by adding a `data-wave-socket-url` attribute on the HTML body element (`<body data-wave-socket-url='/my_socket_url/'>`).
+By default, Lightwave tries to connect to websocket route at `/_s/`. This can be configured by adding a `data-wave-socket-url` attribute on the HTML body element (`<body data-wave-socket-url='/my_socket_url/'>`).
 
 ## Links
 
