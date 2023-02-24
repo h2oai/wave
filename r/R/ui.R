@@ -2983,10 +2983,10 @@ ui_copyable_text <- function(
 #' Create a contextual menu component. Useful when you have a lot of links and want to conserve the space.
 #'
 #' @param items Commands to render.
-#' @param icon The card's icon. Mutually exclusive with the image and label.
-#' @param image The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
+#' @param icon The card's icon.
+#' @param image The card’s image, preferably user avatar.
 #' @param name An identifying name for this component.
-#' @param label The text displayed next to the chevron. Mutually exclusive with the icon and image.
+#' @param label The text displayed next to the chevron.
 #' @return A Menu instance.
 #' @export
 ui_menu <- function(

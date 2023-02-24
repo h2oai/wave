@@ -31,13 +31,13 @@ const css = stylesheet({
 export interface Menu {
   /** Commands to render. */
   items: Command[]
-  /** The card's icon. Mutually exclusive with the image and label. */
+  /** The card's icon. */
   icon?: S
-  /** The card’s image, preferably user avatar. Mutually exclusive with the icon and label. */
+  /** The card’s image, preferably user avatar. */
   image?: S
   /** An identifying name for this component. */
   name?: Id
-  /** The text displayed next to the chevron. Mutually exclusive with the icon and image. */
+  /** The text displayed next to the chevron. */
   label?: S
 }
 
