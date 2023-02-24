@@ -2572,10 +2572,10 @@ def menu(
 
     Args:
         items: Commands to render.
-        icon: The card's icon. Mutually exclusive with the image and label.
-        image: The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
+        icon: The card's icon.
+        image: The card’s image, preferably user avatar.
         name: An identifying name for this component.
-        label: The text displayed next to the chevron. Mutually exclusive with the icon and image.
+        label: The text displayed next to the chevron.
     Returns:
         A `h2o_wave.types.Menu` instance.
     """

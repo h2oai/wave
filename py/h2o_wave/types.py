@@ -6933,13 +6933,13 @@ class Menu:
         self.items = items
         """Commands to render."""
         self.icon = icon
-        """The card's icon. Mutually exclusive with the image and label."""
+        """The card's icon."""
         self.image = image
-        """The card’s image, preferably user avatar. Mutually exclusive with the icon and label."""
+        """The card’s image, preferably user avatar."""
         self.name = name
         """An identifying name for this component."""
         self.label = label
-        """The text displayed next to the chevron. Mutually exclusive with the icon and image."""
+        """The text displayed next to the chevron."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
