@@ -22,7 +22,7 @@ export default defineConfig({
   base: '',
   plugins: [
     react(),
-    eslintPlugin({ cache: false, exclude: ['**/node_modules/**', 'package-lock.json'] }),
+    eslintPlugin({ cache: false, exclude: ['**/node_modules/**', 'package-lock.json', '**/dist/**'] }),
     // Build legacy bundle only when version is specified (releases). Not needed for regular development.
     process.env.VERSION ? legacy({ targets: ['Edge >= 16', 'Firefox >= 31', 'Chrome >= 49', 'Opera >= 36', 'Safari >= 10'] }) : null
   ],
