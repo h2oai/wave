@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Python package `h2o_lightwave` provides the Python driver for H2O Wave.
+Python package `h2o_lightwave` provides a Python driver for H2O Wave.
 
 H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/)
 that can be embedded in popular async web frameworks like FastAPI, Starlette, etc.
