@@ -46,7 +46,7 @@ export interface SidePanel {
 export default bond(() => {
   const
     onDismiss = (e?: React.SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => {
-      const targetClassList = (e?.currentTarget as HTMLElement).classList
+      const targetClassList = (e?.currentTarget as HTMLElement)?.classList
       if (targetClassList?.contains('ms-Overlay') || targetClassList?.contains('ms-Panel-closeButton')) {
         const
           { name, events } = sidePanelB() || {},
