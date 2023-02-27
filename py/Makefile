@@ -5,7 +5,7 @@ SED=$(shell command -v gsed || command -v sed)
 all: build ## Build h2o_wave wheel
 
 .PHONY: build
-build: purge
+build:
 	$(MAKE) build-wave
 	$(MAKE) build-lightwave
 	$(MAKE) build-lightwave-web
@@ -52,11 +52,11 @@ test:
 	echo "Testing using LOCAL UPLOAD" && H2O_WAVE_WAVED_DIR=".." ./venv/bin/python -m tests
 	echo "Testing using LOCAL UPLOAD AND BASE URL" && H2O_WAVE_WAVED_DIR=".." H2O_WAVE_BASE_URL="/foo/" ./venv/bin/python -m tests
 
-purge: ## Purge previous build
-	rm -rf build dist h2o_wave.egg-info
-
-clean: purge ## Clean
+clean:
 	rm -rf docs/build venv h2o_wave_ml
+	cd h2o_wave && $(MAKE) purge
+	cd h2o_lightwave && $(MAKE) purge
+	cd h2o_lightwave_web && $(MAKE) purge
 
 .PHONY: tag
 tag: # Bump version
