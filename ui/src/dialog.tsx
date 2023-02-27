@@ -44,6 +44,8 @@ export interface Dialog {
   events?: S[]
 }
 
+export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: 1 } } }
+
 export default bond(() => {
   const
     onDismiss = () => {
@@ -74,7 +76,7 @@ export default bond(() => {
           hidden={!dialogB()}
           onDismiss={onDismiss}
           dialogContentProps={dialogContentProps}
-          modalProps={{ isBlocking: blocking }}
+          modalProps={{ isBlocking: blocking, layerProps }}
           minWidth={width}
           maxWidth={width}>
           <XComponents items={items} />

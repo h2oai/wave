@@ -79,11 +79,9 @@ const
     toolbarLabel: { maxWidth: '70%' }
   }),
   popoverProps: Partial<PopperProps> | undefined = {
-    container: () => document.querySelector(".ms-Panel") || document.body,
     placement: 'bottom-start',
-    style: { pointerEvents: 'auto' },
     sx: {
-      zIndex: 9999998, // Needs to be higher than Fluent UI Panel, but lower than ui.notification_bar.
+      zIndex: 2, // Needs to be higher than Fluent UI Panel, but lower than ui.notification_bar.
       '& .MuiPaper-root': {
         borderRadius: '2px',
         boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`
