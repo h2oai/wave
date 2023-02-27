@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Box, box, Id, S } from 'h2o-wave'
 import React from 'react'
+import { layerProps } from './dialog'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'
 
@@ -44,13 +45,16 @@ export interface SidePanel {
 
 export default bond(() => {
   const
-    onDismiss = () => {
-      const
-        { name, events } = sidePanelB() || {},
-        ev = events?.find(e => e === 'dismissed')
+    onDismiss = (e?: React.SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => {
+      const targetClassList = (e?.currentTarget as HTMLElement)?.classList
+      if (targetClassList?.contains('ms-Overlay') || targetClassList?.contains('ms-Panel-closeButton')) {
+        const
+          { name, events } = sidePanelB() || {},
+          ev = events?.find(e => e === 'dismissed')
 
-      if (ev && name) wave.emit(name, ev, true)
-      sidePanelB(null)
+        if (ev && name) wave.emit(name, ev, true)
+        sidePanelB(null)
+      }
     },
     render = () => {
       const { title, width = '600px', items = [], closable = false, blocking = false } = sidePanelB() || {}
@@ -63,6 +67,7 @@ export default bond(() => {
           onDismiss={onDismiss}
           hasCloseButton={closable}
           overlayProps={blocking ? { style: { cursor: 'default' } } : undefined}
+          layerProps={layerProps}
           isBlocking
           isLightDismiss={!blocking}>
           <XComponents items={items} />
