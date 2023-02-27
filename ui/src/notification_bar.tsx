@@ -120,7 +120,7 @@ export const
                   animationFillMode: 'forwards',
                   maxWidth: 500,
                   width: pc(100),
-                  zIndex: 9999999, // Needs to be higher than Fluent UI Panel's z-index
+                  zIndex: 3, // Needs to be higher than Fluent UI Panel's z-index
                   ...getPosition(currentModel?.position, shouldBeOpen)
                 },
                 content: { alignItems: isMultiline ? 'start' : 'center' },
