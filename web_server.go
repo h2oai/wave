@@ -185,6 +185,7 @@ func handleStatic(indexPage []byte, fs http.Handler, extraHeader http.Header) ht
 		header.Add("Content-Type", contentTypeHTML)
 		header.Add("Cache-Control", "no-cache, must-revalidate")
 		header.Add("Pragma", "no-cache")
+
 		copyHeaders(extraHeader, header)
 
 		w.Write(indexPage)

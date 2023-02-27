@@ -17,6 +17,7 @@ package wave
 import (
 	"context"
 	"encoding/json"
+	"net/http"
 	"time"
 
 	"github.com/google/uuid"
@@ -46,9 +47,17 @@ var (
 	}
 )
 
-// Boot represents the initial message sent to an app when a client first connects to it
-type Boot struct {
-	Hash string `json:"#,omitempty"` // location hash
+// WaveMsg represents the message sent to an app.
+type WaveMsg struct {
+	Data map[string]interface{} `json:"data"` // q.args, q.events
+}
+
+// WaveBootMsg represents the initial message sent to an app when a client first connects to it.
+type WaveBootMsg struct {
+	Data struct {
+		Hash string `json:"#,omitempty"` // location hash
+	} `json:"data"`
+	Headers http.Header `json:"headers"` // forwarded headers
 }
 
 // Client represent a websocket (UI) client.
@@ -62,11 +71,13 @@ type Client struct {
 	routes   []string        // watched routes
 	data     chan []byte     // send data
 	editable bool            // allow editing? // TODO move to user; tie to role
-	baseURL  string
+	baseURL  string          // URL prefix of the Wave server
+	header   *http.Header    // forwarded headers from the WS connection
+	appPath  string          // path of the app this client is connected to, doesn't change throughout WS lifetime
 }
 
-func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string) *Client {
-	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, ""}
 }
 
 func (c *Client) refreshToken() error {
@@ -86,6 +97,13 @@ func (c *Client) refreshToken() error {
 
 func (c *Client) listen() {
 	defer func() {
+		app := c.broker.getApp(c.appPath)
+		if app != nil {
+			if err := app.disconnect(c.id); err != nil {
+				echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
+			}
+		}
+
 		c.broker.unsubscribe <- c
 		c.conn.Close()
 	}()
@@ -132,11 +150,26 @@ func (c *Client) listen() {
 				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
-			app.forward(c.id, c.session, m.data)
+
+			// Maybe a simple string concatenation would be enough?
+			var tmpMap map[string]interface{}
+			if err := json.Unmarshal(m.data, &tmpMap); err != nil {
+				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed unmarshaling body"})
+				continue
+			}
+
+			body, err := json.Marshal(WaveMsg{Data: tmpMap})
+			if err != nil {
+				echo(Log{"t": "watch", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+				continue
+			}
+
+			app.forward(c.id, c.session, body)
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
 			if app := c.broker.getApp(m.addr); app != nil { // do we have an app handling this route?
+				c.appPath = m.addr
 				switch app.mode {
 				case unicastMode:
 					c.subscribe("/" + c.id) // client-level
@@ -144,14 +177,19 @@ func (c *Client) listen() {
 					c.subscribe("/" + c.session.subject) // user-level
 				}
 
-				boot := emptyJSON
+				boot := WaveBootMsg{Headers: *c.header}
+
 				if len(m.data) > 0 { // location hash
-					if j, err := json.Marshal(Boot{Hash: string(m.data)}); err == nil {
-						boot = j
-					}
+					boot.Data.Hash = string(m.data)
 				}
 
-				app.forward(c.id, c.session, boot)
+				body, err := json.Marshal(boot)
+				if err != nil {
+					echo(Log{"t": "watch", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
+					continue
+				}
+
+				app.forward(c.id, c.session, body)
 				continue
 			}
 

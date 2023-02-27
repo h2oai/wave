@@ -16,22 +16,25 @@ package wave
 
 import (
 	"net/http"
+	"strings"
 )
 
 // SocketServer represents a websocket server.
 type SocketServer struct {
-	broker   *Broker
-	auth     *Auth
-	editable bool
-	baseURL  string
+	broker           *Broker
+	auth             *Auth
+	editable         bool
+	baseURL          string
+	forwardedHeaders map[string]bool
 }
 
-func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string) *SocketServer {
+func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool) *SocketServer {
 	return &SocketServer{
 		broker,
 		auth,
 		editable,
 		baseURL,
+		forwardedHeaders,
 	}
 }
 
@@ -51,7 +54,16 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL)
+	header := make(http.Header)
+	if s.forwardedHeaders != nil {
+		for k, v := range r.Header {
+			if s.forwardedHeaders["*"] || s.forwardedHeaders[strings.ToLower(k)] {
+				header[k] = v
+			}
+		}
+	}
+
+	client := newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header)
 	go client.flush()
 	go client.listen()
 }

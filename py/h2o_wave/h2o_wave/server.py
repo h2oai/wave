@@ -29,7 +29,7 @@ import pickle
 import traceback
 import base64
 import binascii
-from typing import Dict, Tuple, Callable, Any, Awaitable, Optional
+from typing import Dict, List, Tuple, Callable, Any, Awaitable, Optional
 from urllib.parse import urlparse
 
 import uvicorn
@@ -112,6 +112,7 @@ class Query:
             client_state: Expando,
             args: Expando,
             events: Expando,
+            headers: Dict[str, List[str]]
     ):
         self.mode = mode
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
@@ -135,6 +136,8 @@ class Query:
         """The route served by the server."""
         self.auth = auth
         """The authentication / authorization details of the user who initiated this query."""
+        self.headers = headers
+        """Original Websocket HTTP connection headers forwarded from the Wave server to this application."""
 
     async def sleep(self, delay: float, result=None) -> Any:
         """
@@ -228,6 +231,7 @@ class _App:
         self._handle = handle
         self._wave: _Wave = _Wave()
         self._state: WebAppState = _load_state()
+        self._headers: Dict[str, Dict[str, str]] = {}
         self._site: AsyncSite = AsyncSite()
 
         logger.info(f'Server Mode: {mode}')
@@ -241,6 +245,7 @@ class _App:
         self.app = Router(
             routes=[
                 Route('/', endpoint=self._receive, methods=['POST']),
+                Route('/disconnect', endpoint=self._disconnect, methods=['POST']),
             ],
             on_startup=[
                 self._register,
@@ -281,7 +286,7 @@ class _App:
                 logger.debug('Register: retrying...')
 
     async def _unregister(self):
-        logger.debug(f'Unregistering app...')
+        logger.debug('Unregistering app...')
         try:
             await self._wave.call('unregister_app', route=self._route)
             logger.debug('Unregister: success!')
@@ -289,20 +294,23 @@ class _App:
         except httpx.ConnectError:
             logger.debug('Could not unregister app due to unreachable server.')
 
-    async def _receive(self, req: Request):
-        basic_auth = req.headers.get("Authorization")
-        if basic_auth is None:
-            return PlainTextResponse(content='Unauthorized', status_code=401)
-        try:
-            scheme, credentials = basic_auth.split()
-            if scheme.lower() != 'basic':
-                return PlainTextResponse(content='Unauthorized', status_code=401)
-            decoded = base64.b64decode(credentials).decode("ascii")
-        except (ValueError, UnicodeDecodeError, binascii.Error) as exc:
+    async def _disconnect(self, req: Request):
+        if not _is_req_authorized(req):
             return PlainTextResponse(content='Unauthorized', status_code=401)
 
-        key_id, _, key_secret = decoded.partition(":")
-        if key_id != _config.app_access_key_id or key_secret != _config.app_access_key_secret:
+        client_id = req.headers.get('Wave-Client-ID')
+        if not client_id:
+            return PlainTextResponse(content='Bad Request', status_code=400)
+
+        if client_id in self._state[2]:
+            del self._state[2][client_id]
+        if client_id in self._headers:
+            del self._headers[client_id]
+
+        return PlainTextResponse('')
+
+    async def _receive(self, req: Request):
+        if not _is_req_authorized(req):
             return PlainTextResponse(content='Unauthorized', status_code=401)
 
         client_id = req.headers.get('Wave-Client-ID')
@@ -311,10 +319,15 @@ class _App:
         access_token = req.headers.get('Wave-Access-Token')
         refresh_token = req.headers.get('Wave-Refresh-Token')
         session_id = req.headers.get('Wave-Session-ID')
-        auth = Auth(username, subject, access_token, refresh_token, session_id)
-        args = await req.json()
 
-        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))
+        body = await req.json()
+        forwarded_headers = body.get('headers', None)
+        if forwarded_headers:
+            self._headers[client_id] = forwarded_headers
+
+        auth = Auth(username, subject, access_token, refresh_token, session_id)
+
+        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, body.get('data', {})))
 
     async def _process(self, client_id: str, auth: Auth, args: dict):
         logger.debug(f'user: {auth.username}, client: {client_id}')
@@ -335,6 +348,7 @@ class _App:
             client_state=_session_for(client_state, client_id),
             args=Expando(args),
             events=Expando(events_state),
+            headers=self._headers.get(client_id, {}),
         )
         # noinspection PyBroadException,PyPep8
         try:
@@ -356,6 +370,25 @@ class _App:
 
     def _shutdown(self):
         _save_state(self._state)
+
+
+def _is_req_authorized(req: Request) -> bool:
+    basic_auth = req.headers.get("Authorization")
+    if basic_auth is None:
+        return False
+    try:
+        scheme, credentials = basic_auth.split()
+        if scheme.lower() != 'basic':
+            return PlainTextResponse(content='Unauthorized', status_code=401)
+        decoded = base64.b64decode(credentials).decode("ascii")
+    except (ValueError, UnicodeDecodeError, binascii.Error):
+        return False
+
+    key_id, _, key_secret = decoded.partition(":")
+    if key_id != _config.app_access_key_id or key_secret != _config.app_access_key_secret:
+        return False
+
+    return True
 
 
 _CHECKPOINT_DIR_ENV_VAR = 'H2O_WAVE_CHECKPOINT_DIR'
