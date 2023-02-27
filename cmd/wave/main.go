@@ -74,6 +74,7 @@ func main() {
 		accessKeySecret      string
 		accessKeyFile        string
 		httpHeadersFile      string
+		forwardedHttpHeaders string
 		createAccessKey      bool
 		listAccessKeys       bool
 		removeAccessKeyID    string
@@ -100,6 +101,7 @@ func main() {
 	stringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	boolVar(&conf.SkipCertVerification, "no-tls-verify", false, "do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION")
 	stringVar(&httpHeadersFile, "http-headers-file", "", "path to a MIME-formatted file containing additional HTTP headers to add to responses from the server")
+	stringVar(&forwardedHttpHeaders, "forwarded-http-headers", "*", "comma-separated list of case insesitive HTTP header keys to forward to the Wave app from the browser WS connection. If not specified, defaults to '*' - all headers are allowed. If set to an empty string, no headers are forwarded.")
 	boolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	stringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
 	stringVar(&maxCacheRequestSize, "max-cache-request-size", "5M", "maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB)")
@@ -141,6 +143,14 @@ func main() {
 				panic(fmt.Errorf("empty OIDC authorization url parameter value: %v", rawPair))
 			}
 			auth.URLParameters = append(auth.URLParameters, kv)
+		}
+	}
+
+	if len(forwardedHttpHeaders) > 0 {
+		// More idiomatic way to store just keys and retrieve them in O(1)?
+		conf.ForwardedHeaders = make(map[string]bool)
+		for _, header := range strings.Split(forwardedHttpHeaders, ",") {
+			conf.ForwardedHeaders[strings.ToLower(strings.TrimSpace(header))] = true
 		}
 	}
 

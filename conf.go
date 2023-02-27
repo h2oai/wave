@@ -62,6 +62,7 @@ type ServerConf struct {
 	IDE                  bool
 	Debug                bool
 	Auth                 *AuthConf
+	ForwardedHeaders     map[string]bool
 }
 
 type AuthConf struct {

@@ -159,3 +159,13 @@ X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 
 ```
+
+## Accessing forwarded headers
+
+It's possible to access the HTTP headers that were set on **websocket HTTP connection** request via `q.headers`. This might be useful in case built-in OIDC auth is not an option and you already have an existing, company-wide auth based on intercepting all the traffic and verifying if the requests are authenticated.
+
+:::important
+Since Wave is websocket-based, the headers retrieved do not come from the initial `GET index.html` request, but from the websocket `/_s/` one.
+:::
+
+For a more fine-grained control over which HTTP headers are forwarded or not, check the `H2O_WAVE_FORWARDED_HTTP_HEADERS` [configuration option](/docs/configuration#configuring-the-server).
