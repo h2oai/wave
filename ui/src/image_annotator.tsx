@@ -402,14 +402,15 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       if (!canvas) return
 
       const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), zoom, imgPositionRef.current)
+      const isSelect = activeShape === 'select'
 
-      if (zoom > 1 && clickStartPosition?.dragging && !(rectRef.current?.isMovedOrResized() || polygonRef.current?.isMovedOrResized())) {
+      if (zoom > 1 && clickStartPosition?.dragging && isSelect && !(rectRef.current?.isMovedOrResized() || polygonRef.current?.isMovedOrResized())) {
         applyZoom((cursor_x - clickStartPosition.x) * zoom, (cursor_y - clickStartPosition.y) * zoom, zoom)
         canvas.style.cursor = clickStartPosition?.dragging ? 'grabbing' : 'grab'
       } else {
         canvas.style.cursor = clickStartPosition?.dragging
-          ? getCorrectCursorDragging(rectRef.current, polygonRef.current, activeShape === 'select')
-          : getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes, activeShape === 'select')
+          ? getCorrectCursorDragging(rectRef.current, polygonRef.current, isSelect)
+          : getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes, isSelect)
       }
 
       switch (activeShape) {

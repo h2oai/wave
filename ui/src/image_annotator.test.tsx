@@ -1101,6 +1101,8 @@ describe('ImageAnnotator.tsx', () => {
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 18, x2: 108, y1: 18, y2: 108 } } }, polygon])
       })
 
+      // TODO: Add test for creating a new rect while the image is zoomed.
+
       it('Sets correct wave args when drawing a new rectangle while the image is zoomed', async () => {
         const { container, getByTitle } = render(<XImageAnnotator model={model} />)
         await waitForLoad(container)
