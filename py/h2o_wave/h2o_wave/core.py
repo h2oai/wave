@@ -671,16 +671,15 @@ class Site:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+        if _can_do_local_upload(data_dir, waved_dir):
             try:
                 uploaded_files = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    dst = _get_upload_dst_path(data_dir, waved_dir, uuid)
                     os.makedirs(dst, exist_ok=True)
 
                     if 'Windows' in platform.system():
@@ -727,14 +726,13 @@ class Site:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+        if _can_do_local_upload(data_dir, waved_dir):
             try:
                 uuid = str(uuid4())
-                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                dst = _get_upload_dst_path(data_dir, waved_dir, uuid)
                 os.makedirs(dst, exist_ok=True)
 
                 if 'Windows' in platform.system():
@@ -903,14 +901,13 @@ class AsyncSite:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+        if _can_do_local_upload(data_dir, waved_dir):
             try:
                 uuid = str(uuid4())
-                dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                dst = _get_upload_dst_path(data_dir, waved_dir, uuid)
                 os.makedirs(dst, exist_ok=True)
 
                 if 'Windows' in platform.system():
@@ -951,16 +948,15 @@ class AsyncSite:
 
         waved_dir = _get_env('WAVED_DIR', None)
         data_dir = _get_env('DATA_DIR', 'data')
-        skip_local_upload = _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']
 
         # If we know the path of waved and running app on the same machine,
         # we can simply copy the files instead of making an HTTP request.
-        if _is_loopback_address() and not skip_local_upload and waved_dir and data_dir:
+        if _can_do_local_upload(data_dir, waved_dir):
             try:
                 tasks = []
                 for f in files:
                     uuid = str(uuid4())
-                    dst = os.path.join(waved_dir, data_dir, 'f', uuid)
+                    dst = _get_upload_dst_path(data_dir, waved_dir, uuid)
                     os.makedirs(dst, exist_ok=True)
 
                     if 'Windows' in platform.system():
@@ -1139,3 +1135,20 @@ def _is_loopback_address() -> bool:
         return ipaddress.ip_address(hostname).is_loopback
     except ValueError:
         return False
+
+
+def _get_upload_dst_path(data_dir: str, waved_dir: str, uuid: str) -> str:
+    if os.path.isabs(data_dir):
+        return os.path.join(data_dir, 'f', uuid)
+    else:
+        return os.path.join(waved_dir, data_dir, 'f', uuid)
+
+
+def _can_do_local_upload(data_dir: str, waved_dir: str) -> bool:
+    if _get_env('NO_COPY_UPLOAD', 'false').lower() in ['true', '1', 't']:
+        return False
+
+    if not _is_loopback_address():
+        return False
+
+    return os.path.isabs(data_dir) or (waved_dir and data_dir)
