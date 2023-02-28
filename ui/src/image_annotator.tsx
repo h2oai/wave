@@ -128,6 +128,7 @@ const
       transformOrigin: '0px 0px',
       display: 'block',
       margin: '0 auto',
+      userSelect: 'none',
     },
     imageContainer: {
       overflow: 'hidden',
