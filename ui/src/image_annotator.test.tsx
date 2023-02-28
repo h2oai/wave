@@ -79,6 +79,19 @@ describe('ImageAnnotator.tsx', () => {
     expect(canvasEl.style.cursor).toBe('auto')
   })
 
+  it('Displays correct cursor when dragged outside canvas and returned', async () => {
+    const { container } = render(<XImageAnnotator model={model} />)
+    await waitForLoad(container)
+    const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+    fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+    fireEvent.mouseDown(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+    fireEvent.mouseLeave(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+    fireEvent.mouseMove(canvasEl, { clientX: 50, clientY: 50, buttons: 1 })
+    expect(canvasEl.style.cursor).toBe('move')
+    fireEvent.mouseMove(canvasEl, { clientX: 250, clientY: 250, buttons: 1 })
+    expect(canvasEl.style.cursor).toBe('auto')
+  })
+
   it('Removes all shapes after clicking remove all btn', async () => {
     const { container, getByText } = render(<XImageAnnotator model={model} />)
     await waitForLoad(container)

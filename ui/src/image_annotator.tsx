@@ -348,13 +348,11 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     onMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current
       if (!canvas || e.buttons !== 1) return
-      // Handle drag end when mouse is out of canvas.
-      if (zoom > 1 && clickStartPositionRef.current?.dragging) clickStartPositionRef.current = undefined
 
       setWaveArgs(drawnShapes)
-
       polygonRef.current?.resetDragging()
       rectRef.current?.resetDragging()
+      clickStartPositionRef.current = undefined
       redrawExistingShapes()
     },
     onMouseDown = (e: React.MouseEvent) => {
