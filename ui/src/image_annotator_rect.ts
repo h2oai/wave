@@ -67,7 +67,7 @@ export class RectAnnotator {
   onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
     if (!shape.shape.rect) return
     this.movedRect = shape
-    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect, true)
+    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect)
   }
 
   isMovedOrResized = () => !!this.movedRect || !!this.resizedCorner
@@ -99,26 +99,39 @@ export class RectAnnotator {
   resizeRectCorner(cursor_x: U, cursor_y: U, clickStartPosition?: Position) {
     if (!clickStartPosition || !this.movedRect?.shape.rect || !this.resizedCorner) return
 
-    const
-      x1 = clickStartPosition.x,
-      y1 = clickStartPosition.y
+    const rect = this.movedRect.shape.rect
 
     if (this.resizedCorner === 'topLeft') {
-      this.movedRect.shape.rect.x1 += cursor_x - x1
-      this.movedRect.shape.rect.y1 += cursor_y - y1
+      rect.x1 += cursor_x - clickStartPosition.x
+      rect.y1 += cursor_y - clickStartPosition.y
+
+      if (rect.x1 > rect.x2) this.resizedCorner = 'topRight'
+      if (rect.y1 > rect.y2) this.resizedCorner = 'bottomLeft'
     }
     else if (this.resizedCorner === 'topRight') {
-      this.movedRect.shape.rect.x1 += cursor_x - x1
-      this.movedRect.shape.rect.y2 += cursor_y - y1
+      rect.x2 += cursor_x - clickStartPosition.x
+      rect.y1 += cursor_y - clickStartPosition.y
+
+      if (rect.x1 > rect.x2) this.resizedCorner = 'topLeft'
+      if (rect.y1 > rect.y2) this.resizedCorner = 'bottomRight'
     }
     else if (this.resizedCorner === 'bottomLeft') {
-      this.movedRect.shape.rect.x2 += cursor_x - x1
-      this.movedRect.shape.rect.y1 += cursor_y - y1
+      rect.x1 += cursor_x - clickStartPosition.x
+      rect.y2 += cursor_y - clickStartPosition.y
+
+      if (rect.x1 > rect.x2) this.resizedCorner = 'bottomRight'
+      if (rect.y1 > rect.y2) this.resizedCorner = 'topLeft'
     }
     else if (this.resizedCorner === 'bottomRight') {
-      this.movedRect.shape.rect.x2 += cursor_x - x1
-      this.movedRect.shape.rect.y2 += cursor_y - y1
+      rect.x2 += cursor_x - clickStartPosition.x
+      rect.y2 += cursor_y - clickStartPosition.y
+
+      if (rect.x1 > rect.x2) this.resizedCorner = 'bottomLeft'
+      if (rect.y1 > rect.y2) this.resizedCorner = 'topRight'
     }
+
+    if (rect.x1 > rect.x2) [rect.x1, rect.x2] = [rect.x2, rect.x1]
+    if (rect.y1 > rect.y2) [rect.y1, rect.y2] = [rect.y2, rect.y1]
 
     clickStartPosition.x = cursor_x
     clickStartPosition.y = cursor_y
@@ -126,28 +139,23 @@ export class RectAnnotator {
 }
 
 export const
+  fixRectIfNeeded = (rect: ImageAnnotatorRect) => {
+    const { x1, x2, y1, y2 } = rect
+    if (x1 > x2) [rect.x1, rect.x2] = [x2, x1]
+    if (y1 > y2) [rect.y1, rect.y2] = [y2, y1]
+  },
   isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect, isFocused = false) => {
     if (!rect) return false
     if (isFocused && getCorner(cursor_x, cursor_y, rect)) return true
-    const
-      { x2, x1, y2, y1 } = rect,
-      x_min = Math.min(x1, x2),
-      x_max = Math.max(x1, x2),
-      y_min = Math.min(y1, y2),
-      y_max = Math.max(y1, y2)
 
-    return cursor_x > x_min && cursor_x < x_max && cursor_y > y_min && cursor_y < y_max
+    const { x2, x1, y2, y1 } = rect
+    return cursor_x > x1 && cursor_x < x2 && cursor_y > y1 && cursor_y < y2
   },
-  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect, ignoreMaxMin = false) => {
-    const
-      x_min = ignoreMaxMin ? x1 : Math.min(x1, x2),
-      x_max = ignoreMaxMin ? x2 : Math.max(x1, x2),
-      y_min = ignoreMaxMin ? y1 : Math.min(y1, y2),
-      y_max = ignoreMaxMin ? y2 : Math.max(y1, y2)
-    if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'topLeft'
-    else if (x > x_min - ARC_RADIUS && x < x_min + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'topRight'
-    else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_min - ARC_RADIUS && y < y_min + ARC_RADIUS) return 'bottomLeft'
-    else if (x > x_max - ARC_RADIUS && x < x_max + ARC_RADIUS && y > y_max - ARC_RADIUS && y < y_max + ARC_RADIUS) return 'bottomRight'
+  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect) => {
+    if (x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS) return 'topLeft'
+    else if (x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS) return 'topRight'
+    else if (x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS) return 'bottomLeft'
+    else if (x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS) return 'bottomRight'
   },
   getRectCursorByCorner = (corner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight') => {
     if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'

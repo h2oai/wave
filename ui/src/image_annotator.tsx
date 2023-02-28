@@ -3,7 +3,7 @@ import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { getPolygonBoundaries, getPolygonPointCursor, isIntersectingPolygon, PolygonAnnotator } from './image_annotator_polygon'
-import { getRectCornerCursor, getRectCursorByCorner, isIntersectingRect, RectAnnotator } from './image_annotator_rect'
+import { fixRectIfNeeded, getRectCornerCursor, getRectCursorByCorner, isIntersectingRect, RectAnnotator } from './image_annotator_rect'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar, cssVarValue, px } from './theme'
 import { wave } from './ui'
@@ -725,7 +725,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { wave.args[model.name] = model.items as unknown as Rec[] || [] }, [model.name, model.items])
+  React.useEffect(() => {
+    model.items?.forEach(s => { if (s.shape.rect) fixRectIfNeeded(s.shape.rect) })
+    wave.args[model.name] = model.items as unknown as Rec[] || []
+  }, [model.name, model.items])
 
   React.useEffect(() => {
     setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
