@@ -44,7 +44,7 @@ export class PolygonAnnotator {
 
   removeLastPoint() {
     this.currPolygonPoints.pop()
-    this.boundaryRect = getPolygonBoundaries(this.currPolygonPoints)
+    this.boundaryRect = this.currPolygonPoints.length ? getPolygonBoundaries(this.currPolygonPoints) : null
   }
 
   finishPolygon(tag: S) {
