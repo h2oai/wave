@@ -433,10 +433,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
           if (rectRef.current?.getResizedCorner()) {
             rectRef.current?.resizeRectCorner(cursor_x, cursor_y, clickStartPosition)
+            redrawExistingShapes()
             break
           }
           if (polygonRef.current?.getDraggedPoint()) {
             polygonRef.current?.moveDraggedPoint(cursor_x, cursor_y)
+            redrawExistingShapes()
             break
           }
 
