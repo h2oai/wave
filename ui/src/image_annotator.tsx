@@ -429,7 +429,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
           break
         }
         case 'select': {
-          if (!clickStartPosition) break
+          if (!clickStartPosition || (!rectRef.current?.isMovedOrResized() && !polygonRef.current?.isMovedOrResized())) break
 
           if (rectRef.current?.getResizedCorner()) {
             rectRef.current?.resizeRectCorner(cursor_x, cursor_y, clickStartPosition)

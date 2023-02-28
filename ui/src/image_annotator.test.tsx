@@ -276,6 +276,21 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
+    it('Does not move selected rects if initial click not intersecting shape', async () => {
+      const rect1 = { tag: 'person', shape: { rect: { x1: 5, x2: 9, y1: 5, y2: 9 } } }
+      const rect2 = { tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 10, y2: 100 } } }
+      const rect3 = { tag: 'person', shape: { rect: { x1: 110, x2: 120, y1: 110, y2: 120 } } }
+      const { container } = render(<XImageAnnotator model={{ ...model, items: [rect1, rect2, rect3] }} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.mouseDown(canvasEl, { clientX: 250, clientY: 250, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 260, clientY: 260, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 260, clientY: 260 })
+
+      expect(wave.args[name]).toMatchObject([rect1, rect2, rect3])
+    })
+
     it('Does not move rect if click happened outside the canvas but left mouse btn not pressed', async () => {
       const { container } = render(<XImageAnnotator model={model} />)
       await waitForLoad(container)
@@ -548,6 +563,21 @@ describe('ImageAnnotator.tsx', () => {
         { shape: { polygon: { vertices: p1MovedVertices } }, tag: 'person' },
         { shape: { polygon: { vertices: p2MovedVertices } }, tag: 'person' },
       ])
+    })
+
+    it('Does not move selected polygons if initial click not intersecting shape', async () => {
+      const p1 = { shape: { polygon: { vertices: [{ x: 100, y: 100 }, { x: 240, y: 100 }, { x: 240, y: 220 }] } }, tag: 'person' }
+      const p2 = { shape: { polygon: { vertices: [{ x: 10, y: 10 }, { x: 20, y: 10 }, { x: 20, y: 20 }] } }, tag: 'person' }
+      const { container } = render(<XImageAnnotator model={{ ...model, items: [p1, p2] }} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+
+      fireEvent.keyDown(canvasEl, { key: 'a' })
+      fireEvent.mouseDown(canvasEl, { clientX: 280, clientY: 120, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 290, clientY: 130, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 290, clientY: 130 })
+
+      expect(wave.args[name]).toMatchObject([p1, p2])
     })
 
     it('Moves polygon by a single point correctly', async () => {
