@@ -343,6 +343,28 @@ describe('ImageAnnotator.tsx', () => {
       ])
     })
 
+    it('Shows correct cursor when resizing rect corner', async () => {
+      const { container } = render(<XImageAnnotator model={model} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+      fireEvent.mouseMove(canvasEl, { clientX: 10, clientY: 10 })
+      fireEvent.mouseDown(canvasEl, { clientX: 10, clientY: 10, buttons: 1 })
+      expect(canvasEl.style.cursor).toBe('nwse-resize')
+      // HACK: Duplicate mouseMove since canvas is updated one frame later.
+      fireEvent.mouseMove(canvasEl, { clientX: 10, clientY: 110, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 10, clientY: 110, buttons: 1 })
+      expect(canvasEl.style.cursor).toBe('nesw-resize')
+      // HACK: Duplicate mouseMove since canvas is updated one frame later.
+      fireEvent.mouseMove(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      expect(canvasEl.style.cursor).toBe('nwse-resize')
+      // HACK: Duplicate mouseMove since canvas is updated one frame later.
+      fireEvent.mouseMove(canvasEl, { clientX: 110, clientY: 5, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 110, clientY: 5, buttons: 1 })
+      expect(canvasEl.style.cursor).toBe('nesw-resize')
+    })
+
     it('Resizes corner properly when multiple selected', async () => {
       const rect1 = { tag: 'person', shape: { rect: { x1: 5, x2: 9, y1: 5, y2: 9 } } }
       const rect2 = { tag: 'person', shape: { rect: { x1: 10, x2: 100, y1: 10, y2: 100 } } }
