@@ -77,6 +77,8 @@ describe('Table.tsx', () => {
     expect(getAllByRole('gridcell')[0].textContent).toBe('6/23/2022, 12:50:28 AM')
   })
 
+  // TODO: Add a test to check that no event is emitted on rows update. Would result in infinite loop.
+
   describe('Height compute', () => {
 
     it('Computes properly for simple table - header, rows', () => {

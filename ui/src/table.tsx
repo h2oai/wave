@@ -129,7 +129,7 @@ export interface Table {
   rows?: TableRow[]
   /** True to allow multiple rows to be selected. Mutually exclusive with `single` attr. */
   multiple?: B
-  /** True to allow group by feature. Not applicable when `pagination` is set. */
+  /** True to allow group by feature. */
   groupable?: B
   /** Indicates whether the table rows can be downloaded as a CSV file. Defaults to False. */
   downloadable?: B
@@ -153,7 +153,7 @@ export interface Table {
   pagination?: TablePagination
   /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
   events?: S[]
-  /** True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr. */
+  /** True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr. */
   single?: B
   /** The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`). */
   value?: S
@@ -957,7 +957,7 @@ export const
 
     useUpdateOnlyEffect(() => {
       setFilteredItems(items)
-      reset()
+      if (!m.pagination) reset()
     }, [items])
 
     React.useEffect(() => {

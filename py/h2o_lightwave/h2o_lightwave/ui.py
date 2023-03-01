@@ -1414,6 +1414,8 @@ def table(
         groups: Optional[List[TableGroup]] = None,
         pagination: Optional[TablePagination] = None,
         events: Optional[List[str]] = None,
+        single: Optional[bool] = None,
+        value: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
 
@@ -1439,8 +1441,8 @@ def table(
         name: An identifying name for this component.
         columns: The columns in this table.
         rows: The rows in this table. Mutually exclusive with `groups` attr.
-        multiple: True to allow multiple rows to be selected.
-        groupable: True to allow group by feature. Not applicable when `pagination` is set.
+        multiple: True to allow multiple rows to be selected. Mutually exclusive with `single` attr.
+        groupable: True to allow group by feature.
         downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.
@@ -1451,7 +1453,9 @@ def table(
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
         pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
-        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
+        events: The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
+        single: True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr.
+        value: The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`).
     Returns:
         A `h2o_wave.types.Table` instance.
     """
@@ -1472,6 +1476,8 @@ def table(
         groups,
         pagination,
         events,
+        single,
+        value,
     ))
 
 
@@ -2202,6 +2208,8 @@ def inline(
         justify: Optional[str] = None,
         align: Optional[str] = None,
         inset: Optional[bool] = None,
+        height: Optional[str] = None,
+        direction: Optional[str] = None,
 ) -> Component:
     """Create an inline (horizontal) list of components.
 
@@ -2210,6 +2218,8 @@ def inline(
         justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify.
         align: Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign.
         inset: Whether to display the components inset from the parent form, with a contrasting background.
+        height: Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space.
+        direction: Container direction. Defaults to 'row'. One of 'row', 'column'. See enum h2o_wave.ui.InlineDirection.
     Returns:
         A `h2o_wave.types.Inline` instance.
     """
@@ -2218,6 +2228,8 @@ def inline(
         justify,
         align,
         inset,
+        height,
+        direction,
     ))
 
 
@@ -2560,10 +2572,10 @@ def menu(
 
     Args:
         items: Commands to render.
-        icon: The card's icon. Mutually exclusive with the image and label.
-        image: The card’s image, preferably user avatar. Mutually exclusive with the icon and label.
+        icon: The card's icon.
+        image: The card’s image, preferably user avatar.
         name: An identifying name for this component.
-        label: The text displayed next to the chevron. Mutually exclusive with the icon and image.
+        label: The text displayed next to the chevron.
     Returns:
         A `h2o_wave.types.Menu` instance.
     """
