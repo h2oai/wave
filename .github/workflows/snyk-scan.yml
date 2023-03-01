@@ -41,7 +41,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          GOFLAGS="e" snyk test --file=go.mod -d --fail-on=all
+          GOFLAGS="-e" snyk test --file=go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependencies
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'ui/package-lock.json')
@@ -112,7 +112,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          GOFLAGS="e" snyk monitor --org=wave --remote-repo-url=wave/${{ steps.extract_ref.outputs.ref }} --file=go.mod --project-name=WAVE/wave/${{ steps.extract_ref.outputs.ref }}/go.mod -d --fail-on=all
+          GOFLAGS="-e" snyk monitor --org=wave --remote-repo-url=wave/${{ steps.extract_ref.outputs.ref }} --file=go.mod --project-name=WAVE/wave/${{ steps.extract_ref.outputs.ref }}/go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependencies
         uses: snyk/actions/node@master
