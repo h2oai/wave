@@ -33,7 +33,7 @@ async def serve(q: Q):
     # Did we get events from the side panel?
     if q.events.my_side_panel:
         # Was the side panel dismissed?
-        if q.events.my_sidepanel.dismissed:
+        if q.events.my_side_panel.dismissed:
             # Delete the side panel
             q.page['meta'].side_panel = None
 
