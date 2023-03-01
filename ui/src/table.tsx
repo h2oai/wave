@@ -956,10 +956,8 @@ export const
     }, [])
 
     useUpdateOnlyEffect(() => {
-      if (!m.pagination) {
-        setFilteredItems(items)
-        reset()
-      }
+      setFilteredItems(items)
+      if (!m.pagination) reset()
     }, [items])
 
     React.useEffect(() => {

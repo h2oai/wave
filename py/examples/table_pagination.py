@@ -18,7 +18,7 @@ class Issue:
 
 
 all_rows = [Issue(text=i + 1, status=('Closed' if i % 2 == 0 else 'Open')) for i in range(100)]
-rows_per_page = 11
+rows_per_page = 10
 total_rows = len(all_rows)
 
 
