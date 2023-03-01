@@ -186,7 +186,6 @@ async def setup_page(q: Q):
             py_content += f.read()
 
     if py_content:
-        print('adding completions')
         py_content += '''
 def get_wave_completions(line, character, file_content):
     completion_type, leaf_val = get_completion_type(line, character, file_content)
