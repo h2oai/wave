@@ -3711,6 +3711,8 @@ class Table:
             groups: Optional[List[TableGroup]] = None,
             pagination: Optional[TablePagination] = None,
             events: Optional[List[str]] = None,
+            single: Optional[bool] = None,
+            value: Optional[str] = None,
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
@@ -3728,6 +3730,8 @@ class Table:
         _guard_vector('Table.groups', groups, (TableGroup,), False, True, False)
         _guard_scalar('Table.pagination', pagination, (TablePagination,), False, True, False)
         _guard_vector('Table.events', events, (str,), False, True, False)
+        _guard_scalar('Table.single', single, (bool,), False, True, False)
+        _guard_scalar('Table.value', value, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
@@ -3735,9 +3739,9 @@ class Table:
         self.rows = rows
         """The rows in this table. Mutually exclusive with `groups` attr."""
         self.multiple = multiple
-        """True to allow multiple rows to be selected."""
+        """True to allow multiple rows to be selected. Mutually exclusive with `single` attr."""
         self.groupable = groupable
-        """True to allow group by feature. Not applicable when `pagination` is set."""
+        """True to allow group by feature."""
         self.downloadable = downloadable
         """Indicates whether the table rows can be downloaded as a CSV file. Defaults to False."""
         self.resettable = resettable
@@ -3759,7 +3763,11 @@ class Table:
         self.pagination = pagination
         """Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`."""
         self.events = events
-        """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'."""
+        """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'."""
+        self.single = single
+        """True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr."""
+        self.value = value
+        """The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`)."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3779,6 +3787,8 @@ class Table:
         _guard_vector('Table.groups', self.groups, (TableGroup,), False, True, False)
         _guard_scalar('Table.pagination', self.pagination, (TablePagination,), False, True, False)
         _guard_vector('Table.events', self.events, (str,), False, True, False)
+        _guard_scalar('Table.single', self.single, (bool,), False, True, False)
+        _guard_scalar('Table.value', self.value, (str,), False, True, False)
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
@@ -3796,6 +3806,8 @@ class Table:
             groups=None if self.groups is None else [__e.dump() for __e in self.groups],
             pagination=None if self.pagination is None else self.pagination.dump(),
             events=self.events,
+            single=self.single,
+            value=self.value,
         )
 
     @staticmethod
@@ -3833,6 +3845,10 @@ class Table:
         _guard_scalar('Table.pagination', __d_pagination, (dict,), False, True, False)
         __d_events: Any = __d.get('events')
         _guard_vector('Table.events', __d_events, (str,), False, True, False)
+        __d_single: Any = __d.get('single')
+        _guard_scalar('Table.single', __d_single, (bool,), False, True, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('Table.value', __d_value, (str,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: Optional[List[TableRow]] = None if __d_rows is None else [TableRow.load(__e) for __e in __d_rows]
@@ -3849,6 +3865,8 @@ class Table:
         groups: Optional[List[TableGroup]] = None if __d_groups is None else [TableGroup.load(__e) for __e in __d_groups]
         pagination: Optional[TablePagination] = None if __d_pagination is None else TablePagination.load(__d_pagination)
         events: Optional[List[str]] = __d_events
+        single: Optional[bool] = __d_single
+        value: Optional[str] = __d_value
         return Table(
             name,
             columns,
@@ -3866,6 +3884,8 @@ class Table:
             groups,
             pagination,
             events,
+            single,
+            value,
         )
 
 
@@ -5953,6 +5973,14 @@ class InlineAlign:
     BASELINE = 'baseline'
 
 
+_InlineDirection = ['row', 'column']
+
+
+class InlineDirection:
+    ROW = 'row'
+    COLUMN = 'column'
+
+
 class Inline:
     """Create an inline (horizontal) list of components.
     """
@@ -5962,11 +5990,15 @@ class Inline:
             justify: Optional[str] = None,
             align: Optional[str] = None,
             inset: Optional[bool] = None,
+            height: Optional[str] = None,
+            direction: Optional[str] = None,
     ):
         _guard_vector('Inline.items', items, (Component,), False, False, False)
         _guard_enum('Inline.justify', justify, _InlineJustify, True)
         _guard_enum('Inline.align', align, _InlineAlign, True)
         _guard_scalar('Inline.inset', inset, (bool,), False, True, False)
+        _guard_scalar('Inline.height', height, (str,), False, True, False)
+        _guard_enum('Inline.direction', direction, _InlineDirection, True)
         self.items = items
         """The components laid out inline."""
         self.justify = justify
@@ -5975,6 +6007,10 @@ class Inline:
         """Specifies how the individual components are aligned on the vertical axis. Defaults to 'center'. One of 'start', 'end', 'center', 'baseline'. See enum h2o_wave.ui.InlineAlign."""
         self.inset = inset
         """Whether to display the components inset from the parent form, with a contrasting background."""
+        self.height = height
+        """Height of the inline container. Accepts any valid CSS unit e.g. '100vh', '300px'. Use '1' to fill the remaining card space."""
+        self.direction = direction
+        """Container direction. Defaults to 'row'. One of 'row', 'column'. See enum h2o_wave.ui.InlineDirection."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5982,11 +6018,15 @@ class Inline:
         _guard_enum('Inline.justify', self.justify, _InlineJustify, True)
         _guard_enum('Inline.align', self.align, _InlineAlign, True)
         _guard_scalar('Inline.inset', self.inset, (bool,), False, True, False)
+        _guard_scalar('Inline.height', self.height, (str,), False, True, False)
+        _guard_enum('Inline.direction', self.direction, _InlineDirection, True)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             align=self.align,
             inset=self.inset,
+            height=self.height,
+            direction=self.direction,
         )
 
     @staticmethod
@@ -6000,15 +6040,23 @@ class Inline:
         _guard_enum('Inline.align', __d_align, _InlineAlign, True)
         __d_inset: Any = __d.get('inset')
         _guard_scalar('Inline.inset', __d_inset, (bool,), False, True, False)
+        __d_height: Any = __d.get('height')
+        _guard_scalar('Inline.height', __d_height, (str,), False, True, False)
+        __d_direction: Any = __d.get('direction')
+        _guard_enum('Inline.direction', __d_direction, _InlineDirection, True)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         align: Optional[str] = __d_align
         inset: Optional[bool] = __d_inset
+        height: Optional[str] = __d_height
+        direction: Optional[str] = __d_direction
         return Inline(
             items,
             justify,
             align,
             inset,
+            height,
+            direction,
         )
 
 
@@ -6885,13 +6933,13 @@ class Menu:
         self.items = items
         """Commands to render."""
         self.icon = icon
-        """The card's icon. Mutually exclusive with the image and label."""
+        """The card's icon."""
         self.image = image
-        """The card’s image, preferably user avatar. Mutually exclusive with the icon and label."""
+        """The card’s image, preferably user avatar."""
         self.name = name
         """An identifying name for this component."""
         self.label = label
-        """The text displayed next to the chevron. Mutually exclusive with the icon and image."""
+        """The text displayed next to the chevron."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

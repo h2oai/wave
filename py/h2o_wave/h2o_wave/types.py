@@ -3741,7 +3741,7 @@ class Table:
         self.multiple = multiple
         """True to allow multiple rows to be selected. Mutually exclusive with `single` attr."""
         self.groupable = groupable
-        """True to allow group by feature. Not applicable when `pagination` is set."""
+        """True to allow group by feature."""
         self.downloadable = downloadable
         """Indicates whether the table rows can be downloaded as a CSV file. Defaults to False."""
         self.resettable = resettable
@@ -3765,7 +3765,7 @@ class Table:
         self.events = events
         """The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'."""
         self.single = single
-        """True to allow only on row to be selected at time. Mutually exclusive with `multiple` attr."""
+        """True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr."""
         self.value = value
         """The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`)."""
 
