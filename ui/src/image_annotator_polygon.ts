@@ -1,11 +1,11 @@
 import { F, S, U } from "h2o-wave"
-import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect, Position } from "./image_annotator"
+import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect } from "./image_annotator"
 import { ARC_RADIUS } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
   private currPolygonPoints: ImageAnnotatorPoint[] = []
   private boundaryRect: ImageAnnotatorRect | null = null
-  private draggedPoint: ImageAnnotatorPoint | null = null
+  private draggedPoint: DrawnPoint | null = null
   private draggedShape: DrawnShape | null = null
 
 
@@ -44,7 +44,7 @@ export class PolygonAnnotator {
 
   removeLastPoint() {
     this.currPolygonPoints.pop()
-    this.boundaryRect = getPolygonBoundaries(this.currPolygonPoints)
+    this.boundaryRect = this.currPolygonPoints.length ? getPolygonBoundaries(this.currPolygonPoints) : null
   }
 
   finishPolygon(tag: S) {
@@ -73,10 +73,8 @@ export class PolygonAnnotator {
     this.addCurrPolygonPoint({ x: cursor_x, y: cursor_y })
   }
 
-  move(dx: U, dy: U, shape?: DrawnShape) {
-    // Keep the polygon in the boundaries.
+  move(dx: U, dy: U, movedShape?: DrawnShape) {
     const
-      movedShape = (this.draggedShape || shape),
       boundaryRect = movedShape?.boundaryRect,
       movedPolygon = movedShape?.shape.polygon
     if (!movedPolygon || !boundaryRect) return
@@ -102,30 +100,29 @@ export class PolygonAnnotator {
     })
   }
 
-  onMouseMove(cursor_x: U, cursor_y: U, focused?: DrawnShape, intersected?: DrawnShape, clickStartPosition?: Position) {
-    if (!clickStartPosition?.dragging || !focused?.shape.polygon) {
-      this.draggedPoint = null
-      this.draggedShape = null
-      return
-    }
+  onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
+    if (!shape.shape.polygon) return
+    this.draggedPoint = shape.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y)) || null
+    this.draggedShape = shape
+  }
 
-    // TODO: Calculate this in mouseDown handler and store the current result for further use here.
-    const clickedPolygonPoint = focused.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
-    this.draggedPoint = this.draggedPoint || clickedPolygonPoint || null
-    if (this.draggedPoint) {
-      if (focused.shape.polygon) this.draggedShape = focused
-      this.draggedPoint.x += cursor_x - this.draggedPoint.x
-      this.draggedPoint.y += cursor_y - this.draggedPoint.y
-    }
-    else if (intersected == focused || this.draggedShape) {
-      this.draggedShape = intersected?.shape.polygon && intersected.isFocused ? intersected : this.draggedShape
-      if (!this.draggedShape) return
+  isMovedOrResized = () => !!this.draggedPoint || !!this.draggedShape
 
-      this.move(cursor_x - clickStartPosition!.x, cursor_y - clickStartPosition!.y)
+  getDraggedPoint = () => this.draggedPoint
 
-      clickStartPosition.x = cursor_x
-      clickStartPosition.y = cursor_y
-    }
+  getPointCursor = () => {
+    return this.draggedPoint?.isAux
+      ? 'pointer'
+      : this.draggedPoint
+        ? 'move'
+        : ''
+  }
+
+  moveDraggedPoint(cursor_x: U, cursor_y: U) {
+    if (!this.draggedPoint) return
+
+    this.draggedPoint.x += cursor_x - this.draggedPoint.x
+    this.draggedPoint.y += cursor_y - this.draggedPoint.y
   }
 
   tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
