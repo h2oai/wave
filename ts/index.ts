@@ -182,6 +182,7 @@ export type Packed<T> = T | S
 export interface Data {
   list(): (Rec | null)[]
   dict(): Dict<Rec>
+  getTupByIdx(i: U): Rec | null
 }
 
 interface OpsD {
@@ -399,6 +400,14 @@ export function unpack<T>(data: any): T {
       : data
 }
 
+export function unpackByIdx<T>(data: any, idx: U): T {
+  return (typeof data === 'string')
+    ? decodeString(data, idx) // TODO: packed data
+    : (isData(data))
+      ? (data as Data).getTupByIdx(idx)
+      : data
+}
+
 const
   errorCodes: Dict<WaveErrorCode> = {
     not_found: WaveErrorCode.PageNotFound,
@@ -407,27 +416,29 @@ const
     const i = d.indexOf(':')
     return (i > 0) ? [d.substring(0, i), d.substring(i + 1)] : ['', d]
   },
-  decodeString = (data: S): any => {
+  // 'rows:[["price","low","high"],[[4,50,100],[6,100,150],[8,150,200],[16,350,400],[18,400,450],[10,200,250],[12,250,300],[14,300,350]]]' // TODO:
+  decodeString = (data: S, idx?: U): any => {
     if (data === '') return data
     const [t, d] = decodeType(data)
     switch (t) {
       case 'data':
         try {
-          return JSON.parse(d)
+          return JSON.parse(d) // TODO:
         } catch (e) {
           console.error(e)
         }
         break
       case 'rows':
         try {
-          const [fields, rows] = JSON.parse(d)
+          const [fields, items] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
-          if (!Array.isArray(rows)) return data
+          if (!Array.isArray(items)) return data
           const w = fields.length // width
           const recs: Rec[] = []
+          const rows = (idx === undefined) ? items : [items[idx]]
           for (const r of rows) {
             if (!Array.isArray(r)) continue
-            if (r.length !== w) continue
+            if (r.length !== w) continue // TODO:
             const rec: Rec = {}
             for (let j = 0; j < w; j++) {
               const f = fields[j], v = r[j]
@@ -448,7 +459,7 @@ const
           const w = fields.length // width
           if (columns.length !== w) return data
           if (columns.length === 0) return data
-          const n = columns[0].length
+          const n = columns[0].length // TODO:
           const recs = new Array<Rec>(n)
           for (let i = 0; i < n; i++) {
             const rec: Rec = {}
@@ -566,13 +577,17 @@ const
         }
         return null
       },
+      getTupByIdx = (i: U): (Rec | null) => {
+        if (i >= 0 && i < n && tups && tups[i]) return t.make(tups[i] as any[]) // TODO:
+        return null
+      },
       list = (): (Rec | null)[] => {
         const xs: (Rec | null)[] = []
         for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
       },
       dict = (): Dict<Rec> => ({})
-    return { __buf__: true, n, put, set, seti, get, geti, list, dict }
+    return { __buf__: true, n, put, set, seti, get, geti, getTupByIdx, list, dict }
   },
   newCycBuf = (t: Typ, tups: (Tup | null)[], i: U): CycBuf => {
     const
@@ -590,6 +605,10 @@ const
       get = (_k: S): Cur | null => {
         return b.geti(i)
       },
+      getTupByIdx = (i: U): (Rec | null) => {
+        if (i >= 0 && i < n && tups && tups[i]) return t.make(tups[i] as any[]) // TODO:
+        return null
+      },
       list = (): Rec[] => {
         const xs: Rec[] = []
         for (let j = i, k = 0; k < n; j++, k++) {
@@ -600,7 +619,7 @@ const
         return xs
       },
       dict = (): Dict<Rec> => ({})
-    return { __buf__: true, put, set, get, list, dict }
+    return { __buf__: true, put, set, get, getTupByIdx, list, dict }
   },
   newMapBuf = (t: Typ, tups: Dict<Tup>): MapBuf => {
     const
@@ -624,6 +643,10 @@ const
         const tup = tups[k]
         return tup ? newCur(t, tup) : null
       },
+      getTupByIdx = (i: U): Rec | null => {
+        const k = keysOf(tups)[i] // TODO: ??
+        return t.make(tups[k]) // TODO: 
+      },
       list = (): Rec[] => {
         const keys = keysOf(tups)
         keys.sort()
@@ -636,7 +659,7 @@ const
         for (const k in tups) d[k] = t.make(tups[k])
         return d
       }
-    return { __buf__: true, put, set, get, list, dict }
+    return { __buf__: true, put, set, get, getTupByIdx, list, dict }
   },
   newTups = (n: U) => {
     const xs = new Array<Tup | null>(n)
