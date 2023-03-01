@@ -29,14 +29,18 @@ jobs:
             py/examples/requirements.txt
             py/Makefile
 
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.15"
+      
       - name: Snyk scan for Go dependencies
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
-        uses: snyk/actions/golang@master
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --file=go.mod -d --fail-on=all
+        run: |
+          GOFLAGS="e" snyk test --file=go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependencies
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'ui/package-lock.json')
@@ -97,14 +101,17 @@ jobs:
 
       - uses: actions/checkout@master
 
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.15"
+
       - name: Snyk scan for Go dependencies
-        uses: snyk/actions/golang@master
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
-          args: --org=wave --remote-repo-url=wave/${{ steps.extract_ref.outputs.ref }} --file=go.mod --project-name=WAVE/wave/${{ steps.extract_ref.outputs.ref }}/go.mod -d --fail-on=all
+        run: |
+          GOFLAGS="e" snyk monitor --org=wave --remote-repo-url=wave/${{ steps.extract_ref.outputs.ref }} --file=go.mod --project-name=WAVE/wave/${{ steps.extract_ref.outputs.ref }}/go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependencies
         uses: snyk/actions/node@master
