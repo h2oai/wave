@@ -67,7 +67,7 @@ jobs:
           contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile') ||
           contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/examples/requirements.txt')
         shell: bash
-        run: echo "::set-output name=any_changed::true"
+        run: echo "any_changed=true" >> $GITHUB_OUTPUT
 
       - uses: snyk/actions/setup@master
         if: steps.changed-py-deps.outputs.any_changed == 'true'
