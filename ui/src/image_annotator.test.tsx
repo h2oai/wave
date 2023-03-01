@@ -137,6 +137,18 @@ describe('ImageAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 110, x2: 150, y1: 110, y2: 150 } } }, ...items])
     })
 
+    it('Draws a new rect from bottom right to top left', async () => {
+      const { container, getByTitle } = render(<XImageAnnotator model={model} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      fireEvent.click(getByTitle('Rectangle'))
+      fireEvent.mouseDown(canvasEl, { clientX: 150, clientY: 150, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 110, clientY: 110, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 110, clientY: 110 })
+
+      expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 110, x2: 150, y1: 110, y2: 150 } } }, ...items])
+    })
+
     it('Draws a new rect with different tag if selected', async () => {
       const { container, getByText, getByTitle } = render(<XImageAnnotator model={model} />)
       await waitForLoad(container)

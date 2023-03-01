@@ -39,12 +39,17 @@ export class RectAnnotator {
 
   createRect = (x1: F, x2: F, y1: F, y2: F) => {
     const { width, height } = this.canvas
-    return Math.abs(x2 - x1) <= MIN_RECT_WIDTH || Math.abs(y2 - y1) <= MIN_RECT_HEIGHT ? undefined : {
+    if (Math.abs(x2 - x1) <= MIN_RECT_WIDTH || Math.abs(y2 - y1) <= MIN_RECT_HEIGHT) return undefined
+
+    const newRect = {
       x1: x1 > width ? width : x1 < 0 ? 0 : x1,
       x2: x2 > width ? width : x2 < 0 ? 0 : x2,
       y1: y1 > height ? height : y1 < 0 ? 0 : y1,
       y2: y2 > height ? height : y2 < 0 ? 0 : y2,
     }
+    fixRectIfNeeded(newRect)
+
+    return newRect
   }
 
   resetDragging = () => {
