@@ -19,7 +19,7 @@ _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1
 _app_host = _app_address.hostname
 _app_port = '10102'
 default_example_name = 'hello_world'
-vsc_extension_path = os.path.join('..', '..', 'tools', 'vscode-extension')
+vsc_extension_path = os.path.join(example_dir, '..', '..', 'tools', 'vscode-extension')
 
 
 class Example:
@@ -184,7 +184,9 @@ async def setup_page(q: Q):
             py_content = f.read()
         with open(os.path.join(vsc_extension_path, 'server', 'utils.py'), 'r') as f:
             py_content += f.read()
+
     if py_content:
+        print('adding completions')
         py_content += '''
 def get_wave_completions(line, character, file_content):
     completion_type, leaf_val = get_completion_type(line, character, file_content)
