@@ -26,6 +26,8 @@ jobs:
 
       - name: Build lightwave
         run:  make publish-lightwave
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
       
       - name: Publish to PyPI - lightwave
         uses: pypa/gh-action-pypi-publish@master
