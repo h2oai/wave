@@ -155,9 +155,9 @@ export const
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
       onOpen = () => setTimeout(() => (document.activeElement as HTMLElement)?.blur()),
       onBlur = (ev: React.FocusEvent) => {
-        if (!ev.relatedTarget || !Fluent.elementContains(popperRef.current, ev.relatedTarget as HTMLElement)) {
-          setIsDialogOpen(false)
-        }
+        // Close the popover if the side panel or dialog opens.
+        // TODO: Investigate why MUI dismiss on outer click handling doesn't work in this case.
+        if (!ev.relatedTarget || !Fluent.elementContains(popperRef.current, ev.relatedTarget as HTMLElement)) setIsDialogOpen(false)
       },
       { palette: fluentPalette } = Fluent.useTheme(),
       themeObj = {
@@ -208,49 +208,51 @@ export const
         {theme && AdapterDateFns && format
           ? <ThemeProvider theme={theme}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Fluent.FocusTrapZone isClickableOutsideFocusTrap>
-                <TimePicker
-                  value={value}
-                  label={label}
-                  open={isDialogOpen}
-                  onChange={value => setValue(value as Date)}
-                  onAccept={value => onSelectTime(value as Date)}
-                  onClose={() => setIsDialogOpen(false)}
-                  ampm={hour_format === '12'}
-                  showToolbar
-                  ToolbarComponent={({ parsedValue, setOpenView, ampm }) =>
+              <TimePicker
+                value={value}
+                label={label}
+                open={isDialogOpen}
+                onChange={value => setValue(value as Date)}
+                onAccept={value => onSelectTime(value as Date)}
+                onClose={() => setIsDialogOpen(false)}
+                ampm={hour_format === '12'}
+                showToolbar
+                ToolbarComponent={({ parsedValue, setOpenView, ampm }) =>
+                  // Traps focus inside the popover.
+                  // TODO: Check why focus gets back to the textfield after opening the popover from dialog.
+                  <Fluent.FocusTrapZone isClickableOutsideFocusTrap>
                     <Toolbar
                       setOpenView={setOpenView}
                       time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
                       label={label}
                       switchAmPm={switchAmPm}
                     />
-                  }
-                  PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
-                  minTime={min ? parseTimeStringToDate(min) : undefined}
-                  maxTime={max ? parseTimeStringToDate(max) : undefined}
-                  minutesStep={allowedMinutesSteps[minutes_step]}
-                  disabled={disabled}
-                  onOpen={onOpen}
-                  renderInput={({ inputProps, error }: TextFieldProps) =>
-                    <div ref={textInputRef} data-test={m.name}>
-                      <Fluent.TextField
-                        iconProps={{ iconName: 'Clock' }}
-                        onClick={() => setIsDialogOpen(true)}
-                        onChange={inputProps?.onChange}
-                        placeholder={placeholder}
-                        disabled={disabled}
-                        readOnly
-                        value={value ? formatDateToTimeString(value, hour_format) : ''}
-                        label={label}
-                        required={required}
-                        styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                        errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
-                      />
-                    </div>
-                  }
-                />
-              </Fluent.FocusTrapZone>
+                  </Fluent.FocusTrapZone>
+                }
+                PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
+                minTime={min ? parseTimeStringToDate(min) : undefined}
+                maxTime={max ? parseTimeStringToDate(max) : undefined}
+                minutesStep={allowedMinutesSteps[minutes_step]}
+                disabled={disabled}
+                onOpen={onOpen}
+                renderInput={({ inputProps, error }: TextFieldProps) =>
+                  <div ref={textInputRef} data-test={m.name}>
+                    <Fluent.TextField
+                      iconProps={{ iconName: 'Clock' }}
+                      onClick={() => setIsDialogOpen(true)}
+                      onChange={inputProps?.onChange}
+                      placeholder={placeholder}
+                      disabled={disabled}
+                      readOnly
+                      value={value ? formatDateToTimeString(value, hour_format) : ''}
+                      label={label}
+                      required={required}
+                      styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
+                      errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
+                    />
+                  </div>
+                }
+              />
             </LocalizationProvider>
           </ThemeProvider>
           : <LazyLoadPlaceholder />
