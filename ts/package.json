@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "build-dev": "tsc --project dev.tsconfig.json",
+    "build-dev": "tsc --project dev.tsconfig.json --watch",
     "minify": "terser dist/index.js -c -m -o dist/index.min.js",
     "prepublishOnly": "npm run build && npm run minify",
     "test": "echo \"Error: no test specified\" && exit 1"

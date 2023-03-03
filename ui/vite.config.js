@@ -16,6 +16,7 @@ import { defineConfig } from 'vite'
 import legacy from '@vitejs/plugin-legacy'
 import eslintPlugin from 'vite-plugin-eslint'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,11 +30,14 @@ export default defineConfig({
   build: {
     outDir: 'build',
     assetsDir: 'wave-static',
-    chunkSizeWarningLimit: 900
+    chunkSizeWarningLimit: 900,
   },
   optimizeDeps: {
-    // Force pre-bundling of linked package
-    include: ['h2o-wave'],
+    link: ['h2o-wave'],
+  },
+  alias: {
+    'h2o-wave': '/@linked/h2o-wave/index.ts',
+    '/@linked/h2o-wave/': path.resolve(require.resolve('h2o-wave/package.json'), '../')
   },
   server: {
     port: 3000,
