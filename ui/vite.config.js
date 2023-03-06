@@ -35,10 +35,6 @@ export default defineConfig({
   optimizeDeps: {
     link: ['h2o-wave'],
   },
-  alias: {
-    'h2o-wave': '/@linked/h2o-wave/index.ts',
-    '/@linked/h2o-wave/': path.resolve(require.resolve('h2o-wave/package.json'), '../')
-  },
   server: {
     port: 3000,
     proxy: {
