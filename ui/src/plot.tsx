@@ -1044,18 +1044,6 @@ const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalDa
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) => {
       const originalItems = unpackByIdx<any>(originalData, data.idx)
-      // const originalItems = originalData[data.idx]
-      // const originalItems = originalData.length
-      //   ? originalData[data.idx]         
-      // : (originalData as Rec).list()[data.idx]
-
-      // : Object.keys(data).reduce((acc, key) => {
-      //   if (key !== 'idx') {
-      //     const value = (originalData as Rec).get(data.idx).get(key)
-      //     if (value) return ({ ...acc, [key]: value })
-      //   }
-      //   return acc
-      // }, {})
       return Object.keys(originalItems).map((itemKey, idx) => {
         const item = originalItems[itemKey]
         return <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>

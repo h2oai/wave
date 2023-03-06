@@ -402,7 +402,7 @@ export function unpack<T>(data: any): T {
 
 export function unpackByIdx<T>(data: any, idx: U): T {
   return (typeof data === 'string')
-    ? decodeString(data, idx) // TODO: packed data
+    ? decodeString(data, idx)
     : (isData(data))
       ? (data as Data).getTupByIdx(idx)
       : data
@@ -416,7 +416,22 @@ const
     const i = d.indexOf(':')
     return (i > 0) ? [d.substring(0, i), d.substring(i + 1)] : ['', d]
   },
-  // 'rows:[["price","low","high"],[[4,50,100],[6,100,150],[8,150,200],[16,350,400],[18,400,450],[10,200,250],[12,250,300],[14,300,350]]]' // TODO:
+  rowToRowObj = (item: any, fields: any) => {
+    const rec: Rec = {}
+    for (let j = 0; j < fields.length; j++) {
+      const f = fields[j], v = item[j]
+      rec[f] = v
+    }
+    return rec
+  },
+  colToRowObj = (columns: any, fields: any, idx: U) => {
+    const rec: Rec = {}
+    for (let j = 0; j < fields.length; j++) {
+      const f = fields[j], v = columns[j][idx]
+      rec[f] = v
+    }
+    return rec
+  },
   decodeString = (data: S, idx?: U): any => {
     if (data === '') return data
     const [t, d] = decodeType(data)
@@ -430,21 +445,15 @@ const
         break
       case 'rows':
         try {
-          const [fields, items] = JSON.parse(d)
+          const [fields, rows] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
-          if (!Array.isArray(items)) return data
-          const w = fields.length // width
+          if (!Array.isArray(rows)) return data
+          if (idx !== undefined) return rowToRowObj(rows[idx], fields)
           const recs: Rec[] = []
-          const rows = (idx === undefined) ? items : [items[idx]]
           for (const r of rows) {
             if (!Array.isArray(r)) continue
-            if (r.length !== w) continue // TODO:
-            const rec: Rec = {}
-            for (let j = 0; j < w; j++) {
-              const f = fields[j], v = r[j]
-              rec[f] = v
-            }
-            recs.push(rec)
+            if (r.length !== fields.length) continue
+            recs.push(rowToRowObj(r, fields))
           }
           return recs
         } catch (e) {
@@ -456,18 +465,13 @@ const
           const [fields, columns] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
           if (!Array.isArray(columns)) return data
-          const w = fields.length // width
-          if (columns.length !== w) return data
+          if (columns.length !== fields.length) return data
           if (columns.length === 0) return data
-          const n = columns[0].length // TODO:
-          const recs = new Array<Rec>(n)
+          if (idx !== undefined) return colToRowObj(columns, fields, idx)
+          const n = columns[0].length
+          const recs: Rec[] = []
           for (let i = 0; i < n; i++) {
-            const rec: Rec = {}
-            for (let j = 0; j < w; j++) {
-              const f = fields[j], v = columns[j][i]
-              rec[f] = v
-            }
-            recs[i] = rec
+            recs.push(colToRowObj(columns, fields, i))
           }
           return recs
         } catch (e) {

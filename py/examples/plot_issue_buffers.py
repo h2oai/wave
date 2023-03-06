@@ -15,6 +15,10 @@ a = data(fields='price low high', size=8, rows=[
     pack=True
     )
 
+ac = data(fields='price low high', size=8, columns=[[4,6,8,16,18,10,12,14],[50,100,150,350,400,200,250,300],[100,150,200,400,450,250,300,350]],
+    pack=True
+    )
+
 # Cyclic buffer
 c = data(fields='price low high', size=-8, rows=[
         [4, 50, 100],
@@ -45,7 +49,7 @@ async def serve(q: Q):
         q.page['example'] = ui.plot_card(
             box='1 1 4 5',
             title='Histogram',
-            data=a,
+            data=ac,
             plot=ui.plot([ui.mark(type='interval', y='=price', x1='=low', x2='=high', y_min=0)]),
         )
 
