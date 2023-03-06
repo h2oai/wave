@@ -698,9 +698,10 @@ const
           default:
             {
               let x: any = data
-              const p = ks[ks.length - 1]
-              for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
-              gset(x, p, v)
+              if (ks.length === 2) x = extractFormObj(data, ks[0])
+              if (x === data) for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
+              const prop = ks[ks.length - 1]
+              gset(x, prop, v)
               return
             }
         }
@@ -729,6 +730,23 @@ const
       if (!isNaN(i) && i >= 0 && i < x.length) return x[i]
     }
     return null
+  },
+  extractFormObj = (data: any, name: S) => {
+    const items = []
+    if (data['items']) items.push(...data['items'])
+    if (data['secondary_items']) items.push(...data['secondary_items'])
+    if (data['buttons']) items.push(...data['buttons'])
+
+    // Perf: Maybe worth storing a map of name -> component instead of an array.
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      const component = item[Object.keys(item)[0]]
+      if (component.name === name) return component
+      if (component.items || component.secondary_items || component.buttons) {
+        const result: unknown = extractFormObj(component, name)
+        if (result) return result
+      }
+    }
   },
   newPage = (): XPage => {
     let dirty = false, dirties: Dict<B> = {}
