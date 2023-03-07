@@ -53,12 +53,17 @@ mr = data(fields='price low high', rows=dict(
 
 @app('/demo')
 async def serve(q: Q):
-        q.page['meta'] = ui.meta_card(box='')
-        q.page['example'] = ui.plot_card(
-            box='1 1 4 5',
-            title='Histogram',
-            data=ar,
-            plot=ui.plot([ui.mark(type='interval', y='=price', x1='=low', x2='=high', y_min=0)]),
-        )
+        if not q.client.initialized:
+            q.page['meta'] = ui.meta_card(box='')
+            q.page['example'] = ui.plot_card(
+                box='1 1 4 5',
+                title='Histogram',
+                data=ar,
+                plot=ui.plot([ui.mark(type='interval', y='=price', x1='=low', x2='=high', y_min=0)]),
+            )
+            q.page['btn'] = ui.form_card(box='5 6 2 2', items=[ui.button(name='change_data', label='Change data', primary=True)])
+            q.client.initialized = True
+        elif q.args.change_data:
+            q.page['example'].data[2] = [9,160,210]
 
         await q.page.save()
