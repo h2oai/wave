@@ -30,10 +30,10 @@ export default defineConfig({
   build: {
     outDir: 'build',
     assetsDir: 'wave-static',
-    chunkSizeWarningLimit: 900,
+    chunkSizeWarningLimit: 900
   },
   optimizeDeps: {
-    link: ['h2o-wave'],
+    link: ['h2o-wave']
   },
   server: {
     port: 3000,

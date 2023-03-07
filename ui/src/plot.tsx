@@ -1040,7 +1040,7 @@ export interface Visualization {
 const tooltipContainer = document.createElement('div')
 tooltipContainer.className = 'g2-tooltip'
 
-const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalData: any[] }) =>
+const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalData: Rec }) =>
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) => {
       const originalItems = unpackByIdx<any>(originalData, data.idx)
@@ -1068,8 +1068,6 @@ export const
       currentChart = React.useRef<Chart | null>(null),
       currentPlot = React.useRef<Plot | null>(null),
       themeWatchRef = React.useRef<Disposable | null>(null),
-      originalDataRef = React.useRef<any[]>([]),
-      // originalDataRef = React.useRef<any[]>(unpackByIdx<any>(model.data)),
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
@@ -1094,7 +1092,6 @@ export const
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
-        originalDataRef.current = unpack<any[]>(model.data)
         currentPlot.current = plot
         if (chart) {
           chart.tooltip({
@@ -1108,7 +1105,7 @@ export const
               },
             },
             customContent: (_title, items) => {
-              ReactDOM.render(<PlotTooltip items={items} originalData={model.data as any} />, tooltipContainer)
+              ReactDOM.render(<PlotTooltip items={items} originalData={model.data} />, tooltipContainer)
               return tooltipContainer
             }
           })
@@ -1158,7 +1155,6 @@ export const
       const
         raw_data = unpack<any[]>(model.data),
         data = refactorData(raw_data, currentPlot.current.marks)
-      // originalDataRef.current = unpackByIdx<any>(model.data)
       currentChart.current.changeData(data)
     }, [currentChart, currentPlot, model])
 
