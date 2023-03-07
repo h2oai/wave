@@ -32,7 +32,7 @@ jobs:
       - uses: snyk/actions/setup@master
       - uses: actions/setup-go@v3
         with:
-          go-version: "1.15"
+          go-version: "1.19.4"
       
       - name: Snyk scan for Go dependencies
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
@@ -86,7 +86,7 @@ jobs:
 
       - name: Snyk scan for Python dependencies
         if: steps.changed-py-deps.outputs.any_changed == 'true'
-        run: snyk test --org=wave --remote-repo-url=wave/${{ steps.extract_ref.outputs.ref }} --file=py/requirements.txt --project-name=WAVE/wave/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
+        run: snyk test --org=wave --remote-repo-url=wave/${{ steps.extract_ref.outputs.ref }} --file=py/requirements.txt --project-name=WAVE/wave/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all --policy-path=.snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -104,7 +104,7 @@ jobs:
       - uses: snyk/actions/setup@master
       - uses: actions/setup-go@v3
         with:
-          go-version: "1.15"
+          go-version: "1.19.4"
 
       - name: Snyk scan for Go dependencies
         continue-on-error: true
