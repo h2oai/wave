@@ -317,7 +317,7 @@ q.page['example'] = ui.plot_card(
             type='interval', 
             x='=profession',
             y='=salary', y_min=0,
-            label='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            label='=${{intl salary minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             label_offset=0, label_position='middle', label_rotation='-90', label_fill_color='#fff',
             label_font_weight='bold'
         )
