@@ -1,8 +1,8 @@
 from h2o_wave import main, app, Q, ui, data
 
 
-# Array buffer
-a = data(fields='price low high', size=8, rows=[
+# Array buffer - rows
+ar = data(fields='price low high', size=8, rows=[
         [4, 50, 100],
         [6, 100, 150],
         [8, 150, 200],
@@ -11,16 +11,17 @@ a = data(fields='price low high', size=8, rows=[
         [10, 200, 250],
         [12, 250, 300],
         [14, 300, 350],
-    ],
-    pack=True
-    )
+    ], pack=False)
 
-ac = data(fields='price low high', size=8, columns=[[4,6,8,16,18,10,12,14],[50,100,150,350,400,200,250,300],[100,150,200,400,450,250,300,350]],
-    pack=True
-    )
+# Array buffer - columns
+ac = data(fields='price low high', size=8, columns=[
+        [4,6,8,16,18,10,12,14],
+        [50,100,150,350,400,200,250,300],
+        [100,150,200,400,450,250,300,350]
+    ], pack=False)
 
-# Cyclic buffer
-c = data(fields='price low high', size=-8, rows=[
+# Cyclic buffer - rows
+cr = data(fields='price low high', size=-8, rows=[
         [4, 50, 100],
         [6, 100, 150],
         [8, 150, 200],
@@ -29,10 +30,10 @@ c = data(fields='price low high', size=-8, rows=[
         [10, 200, 250],
         [12, 250, 300],
         [14, 300, 350],
-    ])
+    ], pack=False) # pack=False not working
 
-# Map buffer
-m = data(fields='price low high', rows=dict(
+# Map buffer - rows
+mr = data(fields='price low high', rows=dict(
         fst=[4, 50, 100],
         snd=[6, 100, 150],
         trd=[8, 150, 200],
@@ -43,13 +44,20 @@ m = data(fields='price low high', rows=dict(
         nth=[14, 300, 350],
 ))
 
+# Map buffer - columns
+# mc = data(fields='price low high', columns=dict(
+#         fst=[4,6,8,16,18,10,12,14],
+#         snd=[50,100,150,350,400,200,250,300],
+#         trd=[100,150,200,400,450,250,300,350]
+# ))
+
 @app('/demo')
 async def serve(q: Q):
         q.page['meta'] = ui.meta_card(box='')
         q.page['example'] = ui.plot_card(
             box='1 1 4 5',
             title='Histogram',
-            data=ac,
+            data=ar,
             plot=ui.plot([ui.mark(type='interval', y='=price', x1='=low', x2='=high', y_min=0)]),
         )
 

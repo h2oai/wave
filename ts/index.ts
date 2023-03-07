@@ -438,7 +438,9 @@ const
     switch (t) {
       case 'data':
         try {
-          return JSON.parse(d) // TODO:
+          const parsedData = JSON.parse(d)
+          if (idx !== undefined && parsedData?.[idx]) return parsedData[idx]
+          return parsedData
         } catch (e) {
           console.error(e)
         }
@@ -581,8 +583,11 @@ const
         }
         return null
       },
-      getTupByIdx = (i: U): (Rec | null) => {
-        if (i >= 0 && i < n && tups && tups[i]) return t.make(tups[i] as any[]) // TODO:
+      getTupByIdx = (i: U): Rec | null => {
+        if (i >= 0 && i < n) {
+          const tup = tups[i]
+          if (tup) return t.make(tup)
+        }
         return null
       },
       list = (): (Rec | null)[] => {
@@ -609,8 +614,11 @@ const
       get = (_k: S): Cur | null => {
         return b.geti(i)
       },
-      getTupByIdx = (i: U): (Rec | null) => {
-        if (i >= 0 && i < n && tups && tups[i]) return t.make(tups[i] as any[]) // TODO:
+      getTupByIdx = (i: U): Rec | null => {
+        if (i >= 0 && i < n) {
+          const tup = tups[i]
+          if (tup) return t.make(tup)
+        }
         return null
       },
       list = (): Rec[] => {
@@ -648,8 +656,8 @@ const
         return tup ? newCur(t, tup) : null
       },
       getTupByIdx = (i: U): Rec | null => {
-        const k = keysOf(tups)[i] // TODO: ??
-        return t.make(tups[k]) // TODO: 
+        const k = keysOf(tups)[i]
+        return t.make(tups[k])
       },
       list = (): Rec[] => {
         const keys = keysOf(tups)
