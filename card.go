@@ -79,9 +79,9 @@ func loadCard(ns *Namespace, c CardD) *Card {
 					}
 				}
 			}
-			ks[0] = k
-			card.set(ks, v)
 		}
+		ks[0] = k
+		card.set(ks, v)
 	}
 	return card
 }
