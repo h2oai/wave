@@ -46,13 +46,14 @@ func loadBuf(ns *Namespace, b BufD) Buf {
 
 // Card represents an item on a Page, and holds attributes and data for rendering views.
 type Card struct {
-	data map[string]interface{}
+	data             map[string]interface{}
+	nameComponentMap map[string]interface{} // Cache for cards with items, secondary_items or buttons.
 }
 
 const dataPrefix = "~"
 
 func loadCard(ns *Namespace, c CardD) *Card {
-	card := &Card{make(map[string]interface{})}
+	card := &Card{make(map[string]interface{}), nil}
 	ks := make([]string, 1) // to avoid allocation during card.set() below
 	for k, v := range c.D {
 		if len(k) > 0 && strings.HasPrefix(k, dataPrefix) {
@@ -63,8 +64,24 @@ func loadCard(ns *Namespace, c CardD) *Card {
 				}
 			}
 		}
-		ks[0] = k
-		card.set(ks, v)
+		// TODO: Add support for secondary_items and buttons.
+		if k == "items" {
+			card.nameComponentMap = make(map[string]interface{})
+			for _, v := range v.([]interface{}) {
+				// This map always has a single key - wrapper.
+				for _, v := range v.(map[string]interface{}) {
+					// TODO: Add support for nested items, e.g. ui.inline.
+					for attributeKey, attributeValue := range v.(map[string]interface{}) {
+						if attributeKey == "name" {
+							card.nameComponentMap[attributeValue.(string)] = v
+							break
+						}
+					}
+				}
+			}
+			ks[0] = k
+			card.set(ks, v)
+		}
 	}
 	return card
 }
@@ -88,10 +105,17 @@ func (c *Card) set(ks []string, v interface{}) {
 		}
 	default: // .foo.bar.baz = qux
 		var x interface{} = c.data
-		p := ks[len(ks)-1]
-		for _, k := range ks[:len(ks)-1] {
-			x = get(x, k)
+
+		// By-name access.
+		if v, ok := c.nameComponentMap[ks[0]]; ok && len(ks) == 2 {
+			x = v
+		} else {
+			for _, k := range ks[:len(ks)-1] {
+				x = get(x, k)
+			}
 		}
+
+		p := ks[len(ks)-1]
 		set(x, p, v)
 	}
 }
