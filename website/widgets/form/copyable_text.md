@@ -35,7 +35,7 @@ q.page['form'] = ui.form_card(
 
 ## Height of copyable text
 
-If you want to adjust the height of the copyable textbox, set the `height` attribute to your desired height in pixels, e.g. `'200px'`.
+If you want to adjust the height of the copyable textbox, set the `height` attribute to your desired height in pixels (e.g. `'200px'`) or use `1` to fill the remaining card space.
 Note: The set height will only take effect if `multiline` is set to `True`.
 
 ```py

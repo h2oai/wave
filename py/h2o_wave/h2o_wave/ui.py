@@ -2548,7 +2548,7 @@ def copyable_text(
         label: The text displayed above the textbox.
         name: An identifying name for this component.
         multiline: True if the component should allow multi-line text entry.
-        height: Custom height in px, e.g. '200px'. Requires `multiline` to be set.
+        height: Custom height in px (e.g. '200px') or use '1' to fill the remaining card space. Requires `multiline` to be set.
     Returns:
         A `h2o_wave.types.CopyableText` instance.
     """

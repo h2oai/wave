@@ -13,6 +13,17 @@ const css = stylesheet({
       }
     }
   },
+  fullHeight: {
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+    resize: 'none',
+  },
+  textFieldRoot: {
+    width: pc(100),
+    display: 'flex',
+    flexDirection: 'column'
+  },
   compactContainer: {
     position: 'relative',
   },
@@ -51,13 +62,15 @@ export interface CopyableText {
   name?: S
   /** True if the component should allow multi-line text entry. */
   multiline?: B
-  /** Custom height in px, e.g. '200px'. Requires `multiline` to be set. */
+  /** Custom height in px (e.g. '200px') or use '1' to fill the remaining card space. Requires `multiline` to be set. */
   height?: S
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
+    isHeight = multiline && height,
+    fullHeightStyle = isHeight && height === '1' ? css.fullHeight : '',
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -81,13 +94,19 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return (
-    <div data-test={name} className={multiline ? css.multiContainer : css.compactContainer}>
+    <div data-test={name} className={multiline ? clas(css.multiContainer, fullHeightStyle) : css.compactContainer}>
       <Fluent.TextField
         componentRef={ref}
         value={value}
         label={label}
         multiline={multiline}
-        styles={{ root: { width: pc(100) }, fieldGroup: multiline && height ? { minHeight: height } : undefined }}
+        className={fullHeightStyle}
+        styles={{
+          root: css.textFieldRoot,
+          wrapper: fullHeightStyle,
+          field: isHeight ? fullHeightStyle || { height: height } : '',
+          fieldGroup: isHeight ? fullHeightStyle || { minHeight: height } : ''
+        }}
         readOnly
       />
       <Fluent.PrimaryButton
