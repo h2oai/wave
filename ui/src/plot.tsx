@@ -1043,17 +1043,15 @@ tooltipContainer.className = 'g2-tooltip'
 const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalData: Rec }) =>
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) => {
-      const originalItems = unpackByIdx<any>(originalData, data.idx)
-      return Object.keys(originalItems).map((itemKey, idx) => {
-        const item = originalItems[itemKey]
-        return <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+      return Object.entries(unpackByIdx<any>(originalData, data.idx)).map(([key, item], idx) =>
+        <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
           <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
           <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
-            <span style={{ marginRight: 16 }}>{itemKey}:</span>
+            <span style={{ marginRight: 16 }}>{key}:</span>
             <span>{(item instanceof Date ? item.toISOString().split('T')[0] : item)}</span>
           </span>
         </li>
-      }
+
       )
     }
     )}
@@ -1104,10 +1102,10 @@ export const
                 color: cssVar('$text')
               },
             },
-            customContent: (_title, items) => {
-              ReactDOM.render(<PlotTooltip items={items} originalData={model.data} />, tooltipContainer)
-              return tooltipContainer
-            }
+            customContent: () => tooltipContainer
+          })
+          chart.on('tooltip:change', ({ data }: any) => {
+            ReactDOM.render(<PlotTooltip items={data.items} originalData={model.data} />, tooltipContainer)
           })
           currentChart.current = chart
           chart.data(data)

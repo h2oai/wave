@@ -400,12 +400,12 @@ export function unpack<T>(data: any): T {
       : data
 }
 
-export function unpackByIdx<T>(data: any, idx: U): T {
+export function unpackByIdx<T = any>(data: any, idx: U): T {
   return (typeof data === 'string')
-    ? decodeString(data, idx)
+    ? decodeStringByIdx(data, idx)
     : (isData(data))
-      ? (data as Data).getTupByIdx(idx)
-      : data
+      ? data.getTupByIdx(idx)
+      : data // TODO:
 }
 
 const
@@ -432,15 +432,13 @@ const
     }
     return rec
   },
-  decodeString = (data: S, idx?: U): any => {
+  decodeString = (data: S): any => {
     if (data === '') return data
     const [t, d] = decodeType(data)
     switch (t) {
       case 'data':
         try {
-          const parsedData = JSON.parse(d)
-          if (idx !== undefined && parsedData?.[idx]) return parsedData[idx]
-          return parsedData
+          return JSON.parse(d)
         } catch (e) {
           console.error(e)
         }
@@ -450,7 +448,6 @@ const
           const [fields, rows] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
           if (!Array.isArray(rows)) return data
-          if (idx !== undefined) return rowToRowObj(rows[idx], fields)
           const recs: Rec[] = []
           for (const r of rows) {
             if (!Array.isArray(r)) continue
@@ -469,13 +466,49 @@ const
           if (!Array.isArray(columns)) return data
           if (columns.length !== fields.length) return data
           if (columns.length === 0) return data
-          if (idx !== undefined) return colToRowObj(columns, fields, idx)
           const n = columns[0].length
           const recs: Rec[] = []
           for (let i = 0; i < n; i++) {
             recs.push(colToRowObj(columns, fields, i))
           }
           return recs
+        } catch (e) {
+          console.error(e)
+        }
+        break
+    }
+    return data
+  },
+  decodeStringByIdx = (data: S, idx: U): any => {
+    if (data === '') return data
+    const [t, d] = decodeType(data)
+    switch (t) {
+      case 'data':
+        try {
+          const parsedData = JSON.parse(d)
+          return parsedData[idx]
+        } catch (e) {
+          console.error(e)
+        }
+        break
+      case 'rows':
+        try {
+          const [fields, rows] = JSON.parse(d)
+          if (!Array.isArray(fields)) return data // TODO:
+          if (!Array.isArray(rows)) return data
+          return rowToRowObj(rows[idx], fields)
+        } catch (e) {
+          console.error(e)
+        }
+        break
+      case 'cols':
+        try {
+          const [fields, columns] = JSON.parse(d)
+          if (!Array.isArray(fields)) return data
+          if (!Array.isArray(columns)) return data
+          if (columns.length !== fields.length) return data
+          if (columns.length === 0) return data
+          return colToRowObj(columns, fields, idx)
         } catch (e) {
           console.error(e)
         }
