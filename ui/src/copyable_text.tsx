@@ -19,11 +19,6 @@ const css = stylesheet({
     flexDirection: 'column',
     resize: 'none',
   },
-  textFieldRoot: {
-    width: pc(100),
-    display: 'flex',
-    flexDirection: 'column'
-  },
   compactContainer: {
     position: 'relative',
   },
@@ -69,8 +64,8 @@ export interface CopyableText {
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
-    isHeight = multiline && height,
-    fullHeightStyle = isHeight && height === '1' ? css.fullHeight : '',
+    isHeightSet = multiline && height,
+    fullHeightStyle = isHeightSet && height === '1' ? css.fullHeight : '',
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -102,10 +97,10 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         multiline={multiline}
         className={fullHeightStyle}
         styles={{
-          root: css.textFieldRoot,
+          root: { width: pc(100) },
           wrapper: fullHeightStyle,
-          field: isHeight ? fullHeightStyle || { height: height } : '',
-          fieldGroup: isHeight ? fullHeightStyle || { minHeight: height } : ''
+          field: isHeightSet ? fullHeightStyle || { height: height } : '',
+          fieldGroup: isHeightSet ? fullHeightStyle || { minHeight: height } : ''
         }}
         readOnly
       />
