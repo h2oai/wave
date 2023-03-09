@@ -405,7 +405,8 @@ export function unpackByIdx<T = any>(data: any, idx: U): T {
     ? decodeStringByIdx(data, idx)
     : (isData(data))
       ? data.getTupByIdx(idx)
-      : data // TODO:
+      // TODO: Optimize - use for in. Object.entries() not supported in this ES version.
+      : data?.[idx] || data[Object.keys(data)?.[idx]]
 }
 
 const
@@ -689,8 +690,12 @@ const
         return tup ? newCur(t, tup) : null
       },
       getTupByIdx = (i: U): Rec | null => {
-        const k = keysOf(tups)[i]
-        return t.make(tups[k])
+        let idx = 0
+        for (const k in tups) {
+          if (idx === i && tups.hasOwnProperty(k)) return t.make(tups[k])
+          idx++
+        }
+        return null
       },
       list = (): Rec[] => {
         const keys = keysOf(tups)
