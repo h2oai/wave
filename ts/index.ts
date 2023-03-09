@@ -666,6 +666,7 @@ const
   loadCard = (key: S, c: CardD): Card => {
     const
       data: Dict<any> = {},
+      componentCache: Dict<any> = {},
       changedB = box<B>(),
       ctor = (c: CardD) => {
         const { d, b } = c
@@ -674,10 +675,11 @@ const
           if (b && k.length > 0 && k[0] === '~') {
             const buf = loadBuf(b[v as U])
             if (buf) {
-              k = k.substr(1)
+              k = k.substring(1)
               v = buf
             }
           }
+          if (k === "items" || k === "secondary_items" || k === "buttons") fillComponentNameMap(componentCache, v)
           set([k], v)
         }
       },
@@ -698,8 +700,8 @@ const
           default:
             {
               let x: any = data
-              if (ks.length === 2) x = extractFormObj(data, ks[0])
-              if (x === data) for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
+              if (ks.length === 2 && componentCache[ks[0]]) x = componentCache[ks[0]]
+              else for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
               const prop = ks[ks.length - 1]
               gset(x, prop, v)
               return
@@ -731,21 +733,14 @@ const
     }
     return null
   },
-  extractFormObj = (data: any, name: S) => {
-    const items = []
-    if (data['items']) items.push(...data['items'])
-    if (data['secondary_items']) items.push(...data['secondary_items'])
-    if (data['buttons']) items.push(...data['buttons'])
-
-    // Perf: Maybe worth storing a map of name -> component instead of an array.
+  fillComponentNameMap = (nameComponentMap: Dict<any>, items: any) => {
     for (let i = 0; i < items.length; i++) {
       const item = items[i]
       const component = item[Object.keys(item)[0]]
-      if (component.name === name) return component
-      if (component.items || component.secondary_items || component.buttons) {
-        const result: unknown = extractFormObj(component, name)
-        if (result) return result
-      }
+      if (component.name) nameComponentMap[component.name] = component
+      if (component.items) fillComponentNameMap(nameComponentMap, component.items)
+      if (component.secondary_items) fillComponentNameMap(nameComponentMap, component.secondary_items)
+      if (component.buttons) fillComponentNameMap(nameComponentMap, component.buttons)
     }
   },
   newPage = (): XPage => {
@@ -846,7 +841,7 @@ export const
           handle(connectEvent)
           _backoff = 1
           const hash = window.location.hash
-          socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
+          socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substring(1) : hash}`) // protocol: t<sep>addr<sep>data
         }
         socket.onclose = () => {
           const refreshRate = refreshRateB()
