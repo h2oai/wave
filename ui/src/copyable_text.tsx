@@ -62,7 +62,7 @@ export interface CopyableText {
   name?: S
   /** True if the component should allow multi-line text entry. */
   multiline?: B
-  /** Custom height in px (e.g. '200px') or use '1' to fill the remaining card space. Requires `multiline` to be set. */
+  /** Custom height in px (e.g. '200px') or '1' to fill the remaining card space. Requires `multiline` to be set. */
   height?: S
 }
 
