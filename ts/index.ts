@@ -735,8 +735,7 @@ const
     return null
   },
   fillComponentNameMap = (nameComponentMap: Dict<any>, items: any) => {
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i]
+    for (const item of items) {
       const component = item[Object.keys(item)[0]]
       if (component.name) nameComponentMap[component.name] = component
       if (component.items) fillComponentNameMap(nameComponentMap, component.items)
