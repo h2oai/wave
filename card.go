@@ -65,7 +65,9 @@ func loadCard(ns *Namespace, c CardD) *Card {
 			}
 		}
 		if k == "items" || k == "secondary_items" || k == "buttons" {
-			card.nameComponentMap = make(map[string]interface{})
+			if card.nameComponentMap == nil {
+				card.nameComponentMap = make(map[string]interface{})
+			}
 			fillNameComponentMap(card.nameComponentMap, v)
 		}
 		ks[0] = k
