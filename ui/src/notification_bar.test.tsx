@@ -38,13 +38,13 @@ describe('NotificationBar.tsx', () => {
     expect(queryByRole('region')).toBeInTheDocument()
   })
 
-  it('should close the notifification bar after timeout', () => {
+  it('should close the notification bar after timeout', () => {
     render(<NotificationBar />)
     jest.runOnlyPendingTimers()
     expect(notificationBarB()).toBeNull()
   })
 
-  it('should close the notifification bar after timeout even if buttons are specified', () => {
+  it('should close the notification bar after timeout even if buttons are specified', () => {
     notificationBarB({ ...notificationbarProps, buttons: [{ button: { name: 'btn', label: 'click me' } }] })
     render(<NotificationBar />)
     jest.runOnlyPendingTimers()
@@ -58,7 +58,7 @@ describe('NotificationBar.tsx', () => {
     expect(notificationBarB()).not.toBeNull()
   })
 
-  it('should close the notifification bar after clicking dismiss', () => {
+  it('should close the notification bar after clicking dismiss', () => {
     const { container } = render(<NotificationBar />)
     fireEvent.click(container.querySelector('.ms-MessageBar-dismissal') as HTMLButtonElement)
     expect(notificationBarB()).toBeNull()
