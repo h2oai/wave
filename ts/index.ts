@@ -701,6 +701,7 @@ const
             {
               let x: any = data
               if (ks.length === 2 && componentCache[ks[0]]) x = componentCache[ks[0]]
+              // DEPRECATED: Access via page.items[idx].wrapper.prop.
               else for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
               const prop = ks[ks.length - 1]
               gset(x, prop, v)

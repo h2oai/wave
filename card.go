@@ -66,7 +66,7 @@ func loadCard(ns *Namespace, c CardD) *Card {
 		}
 		if k == "items" || k == "secondary_items" || k == "buttons" {
 			card.nameComponentMap = make(map[string]interface{})
-			fillComponentNameMap(card.nameComponentMap, v)
+			fillNameComponentMap(card.nameComponentMap, v)
 		}
 		ks[0] = k
 		card.set(ks, v)
@@ -98,7 +98,7 @@ func (c *Card) set(ks []string, v interface{}) {
 		if v, ok := c.nameComponentMap[ks[0]]; ok && len(ks) == 2 {
 			x = v
 		} else {
-			// DEPRECATED: access page.items[idx].wrapper.prop.
+			// DEPRECATED: Access via page.items[idx].wrapper.prop.
 			for _, k := range ks[:len(ks)-1] {
 				x = get(x, k)
 			}
@@ -184,18 +184,22 @@ func deepClone(ix interface{}) interface{} {
 	return ix
 }
 
-func fillComponentNameMap(m map[string]interface{}, items interface{}) {
+func fillNameComponentMap(m map[string]interface{}, items interface{}) {
 	for _, v := range items.([]interface{}) {
-		// This map always has a single key - wrapper.
+		// This map always has a single key - wrapper so this is O(1) not O(n).
 		for _, v := range v.(map[string]interface{}) {
-			for attributeKey, attributeValue := range v.(map[string]interface{}) {
-				if attributeKey == "name" {
-					m[attributeValue.(string)] = v
-					continue
-				}
-				if attributeKey == "items" || attributeKey == "secondary_items" || attributeKey == "buttons" {
-					fillComponentNameMap(m, attributeValue)
-				}
+			component := v.(map[string]interface{})
+			if name, ok := component["name"]; ok {
+				m[name.(string)] = v
+			}
+			if items, ok := component["items"]; ok {
+				fillNameComponentMap(m, items)
+			}
+			if secondaryItems, ok := component["secondary_items"]; ok {
+				fillNameComponentMap(m, secondaryItems)
+			}
+			if buttons, ok := component["buttons"]; ok {
+				fillNameComponentMap(m, buttons)
 			}
 		}
 	}
