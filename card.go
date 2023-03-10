@@ -24,9 +24,9 @@ type Buf interface {
 	// get cursor at key k
 	get(k string) (Cur, bool)
 	// overwrite all records
-	put(v interface{})
+	put(v any)
 	// set record at key k
-	set(k string, v interface{})
+	set(k string, v any)
 	// dump contents
 	dump() BufD
 }
@@ -46,14 +46,17 @@ func loadBuf(ns *Namespace, b BufD) Buf {
 
 // Card represents an item on a Page, and holds attributes and data for rendering views.
 type Card struct {
-	data             map[string]interface{}
-	nameComponentMap map[string]interface{} // Cache for cards with items, secondary_items or buttons.
+	data             map[string]any
+	nameComponentMap map[string]any // Cache for cards with items, secondary_items or buttons.
 }
 
 const dataPrefix = "~"
 
 func loadCard(ns *Namespace, c CardD) *Card {
-	card := &Card{make(map[string]interface{}), nil}
+	card := &Card{
+		data:             make(map[string]any),
+		nameComponentMap: nil,
+	}
 	ks := make([]string, 1) // to avoid allocation during card.set() below
 	for k, v := range c.D {
 		if len(k) > 0 && strings.HasPrefix(k, dataPrefix) {
@@ -66,7 +69,7 @@ func loadCard(ns *Namespace, c CardD) *Card {
 		}
 		if k == "items" || k == "secondary_items" || k == "buttons" {
 			if card.nameComponentMap == nil {
-				card.nameComponentMap = make(map[string]interface{})
+				card.nameComponentMap = make(map[string]any)
 			}
 			fillNameComponentMap(card.nameComponentMap, v)
 		}
@@ -76,7 +79,7 @@ func loadCard(ns *Namespace, c CardD) *Card {
 	return card
 }
 
-func (c *Card) set(ks []string, v interface{}) {
+func (c *Card) set(ks []string, v any) {
 	switch len(ks) {
 	case 0: // should not get here; outer interpreter loop will clobber this card.
 		return
@@ -94,7 +97,7 @@ func (c *Card) set(ks []string, v interface{}) {
 			c.data[p] = v
 		}
 	default: // .foo.bar.baz = qux
-		var x interface{} = c.data
+		var x any = c.data
 
 		// By-name access.
 		if v, ok := c.nameComponentMap[ks[0]]; ok && len(ks) == 2 {
@@ -111,19 +114,19 @@ func (c *Card) set(ks []string, v interface{}) {
 	}
 }
 
-func set(ix interface{}, k string, v interface{}) {
+func set(ix any, k string, v any) {
 	switch x := ix.(type) {
 	case Buf:
 		x.set(k, v)
 	case Cur:
 		x.set(k, v)
-	case map[string]interface{}:
+	case map[string]any:
 		if v == nil {
 			delete(x, k)
 		} else {
 			x[k] = v
 		}
-	case []interface{}:
+	case []any:
 		if i, err := strconv.Atoi(k); err == nil {
 			if i >= 0 && i < len(x) {
 				x[i] = v
@@ -132,7 +135,7 @@ func set(ix interface{}, k string, v interface{}) {
 	}
 }
 
-func get(ix interface{}, k string) interface{} {
+func get(ix any, k string) any {
 	switch x := ix.(type) {
 	case Buf:
 		if r, ok := x.get(k); ok {
@@ -140,11 +143,11 @@ func get(ix interface{}, k string) interface{} {
 		}
 	case Cur:
 		return x.get(k)
-	case map[string]interface{}:
+	case map[string]any:
 		if v, ok := x[k]; ok {
 			return v
 		}
-	case []interface{}:
+	case []any:
 		if i, err := strconv.Atoi(k); err == nil {
 			if i >= 0 && i < len(x) {
 				return x[i]
@@ -155,7 +158,7 @@ func get(ix interface{}, k string) interface{} {
 }
 
 func (c *Card) dump() CardD {
-	data := make(map[string]interface{})
+	data := make(map[string]any)
 	var bufs []BufD
 	for k, iv := range c.data {
 		if v, ok := iv.(Buf); ok {
@@ -168,16 +171,16 @@ func (c *Card) dump() CardD {
 	return CardD{data, bufs}
 }
 
-func deepClone(ix interface{}) interface{} {
+func deepClone(ix any) any {
 	switch x := ix.(type) {
-	case map[string]interface{}:
-		m := make(map[string]interface{})
+	case map[string]any:
+		m := make(map[string]any)
 		for k, v := range x {
 			m[k] = deepClone(v)
 		}
 		return m
-	case []interface{}:
-		s := make([]interface{}, len(x))
+	case []any:
+		s := make([]any, len(x))
 		for i, v := range x {
 			s[i] = deepClone(v)
 		}
@@ -186,13 +189,15 @@ func deepClone(ix interface{}) interface{} {
 	return ix
 }
 
-func fillNameComponentMap(m map[string]interface{}, items interface{}) {
-	for _, v := range items.([]interface{}) {
+func fillNameComponentMap(m map[string]any, wrappedItems any) {
+	for _, wrappedItem := range wrappedItems.([]any) {
 		// This map always has a single key - wrapper so this is O(1) not O(n).
-		for _, v := range v.(map[string]interface{}) {
-			component := v.(map[string]interface{})
+		for _, item := range wrappedItem.(map[string]any) {
+			component := item.(map[string]any)
 			if name, ok := component["name"]; ok {
-				m[name.(string)] = v
+				if n, ok := name.(string); ok {
+					m[n] = item
+				}
 			}
 			if items, ok := component["items"]; ok {
 				fillNameComponentMap(m, items)
