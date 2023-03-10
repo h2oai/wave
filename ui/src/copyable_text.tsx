@@ -4,39 +4,45 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
-const css = stylesheet({
-  multiContainer: {
-    position: 'relative',
-    $nest: {
-      '&:hover > button': {
-        opacity: 1
+const
+  css = stylesheet({
+    multiContainer: {
+      position: 'relative',
+      $nest: {
+        '&:hover > button': {
+          opacity: 1
+        }
+      }
+    },
+    compactContainer: {
+      position: 'relative',
+    },
+    btnMultiline: {
+      opacity: 0,
+      transition: 'opacity .5s'
+    },
+    btn: {
+      minWidth: 'initial',
+      position: 'absolute',
+      top: 31,
+      right: 4,
+      width: 24,
+      height: 24
+    },
+    copiedBtn: {
+      background: cssVar('$green'),
+      $nest: {
+        '&:hover': {
+          background: cssVar('$green'),
+        }
       }
     }
-  },
-  compactContainer: {
-    position: 'relative',
-  },
-  btnMultiline: {
-    opacity: 0,
-    transition: 'opacity .5s'
-  },
-  btn: {
-    minWidth: 'initial',
-    position: 'absolute',
-    top: 31,
-    right: 4,
-    width: 24,
-    height: 24
-  },
-  copiedBtn: {
-    background: cssVar('$green'),
-    $nest: {
-      '&:hover': {
-        background: cssVar('$green'),
-      }
-    }
+  }),
+  fullHeightStyle = {
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
   }
-})
 
 /**
  * Create a copyable text component.
@@ -51,13 +57,14 @@ export interface CopyableText {
   name?: S
   /** True if the component should allow multi-line text entry. */
   multiline?: B
-  /** Custom height in px, e.g. '200px'. Requires `multiline` to be set. */
+  /** Custom height in px (e.g. '200px') or '1' to fill the remaining card space. Requires `multiline` to be set. */
   height?: S
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -81,13 +88,22 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return (
-    <div data-test={name} className={multiline ? css.multiContainer : css.compactContainer}>
+    <div
+      data-test={name}
+      className={multiline ? css.multiContainer : css.compactContainer}
+      style={heightStyle as React.CSSProperties}
+    >
       <Fluent.TextField
         componentRef={ref}
         value={value}
         label={label}
         multiline={multiline}
-        styles={{ root: { width: pc(100) }, fieldGroup: multiline && height ? { minHeight: height } : undefined }}
+        styles={{
+          root: { ...heightStyle, width: pc(100) },
+          wrapper: heightStyle,
+          fieldGroup: heightStyle || { minHeight: height },
+          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
+        }}
         readOnly
       />
       <Fluent.PrimaryButton
