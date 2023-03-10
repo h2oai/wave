@@ -666,6 +666,7 @@ const
   loadCard = (key: S, c: CardD): Card => {
     const
       data: Dict<any> = {},
+      componentCache: Dict<any> = {},
       changedB = box<B>(),
       ctor = (c: CardD) => {
         const { d, b } = c
@@ -674,10 +675,11 @@ const
           if (b && k.length > 0 && k[0] === '~') {
             const buf = loadBuf(b[v as U])
             if (buf) {
-              k = k.substr(1)
+              k = k.substring(1)
               v = buf
             }
           }
+          if (k === "items" || k === "secondary_items" || k === "buttons") fillComponentNameMap(componentCache, v)
           set([k], v)
         }
       },
@@ -698,9 +700,11 @@ const
           default:
             {
               let x: any = data
-              const p = ks[ks.length - 1]
-              for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
-              gset(x, p, v)
+              if (ks.length === 2 && componentCache[ks[0]]) x = componentCache[ks[0]]
+              // DEPRECATED: Access via page.items[idx].wrapper.prop.
+              else for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
+              const prop = ks[ks.length - 1]
+              gset(x, prop, v)
               return
             }
         }
@@ -729,6 +733,15 @@ const
       if (!isNaN(i) && i >= 0 && i < x.length) return x[i]
     }
     return null
+  },
+  fillComponentNameMap = (nameComponentMap: Dict<any>, items: any) => {
+    for (const item of items) {
+      const component = item[Object.keys(item)[0]]
+      if (component.name) nameComponentMap[component.name] = component
+      if (component.items) fillComponentNameMap(nameComponentMap, component.items)
+      if (component.secondary_items) fillComponentNameMap(nameComponentMap, component.secondary_items)
+      if (component.buttons) fillComponentNameMap(nameComponentMap, component.buttons)
+    }
   },
   newPage = (): XPage => {
     let dirty = false, dirties: Dict<B> = {}
@@ -828,7 +841,7 @@ export const
           handle(connectEvent)
           _backoff = 1
           const hash = window.location.hash
-          socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
+          socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substring(1) : hash}`) // protocol: t<sep>addr<sep>data
         }
         socket.onclose = () => {
           const refreshRate = refreshRateB()
