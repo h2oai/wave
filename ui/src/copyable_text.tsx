@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, S, U } from 'h2o-wave'
 import React from 'react'
-import { style, stylesheet } from 'typestyle'
+import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
 const
@@ -13,11 +13,6 @@ const
           opacity: 1
         }
       }
-    },
-    fullHeight: {
-      display: 'flex',
-      flexGrow: 1,
-      flexDirection: 'column',
     },
     compactContainer: {
       position: 'relative',
@@ -42,7 +37,12 @@ const
         }
       }
     }
-  })
+  }),
+  fullHeightStyle = {
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+  }
 
 /**
  * Create a copyable text component.
@@ -64,8 +64,7 @@ export interface CopyableText {
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
-    isHeightSet = multiline && height,
-    fullHeightStyle = isHeightSet && height === '1' ? css.fullHeight : '',
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -89,18 +88,21 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return (
-    <div data-test={name} className={multiline ? clas(css.multiContainer, fullHeightStyle) : css.compactContainer}>
+    <div
+      data-test={name}
+      className={multiline ? css.multiContainer : css.compactContainer}
+      style={heightStyle as React.CSSProperties}
+    >
       <Fluent.TextField
         componentRef={ref}
         value={value}
         label={label}
         multiline={multiline}
-        className={fullHeightStyle}
         styles={{
-          root: { width: pc(100) },
-          wrapper: fullHeightStyle,
-          field: clas(style({ resize: 'vertical' }), isHeightSet ? fullHeightStyle || style({ height: height }) : ''),
-          fieldGroup: isHeightSet ? fullHeightStyle || { minHeight: height } : ''
+          root: { ...heightStyle, width: pc(100) },
+          wrapper: heightStyle,
+          fieldGroup: heightStyle || { minHeight: height },
+          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
         }}
         readOnly
       />
