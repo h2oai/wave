@@ -1,48 +1,48 @@
 import * as Fluent from '@fluentui/react'
 import { B, S, U } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
+import { style, stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
-const css = stylesheet({
-  multiContainer: {
-    position: 'relative',
-    $nest: {
-      '&:hover > button': {
-        opacity: 1
+const
+  css = stylesheet({
+    multiContainer: {
+      position: 'relative',
+      $nest: {
+        '&:hover > button': {
+          opacity: 1
+        }
+      }
+    },
+    fullHeight: {
+      display: 'flex',
+      flexGrow: 1,
+      flexDirection: 'column',
+    },
+    compactContainer: {
+      position: 'relative',
+    },
+    btnMultiline: {
+      opacity: 0,
+      transition: 'opacity .5s'
+    },
+    btn: {
+      minWidth: 'initial',
+      position: 'absolute',
+      top: 31,
+      right: 4,
+      width: 24,
+      height: 24
+    },
+    copiedBtn: {
+      background: cssVar('$green'),
+      $nest: {
+        '&:hover': {
+          background: cssVar('$green'),
+        }
       }
     }
-  },
-  fullHeight: {
-    display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'column',
-    resize: 'none',
-  },
-  compactContainer: {
-    position: 'relative',
-  },
-  btnMultiline: {
-    opacity: 0,
-    transition: 'opacity .5s'
-  },
-  btn: {
-    minWidth: 'initial',
-    position: 'absolute',
-    top: 31,
-    right: 4,
-    width: 24,
-    height: 24
-  },
-  copiedBtn: {
-    background: cssVar('$green'),
-    $nest: {
-      '&:hover': {
-        background: cssVar('$green'),
-      }
-    }
-  }
-})
+  })
 
 /**
  * Create a copyable text component.
@@ -99,7 +99,7 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         styles={{
           root: { width: pc(100) },
           wrapper: fullHeightStyle,
-          field: isHeightSet ? fullHeightStyle || { height: height } : '',
+          field: clas(style({ resize: 'vertical' }), isHeightSet ? fullHeightStyle || style({ height: height }) : ''),
           fieldGroup: isHeightSet ? fullHeightStyle || { minHeight: height } : ''
         }}
         readOnly
