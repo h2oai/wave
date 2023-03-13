@@ -14,6 +14,7 @@ setup: ## Set up development dependencies
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 	cd tools/showcase && $(MAKE) setup
+	cd tools/vscode-extension && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
