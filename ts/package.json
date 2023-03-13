@@ -17,9 +17,6 @@
   ],
   "author": "Prithvi Prabhu <prithvi.prabhu@gmail.com>",
   "license": "Apache-2.0",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
   "devDependencies": {
     "terser": "^5.7.0",
     "typescript": "^4.2.4"
