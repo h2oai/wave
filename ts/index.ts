@@ -406,8 +406,7 @@ export function unpackByIdx<T = any>(data: any, idx: U): T {
     ? decodeStringByIdx(data, idx)
     : (isData(data))
       ? data.getTupByIdx(idx)
-      // TODO: Optimize - use for in. Object.entries() not supported in this ES version.
-      : data?.[idx] || data[Object.keys(data)?.[idx]]
+      : data?.[idx] || getObjectValueByIdx(data, idx)
 }
 
 const
@@ -482,19 +481,26 @@ const
     return data
   },
   decodeStringByIdx = (data: S, idx: U): any => {
-    if (data === '') return data
+    if (data === '') return
     const [t, d] = decodeType(data)
     try {
-      if (t === 'data') return JSON.parse(d)[idx]
       const [fields, items] = JSON.parse(d)
       if (Array.isArray(fields) && Array.isArray(items)) {
         if (t === 'rows') return rowToRowObj(items[idx], fields)
         if (t === 'cols' && items.length && items.length === fields.length) return colToRowObj(items, fields, idx)
       }
+      return JSON.parse(d)[idx]
     } catch (e) {
       console.error(e)
     }
-    return JSON.parse(d)[idx]
+  },
+  getObjectValueByIdx = <T = any>(data: any, idx: U): T | undefined => {
+    let i = 0
+    for (const k in data) {
+      if (i === idx) return data?.[k]
+      i++
+    }
+    return
   },
   keysOf = <T extends {}>(d: Dict<T>): S[] => {
     const a: S[] = []
@@ -505,7 +511,6 @@ const
     const a: T[] = []
     for (const k in d) a.push(d[k])
     return a
-
   },
   isMap = (x: any): B => {
     // for JSON data only: anything not null, string, number, bool, array
@@ -669,12 +674,8 @@ const
         return tup ? newCur(t, tup) : null
       },
       getTupByIdx = (i: U): Rec | null => {
-        let idx = 0
-        for (const k in tups) {
-          if (idx === i && tups.hasOwnProperty(k)) return t.make(tups[k])
-          idx++
-        }
-        return null
+        const tup = getObjectValueByIdx(tups, i)
+        return tup ? t.make(tup) : null
       },
       list = (): Rec[] => {
         const keys = keysOf(tups)
