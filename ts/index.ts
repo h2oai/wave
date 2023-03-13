@@ -393,7 +393,6 @@ export const
   }
 
 export function unpack<T>(data: any): T {
-  console.log(data)
   return (typeof data === 'string')
     ? decodeString(data)
     : (isData(data))
@@ -489,7 +488,7 @@ const
         if (t === 'rows') return rowToRowObj(items[idx], fields)
         if (t === 'cols' && items.length && items.length === fields.length) return colToRowObj(items, fields, idx)
       }
-      return JSON.parse(d)[idx]
+      return JSON.parse(d)?.[idx]
     } catch (e) {
       console.error(e)
     }

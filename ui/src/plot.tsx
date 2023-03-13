@@ -1042,8 +1042,8 @@ tooltipContainer.className = 'g2-tooltip'
 
 const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalData: Rec }) =>
   <>
-    {items.map(({ data, mappingData, color }: TooltipItem) => {
-      return Object.entries(unpackByIdx<any>(originalData, data.idx)).map(([key, item], idx) =>
+    {items.map(({ data, mappingData, color }: TooltipItem) =>
+      Object.entries(unpackByIdx<any>(originalData, data.idx)).map(([key, item], idx) =>
         <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
           <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
           <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
@@ -1053,7 +1053,6 @@ const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalDa
         </li>
 
       )
-    }
     )}
   </>
 
