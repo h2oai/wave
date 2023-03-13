@@ -393,6 +393,7 @@ export const
   }
 
 export function unpack<T>(data: any): T {
+  console.log(data)
   return (typeof data === 'string')
     ? decodeString(data)
     : (isData(data))
@@ -483,39 +484,17 @@ const
   decodeStringByIdx = (data: S, idx: U): any => {
     if (data === '') return data
     const [t, d] = decodeType(data)
-    switch (t) {
-      case 'data':
-        try {
-          const parsedData = JSON.parse(d)
-          return parsedData[idx]
-        } catch (e) {
-          console.error(e)
-        }
-        break
-      case 'rows':
-        try {
-          const [fields, rows] = JSON.parse(d)
-          if (!Array.isArray(fields)) return data // TODO:
-          if (!Array.isArray(rows)) return data
-          return rowToRowObj(rows[idx], fields)
-        } catch (e) {
-          console.error(e)
-        }
-        break
-      case 'cols':
-        try {
-          const [fields, columns] = JSON.parse(d)
-          if (!Array.isArray(fields)) return data
-          if (!Array.isArray(columns)) return data
-          if (columns.length !== fields.length) return data
-          if (columns.length === 0) return data
-          return colToRowObj(columns, fields, idx)
-        } catch (e) {
-          console.error(e)
-        }
-        break
+    try {
+      if (t === 'data') return JSON.parse(d)[idx]
+      const [fields, items] = JSON.parse(d)
+      if (Array.isArray(fields) && Array.isArray(items)) {
+        if (t === 'rows') return rowToRowObj(items[idx], fields)
+        if (t === 'cols' && items.length && items.length === fields.length) return colToRowObj(items, fields, idx)
+      }
+    } catch (e) {
+      console.error(e)
     }
-    return data
+    return JSON.parse(d)[idx]
   },
   keysOf = <T extends {}>(d: Dict<T>): S[] => {
     const a: S[] = []
