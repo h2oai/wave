@@ -24,6 +24,7 @@ tag: # Bump version
 	$(SED) -i -r -e 's/"version": .+/"version": "$(VERSION)",/' package.json
 
 publish:
+	$(MAKE) test
 	npm run publish
 
 clean:

@@ -1,0 +1,30 @@
+name: Release Wave VSCode extension
+
+on:
+  release:
+      types: [published]
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  publish:
+    name: Release Wave VSCode extension
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup
+        run: cd tools/vscode-extension && make setup
+
+      - name: Publish VSCode extension
+        run: make publish-vsc-extension
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
