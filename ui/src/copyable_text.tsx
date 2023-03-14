@@ -9,7 +9,7 @@ const
     multiContainer: {
       position: 'relative',
       $nest: {
-        '&:hover > button': {
+        '&:hover button': {
           opacity: 1
         }
       }
@@ -24,10 +24,11 @@ const
     btn: {
       minWidth: 'initial',
       position: 'absolute',
-      top: 31,
-      right: 4,
       width: 24,
-      height: 24
+      height: 24,
+      right: 0,
+      transform: 'translate(-4px, 4px)',
+      zIndex: 1,
     },
     copiedBtn: {
       background: cssVar('$green'),
@@ -88,30 +89,31 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return (
-    <div
+    <Fluent.TextField
       data-test={name}
+      componentRef={ref}
+      value={value}
+      label={label}
+      multiline={multiline}
+      onRenderLabel={() =>
+        <div style={{ position: 'relative' }}>
+          <Fluent.Label>{label}</Fluent.Label>
+          <Fluent.PrimaryButton
+            title='Copy to clipboard'
+            onClick={onClick}
+            iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
+            className={clas(css.btn, copied ? css.copiedBtn : '', multiline ? css.btnMultiline : '')}
+          />
+        </div>
+      }
       className={multiline ? css.multiContainer : css.compactContainer}
-      style={heightStyle as React.CSSProperties}
-    >
-      <Fluent.TextField
-        componentRef={ref}
-        value={value}
-        label={label}
-        multiline={multiline}
-        styles={{
-          root: { ...heightStyle, width: pc(100) },
-          wrapper: heightStyle,
-          fieldGroup: heightStyle || { minHeight: height },
-          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
-        }}
-        readOnly
-      />
-      <Fluent.PrimaryButton
-        title='Copy to clipboard'
-        onClick={onClick}
-        iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-        className={clas(css.btn, copied ? css.copiedBtn : '', multiline ? css.btnMultiline : '')}
-      />
-    </div>
+      styles={{
+        root: { ...heightStyle, width: pc(100) },
+        wrapper: heightStyle,
+        fieldGroup: heightStyle || { minHeight: height },
+        field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
+      }}
+      readOnly
+    />
   )
 }
