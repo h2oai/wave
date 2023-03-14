@@ -148,10 +148,11 @@ export const
           return date
         })
       },
-      onSelectTime = (time: D | null) => {
+      onChangeTime = (time: D | null) => {
         wave.args[m.name] = time ? formatDateToTimeString(time, '24') : null
-        if (m.trigger) wave.push()
+        setValue(time)
       },
+      onSelectTime = () => { if (m.trigger) wave.push() },
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
       onOpen = () => setTimeout(() => (document.activeElement as HTMLElement)?.blur()),
       onBlur = (ev: React.FocusEvent) => {
@@ -212,8 +213,8 @@ export const
                 value={value}
                 label={label}
                 open={isDialogOpen}
-                onChange={value => setValue(value as Date)}
-                onAccept={value => onSelectTime(value as Date)}
+                onChange={value => onChangeTime(value as Date)}
+                onAccept={onSelectTime}
                 onClose={() => setIsDialogOpen(false)}
                 ampm={hour_format === '12'}
                 showToolbar
