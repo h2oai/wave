@@ -483,17 +483,20 @@ const
     if (data === '') return
     const [t, d] = decodeType(data)
     try {
-      const [fields, items] = JSON.parse(d)
+      const parsedData = JSON.parse(d)
+      const [fields, items] = parsedData
       if (Array.isArray(fields) && Array.isArray(items)) {
         if (t === 'rows') return rowToRowObj(items[idx], fields)
         if (t === 'cols' && items.length && items.length === fields.length) return colToRowObj(items, fields, idx)
       }
-      return JSON.parse(d)?.[idx]
+      return parsedData?.[idx]
     } catch (e) {
       console.error(e)
     }
   },
   getObjectValueByIdx = <T = any>(data: any, idx: U): T | undefined => {
+    // const sortedKeys = Object.keys(data).sort()
+    // return data?.[sortedKeys[idx]]
     let i = 0
     for (const k in data) {
       if (i === idx) return data?.[k]
