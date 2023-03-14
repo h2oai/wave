@@ -46,7 +46,8 @@ export const XMenu = ({ model }: { model: Menu }) => {
     { name, items, icon, image, label } = model,
     ref = React.useRef<HTMLDivElement>(null),
     [isMenuHidden, setIsMenuHidden] = React.useState(true),
-    toggleMenu = () => setIsMenuHidden(isHidden => !isHidden)
+    toggleMenu = () => setIsMenuHidden(isHidden => !isHidden),
+    dismissMenu = () => setIsMenuHidden(true)
 
   return (
     // HACK: Marker css class.
@@ -58,7 +59,7 @@ export const XMenu = ({ model }: { model: Menu }) => {
         items={toCommands(items)}
         target={ref}
         hidden={isMenuHidden}
-        onDismiss={toggleMenu}
+        onDismiss={dismissMenu}
         isBeakVisible
         directionalHint={Fluent.DirectionalHint.bottomRightEdge}
         calloutProps={{ styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }}
