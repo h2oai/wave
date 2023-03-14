@@ -6,17 +6,6 @@ import { clas, cssVar, pc } from './theme'
 
 const
   css = stylesheet({
-    multiContainer: {
-      position: 'relative',
-      $nest: {
-        '&:hover button': {
-          opacity: 1
-        }
-      }
-    },
-    compactContainer: {
-      position: 'relative',
-    },
     btnMultiline: {
       opacity: 0,
       transition: 'opacity .5s'
@@ -37,12 +26,26 @@ const
           background: cssVar('$green'),
         }
       }
+    },
+    labelContainer: {
+      position: 'relative'
     }
   }),
-  fullHeightStyle = {
-    display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'column',
+  styles: Fluent.IStyle = {
+    fullHeightStyle: {
+      display: 'flex',
+      flexGrow: 1,
+      flexDirection: 'column',
+    },
+    textFieldRoot: {
+      position: 'relative',
+      width: pc(100)
+    },
+    textFieldMultiline: {
+      '&:hover button': {
+        opacity: 1
+      }
+    }
   }
 
 /**
@@ -65,7 +68,7 @@ export interface CopyableText {
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
-    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
+    heightStyle = multiline && height === '1' ? styles.fullHeightStyle : undefined,
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -96,7 +99,7 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       label={label}
       multiline={multiline}
       onRenderLabel={() =>
-        <div style={{ position: 'relative' }}>
+        <div className={css.labelContainer}>
           <Fluent.Label>{label}</Fluent.Label>
           <Fluent.PrimaryButton
             title='Copy to clipboard'
@@ -106,9 +109,12 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
           />
         </div>
       }
-      className={multiline ? css.multiContainer : css.compactContainer}
       styles={{
-        root: { ...heightStyle, width: pc(100) },
+        root: {
+          ...heightStyle,
+          ...styles.textFieldRoot,
+          ...multiline ? styles.textFieldMultiline : undefined
+        },
         wrapper: heightStyle,
         fieldGroup: heightStyle || { minHeight: height },
         field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
