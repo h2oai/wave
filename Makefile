@@ -112,7 +112,7 @@ build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
 	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
 	upx --brute waved
 
-build-py: ## Build h2o_wave wheel
+build-py: ## Build h2o_wave, h2o_lightwave and h2o_lightwave_web wheel.
 	cd py && $(MAKE) build
 
 build-docker:
@@ -156,7 +156,7 @@ release-nightly: build-ui ## Prepare nightly release builds.
 	$(MAKE) OS=darwin ARCH=amd64 release-os
 	$(MAKE) OS=darwin ARCH=arm64 release-os
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
-	$(MAKE) build-py
+	cd py && $(MAKE) build-wave
 	$(MAKE) build-r-nightly
 
 publish-release-s3:
