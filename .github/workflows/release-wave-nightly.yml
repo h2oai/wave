@@ -57,6 +57,7 @@ jobs:
           make setup-py
           make setup-vsc
           make setup-e2e
+          make build-server
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
       
