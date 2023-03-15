@@ -40,11 +40,28 @@ describe('Menu.tsx', () => {
             expect(queryByTestId(name)).not.toBeInTheDocument()
         })
 
-        // it('Opens menu when clicked', () => {
-        //     const { container, getByRole } = render(<XMenu model={menuProps} />)
-        //     expect(getByRole('menu')).not.toBeVisible()
-        //     fireEvent.click(container.querySelector('button')!)
-        //     expect(getByRole('menu')).toBeVisible()
-        // })
+        it('Opens menu when clicked', () => {
+            const { container, queryByRole } = render(<XMenu model={menuProps} />)
+            expect(queryByRole('menu')).not.toBeInTheDocument()
+            fireEvent.click(container.querySelector('button')!)
+            expect(queryByRole('menu')).toBeInTheDocument()
+        })
+
+        it('Closes menu on Esc key', () => {
+            const { container, queryByRole } = render(<XMenu model={menuProps} />)
+            expect(queryByRole('menu')).not.toBeInTheDocument()
+            fireEvent.click(container.querySelector('button')!)
+            expect(queryByRole('menu')).toBeInTheDocument()
+            fireEvent.keyDown(document, { key: 'Escape' })
+            // TODO: Figure out why this doesn't work
+            expect(queryByRole('menu')).not.toBeInTheDocument()
+        })
+
+        it('Does not open menu on Esc key', () => {
+            const { queryByRole } = render(<XMenu model={menuProps} />)
+            expect(queryByRole('menu')).not.toBeInTheDocument()
+            fireEvent.keyDown(document, { key: 'Escape' })
+            expect(queryByRole('menu')).not.toBeInTheDocument()
+        })
     })
 })
