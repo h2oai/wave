@@ -47,14 +47,11 @@ jobs:
 
       - name: Setup
         run: |
-          cd ui && make setup
-          cd py && make setup
-          cd tools/vscode-extension && make setup
-          cd e2e && make setup
+          make setup-ui build-ui
+          make setup-py
+          make setup-vsc
+          make setup-e2e
       
-      - name: Build UI
-        run: make build-ui
-
       - name: Unit Test
         run: |
           make test-ui-ci

@@ -10,11 +10,11 @@ SED=$(shell command -v gsed || command -v sed)
 all: clean setup build ## Setup and build everything
 
 setup: ## Set up development dependencies
-	cd ui && $(MAKE) setup
-	cd py && $(MAKE) setup
+	$(MAKE) setup-ui
+	$(MAKE) setup-py
+	$(MAKE) setup-vsc
 	cd tools/wavegen && $(MAKE) setup build
 	cd tools/showcase && $(MAKE) setup
-	cd tools/vscode-extension && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
@@ -28,6 +28,18 @@ setup-ts: ## Set up NPM package and symlinks
 	cd ts && npm ci && npm run build-dev
 	cd ts && npm link
 	cd ui && npm link h2o-wave
+
+setup-ui:
+	cd ui && $(MAKE) setup
+
+setup-py:
+	cd py && $(MAKE) setup
+
+setup-vsc:
+	cd tools/vscode-extension && $(MAKE) setup
+
+setup-e2e:
+	cd e2e && $(MAKE) setup
 
 .PHONY: build
 build: build-ui build-server ## Build everything
