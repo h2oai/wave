@@ -6,7 +6,7 @@ setup:
 	./venv/bin/playwright install
 
 test:
-	./venv/bin/python oidc_tests.py
+	./venv/bin/pytest
 
 clean:
 	rm -rf venv
