@@ -1,0 +1,11 @@
+
+setup:
+	python3 -m venv venv
+	./venv/bin/pip install -r requirements.txt
+	./venv/bin/python -m pip install --editable ../py/h2o_wave
+
+test:
+	./venv/bin/python oidc_tests.py
+
+clean:
+	rm -rf venv

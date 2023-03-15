@@ -19,7 +19,52 @@ env:
   TAG: "nightly"
 
 jobs:
+  test:
+    name: Test
+    strategy:
+          matrix:
+            os: [ubuntu-22.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.19.4'
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: zulu
+          java-version: 11
+          cache: gradle
+
+      - name: Setup
+        run: |
+          cd ui && make setup
+          cd py && make setup
+          cd tools/vscode-extension && make setup
+          cd e2e && make setup
+      
+      - name: Build UI
+        run: make build-ui
+
+      - name: Unit Test
+        run: |
+          make test-ui-ci
+          make test-py-ci
+          make test-vsc-ci
+          make test-intellij-ci
+          make test-e2e-ci
+    
   release:
+    needs: test
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
@@ -51,12 +96,6 @@ jobs:
         run: make release-nightly
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
-
-      - name: Unit Test
-        run: |
-          make test-ui-ci
-          make test-py-ci
-          make test-vsc-ci
 
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags
