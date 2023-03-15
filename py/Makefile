@@ -37,6 +37,11 @@ setup: ## Install dependencies
 	rm -f h2o_wave/h2o_wave/metadata.py
 	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
+setup-tests: ## Install dependencies for tests only
+	python3 -m venv venv
+	./venv/bin/python -m pip install --editable h2o_wave
+	./venv/bin/pip install httpx
+
 .PHONY: docs
 docs: ## Build API docs
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave

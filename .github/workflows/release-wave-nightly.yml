@@ -22,8 +22,8 @@ jobs:
   test:
     name: Test
     strategy:
-          matrix:
-            os: [ubuntu-22.04, macos-11]
+      matrix:
+        os: [ubuntu-22.04, macos-11]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
       - name: Setup
         run: |
           make setup-ui build-ui
-          make setup-py
+          make setup-py-tests
           make setup-vsc
           make setup-e2e
           make build-server

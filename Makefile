@@ -11,8 +11,8 @@ all: clean setup build ## Setup and build everything
 
 setup: ## Set up development dependencies
 	$(MAKE) setup-ui
-	$(MAKE) setup-py
 	$(MAKE) setup-vsc
+	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 	cd tools/showcase && $(MAKE) setup
 
@@ -32,8 +32,8 @@ setup-ts: ## Set up NPM package and symlinks
 setup-ui:
 	cd ui && $(MAKE) setup
 
-setup-py:
-	cd py && $(MAKE) setup
+setup-py-tests:
+	cd py && $(MAKE) setup-tests
 
 setup-vsc:
 	cd tools/vscode-extension && $(MAKE) setup
