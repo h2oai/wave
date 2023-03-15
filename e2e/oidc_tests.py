@@ -48,6 +48,7 @@ try:
         raise Exception('Failed to run test_keycloak.py')
 finally:
     if waved_p:
+        # TODO: Use psutil.
         os.kill(int(subprocess.check_output(['lsof', '-i' ':10101', '-t']).strip()), signal.SIGINT)
     if kc_p:
         kc_p.send_signal(signal.SIGINT)
