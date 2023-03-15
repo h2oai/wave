@@ -46,11 +46,8 @@ try:
     test_p.communicate()
     if test_p.returncode != 0:
         raise Exception('Failed to run test_keycloak.py')
-
-except Exception as e:
-    raise e
 finally:
     if waved_p:
-        os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
+        os.kill(int(subprocess.check_output(['lsof', '-i' ':10101', '-t']).strip()), signal.SIGINT)
     if kc_p:
         kc_p.send_signal(signal.SIGINT)
