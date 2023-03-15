@@ -14,7 +14,7 @@ kc_p.communicate()
 if kc_p.returncode != 0:
     raise Exception('Failed to build keycloak image')
 
-kc_p = subprocess.Popen(['docker', 'run', '--rm' '-p', '8080:8080', 'keycloak:latest'], cwd=cwd)
+kc_p = subprocess.Popen(['docker', 'run', '--rm', '-p', '8080:8080', 'keycloak:latest'], cwd=cwd)
 
 # Wait for keycloak to start
 time.sleep(10)
