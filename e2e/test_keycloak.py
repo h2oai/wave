@@ -4,9 +4,12 @@ import subprocess
 from playwright.sync_api import Page, expect
 
 
+python_executable = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'venv', 'bin', 'python')
+
+
 def test_login_flow(page: Page):
     cwd = os.path.join(os.path.dirname(__file__), '..', 'py', 'examples')
-    p = subprocess.Popen(['python', 'hello_world.py'], cwd=cwd)
+    p = subprocess.Popen([python_executable, 'hello_world.py'], cwd=cwd)
     p.communicate()
     assert p.returncode == 0
 
