@@ -145,12 +145,15 @@ export const
         setValue((prevValue) => {
           const date = new Date(prevValue!)
           date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
+          wave.args[m.name] = formatDateToTimeString(date, '24')
           return date
         })
       },
-      onChangeTime = (time: D | null) => {
-        wave.args[m.name] = time ? formatDateToTimeString(time, '24') : null
-        setValue(time)
+      onChangeTime = (time: unknown) => {
+        if (time instanceof Date) {
+          wave.args[m.name] = formatDateToTimeString(time, '24')
+          setValue(time)
+        }
       },
       onSelectTime = () => { if (m.trigger) wave.push() },
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
@@ -213,7 +216,7 @@ export const
                 value={value}
                 label={label}
                 open={isDialogOpen}
-                onChange={value => onChangeTime(value as Date)}
+                onChange={onChangeTime}
                 onAccept={onSelectTime}
                 onClose={() => setIsDialogOpen(false)}
                 ampm={hour_format === '12'}
