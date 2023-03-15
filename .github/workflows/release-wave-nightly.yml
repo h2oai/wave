@@ -44,6 +44,12 @@ jobs:
           distribution: zulu
           java-version: 11
           cache: gradle
+      
+    - name: Install make for windows
+        if: matrix.os == 'windows-2022'
+        uses: crazy-max/ghaction-chocolatey@v2
+        with:
+          args: install make
 
       - name: Setup
         run: |
