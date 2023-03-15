@@ -48,7 +48,7 @@ try:
         raise Exception('Failed to run test_keycloak.py')
 
 except Exception as e:
-    print(e)
+    raise e
 finally:
     if waved_p:
         os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
