@@ -31,21 +31,10 @@ const
       position: 'relative'
     }
   }),
-  styles: Fluent.IStyle = {
-    fullHeightStyle: {
-      display: 'flex',
-      flexGrow: 1,
-      flexDirection: 'column',
-    },
-    textFieldRoot: {
-      position: 'relative',
-      width: pc(100)
-    },
-    textFieldMultiline: {
-      '&:hover button': {
-        opacity: 1
-      }
-    }
+  fullHeightStyle = {
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
   }
 
 /**
@@ -68,7 +57,7 @@ export interface CopyableText {
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
-    heightStyle = multiline && height === '1' ? styles.fullHeightStyle : undefined,
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -96,7 +85,6 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       data-test={name}
       componentRef={ref}
       value={value}
-      label={label}
       multiline={multiline}
       onRenderLabel={() =>
         <div className={css.labelContainer}>
@@ -112,8 +100,8 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       styles={{
         root: {
           ...heightStyle,
-          ...styles.textFieldRoot,
-          ...multiline ? styles.textFieldMultiline : undefined
+          textFieldRoot: { position: 'relative', width: pc(100) },
+          textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined
         },
         wrapper: heightStyle,
         fieldGroup: heightStyle || { minHeight: height },
