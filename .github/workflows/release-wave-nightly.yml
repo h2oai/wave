@@ -24,6 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, macos-11]
+        py: [3.8]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -35,6 +36,10 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v2
         with:
           args: install make
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
 
       - uses: actions/setup-go@v1
         with:
