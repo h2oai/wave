@@ -1,9 +1,7 @@
 import signal
 import subprocess
 import unittest
-
-import requests
-from requests.adapters import HTTPAdapter, Retry
+import httpx
 
 from .test_expando import *
 from .test_python_server import *
@@ -19,9 +17,7 @@ if __name__ == '__main__':
 
         # Wait for server to boot up.
         base_url = env.get('H2O_WAVE_BASE_URL', '/')
-        s = requests.Session()
-        s.mount('http://', HTTPAdapter(max_retries=Retry(total=5, backoff_factor=2)))
-        res = s.get(f'http://localhost:10101{base_url}')
+        res = httpx.Client(transport=httpx.HTTPTransport(retries=5)).get(f'http://localhost:10101{base_url}')
 
         if res.status_code != 200:
             raise Exception('Failed to start waved')
