@@ -82,28 +82,27 @@ class Auth:
         """
         async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
             res = await http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id})
-
-            access_token = res.headers.get('Wave-Access-Token', None)
-            refresh_token = res.headers.get('Wave-Refresh-Token', None)
-            if access_token and refresh_token:
-                self.access_token = access_token
-                self.refresh_token = refresh_token
-            return access_token
+            return self.__extract_tokens(res.headers)
 
     def ensure_fresh_token_sync(self) -> Optional[str]:
         """
         Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs - synchronous version.
+        Prefer async version. Use sync only when absolutely necessary - will block your app, making it slow for all users.
         """
         with httpx.Client(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
             res = http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id})
+            return self.__extract_tokens(res.headers)
+      
 
-            access_token = res.headers.get('Wave-Access-Token', None)
-            refresh_token = res.headers.get('Wave-Refresh-Token', None)
-            if access_token and refresh_token:
-                self.access_token = access_token
-                self.refresh_token = refresh_token
-            return access_token
+    def __extract_tokens(self, headers: httpx.Headers):
+        access_token = headers.get('Wave-Access-Token', None)
+        refresh_token = headers.get('Wave-Refresh-Token', None)
 
+        if access_token and refresh_token:
+            self.access_token = access_token
+            self.refresh_token = refresh_token
+
+        return access_token
 
 class Query:
     """
