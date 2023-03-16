@@ -39,7 +39,9 @@ jobs:
 
       - name: Install docker for MacOS
         if: matrix.os == 'macos-12'
-        run: colima start
+        run: |
+          brew install docker
+          colima start
 
       - uses: actions/setup-python@v4
         with:
