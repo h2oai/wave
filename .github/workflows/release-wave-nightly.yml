@@ -18,6 +18,11 @@ env:
   VERSION: "nightly"
   TAG: "nightly"
 
+# Cancel a currently running workflow.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test
