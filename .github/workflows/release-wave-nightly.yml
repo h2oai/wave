@@ -23,7 +23,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-11]
+        os: [ubuntu-22.04, macos-12]
         py: [3.8]
     runs-on: ${{ matrix.os }}
     steps:
@@ -36,6 +36,10 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v2
         with:
           args: install make
+
+      - name: Install docker for MacOS
+        if: matrix.os == 'macos-12'
+        run: colima start
 
       - uses: actions/setup-python@v4
         with:
