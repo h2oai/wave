@@ -143,7 +143,7 @@ async def serve(q: Q):
     new_access_token = await q.auth.ensure_fresh_token()
 ```
 
-Synchronous version `ensure_fresh_token_sync` is also supported if your token provider is synchronous. However, using it is heavily discouraged due to its blocking nature - will make your Wave app super slow for all your users, thus only recommended for throwaway, single user PoCs. ***Async version is the preferred choice*** to mitigate this.
+Synchronous version `ensure_fresh_token_sync` is also supported if your token provider is synchronous. However, using it is heavily discouraged due to its blocking nature - will make the Wave app super slow for all users, thus only recommended for throwaway, single user PoCs. ***Async version is the preferred choice*** to mitigate this.
 
 ## App Server API Access Keys
 
