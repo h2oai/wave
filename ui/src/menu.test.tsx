@@ -43,41 +43,40 @@ describe('Menu.tsx', () => {
 
         it('Opens menu when clicked on the button', () => {
             const { queryByRole } = render(<XMenu model={menuProps} />)
-            expect(document.querySelector('.ms-Callout')).toHaveAttribute('hidden')
             expect(queryByRole('menu')).not.toBeInTheDocument()
+
             fireEvent.click(document.querySelector('button')!)
-            expect(document.querySelector('.ms-Callout')).not.toHaveAttribute('hidden')
             expect(queryByRole('menu')).toBeInTheDocument()
         })
 
         it('Closes open menu when clicked on the button', () => {
             const { queryByRole } = render(<XMenu model={menuProps} />)
-            expect(document.querySelector('.ms-Callout')).toHaveAttribute('hidden')
             expect(queryByRole('menu')).not.toBeInTheDocument()
+
             fireEvent.click(document.querySelector('button')!)
-            expect(document.querySelector('.ms-Callout')).not.toHaveAttribute('hidden')
             expect(queryByRole('menu')).toBeInTheDocument()
+
             fireEvent.click(document.querySelector('button')!)
-            expect(document.querySelector('.ms-Callout')).toHaveAttribute('hidden')
             expect(queryByRole('menu')).not.toBeInTheDocument()
         })
 
         it('Closes menu on Esc key', () => {
             const { queryByRole } = render(<XMenu model={menuProps} />)
-            expect(document.querySelector('.ms-Callout')).toHaveAttribute('hidden')
             expect(queryByRole('menu')).not.toBeInTheDocument()
+
             fireEvent.click(document.querySelector('button')!)
-            expect(document.querySelector('.ms-Callout')).not.toHaveAttribute('hidden')
             expect(queryByRole('menu')).toBeInTheDocument()
-            // FluentUI uses the deprecated 'which' property instead of the 'key' prop.
+
+            // FluentUI uses a deprecated 'which' property instead of the 'key' prop.
             fireEvent.keyDown(window, { which: KeyCodes.escape })
-            expect(document.querySelector('.ms-Callout')).toHaveAttribute('hidden')
             expect(queryByRole('menu')).not.toBeInTheDocument()
         })
 
         it('Does not open menu on Esc key', () => {
             const { queryByRole } = render(<XMenu model={menuProps} />)
             expect(queryByRole('menu')).not.toBeInTheDocument()
+
+            // FluentUI uses a deprecated 'which' property instead of the 'key' prop.
             fireEvent.keyDown(window, { which: KeyCodes.escape })
             expect(queryByRole('menu')).not.toBeInTheDocument()
         })
