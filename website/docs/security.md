@@ -143,6 +143,8 @@ async def serve(q: Q):
     new_access_token = await q.auth.ensure_fresh_token()
 ```
 
+Synchronous version `ensure_fresh_token_sync` is also supported if your token provider is synchronous. However, using it is heavily discouraged due to its blocking nature - will make your Wave app super slow for all your users, thus only recommended for throwaway, single user PoCs. ***Async version is the preferred choice*** to mitigate this.
+
 ## App Server API Access Keys
 
 Access to a Wave app is controlled via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617). The basic authentication username/password pair is automatically generated on app launch, and is visible only to the Wave server. You can manually override this behavior by setting the `$WAVE_APP_ACCESS_KEY_ID` / `$WAVE_APP_ACCESS_KEY_SECRET` environment variables (for development/testing only - not recommended in production).
