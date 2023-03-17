@@ -85,7 +85,7 @@ jobs:
           make test-vsc-ci
           make test-intellij-ci
         env:
-          KC_SLEEP: ${{ matrix.os == 'macos-12' && '45' || '15' }}"
+          KC_SLEEP: "${{ matrix.os == 'macos-12' && '45' || '15' }}"
     
   release:
     needs: test
