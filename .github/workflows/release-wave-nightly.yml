@@ -28,7 +28,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04, ubuntu-18.04, macos-12]
+        os: [ubuntu-22.04, ubuntu-20.04, macos-12]
         py: [3.8]
     runs-on: ${{ matrix.os }}
     steps:
