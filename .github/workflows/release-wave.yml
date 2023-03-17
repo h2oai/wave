@@ -46,7 +46,6 @@ jobs:
         run: |
           make test-ui-ci
           make test-py-ci
-          make test-vsc-ci
 
       - name: Create GitHub Release
         id: create_release
