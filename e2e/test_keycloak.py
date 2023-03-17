@@ -24,7 +24,7 @@ def setup_teardown():
     kc_p = subprocess.Popen(['docker', 'run', '--rm', '-p', '8080:8080', 'keycloak:latest'], cwd=cwd)
 
     # Wait for keycloak to start
-    time.sleep(15)
+    time.sleep(int(os.getenv('KC_SLEEP', 15)))
 
     waved_p = None
     try:
