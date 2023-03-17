@@ -44,7 +44,7 @@ def setup_teardown():
         env['H2O_WAVE_OIDC_CLIENT_ID'] = 'wave'
         env['H2O_WAVE_OIDC_CLIENT_SECRET'] = 'YBuOaJYbHYkKrtuFglPcBjp9JlwfIaQy'
 
-        waved_p = subprocess.Popen(args=args, cwd=waved_cwd, env=env)
+        waved_p = subprocess.Popen(args=args, cwd=waved_cwd, env=env, start_new_session=True)
 
         if waved_p.returncode is not None:
             raise Exception('Failed to start waved')
@@ -55,11 +55,12 @@ def setup_teardown():
 
         yield
     finally:
-        if waved_p:
-            # TODO: Use psutil.
-            os.kill(int(subprocess.check_output(['lsof', '-i' ':10101', '-t']).strip()), signal.SIGINT)
         if kc_p:
             kc_p.send_signal(signal.SIGINT)
+        if waved_p:
+            # TODO: Use psutil.
+            os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
+            # os.kill(int(subprocess.check_output(['lsof', '-i' ':10101', '-t']).strip()), signal.SIGINT)
 
 
 def test_login_flow(page: Page):
