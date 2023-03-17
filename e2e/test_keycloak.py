@@ -58,9 +58,7 @@ def setup_teardown():
         if kc_p:
             kc_p.send_signal(signal.SIGINT)
         if waved_p:
-            # TODO: Use psutil.
             os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
-            # os.kill(int(subprocess.check_output(['lsof', '-i' ':10101', '-t']).strip()), signal.SIGINT)
 
 
 def test_login_flow(page: Page):
