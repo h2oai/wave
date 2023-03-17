@@ -29,7 +29,7 @@ def setup_teardown():
     waved_p = None
     try:
         s = requests.Session()
-        s.mount('http://', HTTPAdapter(max_retries=Retry(total=5, backoff_factor=2)))
+        s.mount('http://', HTTPAdapter(max_retries=Retry(total=15, backoff_factor=2)))
         res = s.get('http://localhost:8080/realms/master/.well-known/openid-configuration')
 
         if res.status_code != 200 and res.status_code != 302:
