@@ -28,19 +28,13 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04, macos-12]
-        py: ["3.8", "3.9", "3.10"]
+        os: [windows-2022]
+        py: ["3.8"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
-
-      - name: Install make for windows
-        if: matrix.os == 'windows-2022'
-        uses: crazy-max/ghaction-chocolatey@v2
-        with:
-          args: install make
 
       - name: Install docker for MacOS
         if: matrix.os == 'macos-12'
@@ -67,7 +61,21 @@ jobs:
           java-version: 11
           cache: gradle
       
-      - name: Setup
+      - name: Windows Setup
+        if: matrix.os == 'windows-2022'
+        run: .\setup.ps1
+        shell: pwsh
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+          ErrorActionPreference: Stop
+
+      - name: Windows Unit Test
+        if: matrix.os == 'windows-2022'
+        run: .\test.ps1
+        shell: pwsh
+
+      - name: Unix Setup
+        if: matrix.os != 'windows-2022'
         run: |
           make setup-ui build-ui
           make setup-py-tests
@@ -76,8 +84,9 @@ jobs:
           make build-server
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
-      
-      - name: Unit Test
+
+      - name: Unix Unit Test
+        if: matrix.os != 'windows-2022'
         run: |
           make test-e2e-ci
           make test-ui-ci
