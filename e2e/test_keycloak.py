@@ -45,8 +45,12 @@ def setup_teardown():
         env['H2O_WAVE_OIDC_CLIENT_SECRET'] = 'YBuOaJYbHYkKrtuFglPcBjp9JlwfIaQy'
 
         waved_p = subprocess.Popen(args=args, cwd=waved_cwd, env=env)
-        time.sleep(2)
+
         if waved_p.returncode is not None:
+            raise Exception('Failed to start waved')
+
+        res = s.get(f'http://localhost:10101/{os.environ.get("H2O_WAVE_BASE_URL", "/")}')
+        if res.status_code != 200:
             raise Exception('Failed to start waved')
 
         yield
