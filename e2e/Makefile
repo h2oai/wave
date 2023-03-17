@@ -6,7 +6,7 @@ setup:
 	./venv/bin/playwright install
 
 test:
-	./venv/bin/pytest
+	./venv/bin/pytest -s
 
 clean:
 	rm -rf venv

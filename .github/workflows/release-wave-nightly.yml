@@ -79,11 +79,11 @@ jobs:
       
       - name: Unit Test
         run: |
+          make test-e2e-ci
           make test-ui-ci
           make test-py-ci
           make test-vsc-ci
           make test-intellij-ci
-          make test-e2e-ci
     
   release:
     needs: test
