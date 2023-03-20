@@ -67,14 +67,11 @@ jobs:
         shell: pwsh
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
-          ErrorActionPreference: Stop
 
       - name: Windows Unit Test
         if: matrix.os == 'windows-2022'
         run: .\test.ps1
         shell: pwsh
-        env:
-          ErrorActionPreference: Stop
 
       - name: Unix Setup
         if: matrix.os != 'windows-2022'

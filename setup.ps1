@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 # Setup UI.
 Set-Location ui
 npm ci
