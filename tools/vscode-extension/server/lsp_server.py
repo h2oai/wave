@@ -60,6 +60,9 @@ def completions(ls: WaveLanguageServer, params: Optional[CompletionParams] = Non
         if completion_type and hasattr(FileMetadata(), completion_type):
             completions: Set[str] = set()
             document_uri = params.text_document.uri.replace('file://', '')
+            # Replace Windows Disk letter if present.
+            if document_uri[1] == ':':
+                document_uri = document_uri[2:]
             visited = [document_uri]
             ls.store[document_uri] = fill_completion(file_content, False, ls.store.get(document_uri))
             get_completions_from_deps(ls, ls.store.get(document_uri), completion_type, completions, visited, prev_val)
@@ -82,6 +85,9 @@ def init(ls: WaveLanguageServer, params: Optional[InitializedParams]):
 def did_save(ls: WaveLanguageServer, params: DidSaveTextDocumentParams):
     if params.text:
         document_uri = params.text_document.uri.replace('file://', '')
+        # Replace Windows Disk letter if present.
+        if document_uri[1] == ':':
+            document_uri = document_uri[2:]
         orig_file = ls.store[document_uri]
         updated_file = fill_completion(params.text)
         # Remove parent dependencies if imports removed.
