@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-
 # Test e2e
 # Set-Location e2e
 # .\venv\Scripts\pytest -s
@@ -10,10 +8,7 @@ $ErrorActionPreference = "Stop"
 # Test Py.
 Set-Location py
 .\venv\Scripts\python -m tests
-# Print the last exit code.
-$LastExitCode
-
-if ($LastExitCode -ne 0 -and $LastExitCode -ne 0xc000013a) { exit $LastExitCode }
+if ($LastExitCode -ne 0) { exit $LastExitCode }
 $env:H2O_WAVE_BASE_URL= '/foo/'; .\venv\Scripts\python -m tests
 if ($LastExitCode -ne 0) { exit $LastExitCode }
 $env:H2O_WAVE_WAVED_DIR='..'; .\venv\Scripts\python -m tests

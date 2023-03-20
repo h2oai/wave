@@ -35,6 +35,10 @@ if __name__ == '__main__':
     finally:
         if waved_p:
             if platform.system() == 'Windows':
-                os.kill(waved_p.pid, signal.CTRL_C_EVENT)
+                o = subprocess.check_output(['netstat', '-ano'])
+                for line in o.decode('utf-8').splitlines():
+                    if '10101' in line and 'LISTEN' in line:
+                        subprocess.Popen(['taskkill', '/F', '/PID', line.split()[4]]).communicate()
+                        break
             else:
                 os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
