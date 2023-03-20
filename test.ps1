@@ -1,3 +1,4 @@
+# TODO: Think about how to run keycloak inside windows runner.
 # Test e2e
 # Set-Location e2e
 # .\venv\Scripts\pytest -s
