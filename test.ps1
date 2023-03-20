@@ -10,7 +10,9 @@ $ErrorActionPreference = "Stop"
 # Test Py.
 Set-Location py
 .\venv\Scripts\python -m tests
-# Check if exit code is ctrl c.
+# Print the last exit code.
+$LastExitCode
+
 if ($LastExitCode -ne 0 -and $LastExitCode -ne 0xc000013a) { exit $LastExitCode }
 $env:H2O_WAVE_BASE_URL= '/foo/'; .\venv\Scripts\python -m tests
 if ($LastExitCode -ne 0) { exit $LastExitCode }
