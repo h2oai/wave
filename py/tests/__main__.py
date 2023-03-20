@@ -34,4 +34,7 @@ if __name__ == '__main__':
             unittest.main()
     finally:
         if waved_p:
-            os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
+            if platform.system() == 'Windows':
+                os.kill(waved_p.pid, signal.CTRL_C_EVENT)
+            else:
+                os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
