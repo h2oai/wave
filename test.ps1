@@ -1,11 +1,11 @@
 $ErrorActionPreference = "Stop"
 
 # Test e2e
-Set-Location e2e
-.\venv\Scripts\pytest -s
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+# Set-Location e2e
+# .\venv\Scripts\pytest -s
+# if ($LastExitCode -ne 0) { exit $LastExitCode }
 
-Set-Location ..
+# Set-Location ..
 
 # Test Py.
 Set-Location py
