@@ -1,8 +1,10 @@
+import asyncio
 import signal
 import subprocess
 import unittest
 import httpx
 import os
+import platform
 
 from .test_expando import *
 from .test_python_server import *
@@ -25,7 +27,11 @@ if __name__ == '__main__':
             raise Exception('Failed to start waved')
 
         # Run the test suite
-        unittest.main()
+        if platform.system() == 'Windows':
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+            asyncio.run(unittest.main())
+        else:
+            unittest.main()
     finally:
         if waved_p:
             os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)
