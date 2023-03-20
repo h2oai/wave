@@ -9,9 +9,9 @@ Set-Location ..
 # Test Py.
 Set-Location py
 .\venv\Scripts\python -m tests
-$env:H2O_WAVE_BASE_URL= '/foo/'; ./venv/bin/python -m tests
-$env:H2O_WAVE_WAVED_DIR='..'; ./venv/bin/python -m tests
-$env:H2O_WAVE_WAVED_DIR='..'; $env:H2O_WAVE_BASE_URL='/foo/'; ./venv/bin/python -m tests
+$env:H2O_WAVE_BASE_URL= '/foo/'; .\venv\bin\python -m tests
+$env:H2O_WAVE_WAVED_DIR='..'; .\venv\bin\python -m tests
+$env:H2O_WAVE_WAVED_DIR='..'; $env:H2O_WAVE_BASE_URL='/foo/'; .\venv\bin\python -m tests
 
 Set-Location ..
 
