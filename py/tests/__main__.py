@@ -2,18 +2,20 @@ import signal
 import subprocess
 import unittest
 import httpx
+import os
 
 from .test_expando import *
 from .test_python_server import *
 from .test_python_server_async import *
 
 if __name__ == '__main__':
-    wave_server_process = None
+    waved_p = None
     try:
         env = os.environ.copy()
         # Turn off excessive logging.
         env['H2O_WAVE_NO_LOG'] = 't'
-        wave_server_process = subprocess.Popen(['make', 'run'], cwd='..', preexec_fn=os.setsid, env=env)
+        args = ['go', 'run', 'cmd/wave/main.go', '-web-dir', './ui/build', '-public-dir', '/assets/@./assets', '-proxy']
+        waved_p = subprocess.Popen(args, cwd='..', env=env, start_new_session=True)
 
         # Wait for server to boot up.
         base_url = env.get('H2O_WAVE_BASE_URL', '/')
@@ -25,5 +27,5 @@ if __name__ == '__main__':
         # Run the test suite
         unittest.main()
     finally:
-        if wave_server_process:
-            os.killpg(os.getpgid(wave_server_process.pid), signal.SIGTERM)
+        if waved_p:
+            os.killpg(os.getpgid(waved_p.pid), signal.SIGTERM)

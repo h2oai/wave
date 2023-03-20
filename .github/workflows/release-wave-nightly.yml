@@ -73,6 +73,8 @@ jobs:
         if: matrix.os == 'windows-2022'
         run: .\test.ps1
         shell: pwsh
+        env:
+          ErrorActionPreference: Stop
 
       - name: Unix Setup
         if: matrix.os != 'windows-2022'
@@ -89,7 +91,6 @@ jobs:
         if: matrix.os != 'windows-2022'
         run: |
           make test-e2e-ci
-          make test-ui-ci
           make test-py-ci
           make test-vsc-ci
           make test-intellij-ci
@@ -124,6 +125,10 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           working-directory: ./r
+
+      # UI unit tests are not OS-dependent, so no need to run them in the Test matrix job.
+      - name: Unit test
+        run: make test-ui-ci
 
       - name: Build Release
         run: make release-nightly

@@ -4,14 +4,13 @@ Set-Location e2e
 
 Set-Location ..
 
-# Test UI.
-Set-Location ui
-npm run test:ci
-
-Set-Location ..
-
 # Test Py.
 Set-Location py
+# TODO: Convert to powershell.
+# echo "Testing using BASE_URL" && H2O_WAVE_BASE_URL="/foo/" ./venv/bin/python -m tests
+# echo "Testing using LOCAL UPLOAD" && H2O_WAVE_WAVED_DIR=".." ./venv/bin/python -m tests
+# echo "Testing using LOCAL UPLOAD AND BASE URL" && H2O_WAVE_WAVED_DIR=".." H2O_WAVE_BASE_URL="/foo/" ./venv/bin/python -m tests
+
 .\venv\Scripts\python -m tests
 
 Set-Location ..
