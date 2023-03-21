@@ -508,6 +508,83 @@ describe('Table.tsx', () => {
       fireEvent.click(sortCol1)
       expect(getAllByRole('gridcell')[0].textContent).toBe('aa')
     })
+
+    it('Keep sort order when applying filters - no groups', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: '3', cells: ['c', 'closed'] },
+          { name: '4', cells: ['d', 'closed'] },
+          { name: '1', cells: ['a', 'open'] },
+          { name: '2', cells: ['b', 'open'] }
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', filterable: true },
+        ],
+      }
+      const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
+
+      const [sortCol] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
+
+      fireEvent.click(sortCol)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('c')
+
+      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(getAllByText('open')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
+    it('Keep sort order when applying filters - groups', () => {
+      tableProps = {
+        ...tableProps,
+        groupable: true,
+        rows: [
+          { name: '4', cells: ['d', 'closed'] },
+          { name: '3', cells: ['c', 'closed'] },
+          { name: '2', cells: ['b', 'open'] },
+          { name: '1', cells: ['a', 'open'] }
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', filterable: true },
+        ],
+      }
+      const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('b')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('a')
+
+      const [sortCol] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
+      fireEvent.click(sortCol)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('a')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('b')
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getAllByText('closed')[3].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      // TODO: These should not exist - add correct checks
+      expect(getAllByRole('gridcell')[11].textContent).not.toBe('a')
+      expect(getAllByRole('gridcell')[14].textContent).not.toBe('b')
+    })
   })
 
   describe('search', () => {
