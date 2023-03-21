@@ -706,18 +706,41 @@ export const
       [groupByKey, setGroupByKey] = React.useState('*'),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
+      sortRef = React.useRef<{ column: WaveColumn, sortAsc: B } | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
+      sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
+        sortRef.current = { column, sortAsc }
+        if (m.pagination && m.events?.includes('sort')) {
+          wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
+          setCurrentPage(1)
+          return
+        }
+        setGroups(groups => {
+          if (groups) {
+            setFilteredItems(filteredItems => [...groups]
+              // sorts groups by startIndex to match its order in filteredItems
+              .sort((group1, group2) => group1.startIndex - group2.startIndex)
+              .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
+                [] as any[]) || [])
+          }
+          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
+          return groups
+        })
+      }, [m.events, m.name, m.pagination]),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
-        // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-        setFilteredItems(
-          selectedFilters
+        setFilteredItems(() => {
+          // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+          const nextFilteredItems = selectedFilters
             ? items.filter(item => Object.keys(selectedFilters)
               .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
             )
             : items
-        )
+          // If sort is applied, re-apply it on filtered items
+          const { column, sortAsc } = sortRef.current || {}
+          return column && sortAsc !== undefined ? nextFilteredItems.sort(sortingF(column, sortAsc)) : nextFilteredItems
+        })
       }, [items]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
@@ -871,6 +894,7 @@ export const
         setGroups(undefined)
         if (m.groups) initGroups()
         expandedRefs.current = {}
+        sortRef.current = null
         setGroupByKey('*')
         tableRef.current?.resetSortIcons()
 
@@ -903,24 +927,6 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
-      sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
-        if (m.pagination && m.events?.includes('sort')) {
-          wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
-          setCurrentPage(1)
-          return
-        }
-        setGroups(groups => {
-          if (groups) {
-            setFilteredItems(filteredItems => [...groups]
-              // sorts groups by startIndex to match its order in filteredItems
-              .sort((group1, group2) => group1.startIndex - group2.startIndex)
-              .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
-                [] as any[]) || [])
-          }
-          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
-          return groups
-        })
-      }, [m.events, m.name, m.pagination]),
       setFiltersInBulk = React.useCallback((colKey: S, filters: S[]) => {
         setSelectedFilters(selectedFilters => {
           const newFilters = {
