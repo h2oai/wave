@@ -93,13 +93,13 @@ test-py-ci: ## Run Python unit tests in CI mode
 test-vsc-ci: ## Run Python unit tests in CI mode
 	cd tools/vscode-extension && $(MAKE) test
 
-test-intellij-ci: ## Run UI unit tests
+test-intellij-ci:
 	cd tools/intellij-plugin && $(MAKE) test
 
-test-e2e-ci: ## Run UI unit tests
+test-e2e-ci:
 	cd e2e && $(MAKE) test
 
-test-e2e-macos-ci: ## Run UI unit tests
+test-e2e-macos-ci:
 	cd e2e && $(MAKE) test-macos
 
 test-ui-watch: ## Run UI unit tests
