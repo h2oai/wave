@@ -10,7 +10,7 @@ cwd = os.path.join(os.path.dirname(__file__))
 wave_executable = os.path.join(cwd, 'venv', 'bin', 'wave')
 
 
-def start_waved(env: Optional[Dict[str, str]] = None) -> subprocess.Popen[bytes]:
+def start_waved(env: Optional[Dict[str, str]] = None):
     s = requests.Session()
     s.mount('http://', HTTPAdapter(max_retries=Retry(total=15, backoff_factor=2)))
 
