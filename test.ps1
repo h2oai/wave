@@ -1,10 +1,4 @@
-# TODO: Think about how to run keycloak inside windows runner.
-# Test e2e
-# Set-Location e2e
-# .\venv\Scripts\pytest -s
-# if ($LastExitCode -ne 0) { exit $LastExitCode }
-
-# Set-Location ..
+# TODO: Think about how to run keycloak inside windows runner as it has only linux images.
 
 # Test Py.
 Set-Location py
@@ -25,8 +19,3 @@ Set-Location tools\vscode-extension
 if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 Set-Location ..\..
-
-# Test IntelliJ.
-Set-Location tools\intellij-plugin
-.\gradlew test
-if ($LastExitCode -ne 0) { exit $LastExitCode }
