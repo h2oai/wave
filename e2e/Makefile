@@ -5,6 +5,13 @@ setup:
 	./venv/bin/python -m pip install --editable ../py/h2o_wave
 	./venv/bin/playwright install
 
+run-kc:
+	docker build -t keycloak -f keycloak.dockerfile . 
+	docker run --rm -p 8080:8080 keycloak:latest
+
+test-dev:
+	 SKIP_KC=1 ./venv/bin/pytest -s
+
 test:
 	./venv/bin/pytest -s --browser firefox --browser chromium
 
