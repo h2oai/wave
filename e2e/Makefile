@@ -6,7 +6,7 @@ setup:
 	./venv/bin/playwright install
 
 test:
-	./venv/bin/pytest -s
+	./venv/bin/pytest -s --browser webkit --browser firefox --browser chromium
 
 clean:
 	rm -rf venv
