@@ -23,6 +23,7 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
+# TODO: Use composite action to make the configuration more DRY.
 jobs:
   test-linux:
     name: Test Linux
@@ -48,13 +49,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: 11
-          cache: gradle
-      
       - name: Setup
         run: |
           make setup-ui build-ui
@@ -94,13 +88,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: 11
-          cache: gradle
-      
       - name: Setup
         run: .\setup.ps1
         shell: pwsh
@@ -139,13 +126,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: 11
-          cache: gradle
-      
       - name: Setup
         run: |
           make setup-ui build-ui
