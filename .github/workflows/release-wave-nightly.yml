@@ -24,11 +24,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test
+  test-linux:
+    name: Test Linux
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04, macos-12, windows-2022]
+        os: [ubuntu-20.04, ubuntu-22.04]
         py: ["3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.os }}
     steps:
@@ -36,8 +36,93 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Install docker for MacOS
-        if: matrix.os == 'macos-12'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+          cache: gradle
+      
+      - name: Setup
+        run: |
+          make setup-ui build-ui
+          make setup-py-tests
+          make setup-vsc
+          make setup-e2e
+          make build-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Test
+        run: |
+          make test-e2e-ci
+          make test-py-ci
+          make test-vsc-ci
+
+  test-win:
+    name: Test Windows
+    strategy:
+      matrix:
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+          cache: gradle
+      
+      - name: Setup
+        run: .\setup.ps1
+        shell: pwsh
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Test
+        run: .\test.ps1
+        shell: pwsh
+
+  test-macos:
+    name: Test MacOS
+    strategy:
+      matrix:
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Install docker
         run: |
           brew install docker
           colima start
@@ -61,20 +146,7 @@ jobs:
           java-version: 11
           cache: gradle
       
-      - name: Windows Setup
-        if: matrix.os == 'windows-2022'
-        run: .\setup.ps1
-        shell: pwsh
-        env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
-
-      - name: Windows Unit Test
-        if: matrix.os == 'windows-2022'
-        run: .\test.ps1
-        shell: pwsh
-
-      - name: Unix Setup
-        if: matrix.os != 'windows-2022'
+      - name: Setup
         run: |
           make setup-ui build-ui
           make setup-py-tests
@@ -84,18 +156,17 @@ jobs:
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
 
-      - name: Unix Unit Test
-        if: matrix.os != 'windows-2022'
+      - name: Test
         run: |
           make test-e2e-ci
           make test-py-ci
           make test-vsc-ci
           make test-intellij-ci
         env:
-          KC_SLEEP: "${{ matrix.os == 'macos-12' && '45' || '15' }}"
+          KC_SLEEP: 45
     
   release:
-    needs: test
+    needs: [test-linux, test-win, test-macos]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
@@ -123,9 +194,11 @@ jobs:
         with:
           working-directory: ./r
 
-      # UI unit tests are not OS-dependent, so no need to run them in the Test matrix job.
+      # These unit tests are not OS-dependent, so no need to run them in the dedicated Test jobs.
       - name: Unit test
-        run: make test-ui-ci
+        run: |
+          make test-ui-ci
+          make test-intellij-ci
 
       - name: Build Release
         run: make release-nightly
