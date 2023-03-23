@@ -18,8 +18,134 @@ env:
   VERSION: "nightly"
   TAG: "nightly"
 
+# Cancel a currently running workflow.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+# TODO: Use composite action to make the configuration more DRY.
 jobs:
+  test-linux:
+    name: Test Linux
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup
+        run: |
+          make setup-ui build-ui
+          make setup-py-tests
+          make setup-vsc
+          make setup-e2e
+          make build-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Test
+        run: |
+          make test-e2e-ci
+          make test-py-ci
+          make test-vsc-ci
+
+  test-win:
+    name: Test Windows
+    strategy:
+      matrix:
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup
+        run: .\setup.ps1
+        shell: pwsh
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Test
+        run: .\test.ps1
+        shell: pwsh
+
+  test-macos:
+    name: Test MacOS
+    strategy:
+      matrix:
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Install docker
+        run: |
+          brew install docker
+          colima start
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup
+        run: |
+          make setup-ui build-ui
+          make setup-py-tests
+          make setup-vsc
+          make setup-e2e
+          make build-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Test
+        run: |
+          make test-e2e-macos-ci
+          make test-py-ci
+          make test-vsc-ci
+        env:
+          KC_SLEEP: 45
+    
   release:
+    needs: [test-linux, test-win, test-macos]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
@@ -31,7 +157,7 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v4
         with:
           go-version: '1.19.4'
       
@@ -47,16 +173,16 @@ jobs:
         with:
           working-directory: ./r
 
+      # These unit tests are not OS-dependent, so no need to run them in the dedicated Test jobs.
+      - name: Unit test
+        run: |
+          make test-ui-ci
+          make test-intellij-ci
+
       - name: Build Release
         run: make release-nightly
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
-
-      - name: Unit Test
-        run: |
-          make test-ui-ci
-          make test-py-ci
-          make test-vsc-ci
 
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags

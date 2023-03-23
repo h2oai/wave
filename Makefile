@@ -10,11 +10,11 @@ SED=$(shell command -v gsed || command -v sed)
 all: clean setup build ## Setup and build everything
 
 setup: ## Set up development dependencies
-	cd ui && $(MAKE) setup
+	$(MAKE) setup-ui
+	$(MAKE) setup-vsc
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 	cd tools/showcase && $(MAKE) setup
-	cd tools/vscode-extension && $(MAKE) setup
 
 clean: ## Clean
 	rm -rf build
@@ -28,6 +28,18 @@ setup-ts: ## Set up NPM package and symlinks
 	cd ts && npm ci && npm run build-dev
 	cd ts && npm link
 	cd ui && npm link h2o-wave
+
+setup-ui:
+	cd ui && $(MAKE) setup
+
+setup-py-tests:
+	cd py && $(MAKE) setup-tests
+
+setup-vsc:
+	cd tools/vscode-extension && $(MAKE) setup
+
+setup-e2e:
+	cd e2e && $(MAKE) setup
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -80,6 +92,15 @@ test-py-ci: ## Run Python unit tests in CI mode
 
 test-vsc-ci: ## Run Python unit tests in CI mode
 	cd tools/vscode-extension && $(MAKE) test
+
+test-intellij-ci:
+	cd tools/intellij-plugin && $(MAKE) test
+
+test-e2e-ci:
+	cd e2e && $(MAKE) test
+
+test-e2e-macos-ci:
+	cd e2e && $(MAKE) test-macos
 
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
