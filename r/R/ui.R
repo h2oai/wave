@@ -1171,6 +1171,40 @@ ui_color_picker <- function(
   return(.o)
 }
 
+#' No documentation available.
+#'
+#' @param name An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+#' @param label The text displayed for this command.
+#' @param caption The caption for this command (typically a tooltip).
+#' @param icon The icon to be displayed for this command.
+#' @param value Data associated with this command, if any.
+#' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
+#' @return A ButtonCommand instance.
+#' @export
+ui_button_command <- function(
+  name,
+  label = NULL,
+  caption = NULL,
+  icon = NULL,
+  value = NULL,
+  path = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("path", "character", path)
+  .o <- list(
+    name=name,
+    label=label,
+    caption=caption,
+    icon=icon,
+    value=value,
+    path=path)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveButtonCommand"))
+  return(.o)
+}
+
 #' Create a button.
 #' 
 #' Buttons are best used to enable a user to commit a change or complete steps in a task.
@@ -1200,6 +1234,7 @@ ui_color_picker <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
+#' @param commands The menu with button actions.
 #' @return A Button instance.
 #' @export
 ui_button <- function(
@@ -1214,7 +1249,8 @@ ui_button <- function(
   width = NULL,
   visible = NULL,
   tooltip = NULL,
-  path = NULL) {
+  path = NULL,
+  commands = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
@@ -1227,6 +1263,7 @@ ui_button <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("path", "character", path)
+  .guard_vector("commands", "WaveButtonCommand", commands)
   .o <- list(button=list(
     name=name,
     label=label,
@@ -1239,7 +1276,8 @@ ui_button <- function(
     width=width,
     visible=visible,
     tooltip=tooltip,
-    path=path))
+    path=path,
+    commands=commands))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

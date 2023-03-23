@@ -21,6 +21,21 @@ import { cssVar, formItemWidth, padding } from './theme'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
 
+interface ButtonCommand {
+  /** An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed. */
+  name: Id
+  /** The text displayed for this command. */
+  label?: S
+  /** The caption for this command (typically a tooltip). */
+  caption?: S
+  /** The icon to be displayed for this command. */
+  icon?: S
+  /** Data associated with this command, if any. */
+  value?: S
+  /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
+  path?: S
+}
+
 /**
  * Create a button.
  *
@@ -64,6 +79,8 @@ export interface Button {
   tooltip?: S
   /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
+  /** The menu with button actions. */
+  commands?: ButtonCommand[]
 }
 
 /** Create a set of buttons laid out horizontally. */
@@ -114,9 +131,9 @@ const
   }
 
 const
-  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path } }: { model: Button }) => {
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, commands } }: { model: Button }) => {
     const
-      onClick = (ev: any) => {
+      handleOnClick = (name: Id, value?: S, path?: S) => (ev: any) => {
         ev.stopPropagation()
         if (path) window.open(path, "_blank")
         else if (name.startsWith('#')) window.location.hash = name.substring(1)
@@ -125,6 +142,7 @@ const
           wave.push()
         }
       },
+      onClick = handleOnClick(name, value, path),
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
         root: {
@@ -137,7 +155,12 @@ const
           display: 'flex',
           alignItems: 'center'
         }
-      }
+      },
+      menuItems = commands
+        ? commands.map(({ name, label, caption, icon, value, path }) =>
+          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value, onClick: handleOnClick(name, value, path) })
+        )
+        : undefined
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = false }, [])
@@ -145,7 +168,14 @@ const
     if (link) {
       return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
     }
-    const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
+    const btnProps: Fluent.IButtonProps = {
+      text: label,
+      disabled,
+      onClick,
+      styles,
+      iconProps: { iconName: icon },
+      menuProps: menuItems ? { items: menuItems } : undefined
+    }
     if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
 
     return caption?.length

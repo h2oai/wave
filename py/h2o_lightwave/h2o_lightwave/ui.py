@@ -985,6 +985,36 @@ def color_picker(
     ))
 
 
+def button_command(
+        name: str,
+        label: Optional[str] = None,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        value: Optional[str] = None,
+        path: Optional[str] = None,
+) -> ButtonCommand:
+    """No documentation available.
+
+    Args:
+        name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+        label: The text displayed for this command.
+        caption: The caption for this command (typically a tooltip).
+        icon: The icon to be displayed for this command.
+        value: Data associated with this command, if any.
+        path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
+    Returns:
+        A `h2o_wave.types.ButtonCommand` instance.
+    """
+    return ButtonCommand(
+        name,
+        label,
+        caption,
+        icon,
+        value,
+        path,
+    )
+
+
 def button(
         name: str,
         label: Optional[str] = None,
@@ -998,6 +1028,7 @@ def button(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         path: Optional[str] = None,
+        commands: Optional[List[ButtonCommand]] = None,
 ) -> Component:
     """Create a button.
 
@@ -1029,6 +1060,7 @@ def button(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
+        commands: The menu with button actions.
     Returns:
         A `h2o_wave.types.Button` instance.
     """
@@ -1045,6 +1077,7 @@ def button(
         visible,
         tooltip,
         path,
+        commands,
     ))
 
 
