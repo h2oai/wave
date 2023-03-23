@@ -62,6 +62,10 @@ For wave app machine, the following needs to be set:
 Do not specify addresses with `https` protocol if you haven't configured Wave server and Wave app to use TLS.
 :::
 
-## AWS EC2 deployment
+## AWS EC2
 
-See the detailed [blog post](https://medium.com/@gfousas/deploy-a-wave-app-on-an-aws-ec2-instance-1fe508f36ef) by [Greg Fousas](https://github.com/fousasg).
+See a step-by-step [blog post](https://medium.com/@gfousas/deploy-a-wave-app-on-an-aws-ec2-instance-1fe508f36ef) by [Greg Fousas](https://github.com/fousasg).
+
+## Hugging Face Spaces
+
+See a step-by-step [blog post](https://medium.com/@unusualcode/deploy-a-wave-app-to-hugging-face-spaces-8b9a2bda5e46).
