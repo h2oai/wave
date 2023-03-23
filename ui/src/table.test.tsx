@@ -514,9 +514,8 @@ describe('Table.tsx', () => {
         ...tableProps,
         rows: [
           { name: '3', cells: ['c', 'closed'] },
-          { name: '4', cells: ['d', 'closed'] },
-          { name: '1', cells: ['a', 'open'] },
-          { name: '2', cells: ['b', 'open'] }
+          { name: '2', cells: ['b', 'open'] },
+          { name: '1', cells: ['a', 'open'] }
         ],
         columns: [
           { name: 'colname1', label: 'Col1', sortable: true },
@@ -525,17 +524,17 @@ describe('Table.tsx', () => {
       }
       const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
 
-      const [sortCol] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
-
-      fireEvent.click(sortCol)
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
 
+      // Open filter menu
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
 
-      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
+      fireEvent.click(getAllByText('closed')[1].parentElement as HTMLDivElement)
       expect(getAllByRole('gridcell')[0].textContent).toBe('c')
 
-      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
+      fireEvent.click(getAllByText('closed')[1].parentElement as HTMLDivElement)
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
 
       fireEvent.click(getAllByText('open')[2].parentElement as HTMLDivElement)
@@ -568,22 +567,22 @@ describe('Table.tsx', () => {
       expect(getAllByRole('gridcell')[11].textContent).toBe('b')
       expect(getAllByRole('gridcell')[14].textContent).toBe('a')
 
-      const [sortCol] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
-      fireEvent.click(sortCol)
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
 
       expect(getAllByRole('gridcell')[3].textContent).toBe('c')
       expect(getAllByRole('gridcell')[6].textContent).toBe('d')
       expect(getAllByRole('gridcell')[11].textContent).toBe('a')
       expect(getAllByRole('gridcell')[14].textContent).toBe('b')
 
+      // Open filter menu
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
 
       fireEvent.click(getAllByText('closed')[3].parentElement as HTMLDivElement)
       expect(getAllByRole('gridcell')[3].textContent).toBe('c')
       expect(getAllByRole('gridcell')[6].textContent).toBe('d')
-      // TODO: These should not exist - add correct checks
-      expect(getAllByRole('gridcell')[11].textContent).not.toBe('a')
-      expect(getAllByRole('gridcell')[14].textContent).not.toBe('b')
+      expect(getAllByRole('gridcell')[11]).toBeUndefined()
+      expect(getAllByRole('gridcell')[14]).toBeUndefined()
     })
   })
 
