@@ -138,7 +138,7 @@ jobs:
 
       - name: Test
         run: |
-          make test-e2e-ci
+          make test-e2e-macos-ci
           make test-py-ci
           make test-vsc-ci
         env:
