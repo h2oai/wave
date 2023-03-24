@@ -985,14 +985,15 @@ def color_picker(
     ))
 
 
-def button_command(
+def button_choice(
         name: str,
         label: Optional[str] = None,
         caption: Optional[str] = None,
         icon: Optional[str] = None,
         value: Optional[str] = None,
         path: Optional[str] = None,
-) -> ButtonCommand:
+        disabled: Optional[bool] = None,
+) -> ButtonChoice:
     """No documentation available.
 
     Args:
@@ -1002,16 +1003,18 @@ def button_command(
         icon: The icon to be displayed for this command.
         value: Data associated with this command, if any.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
+        disabled: True if the command should be disabled.
     Returns:
-        A `h2o_wave.types.ButtonCommand` instance.
+        A `h2o_wave.types.ButtonChoice` instance.
     """
-    return ButtonCommand(
+    return ButtonChoice(
         name,
         label,
         caption,
         icon,
         value,
         path,
+        disabled,
     )
 
 
@@ -1028,7 +1031,7 @@ def button(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         path: Optional[str] = None,
-        commands: Optional[List[ButtonCommand]] = None,
+        choices: Optional[List[ButtonChoice]] = None,
 ) -> Component:
     """Create a button.
 
@@ -1060,7 +1063,7 @@ def button(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-        commands: The menu with button actions. Ignored if `link` is True.
+        choices: The menu with button actions. Ignored if `link` is True.
     Returns:
         A `h2o_wave.types.Button` instance.
     """
@@ -1077,7 +1080,7 @@ def button(
         visible,
         tooltip,
         path,
-        commands,
+        choices,
     ))
 
 

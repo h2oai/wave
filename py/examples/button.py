@@ -22,12 +22,13 @@ async def serve(q: Q):
             ui.text(f'button_with_icon={q.args.button_with_icon}'),
             ui.text(f'icon_button={q.args.icon_button}'),
             ui.text(f'external_path_button={q.args.external_path_button}'),
-            ui.text(f'command_button first_command={q.args.first_command}'),
-            ui.text(f'command_button second_command={q.args.second_command}'),
+            ui.text(f'choice_button={q.args.choice_button}'),
+            ui.text(f'choice_button:first_choice={q.args.first_choice}'),
+            ui.text(f'choice_button:second_choice={q.args.second_choice}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 9', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
             ui.button(name='basic_button', label='Basic'),
             ui.button(name='primary_button', label='Primary', primary=True),
             ui.button(name='link_button', label='Link', link=True),
@@ -43,9 +44,9 @@ async def serve(q: Q):
             ui.button(name='button_with_icon', label='Button with an icon', icon='Search'),
             ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
             ui.button(name='external_path_button', label='External', path='https://h2o.ai/'),
-            ui.button(name='command_button', label='Button with commands', primary=True, commands=[
-                    ui.button_command(name='first_command', label='First command'), 
-                    ui.button_command(name='second_command', label='Second command'),
+            ui.button(name='choice_button', label='Button with choices', primary=True, icon='Like', choices=[
+                    ui.button_choice(name='first_choice', label='First choice', icon='Heart'), 
+                    ui.button_choice(name='second_choice', label='Second choice', icon='Dislike'),
                 ]
             ),
         ])

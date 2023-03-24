@@ -21,7 +21,7 @@ import { cssVar, formItemWidth, padding } from './theme'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
 
-interface ButtonCommand {
+interface ButtonChoice {
   /** An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed. */
   name: Id
   /** The text displayed for this command. */
@@ -34,6 +34,8 @@ interface ButtonCommand {
   value?: S
   /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
+  /** True if the command should be disabled. */
+  disabled?: B
 }
 
 /**
@@ -80,7 +82,7 @@ export interface Button {
   /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
   /** The menu with button actions. Ignored if `link` is True. */
-  commands?: ButtonCommand[]
+  choices?: ButtonChoice[]
 }
 
 /** Create a set of buttons laid out horizontally. */
@@ -131,7 +133,7 @@ const
   }
 
 const
-  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, commands } }: { model: Button }) => {
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, choices } }: { model: Button }) => {
     const
       handleOnClick = (name: Id, value?: S, path?: S) => (ev: any) => {
         ev.stopPropagation()
@@ -156,9 +158,9 @@ const
           alignItems: 'center'
         }
       },
-      menuItems = commands
-        ? commands.map(({ name, label, caption, icon, value, path }) =>
-          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value, onClick: handleOnClick(name, value, path) })
+      menuItems = choices
+        ? choices.map(({ name, label, caption, icon, value, path, disabled }) =>
+          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value, disabled, onClick: handleOnClick(name, value, path) })
         )
         : undefined
 
@@ -174,7 +176,8 @@ const
       onClick,
       styles,
       iconProps: { iconName: icon },
-      menuProps: menuItems ? { items: menuItems } : undefined
+      menuProps: menuItems ? { items: menuItems } : undefined,
+      split: !!menuItems
     }
     if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
 
