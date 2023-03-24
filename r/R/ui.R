@@ -3088,6 +3088,24 @@ ui_time_picker <- function(
   return(.o)
 }
 
+#' Create a wide plot card displaying a title, caption and a plot.
+#'
+#' @param name An identifying name for this component.
+#' @param data The card's plot data.
+#' @return A Chatbot instance.
+#' @export
+ui_chatbot <- function(
+  name,
+  data) {
+  .guard_scalar("name", "character", name)
+  # TODO Validate data: Rec
+  .o <- list(chatbot=list(
+    name=name,
+    data=data))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -5496,31 +5514,23 @@ ui_wide_pie_stat_card <- function(
 #' Create a wide plot card displaying a title, caption and a plot.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param title The card's title.
-#' @param caption The card's caption, displayed below the title.
-#' @param plot The card's plot.
-#' @param data The card's plot data.
+#' @param name An identifying name for this component.
+#' @param data Chatbot messages.
 #' @param commands Contextual menu commands for this component.
 #' @return A WidePlotCard instance.
 #' @export
 ui_wide_plot_card <- function(
   box,
-  title,
-  caption,
-  plot,
+  name,
   data,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  .guard_scalar("caption", "character", caption)
-  .guard_scalar("plot", "WavePlot", plot)
+  .guard_scalar("name", "character", name)
   # TODO Validate data: Rec
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
-    title=title,
-    caption=caption,
-    plot=plot,
+    name=name,
     data=data,
     commands=commands,
     view='wide_plot')

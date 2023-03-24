@@ -7163,6 +7163,42 @@ class TimePicker:
         )
 
 
+class Chatbot:
+    """Create a wide plot card displaying a title, caption and a plot.
+    """
+    def __init__(
+            self,
+            name: str,
+            data: PackedRecord,
+    ):
+        _guard_scalar('Chatbot.name', name, (str,), True, False, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.data = data
+        """The card's plot data."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Chatbot.name', self.name, (str,), True, False, False)
+        return _dump(
+            name=self.name,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Chatbot':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Chatbot.name', __d_name, (str,), True, False, False)
+        __d_data: Any = __d.get('data')
+        name: str = __d_name
+        data: PackedRecord = __d_data
+        return Chatbot(
+            name,
+            data,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -7218,6 +7254,7 @@ class Component:
             menu: Optional[Menu] = None,
             tags: Optional[Tags] = None,
             time_picker: Optional[TimePicker] = None,
+            chatbot: Optional[Chatbot] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -7269,6 +7306,7 @@ class Component:
         _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
         _guard_scalar('Component.tags', tags, (Tags,), False, True, False)
         _guard_scalar('Component.time_picker', time_picker, (TimePicker,), False, True, False)
+        _guard_scalar('Component.chatbot', chatbot, (Chatbot,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -7369,6 +7407,8 @@ class Component:
         """Tags."""
         self.time_picker = time_picker
         """Time picker."""
+        self.chatbot = chatbot
+        """Chatbot."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7422,6 +7462,7 @@ class Component:
         _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
         _guard_scalar('Component.tags', self.tags, (Tags,), False, True, False)
         _guard_scalar('Component.time_picker', self.time_picker, (TimePicker,), False, True, False)
+        _guard_scalar('Component.chatbot', self.chatbot, (Chatbot,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -7473,6 +7514,7 @@ class Component:
             menu=None if self.menu is None else self.menu.dump(),
             tags=None if self.tags is None else self.tags.dump(),
             time_picker=None if self.time_picker is None else self.time_picker.dump(),
+            chatbot=None if self.chatbot is None else self.chatbot.dump(),
         )
 
     @staticmethod
@@ -7578,6 +7620,8 @@ class Component:
         _guard_scalar('Component.tags', __d_tags, (dict,), False, True, False)
         __d_time_picker: Any = __d.get('time_picker')
         _guard_scalar('Component.time_picker', __d_time_picker, (dict,), False, True, False)
+        __d_chatbot: Any = __d.get('chatbot')
+        _guard_scalar('Component.chatbot', __d_chatbot, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7628,6 +7672,7 @@ class Component:
         menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
         tags: Optional[Tags] = None if __d_tags is None else Tags.load(__d_tags)
         time_picker: Optional[TimePicker] = None if __d_time_picker is None else TimePicker.load(__d_time_picker)
+        chatbot: Optional[Chatbot] = None if __d_chatbot is None else Chatbot.load(__d_chatbot)
         return Component(
             text,
             text_xl,
@@ -7679,6 +7724,7 @@ class Component:
             menu,
             tags,
             time_picker,
+            chatbot,
         )
 
 
@@ -13200,43 +13246,31 @@ class WidePlotCard:
     def __init__(
             self,
             box: str,
-            title: str,
-            caption: str,
-            plot: Plot,
+            name: str,
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WidePlotCard.box', box, (str,), False, False, False)
-        _guard_scalar('WidePlotCard.title', title, (str,), False, False, False)
-        _guard_scalar('WidePlotCard.caption', caption, (str,), False, False, False)
-        _guard_scalar('WidePlotCard.plot', plot, (Plot,), False, False, False)
+        _guard_scalar('WidePlotCard.name', name, (str,), True, False, False)
         _guard_vector('WidePlotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
-        self.title = title
-        """The card's title."""
-        self.caption = caption
-        """The card's caption, displayed below the title."""
-        self.plot = plot
-        """The card's plot."""
+        self.name = name
+        """An identifying name for this component."""
         self.data = data
-        """The card's plot data."""
+        """Chatbot messages."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('WidePlotCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('WidePlotCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('WidePlotCard.caption', self.caption, (str,), False, False, False)
-        _guard_scalar('WidePlotCard.plot', self.plot, (Plot,), False, False, False)
+        _guard_scalar('WidePlotCard.name', self.name, (str,), True, False, False)
         _guard_vector('WidePlotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_plot',
             box=self.box,
-            title=self.title,
-            caption=self.caption,
-            plot=self.plot.dump(),
+            name=self.name,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -13246,26 +13280,18 @@ class WidePlotCard:
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         _guard_scalar('WidePlotCard.box', __d_box, (str,), False, False, False)
-        __d_title: Any = __d.get('title')
-        _guard_scalar('WidePlotCard.title', __d_title, (str,), False, False, False)
-        __d_caption: Any = __d.get('caption')
-        _guard_scalar('WidePlotCard.caption', __d_caption, (str,), False, False, False)
-        __d_plot: Any = __d.get('plot')
-        _guard_scalar('WidePlotCard.plot', __d_plot, (dict,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('WidePlotCard.name', __d_name, (str,), True, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
         _guard_vector('WidePlotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
-        title: str = __d_title
-        caption: str = __d_caption
-        plot: Plot = Plot.load(__d_plot)
+        name: str = __d_name
         data: PackedRecord = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WidePlotCard(
             box,
-            title,
-            caption,
-            plot,
+            name,
             data,
             commands,
         )

@@ -2656,6 +2656,24 @@ def time_picker(
     ))
 
 
+def chatbot(
+        name: str,
+        data: PackedRecord,
+) -> Component:
+    """Create a wide plot card displaying a title, caption and a plot.
+
+    Args:
+        name: An identifying name for this component.
+        data: The card's plot data.
+    Returns:
+        A `h2o_wave.types.Chatbot` instance.
+    """
+    return Component(chatbot=Chatbot(
+        name,
+        data,
+    ))
+
+
 def article_card(
         box: str,
         title: str,
@@ -4694,9 +4712,7 @@ def wide_pie_stat_card(
 
 def wide_plot_card(
         box: str,
-        title: str,
-        caption: str,
-        plot: Plot,
+        name: str,
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> WidePlotCard:
@@ -4704,19 +4720,15 @@ def wide_plot_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        title: The card's title.
-        caption: The card's caption, displayed below the title.
-        plot: The card's plot.
-        data: The card's plot data.
+        name: An identifying name for this component.
+        data: Chatbot messages.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WidePlotCard` instance.
     """
     return WidePlotCard(
         box,
-        title,
-        caption,
-        plot,
+        name,
         data,
         commands,
     )
