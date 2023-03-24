@@ -106,10 +106,11 @@ Run Keycloak using Docker:
 ```sh
 docker run \
   -p 8080:8080 \
-  -e KEYCLOAK_USER=admin \
-  -e KEYCLOAK_PASSWORD=admin \
+  -e KEYCLOAK_ADMIN=admin \
+  -e KEYCLOAK_ADMIN_PASSWORD=admin \
   --volume ~/.keycloak:/opt/jboss/keycloak/standalone/data \
-  quay.io/keycloak/keycloak:10.0.2
+  quay.io/keycloak/keycloak:21.0.1 \
+  start-dev
 ```
 
 Keycloak should now be running at <http://localhost:8080/>.
@@ -118,35 +119,36 @@ Keycloak should now be running at <http://localhost:8080/>.
 
 Next, create a *client* in Keycloak to represent our app:
 
-:::tip
-You can also use admin user for logging in with credentials `admin/admin` if you just need a quick testing.
-:::
-
-- Go to Keycloak at <http://localhost:8080/>.
-- Click on "Administration Console".
+- Go to Keycloak at <http://localhost:8080/admin>.
 - Log in with username `admin`, password `admin`.
-- Under "Configure", click on "Clients"
-  - Click the "Create" button to create a new client.
-  - Set "Client ID" to `wave`.
-  - Click "Save".
-  - In the "Settings" tab, change "Access Type" to `confidential`.
-  - Set "Valid Redirect URIs" to `*`.
-  - Click "Save".
-  - Click the "Credentials" tab.
-  - Copy the "Secret" field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+- In the top left, click on `Clients`
+  - Click the `Create client` button to create a new client.
+  - Set `Client ID` to `wave`.
+  - Click "Next".
+  - Change the "Client authentication" to `On` to change access type of the to confidential.
+  - Click `Next`.
+  - Set `Valid Redirect URIs` to `*` (never do this in production).
+  - Click `Save`.
+  - Click the `Credentials` tab.
+  - Copy the `Client secret` field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
 
 ### Add test users
 
 Next, add one or more users to Keycloak:
 
-- Under "Manage", click on "Users".
-  - Click the "Add User" button to create a new user.
-  - Set the "Username" field.
-  - Click "Save".
-  - Go to the "Credentials" tab
+- In the top left, click on `Users`.
+  - Click the `Add User` button to create a new user.
+  - Set the `Username` field.
+  - Click `Create`.
+  - Go to the `Credentials` tab.
+  - Click `Set password`.
   - Set the password fields.
-  - Change "Temporary" to "OFF".
-  - Click "Set Password"
+  - Change `Temporary` to `Off`.
+  - Click `Save`.
+
+:::tip
+You can also use admin user for logging in with credentials `admin/admin` if you just need a quick testing.
+:::
 
 ### Point Wave to Keycloak
 
@@ -159,8 +161,8 @@ Finally, start the Wave daemon with the following `-oidc-` command line argument
     -oidc-client-id wave \
     -oidc-client-secret xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
     -oidc-redirect-url http://localhost:10101/_auth/callback \
-    -oidc-provider-url http://localhost:8080/auth/realms/master \
-    -oidc-end-session-url http://localhost:8080/auth/realms/master/protocol/openid-connect/logout
+    -oidc-provider-url http://localhost:8080/realms/master \
+    -oidc-end-session-url http://localhost:8080/realms/master/protocol/openid-connect/logout
 
 ```
 
