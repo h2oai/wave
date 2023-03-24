@@ -62,12 +62,12 @@ Use the `data()` function to declare a data buffer. The Wave server uses this de
 
 - `fields`: The names of columns, in order; a space-separated string or a list or a tuple (`'foo bar'` or `['foo', 'bar']` or `('foo', 'bar')`.
 - `size`: The number of rows to allocate.
-    - A positive row count creates an array buffer.
-    - A negative row count creates a cyclic buffer.
-    - A zero row count (or `None`) creates a map buffer.
+  - A positive row count creates an array buffer.
+  - A negative row count creates a cyclic buffer.
+  - A zero row count (or `None`) creates a map buffer.
 - `rows`: A `dict` or `list` of rows to initialize the data buffer with. Each row can be a list or tuple.
-    - For array or cyclic buffers, pass a list of rows.
-    - For map buffers, pass a dict with strings as keys and rows as values.
+  - For array or cyclic buffers, pass a list of rows.
+  - For map buffers, pass a dict with strings as keys and rows as values.
 - `columns`: A `list` of columns to initialize the data buffer with. All columns must be of the same length. The columns are automatically transposed to `rows`.
 - `pack`: `True` to pack (compress) the provided rows or columns, use less memory on the server-side, and improve performance. Set `pack=True` if you intend to never make any changes to the data buffer once created. Defaults to `False`.
 
@@ -87,9 +87,10 @@ b = data(fields='donut price')
 ```
 
 Declare and initialize a 5-row buffer with columns `donut` and `price`.
+
 ```py
 # Array buffer
-b = data(fields='donut price', size=5, rows=[
+data(fields='donut price', size=5, rows=[
     ['cream', 3.99],
     ['custard', 2.99],
     ['cinnamon', 2.49],
@@ -98,7 +99,7 @@ b = data(fields='donut price', size=5, rows=[
 ])
 
 # Cyclic buffer
-b = data(fields='donut price', size=-5, rows=[
+data(fields='donut price', size=-5, rows=[
     ['cream', 3.99],
     ['custard', 2.99],
     ['cinnamon', 2.49],
@@ -107,13 +108,31 @@ b = data(fields='donut price', size=-5, rows=[
 ])
 
 # Map buffer
-b = data(fields='donut price', rows=dict(
+data(fields='donut price', rows=dict(
     crm=['cream', 3.99],
     cst=['custard', 2.99],
     cin=['cinnamon', 2.49],
     spr=['sprinkles', 2.49],
     sug=['sugar', 1.99],
 ))
+```
+
+A buffer can only be modified via card. To get a reference to the buffer:
+
+```py
+page['example'] = ui.plot_card(
+    box='1 1 4 5',
+    title='Line',
+    data=data(fields='donut price', size=5, rows=[
+        ['cream', 3.99],
+        ['custard', 2.99],
+        ['cinnamon', 2.49],
+        ['sprinkles', 2.49],
+        ['sugar', 1.99],
+    ])
+    plot=ui.plot([ui.mark(type='line', x_scale='time', x='=year', y='=value', y_min=0)])
+)
+b = page['example'].data
 ```
 
 Modify a buffer row:
@@ -123,7 +142,7 @@ Modify a buffer row:
 b[2] = ['cinnamon', 2.99]
 
 # Cyclic buffer
-b[-1] = ['fruit', 2.99] # replaces ['sugar', 1.99]
+b[-1] = ['fruit', 2.99] # replaces ['cream', 3.99]
 
 # Map buffer (the following two forms are equivalent)
 b['cin'] = ['cinnamon', 2.99]
