@@ -13,20 +13,23 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Id, Rec } from 'h2o-wave'
+import { Id, Model, Rec, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { wave } from './ui'
+import { cards } from './layout'
+import { clas, margin } from './theme'
+import { bond, wave } from './ui'
 
 
 const css = stylesheet({
   chatWindow: {
     height: '100%',
+    minHeight: 400,
     display: 'flex',
     flexDirection: 'column',
   },
   messageContainer: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     flexGrow: 1,
   },
   message: {
@@ -34,8 +37,12 @@ const css = stylesheet({
     color: '#000',
     padding: 10,
     borderRadius: 10,
-    marginLeft: 10,
-    maxWidth: '60%',
+    direction: 'rtl',
+  },
+  userMessage: {
+    backgroundColor: '#0078d4',
+    color: '#fff',
+    direction: 'ltr',
   },
 })
 
@@ -43,14 +50,15 @@ const css = stylesheet({
 export interface Chatbot {
   /** An identifying name for this component. */
   name: Id
-  /** The card's plot data. */
-  data: Rec
+  /** Chat messages data. */
+  data: Rec[]
 }
 
 export const XChatbot = ({ model }: { model: Chatbot }) => {
   const
     [conversation, setConversation] = React.useState<any[]>([]),
     [userInput, setUserInput] = React.useState(''),
+    msgContainerRef = React.useRef<HTMLDivElement>(null),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[model.name] = newVal
@@ -58,26 +66,27 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     },
     onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => { if (e.key === 'Enter') submit() },
     submit = () => {
-      setConversation([...conversation, { text: userInput, fromUser: true }])
+      setConversation([...conversation, { msg: userInput, fromUser: true }])
       wave.push()
       setUserInput('')
     }
 
+  React.useEffect(() => {
+    if (msgContainerRef.current) msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight
+  }, [conversation])
+
+  React.useEffect(() => { if (model.data) setConversation(model.data) }, [model.data])
+
   return (
     <div className={css.chatWindow}>
-      <div className={css.messageContainer}>
-        {conversation.map((message, index) => (
-          <div
-            key={index}
-            className={css.message}
-            style={{ display: 'flex', flexDirection: message.fromUser ? 'row-reverse' : 'row', margin: 10 }}
-          >
-            {message.text}
+      <div className={css.messageContainer} ref={msgContainerRef}>
+        {conversation.map(({ msg, fromUser }, idx) => (
+          <div key={idx} style={{ margin: margin(20, 10), textAlign: fromUser ? 'left' : 'right' }} >
+            <span className={clas(css.message, fromUser ? css.userMessage : '')}>{msg}</span>
           </div>
         ))}
-        <div style={{ float: 'left', clear: 'both' }} ref={(el) => { if (el) { el.scrollIntoView({ behavior: 'smooth' }) } }} ></div>
       </div>
-      <Fluent.Stack horizontal style={{ padding: 10 }}>
+      <Fluent.Stack horizontal style={{ padding: 10, position: 'relative' }}>
         <Fluent.TextField
           value={userInput}
           onChange={onChange}
@@ -85,9 +94,28 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           placeholder="Type your message"
           styles={{ root: { flexGrow: 1 } }}
         />
-        <Fluent.PrimaryButton onClick={submit} iconProps={{ iconName: 'Send' }}>Send</Fluent.PrimaryButton>
+        <Fluent.IconButton iconProps={{ iconName: 'Send' }} onClick={submit} styles={{ root: { position: 'absolute', top: 10, right: 10, height: 30 } }} />
       </Fluent.Stack>
     </div>
 
   )
 }
+
+/** Create a card displaying a plot. */
+interface State {
+  /** An identifying name for this component. */
+  name: Id
+  /** The card's plot data. */
+  data: Rec
+}
+
+export const
+  View = bond(({ state, changed }: Model<State>) => {
+    const
+      render = () => {
+        return <XChatbot model={{ name: state.name, data: unpack<any>(state.data) }} />
+      }
+    return { render, changed }
+  })
+
+cards.register('chatbot', View)

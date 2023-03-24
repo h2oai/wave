@@ -4,24 +4,23 @@
 # ---
 from h2o_wave import main, app, Q, ui, data
 
-b = data(fields='donut price', size=-5, rows=[
-    ['cream', 3.99],
-    ['custard', 2.99],
-    ['cinnamon', 2.49],
-    ['sprinkles', 2.49],
-    ['sugar', 1.99],
-], pack=True)
+
+MAX_MESSAGES = 500
 
 
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        q.page['form'] = ui.form_card(box='1 1 5 5', items=[
-            ui.chatbot(name='chatbot', data=b)
-        ])
+        # Cyclic buffer drops oldest messages when full.
+        cyclic_buffer = data(fields='msg fromUser', size=-MAX_MESSAGES)
+        q.page['chatbot-card'] = ui.chatbot_card(box='1 1 5 5', data=cyclic_buffer, name='chatbot')
         q.client.initialized = True
+
+    # A new message arrived.
     if q.args.chatbot:
-        print(q.args.chatbot)
-        q.page['aa'].items = []
+        # Append user message.
+        q.page['chatbot-card'].data[-1] = [q.args.chatbot, True]
+        # Append bot response.
+        q.page['chatbot-card'].data[-1] = ['I am a fake chatbot. Sorry, I cannot help you.', False]
 
     await q.page.save()

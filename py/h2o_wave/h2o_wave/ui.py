@@ -2658,13 +2658,13 @@ def time_picker(
 
 def chatbot(
         name: str,
-        data: PackedRecord,
+        data: List[PackedRecord],
 ) -> Component:
     """Create a wide plot card displaying a title, caption and a plot.
 
     Args:
         name: An identifying name for this component.
-        data: The card's plot data.
+        data: Chat messages data.
     Returns:
         A `h2o_wave.types.Chatbot` instance.
     """
@@ -2805,6 +2805,30 @@ def chat_card(
         title,
         data,
         capacity,
+        commands,
+    )
+
+
+def chatbot_card(
+        box: str,
+        name: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> ChatbotCard:
+    """Create a card displaying a plot.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        name: An identifying name for this component.
+        data: The card's plot data.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ChatbotCard` instance.
+    """
+    return ChatbotCard(
+        box,
+        name,
+        data,
         commands,
     )
 
@@ -4712,7 +4736,9 @@ def wide_pie_stat_card(
 
 def wide_plot_card(
         box: str,
-        name: str,
+        title: str,
+        caption: str,
+        plot: Plot,
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> WidePlotCard:
@@ -4720,15 +4746,19 @@ def wide_plot_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        name: An identifying name for this component.
-        data: Chatbot messages.
+        title: The card's title.
+        caption: The card's caption, displayed below the title.
+        plot: The card's plot.
+        data: The card's plot data.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WidePlotCard` instance.
     """
     return WidePlotCard(
         box,
-        name,
+        title,
+        caption,
+        plot,
         data,
         commands,
     )

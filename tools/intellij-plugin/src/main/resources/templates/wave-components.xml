@@ -63,7 +63,15 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_chatbot" value="ui.chatbot(name='$name$',data=$data$),$END$" description="Create a minimal Wave Chatbot." toReformat="true" toShortenFQNames="true">
+  <template name="w_chatbot" value="ui.chatbot(name='$name$',data=[&#10;	$data$	&#10;]),$END$" description="Create a minimal Wave Chatbot." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_chatbot_card" value="ui.chatbot_card(box='$box$',name='$name$',data=$data$)$END$" description="Create a minimal Wave ChatbotCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -938,9 +946,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_wide_plot_card" value="ui.wide_plot_card(box='$box$',name='$name$',data=$data$)$END$" description="Create a minimal Wave WidePlotCard." toReformat="true" toShortenFQNames="true">
+  <template name="w_wide_plot_card" value="ui.wide_plot_card(box='$box$',title='$title$',caption='$caption$',plot=$plot$,data=$data$)$END$" description="Create a minimal Wave WidePlotCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="plot" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1045,9 +1055,18 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chatbot" value="ui.chatbot(name='$name$',data=$data$),$END$" description="Create Wave Chatbot with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chatbot" value="ui.chatbot(name='$name$',data=[&#10;	$data$	&#10;]),$END$" description="Create Wave Chatbot with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_chatbot_card" value="ui.chatbot_card(box='$box$',name='$name$',data=$data$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatbotCard with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -2704,9 +2723,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_wide_plot_card" value="ui.wide_plot_card(box='$box$',name='$name$',data=$data$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave WidePlotCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_wide_plot_card" value="ui.wide_plot_card(box='$box$',title='$title$',caption='$caption$',plot=$plot$,data=$data$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave WidePlotCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="plot" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
