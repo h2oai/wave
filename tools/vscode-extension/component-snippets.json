@@ -968,7 +968,7 @@
   "Wave Full ButtonChoice": {
     "prefix": "w_full_button_choice",
     "body": [
-      "ui.button_choice(name='$1', label='$2', caption='$3', icon='$4', value='$5', path='$6', disabled=${7:False}),$0"
+      "ui.button_choice(name='$1', label='$2', caption='$3', icon='$4', value='$5', disabled=${6:False}, path='$7'),$0"
     ],
     "description": "Create a full Wave ButtonChoice."
   },

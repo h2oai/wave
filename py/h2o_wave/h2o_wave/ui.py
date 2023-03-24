@@ -991,19 +991,19 @@ def button_choice(
         caption: Optional[str] = None,
         icon: Optional[str] = None,
         value: Optional[str] = None,
-        path: Optional[str] = None,
         disabled: Optional[bool] = None,
+        path: Optional[str] = None,
 ) -> ButtonChoice:
     """No documentation available.
 
     Args:
-        name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-        label: The text displayed for this command.
-        caption: The caption for this command (typically a tooltip).
-        icon: The icon to be displayed for this command.
-        value: Data associated with this command, if any.
+        name: An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed.
+        label: The text displayed for this choice.
+        caption: The caption for this choice (typically a tooltip).
+        icon: The icon to be displayed for this choice.
+        value: A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True.
+        disabled: True if the choice should be disabled.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-        disabled: True if the command should be disabled.
     Returns:
         A `h2o_wave.types.ButtonChoice` instance.
     """
@@ -1013,8 +1013,8 @@ def button_choice(
         caption,
         icon,
         value,
-        path,
         disabled,
+        path,
     )
 
 

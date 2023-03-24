@@ -126,3 +126,16 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
     ui.button(name='external_path_button', label='External', path='https://h2o.ai/')
 ])
 ```
+
+## With choices
+
+Using the `choices` attribute, you can provide other relevant actions for the button that are displayed in the context menu.
+
+```py
+q.page['form'] = ui.form_card(box='1 1 1 2', items=[
+    ui.button(name='choice_button', label='Button with choices', choices=[
+            ui.button_choice(name='first_choice', label='First choice'), 
+            ui.button_choice(name='second_choice', label='Second choice'),
+    ])
+])
+```

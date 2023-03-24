@@ -2581,30 +2581,30 @@ class ButtonChoice:
             caption: Optional[str] = None,
             icon: Optional[str] = None,
             value: Optional[str] = None,
-            path: Optional[str] = None,
             disabled: Optional[bool] = None,
+            path: Optional[str] = None,
     ):
         _guard_scalar('ButtonChoice.name', name, (str,), True, False, False)
         _guard_scalar('ButtonChoice.label', label, (str,), False, True, False)
         _guard_scalar('ButtonChoice.caption', caption, (str,), False, True, False)
         _guard_scalar('ButtonChoice.icon', icon, (str,), False, True, False)
         _guard_scalar('ButtonChoice.value', value, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.path', path, (str,), False, True, False)
         _guard_scalar('ButtonChoice.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('ButtonChoice.path', path, (str,), False, True, False)
         self.name = name
-        """An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed."""
+        """An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed."""
         self.label = label
-        """The text displayed for this command."""
+        """The text displayed for this choice."""
         self.caption = caption
-        """The caption for this command (typically a tooltip)."""
+        """The caption for this choice (typically a tooltip)."""
         self.icon = icon
-        """The icon to be displayed for this command."""
+        """The icon to be displayed for this choice."""
         self.value = value
-        """Data associated with this command, if any."""
+        """A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True."""
+        self.disabled = disabled
+        """True if the choice should be disabled."""
         self.path = path
         """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab."""
-        self.disabled = disabled
-        """True if the command should be disabled."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2613,16 +2613,16 @@ class ButtonChoice:
         _guard_scalar('ButtonChoice.caption', self.caption, (str,), False, True, False)
         _guard_scalar('ButtonChoice.icon', self.icon, (str,), False, True, False)
         _guard_scalar('ButtonChoice.value', self.value, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.path', self.path, (str,), False, True, False)
         _guard_scalar('ButtonChoice.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('ButtonChoice.path', self.path, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
             caption=self.caption,
             icon=self.icon,
             value=self.value,
-            path=self.path,
             disabled=self.disabled,
+            path=self.path,
         )
 
     @staticmethod
@@ -2638,25 +2638,25 @@ class ButtonChoice:
         _guard_scalar('ButtonChoice.icon', __d_icon, (str,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('ButtonChoice.value', __d_value, (str,), False, True, False)
-        __d_path: Any = __d.get('path')
-        _guard_scalar('ButtonChoice.path', __d_path, (str,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('ButtonChoice.disabled', __d_disabled, (bool,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('ButtonChoice.path', __d_path, (str,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         value: Optional[str] = __d_value
-        path: Optional[str] = __d_path
         disabled: Optional[bool] = __d_disabled
+        path: Optional[str] = __d_path
         return ButtonChoice(
             name,
             label,
             caption,
             icon,
             value,
-            path,
             disabled,
+            path,
         )
 
 

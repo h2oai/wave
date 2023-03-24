@@ -1173,13 +1173,13 @@ ui_color_picker <- function(
 
 #' No documentation available.
 #'
-#' @param name An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-#' @param label The text displayed for this command.
-#' @param caption The caption for this command (typically a tooltip).
-#' @param icon The icon to be displayed for this command.
-#' @param value Data associated with this command, if any.
+#' @param name An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed.
+#' @param label The text displayed for this choice.
+#' @param caption The caption for this choice (typically a tooltip).
+#' @param icon The icon to be displayed for this choice.
+#' @param value A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True.
+#' @param disabled True if the choice should be disabled.
 #' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-#' @param disabled True if the command should be disabled.
 #' @return A ButtonChoice instance.
 #' @export
 ui_button_choice <- function(
@@ -1188,23 +1188,23 @@ ui_button_choice <- function(
   caption = NULL,
   icon = NULL,
   value = NULL,
-  path = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  path = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("value", "character", value)
-  .guard_scalar("path", "character", path)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("path", "character", path)
   .o <- list(
     name=name,
     label=label,
     caption=caption,
     icon=icon,
     value=value,
-    path=path,
-    disabled=disabled)
+    disabled=disabled,
+    path=path)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveButtonChoice"))
   return(.o)
 }

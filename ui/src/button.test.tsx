@@ -122,4 +122,122 @@ describe('Button.tsx', () => {
       expect(wave.args[name]).toBe(null)
     })
   })
+
+  describe('Choices button', () => {
+    const buttonProps = {
+      items: [{
+        button: {
+          name,
+          label: name,
+          value: 'val',
+          choices: [
+            { name: 'choice1', label: 'Choice 1', value: 'choiceVal1' },
+            { name: 'choice2', label: 'Choice 2', value: 'choiceVal2' },
+          ]
+        }
+      }]
+    }
+
+    beforeEach(() => {
+      wave.args['choice1'] = null
+      wave.args['choice2 '] = null
+    })
+
+    it('Renders the context menu with specified items', () => {
+      const { container, queryByText, queryByRole } = render(<XButtons model={buttonProps} />)
+
+      expect(queryByRole('menu')).not.toBeInTheDocument()
+      expect(queryByText('Choice 1')).not.toBeInTheDocument()
+      expect(queryByText('Choice 2')).not.toBeInTheDocument()
+
+      fireEvent.click(container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement)
+
+      expect(queryByRole('menu')).toBeInTheDocument()
+      expect(queryByText('Choice 1')).toBeInTheDocument()
+      expect(queryByText('Choice 2')).toBeInTheDocument()
+    })
+
+    it('Sets args after click - specified value', () => {
+      const { container, getByText } = render(<XButtons model={buttonProps} />)
+
+      expect(wave.args[name]).toBe(false)
+      fireEvent.click(getByText(name))
+      expect(wave.args[name]).toBe('val')
+
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      expect(wave.args['choice1']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Choice 1'))
+      expect(wave.args['choice1']).toBe('choiceVal1')
+
+      expect(wave.args['choice2']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Choice 2'))
+      expect(wave.args['choice2']).toBe('choiceVal2')
+    })
+
+    it('Sets correct state when name starts with #', () => {
+      const btnPropsNameHash = {
+        items: [{
+          button: {
+            name: hashName,
+            label: name,
+            value: 'val',
+            choices: [
+              { name: '#choice1', label: 'Choice 1', value: 'choiceVal1' },
+              { name: '#choice2', label: 'Choice 2', value: 'choiceVal2' },
+            ]
+          }
+        }]
+      }
+
+      wave.args['#choice1'] = null
+      wave.args['#choice2 '] = null
+
+      const { getByText, container } = render(<XButtons model={btnPropsNameHash} />)
+      fireEvent.click(getByText(name))
+      expect(window.location.hash).toBe(hashName)
+      expect(pushMock).toHaveBeenCalledTimes(0)
+      expect(wave.args[name]).toBe(null)
+
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Choice 1'))
+      expect(window.location.hash).toBe('#choice1')
+      expect(pushMock).toHaveBeenCalledTimes(0)
+      expect(wave.args['#choice1']).toBe(null) // TODO: Why is it false??
+    })
+
+    it('Does redirect if the choice has path specified', () => {
+      const
+        btnPropsPath = {
+          items: [{
+            button: {
+              name: name,
+              label: name,
+              value: 'val',
+              choices: [
+                { name: 'choice1', label: 'Choice 1', value: 'choiceVal1' },
+                { name: 'choice2', label: 'Choice 2', value: 'choiceVal2', path: 'https://h2o.ai/' },
+              ]
+            }
+          }]
+        },
+        windowOpenMock = jest.fn(),
+        { getByText, container } = render(<XButtons model={btnPropsPath} />)
+
+      window.open = windowOpenMock
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Choice 1'))
+      expect(windowOpenMock).not.toHaveBeenCalled()
+
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Choice 2'))
+      expect(windowOpenMock).toHaveBeenCalled()
+    })
+  })
 })
