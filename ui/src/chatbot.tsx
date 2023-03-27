@@ -17,7 +17,7 @@ import { Id, Model, Rec, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { clas, margin } from './theme'
+import { clas, cssVar, getContrast } from './theme'
 import { bond, wave } from './ui'
 
 
@@ -25,32 +25,29 @@ const css = stylesheet({
   chatWindow: {
     height: '100%',
     minHeight: 400,
-    display: 'flex',
-    flexDirection: 'column',
   },
   messageContainer: {
     overflowY: 'auto',
-    flexGrow: 1,
+    // HACK: Prevent Safari from rendering double scrollbar. 52px is the total height of the input field.
+    height: 'calc(100% - 52px)',
   },
   message: {
-    backgroundColor: '#f3f2f1',
-    color: '#000',
+    display: 'inline-block',
+    backgroundColor: cssVar('$themeTertiary'),
     padding: 10,
-    borderRadius: 10,
-    direction: 'rtl',
+    borderRadius: 4,
+    maxWidth: '65ch',
   },
   userMessage: {
-    backgroundColor: '#0078d4',
-    color: '#fff',
-    direction: 'ltr',
+    backgroundColor: cssVar('$themePrimary'),
   },
 })
 
-/** Create a wide plot card displaying a title, caption and a plot. */
+/** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
 export interface Chatbot {
   /** An identifying name for this component. */
   name: Id
-  /** Chat messages data. */
+  /** Chat messages data. Requires cyclic buffer. */
   data: Rec[]
 }
 
@@ -66,6 +63,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     },
     onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => { if (e.key === 'Enter') submit() },
     submit = () => {
+      if (!userInput.trim()) return
       setConversation([...conversation, { msg: userInput, fromUser: true }])
       wave.push()
       setUserInput('')
@@ -81,20 +79,30 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     <div className={css.chatWindow}>
       <div className={css.messageContainer} ref={msgContainerRef}>
         {conversation.map(({ msg, fromUser }, idx) => (
-          <div key={idx} style={{ margin: margin(20, 10), textAlign: fromUser ? 'left' : 'right' }} >
-            <span className={clas(css.message, fromUser ? css.userMessage : '')}>{msg}</span>
+          <div key={idx} style={{ margin: 15, textAlign: fromUser ? 'left' : 'right', color: getContrast(fromUser ? '$themePrimary' : '$themeTertiary') }} >
+            <span className={clas(css.message, fromUser ? css.userMessage : '', 'wave-s14')}>{msg}</span>
           </div>
         ))}
       </div>
       <Fluent.Stack horizontal style={{ padding: 10, position: 'relative' }}>
         <Fluent.TextField
+          data-test={model.name}
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
           placeholder="Type your message"
           styles={{ root: { flexGrow: 1 } }}
         />
-        <Fluent.IconButton iconProps={{ iconName: 'Send' }} onClick={submit} styles={{ root: { position: 'absolute', top: 10, right: 10, height: 30 } }} />
+        <Fluent.IconButton
+          data-test={`${model.name}-submit`}
+          iconProps={{ iconName: 'Send' }}
+          onClick={submit}
+          disabled={!userInput.trim()}
+          styles={{
+            root: { position: 'absolute', top: 10, right: 10, height: 30 },
+            rootHovered: { backgroundColor: 'transparent' },
+            rootDisabled: { position: 'absolute', top: 10, right: 10, height: 30, backgroundColor: 'transparent' }
+          }} />
       </Fluent.Stack>
     </div>
 

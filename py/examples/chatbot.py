@@ -1,6 +1,6 @@
-# Form / Chatbot
-# Use this component for chat interactions.
-# #form
+# Chatbot
+# Use this card for chat interactions.
+# #chat
 # ---
 from h2o_wave import main, app, Q, ui, data
 
@@ -14,6 +14,7 @@ async def serve(q: Q):
         # Cyclic buffer drops oldest messages when full.
         cyclic_buffer = data(fields='msg fromUser', size=-MAX_MESSAGES)
         q.page['chatbot-card'] = ui.chatbot_card(box='1 1 5 5', data=cyclic_buffer, name='chatbot')
+        q.page['meta'] = ui.meta_card(box='', theme='h2o-dark')
         q.client.initialized = True
 
     # A new message arrived.
