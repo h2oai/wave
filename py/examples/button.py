@@ -44,9 +44,9 @@ async def serve(q: Q):
             ui.button(name='button_with_icon', label='Button with an icon', icon='Search'),
             ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
             ui.button(name='external_path_button', label='External', path='https://h2o.ai/'),
-            ui.button(name='choice_button', label='Button with choices', primary=True, icon='Like', choices=[
-                    ui.button_choice(name='first_choice', label='First choice', icon='Heart'), 
-                    ui.button_choice(name='second_choice', label='Second choice', icon='Dislike'),
+            ui.button(name='choice_button', label='Button with choices', primary=True, choices=[
+                    ui.button_choice(name='first_choice', label='First choice'), 
+                    ui.button_choice(name='second_choice', label='Second choice'),
                 ]
             ),
         ])

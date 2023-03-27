@@ -139,3 +139,18 @@ q.page['form'] = ui.form_card(box='1 1 1 2', items=[
     ])
 ])
 ```
+
+In addition, each choice supports `caption`, `icon`, `value`, `disabled` and `path` attributes which work exactly like with the button.
+
+```py
+q.page['form'] = ui.form_card(box='1 1 1 2', items=[
+    ui.button(
+        name='like', 
+        value='reaction_like', 
+        icon='Like', 
+        choices=[
+            ui.button_choice(name='love', icon='Heart', value='reaction_love'), 
+            ui.button_choice(name='dislike', icon='Dislike', value='reaction_dislike', disabled=True)
+    ])
+])
+```
