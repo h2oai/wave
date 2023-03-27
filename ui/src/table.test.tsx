@@ -584,6 +584,35 @@ describe('Table.tsx', () => {
       expect(getAllByRole('gridcell')[11]).toBeUndefined()
       expect(getAllByRole('gridcell')[14]).toBeUndefined()
     })
+
+    it('Reset filtered items sorting after table reset', () => {
+      tableProps = {
+        ...tableProps,
+        resettable: true,
+        rows: [
+          { name: '3', cells: ['c', 'closed'] },
+          { name: '2', cells: ['b', 'open'] },
+          { name: '1', cells: ['a', 'open'] }
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', filterable: true },
+        ],
+      }
+      const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(getByText('Reset table'))
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getAllByText('open')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('b')
+    })
   })
 
   describe('search', () => {
