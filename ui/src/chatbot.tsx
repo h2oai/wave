@@ -13,13 +13,12 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Id, Model, Rec, unpack } from 'h2o-wave'
+import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
 import { clas, cssVar, getContrast } from './theme'
 import { bond, wave } from './ui'
-
 
 const css = stylesheet({
   chatWindow: {
@@ -34,7 +33,7 @@ const css = stylesheet({
   message: {
     display: 'inline-block',
     backgroundColor: cssVar('$themeTertiary'),
-    padding: 10,
+    padding: 8,
     borderRadius: 4,
     maxWidth: '65ch',
   },
@@ -42,6 +41,8 @@ const css = stylesheet({
     backgroundColor: cssVar('$themePrimary'),
   },
 })
+
+type ChatMessage = { msg: S, fromUser: B }
 
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
 export interface Chatbot {
@@ -53,7 +54,7 @@ export interface Chatbot {
 
 export const XChatbot = ({ model }: { model: Chatbot }) => {
   const
-    [conversation, setConversation] = React.useState<any[]>([]),
+    [msgs, setMsgs] = React.useState<ChatMessage[]>([]),
     [userInput, setUserInput] = React.useState(''),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
@@ -64,21 +65,18 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => { if (e.key === 'Enter') submit() },
     submit = () => {
       if (!userInput.trim()) return
-      setConversation([...conversation, { msg: userInput, fromUser: true }])
+      setMsgs([...msgs, { msg: userInput, fromUser: true }])
       wave.push()
       setUserInput('')
     }
 
-  React.useEffect(() => {
-    if (msgContainerRef.current) msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight
-  }, [conversation])
-
-  React.useEffect(() => { if (model.data) setConversation(model.data) }, [model.data])
+  React.useEffect(() => { if (msgContainerRef.current) msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight }, [msgs])
+  React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
 
   return (
     <div className={css.chatWindow}>
       <div className={css.messageContainer} ref={msgContainerRef}>
-        {conversation.map(({ msg, fromUser }, idx) => (
+        {msgs.map(({ msg, fromUser }, idx) => (
           <div key={idx} style={{ margin: 15, textAlign: fromUser ? 'left' : 'right', color: getContrast(fromUser ? '$themePrimary' : '$themeTertiary') }} >
             <span className={clas(css.message, fromUser ? css.userMessage : '', 'wave-s14')}>{msg}</span>
           </div>
@@ -105,24 +103,20 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           }} />
       </Fluent.Stack>
     </div>
-
   )
 }
 
-/** Create a card displaying a plot. */
+/** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
 interface State {
   /** An identifying name for this component. */
   name: Id
-  /** The card's plot data. */
+  /** Chat messages data. Requires cyclic buffer. */
   data: Rec
 }
 
 export const
   View = bond(({ state, changed }: Model<State>) => {
-    const
-      render = () => {
-        return <XChatbot model={{ name: state.name, data: unpack<any>(state.data) }} />
-      }
+    const render = () => <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data) }} />
     return { render, changed }
   })
 

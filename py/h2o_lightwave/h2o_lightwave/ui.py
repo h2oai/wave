@@ -2660,11 +2660,11 @@ def chatbot(
         name: str,
         data: List[PackedRecord],
 ) -> Component:
-    """Create a wide plot card displaying a title, caption and a plot.
+    """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
 
     Args:
         name: An identifying name for this component.
-        data: Chat messages data.
+        data: Chat messages data. Requires cyclic buffer.
     Returns:
         A `h2o_wave.types.Chatbot` instance.
     """
@@ -2815,12 +2815,12 @@ def chatbot_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
-    """Create a card displaying a plot.
+    """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
 
     Args:
         box: A string indicating how to place this component on the page.
         name: An identifying name for this component.
-        data: The card's plot data.
+        data: Chat messages data. Requires cyclic buffer.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatbotCard` instance.

@@ -3088,10 +3088,10 @@ ui_time_picker <- function(
   return(.o)
 }
 
-#' Create a wide plot card displaying a title, caption and a plot.
+#' Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
 #'
 #' @param name An identifying name for this component.
-#' @param data Chat messages data.
+#' @param data Chat messages data. Requires cyclic buffer.
 #' @return A Chatbot instance.
 #' @export
 ui_chatbot <- function(
@@ -3256,11 +3256,11 @@ ui_chat_card <- function(
   return(.o)
 }
 
-#' Create a card displaying a plot.
+#' Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param name An identifying name for this component.
-#' @param data The card's plot data.
+#' @param data Chat messages data. Requires cyclic buffer.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
 #' @export

@@ -7164,7 +7164,7 @@ class TimePicker:
 
 
 class Chatbot:
-    """Create a wide plot card displaying a title, caption and a plot.
+    """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
     """
     def __init__(
             self,
@@ -7175,7 +7175,7 @@ class Chatbot:
         self.name = name
         """An identifying name for this component."""
         self.data = data
-        """Chat messages data."""
+        """Chat messages data. Requires cyclic buffer."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8044,7 +8044,7 @@ class ChatCard:
 
 
 class ChatbotCard:
-    """Create a card displaying a plot.
+    """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
     """
     def __init__(
             self,
@@ -8061,7 +8061,7 @@ class ChatbotCard:
         self.name = name
         """An identifying name for this component."""
         self.data = data
-        """The card's plot data."""
+        """Chat messages data. Requires cyclic buffer."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
