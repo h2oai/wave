@@ -227,13 +227,12 @@ describe('Button.tsx', () => {
       expect(wave.args[name]).toBe(null)
 
       const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
-      wave.args['#choice1'] = null
 
       fireEvent.click(contextMenuButton)
       fireEvent.click(getByText('Choice 1'))
       expect(window.location.hash).toBe('#choice1')
       expect(pushMock).toHaveBeenCalledTimes(0)
-      expect(wave.args['#choice1']).toBe(null)
+      expect(wave.args['#choice1']).toBe(false)
     })
 
     it('Does redirect if the choice has path specified', () => {
