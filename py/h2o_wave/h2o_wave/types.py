@@ -2598,7 +2598,7 @@ class ButtonChoice:
         self.caption = caption
         """The caption for this choice (typically a tooltip)."""
         self.icon = icon
-        """The icon to be displayed for this choice."""
+        """An optional icon to display next to the choice label"""
         self.value = value
         """A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True."""
         self.disabled = disabled

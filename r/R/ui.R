@@ -1176,7 +1176,7 @@ ui_color_picker <- function(
 #' @param name An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed.
 #' @param label The text displayed for this choice.
 #' @param caption The caption for this choice (typically a tooltip).
-#' @param icon The icon to be displayed for this choice.
+#' @param icon An optional icon to display next to the choice label
 #' @param value A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True.
 #' @param disabled True if the choice should be disabled.
 #' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.

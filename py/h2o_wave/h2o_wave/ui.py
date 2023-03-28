@@ -1000,7 +1000,7 @@ def button_choice(
         name: An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed.
         label: The text displayed for this choice.
         caption: The caption for this choice (typically a tooltip).
-        icon: The icon to be displayed for this choice.
+        icon: An optional icon to display next to the choice label
         value: A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True.
         disabled: True if the choice should be disabled.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
