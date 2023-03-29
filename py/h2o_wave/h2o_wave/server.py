@@ -80,6 +80,9 @@ class Auth:
         """
         Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs.
         """
+        if not self.refresh_token:
+            return
+
         async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
             res = await http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id})
             return self.__extract_tokens(res.headers)
@@ -89,10 +92,12 @@ class Auth:
         Explicitly refresh OIDC tokens when needed, e.g. during long-running background jobs - synchronous version.
         Prefer async version. Use sync only when absolutely necessary - will block your app, making it slow for all users.
         """
+        if not self.refresh_token:
+            return
+
         with httpx.Client(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
             res = http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id})
             return self.__extract_tokens(res.headers)
-      
 
     def __extract_tokens(self, headers: httpx.Headers):
         access_token = headers.get('Wave-Access-Token', None)
@@ -103,6 +108,7 @@ class Auth:
             self.refresh_token = refresh_token
 
         return access_token
+
 
 class Query:
     """
