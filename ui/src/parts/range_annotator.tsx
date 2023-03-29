@@ -127,7 +127,8 @@ const
 
     for (let i = 0; i < annotations.length; i++) {
       const a = annotations[i]
-      if (!a.isZoom && ((a.canvasStart >= from && a.canvasStart <= to) || (a.canvasEnd >= from && a.canvasEnd <= to))) {
+      // TODO: Maybe we should split zoomed and regular annotations into separate arrays.
+      if (!a.isZoom && ((from >= a.canvasStart && from <= a.canvasEnd) || (to >= a.canvasStart && to <= a.canvasEnd))) {
         const canvasStart = (a.canvasStart - from) / rangeSize * canvasWidth
         const canvasEnd = (a.canvasEnd - from) / rangeSize * canvasWidth
         annotationsWithinRange.push({ ...a, canvasStart, canvasEnd })
@@ -597,7 +598,7 @@ export const
         <div ref={annotatorContainerRef}>
           {annotatorContainerRef.current && (
             <Annotator
-              annotations={getAnnotationsWithinRange(annotations, zoom, annotatorContainerRef.current.clientWidth)}
+              annotations={getAnnotationsWithinRange(annotations, zoom, canvasWidth)}
               activeTag={activeTag}
               trackPosition={getZoomedTrackPosition()}
               start={zoom.from / canvasWidth * duration}
