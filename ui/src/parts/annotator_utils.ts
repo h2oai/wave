@@ -1,0 +1,1 @@
+export const eventToCursor = (e: React.MouseEvent, rect: DOMRect) => ({ cursor_x: e.clientX - rect.left, cursor_y: e.clientY - rect.top })

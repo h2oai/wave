@@ -6804,6 +6804,185 @@ class ImageAnnotator:
         )
 
 
+class AudioAnnotatorTag:
+    """Create a unique tag type for use in an audio annotator.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            color: str,
+    ):
+        _guard_scalar('AudioAnnotatorTag.name', name, (str,), True, False, False)
+        _guard_scalar('AudioAnnotatorTag.label', label, (str,), False, False, False)
+        _guard_scalar('AudioAnnotatorTag.color', color, (str,), False, False, False)
+        self.name = name
+        """An identifying name for this tag."""
+        self.label = label
+        """Text to be displayed for the annotation."""
+        self.color = color
+        """Hex or RGB color string to be used as the background color."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('AudioAnnotatorTag.name', self.name, (str,), True, False, False)
+        _guard_scalar('AudioAnnotatorTag.label', self.label, (str,), False, False, False)
+        _guard_scalar('AudioAnnotatorTag.color', self.color, (str,), False, False, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'AudioAnnotatorTag':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('AudioAnnotatorTag.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('AudioAnnotatorTag.label', __d_label, (str,), False, False, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('AudioAnnotatorTag.color', __d_color, (str,), False, False, False)
+        name: str = __d_name
+        label: str = __d_label
+        color: str = __d_color
+        return AudioAnnotatorTag(
+            name,
+            label,
+            color,
+        )
+
+
+class AudioAnnotatorItem:
+    """Create an annotator item with initial selected tags or no tags.
+    """
+    def __init__(
+            self,
+            start: float,
+            end: float,
+            tag: str,
+    ):
+        _guard_scalar('AudioAnnotatorItem.start', start, (float, int,), False, False, False)
+        _guard_scalar('AudioAnnotatorItem.end', end, (float, int,), False, False, False)
+        _guard_scalar('AudioAnnotatorItem.tag', tag, (str,), False, False, False)
+        self.start = start
+        """The start of the audio annotation in seconds."""
+        self.end = end
+        """The end of the audio annotation in seconds."""
+        self.tag = tag
+        """The `name` of the audio annotator tag to refer to for the `label` and `color` of this item."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('AudioAnnotatorItem.start', self.start, (float, int,), False, False, False)
+        _guard_scalar('AudioAnnotatorItem.end', self.end, (float, int,), False, False, False)
+        _guard_scalar('AudioAnnotatorItem.tag', self.tag, (str,), False, False, False)
+        return _dump(
+            start=self.start,
+            end=self.end,
+            tag=self.tag,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'AudioAnnotatorItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_start: Any = __d.get('start')
+        _guard_scalar('AudioAnnotatorItem.start', __d_start, (float, int,), False, False, False)
+        __d_end: Any = __d.get('end')
+        _guard_scalar('AudioAnnotatorItem.end', __d_end, (float, int,), False, False, False)
+        __d_tag: Any = __d.get('tag')
+        _guard_scalar('AudioAnnotatorItem.tag', __d_tag, (str,), False, False, False)
+        start: float = __d_start
+        end: float = __d_end
+        tag: str = __d_tag
+        return AudioAnnotatorItem(
+            start,
+            end,
+            tag,
+        )
+
+
+class AudioAnnotator:
+    """Create an audio annotator component.
+
+    This component allows annotating and labeling parts of audio file.
+    """
+    def __init__(
+            self,
+            name: str,
+            title: str,
+            src: str,
+            tags: List[AudioAnnotatorTag],
+            items: Optional[List[AudioAnnotatorItem]] = None,
+            trigger: Optional[bool] = None,
+    ):
+        _guard_scalar('AudioAnnotator.name', name, (str,), True, False, False)
+        _guard_scalar('AudioAnnotator.title', title, (str,), False, False, False)
+        _guard_scalar('AudioAnnotator.src', src, (str,), False, False, False)
+        _guard_vector('AudioAnnotator.tags', tags, (AudioAnnotatorTag,), False, False, False)
+        _guard_vector('AudioAnnotator.items', items, (AudioAnnotatorItem,), False, True, False)
+        _guard_scalar('AudioAnnotator.trigger', trigger, (bool,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.title = title
+        """The audio annotator's title."""
+        self.src = src
+        """The source of the audio. We advise using mp3 or wav formats to achieve the best cross-browser experience. See https://caniuse.com/?search=audio%20format for other formats."""
+        self.tags = tags
+        """The master list of tags that can be used for annotations."""
+        self.items = items
+        """Annotations to display on the image, if any."""
+        self.trigger = trigger
+        """True if the form should be submitted as soon as an annotation is made."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('AudioAnnotator.name', self.name, (str,), True, False, False)
+        _guard_scalar('AudioAnnotator.title', self.title, (str,), False, False, False)
+        _guard_scalar('AudioAnnotator.src', self.src, (str,), False, False, False)
+        _guard_vector('AudioAnnotator.tags', self.tags, (AudioAnnotatorTag,), False, False, False)
+        _guard_vector('AudioAnnotator.items', self.items, (AudioAnnotatorItem,), False, True, False)
+        _guard_scalar('AudioAnnotator.trigger', self.trigger, (bool,), False, True, False)
+        return _dump(
+            name=self.name,
+            title=self.title,
+            src=self.src,
+            tags=[__e.dump() for __e in self.tags],
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            trigger=self.trigger,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'AudioAnnotator':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('AudioAnnotator.name', __d_name, (str,), True, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('AudioAnnotator.title', __d_title, (str,), False, False, False)
+        __d_src: Any = __d.get('src')
+        _guard_scalar('AudioAnnotator.src', __d_src, (str,), False, False, False)
+        __d_tags: Any = __d.get('tags')
+        _guard_vector('AudioAnnotator.tags', __d_tags, (dict,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('AudioAnnotator.items', __d_items, (dict,), False, True, False)
+        __d_trigger: Any = __d.get('trigger')
+        _guard_scalar('AudioAnnotator.trigger', __d_trigger, (bool,), False, True, False)
+        name: str = __d_name
+        title: str = __d_title
+        src: str = __d_src
+        tags: List[AudioAnnotatorTag] = [AudioAnnotatorTag.load(__e) for __e in __d_tags]
+        items: Optional[List[AudioAnnotatorItem]] = None if __d_items is None else [AudioAnnotatorItem.load(__e) for __e in __d_items]
+        trigger: Optional[bool] = __d_trigger
+        return AudioAnnotator(
+            name,
+            title,
+            src,
+            tags,
+            items,
+            trigger,
+        )
+
+
 class Facepile:
     """A face pile displays a list of personas. Each circle represents a person and contains their image or initials.
     Often this control is used when sharing who has access to a specific view or file.
@@ -7233,6 +7412,7 @@ class Component:
             persona: Optional[Persona] = None,
             text_annotator: Optional[TextAnnotator] = None,
             image_annotator: Optional[ImageAnnotator] = None,
+            audio_annotator: Optional[AudioAnnotator] = None,
             facepile: Optional[Facepile] = None,
             copyable_text: Optional[CopyableText] = None,
             menu: Optional[Menu] = None,
@@ -7284,6 +7464,7 @@ class Component:
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.image_annotator', image_annotator, (ImageAnnotator,), False, True, False)
+        _guard_scalar('Component.audio_annotator', audio_annotator, (AudioAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
@@ -7379,6 +7560,8 @@ class Component:
         """Text annotator."""
         self.image_annotator = image_annotator
         """Image annotator."""
+        self.audio_annotator = audio_annotator
+        """Audio annotator."""
         self.facepile = facepile
         """Facepile."""
         self.copyable_text = copyable_text
@@ -7437,6 +7620,7 @@ class Component:
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.image_annotator', self.image_annotator, (ImageAnnotator,), False, True, False)
+        _guard_scalar('Component.audio_annotator', self.audio_annotator, (AudioAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
         _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
         _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
@@ -7488,6 +7672,7 @@ class Component:
             persona=None if self.persona is None else self.persona.dump(),
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
             image_annotator=None if self.image_annotator is None else self.image_annotator.dump(),
+            audio_annotator=None if self.audio_annotator is None else self.audio_annotator.dump(),
             facepile=None if self.facepile is None else self.facepile.dump(),
             copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
             menu=None if self.menu is None else self.menu.dump(),
@@ -7588,6 +7773,8 @@ class Component:
         _guard_scalar('Component.text_annotator', __d_text_annotator, (dict,), False, True, False)
         __d_image_annotator: Any = __d.get('image_annotator')
         _guard_scalar('Component.image_annotator', __d_image_annotator, (dict,), False, True, False)
+        __d_audio_annotator: Any = __d.get('audio_annotator')
+        _guard_scalar('Component.audio_annotator', __d_audio_annotator, (dict,), False, True, False)
         __d_facepile: Any = __d.get('facepile')
         _guard_scalar('Component.facepile', __d_facepile, (dict,), False, True, False)
         __d_copyable_text: Any = __d.get('copyable_text')
@@ -7643,6 +7830,7 @@ class Component:
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
         image_annotator: Optional[ImageAnnotator] = None if __d_image_annotator is None else ImageAnnotator.load(__d_image_annotator)
+        audio_annotator: Optional[AudioAnnotator] = None if __d_audio_annotator is None else AudioAnnotator.load(__d_audio_annotator)
         facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
         copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
         menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
@@ -7694,6 +7882,7 @@ class Component:
             persona,
             text_annotator,
             image_annotator,
+            audio_annotator,
             facepile,
             copyable_text,
             menu,
