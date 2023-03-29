@@ -11,7 +11,7 @@ type RangeAnnotatorProps = {
   onAnnotate: (annotations: DrawnAnnotation[]) => void
   activeTag: S
   tags: AudioAnnotatorTag[]
-  percentPlayed: F
+  trackPosition: F
   duration: F
   setActiveTag: (tag: S) => void
   items?: AudioAnnotatorItem[]
@@ -20,7 +20,7 @@ type RangeAnnotatorProps = {
 type AnnotatorProps = {
   annotations: DrawnAnnotation[]
   activeTag: S
-  percentPlayed: F
+  trackPosition: F | null
   duration: F
   start?: F
   colorsMap: Map<S, TagColor>
@@ -176,7 +176,7 @@ const
   },
   Annotator = (props: React.PropsWithChildren<AnnotatorProps>) => {
     const
-      { annotations, activeTag, addNewAnnotation, percentPlayed, duration, setActiveTag,
+      { annotations, activeTag, addNewAnnotation, trackPosition, duration, setActiveTag,
         children, colorsMap, moveOrResizeAnnotation, focusAnnotation, setZoom, start = 0 } = props,
       canvasRef = React.useRef<HTMLCanvasElement>(null),
       ctxRef = React.useRef<CanvasRenderingContext2D | null>(null),
@@ -213,10 +213,12 @@ const
         }
 
         // Draw track.
-        const trackPosition = percentPlayed === 1 ? canvas.width - TRACK_WIDTH : canvas.width * percentPlayed
-        ctx.fillStyle = cssVarValue('$themeDark')
-        ctx.fillRect(trackPosition - (TRACK_WIDTH / 2), 0, TRACK_WIDTH, WAVEFORM_HEIGHT)
-      }, [activeTag, annotations, colorsMap, percentPlayed, setZoom]),
+        if (trackPosition !== null) {
+          const trackP = trackPosition === 1 ? canvas.width - TRACK_WIDTH : canvas.width * trackPosition
+          ctx.fillStyle = cssVarValue('$themeDark')
+          ctx.fillRect(trackP - (TRACK_WIDTH / 2), 0, TRACK_WIDTH, WAVEFORM_HEIGHT)
+        }
+      }, [activeTag, annotations, colorsMap, trackPosition, setZoom]),
       onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (e.buttons !== 1) return // Accept left-click only.
         const canvas = canvasRef.current
@@ -433,7 +435,7 @@ export const
   },
   RangeAnnotator = (props: React.PropsWithChildren<RangeAnnotatorProps>) => {
     const
-      { onAnnotate, activeTag, tags, percentPlayed, items, duration, setActiveTag, children, onRenderToolbar } = props,
+      { onAnnotate, activeTag, tags, trackPosition, items, duration, setActiveTag, children, onRenderToolbar } = props,
       [removeAllDisabled, setRemoveAllDisabled] = React.useState(!items?.length),
       [removeDisabled, setRemoveDisabled] = React.useState(true),
       [annotations, setAnnotations] = React.useState<DrawnAnnotation[]>(itemsToAnnotations(items)),
@@ -542,6 +544,11 @@ export const
         })
         setRemoveDisabled(true)
         recalculateAnnotations(true)
+      },
+      getZoomedTrackPosition = () => {
+        const trackPosPx = trackPosition * canvasWidth
+        const withinBounds = trackPosPx >= zoom.from && trackPosPx <= zoom.to
+        return withinBounds ? (trackPosPx - zoom.from) / (zoom.to - zoom.from) : null
       }
 
     React.useEffect(() => {
@@ -578,7 +585,7 @@ export const
         <Annotator
           annotations={annotations}
           activeTag={activeTag}
-          percentPlayed={percentPlayed}
+          trackPosition={trackPosition}
           duration={duration}
           setActiveTag={setActiveTag}
           addNewAnnotation={addNewAnnotation}
@@ -592,7 +599,7 @@ export const
             <Annotator
               annotations={getAnnotationsWithinRange(annotations, zoom, annotatorContainerRef.current.clientWidth)}
               activeTag={activeTag}
-              percentPlayed={percentPlayed}
+              trackPosition={getZoomedTrackPosition()}
               start={zoom.from / canvasWidth * duration}
               duration={zoom.to / canvasWidth * duration}
               setActiveTag={setActiveTag}

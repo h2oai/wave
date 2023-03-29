@@ -208,7 +208,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               onAnnotate={onAnnotate}
               activeTag={activeTag}
               tags={model.tags}
-              percentPlayed={currentTime / duration}
+              trackPosition={currentTime / duration}
               duration={duration}
               setActiveTag={setActiveTag}
               onRenderToolbar={() => (
