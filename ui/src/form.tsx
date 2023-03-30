@@ -37,6 +37,7 @@ import { Markup, XMarkup } from './markup'
 import { MessageBar, XMessageBar } from './message_bar'
 import { Persona, XPersona } from "./persona"
 import { Picker, XPicker } from './picker'
+import { Chatbot, XChatbot } from './chatbot'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
 import { RangeSlider, XRangeSlider } from './range_slider'
@@ -163,6 +164,8 @@ export interface Component {
   tags?: Tags
   /** Time picker. */
   time_picker?: TimePicker
+  /** Chatbot. */
+  chatbot?: Chatbot
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -337,6 +340,7 @@ const
     if (m.menu) return <XMenu model={m.menu} />
     if (m.tags) return <XTags model={m.tags} />
     if (m.time_picker) return <XTimePicker model={m.time_picker} />
+    if (m.chatbot) return <XChatbot model={m.chatbot} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

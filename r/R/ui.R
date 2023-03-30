@@ -3088,6 +3088,28 @@ ui_time_picker <- function(
   return(.o)
 }
 
+#' Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
+#'
+#' @param name An identifying name for this component.
+#' @param data Chat messages data. Requires cyclic buffer.
+#' @param placeholder Chat input box placeholder. Use for prompt examples.
+#' @return A Chatbot instance.
+#' @export
+ui_chatbot <- function(
+  name,
+  data,
+  placeholder = NULL) {
+  .guard_scalar("name", "character", name)
+  # TODO Validate data: repeated Rec
+  .guard_scalar("placeholder", "character", placeholder)
+  .o <- list(chatbot=list(
+    name=name,
+    data=data,
+    placeholder=placeholder))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -3235,6 +3257,37 @@ ui_chat_card <- function(
     commands=commands,
     view='chat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
+  return(.o)
+}
+
+#' Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param name An identifying name for this component.
+#' @param data Chat messages data. Requires cyclic buffer.
+#' @param placeholder Chat input box placeholder. Use for prompt examples.
+#' @param commands Contextual menu commands for this component.
+#' @return A ChatbotCard instance.
+#' @export
+ui_chatbot_card <- function(
+  box,
+  name,
+  data,
+  placeholder = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("name", "character", name)
+  # TODO Validate data: Rec
+  .guard_scalar("placeholder", "character", placeholder)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    name=name,
+    data=data,
+    placeholder=placeholder,
+    commands=commands,
+    view='chatbot')
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatbotCard"))
   return(.o)
 }
 
