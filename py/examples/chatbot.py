@@ -11,7 +11,7 @@ MAX_MESSAGES = 500
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        # Cyclic buffer drops oldest messages when full.
+        # Cyclic buffer drops oldest messages when full. Must have exactly 2 columns - msg and fromUser.
         cyclic_buffer = data(fields='msg fromUser', size=-MAX_MESSAGES)
         q.page['chatbot-card'] = ui.chatbot_card(box='1 1 5 5', data=cyclic_buffer, name='chatbot')
         q.page['meta'] = ui.meta_card(box='', theme='h2o-dark')
