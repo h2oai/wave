@@ -142,10 +142,13 @@ const
           alignItems: 'center'
         }
       },
-      menuItems = commands
-        ? commands.map(({ name, label, caption, icon, value, data }) => // TODO: add items
-          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value ?? data, disabled, onClick: handleOnClick(name, value, path) })
+      getItemProps = (commands: Command[]) => {
+        return commands.map(({ name, label, caption, icon, value, data, items }) => // TODO: add items
+          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value ?? data, disabled, onClick: handleOnClick(name, value), subMenuProps: items ? { items: getItemProps(items) } : undefined })
         )
+      },
+      menuItems = commands
+        ? getItemProps(commands)
         : undefined
 
     React.useEffect(() => {
@@ -165,7 +168,8 @@ const
       iconProps: { iconName: icon },
       menuProps: menuItems ? {
         items: menuItems,
-        styles: { subComponentStyles: { menuItem: { icon: { lineHeight: 24 } } } }
+        // TODO: Add style for sub-items with an icon.
+        styles: { subComponentStyles: { menuItem: { icon: { lineHeight: 'initial' }, subMenuIcon: { lineHeight: 'initial', height: 'auto' } } } }
       } : undefined,
       split: !!menuItems
     }

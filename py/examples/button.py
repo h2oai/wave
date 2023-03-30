@@ -44,9 +44,13 @@ async def serve(q: Q):
             ui.button(name='button_with_icon', label='Button with an icon', icon='Search'),
             ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
             ui.button(name='external_path_button', label='External', path='https://h2o.ai/'),
+            # TODO: Edit 
             ui.button(name='command_button', label='Button with commands', primary=True, commands=[
                     ui.command(name='first_command', label='First command'), 
-                    ui.command(name='second_command', label='Second command'),
+                    ui.command(name='second_command', label='Second command', icon="Heart", items=[
+                        ui.command(name='third_command', label='Third command'),
+                        ui.command(name='fourth_command', label='Fourth command', icon="Like"),  
+                    ]),
                 ]
             ),
         ])
