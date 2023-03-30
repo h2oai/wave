@@ -15,32 +15,54 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
-import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { clas, cssVar, getContrast } from './theme'
+import { clas, cssVar, getContrast, important, px } from './theme'
 import { bond, wave } from './ui'
 
-const css = stylesheet({
-  chatWindow: {
-    height: '100%',
-    minHeight: 400,
-  },
-  messageContainer: {
-    overflowY: 'auto',
-    // HACK: Prevent Safari from rendering double scrollbar. 52px is the total height of the input field.
-    height: 'calc(100% - 52px)',
-  },
-  message: {
-    display: 'inline-block',
-    backgroundColor: cssVar('$themeTertiary'),
-    padding: 8,
-    borderRadius: 4,
-    maxWidth: '65ch',
-  },
-  userMessage: {
-    backgroundColor: cssVar('$themePrimary'),
-  },
-})
+const
+  SUBMIT_BTN_SIZE = 30,
+  css = Fluent.mergeStyleSets({
+    chatWindow: {
+      height: '100%',
+      minHeight: 400,
+    },
+    msgContainer: {
+      overflowY: 'auto',
+      // HACK: Prevent Safari from rendering double scrollbar. 77px is the total height of the input field.
+      height: 'calc(100% - 77px)',
+      padding: 15,
+      paddingBottom: 0,
+    },
+    msg: {
+      display: 'inline-block',
+      backgroundColor: cssVar('$text'),
+      padding: 6,
+      borderRadius: 4,
+      maxWidth: '65ch',
+      borderTopRightRadius: 0,
+    },
+    userMsg: {
+      backgroundColor: cssVar('$themePrimary'),
+      borderTopRightRadius: 4,
+      borderTopLeftRadius: 0,
+    },
+    msgWrapper: {
+      '&:first-child': { marginTop: important(px(0)) },
+    }
+  }),
+  getCornerStyle = (prev?: B, curr?: B, next?: B): React.CSSProperties | undefined => {
+    // First.
+    if (curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
+    if (!curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
+
+    // Middle.
+    if (curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
+    if (!curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+
+    // Last.
+    if (curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
+    if (!curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
+  }
 
 type ChatMessage = { msg: S, fromUser: B }
 
@@ -75,21 +97,28 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
 
   return (
     <div className={css.chatWindow}>
-      <div className={css.messageContainer} ref={msgContainerRef}>
+      <div className={css.msgContainer} ref={msgContainerRef}>
         {msgs.map(({ msg, fromUser }, idx) => (
-          <div key={idx} style={{ margin: 15, textAlign: fromUser ? 'left' : 'right', color: getContrast(fromUser ? '$themePrimary' : '$themeTertiary') }} >
-            <span className={clas(css.message, fromUser ? css.userMessage : '', 'wave-s14')}>{msg}</span>
+          <div
+            key={idx}
+            className={css.msgWrapper}
+            style={{
+              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 10 : 3,
+              textAlign: fromUser ? 'left' : 'right',
+              color: getContrast(fromUser ? '$themePrimary' : '$text')
+            }} >
+            <span className={clas(css.msg, fromUser ? css.userMsg : '', 'wave-s14')} style={getCornerStyle(msgs[idx - 1]?.fromUser, fromUser, msgs[idx + 1]?.fromUser)}>{msg}</span>
           </div>
         ))}
       </div>
-      <Fluent.Stack horizontal style={{ padding: 10, position: 'relative' }}>
+      <div style={{ padding: 15, position: 'relative' }}>
         <Fluent.TextField
           data-test={model.name}
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
           placeholder="Type your message"
-          styles={{ root: { flexGrow: 1 } }}
+          styles={{ root: { flexGrow: 1 }, field: { width: `calc(100% - ${SUBMIT_BTN_SIZE}px)`, paddingRight: 0 } }}
         />
         <Fluent.IconButton
           data-test={`${model.name}-submit`}
@@ -97,11 +126,11 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           onClick={submit}
           disabled={!userInput.trim()}
           styles={{
-            root: { position: 'absolute', top: 10, right: 10, height: 30 },
+            root: { position: 'absolute', top: 15, right: 15, height: SUBMIT_BTN_SIZE },
             rootHovered: { backgroundColor: 'transparent' },
-            rootDisabled: { position: 'absolute', top: 10, right: 10, height: 30, backgroundColor: 'transparent' }
+            rootDisabled: { position: 'absolute', top: 15, right: 15, height: SUBMIT_BTN_SIZE, backgroundColor: 'transparent' }
           }} />
-      </Fluent.Stack>
+      </div>
     </div>
   )
 }

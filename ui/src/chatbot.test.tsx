@@ -6,6 +6,10 @@ import { wave } from './ui'
 const name = 'chatbot'
 const model = { name, data: [] }
 const pushMock = jest.fn()
+const data = [
+  { msg: 'Hi there!', fromUser: true },
+  { msg: 'Hello!', fromUser: false },
+]
 
 describe('XChatbot', () => {
   beforeAll(() => wave.push = pushMock)
@@ -20,13 +24,7 @@ describe('XChatbot', () => {
   })
 
   it('Displays chat messages', () => {
-    const model = {
-      name, data: [
-        { msg: 'Hello!', fromUser: false },
-        { msg: 'Hi there!', fromUser: true },
-      ],
-    }
-    const { getByText } = render(<XChatbot model={model} />)
+    const { getByText } = render(<XChatbot model={{ name, data }} />)
     expect(getByText('Hello!')).toBeInTheDocument()
     expect(getByText('Hi there!')).toBeInTheDocument()
   })
@@ -134,5 +132,58 @@ describe('XChatbot', () => {
     const { getByRole, getByTestId } = render(<XChatbot model={model} />)
     fireEvent.change(getByRole('textbox'), { target: { value: ' ' } })
     expect(getByTestId(`${name}-submit`)).toBeDisabled()
+  })
+
+  it('Renders properly rounded corners - single message', () => {
+    const { container } = render(<XChatbot model={{ name, data }} />)
+
+    const messages = container.querySelectorAll('[class *="message-"')
+    expect(window.getComputedStyle(messages[0], null).borderTopLeftRadius).toEqual('0px')
+    expect(window.getComputedStyle(messages[1], null).borderTopRightRadius).toEqual('0px')
+  })
+
+  it('Renders properly rounded corners - 2 continuous messages', () => {
+    const data = [
+      { msg: 'Hi there!', fromUser: true },
+      { msg: 'Hi there!', fromUser: true },
+      { msg: 'Hello!', fromUser: false },
+      { msg: 'Hello!', fromUser: false },
+    ]
+    const { container } = render(<XChatbot model={{ name, data }} />)
+    const messages = container.querySelectorAll('[class *="message-"')
+    expect(window.getComputedStyle(messages[0], null).borderBottomLeftRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[0], null).borderTopLeftRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[1], null).borderTopLeftRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[1], null).borderBottomLeftRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[2], null).borderBottomRightRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[2], null).borderTopRightRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[3], null).borderTopRightRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[3], null).borderBottomRightRadius).toEqual('4px')
+  })
+
+  it('Renders properly rounded corners - 2+ continuous messages', () => {
+    const data = [
+      { msg: 'Hi there!', fromUser: true },
+      { msg: 'Hi there!', fromUser: true },
+      { msg: 'Hi there!', fromUser: true },
+      { msg: 'Hello!', fromUser: false },
+      { msg: 'Hello!', fromUser: false },
+      { msg: 'Hello!', fromUser: false },
+    ]
+    const { container } = render(<XChatbot model={{ name, data }} />)
+    const messages = container.querySelectorAll('[class *="message-"')
+    expect(window.getComputedStyle(messages[0], null).borderBottomLeftRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[0], null).borderTopLeftRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[0], null).borderTopRightRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[1], null).borderTopLeftRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[1], null).borderBottomLeftRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[2], null).borderTopLeftRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[2], null).borderBottomLeftRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[3], null).borderBottomRightRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[3], null).borderTopRightRadius).toEqual('4px')
+    expect(window.getComputedStyle(messages[4], null).borderTopRightRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[4], null).borderBottomRightRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[5], null).borderTopRightRadius).toEqual('0')
+    expect(window.getComputedStyle(messages[5], null).borderBottomRightRadius).toEqual('4px')
   })
 })
