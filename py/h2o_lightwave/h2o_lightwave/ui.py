@@ -2659,18 +2659,21 @@ def time_picker(
 def chatbot(
         name: str,
         data: List[PackedRecord],
+        placeholder: Optional[str] = None,
 ) -> Component:
     """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
 
     Args:
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
+        placeholder: Chat input box placeholder. Use for prompt examples.
     Returns:
         A `h2o_wave.types.Chatbot` instance.
     """
     return Component(chatbot=Chatbot(
         name,
         data,
+        placeholder,
     ))
 
 
@@ -2813,6 +2816,7 @@ def chatbot_card(
         box: str,
         name: str,
         data: PackedRecord,
+        placeholder: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
     """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
@@ -2821,6 +2825,7 @@ def chatbot_card(
         box: A string indicating how to place this component on the page.
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
+        placeholder: Chat input box placeholder. Use for prompt examples.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatbotCard` instance.
@@ -2829,6 +2834,7 @@ def chatbot_card(
         box,
         name,
         data,
+        placeholder,
         commands,
     )
 

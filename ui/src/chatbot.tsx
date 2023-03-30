@@ -72,6 +72,8 @@ export interface Chatbot {
   name: Id
   /** Chat messages data. Requires cyclic buffer. */
   data: Rec[]
+  /** Chat input box placeholder. Use for prompt examples. */
+  placeholder?: S
 }
 
 export const XChatbot = ({ model }: { model: Chatbot }) => {
@@ -117,7 +119,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
-          placeholder="Type your message"
+          placeholder={model.placeholder || 'Type your message'}
           styles={{ root: { flexGrow: 1 }, field: { width: `calc(100% - ${SUBMIT_BTN_SIZE}px)`, paddingRight: 0 } }}
         />
         <Fluent.IconButton
@@ -141,11 +143,13 @@ interface State {
   name: Id
   /** Chat messages data. Requires cyclic buffer. */
   data: Rec
+  /** Chat input box placeholder. Use for prompt examples. */
+  placeholder?: S
 }
 
 export const
   View = bond(({ state, changed }: Model<State>) => {
-    const render = () => <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data) }} />
+    const render = () => <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder }} />
     return { render, changed }
   })
 
