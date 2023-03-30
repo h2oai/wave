@@ -20,13 +20,6 @@
     ],
     "description": "Create a minimal Wave BreadcrumbsCard."
   },
-  "Wave ButtonChoice": {
-    "prefix": "w_button_choice",
-    "body": [
-      "ui.button_choice(name='$1'),$0"
-    ],
-    "description": "Create a minimal Wave ButtonChoice."
-  },
   "Wave Button": {
     "prefix": "w_button",
     "body": [
@@ -965,17 +958,10 @@
     ],
     "description": "Create a full Wave BreadcrumbsCard."
   },
-  "Wave Full ButtonChoice": {
-    "prefix": "w_full_button_choice",
-    "body": [
-      "ui.button_choice(name='$1', label='$2', caption='$3', icon='$4', value='$5', disabled=${6:False}, path='$7'),$0"
-    ],
-    "description": "Create a full Wave ButtonChoice."
-  },
   "Wave Full Button": {
     "prefix": "w_full_button",
     "body": [
-      "ui.button(name='$1', label='$2', caption='$3', value='$4', primary=${5:False}, disabled=${6:False}, link=${7:False}, icon='$8', width='$9', visible=${10:True}, tooltip='$11', path='$12', choices=[\n\t\t$13\t\t\n]),$0"
+      "ui.button(name='$1', label='$2', caption='$3', value='$4', primary=${5:False}, disabled=${6:False}, link=${7:False}, icon='$8', width='$9', visible=${10:True}, tooltip='$11', path='$12', commands=[\n\t\t$13\t\t\n]),$0"
     ],
     "description": "Create a full Wave Button."
   },

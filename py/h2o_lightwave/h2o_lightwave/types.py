@@ -2571,95 +2571,6 @@ class ColorPicker:
         )
 
 
-class ButtonChoice:
-    """No documentation available.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: Optional[str] = None,
-            caption: Optional[str] = None,
-            icon: Optional[str] = None,
-            value: Optional[str] = None,
-            disabled: Optional[bool] = None,
-            path: Optional[str] = None,
-    ):
-        _guard_scalar('ButtonChoice.name', name, (str,), True, False, False)
-        _guard_scalar('ButtonChoice.label', label, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.caption', caption, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.icon', icon, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.value', value, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.disabled', disabled, (bool,), False, True, False)
-        _guard_scalar('ButtonChoice.path', path, (str,), False, True, False)
-        self.name = name
-        """An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed."""
-        self.label = label
-        """The text displayed for this choice."""
-        self.caption = caption
-        """The caption for this choice (typically a tooltip)."""
-        self.icon = icon
-        """An optional icon to display next to the choice label"""
-        self.value = value
-        """A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True."""
-        self.disabled = disabled
-        """True if the choice should be disabled."""
-        self.path = path
-        """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('ButtonChoice.name', self.name, (str,), True, False, False)
-        _guard_scalar('ButtonChoice.label', self.label, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.caption', self.caption, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.icon', self.icon, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.value', self.value, (str,), False, True, False)
-        _guard_scalar('ButtonChoice.disabled', self.disabled, (bool,), False, True, False)
-        _guard_scalar('ButtonChoice.path', self.path, (str,), False, True, False)
-        return _dump(
-            name=self.name,
-            label=self.label,
-            caption=self.caption,
-            icon=self.icon,
-            value=self.value,
-            disabled=self.disabled,
-            path=self.path,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'ButtonChoice':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ButtonChoice.name', __d_name, (str,), True, False, False)
-        __d_label: Any = __d.get('label')
-        _guard_scalar('ButtonChoice.label', __d_label, (str,), False, True, False)
-        __d_caption: Any = __d.get('caption')
-        _guard_scalar('ButtonChoice.caption', __d_caption, (str,), False, True, False)
-        __d_icon: Any = __d.get('icon')
-        _guard_scalar('ButtonChoice.icon', __d_icon, (str,), False, True, False)
-        __d_value: Any = __d.get('value')
-        _guard_scalar('ButtonChoice.value', __d_value, (str,), False, True, False)
-        __d_disabled: Any = __d.get('disabled')
-        _guard_scalar('ButtonChoice.disabled', __d_disabled, (bool,), False, True, False)
-        __d_path: Any = __d.get('path')
-        _guard_scalar('ButtonChoice.path', __d_path, (str,), False, True, False)
-        name: str = __d_name
-        label: Optional[str] = __d_label
-        caption: Optional[str] = __d_caption
-        icon: Optional[str] = __d_icon
-        value: Optional[str] = __d_value
-        disabled: Optional[bool] = __d_disabled
-        path: Optional[str] = __d_path
-        return ButtonChoice(
-            name,
-            label,
-            caption,
-            icon,
-            value,
-            disabled,
-            path,
-        )
-
-
 class Button:
     """Create a button.
 
@@ -2692,7 +2603,7 @@ class Button:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             path: Optional[str] = None,
-            choices: Optional[List[ButtonChoice]] = None,
+            commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('Button.name', name, (str,), True, False, False)
         _guard_scalar('Button.label', label, (str,), False, True, False)
@@ -2706,7 +2617,7 @@ class Button:
         _guard_scalar('Button.visible', visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Button.path', path, (str,), False, True, False)
-        _guard_vector('Button.choices', choices, (ButtonChoice,), False, True, False)
+        _guard_vector('Button.commands', commands, (Command,), False, True, False)
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
         self.label = label
@@ -2731,7 +2642,7 @@ class Button:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.path = path
         """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab."""
-        self.choices = choices
+        self.commands = commands
         """The menu with button actions. Ignored if `link` is True."""
 
     def dump(self) -> Dict:
@@ -2748,7 +2659,7 @@ class Button:
         _guard_scalar('Button.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Button.path', self.path, (str,), False, True, False)
-        _guard_vector('Button.choices', self.choices, (ButtonChoice,), False, True, False)
+        _guard_vector('Button.commands', self.commands, (Command,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -2762,7 +2673,7 @@ class Button:
             visible=self.visible,
             tooltip=self.tooltip,
             path=self.path,
-            choices=None if self.choices is None else [__e.dump() for __e in self.choices],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -2792,8 +2703,8 @@ class Button:
         _guard_scalar('Button.tooltip', __d_tooltip, (str,), False, True, False)
         __d_path: Any = __d.get('path')
         _guard_scalar('Button.path', __d_path, (str,), False, True, False)
-        __d_choices: Any = __d.get('choices')
-        _guard_vector('Button.choices', __d_choices, (dict,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('Button.commands', __d_commands, (dict,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
@@ -2806,7 +2717,7 @@ class Button:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         path: Optional[str] = __d_path
-        choices: Optional[List[ButtonChoice]] = None if __d_choices is None else [ButtonChoice.load(__e) for __e in __d_choices]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Button(
             name,
             label,
@@ -2820,7 +2731,7 @@ class Button:
             visible,
             tooltip,
             path,
-            choices,
+            commands,
         )
 
 

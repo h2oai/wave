@@ -18,25 +18,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { cssVar, formItemWidth, padding } from './theme'
+import { Command } from './toolbar'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
-
-interface ButtonChoice {
-  /** An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed. */
-  name: Id
-  /** The text displayed for this choice. */
-  label?: S
-  /** The caption for this choice (typically a tooltip). */
-  caption?: S
-  /** An optional icon to display next to the choice label */
-  icon?: S
-  /** A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True. */
-  value?: S
-  /** True if the choice should be disabled. */
-  disabled?: B
-  /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
-  path?: S
-}
 
 /**
  * Create a button.
@@ -82,7 +66,7 @@ export interface Button {
   /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
   /** The menu with button actions. Ignored if `link` is True. */
-  choices?: ButtonChoice[]
+  commands?: Command[]
 }
 
 /** Create a set of buttons laid out horizontally. */
@@ -133,7 +117,7 @@ const
   }
 
 const
-  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, choices } }: { model: Button }) => {
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, commands } }: { model: Button }) => {
     const
       handleOnClick = (name: Id, value?: S, path?: S) => (ev: any) => {
         ev.stopPropagation()
@@ -158,15 +142,15 @@ const
           alignItems: 'center'
         }
       },
-      menuItems = choices
-        ? choices.map(({ name, label, caption, icon, value, path, disabled }) =>
-          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value, disabled, onClick: handleOnClick(name, value, path) })
+      menuItems = commands
+        ? commands.map(({ name, label, caption, icon, value, data }) => // TODO: add items
+          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value ?? data, disabled, onClick: handleOnClick(name, value, path) })
         )
         : undefined
 
     React.useEffect(() => {
       wave.args[name] = false
-      choices?.forEach(({ name }) => wave.args[name] = false)
+      commands?.forEach(({ name }) => wave.args[name] = false)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

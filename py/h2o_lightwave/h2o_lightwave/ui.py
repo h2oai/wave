@@ -985,39 +985,6 @@ def color_picker(
     ))
 
 
-def button_choice(
-        name: str,
-        label: Optional[str] = None,
-        caption: Optional[str] = None,
-        icon: Optional[str] = None,
-        value: Optional[str] = None,
-        disabled: Optional[bool] = None,
-        path: Optional[str] = None,
-) -> ButtonChoice:
-    """No documentation available.
-
-    Args:
-        name: An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed.
-        label: The text displayed for this choice.
-        caption: The caption for this choice (typically a tooltip).
-        icon: An optional icon to display next to the choice label
-        value: A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True.
-        disabled: True if the choice should be disabled.
-        path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-    Returns:
-        A `h2o_wave.types.ButtonChoice` instance.
-    """
-    return ButtonChoice(
-        name,
-        label,
-        caption,
-        icon,
-        value,
-        disabled,
-        path,
-    )
-
-
 def button(
         name: str,
         label: Optional[str] = None,
@@ -1031,7 +998,7 @@ def button(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         path: Optional[str] = None,
-        choices: Optional[List[ButtonChoice]] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Component:
     """Create a button.
 
@@ -1063,7 +1030,7 @@ def button(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-        choices: The menu with button actions. Ignored if `link` is True.
+        commands: The menu with button actions. Ignored if `link` is True.
     Returns:
         A `h2o_wave.types.Button` instance.
     """
@@ -1080,7 +1047,7 @@ def button(
         visible,
         tooltip,
         path,
-        choices,
+        commands,
     ))
 
 

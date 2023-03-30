@@ -123,15 +123,15 @@ describe('Button.tsx', () => {
     })
   })
 
-  describe('Choices button', () => {
+  describe('Commands button', () => {
     const buttonProps = {
       items: [{
         button: {
           name,
           label: name,
-          choices: [
-            { name: 'choice1', label: 'Choice 1' },
-            { name: 'choice2', label: 'Choice 2' },
+          commands: [
+            { name: 'command1', label: 'Command 1' },
+            { name: 'command2', label: 'Command 2' },
           ]
         }
       }]
@@ -141,15 +141,15 @@ describe('Button.tsx', () => {
       const { container, queryByText, queryByRole } = render(<XButtons model={buttonProps} />)
 
       expect(queryByRole('menu')).not.toBeInTheDocument()
-      expect(queryByText('Choice 1')).not.toBeInTheDocument()
-      expect(queryByText('Choice 2')).not.toBeInTheDocument()
+      expect(queryByText('Command 1')).not.toBeInTheDocument()
+      expect(queryByText('Command 2')).not.toBeInTheDocument()
 
       const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
       fireEvent.click(contextMenuButton)
 
       expect(queryByRole('menu')).toBeInTheDocument()
-      expect(queryByText('Choice 1')).toBeInTheDocument()
-      expect(queryByText('Choice 2')).toBeInTheDocument()
+      expect(queryByText('Command 1')).toBeInTheDocument()
+      expect(queryByText('Command 2')).toBeInTheDocument()
     })
 
     it('Sets args after click', () => {
@@ -161,15 +161,15 @@ describe('Button.tsx', () => {
 
       const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
 
-      expect(wave.args['choice1']).toBe(false)
+      expect(wave.args['command1']).toBe(false)
       fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 1'))
-      expect(wave.args['choice1']).toBe(true)
+      fireEvent.click(getByText('Command 1'))
+      expect(wave.args['command1']).toBe(true)
 
-      expect(wave.args['choice2']).toBe(false)
+      expect(wave.args['command2']).toBe(false)
       fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 2'))
-      expect(wave.args['choice2']).toBe(true)
+      fireEvent.click(getByText('Command 2'))
+      expect(wave.args['command2']).toBe(true)
     })
 
     it('Sets args after click - specified value', () => {
@@ -179,9 +179,9 @@ describe('Button.tsx', () => {
             name,
             label: name,
             value: 'val',
-            choices: [
-              { name: 'choice1', label: 'Choice 1', value: 'choiceVal1' },
-              { name: 'choice2', label: 'Choice 2', value: 'choiceVal2' },
+            commands: [
+              { name: 'command1', label: 'Command 1', value: 'commandVal1' },
+              { name: 'command2', label: 'Command 2', value: 'commandVal2' },
             ]
           }
         }]
@@ -194,15 +194,15 @@ describe('Button.tsx', () => {
 
       const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
 
-      expect(wave.args['choice1']).toBe(false)
+      expect(wave.args['command1']).toBe(false)
       fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 1'))
-      expect(wave.args['choice1']).toBe('choiceVal1')
+      fireEvent.click(getByText('Command 1'))
+      expect(wave.args['command1']).toBe('commandVal1')
 
-      expect(wave.args['choice2']).toBe(false)
+      expect(wave.args['command2']).toBe(false)
       fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 2'))
-      expect(wave.args['choice2']).toBe('choiceVal2')
+      fireEvent.click(getByText('Command 2'))
+      expect(wave.args['command2']).toBe('commandVal2')
     })
 
     it('Sets correct state when name starts with #', () => {
@@ -212,9 +212,9 @@ describe('Button.tsx', () => {
             name: hashName,
             label: name,
             value: 'val',
-            choices: [
-              { name: '#choice1', label: 'Choice 1', value: 'choiceVal1' },
-              { name: '#choice2', label: 'Choice 2', value: 'choiceVal2' },
+            commands: [
+              { name: '#command1', label: 'Command 1', value: 'commandVal1' },
+              { name: '#command2', label: 'Command 2', value: 'commandVal2' },
             ]
           }
         }]
@@ -229,52 +229,22 @@ describe('Button.tsx', () => {
       const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
 
       fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 1'))
-      expect(window.location.hash).toBe('#choice1')
+      fireEvent.click(getByText('Command 1'))
+      expect(window.location.hash).toBe('#command1')
       expect(pushMock).toHaveBeenCalledTimes(0)
-      expect(wave.args['#choice1']).toBe(false)
+      expect(wave.args['#command1']).toBe(false)
     })
 
-    it('Does redirect if the choice has path specified', () => {
-      const
-        btnPathProps = {
-          items: [{
-            button: {
-              name: name,
-              label: name,
-              value: 'val',
-              choices: [
-                { name: 'choice1', label: 'Choice 1', value: 'choiceVal1' },
-                { name: 'choice2', label: 'Choice 2', value: 'choiceVal2', path: 'https://h2o.ai/' },
-              ]
-            }
-          }]
-        },
-        windowOpenMock = jest.fn(),
-        { getByText, container } = render(<XButtons model={btnPathProps} />)
-
-      window.open = windowOpenMock
-      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
-
-      fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 1'))
-      expect(windowOpenMock).not.toHaveBeenCalled()
-
-      fireEvent.click(contextMenuButton)
-      fireEvent.click(getByText('Choice 2'))
-      expect(windowOpenMock).toHaveBeenCalled()
-    })
-
-    it('Does not render choices when link specified', () => {
+    it('Does not render commands when link specified', () => {
       const btnLinkProps: Buttons = {
         items: [{
           button: {
             name,
             label: name,
             link: true,
-            choices: [
-              { name: 'choice1', label: 'Choice 1' },
-              { name: 'choice2', label: 'Choice 2' },
+            commands: [
+              { name: 'command1', label: 'Command 1' },
+              { name: 'command2', label: 'Command 2' },
             ]
           }
         }]

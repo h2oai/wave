@@ -20,12 +20,6 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_button_choice" value="ui.button_choice(name='$name$'),$END$" description="Create a minimal Wave ButtonChoice." toReformat="true" toShortenFQNames="true">
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
   <template name="w_button" value="ui.button(name='$name$'),$END$" description="Create a minimal Wave Button." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -998,19 +992,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_button_choice" value="ui.button_choice(name='$name$',label='$label$',caption='$caption$',icon='$icon$',value='$value$',disabled=$disabled$,path='$path$'),$END$" description="Create Wave ButtonChoice with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
-  <template name="w_full_button" value="ui.button(name='$name$',label='$label$',caption='$caption$',value='$value$',primary=$primary$,disabled=$disabled$,link=$link$,icon='$icon$',width='$width$',visible=$visible$,tooltip='$tooltip$',path='$path$',choices=[&#10;	$choices$	&#10;]),$END$" description="Create Wave Button with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_button" value="ui.button(name='$name$',label='$label$',caption='$caption$',value='$value$',primary=$primary$,disabled=$disabled$,link=$link$,icon='$icon$',width='$width$',visible=$visible$,tooltip='$tooltip$',path='$path$',commands=[&#10;	$commands$	&#10;]),$END$" description="Create Wave Button with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1023,7 +1005,7 @@
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="choices" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

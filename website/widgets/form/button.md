@@ -127,20 +127,20 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 ])
 ```
 
-## With choices
+## With commands
 
-Using the `choices` attribute, you can provide other relevant actions for the button that are displayed in the context menu.
+Using the `commands` attribute, you can provide other relevant actions for the button that are displayed in the context menu.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 1 2', items=[
-    ui.button(name='choice_button', label='Button with choices', choices=[
-            ui.button_choice(name='first_choice', label='First choice'), 
-            ui.button_choice(name='second_choice', label='Second choice'),
+    ui.button(name='command_button', label='Button with commands', commands=[
+            ui.command(name='first_command', label='First command'), 
+            ui.command(name='second_command', label='Second command'),
     ])
 ])
 ```
 
-In addition, each choice supports `caption`, `icon`, `value`, `disabled` and `path` attributes which work exactly like with the button.
+In addition, each command supports `caption`, `icon` and `value` attributes which work exactly like with the button.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 1 2', items=[
@@ -148,9 +148,9 @@ q.page['form'] = ui.form_card(box='1 1 1 2', items=[
         name='like', 
         value='reaction_like', 
         icon='Like', 
-        choices=[
-            ui.button_choice(name='love', icon='Heart', value='reaction_love'), 
-            ui.button_choice(name='dislike', icon='Dislike', value='reaction_dislike', disabled=True)
+        commands=[
+            ui.command(name='love', icon='Heart', value='reaction_love'), 
+            ui.command(name='dislike', icon='Dislike', value='reaction_dislike')
     ])
 ])
 ```

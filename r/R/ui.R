@@ -1171,44 +1171,6 @@ ui_color_picker <- function(
   return(.o)
 }
 
-#' No documentation available.
-#'
-#' @param name An identifying name for this choice. If the name is prefixed with a '#', the location hash is changed to the name when executed.
-#' @param label The text displayed for this choice.
-#' @param caption The caption for this choice (typically a tooltip).
-#' @param icon An optional icon to display next to the choice label
-#' @param value A value for this choice. If a value is set, it is used for the choice's submitted instead of a boolean True.
-#' @param disabled True if the choice should be disabled.
-#' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-#' @return A ButtonChoice instance.
-#' @export
-ui_button_choice <- function(
-  name,
-  label = NULL,
-  caption = NULL,
-  icon = NULL,
-  value = NULL,
-  disabled = NULL,
-  path = NULL) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .guard_scalar("caption", "character", caption)
-  .guard_scalar("icon", "character", icon)
-  .guard_scalar("value", "character", value)
-  .guard_scalar("disabled", "logical", disabled)
-  .guard_scalar("path", "character", path)
-  .o <- list(
-    name=name,
-    label=label,
-    caption=caption,
-    icon=icon,
-    value=value,
-    disabled=disabled,
-    path=path)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveButtonChoice"))
-  return(.o)
-}
-
 #' Create a button.
 #' 
 #' Buttons are best used to enable a user to commit a change or complete steps in a task.
@@ -1238,7 +1200,7 @@ ui_button_choice <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-#' @param choices The menu with button actions. Ignored if `link` is True.
+#' @param commands The menu with button actions. Ignored if `link` is True.
 #' @return A Button instance.
 #' @export
 ui_button <- function(
@@ -1254,7 +1216,7 @@ ui_button <- function(
   visible = NULL,
   tooltip = NULL,
   path = NULL,
-  choices = NULL) {
+  commands = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
@@ -1267,7 +1229,7 @@ ui_button <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("path", "character", path)
-  .guard_vector("choices", "WaveButtonChoice", choices)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(button=list(
     name=name,
     label=label,
@@ -1281,7 +1243,7 @@ ui_button <- function(
     visible=visible,
     tooltip=tooltip,
     path=path,
-    choices=choices))
+    commands=commands))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
