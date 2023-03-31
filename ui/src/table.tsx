@@ -361,32 +361,31 @@ const
               ? +c.max_width.substring(0, c.max_width.length - 2)
               : +c.max_width
             : undefined,
-          numFilters = c.filterable 
-            ? selectedFilters
-              ? selectedFilters[c.name].length
-              : 0
-            : 0,
           onRenderHeader = c.filterable
-            ? () => (
-              <div style={{ display: 'flex' }}>
-                <span>{c.label}</span>
-                <FontIcon 
-                    style={{ fontSize: 12, cursor: 'pointer' }}
-                    onClick={(e) => onColumnContextMenu(c, e)} 
-                    aria-label="Chevron" 
-                    iconName="ChevronDown" 
-                />
-                {
-                    numFilters > 0
-                      ? <span>{
-                        numFilters > 9
-                          ? '9+'
-                          : formatNum(numFilters)    
-                        }</span>
-                      : null
-                }
-              </div>
-              ) 
+            ? () => { 
+                const numFilters = selectedFiltersRef.current
+                  ? selectedFiltersRef.current[c.name].length
+                  : 0
+                return(
+                    <div style={{ display: 'flex' }}>
+                        <span>{c.label}</span>
+                        <FontIcon 
+                            style={{ fontSize: 12, cursor: 'pointer' }}
+                            onClick={(e) => onColumnContextMenu(c, e)} 
+                            aria-label="Chevron" 
+                            iconName="ChevronDown" 
+                        />
+                        {
+                            numFilters > 0
+                            ? <span>{
+                                numFilters > 9
+                                ? '9+'
+                                : formatNum(numFilters)    
+                                }</span>
+                            : null
+                        }
+                    </div>)
+                } 
             : undefined
         return {
           key: c.name,
