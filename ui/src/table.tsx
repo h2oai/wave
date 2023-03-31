@@ -406,10 +406,8 @@ const
                     </div>)
                 } 
             : undefined
-        return {
-            ...col,
-            onRenderHeader
-        }
+        col.onRenderHeader = onRenderHeader
+        return col
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
