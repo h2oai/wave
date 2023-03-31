@@ -191,9 +191,16 @@ func deepClone(ix any) any {
 
 func fillNameComponentMap(m map[string]any, wrappedItems any) {
 	for _, wrappedItem := range wrappedItems.([]any) {
-		// This map always has a single key - wrapper so this is O(1) not O(n).
+		// Form components are always wrapped in a single key object so this is O(1) not O(n).
 		for _, item := range wrappedItem.(map[string]any) {
-			component := item.(map[string]any)
+
+			var component map[string]any
+			if i, ok := item.(map[string]any); ok {
+				component = i
+			} else {
+				// Handle non-form components, e.g. ui.tab.
+				component = wrappedItem.(map[string]any)
+			}
 			if name, ok := component["name"]; ok {
 				if n, ok := name.(string); ok {
 					m[n] = item

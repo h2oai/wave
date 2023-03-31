@@ -5,9 +5,6 @@ import pytest
 
 from playwright.sync_api import Page, expect
 
-cwd = os.path.join(os.path.dirname(__file__))
-python_executable = os.path.join(cwd, 'venv', 'bin', 'python')
-
 
 # Until https://github.com/microsoft/playwright-pytest/issues/69.
 @pytest.fixture(scope='session', autouse=True)

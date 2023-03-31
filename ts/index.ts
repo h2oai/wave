@@ -736,10 +736,14 @@ const
   },
   fillComponentNameMap = (nameComponentMap: Dict<any>, items: any) => {
     for (const item of items) {
-      const component = item[Object.keys(item)[0]]
+      // Form components are always wrapped in a single key object.
+      let component = item[Object.keys(item)[0]]
+      // Handle non-form components, e.g. ui.tab.
+      if (typeof component !== 'object') component = item
       if (component.name) nameComponentMap[component.name] = component
       if (component.items) fillComponentNameMap(nameComponentMap, component.items)
       if (component.secondary_items) fillComponentNameMap(nameComponentMap, component.secondary_items)
+      // TODO: Maybe support choices?
       if (component.buttons) fillComponentNameMap(nameComponentMap, component.buttons)
     }
   },
