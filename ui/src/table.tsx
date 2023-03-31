@@ -702,16 +702,15 @@ export const
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
+      [sortColumn, setSortColumn] = React.useState<{ column: WaveColumn, sortAsc: B } | null>(null),
       expandedRefs = React.useRef<{ [key: S]: B } | null>({}),
       [groupByKey, setGroupByKey] = React.useState('*'),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
-      sortRef = React.useRef<{ column: WaveColumn, sortAsc: B } | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
       sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
-        sortRef.current = { column, sortAsc }
         if (m.pagination && m.events?.includes('sort')) {
           wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
           setCurrentPage(1)
@@ -728,8 +727,16 @@ export const
           else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
         })
+        setSortColumn(() => ({ column, sortAsc }))
       }, [m.events, m.name, m.pagination]),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
+        // TODO: Refactor "stale closure" hack
+        let col
+        setSortColumn(sortColumn => {
+          col = sortColumn
+          return sortColumn
+        })
+        const { column, sortAsc } = col || sortColumn || {}
         setFilteredItems(() => {
           // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
           const nextFilteredItems = selectedFilters
@@ -738,10 +745,9 @@ export const
             )
             : items
           // If sort is applied, re-apply it on filtered items
-          const { column, sortAsc } = sortRef.current || {}
           return column && sortAsc !== undefined ? nextFilteredItems.sort(sortingF(column, sortAsc)) : nextFilteredItems
         })
-      }, [items]),
+      }, [items, sortColumn]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
         const expandedRef = expandedRefs[key]
@@ -894,8 +900,8 @@ export const
         setGroups(undefined)
         if (m.groups) initGroups()
         expandedRefs.current = {}
-        sortRef.current = null
         setGroupByKey('*')
+        setSortColumn(null)
         tableRef.current?.resetSortIcons()
 
         if (m.pagination && m.events?.includes('reset')) {
@@ -906,6 +912,7 @@ export const
 
         filter(null)
         search()
+        // setFilteredItems(items) // TODO: Apply original order of items.
       }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
       selection = React.useMemo(() => new Fluent.Selection({
         onSelectionChanged: () => {
