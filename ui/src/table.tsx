@@ -361,6 +361,25 @@ const
               ? +c.max_width.substring(0, c.max_width.length - 2)
               : +c.max_width
             : undefined,
+          col: WaveColumn = {
+            key: c.name,
+            name: c.label,
+            fieldName: c.name,
+            minWidth,
+            maxWidth,
+            headerClassName: c.sortable ? css.sortableHeader : undefined,
+            iconClassName: c.sortable ? css.sortingIcon : undefined,
+            onColumnClick,
+            cellType: c.cell_type,
+            dataType: c.data_type,
+            align: c.align,
+            isSortable: c.sortable,
+            cellOverflow: c.cell_overflow,
+            styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
+            isResizable: true,
+            isMultiline: c.cell_overflow === 'wrap',
+            filters: c.filterable && m.pagination ? c.filters : undefined,
+          },
           onRenderHeader = c.filterable
             ? () => { 
                 const numFilters = selectedFiltersRef.current
@@ -371,7 +390,7 @@ const
                         <span>{c.label}</span>
                         <FontIcon 
                             style={{ fontSize: 12, cursor: 'pointer' }}
-                            onClick={(e) => onColumnContextMenu(c, e)} 
+                            onClick={(e) => onColumnContextMenu(col, e)}
                             aria-label="Chevron" 
                             iconName="ChevronDown" 
                         />
@@ -388,24 +407,8 @@ const
                 } 
             : undefined
         return {
-          key: c.name,
-          name: c.label,
-          fieldName: c.name,
-          minWidth,
-          maxWidth,
-          headerClassName: c.sortable ? css.sortableHeader : undefined,
-          iconClassName: c.sortable ? css.sortingIcon : undefined,
-          onRenderHeader,
-          onColumnClick,
-          cellType: c.cell_type,
-          dataType: c.data_type,
-          align: c.align,
-          isSortable: c.sortable,
-          cellOverflow: c.cell_overflow,
-          styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
-          isResizable: true,
-          isMultiline: c.cell_overflow === 'wrap',
-          filters: c.filterable && m.pagination ? c.filters : undefined,
+            ...col,
+            onRenderHeader
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
