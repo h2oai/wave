@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
-import { clas, cssVar, getContrast, important, px } from './theme'
+import { clas, cssVar, getContrast, important, padding, px } from './theme'
 import { bond, wave } from './ui'
 
 const
@@ -25,13 +25,18 @@ const
     chatWindow: {
       height: '100%',
       minHeight: 400,
+      // HACK: Use absolute positionning due to Safari being Safari.
+      position: 'relative',
+      flexGrow: 1,
     },
     msgContainer: {
+      position: 'absolute',
+      top: 15,
+      left: 0,
+      right: 0,
+      bottom: 62, // Height of input box + padding.
       overflowY: 'auto',
-      // HACK: Prevent Safari from rendering double scrollbar. 77px is the total height of the input field.
-      height: 'calc(100% - 77px)',
-      padding: 15,
-      paddingBottom: 0,
+      padding: padding(0, 15),
     },
     msg: {
       display: 'inline-block',
@@ -113,7 +118,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           </div>
         ))}
       </div>
-      <div style={{ padding: 15, position: 'relative' }}>
+      <div style={{ padding: 15, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
         <Fluent.TextField
           data-test={model.name}
           value={userInput}
@@ -150,7 +155,7 @@ interface State {
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
-      <div data-test={name}>
+      <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
         <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder }} />
       </div>
     )
