@@ -8,12 +8,11 @@ from requests.adapters import HTTPAdapter, Retry
 
 cwd = os.path.join(os.path.dirname(__file__))
 wave_executable = os.path.join(cwd, 'venv', 'bin', 'wave')
+s = requests.Session()
+s.mount('http://', HTTPAdapter(max_retries=Retry(total=15, backoff_factor=2)))
 
 
 def start_waved(env: Optional[Dict[str, str]] = None):
-    s = requests.Session()
-    s.mount('http://', HTTPAdapter(max_retries=Retry(total=15, backoff_factor=2)))
-
     waved_cwd = os.path.join(os.path.dirname(__file__), '..')
     args = ['go', 'run', 'cmd/wave/main.go', '-web-dir', './ui/build', '-public-dir', '/assets/@./assets']
 
@@ -37,6 +36,9 @@ class AppRunner(object):
         with open('tmp.py', 'w') as f:
             f.write(self.code)
         self.p = subprocess.Popen([wave_executable, 'run', 'tmp.py', '--no-reload'])
+        if s.get('http://localhost:8000').status_code != 405:
+            self.__exit__(None, None, None)
+            raise Exception('Failed to start the app')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         os.remove('tmp.py')
