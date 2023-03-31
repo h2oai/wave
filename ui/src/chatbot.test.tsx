@@ -137,7 +137,7 @@ describe('XChatbot', () => {
   it('Renders properly rounded corners - single message', () => {
     const { container } = render(<XChatbot model={{ name, data }} />)
 
-    const messages = container.querySelectorAll('[class *="message-"')
+    const messages = container.querySelectorAll('[class *="msg-"')
     expect(window.getComputedStyle(messages[0], null).borderTopLeftRadius).toEqual('0px')
     expect(window.getComputedStyle(messages[1], null).borderTopRightRadius).toEqual('0px')
   })
@@ -150,7 +150,7 @@ describe('XChatbot', () => {
       { msg: 'Hello!', fromUser: false },
     ]
     const { container } = render(<XChatbot model={{ name, data }} />)
-    const messages = container.querySelectorAll('[class *="message-"')
+    const messages = container.querySelectorAll('[class *="msg-"')
     expect(window.getComputedStyle(messages[0], null).borderBottomLeftRadius).toEqual('0')
     expect(window.getComputedStyle(messages[0], null).borderTopLeftRadius).toEqual('4px')
     expect(window.getComputedStyle(messages[1], null).borderTopLeftRadius).toEqual('0')
@@ -171,7 +171,7 @@ describe('XChatbot', () => {
       { msg: 'Hello!', fromUser: false },
     ]
     const { container } = render(<XChatbot model={{ name, data }} />)
-    const messages = container.querySelectorAll('[class *="message-"')
+    const messages = container.querySelectorAll('[class *="msg-"')
     expect(window.getComputedStyle(messages[0], null).borderBottomLeftRadius).toEqual('0')
     expect(window.getComputedStyle(messages[0], null).borderTopLeftRadius).toEqual('4px')
     expect(window.getComputedStyle(messages[0], null).borderTopRightRadius).toEqual('4px')

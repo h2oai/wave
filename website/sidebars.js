@@ -178,6 +178,13 @@ module.exports = {
           "widgets/overlays/notification",
         ]
       },
+      {
+        "type": "category",
+        "label": "AI",
+        "items": [
+          "widgets/ai/chatbot",
+        ]
+      },
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [

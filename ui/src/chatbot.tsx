@@ -148,8 +148,12 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Model<State>) => {
-    const render = () => <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder }} />
+  View = bond(({ name, state, changed }: Model<State>) => {
+    const render = () => (
+      <div data-test={name}>
+        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder }} />
+      </div>
+    )
     return { render, changed }
   })
 
