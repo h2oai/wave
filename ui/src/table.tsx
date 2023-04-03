@@ -730,23 +730,23 @@ export const
         setSortColumn(() => ({ column, sortAsc }))
       }, [m.events, m.name, m.pagination]),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
-        // TODO: Refactor "stale closure" hack
-        let col
+        // HACK: Get sortColumn from its setter due to stale closure.
         setSortColumn(sortColumn => {
-          col = sortColumn
+          setFilteredItems(() => {
+            // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+            const nextFilteredItems = selectedFilters
+              ? items.filter(item => Object.keys(selectedFilters)
+                .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
+              )
+              : items
+            const { column, sortAsc } = sortColumn || {}
+            console.log('setting fitleredItems from filter')
+            // If sort is applied, re-apply it on filtered items
+            return selectedFilters && column && sortAsc !== undefined ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
+          })
           return sortColumn
         })
-        const { column, sortAsc } = col || sortColumn || {}
-        setFilteredItems(() => {
-          // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-          const nextFilteredItems = selectedFilters
-            ? items.filter(item => Object.keys(selectedFilters)
-              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
-            )
-            : items
-          // If sort is applied, re-apply it on filtered items
-          return column && sortAsc !== undefined && selectedFilters ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
-        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [items, sortColumn]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
@@ -809,7 +809,11 @@ export const
           const _searchStr = searchString.toLowerCase()
           if (!_searchStr || !searchableKeys.length) return searchString || ''
 
-          setFilteredItems(filteredItems => filteredItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr))))
+          setFilteredItems(filteredItems => {
+            console.log('setting fitleredItems from search')
+            return filteredItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr)))
+          }
+          )
           return searchString || ''
         })
       }, [searchableKeys]),
