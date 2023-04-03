@@ -745,7 +745,7 @@ export const
             )
             : items
           // If sort is applied, re-apply it on filtered items
-          return column && sortAsc !== undefined ? nextFilteredItems.sort(sortingF(column, sortAsc)) : nextFilteredItems
+          return column && sortAsc !== undefined && selectedFilters ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
         })
       }, [items, sortColumn]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
@@ -912,7 +912,6 @@ export const
 
         filter(null)
         search()
-        // setFilteredItems(items) // TODO: Apply original order of items.
       }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
       selection = React.useMemo(() => new Fluent.Selection({
         onSelectionChanged: () => {
