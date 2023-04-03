@@ -7,15 +7,17 @@ import { cssVar, cssVarValue } from '../theme'
 import { eventToCursor } from './annotator_utils'
 import * as Fluent from '@fluentui/react'
 
-type RangeAnnotatorProps = {
-  onAnnotate: (annotations: DrawnAnnotation[]) => void
+type RangeAnnotatorProps<T> = {
   activeTag: S
   tags: AudioAnnotatorTag[]
   trackPosition: F
   duration: F
-  setActiveTag: (tag: S) => void
   items?: AudioAnnotatorItem[]
+  backgroundData: T[]
+  setActiveTag: (tag: S) => void
+  onAnnotate: (annotations: DrawnAnnotation[]) => void
   onRenderToolbar?: () => JSX.Element
+  onRenderBackground: (data: T[]) => JSX.Element
 }
 type AnnotatorProps = {
   annotations: DrawnAnnotation[]
@@ -83,6 +85,15 @@ const
       boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`,
       boxSizing: 'border-box',
     },
+    time: {
+      display: 'inline-block',
+      width: 20,
+    },
+    miliseconds: {
+      display: 'inline-block',
+      marginLeft: -1,
+      marginRight: -2
+    }
   }),
   getIntersectingEdge = (x: U, intersected?: { canvasStart: F, canvasEnd: F }) => {
     if (!intersected) return
@@ -416,8 +427,8 @@ const
           />
         </div>
         <Fluent.Stack horizontal horizontalAlign='space-between' styles={{ root: { marginTop: 8 } }}>
-          <div>{formatTime(start)}</div>
-          <div>{formatTime(duration)}</div>
+          <TimeComponent secs={start} />
+          <TimeComponent secs={duration} />
         </Fluent.Stack>
       </div>
     )
@@ -434,9 +445,26 @@ export const
       .filter((v, i) => v !== "00" || i > 0)
       .join(":")
   },
-  RangeAnnotator = (props: React.PropsWithChildren<RangeAnnotatorProps>) => {
+  TimeComponent = ({ secs }: { secs: F }) => {
+    const hours = Math.floor(secs / 3600)
+    const minutes = Math.floor(secs / 60) % 60
+    const [seconds, miliseconds] = (secs % 60).toFixed(2).split('.').map(v => +v)
+    const [h, m, s, ms] = [hours, minutes, seconds, miliseconds].map(v => v < 10 ? "0" + v : v)
+    return (
+      <div style={{ textAlign: 'center' }}>
+        {h !== '00' && <><span>{h}</span> <span>:</span></>}
+        <span className={css.time}>{m}</span>
+        <span>:</span>
+        <span className={css.time}>{s}</span>
+        <span className={css.miliseconds}>.</span>
+        <span className={css.time}>{ms}</span>
+      </div>
+    )
+  },
+  RangeAnnotator = <T,>(props: RangeAnnotatorProps<T>) => {
     const
-      { onAnnotate, activeTag, tags, trackPosition, items, duration, setActiveTag, children, onRenderToolbar } = props,
+      { onAnnotate, activeTag, tags, trackPosition, items, duration, setActiveTag,
+        onRenderToolbar, onRenderBackground, backgroundData } = props,
       [removeAllDisabled, setRemoveAllDisabled] = React.useState(!items?.length),
       [removeDisabled, setRemoveDisabled] = React.useState(true),
       [annotations, setAnnotations] = React.useState<DrawnAnnotation[]>(itemsToAnnotations(items)),
@@ -594,7 +622,7 @@ export const
           focusAnnotation={focusAnnotation}
           colorsMap={colorsMap}
           setZoom={setZoom}
-        > {children}</Annotator>
+        >{onRenderBackground(backgroundData)}</Annotator>
         <div ref={annotatorContainerRef}>
           {annotatorContainerRef.current && (
             <Annotator
@@ -608,7 +636,10 @@ export const
               moveOrResizeAnnotation={moveOrResizeAnnotation}
               focusAnnotation={focusAnnotation}
               colorsMap={colorsMap}
-            > {children}</Annotator>
+            >{onRenderBackground(backgroundData.slice(
+              Math.ceil(zoom.from / canvasWidth * backgroundData.length),
+              Math.floor(zoom.to / canvasWidth * backgroundData.length)
+            ))}</Annotator>
           )}
         </div>
       </>

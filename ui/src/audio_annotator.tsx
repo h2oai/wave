@@ -3,7 +3,7 @@ import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { MicroBars } from './parts/microbars'
-import { DrawnAnnotation, formatTime, RangeAnnotator } from './parts/range_annotator'
+import { DrawnAnnotation, TimeComponent, RangeAnnotator } from './parts/range_annotator'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar } from './theme'
 import { wave } from './ui'
@@ -83,10 +83,12 @@ declare global {
 // Shim for AudioContext in Safari.
 window.AudioContext = window.AudioContext || window.webkitAudioContext
 
+type WaveformDataPoint = { val: U, cat: U }
+
 export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
   const
     [activeTag, setActiveTag] = React.useState(model.tags[0]?.name),
-    [waveFormData, setWaveFormData] = React.useState<{ val: U, cat: U }[] | null>(null),
+    [waveFormData, setWaveFormData] = React.useState<WaveformDataPoint[] | null>(null),
     [isPlaying, setIsPlaying] = React.useState(false),
     [duration, setDuration] = React.useState(0),
     [currentTime, setCurrentTime] = React.useState(0),
@@ -123,7 +125,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       // TODO: Compute samples dynamically based on available width.
       const samples = 300
       const blockSize = Math.floor(rawData.length / samples)
-      const filteredData = new Array(samples)
+      const filteredData = new Array<U>(samples)
       for (let i = 0; i < samples; i++) {
         const blockStart = blockSize * i // the location of the first sample in the block
         let sum = 0
@@ -203,7 +205,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         waveFormData ? (
           <>
             <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
-            <RangeAnnotator
+            <RangeAnnotator<WaveformDataPoint>
               items={model.items}
               onAnnotate={onAnnotate}
               activeTag={activeTag}
@@ -232,9 +234,9 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                   />
                 </Fluent.Stack>
               )}
-            >
-              <MicroBars data={waveFormData} value='val' category='cat' color='$themePrimary' zeroValue={0} />
-            </RangeAnnotator>
+              backgroundData={waveFormData}
+              onRenderBackground={data => <MicroBars data={data} value='val' category='cat' color='$themePrimary' zeroValue={0} />}
+            />
             <Fluent.Slider
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}
               value={currentTime}
@@ -243,26 +245,26 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               onChange={onTrackChange}
               showValue={false}
             />
-            <div style={{ position: 'relative' }}>
-              <Fluent.Stack horizontal styles={{ root: { position: 'absolute', left: '50%', transform: 'translateX(-50%)', marginTop: 25 } }}>
-                <Fluent.IconButton iconProps={{ iconName: 'PlayReverseResume' }} styles={{ icon: { fontSize: 18 } }} onClick={skipToTime(0)} />
-                <Fluent.IconButton
-                  iconProps={{ iconName: isPlaying ? 'Pause' : 'PlaySolid' }}
-                  onClick={onPlayerStateChange}
-                  styles={{
-                    root: { backgroundColor: cssVar('$themePrimary'), borderRadius: 50 },
-                    rootHovered: { backgroundColor: cssVar('$themeSecondary') },
-                    icon: { marginBottom: 2, color: cssVar('$white'), fontSize: 18 }
-                  }}
-                />
-                <Fluent.IconButton
-                  iconProps={{ iconName: 'PlayResume' }}
-                  styles={{ icon: { fontSize: 18 } }}
-                  onClick={skipToTime(duration)}
-                />
-              </Fluent.Stack>
-              <div style={{ textAlign: 'center' }}>{formatTime(currentTime)} </div>
-            </div>
+
+            <TimeComponent secs={currentTime} />
+            <Fluent.Stack horizontal horizontalAlign='center'>
+              <Fluent.IconButton iconProps={{ iconName: 'PlayReverseResume' }} styles={{ icon: { fontSize: 18 } }} onClick={skipToTime(0)} />
+              <Fluent.IconButton
+                iconProps={{ iconName: isPlaying ? 'Pause' : 'PlaySolid' }}
+                onClick={onPlayerStateChange}
+                styles={{
+                  root: { backgroundColor: cssVar('$themePrimary'), borderRadius: 50 },
+                  rootHovered: { backgroundColor: cssVar('$themeSecondary') },
+                  icon: { marginBottom: 2, color: cssVar('$white'), fontSize: 18 }
+                }}
+              />
+              <Fluent.IconButton
+                iconProps={{ iconName: 'PlayResume' }}
+                styles={{ icon: { fontSize: 18 } }}
+                onClick={skipToTime(duration)}
+              />
+            </Fluent.Stack>
+
           </>
         ) : (
           <Fluent.Stack horizontalAlign='center' verticalAlign='center' styles={{ root: { minHeight: BODY_MIN_HEGHT } }}>
