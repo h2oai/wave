@@ -245,8 +245,9 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               onChange={onTrackChange}
               showValue={false}
             />
-
-            <TimeComponent secs={currentTime} />
+            <div style={{ marginBottom: 8 }}>
+              <TimeComponent secs={currentTime} />
+            </div>
             <Fluent.Stack horizontal horizontalAlign='center'>
               <Fluent.IconButton iconProps={{ iconName: 'PlayReverseResume' }} styles={{ icon: { fontSize: 18 } }} onClick={skipToTime(0)} />
               <Fluent.IconButton
@@ -264,7 +265,6 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                 onClick={skipToTime(duration)}
               />
             </Fluent.Stack>
-
           </>
         ) : (
           <Fluent.Stack horizontalAlign='center' verticalAlign='center' styles={{ root: { minHeight: BODY_MIN_HEGHT } }}>

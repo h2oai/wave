@@ -138,8 +138,7 @@ const
 
     for (let i = 0; i < annotations.length; i++) {
       const a = annotations[i]
-      // TODO: Maybe we should split zoomed and regular annotations into separate arrays.
-      if (!a.isZoom && ((from >= a.canvasStart && from <= a.canvasEnd) || (to >= a.canvasStart && to <= a.canvasEnd))) {
+      if (!a.isZoom && ((a.canvasStart >= from && a.canvasStart <= to) || (a.canvasEnd >= from && a.canvasEnd <= to))) {
         const canvasStart = (a.canvasStart - from) / rangeSize * canvasWidth
         const canvasEnd = (a.canvasEnd - from) / rangeSize * canvasWidth
         annotationsWithinRange.push({ ...a, canvasStart, canvasEnd })
