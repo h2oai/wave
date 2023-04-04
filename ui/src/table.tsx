@@ -730,24 +730,29 @@ export const
         setSortColumn(() => ({ column, sortAsc }))
       }, [m.events, m.name, m.pagination]),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
-        // HACK: Get sortColumn from its setter due to stale closure.
-        setSortColumn(sortColumn => {
-          setFilteredItems(() => {
-            // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-            const nextFilteredItems = selectedFilters
-              ? items.filter(item => Object.keys(selectedFilters)
-                .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
-              )
-              : items
-            const { column, sortAsc } = sortColumn || {}
-            console.log('setting fitleredItems from filter')
-            // If sort is applied, re-apply it on filtered items
-            return selectedFilters && column && sortAsc !== undefined ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
+        setSearchStr(searchString => {
+          setSortColumn(sortColumn => {
+            setFilteredItems(() => {
+              const
+                { column, sortAsc } = sortColumn || {},
+                // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+                nextFilteredItems = selectedFilters
+                  ? items.filter(item => Object.keys(selectedFilters)
+                    .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
+                  )
+                  : items,
+                // TODO: Search first, then sort.
+                // If sort is applied, re-apply it on filtered items
+                _searchStr = searchString.toLowerCase(),
+                sortedItems = (selectedFilters || (!_searchStr || !searchableKeys.length)) && column && sortAsc !== undefined ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
+              return (!_searchStr || !searchableKeys.length) ? sortedItems : sortedItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr)))
+            })
+            return sortColumn
           })
-          return sortColumn
+          return searchString || ''
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [items, sortColumn]),
+      }, [items, searchableKeys, sortColumn]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
         const expandedRef = expandedRefs[key]
@@ -804,19 +809,6 @@ export const
           return groupByKey
         })
       }, [m.groups, makeGroups]),
-      search = React.useCallback(() => {
-        setSearchStr(searchString => {
-          const _searchStr = searchString.toLowerCase()
-          if (!_searchStr || !searchableKeys.length) return searchString || ''
-
-          setFilteredItems(filteredItems => {
-            console.log('setting fitleredItems from search')
-            return filteredItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr)))
-          }
-          )
-          return searchString || ''
-        })
-      }, [searchableKeys]),
       fireSearchEvent = (searchStr: S) => {
         wave.emit(m.name, 'search', { value: searchStr, cols: searchableKeys })
         setCurrentPage(1)
@@ -829,22 +821,13 @@ export const
           debouncedFireSearchEvent.current(searchStr)
           return
         }
-        if (!searchStr && !selectedFilters) {
-          setFilteredItems(items)
-          setGroups(groups => {
-            if (groups) initGroups()
-            return groups
-          })
-          return
-        }
 
         filter(selectedFilters)
-        search()
         setGroups(groups => {
           if (groups) initGroups()
           return groups
         })
-      }, [m.pagination, m.events, selectedFilters, filter, search, items, initGroups]),
+      }, [m.pagination, m.events, selectedFilters, filter, initGroups]),
       onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
         if (m.pagination) {
@@ -888,7 +871,6 @@ export const
             setCurrentPage(1)
           } else {
             filter(filters)
-            search()
             setGroups(groups => {
               if (groups) initGroups()
               return groups
@@ -896,7 +878,7 @@ export const
           }
           return filters
         })
-      }, [filter, initGroups, m.events, m.name, m.pagination, search]),
+      }, [filter, initGroups, m.events, m.name, m.pagination]),
       // TODO: Make filter options in dropdowns dynamic.
       reset = React.useCallback(() => {
         setSelectedFilters(null)
@@ -915,8 +897,7 @@ export const
         }
 
         filter(null)
-        search()
-      }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
+      }, [filter, initGroups, m.events, m.groups, m.name, m.pagination]),
       selection = React.useMemo(() => new Fluent.Selection({
         onSelectionChanged: () => {
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
@@ -949,7 +930,6 @@ export const
           }
           else {
             filter(newFilters)
-            search()
             setGroups(groups => {
               if (groups) initGroups()
               return groups
@@ -957,7 +937,7 @@ export const
           }
           return newFilters
         })
-      }, [m.pagination, m.events, m.name, filter, search, initGroups])
+      }, [m.pagination, m.events, m.name, filter, initGroups])
 
     React.useEffect(() => {
       wave.args[m.name] = []
