@@ -172,7 +172,7 @@ type WaveColumn = Fluent.IColumn & {
 type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
-  sort: (col: WaveColumn, sortAsc: B) => void,
+  onSortChange: (col: WaveColumn, sortAsc: B) => void,
   filteredItems: any[]
   selectedFilters: Dict<S[]> | null
   items: any[]
@@ -328,7 +328,7 @@ const
       </div>
     )
   },
-  DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSingle, groups, expandedRefs, sort, setFiltersInBulk }: DataTable, ref) => {
+  DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSingle, groups, expandedRefs, onSortChange, setFiltersInBulk }: DataTable, ref) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
@@ -338,7 +338,7 @@ const
         if (isMenuClicked) onColumnContextMenu(column, e)
         else if (column.isSortable) {
           const sortAsc = column.iconName === 'SortDown' || !column.iconName
-          sort(column, sortAsc)
+          onSortChange(column, sortAsc)
           setColumns(columns.map(col => {
             if (column.key === col.key) {
               col.iconName = sortAsc ? 'SortUp' : 'SortDown'
@@ -702,15 +702,17 @@ export const
       [searchStr, setSearchStr] = React.useState(''),
       [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
       [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
-      [sortColumn, setSortColumn] = React.useState<{ column: WaveColumn, sortAsc: B } | null>(null),
       expandedRefs = React.useRef<{ [key: S]: B } | null>({}),
       [groupByKey, setGroupByKey] = React.useState('*'),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
+      sortRef = React.useRef<{ column: WaveColumn, sortAsc: B } | null>(null),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
-      sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
+      sort = React.useCallback(() => {
+        const { column, sortAsc } = sortRef.current || {}
+        if (!column || sortAsc === undefined) return
         if (m.pagination && m.events?.includes('sort')) {
           wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
           setCurrentPage(1)
@@ -718,41 +720,35 @@ export const
         }
         setGroups(groups => {
           if (groups) {
-            setFilteredItems(filteredItems => [...groups]
-              // sorts groups by startIndex to match its order in filteredItems
-              .sort((group1, group2) => group1.startIndex - group2.startIndex)
-              .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
-                [] as any[]) || [])
+            setFilteredItems(filteredItems => {
+              const next = [...groups]
+                // sorts groups by startIndex to match its order in filteredItems
+                .sort((group1, group2) => group1.startIndex - group2.startIndex)
+                .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
+                  [] as any[]) || []
+              console.log('next', next, groups)
+              return next
+            }
+            )
           }
           else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
         })
-        setSortColumn(() => ({ column, sortAsc }))
       }, [m.events, m.name, m.pagination]),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
-        setSearchStr(searchString => {
-          setSortColumn(sortColumn => {
-            setFilteredItems(() => {
-              const
-                { column, sortAsc } = sortColumn || {},
-                // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-                nextFilteredItems = selectedFilters
-                  ? items.filter(item => Object.keys(selectedFilters)
-                    .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
-                  )
-                  : items,
-                // TODO: Search first, then sort.
-                // If sort is applied, re-apply it on filtered items
-                _searchStr = searchString.toLowerCase(),
-                sortedItems = (selectedFilters || (!_searchStr || !searchableKeys.length)) && column && sortAsc !== undefined ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
-              return (!_searchStr || !searchableKeys.length) ? sortedItems : sortedItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr)))
-            })
-            return sortColumn
-          })
-          return searchString || ''
+        setFilteredItems(() => {
+          // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+          const nextFilteredItems = selectedFilters
+            ? items.filter(item => Object.keys(selectedFilters)
+              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
+            )
+            : items
+          // If sort is applied, re-apply it on filtered items
+          // const { column, sortAsc } = sortRef.current || {}
+          // return column && sortAsc !== undefined ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
+          return nextFilteredItems
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [items, searchableKeys, sortColumn]),
+      }, [items]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
         const expandedRef = expandedRefs[key]
@@ -809,11 +805,24 @@ export const
           return groupByKey
         })
       }, [m.groups, makeGroups]),
+      search = React.useCallback(() => {
+        setSearchStr(searchString => {
+          const _searchStr = searchString.toLowerCase()
+          if (!_searchStr || !searchableKeys.length) return searchString || ''
+
+          setFilteredItems(filteredItems => filteredItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr))))
+          return searchString || ''
+        })
+      }, [searchableKeys]),
       fireSearchEvent = (searchStr: S) => {
         wave.emit(m.name, 'search', { value: searchStr, cols: searchableKeys })
         setCurrentPage(1)
       },
       debouncedFireSearchEvent = React.useRef(wave.debounce(500, fireSearchEvent)),
+      onSortChange = React.useCallback((column: WaveColumn, sortAsc: B) => {
+        sortRef.current = { column, sortAsc }
+        sort()
+      }, [sort]),
       onSearchChange = React.useCallback((_e?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
         setSearchStr(searchStr)
 
@@ -821,13 +830,24 @@ export const
           debouncedFireSearchEvent.current(searchStr)
           return
         }
+        if (!searchStr && !selectedFilters) {
+          setFilteredItems(items)
+          setGroups(groups => {
+            if (groups) initGroups()
+            return groups
+          })
+          sort()
+          return
+        }
 
         filter(selectedFilters)
+        search()
         setGroups(groups => {
           if (groups) initGroups()
           return groups
         })
-      }, [m.pagination, m.events, selectedFilters, filter, initGroups]),
+        sort()
+      }, [m.pagination, m.events, selectedFilters, filter, search, sort, items, initGroups]),
       onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
         if (m.pagination) {
@@ -871,6 +891,8 @@ export const
             setCurrentPage(1)
           } else {
             filter(filters)
+            search()
+            sort()
             setGroups(groups => {
               if (groups) initGroups()
               return groups
@@ -878,7 +900,7 @@ export const
           }
           return filters
         })
-      }, [filter, initGroups, m.events, m.name, m.pagination]),
+      }, [filter, initGroups, m.events, m.name, m.pagination, search, sort]),
       // TODO: Make filter options in dropdowns dynamic.
       reset = React.useCallback(() => {
         setSelectedFilters(null)
@@ -886,8 +908,8 @@ export const
         setGroups(undefined)
         if (m.groups) initGroups()
         expandedRefs.current = {}
+        sortRef.current = null
         setGroupByKey('*')
-        setSortColumn(null)
         tableRef.current?.resetSortIcons()
 
         if (m.pagination && m.events?.includes('reset')) {
@@ -897,7 +919,8 @@ export const
         }
 
         filter(null)
-      }, [filter, initGroups, m.events, m.groups, m.name, m.pagination]),
+        search()
+      }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
       selection = React.useMemo(() => new Fluent.Selection({
         onSelectionChanged: () => {
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
@@ -930,6 +953,8 @@ export const
           }
           else {
             filter(newFilters)
+            search()
+            sort()
             setGroups(groups => {
               if (groups) initGroups()
               return groups
@@ -937,7 +962,7 @@ export const
           }
           return newFilters
         })
-      }, [m.pagination, m.events, m.name, filter, initGroups])
+      }, [m.pagination, m.events, m.name, filter, search, sort, initGroups])
 
     React.useEffect(() => {
       wave.args[m.name] = []
@@ -976,11 +1001,11 @@ export const
       groups,
       expandedRefs,
       selection,
-      sort,
+      onSortChange,
       isMultiple,
       isSingle,
       setFiltersInBulk
-    }), [filteredItems, groups, expandedRefs, isMultiple, isSingle, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
+    }), [filteredItems, groups, expandedRefs, isMultiple, isSingle, items, m, onFilterChange, selectedFilters, selection, onSortChange, setFiltersInBulk])
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
