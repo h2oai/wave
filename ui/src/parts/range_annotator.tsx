@@ -182,7 +182,7 @@ const
       tag: '',
       isZoom: true
     }
-    const mappedItems = items?.map(i => ({ ...i, id: xid(), canvasHeight: 0, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
+    const mappedItems = items?.map(i => ({ ...i, id: xid(), canvasHeight: WAVEFORM_HEIGHT, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
     return [zoomAnnotation, ...mappedItems]
   },
   Annotator = (props: React.PropsWithChildren<AnnotatorProps>) => {
@@ -248,7 +248,7 @@ const
 
         const { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect())
 
-        const intersected = getIntersectedAnnotation(annotations, cursor_x, cursor_y)
+        const intersected = getIntersectedAnnotation(annotations, cursor_x, cursor_y) || currDrawnAnnotation.current?.intersected
         const canvasWidth = canvasRef.current.width
 
         setTooltipProps(!intersected || intersected.isZoom ? null : {
@@ -260,7 +260,7 @@ const
 
         canvas.style.cursor = (intersected?.isFocused || intersected?.isZoom)
           ? getIntersectingEdge(cursor_x, intersected) ? 'ew-resize' : 'move'
-          : 'auto'
+          : 'pointer'
 
         if (currDrawnAnnotation.current && !currDrawnAnnotation.current?.action && e.buttons === 1) {
           currDrawnAnnotation.current.action = 'new'
@@ -407,7 +407,7 @@ const
       <div>
         <div className={css.annotatorContainer}>
           <div
-            data-test='audio-annotator-tooltip'
+            data-test={setZoom ? 'range-annotator-tooltip' : undefined}
             className={css.tooltip}
             style={{ display: tooltipProps ? 'block' : 'none', left: tooltipProps?.left, top: tooltipProps?.top }}
           >
@@ -448,7 +448,7 @@ export const
     const hours = Math.floor(secs / 3600)
     const minutes = Math.floor(secs / 60) % 60
     const [seconds, miliseconds] = (secs % 60).toFixed(2).split('.').map(v => +v)
-    const [h, m, s, ms] = [hours, minutes, seconds, miliseconds].map(v => v < 10 ? "0" + v : v)
+    const [h, m, s, ms] = [hours, minutes, seconds, miliseconds].map(v => v < 10 ? '0' + v : String(v))
     return (
       <div style={{ textAlign: 'center' }}>
         {h !== '00' && <><span>{h}</span> <span>:</span></>}
