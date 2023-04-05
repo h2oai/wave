@@ -113,11 +113,11 @@ const
       ? cursorX - TOOLTIP_WIDTH - LEFT_TOOLTIP_OFFSET
       : cursorX + LEFT_TOOLTIP_OFFSET
   },
+  isAnnotationIntersectingAtStart = (a1?: DrawnAnnotation, a2?: DrawnAnnotation) => {
+    return a1 && a2 && a1.canvasEnd >= a2.canvasStart && a2.canvasStart >= a1.canvasStart
+  },
   isAnnotationIntersectingAtEnd = (a1?: DrawnAnnotation, a2?: DrawnAnnotation) => {
     return a1 && a2 && a2.canvasStart >= a1.canvasStart && a2.canvasStart <= a1.canvasEnd
-  },
-  isAnnotationIntersectingAtStart = (a1?: DrawnAnnotation, a2?: DrawnAnnotation) => {
-    return a1 && a2 && a1.canvasEnd >= a2.canvasStart && a1.canvasEnd <= a2.canvasEnd
   },
   canvasUnitsToSeconds = (canvasUnit: F, canvasWidth: F, duration: F) => +(canvasUnit / canvasWidth * duration).toFixed(2),
   createAnnotation = (from: U, to: U, tag: S, canvasWidth: F, duration: F): DrawnAnnotation => {
@@ -434,6 +434,54 @@ const
   }
 
 export const
+  recalculateAnnotations = (annotations: DrawnAnnotation[]): DrawnAnnotation[] => {
+    const visited = new Set()
+    const mergedAnnotations: DrawnAnnotation[] = []
+    let zoomAnnotation: DrawnAnnotation | null = null
+    for (let i = 0; i < annotations.length; i++) {
+      const currAnnotation = annotations[i]
+      if (currAnnotation.isZoom) {
+        zoomAnnotation = currAnnotation
+        continue
+      }
+      if (visited.has(currAnnotation)) continue
+      mergedAnnotations.push(currAnnotation)
+
+      for (let j = i + 1; j < annotations.length; j++) {
+        const nextAnnotation = annotations[j]
+        if (currAnnotation.tag !== nextAnnotation.tag) continue
+        if (!isAnnotationIntersectingAtEnd(currAnnotation, nextAnnotation)) break
+        currAnnotation.end = Math.max(currAnnotation.end, nextAnnotation.end)
+        currAnnotation.canvasEnd = Math.max(currAnnotation.canvasEnd, nextAnnotation.canvasEnd)
+        visited.add(nextAnnotation)
+      }
+    }
+
+    let currMaxDepth = 1
+    for (let i = 0; i < mergedAnnotations.length; i++) {
+      const annotation = mergedAnnotations[i]
+      const nextIntersections = []
+      const prevIntersections = []
+      // Perf: Think about when to stop to not iterate over all annotations every time.
+      for (let j = i - 1; j >= 0; j--) {
+        if (isAnnotationIntersectingAtStart(mergedAnnotations[j], annotation)) prevIntersections.push(mergedAnnotations[j])
+      }
+      for (let j = i + 1; isAnnotationIntersectingAtEnd(annotation, mergedAnnotations[j]); j++) {
+        nextIntersections.push(mergedAnnotations[j])
+      }
+
+      const intersections = [...prevIntersections, ...nextIntersections]
+      const maxDepth = getMaxDepth(mergedAnnotations, i, annotation, 1)
+      const shouldFillRemainingSpace = !nextIntersections.length || maxDepth < currMaxDepth
+      currMaxDepth = intersections.length ? Math.max(currMaxDepth, maxDepth) : 1
+
+      const { canvasY, canvasHeight } = getCanvasDimensions(intersections, annotation, shouldFillRemainingSpace ? 0 : maxDepth)
+      annotation.canvasY = canvasY
+      annotation.canvasHeight = canvasHeight
+    }
+
+    return zoomAnnotation ? [zoomAnnotation, ...mergedAnnotations] : mergedAnnotations
+  },
   formatTime = (secs: F) => {
     const hours = Math.floor(secs / 3600)
     const minutes = Math.floor(secs / 60) % 60
@@ -480,53 +528,10 @@ export const
         }]
         // eslint-disable-next-line react-hooks/exhaustive-deps
       })), [tags, theme]),
-      recalculateAnnotations = React.useCallback((submit = false) => {
+      recalcAnnotations = React.useCallback((submit = false) => {
         setAnnotations(annotations => {
-          const visited = new Set()
-          let mergedAnnotations: DrawnAnnotation[] = []
-          let zoomAnnotation: DrawnAnnotation | null = null
-          for (let i = 0; i < annotations.length; i++) {
-            const currAnnotation = annotations[i]
-            if (currAnnotation.isZoom) {
-              zoomAnnotation = currAnnotation
-              continue
-            }
-            if (visited.has(currAnnotation)) continue
-            mergedAnnotations.push(currAnnotation)
-
-            for (let j = i + 1; j < annotations.length; j++) {
-              const nextAnnotation = annotations[j]
-              if (currAnnotation.tag !== nextAnnotation.tag) continue
-              if (!isAnnotationIntersectingAtEnd(currAnnotation, nextAnnotation)) break
-              currAnnotation.end = Math.max(currAnnotation.end, nextAnnotation.end)
-              currAnnotation.canvasEnd = Math.max(currAnnotation.canvasEnd, nextAnnotation.canvasEnd)
-              visited.add(nextAnnotation)
-            }
-          }
-
-          let currMaxDepth = 1
-          for (let i = 0; i < mergedAnnotations.length; i++) {
-            const annotation = mergedAnnotations[i]
-            const nextIntersections = []
-            const prevIntersections = []
-            for (let j = i - 1; isAnnotationIntersectingAtStart(mergedAnnotations[j], annotation); j--) {
-              prevIntersections.push(mergedAnnotations[j])
-            }
-            for (let j = i + 1; isAnnotationIntersectingAtEnd(annotation, mergedAnnotations[j]); j++) {
-              nextIntersections.push(mergedAnnotations[j])
-            }
-
-            const intersections = [...prevIntersections, ...nextIntersections]
-            const maxDepth = getMaxDepth(mergedAnnotations, i, annotation, 1)
-            const shouldFillRemainingSpace = !nextIntersections.length || maxDepth < currMaxDepth
-            currMaxDepth = intersections.length ? Math.max(currMaxDepth, maxDepth) : 1
-
-            const { canvasY, canvasHeight } = getCanvasDimensions(intersections, annotation, shouldFillRemainingSpace ? 0 : maxDepth)
-            annotation.canvasY = canvasY
-            annotation.canvasHeight = canvasHeight
-          }
-          if (submit) onAnnotate(mergedAnnotations)
-          if (zoomAnnotation) mergedAnnotations = [zoomAnnotation, ...mergedAnnotations]
+          const mergedAnnotations = recalculateAnnotations(annotations)
+          if (submit) onAnnotate(mergedAnnotations[0]?.isZoom ? mergedAnnotations.slice(1) : mergedAnnotations)
           return mergedAnnotations
         })
       }, [onAnnotate]),
@@ -543,9 +548,9 @@ export const
           }
           return [...prev, annotation].sort((a, b) => a.canvasStart - b.canvasStart)
         })
-        recalculateAnnotations(true)
+        recalcAnnotations(true)
         setRemoveAllDisabled(false)
-      }, [canvasWidth, recalculateAnnotations, zoom.from, zoom.to]),
+      }, [canvasWidth, recalcAnnotations, zoom.from, zoom.to]),
       moveOrResizeAnnotation = React.useCallback((annotation?: DrawnAnnotation) => {
         if (annotation) {
           const startOffset = zoom.from
@@ -556,8 +561,8 @@ export const
             return annotations
           })
         }
-        recalculateAnnotations(true)
-      }, [canvasWidth, recalculateAnnotations, zoom.from, zoom.to]),
+        recalcAnnotations(true)
+      }, [canvasWidth, recalcAnnotations, zoom.from, zoom.to]),
       reset = () => {
         setAnnotations(annotations => annotations.filter(a => a.isZoom))
         onAnnotate([])
@@ -571,7 +576,7 @@ export const
           return newAnnotations
         })
         setRemoveDisabled(true)
-        recalculateAnnotations(true)
+        recalcAnnotations(true)
       },
       getZoomedTrackPosition = () => {
         const trackPosPx = trackPosition * canvasWidth

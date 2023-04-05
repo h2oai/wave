@@ -15,6 +15,7 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { AudioAnnotator, XAudioAnnotator } from './audio_annotator'
+import { DrawnAnnotation, recalculateAnnotations } from './parts/range_annotator'
 import { wave } from './ui'
 
 const
@@ -610,6 +611,167 @@ describe('AudioAnnotator.tsx', () => {
       expect(wave.args[name]).toHaveLength(3)
       expect(wave.args[name]).toMatchObject([items[0], { start: 50, end: 70, tag: 'tag1' }, items[1]])
     })
+  })
 
+  describe('Annotations recalculations', () => {
+    const WAVE_FORM_HEIGHT = 100
+    const base = { start: 0, end: 0 }
+
+    it('Does not recalculate if no annotations', () => {
+      const annotations: DrawnAnnotation[] = []
+      expect(recalculateAnnotations(annotations)).toMatchObject(annotations)
+    })
+
+    it('Handles single annotation', () => {
+      const annotations: DrawnAnnotation[] = [{ id: '1', ...base, canvasStart: 10, canvasEnd: 20, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' }]
+      expect(recalculateAnnotations(annotations)).toMatchObject(annotations)
+    })
+
+    it('Handles 2 separate annotations', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 20, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 30, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject(annotations)
+    })
+
+    it('Merges 2 intersecting same tag annotations', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 20, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 15, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+      ])
+    })
+
+    it('Handles 2 intersecting annotations - start', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 30, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 30, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag2' },
+      ])
+    })
+
+    it('Handles 2 intersecting annotations - middle ', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag2' },
+      ])
+    })
+
+    it('Handles 2 intersecting annotations - end', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 30, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 30, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag2' },
+      ])
+    })
+
+    it('Handles 3 zig-zag intersecting annotations - tag1, tag2, tag1', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 25, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 45, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 40, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 25, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 45, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 40, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag1' },
+      ])
+    })
+
+    it('Handles 3 intersecting annotations - tag1, tag2, tag3', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 30, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag3' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: WAVE_FORM_HEIGHT / 3, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 30, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT - (2 * WAVE_FORM_HEIGHT / 3), canvasY: 2 * WAVE_FORM_HEIGHT / 3, tag: 'tag3' },
+      ])
+    })
+
+    it('Handles 3 intersecting annotations - tag1, tag2, tag2', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 30, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 40, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 30, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 40, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag2' },
+      ])
+    })
+
+    it('Handles 3 intersecting annotations - tag2, tag1, tag1', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '3', ...base, canvasStart: 30, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 40, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: 0, tag: 'tag2' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT / 2, canvasY: WAVE_FORM_HEIGHT / 2, tag: 'tag1' },
+      ])
+    })
+
+    it('Handles 3 intersecting annotations and 1 that should fill the remaining space', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 140, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 30, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag3' },
+        { id: '4', ...base, canvasStart: 90, canvasEnd: 170, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 140, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: WAVE_FORM_HEIGHT / 3, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 30, canvasEnd: 70, canvasHeight: WAVE_FORM_HEIGHT - (2 * WAVE_FORM_HEIGHT / 3), canvasY: WAVE_FORM_HEIGHT / 3 * 2, tag: 'tag3' },
+        { id: '4', ...base, canvasStart: 90, canvasEnd: 170, canvasHeight: WAVE_FORM_HEIGHT - (WAVE_FORM_HEIGHT / 3), canvasY: WAVE_FORM_HEIGHT / 3, tag: 'tag2' },
+      ])
+    })
+
+    it('Handles 3 intersecting annotations and 1 that should fill the remaining space - 2', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 140, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 60, canvasEnd: 80, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag3' },
+        { id: '4', ...base, canvasStart: 70, canvasEnd: 170, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 140, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 50, canvasHeight: WAVE_FORM_HEIGHT - (WAVE_FORM_HEIGHT / 3), canvasY: WAVE_FORM_HEIGHT / 3, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 60, canvasEnd: 80, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: WAVE_FORM_HEIGHT / 3, tag: 'tag3' },
+        { id: '4', ...base, canvasStart: 70, canvasEnd: 170, canvasHeight: WAVE_FORM_HEIGHT - (2 * WAVE_FORM_HEIGHT / 3), canvasY: 2 * WAVE_FORM_HEIGHT / 3, tag: 'tag2' },
+      ])
+    })
+
+    it('Handles 3 intersecting annotations and 1 that should fill the remaining space - 3', () => {
+      const annotations: DrawnAnnotation[] = [
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 100, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 50, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag3' },
+        { id: '4', ...base, canvasStart: 70, canvasEnd: 90, canvasHeight: WAVE_FORM_HEIGHT, canvasY: 0, tag: 'tag3' },
+      ]
+      expect(recalculateAnnotations(annotations)).toMatchObject([
+        { id: '1', ...base, canvasStart: 10, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: 0, tag: 'tag1' },
+        { id: '2', ...base, canvasStart: 20, canvasEnd: 100, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: WAVE_FORM_HEIGHT / 3, tag: 'tag2' },
+        { id: '3', ...base, canvasStart: 50, canvasEnd: 60, canvasHeight: WAVE_FORM_HEIGHT - (2 * WAVE_FORM_HEIGHT / 3), canvasY: WAVE_FORM_HEIGHT / 3 * 2, tag: 'tag3' },
+        { id: '4', ...base, canvasStart: 70, canvasEnd: 90, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: 0, tag: 'tag3' },
+      ])
+    })
   })
 })
