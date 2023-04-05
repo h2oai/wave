@@ -726,28 +726,21 @@ export const
                 .sort((group1, group2) => group1.startIndex - group2.startIndex)
                 .reduce((acc, group) => [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
                   [] as any[]) || []
-              console.log('next', next, groups)
               return next
-            }
-            )
+            })
           }
           else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
           return groups
         })
       }, [m.events, m.name, m.pagination]),
       filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
-        setFilteredItems(() => {
-          // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-          const nextFilteredItems = selectedFilters
-            ? items.filter(item => Object.keys(selectedFilters)
-              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
-            )
-            : items
-          // If sort is applied, re-apply it on filtered items
-          // const { column, sortAsc } = sortRef.current || {}
-          // return column && sortAsc !== undefined ? [...nextFilteredItems].sort(sortingF(column, sortAsc)) : nextFilteredItems
-          return nextFilteredItems
-        })
+        // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+        setFilteredItems(selectedFilters
+          ? items.filter(item => Object.keys(selectedFilters)
+            .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey].some(filterVal => String(item[filterKey]).includes(filterVal)))
+          )
+          : items
+        )
       }, [items]),
       getIsCollapsed = (key: S, expandedRefs: { [key: S]: B } | null) => {
         if (expandedRefs === null) return false
@@ -830,18 +823,14 @@ export const
           debouncedFireSearchEvent.current(searchStr)
           return
         }
-        if (!searchStr && !selectedFilters) {
+        else if (!searchStr && !selectedFilters) {
           setFilteredItems(items)
-          setGroups(groups => {
-            if (groups) initGroups()
-            return groups
-          })
-          sort()
-          return
+        }
+        else {
+          filter(selectedFilters)
+          search()
         }
 
-        filter(selectedFilters)
-        search()
         setGroups(groups => {
           if (groups) initGroups()
           return groups
@@ -892,11 +881,11 @@ export const
           } else {
             filter(filters)
             search()
-            sort()
             setGroups(groups => {
               if (groups) initGroups()
               return groups
             })
+            sort()
           }
           return filters
         })
@@ -954,11 +943,11 @@ export const
           else {
             filter(newFilters)
             search()
-            sort()
             setGroups(groups => {
               if (groups) initGroups()
               return groups
             })
+            sort()
           }
           return newFilters
         })

@@ -583,6 +583,12 @@ describe('Table.tsx', () => {
       expect(getAllByRole('gridcell')[6].textContent).toBe('d')
       expect(getAllByRole('gridcell')[11]).toBeUndefined()
       expect(getAllByRole('gridcell')[14]).toBeUndefined()
+
+      fireEvent.click(getAllByText('closed')[3].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11]?.textContent).toBe('a')
+      expect(getAllByRole('gridcell')[14]?.textContent).toBe('b')
     })
 
     it('Reset filtered items sorting after table reset', () => {
