@@ -142,10 +142,28 @@ const
           alignItems: 'center'
         }
       },
+      menuStyles: any = { // TODO: fix type
+        subComponentStyles: {
+          menuItem: {
+            icon: { lineHeight: 'initial' },
+            subMenuIcon: { lineHeight: 'initial', height: 'auto' }
+          },
+        }
+      },
       getItemProps = (commands: Command[]) => {
-        return commands.map(({ name, label, caption, icon, value, data, items }) => // TODO: add items
-          ({ key: name, text: label, title: caption, iconProps: { iconName: icon }, data: value ?? data, disabled, onClick: handleOnClick(name, value), subMenuProps: items ? { items: getItemProps(items) } : undefined })
-        )
+        return commands.map(({ name, label, caption, icon, value, data, items }) =>
+        ({
+          key: name,
+          text: label,
+          title: caption,
+          iconProps: { iconName: icon },
+          data: value ?? data, disabled,
+          onClick: handleOnClick(name, value),
+          subMenuProps: items
+            ? { items: getItemProps(items) as Fluent.IContextualMenuItem[], styles: menuStyles } as Fluent.IContextualMenuProps
+            : undefined
+        })
+        ) as Fluent.IContextualMenuItem[]
       },
       menuItems = commands
         ? getItemProps(commands)
@@ -168,8 +186,7 @@ const
       iconProps: { iconName: icon },
       menuProps: menuItems ? {
         items: menuItems,
-        // TODO: Add style for sub-items with an icon.
-        styles: { subComponentStyles: { menuItem: { icon: { lineHeight: 'initial' }, subMenuIcon: { lineHeight: 'initial', height: 'auto' } } } }
+        styles: menuStyles
       } : undefined,
       split: !!menuItems
     }
