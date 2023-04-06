@@ -142,17 +142,16 @@ const
           alignItems: 'center'
         }
       },
-      menuStyles: any = { // TODO: fix type
-        subComponentStyles: {
+      menuStyles: Fluent.IContextualMenuStyles = {
+        subComponentStyles: { // TODO: Fix missing 'callout' from Fluent.IContextualMenuSubComponentStyles; Partial<> not working
           menuItem: {
             icon: { lineHeight: 'initial' },
             subMenuIcon: { lineHeight: 'initial', height: 'auto' }
           },
         }
       },
-      getItemProps = (commands: Command[]) => {
-        return commands.map(({ name, label, caption, icon, value, data, items }) =>
-        ({
+      getItemProps: (commands: Command[]) => Fluent.IContextualMenuItem[] = commands => {
+        return commands.map(({ name, label, caption, icon, value, data, items }) => ({
           key: name,
           text: label,
           title: caption,
@@ -160,14 +159,10 @@ const
           data: value ?? data, disabled,
           onClick: handleOnClick(name, value),
           subMenuProps: items
-            ? { items: getItemProps(items) as Fluent.IContextualMenuItem[], styles: menuStyles } as Fluent.IContextualMenuProps
+            ? { items: getItemProps(items), styles: menuStyles }
             : undefined
-        })
-        ) as Fluent.IContextualMenuItem[]
-      },
-      menuItems = commands
-        ? getItemProps(commands)
-        : undefined
+        }))
+      }
 
     React.useEffect(() => {
       wave.args[name] = false
@@ -184,11 +179,11 @@ const
       onClick,
       styles,
       iconProps: { iconName: icon },
-      menuProps: menuItems ? {
-        items: menuItems,
+      menuProps: commands ? {
+        items: getItemProps(commands),
         styles: menuStyles
       } : undefined,
-      split: !!menuItems
+      split: !!commands
     }
     if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
 
