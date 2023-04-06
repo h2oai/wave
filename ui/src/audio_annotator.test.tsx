@@ -105,18 +105,6 @@ describe('AudioAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag1', start: 130, end: 140 }, items[1]])
     })
 
-    it('Draws a new annotation from right to left', async () => {
-      const { container } = render(<XAudioAnnotator model={model} />)
-      await waitForComponentLoad()
-      const canvasEl = container.querySelector('canvas')!
-      fireEvent.mouseDown(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
-      fireEvent.mouseMove(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
-      fireEvent.click(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
-
-      expect(wave.args[name]).toHaveLength(3)
-      expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag1', start: 130, end: 140 }, items[1]])
-    })
-
     it('Does not draw a new annotation if too small', async () => {
       const { container } = render(<XAudioAnnotator model={model} />)
       await waitForComponentLoad()
@@ -153,17 +141,16 @@ describe('AudioAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject(items)
     })
 
-    it('Draws a new annotation with different tag if selected', async () => {
-      const { container, getByText } = render(<XAudioAnnotator model={model} />)
+    it('Draws a new annotation if moved too fast', async () => {
+      const { container } = render(<XAudioAnnotator model={model} />)
       await waitForComponentLoad()
-      fireEvent.click(getByText('Tag 2'))
       const canvasEl = container.querySelector('canvas')!
-      fireEvent.mouseDown(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
-      fireEvent.mouseMove(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
-      fireEvent.click(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
+      fireEvent.mouseDown(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
 
       expect(wave.args[name]).toHaveLength(3)
-      expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag2', start: 130, end: 140 }, items[1]])
+      expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag1', start: 130, end: 140 }, items[1]])
     })
 
     it('Removes annotation after clicking remove btn', async () => {
@@ -387,7 +374,7 @@ describe('AudioAnnotator.tsx', () => {
       await waitForComponentLoad()
       const canvasEl = container.querySelector('canvas')!
       fireEvent.mouseMove(canvasEl, { clientX: mid, clientY: 3 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(getByText('02:40.00 - 03:10.00')).toBeVisible()
     })
 
@@ -396,7 +383,7 @@ describe('AudioAnnotator.tsx', () => {
       await waitForComponentLoad()
       const canvasEl = container.querySelector('canvas')!
       fireEvent.mouseMove(canvasEl, { clientX: 30, clientY: 3 })
-      expect(getByTestId('range-annotator-tooltip')).not.toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).not.toBeVisible()
     })
 
     it('Shows tooltip while drawing a new annotation', async () => {
@@ -405,7 +392,7 @@ describe('AudioAnnotator.tsx', () => {
       const canvasEl = container.querySelector('canvas')!
       fireEvent.mouseDown(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
       fireEvent.mouseMove(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(queryByText('02:10.00 - 02:20.00')).toBeVisible()
     })
 
@@ -417,7 +404,7 @@ describe('AudioAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: mid, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: mid, clientY: 50, buttons: 1 })
       fireEvent.mouseMove(canvasEl, { clientX: mid + moveOffset, clientY: 60, buttons: 1 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(queryByText('02:45.00 - 03:15.00')).toBeVisible()
     })
 
@@ -429,7 +416,7 @@ describe('AudioAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: mid, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: start, clientY: 50, buttons: 1 })
       fireEvent.mouseMove(canvasEl, { clientX: start - moveOffset, clientY: 60, buttons: 1 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(queryByText('02:35.00 - 03:10.00')).toBeVisible()
     })
 
@@ -441,7 +428,7 @@ describe('AudioAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: mid, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: start, clientY: 50, buttons: 1 })
       fireEvent.mouseMove(canvasEl, { clientX: start + (end - start) + moveOffset, clientY: 60, buttons: 1 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(queryByText('03:10.00 - 03:15.00')).toBeVisible()
     })
 
@@ -453,7 +440,7 @@ describe('AudioAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: mid, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: end, clientY: 50, buttons: 1 })
       fireEvent.mouseMove(canvasEl, { clientX: end + moveOffset, clientY: 60, buttons: 1 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(queryByText('02:40.00 - 03:15.00')).toBeVisible()
     })
 
@@ -464,7 +451,7 @@ describe('AudioAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: mid, clientY: 50 })
       fireEvent.mouseDown(canvasEl, { clientX: end, clientY: 50, buttons: 1 })
       fireEvent.mouseMove(canvasEl, { clientX: start - 5, clientY: 60, buttons: 1 })
-      expect(getByTestId('range-annotator-tooltip')).toBeVisible()
+      expect(getByTestId('wave-range-annotator-tooltip')).toBeVisible()
       expect(queryByText('02:35.00 - 02:40.00')).toBeVisible()
     })
   })

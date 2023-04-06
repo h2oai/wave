@@ -108,6 +108,7 @@ const
         ? 'to'
         : undefined
   },
+  getTooltipTopOffset = (cursorY: F) => cursorY - 80,
   getTooltipLeftOffset = (cursorX: F, canvasWidth: F) => {
     return (cursorX + TOOLTIP_WIDTH + LEFT_TOOLTIP_OFFSET) > canvasWidth
       ? cursorX - TOOLTIP_WIDTH - LEFT_TOOLTIP_OFFSET
@@ -254,7 +255,7 @@ const
         setTooltipProps(!intersected || intersected.isZoom ? null : {
           title: colorsMap.get(intersected.tag)?.label || '',
           range: `${formatTime(intersected.start)} - ${formatTime(intersected.end)}`,
-          top: cursor_y,
+          top: getTooltipTopOffset(cursor_y),
           left: getTooltipLeftOffset(cursor_x, canvasWidth)
         })
 
@@ -262,10 +263,8 @@ const
           ? getIntersectingEdge(cursor_x, intersected) ? 'ew-resize' : 'move'
           : 'pointer'
 
-        if (currDrawnAnnotation.current && !currDrawnAnnotation.current?.action && e.buttons === 1) {
-          currDrawnAnnotation.current.action = 'new'
-        }
-        else if (!currDrawnAnnotation.current || e.buttons !== 1) return
+        if (!currDrawnAnnotation.current || e.buttons !== 1) return
+        if (!currDrawnAnnotation.current?.action) currDrawnAnnotation.current.action = 'new'
 
         let tooltipFrom = 0
         let tooltipTo = 0
@@ -324,7 +323,7 @@ const
         setTooltipProps(currIntersected?.isZoom ? null : {
           title: colorsMap.get(activeTag)!.label,
           range: `${formatTime(tooltipFrom / canvas.width * duration)} - ${formatTime(tooltipTo / canvas.width * duration)}`,
-          top: cursor_y,
+          top: getTooltipTopOffset(cursor_y),
           left: getTooltipLeftOffset(cursor_x, canvasWidth)
         })
       },
@@ -407,7 +406,7 @@ const
       <div>
         <div className={css.annotatorContainer}>
           <div
-            data-test={setZoom ? 'range-annotator-tooltip' : undefined}
+            data-test={setZoom ? 'wave-range-annotator-tooltip' : undefined}
             className={css.tooltip}
             style={{ display: tooltipProps ? 'block' : 'none', left: tooltipProps?.left, top: tooltipProps?.top }}
           >
