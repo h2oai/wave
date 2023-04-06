@@ -38,6 +38,7 @@ type DraggedAnnotation = {
   action?: 'resize' | 'move' | 'new'
   resized?: 'from' | 'to'
   intersected?: DrawnAnnotation
+  newAnnotationStart?: F
 }
 type TooltipProps = { title: S, range: S, top: U, left: U }
 type TagColor = { transparent: S, color: S, label: S }
@@ -102,9 +103,9 @@ const
     if (Math.abs(canvasEnd - x) <= ANNOTATION_HANDLE_OFFSET) return 'to'
   },
   getResized = (cursor_x: F, min: F, max: F) => {
-    return cursor_x === min
+    return cursor_x <= min
       ? 'from'
-      : cursor_x === max
+      : cursor_x >= max
         ? 'to'
         : undefined
   },
@@ -264,21 +265,21 @@ const
           : 'pointer'
 
         if (!currDrawnAnnotation.current || e.buttons !== 1) return
-        if (!currDrawnAnnotation.current?.action) currDrawnAnnotation.current.action = 'new'
+        if (!currDrawnAnnotation.current?.action) {
+          currDrawnAnnotation.current.action = 'new'
+          currDrawnAnnotation.current.newAnnotationStart = currDrawnAnnotation.current.from
+        }
 
         let tooltipFrom = 0
         let tooltipTo = 0
         const { action, intersected: currIntersected } = currDrawnAnnotation.current
-        if (action === 'new') {
-          const { from, to, resized } = currDrawnAnnotation.current
-          const min = Math.min(from, to, cursor_x)
-          const max = Math.max(from, to, cursor_x)
-          const start = resized === 'from' ? cursor_x : min
-          const end = resized === 'to' ? cursor_x : max
-          tooltipFrom = start
-          tooltipTo = end
-          currDrawnAnnotation.current = { from: start, to: end, action: 'new' }
-          currDrawnAnnotation.current.resized = getResized(cursor_x, min, max) || currDrawnAnnotation.current.resized
+        if (action === 'new' && currDrawnAnnotation.current.newAnnotationStart) {
+          const newAnnotationStart = currDrawnAnnotation.current.newAnnotationStart
+          const from = Math.min(cursor_x, newAnnotationStart)
+          const to = Math.max(cursor_x, newAnnotationStart)
+          tooltipFrom = from
+          tooltipTo = to
+          currDrawnAnnotation.current = { from, to, action: 'new', newAnnotationStart }
           canvas.style.cursor = 'ew-resize'
         }
         else if (action === 'move' && currIntersected) {

@@ -105,6 +105,34 @@ describe('AudioAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag1', start: 130, end: 140 }, items[1]])
     })
 
+    it('Draws a new annotation by moving forward and then a bit backward', async () => {
+      const { container } = render(<XAudioAnnotator model={model} />)
+      await waitForComponentLoad()
+      const canvasEl = container.querySelector('canvas')!
+      fireEvent.mouseDown(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 155, clientY: 20, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 150, clientY: 20, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
+
+      expect(wave.args[name]).toHaveLength(3)
+      expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag1', start: 130, end: 140 }, items[1]])
+    })
+
+    it('Draws a new annotation by moving forward, backward, forward', async () => {
+      const { container } = render(<XAudioAnnotator model={model} />)
+      await waitForComponentLoad()
+      const canvasEl = container.querySelector('canvas')!
+      fireEvent.mouseDown(canvasEl, { clientX: 130, clientY: 10, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 150, clientY: 20, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 120, clientY: 20, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 140, clientY: 20, buttons: 1 })
+
+      expect(wave.args[name]).toHaveLength(3)
+      expect(wave.args[name]).toMatchObject([items[0], { tag: 'tag1', start: 130, end: 140 }, items[1]])
+    })
+
     it('Does not draw a new annotation if too small', async () => {
       const { container } = render(<XAudioAnnotator model={model} />)
       await waitForComponentLoad()
