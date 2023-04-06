@@ -1388,6 +1388,24 @@ describe('Table.tsx', () => {
       fireEvent.click(getByText('Reset table'))
       expect(container.querySelector("[data-icon-name='SortUp']")!).not.toBeInTheDocument()
     })
+
+    it('Does not keep sort after reset', () => {
+      const { container, getByText, getAllByRole } = render(<XTable model={{ ...tableProps, resettable: true }} />)
+
+      expect(getAllByRole('gridcell')[0].textContent).toBe('Quick brown fox.')
+      expect(getAllByRole('gridcell')[2].textContent).toBe('Jumps over a dog.')
+      expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('Jumps over a dog.')
+      expect(getAllByRole('gridcell')[2].textContent).toBe('Quick brown fox.')
+      expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
+
+      fireEvent.click(getByText('Reset table'))
+      expect(getAllByRole('gridcell')[0].textContent).toBe('Quick brown fox.')
+      expect(getAllByRole('gridcell')[2].textContent).toBe('Jumps over a dog.')
+      expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
+    })
   })
 
   describe('Download', () => {
