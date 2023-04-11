@@ -93,6 +93,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
     [duration, setDuration] = React.useState(0),
     [currentTime, setCurrentTime] = React.useState(0),
     [volumeIcon, setVolumeIcon] = React.useState('Volume3'),
+    [loadingMsg, setLoadingMsg] = React.useState(''),
     audioRef = React.useRef<HTMLAudioElement>(null),
     audioContextRef = React.useRef<AudioContext>(),
     gainNodeRef = React.useRef<GainNode>(),
@@ -111,6 +112,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         .connect(gainNodeRef.current)
         .connect(audioContext.destination)
 
+      setLoadingMsg('Fetching audio data...')
       // The data audio needs to be fetched and processed manually to generate a waveform later.
       const res = await fetch(model.src)
       const arrBuffer = await res.arrayBuffer()
@@ -119,6 +121,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       // Do not set src directly within HTML to prevent double fetching.
       audioRef.current.src = fetchedAudioUrlRef.current
 
+      setLoadingMsg('Decoding audio data...')
       const audioBuffer = await audioContext.decodeAudioData(arrBuffer)
       const rawData = audioBuffer.getChannelData(0) // We only need to work with one channel of data
 
@@ -137,6 +140,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       const multiplier = Math.pow(Math.max(...filteredData), -1)
       setWaveFormData(filteredData.map(n => ({ val: n * multiplier, cat: n * multiplier * 100 })))
       setDuration(audioBuffer.duration)
+      setLoadingMsg('')
     },
     onPlayerStateChange = () => {
       const audioContext = audioContextRef.current
@@ -268,7 +272,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
           </>
         ) : (
           <Fluent.Stack horizontalAlign='center' verticalAlign='center' styles={{ root: { minHeight: BODY_MIN_HEGHT } }}>
-            <Fluent.Spinner size={Fluent.SpinnerSize.large} label='Loading audio annotator' />
+            <Fluent.Spinner size={Fluent.SpinnerSize.large} label={loadingMsg} />
           </Fluent.Stack>
         )
       }
