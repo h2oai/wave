@@ -242,6 +242,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               onRenderBackground={data => <MicroBars data={data} value='val' category='cat' color='$primary5' zeroValue={0} />}
             />
             <Fluent.Slider
+              key={currentTime} // HACK: Avoid Fluent batch updates to achieve smooth thumb movement synced with canvas.
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}
               value={currentTime}
               max={duration}
