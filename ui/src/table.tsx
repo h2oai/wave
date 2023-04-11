@@ -151,7 +151,7 @@ export interface Table {
   groups?: TableGroup[]
   /** Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`. */
   pagination?: TablePagination
-  /** The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
+  /** The events to capture on this table when pagination is set. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
   events?: S[]
   /** True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr. */
   single?: B
