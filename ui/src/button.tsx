@@ -129,6 +129,18 @@ const
         }
       },
       onClick = handleOnClick(name, value, path),
+      getItemProps: (commands: Command[]) => Fluent.IContextualMenuItem[] = commands =>
+        commands.map(({ name, label, caption, icon, value, data, items }) => ({
+          key: name,
+          text: label,
+          title: caption,
+          iconProps: { iconName: icon },
+          data: value ?? data, disabled,
+          onClick: handleOnClick(name, value),
+          subMenuProps: items
+            ? { items: getItemProps(items), styles: { subComponentStyles } }
+            : undefined
+        })),
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
         root: {
@@ -142,27 +154,14 @@ const
           alignItems: 'center'
         }
       },
-      menuStyles: Fluent.IContextualMenuStyles = {
-        subComponentStyles: { // TODO: Fix missing 'callout' from Fluent.IContextualMenuSubComponentStyles; Partial<> not working
-          menuItem: {
-            icon: { lineHeight: 'initial' },
-            subMenuIcon: { lineHeight: 'initial', height: 'auto' }
-          },
+      // Fixes the vertical scrollbar for menu items with icons.
+      subComponentStyles: Partial<Fluent.IContextualMenuSubComponentStyles> = {
+        menuItem: {
+          icon: { lineHeight: 'initial' },
+          subMenuIcon: { lineHeight: 'initial', height: 'auto' }
         }
-      },
-      getItemProps: (commands: Command[]) => Fluent.IContextualMenuItem[] = commands => {
-        return commands.map(({ name, label, caption, icon, value, data, items }) => ({
-          key: name,
-          text: label,
-          title: caption,
-          iconProps: { iconName: icon },
-          data: value ?? data, disabled,
-          onClick: handleOnClick(name, value),
-          subMenuProps: items
-            ? { items: getItemProps(items), styles: menuStyles }
-            : undefined
-        }))
       }
+
 
     React.useEffect(() => {
       wave.args[name] = false
@@ -181,7 +180,7 @@ const
       iconProps: { iconName: icon },
       menuProps: commands ? {
         items: getItemProps(commands),
-        styles: menuStyles
+        styles: { subComponentStyles }
       } : undefined,
       split: !!commands
     }
