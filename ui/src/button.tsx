@@ -114,6 +114,13 @@ const
     center: 'center',
     between: 'space-between',
     around: 'space-around',
+  },
+  // Fixes the vertical scrollbar for menu items with icons.
+  subComponentStyles: Partial<Fluent.IContextualMenuSubComponentStyles> = {
+    menuItem: {
+      icon: { lineHeight: 'initial' },
+      subMenuIcon: { lineHeight: 'initial', height: 'auto' },
+    }
   }
 
 const
@@ -141,6 +148,7 @@ const
             ? { items: getItemProps(items), styles: { subComponentStyles } }
             : undefined
         })),
+      isIconOnly = !label && icon,
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
         root: {
@@ -152,14 +160,10 @@ const
           fontSize: 20,
           display: 'flex',
           alignItems: 'center'
-        }
-      },
-      // Fixes the vertical scrollbar for menu items with icons.
-      subComponentStyles: Partial<Fluent.IContextualMenuSubComponentStyles> = {
-        menuItem: {
-          icon: { lineHeight: 'initial' },
-          subMenuIcon: { lineHeight: 'initial', height: 'auto' }
-        }
+        },
+        splitButtonMenuButton: isIconOnly
+          ? { backgroundColor: cssVar('$card'), border: 'none' }
+          : undefined
       }
 
 
@@ -184,7 +188,7 @@ const
       } : undefined,
       split: !!commands
     }
-    if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
+    if (isIconOnly) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
 
     return caption?.length
       ? primary
