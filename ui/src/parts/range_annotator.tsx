@@ -1,11 +1,11 @@
-import { S, F, U, B, xid } from 'h2o-wave'
+import * as Fluent from '@fluentui/react'
+import { B, F, S, U, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AudioAnnotatorItem, AudioAnnotatorTag } from '../audio_annotator'
 import { isIntersectingRect } from '../image_annotator_rect'
-import { cssVar, cssVarValue } from '../theme'
+import { clas, cssVar, cssVarValue } from '../theme'
 import { eventToCursor } from './annotator_utils'
-import * as Fluent from '@fluentui/react'
 
 type RangeAnnotatorProps<T> = {
   activeTag: S
@@ -86,15 +86,29 @@ const
       boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`,
       boxSizing: 'border-box',
     },
-    time: {
-      display: 'inline-block',
-      width: 20,
+    timeComponent: {
+      textAlign: 'center',
+      $nest: {
+        'span': {
+          display: 'inline-block',
+          width: 18,
+        },
+        '.wave-time-delimiter': {
+          width: 'auto',
+        }
+      }
     },
-    miliseconds: {
-      display: 'inline-block',
-      marginLeft: -1,
-      marginRight: -2
-    }
+    timeComponentBig: {
+      $nest: {
+        'span': {
+          width: 35,
+          fontSize: 30,
+        },
+        '.wave-time-delimiter': {
+          width: 10,
+        }
+      }
+    },
   }),
   getIntersectingEdge = (x: U, intersected?: { canvasStart: F, canvasEnd: F }) => {
     if (!intersected) return
@@ -492,19 +506,22 @@ export const
       .filter((v, i) => v !== "00" || i > 0)
       .join(":")
   },
-  TimeComponent = ({ secs }: { secs: F }) => {
+  TimeComponent = ({ secs, isBig = false }: { secs: F, isBig?: B }) => {
     const hours = Math.floor(secs / 3600)
     const minutes = Math.floor(secs / 60) % 60
     const [seconds, miliseconds] = (secs % 60).toFixed(2).split('.').map(v => +v)
     const [h, m, s, ms] = [hours, minutes, seconds, miliseconds].map(v => v < 10 ? '0' + v : String(v))
     return (
-      <div style={{ textAlign: 'center' }}>
-        {h !== '00' && <><span>{h}</span> <span>:</span></>}
-        <span className={css.time}>{m}</span>
-        <span>:</span>
-        <span className={css.time}>{s}</span>
-        <span className={css.miliseconds}>.</span>
-        <span className={css.time}>{ms}</span>
+      <div className={clas(css.timeComponent, isBig ? css.timeComponentBig : '')}>
+        {h !== '00' && <>
+          <span>{h}</span>
+          <span className='wave-time-delimiter'>:</span>
+        </>}
+        <span>{m}</span>
+        <span className='wave-time-delimiter'>:</span>
+        <span>{s}</span>
+        <span className='wave-time-delimiter'>.</span>
+        <span>{ms}</span>
       </div>
     )
   },

@@ -242,7 +242,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               onRenderBackground={data => <MicroBars data={data} value='val' category='cat' color='$primary5' zeroValue={0} />}
             />
             <Fluent.Slider
-              key={currentTime} // HACK: Avoid Fluent batch updates to achieve smooth thumb movement synced with canvas.
+              key={isPlaying ? currentTime : undefined} // HACK: Avoid Fluent batch updates to achieve smooth thumb movement synced with canvas.
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}
               value={currentTime}
               max={duration}
@@ -251,7 +251,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               showValue={false}
             />
             <div style={{ marginBottom: 8 }}>
-              <TimeComponent secs={currentTime} />
+              <TimeComponent secs={currentTime} isBig />
             </div>
             <Fluent.Stack horizontal horizontalAlign='center'>
               <Fluent.IconButton iconProps={{ iconName: 'PlayReverseResume' }} styles={{ icon: { fontSize: 18 } }} onClick={skipToTime(0)} />
@@ -259,16 +259,12 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                 iconProps={{ iconName: isPlaying ? 'Pause' : 'PlaySolid' }}
                 onClick={onPlayerStateChange}
                 styles={{
-                  root: { backgroundColor: cssVar('$themePrimary'), borderRadius: 50 },
+                  root: { backgroundColor: cssVar('$themePrimary'), borderRadius: 50, marginTop: 1.5 },
                   rootHovered: { backgroundColor: cssVar('$themeSecondary') },
                   icon: { marginBottom: 2, color: cssVar('$white'), fontSize: 18 }
                 }}
               />
-              <Fluent.IconButton
-                iconProps={{ iconName: 'PlayResume' }}
-                styles={{ icon: { fontSize: 18 } }}
-                onClick={skipToTime(duration)}
-              />
+              <Fluent.IconButton iconProps={{ iconName: 'PlayResume' }} styles={{ icon: { fontSize: 18 } }} onClick={skipToTime(duration)} />
             </Fluent.Stack>
           </>
         ) : (
