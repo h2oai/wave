@@ -239,7 +239,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                 </Fluent.Stack>
               )}
               backgroundData={waveFormData}
-              onRenderBackground={data => <MicroBars data={data} value='val' category='cat' color='$themePrimary' zeroValue={0} />}
+              onRenderBackground={data => <MicroBars data={data} value='val' category='cat' color='$primary5' zeroValue={0} />}
             />
             <Fluent.Slider
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}

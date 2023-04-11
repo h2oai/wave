@@ -17,6 +17,7 @@ import * as d3 from 'd3'
 import { F, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { cssVarValue } from '../theme'
 import { debounce } from '../ui'
 
 interface Props {
@@ -65,7 +66,7 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 0]),
         rects = data.map((d, i) => {
           const x = scaleX(d[category]), y = scaleY(d[value])
-          return <rect key={i} fill={color} x={x} y={y} width={2} height={height - y!} />
+          return <rect key={i} fill={cssVarValue(color)} x={x} y={y} width={2} height={height - y!} />
         })
       setContent(<svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>{rects}</svg>)
     }, [category, color, data, maxY, minY, value]),
