@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { S, U } from 'h2o-wave'
+import { B, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, getContrast, padding } from './theme'
@@ -49,15 +49,28 @@ export interface Tag {
 }
 const css = stylesheet({
   tag: {
+    display: 'inline-block',
     borderRadius: 4,
     padding: padding(4, 16),
-    '&:not(:first-child)': {
-      marginLeft: 8
+  },
+  singleline: {
+    $nest: {
+      '&:not(:first-child)': {
+        marginLeft: 8
+      }
+    }
+  },
+  multiline: {
+    marginBottom: 8,
+    $nest: {
+      '&:not(:last-child)': {
+        marginRight: 8
+      }
     }
   }
 })
 
-export const XTagTableCellType = ({ model, serializedTags }: { model: TagTableCellType, serializedTags: S }) => {
+export const XTagTableCellType = ({ model, serializedTags, isMultiline }: { model: TagTableCellType, serializedTags: S, isMultiline?: B }) => {
   const
     mapTags = ((tagLabel: S, i: U) => {
       const
@@ -66,7 +79,7 @@ export const XTagTableCellType = ({ model, serializedTags }: { model: TagTableCe
         background = cssVar(tagColor),
         color = cssVar(tag?.label_color || getContrast(tagColor))
 
-      return <span key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6')}>{tagLabel}</span>
+      return <div key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6', isMultiline ? css.multiline : css.singleline)}>{tagLabel}</div>
     })
   return <div data-test={model.name}>{serializedTags.split(',').map(mapTags)}</div>
 }
