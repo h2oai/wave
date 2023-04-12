@@ -52,22 +52,13 @@ const css = stylesheet({
     display: 'inline-block',
     borderRadius: 4,
     padding: padding(4, 16),
-  },
-  singleline: {
-    $nest: {
-      '&:not(:first-child)': {
-        marginLeft: 8
-      }
-    }
-  },
-  multiline: {
-    marginBottom: 8,
     $nest: {
       '&:not(:last-child)': {
         marginRight: 8
       }
     }
-  }
+  },
+  multiline: { marginBottom: 8, }
 })
 
 export const XTagTableCellType = ({ model, serializedTags, isMultiline }: { model: TagTableCellType, serializedTags: S, isMultiline?: B }) => {
@@ -79,7 +70,7 @@ export const XTagTableCellType = ({ model, serializedTags, isMultiline }: { mode
         background = cssVar(tagColor),
         color = cssVar(tag?.label_color || getContrast(tagColor))
 
-      return <div key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6', isMultiline ? css.multiline : css.singleline)}>{tagLabel}</div>
+      return <div key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6', isMultiline ? css.multiline : '')}>{tagLabel}</div>
     })
   return <div data-test={model.name}>{serializedTags.split(',').map(mapTags)}</div>
 }
