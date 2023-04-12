@@ -52,13 +52,11 @@ const css = stylesheet({
     display: 'inline-block',
     borderRadius: 4,
     padding: padding(4, 16),
-    $nest: {
-      '&:not(:last-child)': {
-        marginRight: 8
-      }
+    '&:not(:last-child)': {
+      marginRight: 8
     }
   },
-  multiline: { marginBottom: 8, }
+  multiline: { marginBottom: 8 }
 })
 
 export const XTagTableCellType = ({ model, serializedTags, isMultiline }: { model: TagTableCellType, serializedTags: S, isMultiline?: B }) => {
