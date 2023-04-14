@@ -31,7 +31,7 @@ const css = stylesheet({
           '&:first-child': {
             marginTop: 0
           },
-          'h1, h2, h3, h4, h5, h6': {
+          '& h1,&  h2, & h3, & h4, & h5, & h6': {
             marginBlock: 0,
             color: cssVar('$neutralPrimary')
           },

@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
+import { Markdown } from './markdown'
 import { clas, cssVar, getContrast, important, padding, px } from './theme'
 import { bond, wave } from './ui'
 
@@ -45,6 +46,7 @@ const
       borderRadius: 4,
       maxWidth: '65ch',
       borderTopRightRadius: 0,
+      textAlign: 'left',
     },
     userMsg: {
       backgroundColor: cssVar('$themePrimary'),
@@ -114,7 +116,14 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
               textAlign: fromUser ? 'left' : 'right',
               color: getContrast(fromUser ? '$themePrimary' : '$text')
             }} >
-            <span className={clas(css.msg, fromUser ? css.userMsg : '', 'wave-s14')} style={getCornerStyle(msgs[idx - 1]?.fromUser, fromUser, msgs[idx + 1]?.fromUser)}>{msg}</span>
+            <span
+              className={clas(css.msg, fromUser ? css.userMsg : '', 'wave-s14')}
+              style={{
+                ...getCornerStyle(msgs[idx - 1]?.fromUser, fromUser, msgs[idx + 1]?.fromUser),
+                padding: msg?.includes('\n') ? 12 : 6,
+              }}>
+              <Markdown source={msg || ''} />
+            </span>
           </div>
         ))}
       </div>

@@ -32,8 +32,11 @@ const
     },
     markdown: {
       $nest: {
-        '>*:only-child': {
-          margin: 0
+        '&>*:first-child': {
+          marginTop: 0
+        },
+        '&>*:last-child': {
+          marginBottom: 0
         },
         a: {
           color: cssVar('$themePrimary'),
