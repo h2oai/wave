@@ -29,7 +29,9 @@ async def show_red_dashboard(q: Q):
     ])
 
     q.page['header'] = ui.header_card(box='header', title='H2O Wave Demo', subtitle='Red Dashboard',
-                                      nav=global_nav)
+                                      image='https://wave.h2o.ai/img/h2o-logo.svg',
+                                      items=[ui.tabs(name='Dashboards', value='#dashboards/red', 
+                                                     items=global_nav),])
     q.page['title'] = ui.section_card(
         box='title',
         title=next(sample_title),
