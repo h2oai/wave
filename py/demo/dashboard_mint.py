@@ -9,7 +9,7 @@ async def show_mint_dashboard(q: Q):
             breakpoint='xs',
             width='1200px',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('main_section'),
                 ui.zone('overview', direction=ui.ZoneDirection.ROW, size='425px'),
                 ui.zone('tickers', direction=ui.ZoneDirection.ROW, size='175px'),
@@ -20,7 +20,9 @@ async def show_mint_dashboard(q: Q):
         )
     ])
     q.page['header'] = ui.header_card(box='header', title='H2O Wave Demo', subtitle='Mint Dashboard',
-                                      nav=global_nav)
+                                      image='https://wave.h2o.ai/img/h2o-logo.svg',
+                                      items=[ui.tabs(name='Dashboards', value='#dashboards/mint', 
+                                                     items=global_nav),])
     q.page['main_section'] = ui.section_card(
         box='main_section',
         title=next(sample_title),

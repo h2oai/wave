@@ -9,7 +9,7 @@ async def show_grey_dashboard(q: Q):
             breakpoint='xs',
             min_width='800px',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('title'),
                 ui.zone('body', size='1000px', zones=[
                     ui.zone('top', direction=ui.ZoneDirection.ROW, size='25%'),
@@ -23,7 +23,9 @@ async def show_grey_dashboard(q: Q):
     ])
 
     q.page['header'] = ui.header_card(box='header', title='H2O Wave Demo', subtitle='Grey Dashboard',
-                                      nav=global_nav)
+                                      image='https://wave.h2o.ai/img/h2o-logo.svg',
+                                      items=[ui.tabs(name='Dashboards', value='#dashboards/grey', 
+                                                     items=global_nav),])
     q.page['section'] = ui.section_card(
         box='title',
         title=next(sample_title),
