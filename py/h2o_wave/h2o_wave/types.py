@@ -9491,11 +9491,13 @@ class MarkupCard:
             box: str,
             title: str,
             content: str,
+            compact: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MarkupCard.box', box, (str,), False, False, False)
         _guard_scalar('MarkupCard.title', title, (str,), False, False, False)
         _guard_scalar('MarkupCard.content', content, (str,), False, False, False)
+        _guard_scalar('MarkupCard.compact', compact, (bool,), False, True, False)
         _guard_vector('MarkupCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9503,6 +9505,8 @@ class MarkupCard:
         """The title for this card."""
         self.content = content
         """The HTML content."""
+        self.compact = compact
+        """True if title and padding should be removed. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9511,12 +9515,14 @@ class MarkupCard:
         _guard_scalar('MarkupCard.box', self.box, (str,), False, False, False)
         _guard_scalar('MarkupCard.title', self.title, (str,), False, False, False)
         _guard_scalar('MarkupCard.content', self.content, (str,), False, False, False)
+        _guard_scalar('MarkupCard.compact', self.compact, (bool,), False, True, False)
         _guard_vector('MarkupCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='markup',
             box=self.box,
             title=self.title,
             content=self.content,
+            compact=self.compact,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9529,16 +9535,20 @@ class MarkupCard:
         _guard_scalar('MarkupCard.title', __d_title, (str,), False, False, False)
         __d_content: Any = __d.get('content')
         _guard_scalar('MarkupCard.content', __d_content, (str,), False, False, False)
+        __d_compact: Any = __d.get('compact')
+        _guard_scalar('MarkupCard.compact', __d_compact, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MarkupCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
+        compact: Optional[bool] = __d_compact
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MarkupCard(
             box,
             title,
             content,
+            compact,
             commands,
         )
 

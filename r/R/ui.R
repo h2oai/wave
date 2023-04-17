@@ -3900,6 +3900,7 @@ ui_markdown_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
 #' @param content The HTML content.
+#' @param compact True if title and padding should be removed. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkupCard instance.
 #' @export
@@ -3907,15 +3908,18 @@ ui_markup_card <- function(
   box,
   title,
   content,
+  compact = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
+  .guard_scalar("compact", "logical", compact)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
+    compact=compact,
     commands=commands,
     view='markup')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkupCard"))

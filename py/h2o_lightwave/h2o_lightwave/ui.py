@@ -3353,6 +3353,7 @@ def markup_card(
         box: str,
         title: str,
         content: str,
+        compact: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> MarkupCard:
     """Render HTML content.
@@ -3361,6 +3362,7 @@ def markup_card(
         box: A string indicating how to place this component on the page.
         title: The title for this card.
         content: The HTML content.
+        compact: True if title and padding should be removed. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkupCard` instance.
@@ -3369,6 +3371,7 @@ def markup_card(
         box,
         title,
         content,
+        compact,
         commands,
     )
 

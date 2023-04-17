@@ -1325,7 +1325,7 @@
   "Wave Full MarkupCard": {
     "prefix": "w_full_markup_card",
     "body": [
-      "ui.markup_card(box='$1', title='$2', content='$3', commands=[\n\t\t$4\t\t\n])$0"
+      "ui.markup_card(box='$1', title='$2', content='$3', compact=${4:False}, commands=[\n\t\t$5\t\t\n])$0"
     ],
     "description": "Create a full Wave MarkupCard."
   },
