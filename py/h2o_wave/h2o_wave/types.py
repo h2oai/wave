@@ -9506,7 +9506,7 @@ class MarkupCard:
         self.content = content
         """The HTML content."""
         self.compact = compact
-        """True if title and padding should be removed. Defaults to False."""
+        """True if outer spacing should be removed. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

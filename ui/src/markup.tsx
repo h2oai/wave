@@ -63,7 +63,7 @@ interface State {
    **/
   content: S
   /** 
-   * True if title and padding should be removed. Defaults to False.
+   * True if outer spacing should be removed. Defaults to False.
    **/
   compact?: B
 }
@@ -74,7 +74,7 @@ export const
   ),
   MarkupCard = ({ name, title, content, compact }: { name: S, title: S, content: S, compact?: B }) => (
     <div data-test={name} className={clas(css.card, compact ? '' : css.cardPadding)}>
-      {!compact && title && <div className='wave-s12 wave-w6'>{title}</div>}
+      {title && <div className='wave-s12 wave-w6'>{title}</div>}
       <div className={css.body}>
         <XMarkup model={{ content }} />
       </div>

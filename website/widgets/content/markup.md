@@ -25,17 +25,17 @@ menu = '''
 q.page['example'] = ui.markup_card(box='1 1 2 2', title='Menu', content=menu)
 ```
 
-## Without padding
+## Without outer card spacing
 
-You can set the `compact` attribute to `True` to remove the title and padding of a markup card.
+Set the `compact` attribute to `True` to remove the outer spacing.
 
 ```py
 menu = '''
-<ol>
-    <li>Spam</li>
-    <li>Ham</li>
-    <li>Eggs</li>
-</ol>
+<p>
+    <span>Spam</span>
+    <span>Ham</span>
+    <span>Eggs</span>
+</p>
 '''
 
 q.page['example'] = ui.markup_card(box='1 1 2 2', title='Menu', content=menu, compact=True)

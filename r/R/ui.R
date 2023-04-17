@@ -3900,7 +3900,7 @@ ui_markdown_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
 #' @param content The HTML content.
-#' @param compact True if title and padding should be removed. Defaults to False.
+#' @param compact True if outer spacing should be removed. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkupCard instance.
 #' @export

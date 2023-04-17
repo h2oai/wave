@@ -3362,7 +3362,7 @@ def markup_card(
         box: A string indicating how to place this component on the page.
         title: The title for this card.
         content: The HTML content.
-        compact: True if title and padding should be removed. Defaults to False.
+        compact: True if outer spacing should be removed. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkupCard` instance.
