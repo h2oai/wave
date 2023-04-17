@@ -9,7 +9,7 @@ async def show_mint_dashboard(q: Q):
             breakpoint='xs',
             width='1200px',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('main_section'),
                 ui.zone('overview', direction=ui.ZoneDirection.ROW, size='425px'),
                 ui.zone('tickers', direction=ui.ZoneDirection.ROW, size='175px'),

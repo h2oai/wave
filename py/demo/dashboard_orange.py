@@ -9,7 +9,7 @@ async def show_orange_dashboard(q: Q):
             breakpoint='xs',
             width='1200px',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('control'),
                 ui.zone('top', direction=ui.ZoneDirection.ROW, size='385px', zones=[
                     ui.zone('top_left', direction=ui.ZoneDirection.ROW, size='66%'),

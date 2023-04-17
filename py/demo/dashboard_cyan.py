@@ -9,7 +9,7 @@ async def show_cyan_dashboard(q: Q):
             breakpoint='xs',
             width='1200px',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('body', size='1400px', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('content', size='75%', zones=[
                         ui.zone('top', size='600px'),

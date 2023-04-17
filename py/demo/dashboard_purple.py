@@ -8,7 +8,7 @@ async def show_purple_dashboard(q: Q):
         ui.layout(
             breakpoint='xs',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('title', size='60px'),
                 ui.zone('body'),
                 ui.zone('footer', size='80px'),
@@ -17,7 +17,7 @@ async def show_purple_dashboard(q: Q):
         ui.layout(
             breakpoint='m',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('title', size='60px'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', zones=[
@@ -35,7 +35,7 @@ async def show_purple_dashboard(q: Q):
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header', size='65px'),
+                ui.zone('header', size='76px'),
                 ui.zone('title', size='60px'),
                 ui.zone('body', size='1150px', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', size='3', zones=[
