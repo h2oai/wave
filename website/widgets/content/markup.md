@@ -24,3 +24,19 @@ menu = '''
 
 q.page['example'] = ui.markup_card(box='1 1 2 2', title='Menu', content=menu)
 ```
+
+## Without outer card spacing
+
+Set the `compact` attribute to `True` to remove the outer spacing.
+
+```py
+menu = '''
+<p>
+    <span>Spam</span>
+    <span>Ham</span>
+    <span>Eggs</span>
+</p>
+'''
+
+q.page['example'] = ui.markup_card(box='1 1 2 2', title='Menu', content=menu, compact=True)
+```

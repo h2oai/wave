@@ -1620,10 +1620,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_markup_card" value="ui.markup_card(box='$box$',title='$title$',content='$content$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MarkupCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_markup_card" value="ui.markup_card(box='$box$',title='$title$',content='$content$',compact=$compact$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MarkupCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="compact" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

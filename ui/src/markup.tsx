@@ -16,6 +16,7 @@ import { B, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
+import { clas } from './theme'
 import { bond } from './ui'
 
 const
@@ -23,6 +24,8 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
+    },
+    cardPadding: {
       padding: grid.gap,
     },
     body: {
@@ -59,14 +62,18 @@ interface State {
    * :value "<div/>"
    **/
   content: S
+  /** 
+   * True if outer spacing should be removed. Defaults to False.
+   **/
+  compact?: B
 }
 
 export const
   XMarkup = ({ model: { content, name } }: { model: Markup }) => (
     <div data-test={name} dangerouslySetInnerHTML={{ __html: content }} />
   ),
-  MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
-    <div data-test={name} className={css.card}>
+  MarkupCard = ({ name, title, content, compact }: { name: S, title: S, content: S, compact?: B }) => (
+    <div data-test={name} className={clas(css.card, compact ? '' : css.cardPadding)}>
       {title && <div className='wave-s12 wave-w6'>{title}</div>}
       <div className={css.body}>
         <XMarkup model={{ content }} />
@@ -74,7 +81,7 @@ export const
     </div>
   ),
   View = bond(({ name, state, changed }: Model<State>) => {
-    const render = () => <MarkupCard name={name} title={state.title} content={state.content} />
+    const render = () => <MarkupCard name={name} title={state.title} content={state.content} compact={state.compact} />
     return { render, changed }
   })
 
