@@ -500,7 +500,7 @@ const
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
-        if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} isMultiline={col.isMultiline} />
+        if (col.cellType?.tag) return <XTagTableCellType model={col.cellType.tag} serializedTags={item[col.key]} />
         if (col.cellType?.menu) return <XMenuTableCellType model={{ ...col.cellType.menu, rowId: String(item.key) }} />
         if (col.cellType?.markdown) return (
           <TooltipWrapper cellOverflow={col.cellOverflow}>
