@@ -129,7 +129,7 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 
 ## With actions
 
-Using the `commands` attribute, you can provide other relevant actions for the button that are displayed in the context menu.
+The `commands` attribute can provide other relevant actions for the button that are displayed in the context menu.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 2 1', items=[
