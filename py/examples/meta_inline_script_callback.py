@@ -61,7 +61,7 @@ async def serve(q: Q):
             items=[
                 # Display our custom button.
                 ui.markup(content=counter_html),
-                ui.text(''),
+                ui.text(name='text', content=''),
             ],
         )
         q.client.initialized = True
@@ -73,6 +73,6 @@ async def serve(q: Q):
                 # Increment the count.
                 q.client.count += 1
                 # Display the latest count.
-                q.page['form'].items[1].text.content = f'You clicked {q.client.count} times.'
+                q.page['form'].text.content = f'You clicked {q.client.count} times.'
 
     await q.page.save()
