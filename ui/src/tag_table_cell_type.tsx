@@ -68,7 +68,7 @@ export const XTagTableCellType = ({ model, serializedTags, isMultiline }: { mode
         background = cssVar(tagColor),
         color = cssVar(tag?.label_color || getContrast(tagColor))
 
-      return <div key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6', isMultiline ? css.multiline : '')}>{tagLabel}</div>
+      return <span key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6', isMultiline ? css.multiline : '')}>{tagLabel}</span>
     })
   return <div data-test={model.name}>{serializedTags.split(',').map(mapTags)}</div>
 }
