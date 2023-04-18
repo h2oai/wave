@@ -21,6 +21,7 @@ import { cssVar, formItemWidth, padding } from './theme'
 import { Command, toCommands } from './toolbar'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
+import { fixMenuOverflowStyles } from './parts/utils'
 
 /**
  * Create a button.
@@ -114,13 +115,6 @@ const
     center: 'center',
     between: 'space-between',
     around: 'space-around',
-  },
-  // Fixes the vertical scrollbar for menu items with icons.
-  subComponentStyles: Partial<Fluent.IContextualMenuSubComponentStyles> = {
-    menuItem: {
-      icon: { lineHeight: 'initial' },
-      subMenuIcon: { lineHeight: 'initial', height: 'auto' },
-    }
   }
 
 const
@@ -171,7 +165,7 @@ const
       iconProps: { iconName: icon },
       menuProps: commands ? {
         items: toCommands(commands),
-        styles: { subComponentStyles }
+        styles: fixMenuOverflowStyles
       } : undefined,
       split: !!commands
     }
