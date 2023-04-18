@@ -1030,7 +1030,7 @@ def button(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-        commands: The menu with button actions. Ignored if `link` is True.
+        commands: When specified, a split button is rendered with extra actions tied to it within a context menu. Mutually exclusive with `link` attribute.
     Returns:
         A `h2o_wave.types.Button` instance.
     """

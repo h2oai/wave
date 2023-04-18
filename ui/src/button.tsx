@@ -65,7 +65,7 @@ export interface Button {
   tooltip?: S
   /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
-  /** The menu with button actions. Ignored if `link` is True. */
+  /** When specified, a split button is rendered with extra actions tied to it within a context menu. Mutually exclusive with `link` attribute. */
   commands?: Command[]
 }
 

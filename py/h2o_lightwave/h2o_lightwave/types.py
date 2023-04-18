@@ -2643,7 +2643,7 @@ class Button:
         self.path = path
         """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab."""
         self.commands = commands
-        """The menu with button actions. Ignored if `link` is True."""
+        """When specified, a split button is rendered with extra actions tied to it within a context menu. Mutually exclusive with `link` attribute."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

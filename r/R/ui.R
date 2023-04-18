@@ -1200,7 +1200,7 @@ ui_color_picker <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
-#' @param commands The menu with button actions. Ignored if `link` is True.
+#' @param commands When specified, a split button is rendered with extra actions tied to it within a context menu. Mutually exclusive with `link` attribute.
 #' @return A Button instance.
 #' @export
 ui_button <- function(
