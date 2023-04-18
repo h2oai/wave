@@ -167,7 +167,7 @@ const
         items: toCommands(commands),
         styles: fixMenuOverflowStyles,
         isBeakVisible: true,
-        directionalHint: Fluent.DirectionalHint.bottomRightEdge,
+        directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
         calloutProps: { styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }
       } : undefined,
       split: !!commands,
