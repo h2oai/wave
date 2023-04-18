@@ -17,7 +17,7 @@ import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { cssVar, formItemWidth, padding } from './theme'
+import { border, cssVar, formItemWidth, padding } from './theme'
 import { Command, toCommands } from './toolbar'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
@@ -165,9 +165,12 @@ const
       iconProps: { iconName: icon },
       menuProps: commands ? {
         items: toCommands(commands),
-        styles: fixMenuOverflowStyles
+        styles: fixMenuOverflowStyles,
+        isBeakVisible: true,
+        directionalHint: Fluent.DirectionalHint.bottomRightEdge,
+        calloutProps: { styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }
       } : undefined,
-      split: !!commands
+      split: !!commands,
     }
     if (isIconOnly) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
 
