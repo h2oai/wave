@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, S, U } from 'h2o-wave'
+import { S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, getContrast, padding } from './theme'
@@ -60,7 +60,7 @@ const css = stylesheet({
   }
 })
 
-export const XTagTableCellType = ({ model, serializedTags }: { model: TagTableCellType, serializedTags: S, isMultiline?: B }) => {
+export const XTagTableCellType = ({ model, serializedTags }: { model: TagTableCellType, serializedTags: S }) => {
   const
     mapTags = ((tagLabel: S, i: U) => {
       const
