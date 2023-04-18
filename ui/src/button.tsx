@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { cssVar, formItemWidth, padding } from './theme'
-import { Command } from './toolbar'
+import { Command, toCommands } from './toolbar'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
 
@@ -126,7 +126,7 @@ const
 const
   XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, commands } }: { model: Button }) => {
     const
-      handleOnClick = (name: Id, value?: S, path?: S) => (ev: any) => {
+      onClick = (ev: any) => {
         ev.stopPropagation()
         if (path) window.open(path, "_blank")
         else if (name.startsWith('#')) window.location.hash = name.substring(1)
@@ -135,19 +135,6 @@ const
           wave.push()
         }
       },
-      onClick = handleOnClick(name, value, path),
-      getItemProps: (commands: Command[]) => Fluent.IContextualMenuItem[] = commands =>
-        commands.map(({ name, label, caption, icon, value, items }) => ({
-          key: name,
-          text: label,
-          title: caption,
-          iconProps: { iconName: icon },
-          disabled,
-          onClick: handleOnClick(name, value),
-          subMenuProps: items
-            ? { items: getItemProps(items), styles: { subComponentStyles } }
-            : undefined
-        })),
       isIconOnly = !label && icon,
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
@@ -183,7 +170,7 @@ const
       styles,
       iconProps: { iconName: icon },
       menuProps: commands ? {
-        items: getItemProps(commands),
+        items: toCommands(commands),
         styles: { subComponentStyles }
       } : undefined,
       split: !!commands
