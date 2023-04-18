@@ -137,12 +137,12 @@ const
       },
       onClick = handleOnClick(name, value, path),
       getItemProps: (commands: Command[]) => Fluent.IContextualMenuItem[] = commands =>
-        commands.map(({ name, label, caption, icon, value, data, items }) => ({
+        commands.map(({ name, label, caption, icon, value, items }) => ({
           key: name,
           text: label,
           title: caption,
           iconProps: { iconName: icon },
-          data: value ?? data, disabled,
+          disabled,
           onClick: handleOnClick(name, value),
           subMenuProps: items
             ? { items: getItemProps(items), styles: { subComponentStyles } }
