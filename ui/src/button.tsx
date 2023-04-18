@@ -150,7 +150,6 @@ const
 
     React.useEffect(() => {
       wave.args[name] = false
-      commands?.forEach(({ name }) => wave.args[name] = false)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
