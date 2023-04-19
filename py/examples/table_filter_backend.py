@@ -45,8 +45,7 @@ async def serve(q: Q):
         ])
         q.client.initialized = True
     else:
-        items = q.page['form'].items
-        table = items[1].table
+        table = q.page['form'].issues
         term: str = q.args.search
         term = term.strip() if term else ''
         table.rows = df_to_rows(search_df(addresses, term) if len(term) else addresses)

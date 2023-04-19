@@ -109,7 +109,7 @@ async def serve(q: Q):
             get_contrast('text', 'page', q),
             get_contrast('page', 'primary', q),
             ui.text_xl('Copy code'),
-            ui.frame(content=get_theme_code(q), height='180px'),
+            ui.frame(name='frame', content=get_theme_code(q), height='180px'),
         ])
         q.page['sample'] = ui.form_card(box='preview', items=[
             ui.text_xl(content='Sample App to show colors'),
@@ -204,5 +204,5 @@ async def serve(q: Q):
     q.page['form'].items[6] = get_contrast('card', 'primary', q)
     q.page['form'].items[7] = get_contrast('text', 'page', q)
     q.page['form'].items[8] = get_contrast('page', 'primary', q)
-    q.page['form'].items[10].frame.content = get_theme_code(q)
+    q.page['form'].frame.content = get_theme_code(q)
     await q.page.save()
