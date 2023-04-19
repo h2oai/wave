@@ -22,6 +22,6 @@ async def serve(q: Q):
     else:
         if q.args.increment:
             q.client.count = count = count + 1
-            q.page['example'].items[0].button.label = f'Count={count}'
+            q.page['example'].increment.label = f'Count={count}'
 
     await q.page.save()
