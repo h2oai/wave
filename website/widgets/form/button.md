@@ -129,7 +129,7 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 
 ## With actions
 
-The `commands` attribute can provide other relevant actions for the button that are displayed in the context menu.
+The `commands` attribute can provide other relevant actions for the button that are displayed inside of a context menu. See [ui.command API](/docs/api/ui#command) for available options.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 2 1', items=[
@@ -139,32 +139,6 @@ q.page['form'] = ui.form_card(box='1 1 2 1', items=[
                         ui.command(name='second_command', label='Second command'),
                         ui.command(name='third_command', label='Third command'),  
                     ]),
-    ])
-])
-```
-
-In addition, each [command](/docs/api/ui#command) supports `caption`, `icon` and `value` attributes which work exactly like with the button.
-
-```py
-q.page['form'] = ui.form_card(box='1 1 1 1', items=[
-    ui.button(
-        name='like',
-        caption='React with like emoji', 
-        value='reaction_like', 
-        icon='Like', 
-        commands=[
-            ui.command(
-                name='love', 
-                icon='Heart', 
-                caption='React with heart emoji', 
-                value='reaction_love'
-            ), 
-            ui.command(
-                name='dislike', 
-                icon='Dislike', 
-                caption='React with dislike emoji', 
-                value='reaction_dislike'
-            )
     ])
 ])
 ```
