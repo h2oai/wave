@@ -31,6 +31,6 @@ async def serve(q: Q):
     if q.events.table and q.events.table.page_change:
         offset = q.events.table.page_change.get('offset', 0)
         new_groups = groups[offset:offset + groups_per_page]
-        q.page['form'].items[0].table.groups = new_groups
+        q.page['form'].table.groups = new_groups
 
     await q.page.save()

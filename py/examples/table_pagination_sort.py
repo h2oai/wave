@@ -40,6 +40,6 @@ async def serve(q: Q):
             offset = q.events.table.page_change.get('offset', 0)
 
         next_issues = issues[offset:offset + rows_per_page]
-        q.page['form'].items[0].table.rows = [ui.table_row(name=str(i.text), cells=[str(i.text)]) for i in next_issues]
+        q.page['form'].table.rows = [ui.table_row(name=str(i.text), cells=[str(i.text)]) for i in next_issues]
 
     await q.page.save()

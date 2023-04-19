@@ -41,7 +41,7 @@ async def serve(q: Q):
         if q.events.table.page_change:
             offset = q.events.table.page_change.get('offset', 0)
 
-        table = q.page['form'].items[0].table
+        table = q.page['form'].table
         table.rows = [ui.table_row(name=i.text, cells=[i.text]) for i in searched[offset:offset + rows_per_page]]
         table.pagination = ui.table_pagination(len(searched), rows_per_page)
 

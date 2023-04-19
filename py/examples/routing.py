@@ -7,7 +7,7 @@ from h2o_wave import main, app, Q, ui, on, handle_on
 # This function is called when q.args['empty_cart'] is True.
 @on(arg='empty_cart')
 async def clear_cart(q: Q):
-    q.page['cart'].items[0].text.content = 'Your cart was emptied!'
+    q.page['cart'].cart_info.content = 'Your cart was emptied!'
     await q.page.save()
 
 
@@ -15,7 +15,7 @@ async def clear_cart(q: Q):
 # This function is called when q.args['buy_now'] is True.
 @on()
 async def buy_now(q: Q):
-    q.page['cart'].items[0].text.content = 'Nothing to buy!'
+    q.page['cart'].cart_info.content = 'Nothing to buy!'
     await q.page.save()
 
 
@@ -52,7 +52,7 @@ async def serve(q: Q):
             box='1 5 4 2',
             title='Cart',
             items=[
-                ui.text('Your cart is empty!'),
+                ui.text(name='cart_info', content='Your cart is empty!'),
                 ui.buttons([
                     ui.button(name=buy_now.__name__, label='Buy Now!', primary=True),
                     ui.button(name='empty_cart', label='Clear cart'),

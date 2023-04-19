@@ -28,6 +28,6 @@ async def serve(q: Q):
     if q.events.table and q.events.table.page_change:
         offset = q.events.table.page_change.get('offset', 0)
         new_rows = rows[offset:offset + rows_per_page]
-        q.page['form'].items[0].table.rows = [ui.table_row(name=r, cells=[r]) for r in new_rows]
+        q.page['form'].table.rows = [ui.table_row(name=r, cells=[r]) for r in new_rows]
 
     await q.page.save()

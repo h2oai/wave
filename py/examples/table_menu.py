@@ -49,7 +49,7 @@ async def serve(q: Q):
 
     if q.args.delete:
         q.client.rows = [row for row in q.client.rows if row.id != q.args.delete]
-        q.page['example'].items[0].table.rows = [ui.table_row(name=r.id, cells=[r.name]) for r in q.client.rows]
+        q.page['example'].table.rows = [ui.table_row(name=r.id, cells=[r.name]) for r in q.client.rows]
     if q.args.details:
         for row in q.client.rows:
             if row.id == q.args.details:

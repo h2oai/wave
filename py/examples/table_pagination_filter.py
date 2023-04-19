@@ -47,7 +47,7 @@ async def serve(q: Q):
 
         next_issues = filtered[offset:offset + rows_per_page] if filtered else issues[offset:offset + rows_per_page]
 
-        table = q.page['form'].items[0].table
+        table = q.page['form'].table
         table.rows = [ui.table_row(name=i.text, cells=[i.text, i.status]) for i in next_issues]
         table.pagination = ui.table_pagination(len(filtered) if filtered else len(issues), rows_per_page)
 
