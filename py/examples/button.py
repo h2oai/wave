@@ -22,10 +22,13 @@ async def serve(q: Q):
             ui.text(f'button_with_icon={q.args.button_with_icon}'),
             ui.text(f'icon_button={q.args.icon_button}'),
             ui.text(f'external_path_button={q.args.external_path_button}'),
+            ui.text(f'command_button={q.args.command_button}'),
+            ui.text(f'command_button:first_command={q.args.first_command}'),
+            ui.text(f'command_button:second_command={q.args.second_command}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 4 8', items=[
+        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
             ui.button(name='basic_button', label='Basic'),
             ui.button(name='primary_button', label='Primary', primary=True),
             ui.button(name='link_button', label='Link', link=True),
@@ -41,5 +44,10 @@ async def serve(q: Q):
             ui.button(name='button_with_icon', label='Button with an icon', icon='Search'),
             ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
             ui.button(name='external_path_button', label='External', path='https://h2o.ai/'),
+            ui.button(name='command_button', label='Button with commands', primary=True, commands=[
+                    ui.command(name='first_command', label='First command'), 
+                    ui.command(name='second_command', label='Second command'),
+                ]
+            ),
         ])
     await q.page.save()

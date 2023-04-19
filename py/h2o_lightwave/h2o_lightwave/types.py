@@ -2603,6 +2603,7 @@ class Button:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             path: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('Button.name', name, (str,), True, False, False)
         _guard_scalar('Button.label', label, (str,), False, True, False)
@@ -2616,6 +2617,7 @@ class Button:
         _guard_scalar('Button.visible', visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Button.path', path, (str,), False, True, False)
+        _guard_vector('Button.commands', commands, (Command,), False, True, False)
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
         self.label = label
@@ -2640,6 +2642,8 @@ class Button:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.path = path
         """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab."""
+        self.commands = commands
+        """When specified, a split button is rendered with extra actions tied to it within a context menu. Mutually exclusive with `link` attribute."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2655,6 +2659,7 @@ class Button:
         _guard_scalar('Button.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Button.path', self.path, (str,), False, True, False)
+        _guard_vector('Button.commands', self.commands, (Command,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -2668,6 +2673,7 @@ class Button:
             visible=self.visible,
             tooltip=self.tooltip,
             path=self.path,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -2697,6 +2703,8 @@ class Button:
         _guard_scalar('Button.tooltip', __d_tooltip, (str,), False, True, False)
         __d_path: Any = __d.get('path')
         _guard_scalar('Button.path', __d_path, (str,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('Button.commands', __d_commands, (dict,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
@@ -2709,6 +2717,7 @@ class Button:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         path: Optional[str] = __d_path
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Button(
             name,
             label,
@@ -2722,6 +2731,7 @@ class Button:
             visible,
             tooltip,
             path,
+            commands,
         )
 
 

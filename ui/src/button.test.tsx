@@ -122,4 +122,137 @@ describe('Button.tsx', () => {
       expect(wave.args[name]).toBe(null)
     })
   })
+
+  describe('Commands button', () => {
+    const buttonProps = {
+      items: [{
+        button: {
+          name,
+          label: name,
+          commands: [
+            { name: 'command1', label: 'Command 1' },
+            { name: 'command2', label: 'Command 2' },
+          ]
+        }
+      }]
+    }
+
+    it('Renders the context menu with specified items', () => {
+      const { container, queryByText, queryByRole } = render(<XButtons model={buttonProps} />)
+
+      expect(queryByRole('menu')).not.toBeInTheDocument()
+      expect(queryByText('Command 1')).not.toBeInTheDocument()
+      expect(queryByText('Command 2')).not.toBeInTheDocument()
+
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+      fireEvent.click(contextMenuButton)
+
+      expect(queryByRole('menu')).toBeInTheDocument()
+      expect(queryByText('Command 1')).toBeInTheDocument()
+      expect(queryByText('Command 2')).toBeInTheDocument()
+    })
+
+    it('Sets args after click', () => {
+      const { container, getByText } = render(<XButtons model={buttonProps} />)
+
+      expect(wave.args[name]).toBe(false)
+      fireEvent.click(getByText(name))
+      expect(wave.args[name]).toBe(true)
+
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      expect(wave.args['command1']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 1'))
+      expect(wave.args['command1']).toBe(true)
+
+      expect(wave.args['command2']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 2'))
+      expect(wave.args['command2']).toBe(true)
+    })
+
+    it('Sets args after click - specified value', () => {
+      const buttonValueProps = {
+        items: [{
+          button: {
+            name,
+            label: name,
+            value: 'val',
+            commands: [
+              { name: 'command1', label: 'Command 1', value: 'commandVal1' },
+              { name: 'command2', label: 'Command 2', value: 'commandVal2' },
+            ]
+          }
+        }]
+      }
+      const { container, getByText } = render(<XButtons model={buttonValueProps} />)
+
+      expect(wave.args[name]).toBe(false)
+      fireEvent.click(getByText(name))
+      expect(wave.args[name]).toBe('val')
+
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      expect(wave.args['command1']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 1'))
+      expect(wave.args['command1']).toBe('commandVal1')
+
+      expect(wave.args['command2']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 2'))
+      expect(wave.args['command2']).toBe('commandVal2')
+    })
+
+    it('Sets correct state when name starts with #', () => {
+      const btnNameHashProps = {
+        items: [{
+          button: {
+            name: hashName,
+            label: name,
+            value: 'val',
+            commands: [
+              { name: '#command1', label: 'Command 1', value: 'commandVal1' },
+              { name: '#command2', label: 'Command 2', value: 'commandVal2' },
+            ]
+          }
+        }]
+      }
+      const { getByText, container } = render(<XButtons model={btnNameHashProps} />)
+
+      fireEvent.click(getByText(name))
+      expect(window.location.hash).toBe(hashName)
+      expect(pushMock).toHaveBeenCalledTimes(0)
+      expect(wave.args[name]).toBe(null)
+
+      const contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 1'))
+      expect(window.location.hash).toBe('#command1')
+      expect(pushMock).toHaveBeenCalledTimes(0)
+      expect(wave.args['#command1']).toBe(false)
+    })
+
+    it('Does not render commands when link specified', () => {
+      const btnLinkProps: Buttons = {
+        items: [{
+          button: {
+            name,
+            label: name,
+            link: true,
+            commands: [
+              { name: 'command1', label: 'Command 1' },
+              { name: 'command2', label: 'Command 2' },
+            ]
+          }
+        }]
+      }
+      const { container, getByTestId } = render(<XButtons model={btnLinkProps} />)
+
+      expect(getByTestId(name)).toHaveClass('ms-Link')
+      expect(container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement).not.toBeInTheDocument()
+    })
+  })
 })

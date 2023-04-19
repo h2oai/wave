@@ -17,9 +17,11 @@ import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { cssVar, formItemWidth, padding } from './theme'
+import { border, cssVar, formItemWidth, padding } from './theme'
+import { Command, toCommands } from './toolbar'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
+import { fixMenuOverflowStyles } from './parts/utils'
 
 /**
  * Create a button.
@@ -64,6 +66,8 @@ export interface Button {
   tooltip?: S
   /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. */
   path?: S
+  /** When specified, a split button is rendered with extra actions tied to it within a context menu. Mutually exclusive with `link` attribute. */
+  commands?: Command[]
 }
 
 /** Create a set of buttons laid out horizontally. */
@@ -114,7 +118,7 @@ const
   }
 
 const
-  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path } }: { model: Button }) => {
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width, path, commands } }: { model: Button }) => {
     const
       onClick = (ev: any) => {
         ev.stopPropagation()
@@ -125,6 +129,7 @@ const
           wave.push()
         }
       },
+      isIconOnly = !label && icon,
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
       styles: Fluent.IButtonStyles = {
         root: {
@@ -136,17 +141,37 @@ const
           fontSize: 20,
           display: 'flex',
           alignItems: 'center'
-        }
+        },
+        splitButtonMenuButton: isIconOnly
+          ? { backgroundColor: cssVar('$card'), border: 'none' }
+          : undefined
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[name] = false }, [])
+
+    React.useEffect(() => {
+      wave.args[name] = false
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     if (link) {
       return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
     }
-    const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
-    if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
+    const btnProps: Fluent.IButtonProps = {
+      text: label,
+      disabled,
+      onClick,
+      styles,
+      iconProps: { iconName: icon },
+      menuProps: commands ? {
+        items: toCommands(commands),
+        styles: fixMenuOverflowStyles,
+        isBeakVisible: true,
+        directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
+        calloutProps: { styles: { beak: { border: border(1, cssVar('$neutralQuaternaryAlt')) } } }
+      } : undefined,
+      split: !!commands,
+    }
+    if (isIconOnly) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
 
     return caption?.length
       ? primary

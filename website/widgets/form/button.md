@@ -126,3 +126,19 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
     ui.button(name='external_path_button', label='External', path='https://h2o.ai/')
 ])
 ```
+
+## With actions
+
+The `commands` attribute can provide other relevant actions for the button that are displayed inside of a context menu. See [ui.command API](/docs/api/ui#command) for available options.
+
+```py
+q.page['form'] = ui.form_card(box='1 1 2 1', items=[
+    ui.button(name='command_button', label='Button with commands', commands=[
+            ui.command(name='first_command', label='First command'), 
+            ui.command(name='other_commands', label='Other commands', items=[
+                        ui.command(name='second_command', label='Second command'),
+                        ui.command(name='third_command', label='Third command'),  
+                    ]),
+    ])
+])
+```
