@@ -45,6 +45,21 @@ def get_contrast(color1: str, color2: str, q: Q, min_contrast=4.5):
         return False
     else:
         return True
+    
+def update_contrast_check(color1: str, color2: str, q:Q, min_contrast=4.5):
+    rgb1 = hex_to_rgb(q.client[color1].lstrip('#'))
+    rgb2 = hex_to_rgb(q.client[color2].lstrip('#'))
+    lum1 = get_luminance(rgb1[0], rgb1[1], rgb1[2])
+    lum2 = get_luminance(rgb2[0], rgb2[1], rgb2[2])
+    brightest = max(lum1, lum2)
+    darkest = min(lum1, lum2)
+    contrast = (brightest + 0.05) / (darkest + 0.05)
+    if contrast < min_contrast:
+        q.page['form'][f'{color1}_{color2}'].type = 'error'
+        q.page['form'][f'{color1}_{color2}'].text = f'Improve contrast between **{color1}** and **{color2}**.'
+    else:
+        q.page['form'][f'{color1}_{color2}'].type = 'success'
+        q.page['form'][f'{color1}_{color2}'].text = f'Contrast between **{color1}** and **{color2}** is great!'
 
 
 def get_theme_code(q: Q):
@@ -200,29 +215,8 @@ async def serve(q: Q):
         q.client.page = q.args.page
 
     q.page['meta'].themes = q.client.themes
-    if not get_contrast('text', 'card', q):
-        q.page['form'].text_card.type = 'error'
-        q.page['form'].text_card.text = 'Improve contrast between **text** and **card**.'
-    else:
-        q.page['form'].text_card.type = 'success'
-        q.page['form'].text_card.text = 'Contrast between **text** and **card** is great!'
-    if not get_contrast('card', 'primary', q):
-        q.page['form'].card_primary.type = 'error'
-        q.page['form'].card_primary.text = 'Improve contrast between **card** and **primary**.'
-    else:
-        q.page['form'].card_primary.type = 'success'
-        q.page['form'].card_primary.text = 'Contrast between **card** and **primary** is great!'
-    if not get_contrast('text', 'page', q):
-        q.page['form'].text_page.type = 'error'
-        q.page['form'].text_page.text = 'Improve contrast between **text** and **page**.'
-    else:
-        q.page['form'].text_page.type = 'success'
-        q.page['form'].text_page.text = 'Contrast between **text** and **page** is great!'
-    if not get_contrast('page', 'primary', q):
-        q.page['form'].page_primary.type = 'error'
-        q.page['form'].page_primary.text = 'Improve contrast between **page** and **primary**.'
-    else:
-        q.page['form'].page_primary.type = 'success'
-        q.page['form'].page_primary.text = 'Contrast between **page** and **primary** is great!'
-    q.page['form'].frame.content = get_theme_code(q)
+    update_contrast_check('text', 'card', q)
+    update_contrast_check('card', 'primary', q)
+    update_contrast_check('text', 'page', q)
+    update_contrast_check('page', 'primary', q)
     await q.page.save()
