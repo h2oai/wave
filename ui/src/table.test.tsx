@@ -110,10 +110,7 @@ describe('Table.tsx', () => {
     const checkboxes = getAllByRole('checkbox')
     expect(checkboxes).toHaveLength(3)
 
-    const [tag1, tag2, tag3] = checkboxes
-    expect(tag1).not.toBeChecked()
-    expect(tag2).not.toBeChecked()
-    expect(tag3).not.toBeChecked()
+    checkboxes.forEach(c => expect(c).not.toBeChecked())
 
     expect(getAllByTestId('tags')[0].childElementCount).toBe(1)
     expect(getAllByTestId('tags')[1].childElementCount).toBe(2)
@@ -135,8 +132,7 @@ describe('Table.tsx', () => {
 
     fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
 
-    const checkboxes = getAllByRole('checkbox')
-    expect(checkboxes).toHaveLength(2)
+    expect(getAllByRole('checkbox')).toHaveLength(2)
 
     const [tags1, tags2, tags3] = getAllByTestId('tags')
     expect(tags1.childElementCount).toBe(1)
