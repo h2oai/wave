@@ -77,6 +77,91 @@ describe('Table.tsx', () => {
     expect(getAllByRole('gridcell')[0].textContent).toBe('6/23/2022, 12:50:28 AM')
   })
 
+  it('Renders tags correctly', () => {
+    tableProps = {
+      ...tableProps,
+      columns: [
+        { name: 'colname1', label: 'col1' },
+        {
+          name: 'colname2',
+          label: 'col2',
+          filterable: true,
+          cell_type: {
+            tag: {
+              name: 'tags',
+              tags: [
+                { label: 'TAG1', color: 'red' },
+                { label: 'TAG2', color: 'green' },
+                { label: 'TAG3', color: 'blue' },
+              ]
+            }
+          }
+        },
+      ],
+      rows: [
+        { name: 'rowname1', cells: [cell11, 'TAG1'] },
+        { name: 'rowname2', cells: [cell21, 'TAG2,TAG3'] },
+        { name: 'rowname3', cells: [cell31, 'TAG2'] }
+      ]
+    }
+
+    const { container, getAllByRole, getAllByTestId } = render(<XTable model={tableProps} />)
+
+    fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+
+    const checkboxes = getAllByRole('checkbox')
+    expect(checkboxes).toHaveLength(3)
+
+    const [tag1, tag2, tag3] = checkboxes
+    expect(tag1).not.toBeChecked()
+    expect(tag2).not.toBeChecked()
+    expect(tag3).not.toBeChecked()
+
+    expect(getAllByTestId('tags')[0].childElementCount).toBe(1)
+    expect(getAllByTestId('tags')[1].childElementCount).toBe(2)
+    expect(getAllByTestId('tags')[2].childElementCount).toBe(1)
+  })
+
+  it('Do not render tags with empty string values', () => {
+    tableProps = {
+      ...tableProps,
+      columns: [
+        { name: 'colname1', label: 'col1' },
+        {
+          name: 'colname2',
+          label: 'col2',
+          filterable: true,
+          cell_type: {
+            tag: {
+              name: 'tags',
+              tags: [
+                { label: 'TAG1', color: 'red' },
+                { label: 'TAG2', color: 'green' },
+                { label: 'TAG3', color: 'blue' },
+              ]
+            }
+          }
+        },
+      ],
+      rows: [
+        { name: 'rowname1', cells: [cell11, 'TAG1'] },
+        { name: 'rowname2', cells: [cell21, 'TAG2,TAG1'] },
+        { name: 'rowname3', cells: [cell31, ''] }
+      ]
+    }
+
+    const { container, getAllByRole, getAllByTestId } = render(<XTable model={tableProps} />)
+
+    fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+
+    const checkboxes = getAllByRole('checkbox')
+    expect(checkboxes).toHaveLength(2)
+
+    expect(getAllByTestId('tags')[0].childElementCount).toBe(1)
+    expect(getAllByTestId('tags')[1].childElementCount).toBe(2)
+    expect(getAllByTestId('tags')[2].childElementCount).toBe(0)
+  })
+
   // TODO: Add a test to check that no event is emitted on rows update. Would result in infinite loop.
 
   describe('Height compute', () => {
