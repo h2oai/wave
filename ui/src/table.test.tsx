@@ -26,7 +26,22 @@ const
   groupHeaderRow = 1,
   groupHeaderRowsCount = 2,
   filteredItem = 1,
-  emitMock = jest.fn()
+  emitMock = jest.fn(),
+  tagsColumn = {
+    name: 'tagsColumn',
+    label: 'tagsColumn',
+    filterable: true,
+    cell_type: {
+      tag: {
+        name: 'tags',
+        tags: [
+          { label: 'TAG1', color: 'red' },
+          { label: 'TAG2', color: 'green' },
+          { label: 'TAG3', color: 'blue' },
+        ]
+      }
+    }
+  }
 
 let tableProps: Table
 
@@ -80,28 +95,11 @@ describe('Table.tsx', () => {
   it('Renders tags correctly', () => {
     tableProps = {
       ...tableProps,
-      columns: [
-        { name: 'colname1', label: 'col1' },
-        {
-          name: 'colname2',
-          label: 'col2',
-          filterable: true,
-          cell_type: {
-            tag: {
-              name: 'tags',
-              tags: [
-                { label: 'TAG1', color: 'red' },
-                { label: 'TAG2', color: 'green' },
-                { label: 'TAG3', color: 'blue' },
-              ]
-            }
-          }
-        },
-      ],
+      columns: [tagsColumn],
       rows: [
-        { name: 'rowname1', cells: [cell11, 'TAG1'] },
-        { name: 'rowname2', cells: [cell21, 'TAG2,TAG3'] },
-        { name: 'rowname3', cells: [cell31, 'TAG2'] }
+        { name: 'rowname1', cells: ['TAG1'] },
+        { name: 'rowname2', cells: ['TAG2,TAG3'] },
+        { name: 'rowname3', cells: ['TAG2'] }
       ]
     }
 
@@ -122,31 +120,14 @@ describe('Table.tsx', () => {
     expect(getAllByTestId('tags')[2].childElementCount).toBe(1)
   })
 
-  it('Do not render tags with empty string values', () => {
+  it('Does not render empty tags', () => {
     tableProps = {
       ...tableProps,
-      columns: [
-        { name: 'colname1', label: 'col1' },
-        {
-          name: 'colname2',
-          label: 'col2',
-          filterable: true,
-          cell_type: {
-            tag: {
-              name: 'tags',
-              tags: [
-                { label: 'TAG1', color: 'red' },
-                { label: 'TAG2', color: 'green' },
-                { label: 'TAG3', color: 'blue' },
-              ]
-            }
-          }
-        },
-      ],
+      columns: [tagsColumn],
       rows: [
-        { name: 'rowname1', cells: [cell11, 'TAG1'] },
-        { name: 'rowname2', cells: [cell21, 'TAG2,TAG1'] },
-        { name: 'rowname3', cells: [cell31, ''] }
+        { name: 'rowname1', cells: ['TAG1'] },
+        { name: 'rowname2', cells: ['TAG2,TAG1'] },
+        { name: 'rowname3', cells: [''] }
       ]
     }
 
@@ -713,21 +694,7 @@ describe('Table.tsx', () => {
         ...tableProps,
         columns: [
           { name: 'colname1', label: 'col1' },
-          {
-            name: 'colname2',
-            label: 'col2',
-            filterable: true,
-            cell_type: {
-              tag: {
-                name: 'tags',
-                tags: [
-                  { label: 'TAG1', color: 'red' },
-                  { label: 'TAG2', color: 'green' },
-                  { label: 'TAG3', color: 'blue' },
-                ]
-              }
-            }
-          },
+          tagsColumn
         ],
         rows: [
           { name: 'rowname1', cells: [cell11, 'TAG1'] },
@@ -775,7 +742,7 @@ describe('Table.tsx', () => {
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': ['TAG1'] })
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'tagsColumn': ['TAG1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
