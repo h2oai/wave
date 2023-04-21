@@ -393,7 +393,7 @@ const
           /> : null
       }, [onFilterChange, setFiltersInBulk]),
       onColumnContextMenu = React.useCallback((col: WaveColumn, e: React.MouseEvent<HTMLElement>) => {
-        const menuFilters = col.filters || items.map(i => i[col.fieldName || col.key])
+        const menuFilters = (col.filters || items.map(i => i[col.fieldName || col.key])).filter(item => item !== '')
         setColContextMenuList({
           items: Array.from(new Set(menuFilters)).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
           target: e.target as HTMLElement,

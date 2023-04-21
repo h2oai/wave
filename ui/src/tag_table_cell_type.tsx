@@ -73,5 +73,5 @@ export const XTagTableCellType = ({ model, serializedTags, isMultiline }: { mode
 
       return <span key={i} style={{ background, color }} className={clas(css.tag, 'wave-s12 wave-w6', isMultiline ? css.multiline : '')}>{tagLabel}</span>
     })
-  return <div data-test={model.name}>{serializedTags.split(',').map(mapTags)}</div>
+  return <div data-test={model.name}>{serializedTags.split(',').filter(tag => tag !== '').map(mapTags)}</div>
 }
