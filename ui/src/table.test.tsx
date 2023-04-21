@@ -157,9 +157,10 @@ describe('Table.tsx', () => {
     const checkboxes = getAllByRole('checkbox')
     expect(checkboxes).toHaveLength(2)
 
-    expect(getAllByTestId('tags')[0].childElementCount).toBe(1)
-    expect(getAllByTestId('tags')[1].childElementCount).toBe(2)
-    expect(getAllByTestId('tags')[2].childElementCount).toBe(0)
+    const [tags1, tags2, tags3] = getAllByTestId('tags')
+    expect(tags1.childElementCount).toBe(1)
+    expect(tags2.childElementCount).toBe(2)
+    expect(tags3.childElementCount).toBe(0)
   })
 
   // TODO: Add a test to check that no event is emitted on rows update. Would result in infinite loop.
