@@ -26,7 +26,22 @@ const
   groupHeaderRow = 1,
   groupHeaderRowsCount = 2,
   filteredItem = 1,
-  emitMock = jest.fn()
+  emitMock = jest.fn(),
+  tagsColumn = {
+    name: 'tagsColumn',
+    label: 'tagsColumn',
+    filterable: true,
+    cell_type: {
+      tag: {
+        name: 'tags',
+        tags: [
+          { label: 'TAG1', color: 'red' },
+          { label: 'TAG2', color: 'green' },
+          { label: 'TAG3', color: 'blue' },
+        ]
+      }
+    }
+  }
 
 let tableProps: Table
 
@@ -75,6 +90,54 @@ describe('Table.tsx', () => {
     }
     const { getAllByRole } = render(<XTable model={tableProps} />)
     expect(getAllByRole('gridcell')[0].textContent).toBe('6/23/2022, 12:50:28 AM')
+  })
+
+  it('Renders tags correctly', () => {
+    tableProps = {
+      ...tableProps,
+      columns: [tagsColumn],
+      rows: [
+        { name: 'rowname1', cells: ['TAG1'] },
+        { name: 'rowname2', cells: ['TAG2,TAG3'] },
+        { name: 'rowname3', cells: ['TAG2'] }
+      ]
+    }
+
+    const { container, getAllByRole, getAllByTestId } = render(<XTable model={tableProps} />)
+
+    fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+
+    const checkboxes = getAllByRole('checkbox')
+    expect(checkboxes).toHaveLength(3)
+
+    checkboxes.forEach(c => expect(c).not.toBeChecked())
+
+    expect(getAllByTestId('tags')[0].childElementCount).toBe(1)
+    expect(getAllByTestId('tags')[1].childElementCount).toBe(2)
+    expect(getAllByTestId('tags')[2].childElementCount).toBe(1)
+  })
+
+  it('Does not render empty tags', () => {
+    tableProps = {
+      ...tableProps,
+      columns: [tagsColumn],
+      rows: [
+        { name: 'rowname1', cells: ['TAG1'] },
+        { name: 'rowname2', cells: ['TAG2,TAG1'] },
+        { name: 'rowname3', cells: [''] }
+      ]
+    }
+
+    const { container, getAllByRole, getAllByTestId } = render(<XTable model={tableProps} />)
+
+    fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+
+    expect(getAllByRole('checkbox')).toHaveLength(2)
+
+    const [tags1, tags2, tags3] = getAllByTestId('tags')
+    expect(tags1.childElementCount).toBe(1)
+    expect(tags2.childElementCount).toBe(2)
+    expect(tags3.childElementCount).toBe(0)
   })
 
   // TODO: Add a test to check that no event is emitted on rows update. Would result in infinite loop.
@@ -627,21 +690,7 @@ describe('Table.tsx', () => {
         ...tableProps,
         columns: [
           { name: 'colname1', label: 'col1' },
-          {
-            name: 'colname2',
-            label: 'col2',
-            filterable: true,
-            cell_type: {
-              tag: {
-                name: 'tags',
-                tags: [
-                  { label: 'TAG1', color: 'red' },
-                  { label: 'TAG2', color: 'green' },
-                  { label: 'TAG3', color: 'blue' },
-                ]
-              }
-            }
-          },
+          tagsColumn
         ],
         rows: [
           { name: 'rowname1', cells: [cell11, 'TAG1'] },
@@ -689,7 +738,7 @@ describe('Table.tsx', () => {
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('TAG1')[1].parentElement!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'colname2': ['TAG1'] })
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'filter', { 'tagsColumn': ['TAG1'] })
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
