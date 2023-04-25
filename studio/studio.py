@@ -18,6 +18,8 @@ import file_utils
 import studio_editor as editor
 
 
+# TODO update this app with by-name component access once the Wave version higher than 0.25.2 is available.
+
 class Project:
     def __init__(self) -> None:
         self.dir = 'project'
@@ -206,8 +208,8 @@ async def render_code(q: Q):
         title=f'Preview of {project.server_adress}{path}',
         path=f'{project.server_adress}{path}'
     )
-    q.page['header'].open_preview.disabled = False
-    q.page['header'].open_preview.path = f'{project.server_adress}{path}'
+    q.page['header'].items[1].button.disabled = False
+    q.page['header'].items[1].button.path = f'{project.server_adress}{path}'
 
 async def on_startup():
     file_utils.create_folder(project.dir)
@@ -246,7 +248,7 @@ async def serve(q: Q):
 
     if q.args.dropdown:
         q.user.view = q.args.dropdown
-        q.page['header'].dropdown.value = q.args.dropdown
+        q.page['header'].items[2].dropdown.value = q.args.dropdown
     elif q.args.export_project:
         await export(q)
     elif q.args.import_project:
@@ -295,16 +297,16 @@ async def serve(q: Q):
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
         q.page['logs'].box = ui.box('main', width='100%')
-        q.page['header'].console.name = 'show_code'
-        q.page['header'].console.label = 'Code'
-        q.page['header'].console.icon = 'Code'
+        q.page['header'].items[0].button.name = 'show_code'
+        q.page['header'].items[0].button.label = 'Code'
+        q.page['header'].items[0].button.icon = 'Code'
     elif q.args.show_code:
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['logs'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
-        q.page['header'].console.name = 'console'
-        q.page['header'].console.label = 'Console'
-        q.page['header'].console.icon = 'CommandPrompt'
+        q.page['header'].items[0].button.name = 'console'
+        q.page['header'].items[0].button.label = 'Console'
+        q.page['header'].items[0].button.icon = 'CommandPrompt'
 
     if q.events.editor:
         await render_code(q)
