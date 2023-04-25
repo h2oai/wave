@@ -33,19 +33,6 @@ def hex_to_rgb(hex_color: str) -> Tuple[int, ...]:
 
 
 # Source: https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors. # noqa
-def get_contrast(color1: str, color2: str, q: Q, min_contrast=4.5):
-    rgb1 = hex_to_rgb(q.client[color1].lstrip('#'))
-    rgb2 = hex_to_rgb(q.client[color2].lstrip('#'))
-    lum1 = get_luminance(rgb1[0], rgb1[1], rgb1[2])
-    lum2 = get_luminance(rgb2[0], rgb2[1], rgb2[2])
-    brightest = max(lum1, lum2)
-    darkest = min(lum1, lum2)
-    contrast = (brightest + 0.05) / (darkest + 0.05)
-    if contrast < min_contrast:
-        return False
-    else:
-        return True
-    
 def update_contrast_check(color1: str, color2: str, q:Q, min_contrast=4.5):
     rgb1 = hex_to_rgb(q.client[color1].lstrip('#'))
     rgb2 = hex_to_rgb(q.client[color2].lstrip('#'))
@@ -219,4 +206,5 @@ async def serve(q: Q):
     update_contrast_check('card', 'primary', q)
     update_contrast_check('text', 'page', q)
     update_contrast_check('page', 'primary', q)
+    q.page['form'].frame.content = get_theme_code(q)
     await q.page.save()
