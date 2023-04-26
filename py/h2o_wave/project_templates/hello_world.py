@@ -64,6 +64,6 @@ If you have any questions, please reach out to [Github Discussions](https://gith
         # Update state
         q.client.count += 1
         # Update the button label.
-        q.page['body'].items[0].button.label = f'Current count: {q.client.count}'
+        q.page['body'].counter.label = f'Current count: {q.client.count}'
 
     await q.page.save()

@@ -54,6 +54,6 @@ async def serve(q: Q):
     if q.args.toggle:
         global update_stats
         update_stats = not update_stats
-        q.page['form'].items[1].button.label = 'Stop updates' if update_stats else 'Start updates'
+        q.page['form'].toggle.label = 'Stop updates' if update_stats else 'Start updates'
         await q.page.save()
         await update_stats_page(q, stats_page)

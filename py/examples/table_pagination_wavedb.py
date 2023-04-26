@@ -111,7 +111,7 @@ async def serve(q: Q):
     # Check if user triggered any table action and save it to local state for allowing multiple
     # actions to be performed on the data at the same time, e.g. sort the filtered data etc.
     if q.events.table:
-        table = q.page['form'].items[0].table
+        table = q.page['form'].table
         if q.events.table.sort:
             q.client.sort = q.events.table.sort
             q.client.page_offset = 0

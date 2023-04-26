@@ -49,20 +49,20 @@ async def serve(q: Q):
         example = q.page['example']
         if q.args.to_log_scale:
             # Change to log scale
-            example.items[0].text_l.content = 'Plot (Log Scale)'
-            example.items[0].text_l.commands = [linear_scale_command]
-            example.items[1].vega_visualization.specification = spec_log_scale
+            example.text.content = 'Plot (Log Scale)'
+            example.text.commands = [linear_scale_command]
+            example.visualization.specification = spec_log_scale
         else:
             # Change to linear scale
-            example.items[0].text_l.content = 'Plot (Linear Scale)'
-            example.items[0].text_l.commands = [log_scale_command]
-            example.items[1].vega_visualization.specification = spec_linear_scale
+            example.text.content = 'Plot (Linear Scale)'
+            example.text.commands = [log_scale_command]
+            example.visualization.specification = spec_linear_scale
     else:  # Add a new plot
         q.page['example'] = ui.form_card(
             box='1 1 2 8',
             items=[
-                ui.text_l(content='Plot (Linear Scale)', commands=[log_scale_command]),
-                ui.vega_visualization(specification=spec_linear_scale, data=plot_data, height='300px'),
+                ui.text_l(name='text', content='Plot (Linear Scale)', commands=[log_scale_command]),
+                ui.vega_visualization(name='visualization', specification=spec_linear_scale, data=plot_data, height='300px'),
             ],
         )
         # Flag to indicate that we've added a plot

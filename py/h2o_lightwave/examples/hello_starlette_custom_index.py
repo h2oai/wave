@@ -29,7 +29,7 @@ async def serve(q: Q):
         # Increment the counter.
         q.client.count += 1
         # Update the counter button.
-        q.page['hello'].items[1].button.label = f'Current count: {q.client.count}'
+        q.page['hello'].counter.label = f'Current count: {q.client.count}'
 
     # Send the UI changes to the browser.
     await q.page.save()

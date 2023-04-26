@@ -150,8 +150,8 @@ async def serve(q: Q):
 
         # Update the rows in our UI
         # TODO: if you change where your table is located, this needs updating
-        q.page["table_card"].items[0].table.rows = get_table_rows(q)
-        q.page["table_card"].items[0].table.pagination.total_rows = q.client.total_rows
+        q.page["table_card"].h2o_table.rows = get_table_rows(q)
+        q.page["table_card"].h2o_table.pagination.total_rows = q.client.total_rows
 
     await q.page.save()
 

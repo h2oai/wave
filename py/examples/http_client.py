@@ -14,13 +14,13 @@ async def serve(q: Q):
                 ui.button(name='clear', label='Clear'),
                 ui.button(name='download', label='Download', primary=True)
             ]),
-            ui.text_m('No data yet.'),
+            ui.text_m(name='text', content='No data yet.'),
         ])
         q.client.initialized = True
     if q.args.download:
         response = httpx.get('https://jsonplaceholder.typicode.com/posts/1')
-        q.page['form'].items[1].text_m.content = response.text
+        q.page['form'].text.content = response.text
     if q.args.clear:
-        q.page['form'].items[1].text_m.content = 'No data yet.'
+        q.page['form'].text.content = 'No data yet.'
 
     await q.page.save()

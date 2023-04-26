@@ -8,10 +8,10 @@ from h2o_wave import main, app, Q, ui
 async def serve(q: Q):
     if not q.client.initialized:
         q.page['example'] = ui.form_card(box='1 1 4 7', items=[
-            ui.text_xl(content='First text'),
-            ui.text_l(content='Second text'),
-            ui.text_m(content='Third text'),
-            ui.text_s(content='Fourth text'),
+            ui.text_xl(name='text_xl', content='First text'),
+            ui.text_l(name='text_l', content='Second text'),
+            ui.text_m(name='text_m', content='Third text'),
+            ui.text_s(name='text_s', content='Fourth text'),
             ui.inline([
                 ui.button(name='left1', label='Left1'),
                 ui.button(name='left2', label='Left2'),
@@ -25,12 +25,12 @@ async def serve(q: Q):
             ui.buttons(items=[ui.button(name='show', label='Show'), ui.button(name='hide', label='Hide')])
         ])
         q.client.initialized = True
-    items = q.page['example'].items
+    page = q.page['example']
     items_to_hide = [
-        items[0].text_xl,
-        items[2].text_m,
-        items[4].inline.items[0].button,
-        items[5].buttons.items[2].button,
+        page.text_xl,
+        page.text_m,
+        page.left1,
+        page.right3,
     ]
     if q.args.hide:
         for i in items_to_hide:

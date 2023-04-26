@@ -18,6 +18,8 @@ import file_utils
 import studio_editor as editor
 
 
+# TODO update this app with by-name component access once the Wave version higher than 0.25.2 is available.
+
 class Project:
     def __init__(self) -> None:
         self.dir = 'project'

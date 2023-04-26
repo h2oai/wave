@@ -25,20 +25,20 @@ async def serve(q: Q):
         accuracy = round(100 - q.client.wave_model.model.mean_per_class_error() * 100, 2)
 
         # show training details and prediction option
-        q.page['example'].items[1].dropdown.values = q.client.categorical_columns
-        q.page['example'].items[2].buttons.items[1].button.disabled = False
-        q.page['example'].items[3].message_bar.type = 'success'
-        q.page['example'].items[3].message_bar.text = 'Training successfully completed!'
-        q.page['example'].items[4].text.content = f'''**H2O AutoML model id:** {model_id} <br />
+        q.page['example'].categorical_columns.values = q.client.categorical_columns
+        q.page['example'].predict.disabled = False
+        q.page['example'].message.type = 'success'
+        q.page['example'].message.text = 'Training successfully completed!'
+        q.page['example'].model_id.content = f'''**H2O AutoML model id:** {model_id} <br />
             **Accuracy:** {accuracy}%'''
-        q.page['example'].items[5].text.content = ''
+        q.page['example'].example_predictions.content = ''
     elif q.args.predict:
         # predict on test data
         preds = q.client.wave_model.predict(test_df=q.client.test_df)
 
         # show predictions
-        q.page['example'].items[3].message_bar.text = 'Prediction successfully completed!'
-        q.page['example'].items[5].text.content = f'''**Example predictions:** <br />
+        q.page['example'].message.text = 'Prediction successfully completed!'
+        q.page['example'].example_predictions.content = f'''**Example predictions:** <br />
             {preds[0]} <br /> {preds[1]} <br /> {preds[2]}'''
     else:
         # prepare sample train and test dataframes
@@ -60,9 +60,9 @@ async def serve(q: Q):
                     ui.button(name='train', label='Train', primary=True),
                     ui.button(name='predict', label='Predict', primary=True, disabled=True),
                 ]),
-                ui.message_bar(type='warning', text='Training will take a few seconds'),
-                ui.text(content=''),
-                ui.text(content='')
+                ui.message_bar(name='message', type='warning', text='Training will take a few seconds'),
+                ui.text(name='model_id', content=''),
+                ui.text(name='example_predictions', content='')
             ]
         )
 

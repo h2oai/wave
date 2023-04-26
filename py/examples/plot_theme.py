@@ -428,5 +428,5 @@ async def serve(q: Q):
     if q.args.toggle_theme is not None:
         q.client.active_theme = 'neon' if q.args.toggle_theme else 'default'
         q.page['meta'].theme = q.client.active_theme
-        q.page['title'].items[0].toggle.value = q.client.active_theme == 'neon'
+        q.page['title'].toggle_theme.value = q.client.active_theme == 'neon'
     await q.page.save()
