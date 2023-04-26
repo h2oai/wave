@@ -8,3 +8,4 @@ LongDescription = "about.md"
 
 [Runtime]
 Module = "examples.tour"
+RuntimeVersion = "deb11_py310_wlatest"

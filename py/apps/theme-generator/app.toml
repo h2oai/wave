@@ -8,3 +8,4 @@ LongDescription = "about.md"
 
 [Runtime]
 Module = "theme_generator"
+RuntimeVersion = "deb11_py310_wlatest"

@@ -9,6 +9,7 @@ LongDescription = "about.md"
 
 [Runtime]
 Module = "demo.app"
+RuntimeVersion = "deb11_py310_wlatest"
 
 [[Env]]
 Name = "TRACKER_ID"

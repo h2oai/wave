@@ -9,6 +9,7 @@ Tags = ["APP_DEV"]
 [Runtime]
 Module = "h2o_wave_university.university"
 RoutingMode = "BASE_URL"
+RuntimeVersion = "deb11_py310_wlatest"
 
 [[Env]]
 Name = "H2O_WAVE_PUBLIC_DIR"
