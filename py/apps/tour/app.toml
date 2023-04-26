@@ -8,4 +8,5 @@ LongDescription = "about.md"
 
 [Runtime]
 Module = "examples.tour"
+RoutingMode = "BASE_URL"
 RuntimeVersion = "deb11_py310_wlatest"
