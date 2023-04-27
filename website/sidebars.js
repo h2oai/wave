@@ -12,6 +12,7 @@ module.exports = {
       'getting-started',
       'installation',
       'installation-8-20',
+      'project-templates',
       'tutorial-hello',
       'tutorial-beer',
       'tutorial-monitor',
