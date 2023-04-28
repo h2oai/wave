@@ -1733,12 +1733,13 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_nav_item" value="ui.nav_item(name='$name$',label='$label$',icon='$icon$',disabled=$disabled$,tooltip='$tooltip$'),$END$" description="Create Wave NavItem with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_nav_item" value="ui.nav_item(name='$name$',label='$label$',icon='$icon$',disabled=$disabled$,tooltip='$tooltip$',path='$path$'),$END$" description="Create Wave NavItem with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

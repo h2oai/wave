@@ -146,3 +146,5 @@ q.page['nav'] = ui.nav_card(
     ]
 )
 ```
+
+## With path

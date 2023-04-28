@@ -33,7 +33,9 @@ export interface NavItem {
   /** True if this item should be disabled. */
   disabled?: B
   /** An optional tooltip message displayed when a user hovers over this item. */
-  tooltip?: S
+  tooltip?: S,
+  /** The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. E.g. `/foo.html` or `http://example.com/foo.html` */
+  path?: S
 }
 
 /** Create a group of navigation items. */
@@ -119,7 +121,7 @@ export const
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled, tooltip }): Fluent.INavLink => ({
+      links: g.items.map(({ name, label, icon, disabled, tooltip, path }): Fluent.INavLink => ({
         key: name,
         name: label,
         icon,
@@ -129,12 +131,12 @@ export const
         url: '',
         onClick: () => {
           if (hideNav) hideNav()
-          if (name.startsWith('#')) {
-            window.location.hash = name.substring(1)
-            return
+          if (path) window.open(path, "_blank")
+          else if (name.startsWith('#')) window.location.hash = name.substring(1)
+          else {
+            wave.args[name] = true
+            wave.push()
           }
-          wave.args[name] = true
-          wave.push()
         }
       }))
     }))
