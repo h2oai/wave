@@ -220,14 +220,27 @@ def get_wave_completions(line, character, file_content):
         scripts=[ui.script(q.app.tour_assets + '/loader.min.js')],
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
-            ui.layout(breakpoint='xs', zones=[
+            ui.layout(
+                breakpoint='xs',
+                zones=[
+                    ui.zone('header'),
+                    ui.zone('blurb'),
+                    ui.zone('navi'),
+                    ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.COLUMN, zones=[
+                        ui.zone('preview', size='100vh'),
+                        ui.zone('code'),
+                    ])
+                ],
+            ),
+            ui.layout(breakpoint='m', zones=[
                 ui.zone('header'),
                 ui.zone('blurb'),
+                ui.zone('navi'),
                 ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('code'),
                     ui.zone('preview')
                 ])
-            ])
+            ]),
         ])
     q.page['header'] = ui.header_card(
         box='header',
@@ -250,6 +263,17 @@ def get_wave_completions(line, character, file_content):
         title='',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
     )
+    q.page['dropdown'] = ui.form_card(
+        box='navi',
+        # name='examplepicker',
+        items=[
+            ui.inline(  
+                # name='examplepicker',
+                direction='row',
+                items= []
+            )
+        ]
+    )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
     await q.page.save()
@@ -263,11 +287,17 @@ def make_blurb(q: Q):
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
     items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
                          choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
+    buttons = []
     if example.previous_example:
-        items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
-        items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = items
+        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+    blurb_card.items = items + buttons
+    q.page['dropdown'].items[0] = ui.inline(  
+                # name='examplepicker',
+                direction='column',
+                items= items + [ui.inline(direction='row', items=buttons)]
+            )
 
 
 async def show_example(q: Q, example: Example):
