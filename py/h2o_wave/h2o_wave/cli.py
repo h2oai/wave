@@ -301,10 +301,11 @@ def share(port: str, subdomain: str):
         res = res.json()
         print(f'BETA: Proxying localhost:{port} ==> {res["url"]}.')
         print('The URL is accesible to anyone on the internet. \x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
+        print('Press Ctrl+C to stop sharing.')
 
         threads = []
         for _ in range(res['max_conn_count']):
-            # Run threads as daemons so they exit when the main thread exits.
+            # Run threads as daemons so that they do not prevent the main thread from exiting via CTRL + C.
             t = Thread(target=listen_on_socket, args=('127.0.0.1', int(port), 'h2oai.app', res['port']), daemon=True)
             t.start()
             threads.append(t)
