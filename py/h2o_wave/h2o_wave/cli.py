@@ -12,24 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import tarfile
-import shutil
-import sys
-import socket
-from contextlib import closing
-import subprocess
-from pathlib import Path
-import platform
-import uvicorn
-import click
-import inquirer
 import os
-from click import Choice, option
+import platform
+import shutil
+import socket
+import subprocess
+import sys
+import tarfile
+import time
+from contextlib import closing
+from pathlib import Path
+from threading import Thread
 from urllib import request
 from urllib.parse import urlparse
+
+import click
+import httpx
+import inquirer
+import uvicorn
+from click import Choice, option
+from h2o_wave.share import listen_on_socket
+
+from .metadata import __arch__, __platform__
 from .version import __version__
-from .metadata import __platform__, __arch__
 
 _localhost = '127.0.0.1'
 
@@ -277,3 +282,39 @@ def learn():
         cli.main()
     except ImportError:
         print('You need to run \x1b[7;30;43mpip install h2o_wave_university\x1b[0m first.')
+
+
+@main.command()
+@click.option('--port', default='10101', help='Port your app is running on (defaults to 10101).')
+@click.option('--subdomain', default='?new', help='Subdomain to use. If not available, a random one is generated.')
+def share(port: str, subdomain: str):
+    if not port.isdigit():
+        print('Port must be a number.')
+        exit(1)
+
+    try:
+        res = httpx.get(f'https://h2oai.app/{subdomain}', headers={'Content-Type': 'application/json'})
+        if res.status_code != 200:
+            print('Could not connect to the server.')
+            exit(1)
+
+        res = res.json()
+        print(f'BETA: Proxying localhost:{port} ==> {res["url"]}.')
+        print('The URL is accesible to anyone on the internet. \x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
+
+        threads = []
+        for _ in range(res['max_conn_count']):
+            # Run threads as daemons so they exit when the main thread exits.
+            t = Thread(target=listen_on_socket, args=('127.0.0.1', int(port), 'h2oai.app', res['port']), daemon=True)
+            t.start()
+            threads.append(t)
+        # Block the main thread since the threads are daemons.
+        while True:
+            threads = [t for t in threads if t.is_alive()]
+            if not threads:
+                break
+            time.sleep(1)
+
+    # Handle ctrl+c
+    except KeyboardInterrupt:
+        pass
