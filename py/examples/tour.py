@@ -224,18 +224,16 @@ def get_wave_completions(line, character, file_content):
                 breakpoint='xs',
                 zones=[
                     ui.zone('header'),
-                    ui.zone('blurb'),
                     ui.zone('navi'),
                     ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.COLUMN, zones=[
-                        ui.zone('preview', size='100vh'),
                         ui.zone('code'),
+                        ui.zone('preview', size='100vh'),
                     ])
                 ],
             ),
             ui.layout(breakpoint='m', zones=[
                 ui.zone('header'),
                 ui.zone('blurb'),
-                ui.zone('navi'),
                 ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('code'),
                     ui.zone('preview')
@@ -294,9 +292,11 @@ def make_blurb(q: Q):
         buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
     blurb_card.items = items + buttons
     q.page['dropdown'].items[0] = ui.inline(  
-                # name='examplepicker',
                 direction='column',
-                items= items + [ui.inline(direction='row', items=buttons)]
+                items= items + [
+                    ui.text_s(example.description),
+                    ui.inline(direction='row', items=buttons), 
+                    ]
             )
 
 
