@@ -2,9 +2,9 @@
 title: "Project templates"
 ---
 
-We prepared some useful templates for you to boost your start with the Wave app development. Just use `wave init` command and pick the one you like.
+Wave comes with useful app templates to boost the app development startup time. Use `wave init` CLI command and pick the one you like or use `w_app_<template-name>` code snippet coming with the [IDE plugins](https://wave.h2o.ai/docs/development/#using-pycharm).
 
-![template-wave-init](assets/template-wave-init.gif)
+![template-wave-init](assets/wave-init.gif)
 
 ## Hello World app
 
