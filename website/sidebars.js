@@ -17,6 +17,7 @@ module.exports = {
       'tutorial-monitor',
       'tutorial-counter',
       'tutorial-todo',
+      'project-templates',
     ],
     'Guide': [
       'guide',
