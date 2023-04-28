@@ -14,7 +14,7 @@ page['meta'] = ui.meta_card(box='', icon='https://en.wikipedia.org/static/apple-
 page['example'] = ui.markdown_card(
     box='1 1 2 2',
     title='',
-    content='<a href="/demo" target="_blank">Open this page in a new window</a> to view its icon.',
+    content='<a href="demo" target="_blank">Open this page in a new window</a> to view its icon.',
 )
 
 page.save()
