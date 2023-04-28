@@ -285,13 +285,14 @@ def learn():
 
 
 @main.command()
-@click.option('--port', default='10101', help='Port your app is running on (defaults to 10101).')
+@click.option('--port', default=10101, help='Port your app is running on (defaults to 10101).')
 @click.option('--subdomain', default='?new', help='Subdomain to use. If not available, a random one is generated.')
 def share(port: str, subdomain: str):
-    if not port.isdigit():
-        print('Port must be a number.')
-        exit(1)
+    """Share your locally running app with the world.
 
+    \b
+    $ wave share
+    """
     try:
         res = httpx.get(f'https://h2oai.app/{subdomain}', headers={'Content-Type': 'application/json'})
         if res.status_code != 200:
@@ -299,7 +300,7 @@ def share(port: str, subdomain: str):
             exit(1)
 
         res = res.json()
-        print(f'BETA: Proxying localhost:{port} ==> {res["url"]}.')
+        print(f'BETA: Proxying localhost:{port} ==> {res["url"]}')
         print('The URL is accesible to anyone on the internet. \x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
         print('Press Ctrl+C to stop sharing.')
 
