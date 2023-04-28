@@ -223,11 +223,11 @@ def get_wave_completions(line, character, file_content):
             ui.layout(
                 breakpoint='xs',
                 zones=[
-                    ui.zone('header'),
+                    ui.zone('mobile_header'),
                     ui.zone('navi'),
                     ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.COLUMN, zones=[
-                        ui.zone('code'),
-                        ui.zone('preview', size='100vh'),
+                        ui.zone('code', size='50vh'),
+                        ui.zone('preview', size='50vh'),
                     ])
                 ],
             ),
@@ -254,6 +254,26 @@ def get_wave_completions(line, character, file_content):
                 ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
             ])
         ]
+    )
+    q.page['mobile_header'] = ui.header_card(
+        box='mobile_header',
+        title=app_title,
+        subtitle=f'{len(catalog)} Interactive Examples',
+        image=f'{q.app.tour_assets}/h2o-logo.svg',
+        nav=[
+            ui.nav_group('Menu', items=[
+                ui.nav_item(name='home', label='Home', icon='Home'),
+            ])
+        ]
+        # items=[
+        #     ui.links(inline=True, items=[
+        #         ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
+        #         ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
+        #         ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
+        #         ui.link(label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/', target='_blank'),
+        #         ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
+        #     ])
+        # ]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.markup_card(
