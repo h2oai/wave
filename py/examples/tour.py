@@ -261,19 +261,14 @@ def get_wave_completions(line, character, file_content):
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
         nav=[
-            ui.nav_group('Menu', items=[
-                ui.nav_item(name='home', label='Home', icon='Home'),
+            ui.nav_group('Links', items=[
+                ui.nav_item(name='link_docs', label='Wave docs', path='https://wave.h2o.ai/docs/getting-started'),
+                ui.nav_item(name='link_discussions', label='Discussions', path='https://github.com/h2oai/wave/discussions'),
+                ui.nav_item(name='link_blog', label='Blog', path='https://wave.h2o.ai/blog'),
+                ui.nav_item(name='link_cloud', label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/'),
+                ui.nav_item(name='link_h2o', label='H2O', path='https://www.h2o.ai/'),
             ])
         ]
-        # items=[
-        #     ui.links(inline=True, items=[
-        #         ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
-        #         ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
-        #         ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
-        #         ui.link(label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/', target='_blank'),
-        #         ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
-        #     ])
-        # ]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['code'] = ui.markup_card(
@@ -283,10 +278,8 @@ def get_wave_completions(line, character, file_content):
     )
     q.page['dropdown'] = ui.form_card(
         box='navi',
-        # name='examplepicker',
         items=[
             ui.inline(  
-                # name='examplepicker',
                 direction='row',
                 items= []
             )
