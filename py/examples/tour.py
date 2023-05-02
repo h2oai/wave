@@ -224,8 +224,8 @@ def get_wave_completions(line, character, file_content):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('navi'),
-                    ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.COLUMN, zones=[
+                    ui.zone('mobile_blurb'),
+                    ui.zone('main', size='calc(100vh - 219px)', direction=ui.ZoneDirection.COLUMN, zones=[
                         ui.zone('code', size='50vh'),
                         ui.zone('preview', size='50vh'),
                     ])
@@ -240,50 +240,33 @@ def get_wave_completions(line, character, file_content):
                 ])
             ]),
         ])
+    nav_links = [
+        ('docs', 'Wave docs', 'https://wave.h2o.ai/docs/getting-started'),
+        ('discussions', 'Discussions', 'https://github.com/h2oai/wave/discussions'),
+        ('blog', 'Blog', 'https://wave.h2o.ai/blog'),
+        ('cloud', 'H2O AI Cloud', 'https://h2o.ai/platform/ai-cloud/'),
+        ('h2o', 'H2O', 'https://www.h2o.ai/'),
+    ]
     q.page['header'] = ui.header_card(
         box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
-        items=[
-            ui.links(inline=True, items=[
-                ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
-                ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
-                ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
-                ui.link(label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/', target='_blank'),
-                ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
-            ])
-        ]
+        items=[ui.links(inline=True, items=list(map(lambda item: ui.link(label=item[1], path=item[2], target='_blank'), nav_links)))]
     )
     q.page['mobile_header'] = ui.header_card(
         box='mobile_header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
-        nav=[
-            ui.nav_group('Links', items=[
-                ui.nav_item(name='link_docs', label='Wave docs', path='https://wave.h2o.ai/docs/getting-started'),
-                ui.nav_item(name='link_discussions', label='Discussions', path='https://github.com/h2oai/wave/discussions'),
-                ui.nav_item(name='link_blog', label='Blog', path='https://wave.h2o.ai/blog'),
-                ui.nav_item(name='link_cloud', label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/'),
-                ui.nav_item(name='link_h2o', label='H2O', path='https://www.h2o.ai/'),
-            ])
-        ]
+        nav=[ui.nav_group('Links', items= list(map(lambda item: ui.nav_item(name=item[0], label=item[1], path=item[2]), nav_links)))]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
+    q.page['mobile_blurb'] = ui.form_card(box='mobile_blurb',items=[])
     q.page['code'] = ui.markup_card(
         box=ui.box('code', height='calc(100vh - 140px)'),
         title='',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
-    )
-    q.page['dropdown'] = ui.form_card(
-        box='navi',
-        items=[
-            ui.inline(  
-                direction='row',
-                items= []
-            )
-        ]
     )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
@@ -304,13 +287,11 @@ def make_blurb(q: Q):
     if example.next_example:
         buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
     blurb_card.items = items + buttons
-    q.page['dropdown'].items[0] = ui.inline(  
-                direction='column',
-                items= items + [
-                    ui.text_s(example.description),
-                    ui.inline(direction='row', items=buttons), 
-                    ]
-            )
+    q.page['mobile_blurb'].items = [ui.inline(
+        direction='column',
+        items= items + [ui.text_s(example.description), ui.inline(direction='row', items=buttons)]
+    )]
+            
 
 
 async def show_example(q: Q, example: Example):
