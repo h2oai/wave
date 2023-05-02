@@ -3549,6 +3549,7 @@ ui_grid_card <- function(
 #' @param icon An optional icon to display next to the label.
 #' @param disabled True if this item should be disabled.
 #' @param tooltip An optional tooltip message displayed when a user hovers over this item.
+#' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. E.g. `/foo.html` or `http://example.com/foo.html`
 #' @return A NavItem instance.
 #' @export
 ui_nav_item <- function(
@@ -3556,18 +3557,21 @@ ui_nav_item <- function(
   label,
   icon = NULL,
   disabled = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  path = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("path", "character", path)
   .o <- list(
     name=name,
     label=label,
     icon=icon,
     disabled=disabled,
-    tooltip=tooltip)
+    tooltip=tooltip,
+    path=path)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNavItem"))
   return(.o)
 }

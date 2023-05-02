@@ -8700,12 +8700,14 @@ class NavItem:
             icon: Optional[str] = None,
             disabled: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            path: Optional[str] = None,
     ):
         _guard_scalar('NavItem.name', name, (str,), True, False, False)
         _guard_scalar('NavItem.label', label, (str,), False, False, False)
         _guard_scalar('NavItem.icon', icon, (str,), False, True, False)
         _guard_scalar('NavItem.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('NavItem.tooltip', tooltip, (str,), False, True, False)
+        _guard_scalar('NavItem.path', path, (str,), False, True, False)
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
@@ -8716,6 +8718,8 @@ class NavItem:
         """True if this item should be disabled."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user hovers over this item."""
+        self.path = path
+        """The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. E.g. `/foo.html` or `http://example.com/foo.html`"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8724,12 +8728,14 @@ class NavItem:
         _guard_scalar('NavItem.icon', self.icon, (str,), False, True, False)
         _guard_scalar('NavItem.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('NavItem.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_scalar('NavItem.path', self.path, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
             icon=self.icon,
             disabled=self.disabled,
             tooltip=self.tooltip,
+            path=self.path,
         )
 
     @staticmethod
@@ -8745,17 +8751,21 @@ class NavItem:
         _guard_scalar('NavItem.disabled', __d_disabled, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('NavItem.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('NavItem.path', __d_path, (str,), False, True, False)
         name: str = __d_name
         label: str = __d_label
         icon: Optional[str] = __d_icon
         disabled: Optional[bool] = __d_disabled
         tooltip: Optional[str] = __d_tooltip
+        path: Optional[str] = __d_path
         return NavItem(
             name,
             label,
             icon,
             disabled,
             tooltip,
+            path,
         )
 
 

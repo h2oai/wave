@@ -3054,6 +3054,7 @@ def nav_item(
         icon: Optional[str] = None,
         disabled: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        path: Optional[str] = None,
 ) -> NavItem:
     """Create a navigation item.
 
@@ -3063,6 +3064,7 @@ def nav_item(
         icon: An optional icon to display next to the label.
         disabled: True if this item should be disabled.
         tooltip: An optional tooltip message displayed when a user hovers over this item.
+        path: The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab. E.g. `/foo.html` or `http://example.com/foo.html`
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
@@ -3072,6 +3074,7 @@ def nav_item(
         icon,
         disabled,
         tooltip,
+        path,
     )
 
 

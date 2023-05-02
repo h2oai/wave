@@ -113,4 +113,22 @@ describe('Nav.tsx', () => {
     const { container } = render(<View {...props} />)
     expect(container.querySelector('.is-expanded')).not.toBeInTheDocument()
   })
+
+  it('Does redirect if path is specified', () => {
+    const
+      props = {
+        ...navProps,
+        state: {
+          items: [
+            { label: 'group1', items: [{ name, label, path: 'https://h2o.ai/' }] }
+          ]
+        },
+      },
+      windowOpenMock = jest.fn(),
+      { getByTitle } = render(<View {...props} />)
+
+    window.open = windowOpenMock
+    fireEvent.click(getByTitle(label))
+    expect(windowOpenMock).toHaveBeenCalled()
+  })
 })
