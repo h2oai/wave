@@ -149,10 +149,7 @@ q.page['nav'] = ui.nav_card(
 
 ## With path
 
-Use a `path` attribute to navigate to internal or external hyperlink.
-
-- Internal hyperlinks have paths that begin with a `/` and point to URLs within the Wave UI
-- All other kinds of paths are treated as external hyperlinks (e.g. <https://h2o.ai/>)
+Use a `path` attribute to navigate to internal or external link. See [links docs](/docs/widgets/form/link/) for more details.
 
 ```py
 q.page['nav'] = ui.nav_card(
