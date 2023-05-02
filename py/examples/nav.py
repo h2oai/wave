@@ -34,6 +34,7 @@ async def serve(q: Q):
                 ui.nav_group('Help', items=[
                     ui.nav_item(name='#about', label='About', icon='Info'),
                     ui.nav_item(name='#support', label='Support', icon='Help'),
+                    ui.nav_item(name='faq', label='FAQ', icon='OfficeChat', path='https://h2o.ai/'),
                 ])
             ],
             secondary_items=[
@@ -61,6 +62,7 @@ async def serve(q: Q):
                 ui.nav_group('Help', items=[
                     ui.nav_item(name='#about', label='About', icon='Info'),
                     ui.nav_item(name='#support', label='Support', icon='Help'),
+                    ui.nav_item(name='faq', label='FAQ', icon='OfficeChat', path='https://h2o.ai/'),
                 ])
             ],
             secondary_items=[ui.button(name='logout', label='Logout', width='100%')],
