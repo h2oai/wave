@@ -166,7 +166,9 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
 
 
 app_title = 'H2O Wave Tour'
-
+header_height = 76
+blurb_height = 56
+mobile_blurb_height = 143
 
 async def setup_page(q: Q):
     py_content = ''
@@ -225,7 +227,7 @@ def get_wave_completions(line, character, file_content):
                 zones=[
                     ui.zone('mobile_header'),
                     ui.zone('mobile_blurb'),
-                    ui.zone('main', size='calc(100vh - 219px)', direction=ui.ZoneDirection.COLUMN, zones=[
+                    ui.zone('main', size=f'calc(100vh - {header_height + mobile_blurb_height}px)', direction=ui.ZoneDirection.COLUMN, zones=[
                         ui.zone('code', size='50vh'),
                         ui.zone('preview', size='50vh'),
                     ])
@@ -234,7 +236,7 @@ def get_wave_completions(line, character, file_content):
             ui.layout(breakpoint='m', zones=[
                 ui.zone('header'),
                 ui.zone('blurb'),
-                ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('main', size=f'calc(100vh - {header_height + blurb_height}px)', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('code'),
                     ui.zone('preview')
                 ])
