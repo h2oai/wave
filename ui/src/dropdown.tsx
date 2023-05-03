@@ -112,7 +112,7 @@ const
       selectAll = () => {
         if (!selection) return
 
-        selection.clear()
+        // selection.clear()
         options.forEach(o => { if (!o.disabled) selection.add(o.key as S) })
 
         const selectionArr = Array.from(selection)
@@ -124,9 +124,11 @@ const
       deselectAll = () => {
         if (!selection) return
 
-        selection.clear()
-        setMultiValues([])
-        wave.args[name] = []
+        // selection.clear()
+        options.forEach(o => { if (!o.disabled) selection.delete(o.key as S) })
+        const selectedOpts = Array.from(selection)
+        setMultiValues(selectedOpts)
+        wave.args[name] = selectedOpts
 
         onChange()
       }
