@@ -68,7 +68,8 @@ type DropdownItem = {
   text: S
   idx: U
   checked: B
-  show: B
+  show: B,
+  disabled: B
 }
 
 const
@@ -174,8 +175,8 @@ const
   getPageSpecification = () => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE } as Fluent.IPageSpecification),
   useItems = (choices: Choice[], v?: S | S[]) => {
     const
-      [items, setItems] = React.useState<DropdownItem[]>(choices.map(({ name, label }, idx) =>
-        ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true }))),
+      [items, setItems] = React.useState<DropdownItem[]>(choices.map(({ name, label, disabled = false }, idx) =>
+        ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled }))),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) })))
 
     return [items, setItems, onSearchChange] as const
@@ -190,6 +191,7 @@ const
       }}
       onChange={onChecked(item.name)}
       className={item.checked ? css.dialogCheckedRow : ''}
+      disabled={item.disabled}
       checked={item.checked} />
     : null,
 
