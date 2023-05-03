@@ -17,10 +17,16 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { Dropdown, XDropdown } from './dropdown'
 import { wave } from './ui'
+import { Choice } from './choice_group'
 
 describe('Dropdown.tsx', () => {
   const
     name = 'dropdown-test',
+    choicesDisabled: Choice[] = [
+      { name: '1', label: 'Choice 1' },
+      { name: '2', label: 'Choice 2', disabled: true },
+      { name: '3', label: 'Choice 3' }
+    ],
     // Need to test if wave.args are correct after calling push so mock the implementation.
     pushMock = jest.fn(() => wave.args = {})
 
@@ -118,17 +124,11 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Selects all options on Select all - except disabled', () => {
-      const choices = [
-        { name: 'A', label: 'Choice A' },
-        { name: 'B', label: 'Choice B' },
-        { name: 'C', label: 'Choice C', disabled: true },
-        { name: 'D', label: 'Choice D' },
-      ]
-      const { getByText } = render(<XDropdown model={{ ...defaultProps, choices, values: ['A'] }} />)
+      const { getByText } = render(<XDropdown model={{ ...defaultProps, choices: choicesDisabled, values: ['1'] }} />)
 
       fireEvent.click(getByText('Select All'))
 
-      expect(wave.args[name]).toMatchObject(['A', 'B', 'D'])
+      expect(wave.args[name]).toMatchObject(['1', '3'])
     })
 
     it('Do not select all options on Select all - dropdown disabled', () => {
@@ -369,13 +369,7 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Selects all options on Select all - except disabled', () => {
-      const choices = [
-        { name: '1', label: 'Choice 1' },
-        { name: '2', label: 'Choice 2', disabled: true },
-        { name: '3', label: 'Choice 3' }
-      ]
-
-      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices, values: ['1'] }} />)
+      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices: choicesDisabled, values: ['1'] }} />)
 
       expect(wave.args[name]).toMatchObject(['1'])
       fireEvent.click(getByTestId(name))
@@ -386,13 +380,7 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Does not modify disabled choice on Select/Deselect all', () => {
-      const choices = [
-        { name: '1', label: 'Choice 1' },
-        { name: '2', label: 'Choice 2', disabled: true },
-        { name: '3', label: 'Choice 3' }
-      ]
-
-      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices, values: ['2', '3'] }} />)
+      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices: choicesDisabled, values: ['2', '3'] }} />)
 
       expect(wave.args[name]).toMatchObject(['2', '3'])
 
