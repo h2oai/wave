@@ -275,7 +275,7 @@ const
         setItems(items => items.map(i => ({ ...i, checked: name === i.name ? checked : i.checked })))
       },
       selectAll = (checked = true) => () => {
-        setItems(items => items.map(i => ({ ...i, checked: i.show ? checked : i.checked })))
+        setItems(items => items.map(i => ({ ...i, checked: i.disabled ? false : i.show ? checked : i.checked })))
       }
 
     React.useEffect(() => {
