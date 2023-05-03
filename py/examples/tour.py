@@ -281,17 +281,17 @@ def make_blurb(q: Q):
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
-    items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
-                         choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
+    dropdown = ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
+                         choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])
     buttons = []
     if example.previous_example:
         buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
         buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = items + buttons
+    blurb_card.items = [dropdown] + buttons
     q.page['mobile_blurb'].items = [ui.inline(
         direction='column',
-        items= items + [ui.text_s(example.description), ui.inline(direction='row', items=buttons)]
+        items= [dropdown] + [ui.text_s(example.description), ui.inline(direction='row', items=buttons)]
     )]
             
 
