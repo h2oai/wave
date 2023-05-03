@@ -141,6 +141,24 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['A'])
     })
 
+    it('Does not modify disabled choice on Select/Deselect all', () => {
+      const choices = [
+        { name: '1', label: 'Choice 1' },
+        { name: '2', label: 'Choice 2', disabled: true },
+        { name: '3', label: 'Choice 3' }
+      ]
+
+      const { getByText } = render(<XDropdown model={{ ...defaultProps, choices, values: ['2', '3'] }} />)
+
+      expect(wave.args[name]).toMatchObject(['2', '3'])
+
+      fireEvent.click(getByText('Select All'))
+      expect(wave.args[name]).toMatchObject(['1', '2', '3'])
+
+      fireEvent.click(getByText('Deselect All'))
+      expect(wave.args[name]).toMatchObject(['2'])
+    })
+
     it('Calls sync on Select all - trigger enabled', async () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
 
@@ -383,6 +401,28 @@ describe('Dropdown.tsx', () => {
       fireEvent.click(getByText('Select'))
 
       expect(wave.args[name]).toMatchObject(['1', '3'])
+    })
+
+    it('Does not modify disabled choice on Select/Deselect all', () => {
+      const choices = [
+        { name: '1', label: 'Choice 1' },
+        { name: '2', label: 'Choice 2', disabled: true },
+        { name: '3', label: 'Choice 3' }
+      ]
+
+      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices, values: ['2', '3'] }} />)
+
+      expect(wave.args[name]).toMatchObject(['2', '3'])
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(getByText('Select All'))
+      fireEvent.click(getByText('Select'))
+      expect(wave.args[name]).toMatchObject(['1', '2', '3'])
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(getByText('Deselect All'))
+      fireEvent.click(getByText('Select'))
+      expect(wave.args[name]).toMatchObject(['2'])
     })
 
     it('Sets correct args after filter', () => {
