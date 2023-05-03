@@ -368,6 +368,23 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['1', '2'])
     })
 
+    it('Selects all options on Select all - except disabled', () => {
+      const choices = [
+        { name: '1', label: 'Choice 1' },
+        { name: '2', label: 'Choice 2', disabled: true },
+        { name: '3', label: 'Choice 3' }
+      ]
+
+      const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices, values: ['1'] }} />)
+
+      expect(wave.args[name]).toMatchObject(['1'])
+      fireEvent.click(getByTestId(name))
+      fireEvent.click(getByText('Select All'))
+      fireEvent.click(getByText('Select'))
+
+      expect(wave.args[name]).toMatchObject(['1', '3'])
+    })
+
     it('Sets correct args after filter', () => {
       const { getByText, getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
 
