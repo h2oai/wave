@@ -151,20 +151,7 @@ func (c *Client) listen() {
 				continue
 			}
 
-			// Maybe a simple string concatenation would be enough?
-			var tmpMap map[string]interface{}
-			if err := json.Unmarshal(m.data, &tmpMap); err != nil {
-				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed unmarshaling body"})
-				continue
-			}
-
-			body, err := json.Marshal(WaveMsg{Data: tmpMap})
-			if err != nil {
-				echo(Log{"t": "watch", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
-				continue
-			}
-
-			app.forward(c.id, c.session, body)
+			app.forward(c.id, c.session, []byte("{\"data\":"+string(m.data)+"}"))
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
