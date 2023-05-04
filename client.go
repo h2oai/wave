@@ -47,13 +47,8 @@ var (
 	}
 )
 
-// WaveMsg represents the message sent to an app.
-type WaveMsg struct {
-	Data map[string]interface{} `json:"data"` // q.args, q.events
-}
-
-// WaveBootMsg represents the initial message sent to an app when a client first connects to it.
-type WaveBootMsg struct {
+// BootMsg represents the initial message sent to an app when a client first connects to it.
+type BootMsg struct {
 	Data struct {
 		Hash string `json:"#,omitempty"` // location hash
 	} `json:"data"`
@@ -164,7 +159,7 @@ func (c *Client) listen() {
 					c.subscribe("/" + c.session.subject) // user-level
 				}
 
-				boot := WaveBootMsg{Headers: *c.header}
+				boot := BootMsg{Headers: *c.header}
 
 				if len(m.data) > 0 { // location hash
 					boot.Data.Hash = string(m.data)
