@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
+
 example_dir = os.path.dirname(os.path.realpath(__file__))
 tour_tmp_dir = os.path.join(example_dir, '_tour_apps_tmp')
 
@@ -170,6 +171,7 @@ header_height = 76
 blurb_height = 56
 mobile_blurb_height = 76
 
+
 async def setup_page(q: Q):
     py_content = ''
     parser_path = os.path.join(example_dir, 'tour_autocomplete_parser.py')
@@ -226,20 +228,22 @@ def get_wave_completions(line, character, file_content):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('main', size=f'calc(100vh - {header_height + mobile_blurb_height}px)', direction=ui.ZoneDirection.COLUMN, zones=[
-                        ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
-                        ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
-                    ]),
+                    ui.zone('main', size=f'calc(100vh - {header_height + mobile_blurb_height}px)',
+                            direction=ui.ZoneDirection.COLUMN, zones=[
+                            ui.zone('mobile_code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                            ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                        ]),
                     ui.zone('mobile_blurb')
                 ],
             ),
             ui.layout(breakpoint='m', zones=[
                 ui.zone('header'),
                 ui.zone('blurb'),
-                ui.zone('main', size=f'calc(100vh - {header_height + blurb_height}px)', direction=ui.ZoneDirection.ROW, zones=[
-                    ui.zone('code'),
-                    ui.zone('preview')
-                ])
+                ui.zone('main', size=f'calc(100vh - {header_height + blurb_height}px)', direction=ui.ZoneDirection.ROW,
+                        zones=[
+                            ui.zone('code'),
+                            ui.zone('preview')
+                        ])
             ]),
         ])
     nav_links = [
@@ -254,21 +258,28 @@ def get_wave_completions(line, character, file_content):
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
-        items=[ui.links(inline=True, items=list(map(lambda item: ui.link(label=item[1], path=item[2], target='_blank'), nav_links)))]
+        items=[ui.links(inline=True,
+                        items=list(map(lambda item: ui.link(label=item[1], path=item[2], target='_blank'), nav_links)))]
     )
     q.page['mobile_header'] = ui.header_card(
         box='mobile_header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
-        nav=[ui.nav_group('Links', items= list(map(lambda item: ui.nav_item(name=item[0], label=item[1], path=item[2]), nav_links)))]
+        nav=[ui.nav_group('Links', items=list(
+            map(lambda item: ui.nav_item(name=item[0], label=item[1], path=item[2]), nav_links)))]
     )
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
-    q.page['mobile_blurb'] = ui.form_card(box='mobile_blurb',items=[])
+    q.page['mobile_blurb'] = ui.form_card(box='mobile_blurb', items=[])
     q.page['code'] = ui.markup_card(
-        box=ui.box('code', height='calc(100vh - 140px)'),
+        box=ui.box('code', height=f'calc(100vh - {header_height + blurb_height}px)'),
         title='',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
+    )
+    q.page['mobile_code'] = ui.markup_card(
+        box=ui.box('mobile_code', height=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+        title='',
+        content='<div id="monaco-editor" style="position: absolute; inset: 0px"/>'
     )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
@@ -288,8 +299,7 @@ def make_blurb(q: Q):
     if example.next_example:
         items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
     blurb_card.items = items
-    q.page['mobile_blurb'].items = [ui.inline(direction='row',items= items)]
-            
+    q.page['mobile_blurb'].items = [ui.inline(direction='row', items=items)]
 
 
 async def show_example(q: Q, example: Example):
@@ -335,7 +345,8 @@ async def show_example(q: Q, example: Example):
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
-            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()', requires=['editor'])
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()',
+                                                     requires=['editor'])
 
     # HACK
     # The ?e= appended to the path forces the frame to reload.
