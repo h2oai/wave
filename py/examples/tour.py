@@ -168,7 +168,7 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
 app_title = 'H2O Wave Tour'
 header_height = 76
 blurb_height = 56
-mobile_blurb_height = 143
+mobile_blurb_height = 76
 
 async def setup_page(q: Q):
     py_content = ''
@@ -226,11 +226,11 @@ def get_wave_completions(line, character, file_content):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('mobile_blurb'),
                     ui.zone('main', size=f'calc(100vh - {header_height + mobile_blurb_height}px)', direction=ui.ZoneDirection.COLUMN, zones=[
-                        ui.zone('code', size='50vh'),
-                        ui.zone('preview', size='50vh'),
-                    ])
+                        ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                        ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                    ]),
+                    ui.zone('mobile_blurb')
                 ],
             ),
             ui.layout(breakpoint='m', zones=[
@@ -281,18 +281,14 @@ def make_blurb(q: Q):
     blurb_card.title = example.title
     blurb_card.subtitle = example.description
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
-    dropdown = ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
-                         choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])
-    buttons = []
+    items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
+                         choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
     if example.previous_example:
-        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
-        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = [dropdown] + buttons
-    q.page['mobile_blurb'].items = [ui.inline(
-        direction='column',
-        items= [dropdown] + [ui.text_s(example.description), ui.inline(direction='row', items=buttons)]
-    )]
+        items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+    blurb_card.items = items
+    q.page['mobile_blurb'].items = [ui.inline(direction='row',items= items)]
             
 
 
