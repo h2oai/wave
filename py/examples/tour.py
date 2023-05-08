@@ -258,17 +258,17 @@ def get_wave_completions(line, character, file_content):
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
-        items=[ui.links(inline=True,
-                        items=list(map(lambda item: ui.link(label=item[1], path=item[2], target='_blank'), nav_links)))]
-    )
+        items=[
+            ui.links(inline=True, items=[ui.link(label=item[1], path=item[2], target='_blank') for item in nav_links])
+        ])
     q.page['mobile_header'] = ui.header_card(
         box='mobile_header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
-        nav=[ui.nav_group('Links', items=list(
-            map(lambda item: ui.nav_item(name=item[0], label=item[1], path=item[2]), nav_links)))]
-    )
+        nav=[
+            ui.nav_group('Links', items=[ui.nav_item(name=item[0], label=item[1], path=item[2]) for item in nav_links])
+        ])
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['mobile_blurb'] = ui.form_card(box='mobile_blurb', items=[])
     q.page['code'] = ui.markup_card(
@@ -279,7 +279,7 @@ def get_wave_completions(line, character, file_content):
     q.page['mobile_code'] = ui.markup_card(
         box=ui.box('mobile_code', height=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
         title='',
-        content='<div id="monaco-editor" style="position: absolute; inset: 0px"/>'
+        content='<div id="monaco-editor" style="position: absolute; inset: 0px; top: 45px;"/>'
     )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
@@ -294,12 +294,16 @@ def make_blurb(q: Q):
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
     items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
                          choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
+    buttons = []
+    mobile_buttons = []
     if example.previous_example:
-        items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        mobile_buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Prev'))
     if example.next_example:
-        items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = items
-    q.page['mobile_blurb'].items = [ui.inline(direction='row', items=items)]
+        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+        mobile_buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+    blurb_card.items = items + buttons
+    q.page['mobile_blurb'].items = [ui.inline(direction='row', justify='center', items=items + mobile_buttons)]
 
 
 async def show_example(q: Q, example: Example):
@@ -332,6 +336,7 @@ async def show_example(q: Q, example: Example):
     # Update preview title
     preview_card.title = f'Preview of {example.filename}'
     q.page['code'].title = example.filename
+    q.page['mobile_code'].title = example.filename
     await q.page.save()
 
     if q.client.is_first_load:
