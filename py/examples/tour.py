@@ -228,7 +228,7 @@ def get_wave_completions(line, character, file_content):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('main', direction=ui.ZoneDirection.COLUMN,
+                    ui.zone('main',
                             zones=[
                                 ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
                                 ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
@@ -259,7 +259,7 @@ def get_wave_completions(line, character, file_content):
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
         items=[
-            ui.links(inline=True, items=[ui.link(label=item[1], path=item[2], target='_blank') for item in nav_links])
+            ui.links(inline=True, items=[ui.link(label=link[1], path=link[2], target='_blank') for link in nav_links])
         ])
     q.page['mobile_header'] = ui.header_card(
         box='mobile_header',
@@ -267,12 +267,12 @@ def get_wave_completions(line, character, file_content):
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
         nav=[
-            ui.nav_group('Links', items=[ui.nav_item(name=item[0], label=item[1], path=item[2]) for item in nav_links])
+            ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1], path=link[2]) for link in nav_links])
         ])
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
     q.page['mobile_blurb'] = ui.form_card(box='mobile_blurb', items=[])
     q.page['code'] = ui.markup_card(
-        box=ui.box('code', height=f'calc(100vh - {header_height + blurb_height}px)'),
+        box='code',
         title='',
         content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 2px"/>'
     )
@@ -289,16 +289,12 @@ def make_blurb(q: Q):
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
     items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
                          choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
-    buttons = []
-    mobile_buttons = []
     if example.previous_example:
-        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
-        mobile_buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Prev'))
+        items.append(ui.button(name=f'#{example.previous_example.name}', label='Prev'))
     if example.next_example:
-        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-        mobile_buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-    blurb_card.items = items + buttons
-    q.page['mobile_blurb'].items = [ui.inline(direction='row', justify='center', items=items + mobile_buttons)]
+        items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+    blurb_card.items = items
+    q.page['mobile_blurb'].items = [ui.inline(direction='row', justify='center', items=items)]
 
 
 async def show_example(q: Q, example: Example):
