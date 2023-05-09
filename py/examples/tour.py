@@ -230,7 +230,7 @@ def get_wave_completions(line, character, file_content):
                     ui.zone('mobile_header'),
                     ui.zone('main', size=f'calc(100vh - {header_height + mobile_blurb_height}px)',
                             direction=ui.ZoneDirection.COLUMN, zones=[
-                            ui.zone('mobile_code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                            ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
                             ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
                         ]),
                     ui.zone('mobile_blurb')
@@ -274,12 +274,7 @@ def get_wave_completions(line, character, file_content):
     q.page['code'] = ui.markup_card(
         box=ui.box('code', height=f'calc(100vh - {header_height + blurb_height}px)'),
         title='',
-        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
-    )
-    q.page['mobile_code'] = ui.markup_card(
-        box=ui.box('mobile_code', height=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
-        title='',
-        content='<div id="monaco-editor" style="position: absolute; inset: 0px; top: 45px;"/>'
+        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 2px"/>'
     )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
@@ -336,7 +331,6 @@ async def show_example(q: Q, example: Example):
     # Update preview title
     preview_card.title = f'Preview of {example.filename}'
     q.page['code'].title = example.filename
-    q.page['mobile_code'].title = example.filename
     await q.page.save()
 
     if q.client.is_first_load:
