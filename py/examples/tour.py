@@ -228,11 +228,11 @@ def get_wave_completions(line, character, file_content):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('main', size=f'calc(100vh - {header_height + mobile_blurb_height}px)',
-                            direction=ui.ZoneDirection.COLUMN, zones=[
-                            ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
-                            ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
-                        ]),
+                    ui.zone('main', direction=ui.ZoneDirection.COLUMN,
+                            zones=[
+                                ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                                ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                            ]),
                     ui.zone('mobile_blurb')
                 ],
             ),
