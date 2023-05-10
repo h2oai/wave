@@ -47,6 +47,9 @@ require(['vs/editor/editor.main', 'pyodide'], async () => {
     hideCursorInOverviewRuler: true,
     scrollbar: { vertical: 'hidden' },
     overviewRulerBorder: false,
+    lineDecorationsWidth: 0,
+    lineNumbersMinChars: 3,
+    automaticLayout: true,
   })
   editor.onDidChangeModelContent(e => {
     if (e.isFlush) return

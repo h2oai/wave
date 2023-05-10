@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
+
 example_dir = os.path.dirname(os.path.realpath(__file__))
 tour_tmp_dir = os.path.join(example_dir, '_tour_apps_tmp')
 
@@ -166,6 +167,9 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
 
 
 app_title = 'H2O Wave Tour'
+header_height = 76
+blurb_height = 56
+mobile_blurb_height = 76
 
 
 async def setup_page(q: Q):
@@ -220,35 +224,57 @@ def get_wave_completions(line, character, file_content):
         scripts=[ui.script(q.app.tour_assets + '/loader.min.js')],
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
-            ui.layout(breakpoint='xs', zones=[
+            ui.layout(
+                breakpoint='xs',
+                zones=[
+                    ui.zone('mobile_header'),
+                    ui.zone('main',
+                            zones=[
+                                ui.zone('code', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                                ui.zone('preview', size=f'calc(50vh - {(header_height + mobile_blurb_height) / 2}px)'),
+                            ]),
+                    ui.zone('mobile_blurb')
+                ],
+            ),
+            ui.layout(breakpoint='m', zones=[
                 ui.zone('header'),
                 ui.zone('blurb'),
-                ui.zone('main', size='calc(100vh - 140px)', direction=ui.ZoneDirection.ROW, zones=[
-                    ui.zone('code'),
-                    ui.zone('preview')
-                ])
-            ])
+                ui.zone('main', size=f'calc(100vh - {header_height + blurb_height}px)', direction=ui.ZoneDirection.ROW,
+                        zones=[
+                            ui.zone('code'),
+                            ui.zone('preview')
+                        ])
+            ]),
         ])
+    nav_links = [
+        ('docs', 'Wave docs', 'https://wave.h2o.ai/docs/getting-started'),
+        ('discussions', 'Discussions', 'https://github.com/h2oai/wave/discussions'),
+        ('blog', 'Blog', 'https://wave.h2o.ai/blog'),
+        ('cloud', 'H2O AI Cloud', 'https://h2o.ai/platform/ai-cloud/'),
+        ('h2o', 'H2O', 'https://www.h2o.ai/'),
+    ]
     q.page['header'] = ui.header_card(
         box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
         image=f'{q.app.tour_assets}/h2o-logo.svg',
         items=[
-            ui.links(inline=True, items=[
-                ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
-                ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
-                ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
-                ui.link(label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/', target='_blank'),
-                ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
-            ])
-        ]
-    )
+            ui.links(inline=True, items=[ui.link(label=link[1], path=link[2], target='_blank') for link in nav_links])
+        ])
+    q.page['mobile_header'] = ui.header_card(
+        box='mobile_header',
+        title=app_title,
+        subtitle=f'{len(catalog)} Interactive Examples',
+        image=f'{q.app.tour_assets}/h2o-logo.svg',
+        nav=[
+            ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1], path=link[2]) for link in nav_links])
+        ])
     q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
+    q.page['mobile_blurb'] = ui.form_card(box='mobile_blurb', items=[])
     q.page['code'] = ui.markup_card(
-        box=ui.box('code', height='calc(100vh - 140px)'),
+        box='code',
         title='',
-        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 15px"/>'
+        content='<div id="monaco-editor" style="position: absolute; top: 45px; bottom: 15px; right: 15px; left: 2px"/>'
     )
     # Put tmp placeholder <div></div> to simulate blank screen.
     q.page['preview'] = ui.frame_card(box='preview', title='Preview', content='<div></div>')
@@ -264,10 +290,11 @@ def make_blurb(q: Q):
     items = [ui.dropdown(name=q.args['#'] or default_example_name, width='300px', value=example.name, trigger=True,
                          choices=[ui.choice(name=e.name, label=e.title) for e in catalog.values()])]
     if example.previous_example:
-        items.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+        items.append(ui.button(name=f'#{example.previous_example.name}', label='Prev'))
     if example.next_example:
         items.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
     blurb_card.items = items
+    q.page['mobile_blurb'].items = [ui.inline(direction='row', justify='center', items=items)]
 
 
 async def show_example(q: Q, example: Example):
@@ -313,7 +340,8 @@ async def show_example(q: Q, example: Example):
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
-            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()', requires=['editor'])
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()',
+                                                     requires=['editor'])
 
     # HACK
     # The ?e= appended to the path forces the frame to reload.
