@@ -397,7 +397,7 @@ describe('Dropdown.tsx', () => {
       expect(wave.args[name]).toMatchObject(['1', '3'])
     })
 
-    it('Does not modify disabled choice on Select/Deselect all', () => {
+    it('Does not modify disabled choice on Select/Deselect all in a dialog dropdown', () => {
       const { getByText, getByTestId } = render(<XDropdown model={{ ...dialogProps, choices: choicesDisabled, values: ['2', '3'] }} />)
 
       expect(wave.args[name]).toMatchObject(['2', '3'])
