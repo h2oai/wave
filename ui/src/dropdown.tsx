@@ -112,17 +112,19 @@ const
       },
       onSelectAll = (checked = true) => () => {
         if (!selection) return
+        if (checked) selection.clear()
 
-        checked
-          ? options.forEach(o => { if (!o.disabled) selection.add(o.key as S) })
-          : options.forEach(o => { if (!o.disabled) selection.delete(o.key as S) })
+        options.forEach(({ disabled, key }) => {
+          checked
+            ? !disabled || values?.includes(key as S) ? selection.add(key as S) : null
+            : !disabled ? selection.delete(key as S) : null
+        })
 
         const selectedOpts = Array.from(selection)
         setMultiValues(selectedOpts)
         wave.args[name] = selectedOpts
 
         onChange()
-        // setItems(items => items.map(i => ({ ...i, checked: i.show && !i.disabled ? checked : i.checked })))
       }
 
     React.useEffect(() => {
