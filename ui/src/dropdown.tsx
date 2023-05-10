@@ -110,7 +110,7 @@ const
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
         if (trigger) setTimeout(() => wave.push(), 0)
       },
-      onSelectAll = (checked = true) => () => {
+      selectAll = (checked = true) => () => {
         if (!selection) return
         if (checked) selection.clear()
 
@@ -158,7 +158,7 @@ const
           isMultivalued &&
           <div>
             <Fluent.Text variant='small'>
-              <Fluent.Link disabled={disabled} onClick={onSelectAll()}>Select All</Fluent.Link> | <Fluent.Link disabled={disabled} onClick={onSelectAll(false)}>Deselect All</Fluent.Link>
+              <Fluent.Link disabled={disabled} onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link disabled={disabled} onClick={selectAll(false)}>Deselect All</Fluent.Link>
             </Fluent.Text>
           </div>
         }
