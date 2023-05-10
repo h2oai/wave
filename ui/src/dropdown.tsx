@@ -110,26 +110,19 @@ const
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
         if (trigger) setTimeout(() => wave.push(), 0)
       },
-      selectAll = () => {
+      onSelectAll = (checked = true) => () => {
         if (!selection) return
 
-        selection.clear()
-        options.forEach(o => { if (!o.disabled) selection.add(o.key as S) })
+        checked
+          ? options.forEach(o => { if (!o.disabled) selection.add(o.key as S) })
+          : options.forEach(o => { if (!o.disabled) selection.delete(o.key as S) })
 
-        const selectionArr = Array.from(selection)
-        setMultiValues(selectionArr)
-        wave.args[name] = selectionArr
-
-        onChange()
-      },
-      deselectAll = () => {
-        if (!selection) return
-
-        selection.clear()
-        setMultiValues([])
-        wave.args[name] = []
+        const selectedOpts = Array.from(selection)
+        setMultiValues(selectedOpts)
+        wave.args[name] = selectedOpts
 
         onChange()
+        // setItems(items => items.map(i => ({ ...i, checked: i.show && !i.disabled ? checked : i.checked })))
       }
 
     React.useEffect(() => {
@@ -163,7 +156,7 @@ const
           isMultivalued &&
           <div>
             <Fluent.Text variant='small'>
-              <Fluent.Link disabled={disabled} onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link disabled={disabled} onClick={deselectAll}>Deselect All</Fluent.Link>
+              <Fluent.Link disabled={disabled} onClick={onSelectAll()}>Select All</Fluent.Link> | <Fluent.Link disabled={disabled} onClick={onSelectAll(false)}>Deselect All</Fluent.Link>
             </Fluent.Text>
           </div>
         }
