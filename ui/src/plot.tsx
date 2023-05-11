@@ -20,7 +20,7 @@ import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { cssVarValue, cssVar, formItemWidth, themeB } from './theme'
+import { cssVarValue, cssVar, formItemWidth, themeB, themesB } from './theme'
 import { bond, wave } from './ui'
 
 let
@@ -1134,7 +1134,7 @@ export const
           // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
           // same as after Layout phase. If not, rerender the plot again.
           setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
-          themeWatchRef.current = on(themeB, () => {
+          themeWatchRef.current = on(themeB, themesB, () => {
             cat10 = cat10.map(cssVarValue)
             const [geometries, annotations] = makeMarks(marks)
             chart.updateOptions({ geometries, annotations })
