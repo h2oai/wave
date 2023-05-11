@@ -1006,7 +1006,7 @@ const
       userSelect: 'none',
       "-webkit-user-select": 'none',
       $nest: {
-        'svg': {
+        'canvas': {
           position: 'absolute',
           top: 0,
           left: 0,
