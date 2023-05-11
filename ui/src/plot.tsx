@@ -20,7 +20,7 @@ import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { cssVarValue, cssVar, formItemWidth, themeB } from './theme'
+import { cssVarValue, cssVar, formItemWidth, themeB, themesB } from './theme'
 import { bond, wave } from './ui'
 
 let
@@ -1065,7 +1065,7 @@ export const
       container = React.useRef<HTMLDivElement>(null),
       currentChart = React.useRef<Chart | null>(null),
       currentPlot = React.useRef<Plot | null>(null),
-      themeWatchRef = React.useRef<Disposable | null>(null),
+      themeWatchRef = React.useRef<{ theme: Disposable, themes: Disposable } | null>(null),
       originalDataRef = React.useRef<any[]>([]),
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
@@ -1134,19 +1134,26 @@ export const
           // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
           // same as after Layout phase. If not, rerender the plot again.
           setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
-          themeWatchRef.current = on(themeB, () => {
+          const onThemeChange = () => {
             cat10 = cat10.map(cssVarValue)
             const [geometries, annotations] = makeMarks(marks)
             chart.updateOptions({ geometries, annotations })
             chart.theme(getPlotTheme())
             chart.render(true)
-          })
+          }
+          themeWatchRef.current = {
+            theme: on(themeB, onThemeChange),
+            themes: on(themesB, onThemeChange)
+          }
         }
       }
 
     React.useEffect(() => {
       init()
-      return () => themeWatchRef.current?.dispose()
+      return () => {
+        themeWatchRef.current?.theme.dispose()
+        themeWatchRef.current?.themes.dispose()
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     React.useEffect(() => {
