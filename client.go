@@ -47,13 +47,8 @@ var (
 	}
 )
 
-// WaveMsg represents the message sent to an app.
-type WaveMsg struct {
-	Data map[string]interface{} `json:"data"` // q.args, q.events
-}
-
-// WaveBootMsg represents the initial message sent to an app when a client first connects to it.
-type WaveBootMsg struct {
+// BootMsg represents the initial message sent to an app when a client first connects to it.
+type BootMsg struct {
 	Data struct {
 		Hash string `json:"#,omitempty"` // location hash
 	} `json:"data"`
@@ -151,20 +146,7 @@ func (c *Client) listen() {
 				continue
 			}
 
-			// Maybe a simple string concatenation would be enough?
-			var tmpMap map[string]interface{}
-			if err := json.Unmarshal(m.data, &tmpMap); err != nil {
-				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "failed unmarshaling body"})
-				continue
-			}
-
-			body, err := json.Marshal(WaveMsg{Data: tmpMap})
-			if err != nil {
-				echo(Log{"t": "watch", "client": c.addr, "route": m.addr, "error": "failed marshaling body"})
-				continue
-			}
-
-			app.forward(c.id, c.session, body)
+			app.forward(c.id, c.session, []byte("{\"data\":"+string(m.data)+"}"))
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
@@ -177,7 +159,7 @@ func (c *Client) listen() {
 					c.subscribe("/" + c.session.subject) // user-level
 				}
 
-				boot := WaveBootMsg{Headers: *c.header}
+				boot := BootMsg{Headers: *c.header}
 
 				if len(m.data) > 0 { // location hash
 					boot.Data.Hash = string(m.data)
