@@ -26,7 +26,8 @@ with open(os.path.join(curr_dir, 'README.md'), 'r') as readme_markdown:
     conda_description = readme_markdown.read()
 
 platform = os.getenv('H2O_WAVE_BUILD_OS', 'darwin')
-version = os.getenv('VERSION', 'DEV')
+# VERSION clashes with conda build. Use PKG_VERSION instead.
+version = os.getenv('VERSION', os.getenv('PKG_VERSION', 'DEV'))
 arch = os.getenv('H2O_WAVE_BUILD_ARCH', 'amd64')
 base_path = os.path.join(curr_dir, '..', '..', 'build', f'wave-{version}-{platform}-{arch}')
 

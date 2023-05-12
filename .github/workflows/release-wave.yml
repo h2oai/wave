@@ -80,6 +80,9 @@ jobs:
           CondaDir: 'py/h2o_wave/conda'
           CondaUsername: ${{ secrets.CONDA_USERNAME }}
           CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+        env:
+          # VERSION clashes with conda build. Use PKG_VERSION instead.
+          PKG_VERSION: ${{ env.VERSION }}
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
