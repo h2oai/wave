@@ -85,45 +85,40 @@ const
   }),
   BaseDropdown = ({ model: m }: { model: Dropdown }) => {
     const
-      { name, label, required, disabled, values, choices, trigger, placeholder } = m,
-      isMultivalued = !!values,
-      selection = React.useMemo(() => isMultivalued ? new Set<S>(values) : null, [isMultivalued, values]),
+      { name, label, required, disabled, values = [], choices = [], trigger, placeholder } = m,
+      isMultivalued = !!m.values,
+      [, setItems] = useItems(choices, values),
       [singleValue, setSingleValue] = React.useState(m.value),
       [multiValues, setMultiValues] = React.useState(values),
-      options = (choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
+      options = choices.map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
           const optionKey = option.key as S
-          if (isMultivalued && selection !== null) {
-            option.selected ? selection.add(optionKey) : selection.delete(optionKey)
-
-            const selectedOpts = Array.from(selection)
-            wave.args[name] = selectedOpts
-            setMultiValues(selectedOpts)
+          if (isMultivalued) {
+            setItems(items => {
+              const nextItems = items.map(i => ({ ...i, checked: optionKey === i.name ? !!option.selected : i.checked }))
+              const nextValues = nextItems.filter(i => i.checked).map(i => i.name)
+              setMultiValues(nextValues)
+              wave.args[name] = nextValues
+              return nextItems
+            })
           } else {
             setSingleValue(optionKey)
             wave.args[name] = optionKey
             m.value = optionKey
           }
         }
-
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
         if (trigger) setTimeout(() => wave.push(), 0)
       },
       selectAll = (select = true) => () => {
-        if (!selection) return
-        if (select) selection.clear()
-
-        options.forEach(({ disabled, key }) => {
-          select
-            ? !disabled || values?.includes(key as S) ? selection.add(key as S) : null
-            : !disabled ? selection.delete(key as S) : null
+        setItems(items => {
+          const nextItems = items.map(i => ({ ...i, checked: i.show && !i.disabled ? select : i.checked }))
+          const nextValues = nextItems.filter(i => i.checked).map(i => i.name)
+          setMultiValues(nextValues)
+          wave.args[name] = nextValues
+          return nextItems
         })
-
-        const selectedOpts = Array.from(selection)
-        setMultiValues(selectedOpts)
-        wave.args[name] = selectedOpts
-
         onChange()
       }
 
