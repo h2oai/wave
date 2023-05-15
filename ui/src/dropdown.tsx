@@ -110,12 +110,12 @@ const
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
         if (trigger) setTimeout(() => wave.push(), 0)
       },
-      selectAll = (checked = true) => () => {
+      selectAll = (select = true) => () => {
         if (!selection) return
-        if (checked) selection.clear()
+        if (select) selection.clear()
 
         options.forEach(({ disabled, key }) => {
-          checked
+          select
             ? !disabled || values?.includes(key as S) ? selection.add(key as S) : null
             : !disabled ? selection.delete(key as S) : null
         })
@@ -269,8 +269,8 @@ const
       onChecked = (name: S) => (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, checked = false) => {
         setItems(items => items.map(i => ({ ...i, checked: name === i.name ? checked : i.checked })))
       },
-      selectAll = (checked = true) => () => {
-        setItems(items => items.map(i => ({ ...i, checked: i.show && !i.disabled ? checked : i.checked })))
+      selectAll = (select = true) => () => {
+        setItems(items => items.map(i => ({ ...i, checked: i.show && !i.disabled ? select : i.checked })))
       }
 
     React.useEffect(() => {
