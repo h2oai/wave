@@ -67,14 +67,14 @@ type DropdownItem = {
   name: S
   text: S
   idx: U
-  checked: B
+  selected: B
   show: B,
   disabled: B
 }
 
 const
   css = stylesheet({
-    dialogCheckedRow: {
+    dialogSelectedRow: {
       background: cssVar('$neutralLight')
     },
     dialogControls: {
@@ -83,11 +83,26 @@ const
       marginTop: 16
     }
   }),
+  choicesToDropdownItems = (choices: Choice[], v?: S | S[]) => choices.map(({ name, label, disabled = false }, idx) =>
+    ({ name, text: label || name, idx, selected: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled })),
+  useItems = (choices: Choice[], v?: S | S[]) => {
+    const
+      [items, setItems] = React.useState<DropdownItem[]>(choicesToDropdownItems(choices, v)),
+      onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) }))),
+      onSelect = (name: S, select = false) => {
+        setItems(items => items.map(i => ({ ...i, selected: name === i.name ? select : i.selected })))
+      },
+      selectAll = (select = true) => () => {
+        setItems(items => items.map(i => ({ ...i, selected: i.show && !i.disabled ? select : i.selected })))
+      }
+
+    return [items, setItems, onSearchChange, onSelect, selectAll] as const
+  },
   BaseDropdown = ({ model: m }: { model: Dropdown }) => {
     const
       { name, label, required, disabled, values = [], choices = [], trigger, placeholder } = m,
       isMultivalued = !!m.values,
-      [items, setItems, , onChecked, selectAll] = useItems(choices, values),
+      [items, setItems, , onSelect, selectAll] = useItems(choices, values),
       [singleValue, setSingleValue] = React.useState(m.value),
       [multiValues, setMultiValues] = React.useState(values),
       options = choices.map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
@@ -95,7 +110,7 @@ const
         if (option) {
           const optionKey = option.key as S
           if (isMultivalued) {
-            onChecked(optionKey, !!option.selected)
+            onSelect(optionKey, !!option.selected)
           } else {
             setSingleValue(optionKey)
             wave.args[name] = optionKey
@@ -126,7 +141,7 @@ const
 
     React.useEffect(() => {
       if (!isMultivalued) return
-      const nextValues = items.filter(i => i.checked).map(i => i.name)
+      const nextValues = items.filter(i => i.selected).map(i => i.name)
       setMultiValues(nextValues)
       wave.args[name] = nextValues
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,22 +176,7 @@ const
   ROW_HEIGHT = 44,
   PAGE_SIZE = 40,
   getPageSpecification = () => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE } as Fluent.IPageSpecification),
-  choicesToDropdownItems = (choices: Choice[], v?: S | S[]) => choices.map(({ name, label, disabled = false }, idx) =>
-    ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled })),
-  useItems = (choices: Choice[], v?: S | S[]) => {
-    const
-      [items, setItems] = React.useState<DropdownItem[]>(choicesToDropdownItems(choices, v)),
-      onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) }))),
-      onChecked = (name: S, checked = false) => {
-        setItems(items => items.map(i => ({ ...i, checked: name === i.name ? checked : i.checked })))
-      },
-      selectAll = (select = true) => () => {
-        setItems(items => items.map(i => ({ ...i, checked: i.show && !i.disabled ? select : i.checked })))
-      }
-
-    return [items, setItems, onSearchChange, onChecked, selectAll] as const
-  },
-  onRenderCell = (onChecked: any) => (item?: DropdownItem) => item
+  onRenderCell = (onSelect: any) => (item?: DropdownItem) => item
     ? <Fluent.Checkbox
       label={item.text}
       styles={{
@@ -184,10 +184,10 @@ const
         label: { width: pc(100), padding: 12, wordBreak: 'break-word' },
         checkmark: { display: 'flex' }
       }}
-      onChange={(_ev, checked) => onChecked(item.name, checked)}
-      className={item.checked ? css.dialogCheckedRow : ''}
+      onChange={(_ev, checked) => onSelect(item.name, checked)}
+      className={item.selected ? css.dialogSelectedRow : ''}
       disabled={item.disabled}
-      checked={item.checked} />
+      checked={item.selected} />
     : null,
 
   DialogDropdownSingle = ({ model }: { model: Dropdown }) => {
@@ -196,8 +196,8 @@ const
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, model.value),
       toggleDialog = () => setIsDialogHidden(v => !v),
-      onChecked = (itemName: S, checked = false) => {
-        setItems(items => items.map(item => (({ ...item, checked: item.name === itemName ? checked : false, show: true }))))
+      onSelect = (itemName: S, select = false) => {
+        setItems(items => items.map(item => (({ ...item, selected: item.name === itemName ? select : false, show: true }))))
         wave.args[name] = itemName
         model.value = itemName
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
@@ -208,7 +208,7 @@ const
     React.useEffect(() => {
       if (model.value !== undefined) {
         wave.args[name] = model.value ?? null
-        setItems(items => items.map(i => ({ ...i, checked: model.value === i.name })))
+        setItems(items => items.map(i => ({ ...i, selected: model.value === i.name })))
       }
     }, [name, model.value, setItems])
 
@@ -224,7 +224,7 @@ const
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
           placeholder={placeholder}
-          value={items.find(i => i.checked)?.text ?? ''} />
+          value={items.find(i => i.selected)?.text ?? ''} />
         <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={toggleDialog} minWidth={600} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.Label>Search</Fluent.Label>
@@ -234,7 +234,7 @@ const
                 items={items.filter(i => i.show)}
                 getPageSpecification={getPageSpecification}
                 renderedWindowsAhead={3}
-                onRenderCell={onRenderCell(onChecked)}
+                onRenderCell={onRenderCell(onSelect)}
               />
             </Fluent.ScrollablePane>
           </Fluent.DialogContent>
@@ -246,7 +246,7 @@ const
     const
       { name, choices = [], values = [], disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
-      [items, setItems, onSearchChange, onChecked, selectAll] = useItems(choices, values),
+      [items, setItems, onSearchChange, onSelect, selectAll] = useItems(choices, values),
       itemsOnDialogOpen = React.useRef(items),
       openDialog = () => {
         setIsDialogHidden(false)
@@ -261,7 +261,7 @@ const
         closeDialog()
       },
       submit = (items: DropdownItem[]) => {
-        wave.args[name] = items.filter(i => i.checked).map(i => i.name)
+        wave.args[name] = items.filter(i => i.selected).map(i => i.name)
         // HACK: Push clears args so run it after useEffect sets them due to model.values change.
         if (trigger) setTimeout(() => wave.push(), 0)
         closeDialog()
@@ -270,7 +270,7 @@ const
     React.useEffect(() => {
       if (values) {
         wave.args[name] = values
-        setItems(items => items.map(i => ({ ...i, checked: values.includes(i.name) })))
+        setItems(items => items.map(i => ({ ...i, selected: values.includes(i.name) })))
       }
     }, [name, values, setItems])
 
@@ -286,13 +286,13 @@ const
           required={required}
           styles={{ field: { cursor: 'pointer' }, icon: { fontSize: 12, color: cssVar('$neutralSecondary') } }}
           placeholder={placeholder}
-          value={items.filter(i => i.checked).map(i => i.text).join(', ')} />
+          value={items.filter(i => i.selected).map(i => i.text).join(', ')} />
         <Fluent.Dialog hidden={isDialogHidden} dialogContentProps={{ title: label, type: Fluent.DialogType.close }} onDismiss={cancelDialog} minWidth={600} maxWidth='90vw'>
           <Fluent.DialogContent styles={{ innerContent: { height: '65vh' }, header: { height: 0 } }}>
             <Fluent.Label>Search</Fluent.Label>
             <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
             <div className={clas('wave-s14', css.dialogControls)}>
-              <span className='wave-w5'>Selected: {items.filter(i => i.checked).length}</span>
+              <span className='wave-w5'>Selected: {items.filter(i => i.selected).length}</span>
               <div><Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link></div>
             </div>
             <Fluent.ScrollablePane styles={{ root: { marginTop: 100, boxShadow: `0px 3px 7px ${cssVar('$text3')}` } }}>
@@ -300,7 +300,7 @@ const
                 items={items.filter(i => i.show)}
                 getPageSpecification={getPageSpecification}
                 renderedWindowsAhead={3}
-                onRenderCell={onRenderCell(onChecked)}
+                onRenderCell={onRenderCell(onSelect)}
               />
             </Fluent.ScrollablePane>
           </Fluent.DialogContent>
