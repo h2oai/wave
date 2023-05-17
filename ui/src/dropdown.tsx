@@ -89,8 +89,12 @@ const
     const
       [items, setItems] = React.useState<DropdownItem[]>(choicesToDropdownItems(choices, v)),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) }))),
-      onSelect = (name: S, select = false) => {
-        setItems(items => items.map(i => ({ ...i, selected: name === i.name ? select : i.selected })))
+      onSelect = (name: S, select = false, isSingle = false) => {
+        if (isSingle) {
+          setItems(items => items.map(i => ({ ...i, selected: name === i.name, show: true })))
+        } else {
+          setItems(items => items.map(i => ({ ...i, selected: name === i.name ? select : i.selected })))
+        }
       },
       selectAll = (select = true) => () => {
         setItems(items => items.map(i => ({ ...i, selected: i.show && !i.disabled ? select : i.selected })))
@@ -100,22 +104,15 @@ const
   },
   BaseDropdown = ({ model: m }: { model: Dropdown }) => {
     const
-      { name, label, required, disabled, values = [], choices = [], trigger, placeholder } = m,
+      { name, label, required, disabled, choices = [], trigger, placeholder } = m,
       isMultivalued = !!m.values,
-      [items, setItems, , onSelect, selectAll] = useItems(choices, values),
-      [singleValue, setSingleValue] = React.useState(m.value),
-      [multiValues, setMultiValues] = React.useState(values),
+      [items, setItems, , onSelect, selectAll] = useItems(choices, m.values || m.value),
       options = choices.map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
           const optionKey = option.key as S
-          if (isMultivalued) {
-            onSelect(optionKey, !!option.selected)
-          } else {
-            setSingleValue(optionKey)
-            wave.args[name] = optionKey
-            m.value = optionKey
-          }
+          onSelect(optionKey, option.selected, !isMultivalued)
+          if (!isMultivalued) m.value = optionKey
         }
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
         if (trigger) setTimeout(() => wave.push(), 0)
@@ -123,27 +120,15 @@ const
       onSelectAll = (select = true) => () => {
         selectAll(select)()
         onChange()
-      }
+      },
+      getSelectedKeys = () => items.filter(i => i.selected).map(i => i.name)
+
+    React.useEffect(() => setItems(choicesToDropdownItems(choices, isMultivalued ? m.values : m.value)),
+      [name, m.values, m.value, isMultivalued, setItems, choices])
 
     React.useEffect(() => {
-      if (!isMultivalued) return
-      setItems(choicesToDropdownItems(choices, values))
-      setMultiValues(values)
-      wave.args[name] = values ?? null
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [name, values, isMultivalued])
-
-    React.useEffect(() => {
-      if (isMultivalued) return
-      setSingleValue(m.value || '')
-      wave.args[name] = m.value ?? null
-    }, [name, m.value, isMultivalued])
-
-    React.useEffect(() => {
-      if (!isMultivalued) return
       const nextValues = items.filter(i => i.selected).map(i => i.name)
-      setMultiValues(nextValues)
-      wave.args[name] = nextValues
+      wave.args[name] = isMultivalued ? nextValues : nextValues[0] ?? null
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items])
 
@@ -158,8 +143,8 @@ const
           required={required}
           disabled={disabled}
           multiSelect={isMultivalued || undefined}
-          selectedKey={!isMultivalued ? singleValue : undefined}
-          selectedKeys={isMultivalued ? multiValues : undefined}
+          selectedKey={!isMultivalued ? getSelectedKeys()[0] ?? '' : undefined}
+          selectedKeys={isMultivalued ? getSelectedKeys() : undefined}
           onChange={onChange}
         />
         {
