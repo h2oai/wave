@@ -89,16 +89,16 @@ const
     const
       [items, setItems] = React.useState<DropdownItem[]>(choicesToDropdownItems(choices, v)),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) }))),
-      onSelect = (name: S, select = false, isSingle = false) => {
-        if (isSingle) {
-          setItems(items => items.map(i => ({ ...i, selected: name === i.name, show: true })))
-        } else {
-          setItems(items => items.map(i => ({ ...i, selected: name === i.name ? select : i.selected })))
-        }
-      },
-      selectAll = (select = true) => () => {
-        setItems(items => items.map(i => ({ ...i, selected: i.show && !i.disabled ? select : i.selected })))
-      }
+      onSelect = (name: S, select = false, isMultivalued = true) =>
+        setItems(items => items.map(i => ({
+          ...i,
+          selected: isMultivalued ? name === i.name ? select : i.selected : name === i.name,
+          show: isMultivalued ? i.show : true
+        }))),
+      selectAll = (select = true) => () => setItems(items =>
+        items.map(i => ({ ...i, selected: i.show && !i.disabled ? select : i.selected }))
+      )
+
 
     return [items, setItems, onSearchChange, onSelect, selectAll] as const
   },
@@ -111,7 +111,7 @@ const
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
           const optionKey = option.key as S
-          onSelect(optionKey, option.selected, !isMultivalued)
+          onSelect(optionKey, option.selected, isMultivalued)
           if (!isMultivalued) m.value = optionKey
         }
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
