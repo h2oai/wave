@@ -95,7 +95,7 @@ const
           selected: isMultivalued ? name === i.name ? select : i.selected : name === i.name,
           show: isMultivalued ? i.show : true
         }))),
-      selectAll = (select = true) => () => setItems(items =>
+      selectAll = (select = true) => setItems(items =>
         items.map(i => ({ ...i, selected: i.show && !i.disabled ? select : i.selected }))
       )
 
@@ -118,7 +118,7 @@ const
         if (trigger) setTimeout(() => wave.push(), 0)
       },
       onSelectAll = (select = true) => () => {
-        selectAll(select)()
+        selectAll(select)
         onChange()
       },
       getSelectedKeys = () => items.filter(i => i.selected).map(i => i.name)
@@ -128,7 +128,7 @@ const
 
     React.useEffect(() => {
       const nextValues = items.filter(i => i.selected).map(i => i.name)
-      wave.args[name] = isMultivalued ? nextValues : nextValues[0] ?? null
+      wave.args[name] = isMultivalued ? nextValues : nextValues[0] ?? (m.value === '' ? '' : null)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items])
 
@@ -278,7 +278,7 @@ const
             <Fluent.SearchBox data-test={`${name}-search`} onChange={onSearchChange} autoFocus />
             <div className={clas('wave-s14', css.dialogControls)}>
               <span className='wave-w5'>Selected: {items.filter(i => i.selected).length}</span>
-              <div><Fluent.Link onClick={selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={selectAll(false)}>Deselect All</Fluent.Link></div>
+              <div><Fluent.Link onClick={() => selectAll()}>Select All</Fluent.Link> | <Fluent.Link onClick={() => selectAll(false)}>Deselect All</Fluent.Link></div>
             </div>
             <Fluent.ScrollablePane styles={{ root: { marginTop: 100, boxShadow: `0px 3px 7px ${cssVar('$text3')}` } }}>
               <Fluent.List
