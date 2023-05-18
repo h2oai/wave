@@ -89,10 +89,12 @@ const
     const
       [items, setItems] = React.useState<DropdownItem[]>(choicesToDropdownItems(choices, v)),
       onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) }))),
-      onSelect = (name: S, select = false, isMultivalued = true) =>
+      selectItem = (name: S, select = false, isMultivalued = true) =>
         setItems(items => items.map(i => ({
           ...i,
-          selected: isMultivalued ? name === i.name ? select : i.selected : name === i.name,
+          selected: isMultivalued
+            ? name === i.name ? select : i.selected
+            : name === i.name,
           show: isMultivalued ? i.show : true
         }))),
       selectAll = (select = true) => setItems(items =>
@@ -100,19 +102,20 @@ const
       )
 
 
-    return [items, setItems, onSearchChange, onSelect, selectAll] as const
+    return [items, setItems, onSearchChange, selectItem, selectAll] as const
   },
   BaseDropdown = ({ model: m }: { model: Dropdown }) => {
     const
-      { name, label, required, disabled, choices = [], trigger, placeholder } = m,
-      isMultivalued = !!m.values,
-      [items, setItems, , onSelect, selectAll] = useItems(choices, m.values || m.value),
+      { name, label, required, disabled, choices = [], values, trigger, placeholder } = m,
+      isMultivalued = !!values,
+      [items, setItems, , selectItem, selectAll] = useItems(choices, m.values || m.value),
       options = choices.map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
+      getSelectedKey = () => m.value === '' ? '' : items.find(i => i.selected)?.name ?? null,
+      getSelectedKeys = () => items.filter(i => i.selected).map(i => i.name),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
-          const optionKey = option.key as S
-          onSelect(optionKey, option.selected, isMultivalued)
-          if (!isMultivalued) m.value = optionKey
+          selectItem(option.key as S, option.selected, isMultivalued)
+          if (!isMultivalued) m.value = option.key as S
         }
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
         if (trigger) setTimeout(() => wave.push(), 0)
@@ -120,15 +123,13 @@ const
       onSelectAll = (select = true) => () => {
         selectAll(select)
         onChange()
-      },
-      getSelectedKeys = () => items.filter(i => i.selected).map(i => i.name)
+      }
 
-    React.useEffect(() => setItems(choicesToDropdownItems(choices, isMultivalued ? m.values : m.value)),
-      [name, m.values, m.value, isMultivalued, setItems, choices])
+    React.useEffect(() => setItems(choicesToDropdownItems(choices, isMultivalued ? values : m.value)),
+      [name, values, m.value, isMultivalued, setItems, choices])
 
     React.useEffect(() => {
-      const nextValues = items.filter(i => i.selected).map(i => i.name)
-      wave.args[name] = isMultivalued ? nextValues : nextValues[0] ?? (m.value === '' ? '' : null)
+      wave.args[name] = isMultivalued ? getSelectedKeys() : getSelectedKey()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items])
 
@@ -143,7 +144,7 @@ const
           required={required}
           disabled={disabled}
           multiSelect={isMultivalued || undefined}
-          selectedKey={!isMultivalued ? getSelectedKeys()[0] ?? '' : undefined}
+          selectedKey={!isMultivalued ? getSelectedKey() : undefined}
           selectedKeys={isMultivalued ? getSelectedKeys() : undefined}
           onChange={onChange}
         />
@@ -179,10 +180,10 @@ const
     const
       { name, choices = [], disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
-      [items, setItems, onSearchChange] = useItems(choices, model.value),
+      [items, setItems, onSearchChange, selectItem] = useItems(choices, model.value),
       toggleDialog = () => setIsDialogHidden(v => !v),
       onSelect = (itemName: S, select = false) => {
-        setItems(items => items.map(item => (({ ...item, selected: item.name === itemName ? select : false, show: true }))))
+        selectItem(itemName, select, false)
         wave.args[name] = itemName
         model.value = itemName
         // HACK: Push clears args so run it after useEffect sets them due to model.value change.
@@ -193,9 +194,9 @@ const
     React.useEffect(() => {
       if (model.value !== undefined) {
         wave.args[name] = model.value ?? null
-        setItems(items => items.map(i => ({ ...i, selected: model.value === i.name })))
+        setItems(choicesToDropdownItems(choices, model.value))
       }
-    }, [name, model.value, setItems])
+    }, [name, model.value, setItems, choices])
 
     return (
       <>
@@ -231,7 +232,7 @@ const
     const
       { name, choices = [], values = [], disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
-      [items, setItems, onSearchChange, onSelect, selectAll] = useItems(choices, values),
+      [items, setItems, onSearchChange, selectItem, selectAll] = useItems(choices, values),
       itemsOnDialogOpen = React.useRef(items),
       openDialog = () => {
         setIsDialogHidden(false)
@@ -285,7 +286,7 @@ const
                 items={items.filter(i => i.show)}
                 getPageSpecification={getPageSpecification}
                 renderedWindowsAhead={3}
-                onRenderCell={onRenderCell(onSelect)}
+                onRenderCell={onRenderCell(selectItem)}
               />
             </Fluent.ScrollablePane>
           </Fluent.DialogContent>
