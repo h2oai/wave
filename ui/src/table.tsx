@@ -902,6 +902,11 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
+      computeWidth = () => {
+        if (m.width) return m.width
+        const minWidth = m.columns.reduce((acc, column) => acc + 24 + (parseInt(column.min_width || '150')), 0)
+        return minWidth + (isSingle || isMultiple ? 48 : 0)
+      },
       sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
         if (m.pagination && m.events?.includes('sort')) {
           wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
@@ -986,7 +991,11 @@ export const
     }), [filteredItems, groups, expandedRefs, isMultiple, isSingle, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
-      <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
+      <div data-test={m.name} style={{
+        position: 'relative', height: computeHeight(),
+        width: computeWidth(),
+        minWidth: m.width ? undefined : '100%',
+      }}>
         <Fluent.Stack horizontal>
           {
             groupable && (
@@ -1016,9 +1025,20 @@ export const
           componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
-            root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },
+            root: {
+              top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0,
+              // minWidth: computeMinWidth(),
+              // maxWidth: m.width || '100%'
+              // maxWidth: '100%',
+              // width: computeMinWidth(),
+              // width: m.width || computeMinWidth(),
+              // maxWidth: m.width ? undefined : '100%'
+            },
             stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
-            contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
+            contentContainer: {
+              border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0',
+              // minWidth: computeMinWidth()
+            }
           }}>
           {
             isMultiple
