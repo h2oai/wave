@@ -626,7 +626,11 @@ const
       },
       list = (): Rec[] => {
         const keys = keysOf(tups)
-        keys.sort()
+
+        isNaN(+keys[0])
+          ? keys.sort()
+          : keys.sort((a, b) => +a - +b)
+
         const xs: Rec[] = []
         for (const k of keys) xs.push(t.make(tups[k]))
         return xs
