@@ -904,8 +904,11 @@ export const
       },
       computeWidth = () => {
         if (m.width) return m.width
-        const minWidth = m.columns.reduce((acc, column) => acc + 24 + (parseInt(column.min_width || '150')), 0)
-        return minWidth + (isSingle || isMultiple ? 48 : 0)
+        const
+          columnsWidth = m.columns.reduce((acc, col) => acc + 20 + parseInt(col.min_width || '150'), 0),
+          selectionWidth = (isSingle || isMultiple ? 48 : 0),
+          cellSizerWidth = 12
+        return columnsWidth + selectionWidth + cellSizerWidth
       },
       sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
         if (m.pagination && m.events?.includes('sort')) {
