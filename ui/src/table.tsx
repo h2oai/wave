@@ -1028,13 +1028,9 @@ export const
           componentRef={contentRef}
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
-            root: {
-              top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0,
-            },
+            root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },
             stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
-            contentContainer: {
-              border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0',
-            }
+            contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
           {
             isMultiple
