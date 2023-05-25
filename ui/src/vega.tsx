@@ -112,7 +112,12 @@ export const
             }
           }
         })
-      }, [model.data, model.grammar, model.specification]),
+        setTimeout(() => {
+          const el = ref.current
+          if (!el) return
+          if (!model.width) el.style.minWidth = '100%'
+        }, 300)
+      }, [model.data, model.grammar, model.specification, model.width]),
       onResize = debounce(1000, init),
       { name, width = 'auto', height = 'auto' } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
