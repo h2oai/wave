@@ -83,7 +83,10 @@ export const
           icon: { bottom: 2 },
           readOnlyTextField: { paddingRight: important('32px') },
           statusMessage: { marginTop: 0 },
-          root: { width: m.width || 190 }
+          root: {
+            width: m.width || 190,
+            minWidth: m.width ? undefined : '100%',
+          }
         }}
         label={m.label}
         value={value}

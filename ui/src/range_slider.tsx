@@ -79,7 +79,7 @@ export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
         disabled={disabled}
         onChange={onChange}
         onChanged={onChanged}
-        styles={{ root: { width } }}
+        styles={{ root: { width, minWidth: model.width ? undefined : '100%' } }}
       />
     </div>
   )

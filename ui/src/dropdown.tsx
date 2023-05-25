@@ -145,7 +145,10 @@ const
           data-test={name}
           styles={{
             caretDownWrapper: { lineHeight: px(26) }, // Remove unwanted overflow.
-            root: { width: m.width || 190 }
+            root: {
+              width: m.width || 190,
+              minWidth: m.width ? undefined : '100%',
+            }
           }}
           label={label}
           placeholder={placeholder}

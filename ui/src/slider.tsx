@@ -61,11 +61,10 @@ export interface Slider {
 export const
   XSlider = ({ model: m }: { model: Slider }) => {
     const
-      { min = 0, max = 100, step = 1, value = 0 } = m,
+      { min = 0, max = 100, step = 1, value = 0, width = 200 } = m,
       defaultValue = (value < min) ? min : ((value > max) ? max : value),
       onChange = (v: U) => wave.args[m.name] = v,
-      onChanged = React.useCallback((_e: MouseEvent | KeyboardEvent | TouchEvent, _value: U) => { if (m.trigger) wave.push() }, [m.trigger]),
-      digitsCount = max.toString().length
+      onChanged = React.useCallback((_e: MouseEvent | KeyboardEvent | TouchEvent, _value: U) => { if (m.trigger) wave.push() }, [m.trigger])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[m.name] = defaultValue }, [])
@@ -84,10 +83,7 @@ export const
         onChange={onChange}
         onChanged={onChanged}
         disabled={m.disabled}
-        styles={{
-          root: { width: m.width || 175 + digitsCount * 5 },
-          valueLabel: { width: digitsCount * 5 }
-        }}
+        styles={{ root: { width, minWidth: m.width ? undefined : '100%' } }}
       />
     )
   }
