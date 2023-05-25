@@ -294,18 +294,19 @@ def share(port: str, subdomain: str):
     \b
     $ wave share
     """
+    if 'Windows' in platform.system():
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
     if 'Windows' in platform.system():
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
         async def wakeup():
             while True:
                 await asyncio.sleep(1)
 
-        # HACK: Allow Ctrl-C to work on Windows when opening multiple TCP connections.
+        # HACK: Enable Ctrl-C on Windows when opening multiple TCP connections.
         # https://stackoverflow.com/questions/27480967/why-does-the-asyncios-event-loop-suppress-the-keyboardinterrupt-on-windows.
         loop.create_task(wakeup())
 
