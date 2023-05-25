@@ -116,7 +116,7 @@ export const
       onResize = debounce(1000, init),
       { name, width = 'auto', height = 'auto' } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
-        ? { flexGrow: 1 }
+        ? { flexGrow: 1, width: 400 }
         : { width: formItemWidth(width), height }
 
     React.useEffect(() => { updateData() }, [updateData, model])
