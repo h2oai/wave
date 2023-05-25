@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 import os
 import platform
 import shutil
@@ -293,30 +294,43 @@ def share(port: str, subdomain: str):
     \b
     $ wave share
     """
+
+    loop = asyncio.get_event_loop()
     try:
-        res = httpx.get(f'https://h2oai.app/{subdomain}', headers={'Content-Type': 'application/json'})
-        if res.status_code != 200:
-            print('Could not connect to the server.')
-            exit(1)
-
-        res = res.json()
-        print(f'BETA: Proxying localhost:{port} ==> {res["url"]}')
-        print('The URL is accesible to anyone on the internet. \x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
-        print('Press Ctrl+C to stop sharing.')
-
-        threads = []
-        for _ in range(res['max_conn_count']):
-            # Run threads as daemons so that they do not prevent the main thread from exiting via CTRL + C.
-            t = Thread(target=listen_on_socket, args=('127.0.0.1', int(port), 'h2oai.app', res['port']), daemon=True)
-            t.start()
-            threads.append(t)
-        # Block the main thread since the threads are daemons.
-        while True:
-            threads = [t for t in threads if t.is_alive()]
-            if not threads:
-                break
-            time.sleep(1)
-
-    # Handle ctrl+c
+        loop.run_until_complete(_share(port, subdomain))
     except KeyboardInterrupt:
-        pass
+        tasks = asyncio.all_tasks(loop)
+        for task in tasks:
+            task.cancel()
+        loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
+        loop.close()
+
+
+async def _share(port: str, subdomain: str):
+    if _scan_free_port(port) == port:
+        print(f'Could not connect to localhost:{port}. Please make sure your app is running.')
+        exit(1)
+
+    res = httpx.get(f'https://h2oai.app/{subdomain}', headers={'Content-Type': 'application/json'})
+    if res.status_code != 200:
+        print('Could not connect to the remote sharing server.')
+        exit(1)
+
+    res = res.json()
+    print(f'BETA: Proxying localhost:{port} ==> {res["url"]}')
+    print('\x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
+    print('Press Ctrl+C to stop sharing.')
+
+    max_conn_count = res['max_conn_count']
+    step = 100 if max_conn_count > 10 else max_conn_count
+
+    tasks = []
+    for _ in range(max_conn_count // step):
+        for _ in range(step):
+            tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', int(port), 'h2oai.app', res['port'])))
+        await asyncio.sleep(1)
+    # Handle the rest if any.
+    for _ in range(max_conn_count % step):
+        tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', int(port), 'h2oai.app', res['port'])))
+
+    await asyncio.gather(*tasks)

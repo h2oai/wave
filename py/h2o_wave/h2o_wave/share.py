@@ -1,29 +1,26 @@
-import socket
-import ssl
-from threading import Thread
+import asyncio
 
 
-def pipe(s1: socket.socket, s2: socket.socket) -> None:
+async def pipe(r: asyncio.StreamReader, w: asyncio.StreamWriter) -> None:
     while True:
-        data = s1.recv(4096)
-        s2.sendall(data)
-        # Client disconnected.
+        data = await r.read(4096)
         if not data:
-            return
+            break
+        w.write(data)
+        await w.drain()
 
 
-def listen_on_socket(local_ip: str, local_port: int, remote_host: str, remote_port: int) -> None:
+async def listen_on_socket(local_host: str, local_port: int, remote_host: str, remote_port: int) -> None:
     while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as local_socket:
-            local_socket.connect((local_ip, local_port))
-            remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            with ssl.wrap_socket(remote_socket) as remote_socket:
-                remote_socket.connect((remote_host, remote_port))
+        try:
+            local_reader, local_writer = await asyncio.open_connection(local_host, local_port)
+            remote_reader, remote_writer = await asyncio.open_connection(remote_host, remote_port, ssl=True)
 
-                remote_local = Thread(target=pipe, args=(remote_socket, local_socket))
-                local_remote = Thread(target=pipe, args=(local_socket, remote_socket))
+            await asyncio.gather(pipe(local_reader, remote_writer), pipe(remote_reader, local_writer))
 
-                remote_local.start()
-                local_remote.start()
-                remote_local.join()
-                local_remote.join()
+        # Swallow exceptions and reconnect.
+        except Exception:
+            pass
+        finally:
+            local_writer.close()
+            remote_writer.close()
