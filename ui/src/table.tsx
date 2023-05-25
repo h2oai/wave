@@ -995,7 +995,8 @@ export const
 
     return (
       <div data-test={m.name} style={{
-        position: 'relative', height: computeHeight(),
+        position: 'relative',
+        height: computeHeight(),
         width: computeWidth(),
         minWidth: m.width ? undefined : '100%',
       }}>
