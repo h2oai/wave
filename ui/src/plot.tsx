@@ -1080,8 +1080,9 @@ export const
         cat10 = cat10.map(cssVarValue)
         const el = container.current
         if (!el) return
-        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
+        // If card does not have specified height/width, it uses content. Since the wrapper is empty, it takes very little space - set to 300px/400px by default.
         if (el.clientHeight < 30) el.style.height = '300px'
+        if (el.clientWidth < 30) el.style.width = '400px'
         const
           raw_data = unpack<any[]>(model.data),
           raw_plot = unpack<Plot>(model.plot),
