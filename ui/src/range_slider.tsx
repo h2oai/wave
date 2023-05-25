@@ -54,10 +54,9 @@ export interface RangeSlider {
 
 export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
   const
-    { min = 0, max = 100, step = 1, min_value, max_value = max, disabled, trigger, name, label, width } = model,
+    { min = 0, max = 100, step = 1, min_value, max_value = max, disabled, trigger, name, label, width = 200 } = model,
     onChange = React.useCallback((_val: U, val_range?: [U, U]) => { if (val_range) wave.args[name] = val_range }, [name]),
-    onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger]),
-    digitsCount = max.toString().length
+    onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger])
 
   React.useEffect(() => {
     wave.args[name] = [
@@ -80,10 +79,7 @@ export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
         disabled={disabled}
         onChange={onChange}
         onChanged={onChanged}
-        styles={{
-          root: { width: width || 160 + digitsCount * 5 * 2 },
-          valueLabel: { width: digitsCount * 5 }
-        }}
+        styles={{ root: { width } }}
       />
     </div>
   )
