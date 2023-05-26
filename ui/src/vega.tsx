@@ -82,9 +82,8 @@ export const
         const spec = JSON.parse(model.specification)
         // HACK: Vega calculates dimensions with extra 10px for some reason, increase container for 10px as well.
         if (!isNaN(spec.height)) el.style.height = `${spec.height + 10}px`
-        if (!isNaN(spec.width)) el.style.width = `${spec.width + 10}px`
-        // If card does not have specified height/width, it uses content. Since the wrapper is empty, it takes very little space - set to 300px/400px by default.
-        if (isNaN(spec.height) && el.clientHeight < 30) el.style.height = '300px'
+        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
+        else if (el.clientHeight < 30) el.style.height = '300px'
 
         const
           data = unpack<any[]>(model.data),

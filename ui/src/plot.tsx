@@ -1081,7 +1081,7 @@ export const
         cat10 = cat10.map(cssVarValue)
         const el = container.current
         if (!el) return
-        // If card does not have specified height/width, it uses content. Since the wrapper is empty, it takes very little space - set to 300px/400px by default.
+        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
         if (el.clientHeight < 30) el.style.height = '300px'
         const
           raw_data = unpack<any[]>(model.data),
@@ -1163,7 +1163,10 @@ export const
     const
       { width = 'auto', height = 'auto', name } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
-        ? { flexGrow: 1, width: 400 }
+        ? {
+          flexGrow: 1,
+          width: 400  // Set the default width
+        }
         : { width: formItemWidth(width), height }
     return <div data-test={name} style={style} className={css.plot} ref={container} />
   }
