@@ -66,6 +66,10 @@ Do not specify addresses with `https` protocol if you haven't configured Wave se
 
 See a step-by-step [blog post](https://medium.com/@gfousas/deploy-a-wave-app-on-an-aws-ec2-instance-1fe508f36ef) by [Greg Fousas](https://github.com/fousasg).
 
+## Azure
+
+See a step-by-step [blog post](https://medium.com/@leteve.audrey/run-h2o-wave-app-with-azure-app-service-342d32a009f8) by [Audrey Leteve](https://github.com/audreyleteve).
+
 ## Hugging Face Spaces
 
 See a step-by-step [blog post](https://medium.com/@unusualcode/deploy-a-wave-app-to-hugging-face-spaces-8b9a2bda5e46).
