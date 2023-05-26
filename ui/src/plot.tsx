@@ -1165,7 +1165,7 @@ export const
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
         ? {
           flexGrow: 1,
-          width: 400  // Set the default width
+          width: 400
         }
         : { width: formItemWidth(width), height }
     return <div data-test={name} style={style} className={css.plot} ref={container} />
