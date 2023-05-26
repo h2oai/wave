@@ -45,13 +45,13 @@ const
       padding: 6,
       borderRadius: 4,
       maxWidth: '65ch',
-      borderTopRightRadius: 0,
+      borderTopLeftRadius: 0,
       textAlign: 'left',
     },
     userMsg: {
       backgroundColor: cssVar('$themePrimary'),
-      borderTopRightRadius: 4,
-      borderTopLeftRadius: 0,
+      borderTopLeftRadius: 4,
+      borderTopRightRadius: 0,
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
@@ -112,8 +112,8 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
             key={idx}
             className={css.msgWrapper}
             style={{
-              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 10 : 3,
-              textAlign: fromUser ? 'left' : 'right',
+              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 3 : 10,
+              textAlign: fromUser ? 'right' : 'left',
               color: getContrast(fromUser ? '$themePrimary' : '$text')
             }} >
             <span
