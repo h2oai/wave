@@ -59,16 +59,16 @@ const
   }),
   getCornerStyle = (prev?: B, curr?: B, next?: B): React.CSSProperties | undefined => {
     // First.
-    if (curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
-    if (!curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
+    if (curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
+    if (!curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
 
     // Middle.
-    if (curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
-    if (!curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+    if (curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+    if (!curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
 
     // Last.
-    if (curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
-    if (!curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
+    if (curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
+    if (!curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
   }
 
 type ChatMessage = { msg: S, fromUser: B }
