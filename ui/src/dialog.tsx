@@ -44,7 +44,8 @@ export interface Dialog {
   events?: S[]
 }
 
-export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: 1 } } }
+// z-index needs to be higher than sticky header in ui.table
+export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: 3 } } }
 
 export default bond(() => {
   const

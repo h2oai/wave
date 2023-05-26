@@ -120,7 +120,7 @@ export const
                   animationFillMode: 'forwards',
                   maxWidth: 500,
                   width: pc(100),
-                  zIndex: 3, // Needs to be higher than Fluent UI Panel's z-index
+                  zIndex: 5, // Needs to be higher than z-index of ui.time_picker
                   ...getPosition(currentModel?.position, shouldBeOpen)
                 },
                 content: { alignItems: isMultiline ? 'start' : 'center' },
