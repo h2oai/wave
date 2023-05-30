@@ -281,8 +281,8 @@ export const
       >{components}</div>
     )
   },
-  XInline = ({ model: m }: { model: Inline }) => {
-    return <XComponents
+  XInline = ({ model: m }: { model: Inline }) => (
+    <XComponents
       items={m.items}
       justify={m.justify || 'start'}
       align={m.align || 'center'}
@@ -290,8 +290,7 @@ export const
       height={m.height}
       direction={m.direction || 'row'}
     />
-
-  }
+  )
 
 
 const
