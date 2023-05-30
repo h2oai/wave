@@ -21,6 +21,7 @@ import { Markdown } from './markdown'
 import { css, notificationTypes, toMessageBarType } from './message_bar'
 import { important, pc } from './theme'
 import { bond, wave } from './ui'
+import { Z_INDEX } from './parts/zindex'
 
 /**
  * Create a notification bar.
@@ -120,7 +121,7 @@ export const
                   animationFillMode: 'forwards',
                   maxWidth: 500,
                   width: pc(100),
-                  zIndex: 5, // Needs to be higher than z-index of ui.time_picker
+                  zIndex: Z_INDEX.NOTIFICATION_BAR,
                   ...getPosition(currentModel?.position, shouldBeOpen)
                 },
                 content: { alignItems: isMultiline ? 'start' : 'center' },

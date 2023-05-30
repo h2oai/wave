@@ -23,6 +23,7 @@ import DateFnsUtils from '@date-io/date-fns'
 import { VirtualElement } from '@popperjs/core/lib'
 import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models'
 import { format } from 'date-fns'
+import { Z_INDEX } from './parts/zindex'
 
 /**
  * Create a time picker.
@@ -81,7 +82,7 @@ const
   popoverProps: Partial<PopperProps> | undefined = {
     placement: 'bottom-start',
     sx: {
-      zIndex: 4, // Needs to be higher than ui.dialog/ui.side_panel, but lower than ui.notification_bar.
+      zIndex: Z_INDEX.TIME_PICKER,
       '& .MuiPaper-root': {
         borderRadius: '2px',
         boxShadow: `${cssVar('$text1')} 0px 6.4px 14.4px 0px, ${cssVar('$text2')} 0px 1.2px 3.6px 0px`

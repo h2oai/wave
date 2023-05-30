@@ -266,12 +266,17 @@ export const
           all = page.items(),
           [metas, cards] = segregate(all, c => c.state.view === 'meta')
 
+        if (cards.length) {
+          console.log('rendering pages', cards)
+
+        }
         if (metas.length) {
           onMetaCardChanged?.dispose()
           metaCard = metas[0]
           preload(metaCard as any) // causes layoutB to be set, if available.
           onMetaCardChanged = on(metaCard.changed, () => preload(metaCard as any))
         }
+        console.log('layoutsB', layoutsB())
         return layoutsB().length
           ? <FlexLayout name={page.key} cards={cards} />
           : <GridLayout name={page.key} cards={cards} />
