@@ -241,7 +241,7 @@ type XComponentsProps = {
 }
 
 const
-  noWidthComponentKeys = ['date_picker', 'dropdown', 'toggle', 'slider', 'range_slider', 'table', 'visualization', 'vega_visualization'],
+  noWidthComponentKeys = ['date_picker', 'dropdown', 'slider', 'range_slider', 'table', 'visualization', 'vega_visualization'],
   getComponentWidth = (componentKey: S, isInline: B) => isInline && noWidthComponentKeys.includes(componentKey) ? '400px' : 'auto'
 
 export const
