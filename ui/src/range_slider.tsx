@@ -54,7 +54,7 @@ export interface RangeSlider {
 
 export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
   const
-    { min = 0, max = 100, step = 1, min_value, max_value = max, disabled, trigger, name, label, width = 200 } = model,
+    { min = 0, max = 100, step = 1, min_value, max_value = max, disabled, trigger, name, label } = model,
     onChange = React.useCallback((_val: U, val_range?: [U, U]) => { if (val_range) wave.args[name] = val_range }, [name]),
     onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger])
 
@@ -79,7 +79,6 @@ export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
         disabled={disabled}
         onChange={onChange}
         onChanged={onChanged}
-        styles={{ root: { width, minWidth: model.width ? undefined : '100%' } }}
       />
     </div>
   )

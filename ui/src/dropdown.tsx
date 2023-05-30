@@ -143,13 +143,7 @@ const
       <>
         <Fluent.Dropdown
           data-test={name}
-          styles={{
-            caretDownWrapper: { lineHeight: px(26) }, // Remove unwanted overflow.
-            root: {
-              width: m.width || 190,
-              minWidth: m.width ? undefined : '100%',
-            }
-          }}
+          styles={{ caretDownWrapper: { lineHeight: px(26) } }} // Remove unwanted overflow.
           label={label}
           placeholder={placeholder}
           options={options}

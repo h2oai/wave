@@ -61,7 +61,7 @@ export interface Slider {
 export const
   XSlider = ({ model: m }: { model: Slider }) => {
     const
-      { min = 0, max = 100, step = 1, value = 0, width = 200 } = m,
+      { min = 0, max = 100, step = 1, value = 0 } = m,
       defaultValue = (value < min) ? min : ((value > max) ? max : value),
       onChange = (v: U) => wave.args[m.name] = v,
       onChanged = React.useCallback((_e: MouseEvent | KeyboardEvent | TouchEvent, _value: U) => { if (m.trigger) wave.push() }, [m.trigger])
@@ -83,7 +83,6 @@ export const
         onChange={onChange}
         onChanged={onChanged}
         disabled={m.disabled}
-        styles={{ root: { width, minWidth: m.width ? undefined : '100%' } }}
       />
     )
   }

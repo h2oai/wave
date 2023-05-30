@@ -902,14 +902,6 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight + bottomBorder
       },
-      computeWidth = () => {
-        if (m.width) return m.width
-        const
-          columnsWidth = m.columns.reduce((acc, col) => acc + 20 + parseInt(col.min_width || '150'), 0),
-          selectionWidth = (isSingle || isMultiple ? 48 : 0),
-          cellSizerWidth = 12
-        return columnsWidth + selectionWidth + cellSizerWidth
-      },
       sort = React.useCallback((column: WaveColumn, sortAsc: B) => {
         if (m.pagination && m.events?.includes('sort')) {
           wave.emit(m.name, 'sort', { [column.fieldName || column.name]: sortAsc })
@@ -994,12 +986,7 @@ export const
     }), [filteredItems, groups, expandedRefs, isMultiple, isSingle, items, m, onFilterChange, selectedFilters, selection, sort, setFiltersInBulk])
 
     return (
-      <div data-test={m.name} style={{
-        position: 'relative',
-        height: computeHeight(),
-        width: computeWidth(),
-        minWidth: m.width ? undefined : '100%',
-      }}>
+      <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
         <Fluent.Stack horizontal>
           {
             groupable && (

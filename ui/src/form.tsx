@@ -240,6 +240,10 @@ type XComponentsProps = {
   direction?: 'row' | 'column'
 }
 
+const
+  noWidthComponentKeys = ['date_picker', 'dropdown', 'toggle', 'slider', 'range_slider', 'table', 'visualization', 'vega_visualization'],
+  getComponentWidth = (componentKey: S, isInline: B) => isInline && noWidthComponentKeys.includes(componentKey) ? '400px' : 'auto'
+
 export const
   XComponents = ({ items, justify, align, inset, height, direction = 'column' }: XComponentsProps) => {
     const
@@ -247,7 +251,8 @@ export const
         const
           // All form items are wrapped by their component name (first and only prop of "m").
           [componentKey] = Object.keys(m),
-          { name, visible = true, width = 'auto', height } = m[componentKey],
+          isInline = !!(justify || align),
+          { name, visible = true, width = getComponentWidth(componentKey, isInline), height } = m[componentKey],
           visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
           // TODO: Ugly, maybe use ui.inline's 'align' prop instead?
           alignSelf = componentKey === 'links' ? 'flex-start' : undefined
@@ -276,8 +281,8 @@ export const
       >{components}</div>
     )
   },
-  XInline = ({ model: m }: { model: Inline }) => (
-    <XComponents
+  XInline = ({ model: m }: { model: Inline }) => {
+    return <XComponents
       items={m.items}
       justify={m.justify || 'start'}
       align={m.align || 'center'}
@@ -285,7 +290,8 @@ export const
       height={m.height}
       direction={m.direction || 'row'}
     />
-  )
+
+  }
 
 
 const

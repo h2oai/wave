@@ -110,16 +110,11 @@ export const
             }
           }
         })
-        setTimeout(() => {
-          const el = ref.current
-          if (!el) return
-          if (!model.width) el.style.minWidth = '100%'
-        }, 300)
-      }, [model.data, model.grammar, model.specification, model.width]),
+      }, [model.data, model.grammar, model.specification]),
       onResize = debounce(1000, init),
       { name, width = 'auto', height = 'auto' } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
-        ? { flexGrow: 1, width: 400 }
+        ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
 
     React.useEffect(() => { updateData() }, [updateData, model])

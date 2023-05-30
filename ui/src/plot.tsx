@@ -1070,7 +1070,6 @@ export const
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
-        if (!model.width) el.style.minWidth = '100%'
         if (el.clientHeight !== h || el.clientWidth !== w) {
           currentChart.current?.destroy()
           init()
@@ -1163,10 +1162,7 @@ export const
     const
       { width = 'auto', height = 'auto', name } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
-        ? {
-          flexGrow: 1,
-          width: 400
-        }
+        ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
     return <div data-test={name} style={style} className={css.plot} ref={container} />
   }
