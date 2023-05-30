@@ -21,7 +21,7 @@ import { Markdown } from './markdown'
 import { css, notificationTypes, toMessageBarType } from './message_bar'
 import { important, pc } from './theme'
 import { bond, wave } from './ui'
-import { Z_INDEX } from './parts/zindex'
+import { Z_INDEX } from './parts/styleConstants'
 
 /**
  * Create a notification bar.

@@ -23,7 +23,7 @@ import DateFnsUtils from '@date-io/date-fns'
 import { VirtualElement } from '@popperjs/core/lib'
 import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models'
 import { format } from 'date-fns'
-import { Z_INDEX } from './parts/zindex'
+import { Z_INDEX } from './parts/styleConstants'
 
 /**
  * Create a time picker.

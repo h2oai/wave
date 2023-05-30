@@ -22,7 +22,7 @@ import { NavGroup, XNav } from './nav'
 import { centerMixin, clas, cssVar, important, padding, px } from './theme'
 import { Command } from './toolbar'
 import { bond } from './ui'
-import { Z_INDEX } from './parts/zindex'
+import { Z_INDEX } from './parts/styleConstants'
 
 const css = stylesheet({
   card: {

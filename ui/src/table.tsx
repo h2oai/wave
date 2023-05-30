@@ -24,7 +24,7 @@ import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
 import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 import { wave } from './ui'
-import { Z_INDEX } from './parts/zindex'
+import { Z_INDEX } from './parts/styleConstants'
 
 /** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
 interface TablePagination {
