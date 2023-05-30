@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, Id, S, xid } from 'h2o-wave'
+import { B, Box, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'
-import { getZIndex, Z_INDEX } from './parts/zindex'
+import { Z_INDEX } from './parts/zindex'
 
 export const dialogB: Box<Dialog | null> = box()
 
@@ -45,7 +45,7 @@ export interface Dialog {
   events?: S[]
 }
 
-export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: getZIndex(Z_INDEX.DIALOG, xid()) } } }
+export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: Z_INDEX.DIALOG } } }
 
 export default bond(() => {
   const

@@ -18,7 +18,6 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
 import { clas, cssVar, important, margin } from './theme'
-import { getZIndex } from './parts/zindex'
 
 type Slot = {
   left: U
@@ -353,7 +352,6 @@ const css = stylesheet({
 export const
   getCardEffectClass = (c: Card) => {
     const { effect, marginless } = getCardStyle(c)
-    console.log('ec', c)
     return clas(css.slot, getEffectClass(effect), marginless ? css.marginless : '')
   },
   toCardEffect = (color?: 'card' | 'transparent' | 'primary') => {
@@ -374,7 +372,7 @@ export const
           placement = grid.place(c.state.box),
           { left, top, right, bottom, width, height } = placement,
           display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
-          zIndex = c.name === '__unhandled_error__' ? 1 : getZIndex(0, 'x0', name)
+          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
           <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex, margin: 0 }}>
             <CardView card={c} />
