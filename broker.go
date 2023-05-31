@@ -45,7 +45,7 @@ var (
 	emptyJSON  = []byte("{}")
 	resetMsg   []byte
 	invalidMsg = Msg{t: badMsgT}
-	logoutMsg  = []byte(`{"":{"@system":{"logout":true}}}`)
+	logoutMsg  = []byte(`{"data": {"":{"@system":{"logout":true}}}}`)
 )
 
 // Pub represents a published message

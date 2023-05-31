@@ -32,7 +32,7 @@ Wave apps support *hash routing*, a popular client-side mechanism where the loca
 
 To set the location hash, prefix `#` to the `name` attribute of command-like components. When the command is invoked, the location hash is set to the name of the command.
 
-For example, if a button is named `foo` is clicked, `q.args.foo` is set to `True`. Instead, if a button named `#foo` is clicked, the location hash is set to `foo` (`q.args.foo` is not set). 
+For example, if a button is named `foo` is clicked, `q.args.foo` is set to `True`. Instead, if a button named `#foo` is clicked, the location hash is set to `foo` (`q.args.foo` is not set).
 
 ```py {8-9}
 from h2o_wave import Q, main, app, ui
@@ -52,6 +52,7 @@ async def serve(q: Q):
 Names don't have to be alphanumeric, so you can use names with nested sub-paths like `#foo/bar`, `#foo/bar/baz`, `#foo/bar/baz/qux` to make route-handling more manageable.
 
 The components that support setting a location hash are:
+
 - `ui.button()`
 - `ui.command()`
 - `ui.nav_item()`
@@ -80,7 +81,6 @@ async def serve(q: Q):
 
 Combining the two examples above gives us a basic pattern for handling routes and updating the user interface:
 
-
 ```py {7,9,11}
 from h2o_wave import Q, main, app, ui
 
@@ -107,7 +107,6 @@ async def serve(q: Q):
 ### Organizing code
 
 In most sizeable applications, the logic in the above `if/elif/else` conditionals can call into sub-functions, possibly spread across other modules:
-
 
 ```py {23,25,27}
 from h2o_wave import Q, main, app, ui
@@ -145,7 +144,6 @@ async def serve(q: Q):
 
 As your application gets larger, using the above `if/elif/else` conditionals can seem tedious or repetitive. If so, you can use `on` and `handle_on` to reduce the boilerplate.
 
-
 ```py {3,7,22}
 from h2o_wave import Q, main, app, ui, on, handle_on
 
@@ -175,7 +173,6 @@ async def serve(q: Q):
 ```
 
 In the above example, the `@on('#heads')` is read as "if `q.args['#']` is `'heads'`, then invoke the function the `@on()` is applied to" - in this case, `on_heads()`.
-
 
 ### Pattern matching
 
@@ -328,3 +325,13 @@ async def on_user_logout(q: Q):
 ```
 
 Note that when a user logs out of the Wave daemon, all the apps linked to the daemon get notified with a `@system.logout` event.
+
+### Handling client (browser tab) disconnect
+
+To get notified when a user closes the tab, use the system-wide `@system.client_disconnect` event.
+
+```py
+@on('@system.client_disconnect')
+async def on_client_disconnect(q: Q):
+    print('Client disconnected')
+```
