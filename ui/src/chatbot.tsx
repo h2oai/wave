@@ -45,13 +45,13 @@ const
       padding: 6,
       borderRadius: 4,
       maxWidth: '65ch',
-      borderTopRightRadius: 0,
+      borderTopLeftRadius: 0,
       textAlign: 'left',
     },
     userMsg: {
       backgroundColor: cssVar('$themePrimary'),
-      borderTopRightRadius: 4,
-      borderTopLeftRadius: 0,
+      borderTopLeftRadius: 4,
+      borderTopRightRadius: 0,
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
@@ -59,16 +59,16 @@ const
   }),
   getCornerStyle = (prev?: B, curr?: B, next?: B): React.CSSProperties | undefined => {
     // First.
-    if (curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
-    if (!curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
+    if (curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
+    if (!curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
 
     // Middle.
-    if (curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
-    if (!curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+    if (curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+    if (!curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
 
     // Last.
-    if (curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
-    if (!curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
+    if (curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
+    if (!curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
   }
 
 type ChatMessage = { msg: S, fromUser: B }
@@ -112,8 +112,8 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
             key={idx}
             className={css.msgWrapper}
             style={{
-              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 10 : 3,
-              textAlign: fromUser ? 'left' : 'right',
+              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 3 : 10,
+              textAlign: fromUser ? 'right' : 'left',
               color: getContrast(fromUser ? '$themePrimary' : '$text')
             }} >
             <span
