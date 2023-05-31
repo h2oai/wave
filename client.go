@@ -94,6 +94,7 @@ func (c *Client) listen() {
 	defer func() {
 		app := c.broker.getApp(c.appPath)
 		if app != nil {
+			app.forward(c.id, c.session, []byte(`{"data": {"":{"@system":{"client_disconnect":true}}}}`))
 			if err := app.disconnect(c.id); err != nil {
 				echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
 			}
