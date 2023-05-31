@@ -1,0 +1,8 @@
+export const Z_INDEX = {
+    HEADER: 1,
+    TABLE_GROUPS_HEADER: 1,
+    TABLE_HEADER: 2,
+    DIALOG: 3,
+    TIME_PICKER: 4,
+    NOTIFICATION_BAR: 5
+}

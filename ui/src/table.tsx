@@ -24,6 +24,7 @@ import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
 import { border, cssVar, important, margin, rem } from './theme'
 import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 import { wave } from './ui'
+import { Z_INDEX } from './parts/styleConstants'
 
 /** Configure table pagination. Use as `pagination` parameter to `ui.table()` */
 interface TablePagination {
@@ -445,7 +446,7 @@ const
                   position: 'sticky',
                   top: 48,
                   backgroundColor: cssVar('$card'),
-                  zIndex: 1
+                  zIndex: Z_INDEX.TABLE_GROUPS_HEADER
                 },
                 stylesProps.selected
                   ? {
@@ -1017,7 +1018,7 @@ export const
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
             root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },
-            stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: 2 },
+            stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: Z_INDEX.TABLE_HEADER },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
           {

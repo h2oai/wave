@@ -22,6 +22,7 @@ import { NavGroup, XNav } from './nav'
 import { centerMixin, clas, cssVar, important, padding, px } from './theme'
 import { Command } from './toolbar'
 import { bond } from './ui'
+import { Z_INDEX } from './parts/styleConstants'
 
 const css = stylesheet({
   card: {
@@ -40,7 +41,7 @@ const css = stylesheet({
     display: 'flex',
     alignItems: 'center',
     cursor: 'default',
-    zIndex: 1
+    zIndex: Z_INDEX.HEADER,
   },
   center: {
     ...centerMixin(),
@@ -140,7 +141,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
             </div>
           </div>
           {secondary_items && <div className={css.center}><XInline model={{ items: secondary_items }} /></div>}
-          {items && <div style={{ zIndex: 1, marginRight: state.commands ? 30 : undefined }}><XInline model={{ items }} /></div>}
+          {items && <div style={{ zIndex: Z_INDEX.HEADER, marginRight: state.commands ? 30 : undefined }}><XInline model={{ items }} /></div>}
           {nav && <Navigation items={nav} isOpenB={navB} />}
         </div>
       )

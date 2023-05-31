@@ -17,6 +17,7 @@ import { B, Box, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'
+import { Z_INDEX } from './parts/styleConstants'
 
 export const dialogB: Box<Dialog | null> = box()
 
@@ -44,7 +45,7 @@ export interface Dialog {
   events?: S[]
 }
 
-export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: 1 } } }
+export const layerProps: Fluent.ILayerProps = { styles: { root: { zIndex: Z_INDEX.DIALOG } } }
 
 export default bond(() => {
   const
