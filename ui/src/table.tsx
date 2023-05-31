@@ -446,7 +446,7 @@ const
                   position: 'sticky',
                   top: 48,
                   backgroundColor: cssVar('$card'),
-                  zIndex: Z_INDEX.TABLE_HEADER
+                  zIndex: Z_INDEX.TABLE_GROUPS_HEADER
                 },
                 stylesProps.selected
                   ? {
@@ -1018,7 +1018,7 @@ export const
           scrollbarVisibility={Fluent.ScrollbarVisibility.auto}
           styles={{
             root: { top: groupable || searchableKeys.length ? (groupable ? 74 : 48) : 0, bottom: shouldShowFooter ? 46 : 0 },
-            stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: Z_INDEX.TABLE_GROUPS_HEADER },
+            stickyAbove: { right: important('12px'), border: border(2, 'transparent'), zIndex: Z_INDEX.TABLE_HEADER },
             contentContainer: { border: border(2, cssVar('$neutralLight')), borderRadius: '4px 4px 0 0' }
           }}>
           {
