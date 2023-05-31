@@ -332,6 +332,6 @@ To get notified when a user closes the tab, use the system-wide `@system.client_
 
 ```py
 @on('@system.client_disconnect')
-async def on_user_logout(q: Q):
+async def on_client_disconnect(q: Q):
     print('Client disconnected')
 ```
