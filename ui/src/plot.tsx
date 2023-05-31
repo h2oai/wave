@@ -1067,14 +1067,6 @@ export const
       currentPlot = React.useRef<Plot | null>(null),
       themeWatchRef = React.useRef<Disposable | null>(null),
       originalDataRef = React.useRef<any[]>([]),
-      checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
-        const el = container.current
-        if (!el) return
-        if (el.clientHeight !== h || el.clientWidth !== w) {
-          currentChart.current?.destroy()
-          init()
-        }
-      },
       init = async () => {
         // Map CSS var colors to their hex values.
         cat10 = cat10.map(cssVarValue)
@@ -1131,9 +1123,6 @@ export const
             }
           }
           chart.render()
-          // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
-          // same as after Layout phase. If not, rerender the plot again.
-          setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
           themeWatchRef.current = on(themeB, themesB, () => {
             cat10 = cat10.map(cssVarValue)
             const [geometries, annotations] = makeMarks(marks)

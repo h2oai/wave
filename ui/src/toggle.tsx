@@ -59,7 +59,10 @@ export const
     return (
       <Fluent.Toggle
         data-test={m.name}
-        styles={{ root: { marginBottom: 0 } }}
+        styles={{
+          root: { marginBottom: 0 },
+          text: { width: 21 }  // Prevent jumping when the label changes from 'On' to 'Off'.
+        }}
         label={m.label}
         defaultChecked={m.value}
         onChange={onChange}
