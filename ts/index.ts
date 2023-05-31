@@ -182,6 +182,7 @@ export type Packed<T> = T | S
 export interface Data {
   list(): (Rec | null)[]
   dict(): Dict<Rec>
+  getTupByIdx(i: U): Rec | null
 }
 
 interface OpsD {
@@ -399,6 +400,14 @@ export function unpack<T>(data: any): T {
       : data
 }
 
+export function unpackByIdx<T = any>(data: any, idx: U): T {
+  return (typeof data === 'string')
+    ? decodeStringByIdx(data, idx)
+    : (isData(data))
+      ? data.getTupByIdx(idx)
+      : data?.[idx] || getObjectValueByIdx(data, idx)
+}
+
 const
   errorCodes: Dict<WaveErrorCode> = {
     not_found: WaveErrorCode.PageNotFound,
@@ -406,6 +415,22 @@ const
   decodeType = (d: S): [S, S] => {
     const i = d.indexOf(':')
     return (i > 0) ? [d.substring(0, i), d.substring(i + 1)] : ['', d]
+  },
+  rowToRowObj = (item: any, fields: any) => {
+    const rec: Rec = {}
+    for (let j = 0; j < fields.length; j++) {
+      const f = fields[j], v = item[j]
+      rec[f] = v
+    }
+    return rec
+  },
+  colToRowObj = (columns: any, fields: any, idx: U) => {
+    const rec: Rec = {}
+    for (let j = 0; j < fields.length; j++) {
+      const f = fields[j], v = columns[j][idx]
+      rec[f] = v
+    }
+    return rec
   },
   decodeString = (data: S): any => {
     if (data === '') return data
@@ -423,17 +448,11 @@ const
           const [fields, rows] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
           if (!Array.isArray(rows)) return data
-          const w = fields.length // width
           const recs: Rec[] = []
           for (const r of rows) {
             if (!Array.isArray(r)) continue
-            if (r.length !== w) continue
-            const rec: Rec = {}
-            for (let j = 0; j < w; j++) {
-              const f = fields[j], v = r[j]
-              rec[f] = v
-            }
-            recs.push(rec)
+            if (r.length !== fields.length) continue
+            recs.push(rowToRowObj(r, fields))
           }
           return recs
         } catch (e) {
@@ -445,18 +464,12 @@ const
           const [fields, columns] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
           if (!Array.isArray(columns)) return data
-          const w = fields.length // width
-          if (columns.length !== w) return data
+          if (columns.length !== fields.length) return data
           if (columns.length === 0) return data
           const n = columns[0].length
-          const recs = new Array<Rec>(n)
+          const recs: Rec[] = []
           for (let i = 0; i < n; i++) {
-            const rec: Rec = {}
-            for (let j = 0; j < w; j++) {
-              const f = fields[j], v = columns[j][i]
-              rec[f] = v
-            }
-            recs[i] = rec
+            recs.push(colToRowObj(columns, fields, i))
           }
           return recs
         } catch (e) {
@@ -465,6 +478,31 @@ const
         break
     }
     return data
+  },
+  decodeStringByIdx = (data: S, idx: U): any => {
+    if (data === '') return
+    const [t, d] = decodeType(data)
+    try {
+      const parsedData = JSON.parse(d)
+      const [fields, items] = parsedData
+      if (Array.isArray(fields) && Array.isArray(items)) {
+        if (t === 'rows') return rowToRowObj(items[idx], fields)
+        if (t === 'cols' && items.length && items.length === fields.length) return colToRowObj(items, fields, idx)
+      }
+      return parsedData?.[idx]
+    } catch (e) {
+      console.error(e)
+    }
+  },
+  getObjectValueByIdx = <T = any>(data: any, idx: U): T | undefined => {
+    // const sortedKeys = Object.keys(data).sort()
+    // return data?.[sortedKeys[idx]]
+    let i = 0
+    for (const k in data) {
+      if (i === idx) return data?.[k]
+      i++
+    }
+    return
   },
   keysOf = <T extends {}>(d: Dict<T>): S[] => {
     const a: S[] = []
@@ -475,7 +513,6 @@ const
     const a: T[] = []
     for (const k in d) a.push(d[k])
     return a
-
   },
   isMap = (x: any): B => {
     // for JSON data only: anything not null, string, number, bool, array
@@ -566,13 +603,20 @@ const
         }
         return null
       },
+      getTupByIdx = (i: U): Rec | null => {
+        if (i >= 0 && i < n) {
+          const tup = tups[i]
+          if (tup) return t.make(tup)
+        }
+        return null
+      },
       list = (): (Rec | null)[] => {
         const xs: (Rec | null)[] = []
         for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
       },
       dict = (): Dict<Rec> => ({})
-    return { __buf__: true, n, put, set, seti, get, geti, list, dict }
+    return { __buf__: true, n, put, set, seti, get, geti, getTupByIdx, list, dict }
   },
   newCycBuf = (t: Typ, tups: (Tup | null)[], i: U): CycBuf => {
     const
@@ -590,6 +634,13 @@ const
       get = (_k: S): Cur | null => {
         return b.geti(i)
       },
+      getTupByIdx = (i: U): Rec | null => {
+        if (i >= 0 && i < n) {
+          const tup = tups[i]
+          if (tup) return t.make(tup)
+        }
+        return null
+      },
       list = (): Rec[] => {
         const xs: Rec[] = []
         for (let j = i, k = 0; k < n; j++, k++) {
@@ -600,7 +651,7 @@ const
         return xs
       },
       dict = (): Dict<Rec> => ({})
-    return { __buf__: true, put, set, get, list, dict }
+    return { __buf__: true, put, set, get, getTupByIdx, list, dict }
   },
   newMapBuf = (t: Typ, tups: Dict<Tup>): MapBuf => {
     const
@@ -624,6 +675,10 @@ const
         const tup = tups[k]
         return tup ? newCur(t, tup) : null
       },
+      getTupByIdx = (i: U): Rec | null => {
+        const tup = getObjectValueByIdx(tups, i)
+        return tup ? t.make(tup) : null
+      },
       list = (): Rec[] => {
         const keys = keysOf(tups)
         keys.sort()
@@ -636,7 +691,7 @@ const
         for (const k in tups) d[k] = t.make(tups[k])
         return d
       }
-    return { __buf__: true, put, set, get, list, dict }
+    return { __buf__: true, put, set, get, getTupByIdx, list, dict }
   },
   newTups = (n: U) => {
     const xs = new Array<Tup | null>(n)

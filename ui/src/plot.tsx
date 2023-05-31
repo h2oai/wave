@@ -14,7 +14,7 @@
 
 import { Chart } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, TooltipItem } from '@antv/g2/lib/interface'
-import { B, Dict, Disposable, F, Model, on, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
+import { B, Dict, Disposable, F, Model, on, parseI, parseU, Rec, S, unpack, unpackByIdx, V } from 'h2o-wave'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
@@ -1040,19 +1040,18 @@ export interface Visualization {
 const tooltipContainer = document.createElement('div')
 tooltipContainer.className = 'g2-tooltip'
 
-const PlotTooltip = ({ items, originalItems }: { items: TooltipItem[], originalItems: any[] }) =>
+const PlotTooltip = ({ items, originalData }: { items: TooltipItem[], originalData: Rec }) =>
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) =>
-      Object.keys(originalItems[data.idx]).map((itemKey, idx) => {
-        const item = originalItems[data.idx][itemKey]
-        return <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+      Object.entries(unpackByIdx<any>(originalData, data.idx)).map(([key, item], idx) =>
+        <li key={idx} className="g2-tooltip-list-item" data-index={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
           <span style={{ backgroundColor: mappingData?.color || color }} className="g2-tooltip-marker" />
           <span style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}>
-            <span style={{ marginRight: 16 }}>{itemKey}:</span>
+            <span style={{ marginRight: 16 }}>{key}:</span>
             <span>{(item instanceof Date ? item.toISOString().split('T')[0] : item)}</span>
           </span>
         </li>
-      }
+
       )
     )}
   </>
@@ -1066,7 +1065,6 @@ export const
       currentChart = React.useRef<Chart | null>(null),
       currentPlot = React.useRef<Plot | null>(null),
       themeWatchRef = React.useRef<Disposable | null>(null),
-      originalDataRef = React.useRef<any[]>([]),
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
@@ -1091,7 +1089,6 @@ export const
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
-        originalDataRef.current = unpack<any[]>(model.data)
         currentPlot.current = plot
         if (chart) {
           chart.tooltip({
@@ -1104,10 +1101,10 @@ export const
                 color: cssVar('$text')
               },
             },
-            customContent: (_title, items) => {
-              ReactDOM.render(<PlotTooltip items={items} originalItems={originalDataRef.current} />, tooltipContainer)
-              return tooltipContainer
-            }
+            customContent: () => tooltipContainer
+          })
+          chart.on('tooltip:change', ({ data }: any) => {
+            ReactDOM.render(<PlotTooltip items={data.items} originalData={model.data} />, tooltipContainer)
           })
           currentChart.current = chart
           chart.data(data)
@@ -1155,7 +1152,6 @@ export const
       const
         raw_data = unpack<any[]>(model.data),
         data = refactorData(raw_data, currentPlot.current.marks)
-      originalDataRef.current = unpack<any[]>(model.data)
       currentChart.current.changeData(data)
     }, [currentChart, currentPlot, model])
 

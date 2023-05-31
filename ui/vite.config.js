@@ -31,6 +31,9 @@ export default defineConfig({
     assetsDir: 'wave-static',
     chunkSizeWarningLimit: 900
   },
+  optimizeDeps: {
+    link: ['h2o-wave']
+  },
   server: {
     port: 3000,
     proxy: {
