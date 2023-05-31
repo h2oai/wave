@@ -241,8 +241,8 @@ type XComponentsProps = {
 }
 
 const
-  noWidthComponentKeys = ['date_picker', 'dropdown', 'slider', 'range_slider', 'table', 'visualization', 'vega_visualization'],
-  getComponentWidth = (componentKey: S, isInline: B) => isInline && noWidthComponentKeys.includes(componentKey) ? '400px' : 'auto'
+  needsDefaultWidth = new Set(['date_picker', 'dropdown', 'slider', 'range_slider', 'table', 'visualization', 'vega_visualization']),
+  getComponentWidth = (componentKey: S, isInline: B) => isInline && needsDefaultWidth.has(componentKey) ? '400px' : 'auto'
 
 export const
   XComponents = ({ items, justify, align, inset, height, direction = 'column' }: XComponentsProps) => {
