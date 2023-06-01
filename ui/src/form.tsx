@@ -269,7 +269,7 @@ export const
             style={{
               ...visibleStyles,
               width,
-              height: height === '1' ? undefined : height,
+              minHeight: height === '1' ? undefined : height,
               alignSelf
             }}
           >
