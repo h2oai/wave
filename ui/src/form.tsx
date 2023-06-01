@@ -199,6 +199,7 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: 15,
+      height: '100%',
     },
     vertical: {
       display: 'flex',
@@ -265,7 +266,12 @@ export const
             key={name || `${componentKey}-${i}`}
             data-visible={visible}
             className={height === '1' ? css.fullHeight : ''}
-            style={{ ...visibleStyles, width, alignSelf }}
+            style={{
+              ...visibleStyles,
+              width,
+              height: height === '1' ? undefined : height,
+              alignSelf
+            }}
           >
             <XComponent model={m} />
           </div>
