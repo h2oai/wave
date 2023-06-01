@@ -57,10 +57,7 @@ export interface CopyableText {
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
-    isCustomHeight = height && height !== '1',
-    isFullHeight = multiline && height === '1',
-    heightStyle = isCustomHeight || isFullHeight ? fullHeightStyle : undefined,
-    minHeight = isCustomHeight ? height : undefined,
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -102,14 +99,13 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       }
       styles={{
         root: {
-          ...(isFullHeight ? fullHeightStyle : undefined),
-          minHeight,
+          ...heightStyle,
           textFieldRoot: { position: 'relative', width: pc(100) },
           textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined
         },
-        wrapper: { ...heightStyle, minHeight },
-        fieldGroup: heightStyle,
-        field: { ...heightStyle, resize: multiline ? 'vertical' : 'none', },
+        wrapper: heightStyle,
+        fieldGroup: heightStyle || { minHeight: height },
+        field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
       }}
       readOnly
     />
