@@ -88,12 +88,6 @@ func main() {
 	goconfig.PrefixEnv = "H2O_WAVE"
 	goconfig.KebabCfgToSnakeEnv = true
 
-	// Check if goconfig.File exists.
-	if _, err := os.Stat(goconfig.File); os.IsNotExist(err) {
-		// If not, check if .env exists.
-		panic(fmt.Errorf("configuration file %s not found", goconfig.File))
-	}
-
 	err := goconfig.Parse(&conf)
 	if err != nil {
 		panic(err.Error())
