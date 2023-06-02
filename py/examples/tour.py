@@ -13,7 +13,7 @@ from string import Template
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
-from h2o_wave import Q, app, main, ui
+from h2o_wave import Q, app, handle_on, main, on, ui
 
 example_dir = os.path.dirname(os.path.realpath(__file__))
 tour_tmp_dir = os.path.join(example_dir, '_tour_apps_tmp')
@@ -26,6 +26,9 @@ vsc_extension_path = os.path.join(example_dir, '..', '..', 'tools', 'vscode-exte
 
 def scan_free_port(port: int):
     while True:
+        # If we run out of ports, wrap around.
+        if port > 60000:
+            port = 10000
         with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
             if sock.connect_ex(('localhost', port)):
                 return port
@@ -376,6 +379,16 @@ async def on_shutdown():
         shutil.rmtree(dirpath)
 
 
+@on("@system.client_disconnect")
+async def client_disconnect(q: Q):
+    demo_page = q.site[f'/{q.client.path}']
+    demo_page.drop()
+    await demo_page.save()
+
+    if q.client.active_example:
+        q.client.active_example.stop()
+
+
 @app('/tour', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
@@ -398,6 +411,8 @@ async def serve(q: Q):
         q.client.is_first_load = True
         q.client.path = uuid.uuid4()
         await setup_page(q)
+
+    await handle_on(q)
 
     search = q.args[q.args['#'] or default_example_name]
     if search and not q.events.editor:
