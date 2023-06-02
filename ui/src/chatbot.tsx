@@ -35,41 +35,37 @@ const
       top: 15,
       left: 0,
       right: 0,
-      bottom: 62, // Height of input box + padding.
+      bottom: 0,
       overflowY: 'auto',
-      padding: padding(0, 15),
-    },
-    msg: {
-      display: 'inline-block',
-      backgroundColor: cssVar('$text'),
-      padding: 6,
-      borderRadius: 4,
-      maxWidth: '65ch',
-      borderTopLeftRadius: 0,
-      textAlign: 'left',
-    },
-    userMsg: {
-      backgroundColor: cssVar('$themePrimary'),
-      borderTopLeftRadius: 4,
-      borderTopRightRadius: 0,
+      padding: padding(0, 0),
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
+      '&:last-child': { marginBottom: important(px(80)) },
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    msg: {
+      width: '65ch',
+    },
+    userMsg: {
+      backgroundColor: cssVar('$neutralLighter'),
+    },
+    text: {
+      display: 'inline-block',
+      padding: 6,
+      maxWidth: '65ch',
+      textAlign: 'left',
+    },
+    textInput: {
+      position: 'absolute',
+      padding: 15,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundImage: `linear-gradient(180deg,rgba(0,0,0,0),${cssVar('$card')} 45%)`
     }
-  }),
-  getCornerStyle = (prev?: B, curr?: B, next?: B): React.CSSProperties | undefined => {
-    // First.
-    if (curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
-    if (!curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
-
-    // Middle.
-    if (curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
-    if (!curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
-
-    // Last.
-    if (curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
-    if (!curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
-  }
+  })
 
 type ChatMessage = { msg: S, fromUser: B }
 
@@ -101,7 +97,9 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
       setUserInput('')
     }
 
-  React.useEffect(() => { if (msgContainerRef.current) msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight }, [msgs])
+  React.useEffect(() => {
+    if (msgContainerRef.current) msgContainerRef.current.scrollTo({ top: msgContainerRef.current.scrollHeight, behavior: 'smooth' })
+  }, [msgs])
   React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
 
   return (
@@ -110,29 +108,28 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
         {msgs.map(({ msg, fromUser }, idx) => (
           <div
             key={idx}
-            className={css.msgWrapper}
+            className={clas(css.msgWrapper, fromUser ? css.userMsg : '')}
             style={{
               marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 3 : 10,
-              textAlign: fromUser ? 'right' : 'left',
-              color: getContrast(fromUser ? '$themePrimary' : '$text')
+              color: fromUser ? getContrast('$neutralLighter') : '$text'
             }} >
-            <span
-              className={clas(css.msg, fromUser ? css.userMsg : '', 'wave-s14')}
-              style={{
-                ...getCornerStyle(msgs[idx - 1]?.fromUser, fromUser, msgs[idx + 1]?.fromUser),
-                padding: msg?.includes('\n') ? 12 : 6,
-              }}>
-              <Markdown source={msg || ''} />
-            </span>
+            <div
+              className={clas(css.msg, 'wave-s14')}
+              style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
+              <span className={css.text}>
+                <Markdown source={msg || ''} />
+              </span>
+            </div>
           </div>
         ))}
       </div>
-      <div style={{ padding: 15, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+      <div className={css.textInput}>
         <Fluent.TextField
           data-test={model.name}
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
+          autoComplete='off'
           placeholder={model.placeholder || 'Type your message'}
           styles={{ root: { flexGrow: 1 }, field: { width: `calc(100% - ${SUBMIT_BTN_SIZE}px)`, paddingRight: 0 } }}
         />
