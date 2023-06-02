@@ -25,6 +25,7 @@ const
       display: 'flex',
       alignItems: 'flex-start',
       alignContent: 'flex-start',
+      height: '100%'
     },
     expand: {
       flexGrow: 1
@@ -41,7 +42,7 @@ const
     preventOverflow: {
       minWidth: 0
     },
-    inheritHeight: {
+    tooltipWrapper: {
       height: 'inherit'
     }
   })
@@ -57,18 +58,18 @@ export const
 
     const tooltipProps: Fluent.ITooltipProps = { onRenderContent: () => <div><Markdown source={content} /></div> }
     return (
-      <div className={clas(css.container, css.inheritHeight)} data-test='tooltip'>
+      <div className={css.container} data-test='tooltip'>
         {
           showIcon
             ? (
               <>
-                <div className={clas(css.preventOverflow, css.inheritHeight, expand ? css.expand : '')}>{children}</div>
+                <div className={clas(css.preventOverflow, css.tooltipWrapper, expand ? css.expand : '')}>{children}</div>
                 <Fluent.TooltipHost tooltipProps={tooltipProps}>
                   <Fluent.FontIcon className={css.icon} iconName='Info' />
                 </Fluent.TooltipHost>
               </>
             )
-            : <Fluent.TooltipHost className={css.inheritHeight} tooltipProps={tooltipProps}>{children}</Fluent.TooltipHost>
+            : <Fluent.TooltipHost tooltipProps={tooltipProps}>{children}</Fluent.TooltipHost>
         }
       </div>
     )

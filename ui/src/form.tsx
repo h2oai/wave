@@ -259,6 +259,7 @@ export const
           alignSelf = componentKey === 'links' ? 'flex-start' : undefined
 
         if (m[componentKey].width !== width) m[componentKey].width = width
+        if (height?.endsWith('%')) m[componentKey].height = '100%'
 
         return (
           <div
