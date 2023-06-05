@@ -316,7 +316,7 @@ async def show_example(q: Q, example: Example):
     filename = os.path.join(tour_tmp_dir, f'{q.client.path}.py')
     code = q.events.editor.change if q.events.editor else example.source
     code = code.replace("`", "\\`")
-    is_app = code.find('@app(') > 0
+    is_app = '@app(' in code
     with open(filename, 'w') as f:
         fixed_path = code
         if is_app:
