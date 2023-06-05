@@ -4,9 +4,10 @@ import os.path
 import re
 import shutil
 import socket
-import subprocess
 import sys
 import uuid
+from asyncio.subprocess import Process
+from asyncio import create_subprocess_exec
 from contextlib import closing
 from pathlib import Path
 from string import Template
@@ -44,9 +45,9 @@ class Example:
         self.source = source
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
-        self.process: Optional[subprocess.Popen] = None
+        self.process: Optional[Process] = None
 
-    def start(self, filename: str, is_app: bool, q: Q):
+    async def start(self, filename: str, is_app: bool, q: Q):
         env = os.environ.copy()
         env['H2O_WAVE_BASE_URL'] = _base_url
         env['H2O_WAVE_ADDRESS'] = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
@@ -57,19 +58,20 @@ class Example:
         if is_app:
             q.app.app_port = scan_free_port(q.app.app_port)
             env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_address.hostname}:{q.app.app_port}'
-            self.process = subprocess.Popen([
+            cmd = [
                 sys.executable, '-m', 'uvicorn',
                 '--host', '0.0.0.0',
                 '--port', str(q.app.app_port),
                 f'examples.{filename.replace(".py", "")}:main',
-            ], env=env)
+            ]
+            self.process = await create_subprocess_exec(*cmd, env=env)
         else:
-            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, filename)], env=env)
+            self.process = await create_subprocess_exec(sys.executable, os.path.join(example_dir, filename), env=env)
 
-    def stop(self):
+    async def stop(self):
         if self.process and self.process.returncode is None:
             self.process.terminate()
-            self.process.wait()
+            await self.process.wait()
 
 
 def read_lines(p: str) -> List[str]:
@@ -330,10 +332,10 @@ async def show_example(q: Q, example: Example):
     # Stop active example, if any.
     active_example = q.client.active_example
     if active_example:
-        active_example.stop()
+        await active_example.stop()
 
     # Start new example
-    example.start(filename, is_app, q)
+    await example.start(filename, is_app, q)
     q.client.active_example = example
 
     # Update example blurb
@@ -386,7 +388,7 @@ async def client_disconnect(q: Q):
     await demo_page.save()
 
     if q.client.active_example:
-        q.client.active_example.stop()
+        await q.client.active_example.stop()
 
 
 @app('/tour', on_startup=on_startup, on_shutdown=on_shutdown)
