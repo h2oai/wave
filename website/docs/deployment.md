@@ -73,3 +73,36 @@ See a step-by-step [blog post](https://medium.com/@leteve.audrey/run-h2o-wave-ap
 ## Hugging Face Spaces
 
 See a step-by-step [blog post](https://medium.com/@unusualcode/deploy-a-wave-app-to-hugging-face-spaces-8b9a2bda5e46).
+
+## Behind Nginx (reverse proxy)
+
+Since Wave relies on websockets, the following configuration is necessary.
+
+```conf
+# Enable websockets.
+# http://nginx.org/en/docs/http/websocket.html
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+    location / {
+        proxy_http_version 1.1;
+        ; Change to your wave server address.
+        proxy_pass http://localhost:10101/;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+
+        proxy_redirect off;
+    }
+}
+```
+
+Read more at [official Nginx docs](http://nginx.org/en/docs/http/websocket.html) or see an [example repo](https://github.com/mturoci/wave-nginx).
