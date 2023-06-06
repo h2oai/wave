@@ -31,7 +31,7 @@ For more information, see [uvicorn.org/deployment](https://www.uvicorn.org/deplo
 To configure a different port, see [configuring ports](/docs/configuration/#how-to-start-a-wave-app-on-a-different-port).
 
 :::tip
-`uvicorn` accepts `--env-file` flag to specify `.env` configuration file for the Wave app. Note that as of time of writing, `--env-file` does not support configuration of Uvicorn itself.
+`uvicorn` accepts `--env-file` flag to specify `.env` configuration file for the Wave app. Note that as of time of writing, `--env-file` does not support configuration of Uvicorn itself. Using this flag may require running `pip install python-dotenv` first.
 :::
 
 ### Beyond defaults
