@@ -199,7 +199,6 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: 15,
-      height: '100%',
     },
     vertical: {
       display: 'flex',
