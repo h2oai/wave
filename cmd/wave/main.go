@@ -63,18 +63,12 @@ func main() {
 	serverConf := wave.ServerConf{}
 	authConf := wave.AuthConf{}
 
-	goconfig.Formats = append(goconfig.Formats, goconfig.Fileformat{
-		Extension:   ".env",
-		Load:        wave.LoadEnv,
-		PrepareHelp: wave.PrepareHelp,
-	})
-
 	goconfig.File = ".env"
 	if v, ok := os.LookupEnv("H2O_WAVE_CONF"); ok {
 		goconfig.File = v
 	}
 
-	// Cannot register -conf flag with goconfig because it needs to be parsed before goconfig.Parse.
+	// Cannot register -conf flag with goconfig because it needs to be parsed prior to goconfig.Parse.
 	args := os.Args[1:]
 	for i, arg := range args {
 		if arg == "-conf" {
@@ -200,8 +194,8 @@ func main() {
 	serverConf.BuildDate = BuildDate
 	serverConf.Listen = conf.Listen
 	serverConf.BaseURL = conf.BaseUrl
-	serverConf.PublicDirs = parseDirs(conf.PublicDirs)
-	serverConf.PrivateDirs = parseDirs(conf.PrivateDirs)
+	serverConf.PublicDirs = splitDirs(conf.PublicDirs)
+	serverConf.PrivateDirs = splitDirs(conf.PrivateDirs)
 	serverConf.Init = conf.Init
 	serverConf.CertFile = conf.CertFile
 	serverConf.KeyFile = conf.KeyFile
@@ -260,7 +254,7 @@ func getEmptyOIDCValues(requiredEnvOIDC map[string]string) []string {
 	return emptyRequiredOIDCParams
 }
 
-func parseDirs(dirs string) []string {
+func splitDirs(dirs string) []string {
 	if len(dirs) == 0 {
 		return nil
 	}
