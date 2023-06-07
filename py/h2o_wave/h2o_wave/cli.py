@@ -25,6 +25,7 @@ import uvicorn
 import click
 import inquirer
 import os
+from click import Choice, option
 from urllib import request
 from urllib.parse import urlparse
 from .version import __version__
@@ -32,13 +33,16 @@ from .metadata import __platform__, __arch__
 
 _localhost = '127.0.0.1'
 
+
 def read_file(file: str) -> str:
     with open(file, 'r') as f:
         return f.read()
 
+
 def write_file(file: str, content: str) -> None:
     with open(file, 'w') as f:
         f.write(content)
+
 
 def _scan_free_port(port: int = 8000):
     while True:
@@ -52,7 +56,7 @@ def is_within_directory(directory, target):
     abs_directory = os.path.abspath(directory)
     abs_target = os.path.abspath(target)
     prefix = os.path.commonprefix([abs_directory, abs_target])
-    
+
     return prefix == abs_directory
 
 
@@ -62,8 +66,8 @@ def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
         if not is_within_directory(path, member_path):
             raise Exception("Attempted Path Traversal in Tar File")
 
-    tar.extractall(path, members, numeric_owner=numeric_owner) 
-    
+    tar.extractall(path, members, numeric_owner=numeric_owner)
+
 
 @click.group()
 def main():
@@ -154,14 +158,23 @@ def ide():
 
 
 @main.command()
-def fetch():
+@option('--platform', help='Operating system type.', type=Choice(['linux', 'windows', 'darwin']))
+@option('--arch', default=__arch__, help='Processor architecture type.', type=Choice(['amd64', 'arm64']))
+def fetch(platform: str, arch: str):
     """Download examples and related files to ./wave.
 
     \b
     $ wave fetch
     """
+    if not platform:
+        platform = __platform__
+
+    if platform == 'any':
+        print('Platform could not be detected. Please specify manually via --platform param.')
+        return
+
     print('Fetching examples and related files. Please wait...')
-    tar_name = f'wave-{__version__}-{__platform__}-{__arch__}'
+    tar_name = f'wave-{__version__}-{platform}-{arch}'
     tar_file = f'{tar_name}.tar.gz'
     tar_url = f'https://github.com/h2oai/wave/releases/download/v{__version__}/{tar_file}'
     tar_path = Path(tar_file)
