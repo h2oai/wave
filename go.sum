@@ -103,8 +103,8 @@ github.com/googleapis/gax-go/v2 v2.0.4/go.mod h1:0Wqv26UfaUD9n4G6kQubkQ+KchISgw+
 github.com/googleapis/gax-go/v2 v2.0.5/go.mod h1:DWXyrwAJ9X0FpwwEdw+IPEYBICEFu5mhpdKc/us6bOk=
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
-github.com/h2oai/goconfig v1.3.2-0.20230601133509-1de31214221f h1:ImocAPnFximMRIwEXOAyp+oy4tgQveR1Xw7/KKaqRNk=
-github.com/h2oai/goconfig v1.3.2-0.20230601133509-1de31214221f/go.mod h1:+ik4b6fJebd8qP4tK06xoSMAhHoYLPnaydm1tt0J1Sw=
+github.com/h2oai/goconfig v1.3.2-0.20230607113525-ec7811bd2c8e h1:c6o8chMPAq7wGuaSS8PO3OBZkCoesUCl31xXMkvLv28=
+github.com/h2oai/goconfig v1.3.2-0.20230607113525-ec7811bd2c8e/go.mod h1:+ik4b6fJebd8qP4tK06xoSMAhHoYLPnaydm1tt0J1Sw=
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.4 h1:YDjusn29QI/Das2iO9M0BHnIbxPeyuCHsjMW+lJfyTc=

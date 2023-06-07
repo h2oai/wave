@@ -30,6 +30,7 @@ import (
 	"time"
 
 	"github.com/h2oai/goconfig"
+	_ "github.com/h2oai/goconfig/env"
 	"github.com/h2oai/wave"
 	"github.com/h2oai/wave/pkg/keychain"
 )
