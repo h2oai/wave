@@ -285,11 +285,12 @@ needed. For tables with > 10 rows, the initial height is `500px`.
 In some cases though, it might be desirable to control the dimensions yourself via `width` and `height`
 attributes. Both accept [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units),
 however `%` values for height might not work as you think (especially in [flex layout](/docs/layout#flex-layout))
-so we discourage its use in favor of more static units like `px` or `rem`.
+so we discourage its use in favor of more static units like `px` or `rem`. If you wish to use all of the available height,
+simply set the `height` attribute to `1`.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
-    ui.table(name='table', width='200px', height='200px', columns=[
+    ui.table(name='table', width='200px', height='1', columns=[
         ui.table_column(name='name', label='Name'),
         ui.table_column(name='surname', label='Surname'),
     ], rows=[

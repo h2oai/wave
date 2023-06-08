@@ -1655,7 +1655,7 @@ ui_table_pagination <- function(
 #' @param groupable True to allow group by feature.
 #' @param downloadable Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
-#' @param height The height of the table, e.g. '400px', '50%', etc.
+#' @param height Custom height of the table in px (e.g. '200px') or use '1' to fill the remaining card space.
 #' @param width The width of the table, e.g. '100px'. Defaults to '100%'.
 #' @param values The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
 #' @param checkbox_visibility Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'.
