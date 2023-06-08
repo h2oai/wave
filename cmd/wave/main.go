@@ -226,6 +226,12 @@ func main() {
 			authConf.URLParameters = append(authConf.URLParameters, kv)
 		}
 	}
+	if authConf.SessionExpiry, err = time.ParseDuration(conf.SessionExpiry); err != nil {
+		panic(err)
+	}
+	if authConf.InactivityTimeout, err = time.ParseDuration(conf.InactivityTimeout); err != nil {
+		panic(err)
+	}
 
 	requiredEnvOIDC := map[string]string{
 		"oidc-client-id":     conf.ClientID,
@@ -236,6 +242,13 @@ func main() {
 	emptyRequiredOIDCParams := getEmptyOIDCValues(requiredEnvOIDC)
 	emptyRequiredOIDCParamsCount := len(emptyRequiredOIDCParams)
 	if emptyRequiredOIDCParamsCount == 0 {
+		authConf.ClientID = conf.ClientID
+		authConf.ClientSecret = conf.ClientSecret
+		authConf.ProviderURL = conf.ProviderUrl
+		authConf.RedirectURL = conf.RedirectUrl
+		authConf.EndSessionURL = conf.EndSessionUrl
+		authConf.PostLogoutRedirectURL = conf.PostLogoutRedirectUrl
+		authConf.SkipLogin = conf.SkipLogin
 		serverConf.Auth = &authConf
 	}
 	if emptyRequiredOIDCParamsCount > 0 && emptyRequiredOIDCParamsCount != len(requiredEnvOIDC) {
