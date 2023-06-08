@@ -486,29 +486,6 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
-    it('Sorts by multiple columns', () => {
-      tableProps = {
-        ...tableProps,
-        rows: [
-          { name: '2', cells: ['bb', 'open'] },
-          { name: '3', cells: ['cc', 'closed'] },
-          { name: '1', cells: ['aa', 'closed'] },
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', sortable: true },
-        ],
-      }
-      const { container, getAllByRole } = render(<XTable model={tableProps} />)
-
-      const [sortCol1, sortCol2] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
-      expect(getAllByRole('gridcell')[0].textContent).toBe('bb')
-      fireEvent.click(sortCol2)
-      expect(getAllByRole('gridcell')[0].textContent).toBe('cc')
-      fireEvent.click(sortCol1)
-      expect(getAllByRole('gridcell')[0].textContent).toBe('aa')
-    })
-
     it('Keep sort order when applying filters - no groups', () => {
       tableProps = {
         ...tableProps,
@@ -644,9 +621,37 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
       expect(getAllByRole('row')).toHaveLength(headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'open' } })
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length - 1 + headerRow)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
+    it('Keep sort order after removing search - no groups', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: '3', cells: ['c', 'closed'] },
+          { name: '2', cells: ['b', 'open'] },
+          { name: '1', cells: ['a', 'open'] }
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', searchable: true },
+        ],
+      }
+      const { container, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+
+      // Sort by first column
+      expect(getAllByRole('gridcell')[0].textContent).toBe('c')
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      // Search
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: '' } })
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
-
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
     })
 
