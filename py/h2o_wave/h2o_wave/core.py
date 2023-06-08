@@ -299,6 +299,13 @@ class Ref:
             raise ValueError('Data instances cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
+    def __iadd__(self, value):
+        if not getattr(self, KEY).endswith('data'):
+            raise ValueError('+= can only be used on cyclic data buffers.')
+        page = getattr(self, PAGE)
+        page._track(_set_op(self, '__wave_append__', _dump(value)))
+        page._skip_next_track = True
+
 
 class Data:
     """
@@ -468,6 +475,8 @@ class PageBase:
     def __init__(self, url: str):
         self.url = url
         self._changes = []
+        # HACK: Overloading += operator makes unnecessary __setattr__ call. Skip it to prevent redundant ops.
+        self._skip_next_track = False
 
     def add(self, key: str, card: Any) -> Ref:
         """
@@ -510,6 +519,9 @@ class PageBase:
         return Ref(self, key)
 
     def _track(self, op: dict):
+        if self._skip_next_track:
+            self._skip_next_track = False
+            return
         self._changes.append(op)
 
     def _diff(self):
@@ -1151,4 +1163,4 @@ def _can_do_local_upload(data_dir: str, waved_dir: str) -> bool:
     if not _is_loopback_address():
         return False
 
-    return os.path.isabs(data_dir) or (waved_dir and data_dir)
+    return bool(os.path.isabs(data_dir) or (waved_dir and data_dir))

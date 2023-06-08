@@ -545,6 +545,9 @@ const
         if (!isNaN(i)) seti(i, v)
       },
       seti = (i: U, v: any) => {
+        if (i < 0 && -i > -n) {
+          i += n
+        }
         if (i >= 0 && i < n) {
           if (v === null) {
             tups[i] = null
@@ -582,7 +585,21 @@ const
       put = (xs: any) => {
         if (Array.isArray(xs)) for (const x of xs) set(cur, x)
       },
-      set = (_k: S, v: any) => {
+      set = (key: S, v: any) => {
+        // Check if key is a valid index.
+        const numKey = +key
+        if (!isNaN(numKey)) {
+          let idx = numKey
+          // If negative, start from last inserted idx.
+          if (idx < 0) idx = i + idx
+          // If out of bounds, wrap around.
+          if (idx < 0) idx += n
+          if (idx >= 0 && idx < n) {
+            b.seti(idx, v)
+            return
+          }
+        }
+        // Otherwise, append to the end.
         b.seti(i, v)
         i++
         if (i >= n) i = 0

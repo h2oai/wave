@@ -14,6 +14,8 @@
 
 package wave
 
+import "strconv"
+
 // CycBuf represents a cyclic buffer.
 type CycBuf struct {
 	b *FixBuf
@@ -28,8 +30,22 @@ func (b *CycBuf) put(ixs interface{}) {
 	}
 }
 
-func (b *CycBuf) set(_ string, v interface{}) { // append-only; ignore key
+func (b *CycBuf) set(key string, v any) {
 	fb := b.b
+	// Check if key is a valid index.
+	if i, err := strconv.Atoi(key); err == nil {
+		if i < 0 {
+			i += b.i
+		}
+		if i < 0 {
+			i += len(fb.tups)
+		}
+		if i >= 0 && i < len(fb.tups) {
+			fb.seti(i, v)
+			return
+		}
+	}
+	// Otherwise, append to the current end.
 	fb.seti(b.i, v)
 	b.i++
 	if b.i >= len(fb.tups) {
