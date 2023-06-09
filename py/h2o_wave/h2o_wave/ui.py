@@ -1319,7 +1319,7 @@ def table_column(
         data_type: Defines the data type of this column. Time column takes either ISO 8601 date string or unix epoch miliseconds. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
         cell_type: Defines how to render each cell in this column. Renders as plain text by default.
         cell_overflow: Defines what to do with a cell's contents in case it does not fit inside the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
-        filters: List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
+        filters: Explicit list of values to allow filtering by, needed when pagination is set or custom order is needed. Only applicable to filterable columns.
         align: Defines how to align values in a column. One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign.
     Returns:
         A `h2o_wave.types.TableColumn` instance.

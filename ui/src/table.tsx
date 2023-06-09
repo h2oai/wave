@@ -72,7 +72,7 @@ interface TableColumn {
   cell_type?: TableCellType
   /** Defines what to do with a cell's contents in case it does not fit inside the cell. */
   cell_overflow?: 'tooltip' | 'wrap'
-  /** List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns. */
+  /** Explicit list of values to allow filtering by, needed when pagination is set or custom order is needed. Only applicable to filterable columns. */
   filters?: S[]
   /** Defines how to align values in a column. */
   align?: 'left' | 'center' | 'right'
@@ -379,7 +379,7 @@ const
           styles: { root: { height: 48 }, cellName: { color: cssVar('$neutralPrimary') } },
           isResizable: true,
           isMultiline: c.cell_overflow === 'wrap',
-          filters: c.filterable && m.pagination ? c.filters : undefined,
+          filters: c.filterable ? c.filters : undefined,
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),

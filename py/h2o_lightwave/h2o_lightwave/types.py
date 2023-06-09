@@ -3450,7 +3450,7 @@ class TableColumn:
         self.cell_overflow = cell_overflow
         """Defines what to do with a cell's contents in case it does not fit inside the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow."""
         self.filters = filters
-        """List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns."""
+        """Explicit list of values to allow filtering by, needed when pagination is set or custom order is needed. Only applicable to filterable columns."""
         self.align = align
         """Defines how to align values in a column. One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign."""
 

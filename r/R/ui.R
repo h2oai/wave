@@ -1518,7 +1518,7 @@ ui_markdown_table_cell_type <- function(
 #' @param cell_type Defines how to render each cell in this column. Renders as plain text by default.
 #' @param cell_overflow Defines what to do with a cell's contents in case it does not fit inside the cell.
 #'   One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
-#' @param filters List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
+#' @param filters Explicit list of values to allow filtering by, needed when pagination is set or custom order is needed. Only applicable to filterable columns.
 #' @param align Defines how to align values in a column.
 #'   One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign.
 #' @return A TableColumn instance.
