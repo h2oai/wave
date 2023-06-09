@@ -44,6 +44,7 @@ const
   }
 
 let tableProps: Table
+let sortTableProps: Table
 
 describe('Table.tsx', () => {
   beforeAll(() => {
@@ -379,6 +380,22 @@ describe('Table.tsx', () => {
   })
 
   describe('sort', () => {
+    beforeEach(() => {
+      sortTableProps = {
+        ...tableProps,
+        rows: [
+          { name: '4', cells: ['d', 'closed'] },
+          { name: '3', cells: ['c', 'closed'] },
+          { name: '2', cells: ['b', 'open'] },
+          { name: '1', cells: ['a', 'open'] }
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', filterable: true, searchable: true },
+        ],
+      }
+    })
+
     it('Does not render sort arrow on sortable columns by default', () => {
       const { container } = render(<XTable model={tableProps} />)
 
@@ -486,27 +503,210 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
-    it('Sorts by multiple columns', () => {
-      tableProps = {
-        ...tableProps,
-        rows: [
-          { name: '2', cells: ['bb', 'open'] },
-          { name: '3', cells: ['cc', 'closed'] },
-          { name: '1', cells: ['aa', 'closed'] },
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', sortable: true },
-        ],
-      }
-      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+    it('Keep sort order when applying filters - no groups', () => {
+      const { container, getAllByText, getAllByRole } = render(<XTable model={sortTableProps} />)
 
-      const [sortCol1, sortCol2] = container.querySelectorAll('.ms-DetailsHeader-cellTitle')
-      expect(getAllByRole('gridcell')[0].textContent).toBe('bb')
-      fireEvent.click(sortCol2)
-      expect(getAllByRole('gridcell')[0].textContent).toBe('cc')
-      fireEvent.click(sortCol1)
-      expect(getAllByRole('gridcell')[0].textContent).toBe('aa')
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('c')
+
+      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(getAllByText('open')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
+    it('Keep sort order after Select/Deselect All filters - no groups', () => {
+      const { container, getByText, getAllByRole } = render(<XTable model={sortTableProps} />)
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getByText('Select All'))
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(getByText('Deselect All'))
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
+    it('Keep sort order when applying filters - groups', () => {
+      tableProps = {
+        ...sortTableProps,
+        groupable: true,
+      }
+      const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('b')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('a')
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('a')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('b')
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getAllByText('closed')[3].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11]).toBeUndefined()
+      expect(getAllByRole('gridcell')[14]).toBeUndefined()
+
+      fireEvent.click(getAllByText('closed')[3].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11]?.textContent).toBe('a')
+      expect(getAllByRole('gridcell')[14]?.textContent).toBe('b')
+    })
+
+    it('Keep sort order after Select/Deselect All filters - groups', () => {
+      tableProps = {
+        ...sortTableProps,
+        groupable: true,
+      }
+      const { container, getByText, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+      const expectCorrectSortOrder = () => {
+        expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+        expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+        expect(getAllByRole('gridcell')[11].textContent).toBe('a')
+        expect(getAllByRole('gridcell')[14].textContent).toBe('b')
+      }
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('b')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('a')
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expectCorrectSortOrder()
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getByText('Select All'))
+      expectCorrectSortOrder()
+
+      fireEvent.click(getByText('Deselect All'))
+      expectCorrectSortOrder()
+    })
+
+    it('Reset filtered items sorting after table reset', () => {
+      tableProps = {
+        ...sortTableProps,
+        resettable: true
+      }
+      const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(getByText('Reset table'))
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getAllByText('open')[2].parentElement as HTMLDivElement)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('b')
+    })
+
+    it('Keep sort order after applying search - no groups', () => {
+      tableProps = sortTableProps
+      const { container, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+
+      // Sort by first column
+      expect(getAllByRole('gridcell')[0].textContent).toBe('d')
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      // Search
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'open' } })
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length - 2 + headerRow)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
+    it('Keep sort order after removing search - no groups', () => {
+      tableProps = sortTableProps
+      const { container, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+
+      // Sort by first column
+      expect(getAllByRole('gridcell')[0].textContent).toBe('d')
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      // Search
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
+    it('Keep sort after applying search - groups', () => {
+      tableProps = {
+        ...sortTableProps,
+        groupable: true
+      }
+      const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('b')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('a')
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('a')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('b')
+
+      // Search
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow + groupHeaderRowsCount)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow + groupHeaderRowsCount)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('a')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('b')
     })
   })
 
@@ -1199,6 +1399,24 @@ describe('Table.tsx', () => {
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
       fireEvent.click(getByText('Reset table'))
       expect(container.querySelector("[data-icon-name='SortUp']")!).not.toBeInTheDocument()
+    })
+
+    it('Does not keep sort after reset', () => {
+      const { container, getByText, getAllByRole } = render(<XTable model={{ ...tableProps, resettable: true }} />)
+
+      expect(getAllByRole('gridcell')[0].textContent).toBe('Quick brown fox.')
+      expect(getAllByRole('gridcell')[2].textContent).toBe('Jumps over a dog.')
+      expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('Jumps over a dog.')
+      expect(getAllByRole('gridcell')[2].textContent).toBe('Quick brown fox.')
+      expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
+
+      fireEvent.click(getByText('Reset table'))
+      expect(getAllByRole('gridcell')[0].textContent).toBe('Quick brown fox.')
+      expect(getAllByRole('gridcell')[2].textContent).toBe('Jumps over a dog.')
+      expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
     })
   })
 
