@@ -17,7 +17,7 @@ import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
-import { clas, cssVar, getContrast, important, padding, px } from './theme'
+import { clas, cssVar, important, padding, px, rem } from './theme'
 import { bond, wave } from './ui'
 
 const
@@ -32,7 +32,7 @@ const
     },
     msgContainer: {
       position: 'absolute',
-      top: 15,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,
@@ -40,10 +40,12 @@ const
       padding: padding(0, 0),
     },
     msgWrapper: {
-      '&:first-child': { marginTop: important(px(0)) },
-      '&:last-child': { marginBottom: important(px(80)) },
+      '&:first-child': { marginTop: important(px(0)), },
+      '&:last-child': { marginBottom: important(px(100)) },
       display: 'flex',
       justifyContent: 'center',
+      paddingTop: rem(0.6),
+      paddingBottom: rem(0.75)
     },
     msg: {
       width: '65ch',
@@ -111,7 +113,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
             className={clas(css.msgWrapper, fromUser ? css.userMsg : '')}
             style={{
               marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 3 : 10,
-              color: fromUser ? getContrast('$neutralLighter') : '$text'
+              color: fromUser ? cssVar('$neutralDark') : cssVar('$themePrimary')
             }} >
             <div
               className={clas(css.msg, 'wave-s14')}
