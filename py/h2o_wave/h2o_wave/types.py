@@ -3757,7 +3757,7 @@ class Table:
         self.resettable = resettable
         """Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False."""
         self.height = height
-        """The height of the table, e.g. '400px', '50%', etc."""
+        """The height of the table in px (e.g. '200px') or '1' to fill the remaining card space."""
         self.width = width
         """The width of the table, e.g. '100px'. Defaults to '100%'."""
         self.values = values

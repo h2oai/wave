@@ -21,8 +21,10 @@ import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
-    container: {
+    flexContainer: {
       display: 'flex',
+    },
+    alignStart: {
       alignItems: 'flex-start',
       alignContent: 'flex-start'
     },
@@ -45,21 +47,23 @@ const
 
 export const
   XToolTip = ({ children, content, showIcon = true, expand = true }: {
-    children: React.ReactChild,
+    children: React.ReactElement,
     content?: S,
     showIcon?: B,
     expand?: B
   }) => {
     if (!content) return <>{children}</>
 
-    const tooltipProps: Fluent.ITooltipProps = { onRenderContent: () => <div><Markdown source={content} /></div> }
+    const
+      isFullHeight = children.props.model?.height === '1',
+      tooltipProps: Fluent.ITooltipProps = { onRenderContent: () => <Markdown source={content} /> }
     return (
-      <div className={css.container} data-test='tooltip'>
+      <div className={clas(css.flexContainer, isFullHeight ? css.expand : css.alignStart)} data-test='tooltip'>
         {
           showIcon
             ? (
               <>
-                <div className={clas(css.preventOverflow, expand ? css.expand : '')}>{children}</div>
+                <div className={clas(css.preventOverflow, expand ? css.expand : '', isFullHeight ? css.flexContainer : '')}>{children}</div>
                 <Fluent.TooltipHost tooltipProps={tooltipProps}>
                   <Fluent.FontIcon className={css.icon} iconName='Info' />
                 </Fluent.TooltipHost>

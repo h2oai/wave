@@ -300,6 +300,20 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
+To fill all of the remaining card height, set the `height` attribute to `1`.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+    ui.table(name='table', height='1', columns=[
+        ui.table_column(name='name', label='Name'),
+        ui.table_column(name='surname', label='Surname'),
+    ], rows=[
+        ui.table_row(name='row1', cells=['John', 'Doe']),
+        ui.table_row(name='row2', cells=['Alice', 'Smith']),
+        ui.table_row(name='row3', cells=['Bob', 'Adams']),
+    ])
+])
+
 ## With tags
 
 Use tags to emphasize a specific value, usually an enum value like a certain state for example. For multiple tags in a single row use `,` as a delimiter.

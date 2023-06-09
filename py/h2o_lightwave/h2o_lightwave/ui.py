@@ -1448,7 +1448,7 @@ def table(
         groupable: True to allow group by feature.
         downloadable: Indicates whether the table rows can be downloaded as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
-        height: The height of the table, e.g. '400px', '50%', etc.
+        height: The height of the table in px (e.g. '200px') or '1' to fill the remaining card space.
         width: The width of the table, e.g. '100px'. Defaults to '100%'.
         values: The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
         checkbox_visibility: Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.

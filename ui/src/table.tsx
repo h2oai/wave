@@ -136,7 +136,7 @@ export interface Table {
   downloadable?: B
   /** Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False. */
   resettable?: B
-  /** The height of the table, e.g. '400px', '50%', etc. */
+  /** The height of the table in px (e.g. '200px') or '1' to fill the remaining card space. */
   height?: S
   /** The width of the table, e.g. '100px'. Defaults to '100%'. */
   width?: S
@@ -696,6 +696,7 @@ export const
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       isSingle = Boolean(m.value || m.single),
+      isFullHeight = m.height === '1',
       [filteredItems, setFilteredItems] = React.useState(items),
       [currentPage, setCurrentPage] = React.useState(1),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
@@ -995,7 +996,11 @@ export const
     }), [filteredItems, groups, expandedRefs, isMultiple, isSingle, items, m, onFilterChange, selectedFilters, selection, onSortChange, setFiltersInBulk])
 
     return (
-      <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
+      <div data-test={m.name} style={{
+        position: 'relative',
+        flexGrow: isFullHeight ? 1 : 0,
+        height: isFullHeight ? 'auto' : computeHeight()
+      }}>
         <Fluent.Stack horizontal>
           {
             groupable && (
