@@ -111,7 +111,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
             style={{
               paddingTop: msgs[idx - 1]?.fromUser !== fromUser ? rem(0.7) : 0,
               paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.85) : 0,
-              color: fromUser ? cssVar('$neutralDark') : cssVar('$themePrimary')
+              color: cssVar(fromUser ? '$neutralDark' : '$themePrimary')
             }} >
             <div
               className={clas(css.msg, 'wave-s14')}
