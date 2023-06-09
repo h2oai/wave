@@ -40,12 +40,10 @@ const
       padding: padding(0, 0),
     },
     msgWrapper: {
-      '&:first-child': { marginTop: important(px(0)), },
+      '&:first-child': { marginTop: important(px(0)) },
       '&:last-child': { marginBottom: important(px(100)) },
       display: 'flex',
       justifyContent: 'center',
-      paddingTop: rem(0.6),
-      paddingBottom: rem(0.75)
     },
     msg: {
       width: '65ch',
@@ -55,7 +53,6 @@ const
     },
     text: {
       display: 'inline-block',
-      padding: 6,
       maxWidth: '65ch',
       textAlign: 'left',
     },
@@ -112,7 +109,8 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
             key={idx}
             className={clas(css.msgWrapper, fromUser ? css.userMsg : '')}
             style={{
-              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 3 : 10,
+              paddingTop: msgs[idx - 1]?.fromUser !== fromUser ? rem(0.7) : 0,
+              paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.85) : 0,
               color: fromUser ? cssVar('$neutralDark') : cssVar('$themePrimary')
             }} >
             <div
