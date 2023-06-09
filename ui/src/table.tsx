@@ -941,6 +941,7 @@ export const
           else {
             filter(newFilters)
             search()
+            if (currentSort) setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(currentSort.column, currentSort.sortAsc)))
             setGroups(groups => {
               if (groups) initGroups()
               return groups
@@ -948,7 +949,7 @@ export const
           }
           return newFilters
         })
-      }, [m.pagination, m.events, m.name, filter, search, initGroups])
+      }, [m.pagination, m.events, m.name, filter, search, currentSort, initGroups])
 
     React.useEffect(() => {
       wave.args[m.name] = []
