@@ -44,6 +44,7 @@ const
   }
 
 let tableProps: Table
+let sortTableProps: Table
 
 describe('Table.tsx', () => {
   beforeAll(() => {
@@ -379,6 +380,22 @@ describe('Table.tsx', () => {
   })
 
   describe('sort', () => {
+    beforeEach(() => {
+      sortTableProps = {
+        ...tableProps,
+        rows: [
+          { name: '4', cells: ['d', 'closed'] },
+          { name: '3', cells: ['c', 'closed'] },
+          { name: '2', cells: ['b', 'open'] },
+          { name: '1', cells: ['a', 'open'] }
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', filterable: true, searchable: true },
+        ],
+      }
+    })
+
     it('Does not render sort arrow on sortable columns by default', () => {
       const { container } = render(<XTable model={tableProps} />)
 
@@ -487,19 +504,7 @@ describe('Table.tsx', () => {
     })
 
     it('Keep sort order when applying filters - no groups', () => {
-      tableProps = {
-        ...tableProps,
-        rows: [
-          { name: '3', cells: ['c', 'closed'] },
-          { name: '2', cells: ['b', 'open'] },
-          { name: '1', cells: ['a', 'open'] }
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', filterable: true },
-        ],
-      }
-      const { container, getAllByText, getAllByRole } = render(<XTable model={tableProps} />)
+      const { container, getAllByText, getAllByRole } = render(<XTable model={sortTableProps} />)
 
       // Sort by first column
       fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
@@ -508,30 +513,37 @@ describe('Table.tsx', () => {
       // Open filter menu
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
 
-      fireEvent.click(getAllByText('closed')[1].parentElement as HTMLDivElement)
+      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
       expect(getAllByRole('gridcell')[0].textContent).toBe('c')
 
-      fireEvent.click(getAllByText('closed')[1].parentElement as HTMLDivElement)
+      fireEvent.click(getAllByText('closed')[2].parentElement as HTMLDivElement)
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
 
       fireEvent.click(getAllByText('open')[2].parentElement as HTMLDivElement)
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
     })
 
+    it('Keep sort order after Select/Deselect All filters - no groups', () => {
+      const { container, getByText, getAllByRole } = render(<XTable model={sortTableProps} />)
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getByText('Select All'))
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+
+      fireEvent.click(getByText('Deselect All'))
+      expect(getAllByRole('gridcell')[0].textContent).toBe('a')
+    })
+
     it('Keep sort order when applying filters - groups', () => {
       tableProps = {
-        ...tableProps,
+        ...sortTableProps,
         groupable: true,
-        rows: [
-          { name: '4', cells: ['d', 'closed'] },
-          { name: '3', cells: ['c', 'closed'] },
-          { name: '2', cells: ['b', 'open'] },
-          { name: '1', cells: ['a', 'open'] }
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', filterable: true },
-        ],
       }
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
@@ -568,19 +580,46 @@ describe('Table.tsx', () => {
       expect(getAllByRole('gridcell')[14]?.textContent).toBe('b')
     })
 
+    it('Keep sort order after Select/Deselect All filters - groups', () => {
+      tableProps = {
+        ...sortTableProps,
+        groupable: true,
+      }
+      const { container, getByText, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
+      const expectCorrectSortOrder = () => {
+        expect(getAllByRole('gridcell')[3].textContent).toBe('c')
+        expect(getAllByRole('gridcell')[6].textContent).toBe('d')
+        expect(getAllByRole('gridcell')[11].textContent).toBe('a')
+        expect(getAllByRole('gridcell')[14].textContent).toBe('b')
+      }
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe('d')
+      expect(getAllByRole('gridcell')[6].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[11].textContent).toBe('b')
+      expect(getAllByRole('gridcell')[14].textContent).toBe('a')
+
+      // Sort by first column
+      fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
+      expectCorrectSortOrder()
+
+      // Open filter menu
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+
+      fireEvent.click(getByText('Select All'))
+      expectCorrectSortOrder()
+
+      fireEvent.click(getByText('Deselect All'))
+      expectCorrectSortOrder()
+    })
+
     it('Reset filtered items sorting after table reset', () => {
       tableProps = {
-        ...tableProps,
-        resettable: true,
-        rows: [
-          { name: '3', cells: ['c', 'closed'] },
-          { name: '2', cells: ['b', 'open'] },
-          { name: '1', cells: ['a', 'open'] }
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', filterable: true },
-        ],
+        ...sortTableProps,
+        resettable: true
       }
       const { container, getAllByText, getAllByRole, getByText } = render(<XTable model={tableProps} />)
 
@@ -598,22 +637,11 @@ describe('Table.tsx', () => {
     })
 
     it('Keep sort order after applying search - no groups', () => {
-      tableProps = {
-        ...tableProps,
-        rows: [
-          { name: '3', cells: ['c', 'closed'] },
-          { name: '2', cells: ['b', 'open'] },
-          { name: '1', cells: ['a', 'open'] }
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', searchable: true },
-        ],
-      }
+      tableProps = sortTableProps
       const { container, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
       // Sort by first column
-      expect(getAllByRole('gridcell')[0].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[0].textContent).toBe('d')
       fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
 
@@ -622,27 +650,16 @@ describe('Table.tsx', () => {
       fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
       expect(getAllByRole('row')).toHaveLength(headerRow)
       fireEvent.change(getByTestId('search'), { target: { value: 'open' } })
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length - 1 + headerRow)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length - 2 + headerRow)
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
     })
 
     it('Keep sort order after removing search - no groups', () => {
-      tableProps = {
-        ...tableProps,
-        rows: [
-          { name: '3', cells: ['c', 'closed'] },
-          { name: '2', cells: ['b', 'open'] },
-          { name: '1', cells: ['a', 'open'] }
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', searchable: true },
-        ],
-      }
+      tableProps = sortTableProps
       const { container, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
       // Sort by first column
-      expect(getAllByRole('gridcell')[0].textContent).toBe('c')
+      expect(getAllByRole('gridcell')[0].textContent).toBe('d')
       fireEvent.click(container.querySelectorAll('.ms-DetailsHeader-cellTitle')[0])
       expect(getAllByRole('gridcell')[0].textContent).toBe('a')
 
@@ -657,18 +674,8 @@ describe('Table.tsx', () => {
 
     it('Keep sort after applying search - groups', () => {
       tableProps = {
-        ...tableProps,
-        groupable: true,
-        rows: [
-          { name: '4', cells: ['d', 'closed'] },
-          { name: '3', cells: ['c', 'closed'] },
-          { name: '2', cells: ['b', 'open'] },
-          { name: '1', cells: ['a', 'open'] }
-        ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true },
-          { name: 'colname2', label: 'Col2', searchable: true },
-        ],
+        ...sortTableProps,
+        groupable: true
       }
       const { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />)
 
