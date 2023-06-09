@@ -55,8 +55,19 @@ async def serve(q: Q):
 
 `q.exec()` accepts a custom process pool or thread pool to run the blocking function.
 
+```python {1,6-7}
+import concurrent.futures
+
+@app('/demo')
+async def serve(q: Q):
+    # ...
+    with concurrent.futures.ProcessPoolExecutor() as pool:
+        message = await q.exec(pool, blocking_function, seconds)
+    # ...
+```
+
 :::tip
 Apps that make calls to external services or APIs are better off replacing blocking HTTP clients like [requests](https://requests.readthedocs.io/en/master/) with non-blocking clients like [HTTPX](https://www.python-httpx.org/async/).
 :::
 
-For furher details see [this blog post](https://medium.com/@unusualcode/background-jobs-in-wave-or-how-not-to-kill-your-ui-ae1fed95693a).
+To update UI from within a background job, see [this example](/docs/examples/background-progress/) or a detailed [blog post](https://medium.com/@unusualcode/background-jobs-in-wave-or-how-not-to-kill-your-ui-ae1fed95693a).
