@@ -1,8 +1,11 @@
 SED=$(shell command -v gsed || command -v sed)
 
-# Can be only built correctly with python 3.8 set.
+# Make sure to build against python 3.8 to achieve the highest compatibility.
 build:
-	[ -d "venv/lib/python3.8/site-packages" ] && npm run build || echo "venv need to use python 3.8"
+	mkdir deps
+	cp -r venv/lib/*/site-packages/* deps
+	npm run build
+	rm -rf deps
 
 setup:
 	npm ci
