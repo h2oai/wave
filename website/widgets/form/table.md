@@ -300,7 +300,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
-If you wish to fill all of the available height, simply set the `height` attribute to `1`.
+To fill all of the remaining card height, set the `height` attribute to `1`.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
