@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        py: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -69,7 +69,7 @@ jobs:
     name: Test Windows
     strategy:
       matrix:
-        py: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
@@ -102,7 +102,7 @@ jobs:
     name: Test MacOS
     strategy:
       matrix:
-        py: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v2

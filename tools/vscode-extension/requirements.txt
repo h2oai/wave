@@ -1,2 +1,2 @@
-parso==0.8.2
-pygls==0.11.0
+parso==0.8.3
+pygls==1.0.2
