@@ -991,6 +991,7 @@ export const
       <div data-test={m.name} style={{
         position: 'relative',
         flexGrow: isFullHeight ? 1 : 0,
+        minHeight: isFullHeight ? 100 : 'auto',
         height: isFullHeight ? 'auto' : computeHeight()
       }}>
         <Fluent.Stack horizontal>
