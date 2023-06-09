@@ -29,6 +29,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_lightwave'],
+    package_data={'h2o_lightwave': ['py.typed']},
     extras_require=dict(web=[f"h2o_lightwave_web=={version}"]),
     classifiers=[
         'Programming Language :: Python :: 3',

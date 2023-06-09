@@ -71,6 +71,7 @@ setuptools.setup(
     conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=['h2o_wave'],
+    package_data={'h2o_wave': ['py.typed']},
     data_files=get_data_files(),
     classifiers=[
         'Programming Language :: Python :: 3',
