@@ -56,7 +56,7 @@ export const
 
     const
       isFullHeight = children.props.model?.height === '1',
-      tooltipProps: Fluent.ITooltipProps = { onRenderContent: () => <div><Markdown source={content} /></div> }
+      tooltipProps: Fluent.ITooltipProps = { onRenderContent: () => <Markdown source={content} /> }
     return (
       <div className={clas(css.flexContainer, isFullHeight ? css.expand : css.alignStart)} data-test='tooltip'>
         {

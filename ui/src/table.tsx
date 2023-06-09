@@ -136,7 +136,7 @@ export interface Table {
   downloadable?: B
   /** Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False. */
   resettable?: B
-  /** Custom height of the table in px (e.g. '200px') or use '1' to fill the remaining card space. */
+  /** The height of the table in px (e.g. '200px') or '1' to fill the remaining card space. */
   height?: S
   /** The width of the table, e.g. '100px'. Defaults to '100%'. */
   width?: S
@@ -696,7 +696,7 @@ export const
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       isSingle = Boolean(m.value || m.single),
-      isFullHeight = Boolean(m.height === '1'),
+      isFullHeight = m.height === '1',
       [filteredItems, setFilteredItems] = React.useState(items),
       [currentPage, setCurrentPage] = React.useState(1),
       searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
