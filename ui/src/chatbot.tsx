@@ -17,7 +17,7 @@ import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
-import { clas, cssVar, important, padding, px, rem } from './theme'
+import { clas, cssVar, getContrast, important, padding, px, rem } from './theme'
 import { bond, wave } from './ui'
 
 const
@@ -41,19 +41,19 @@ const
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
-      '&:last-child': { marginBottom: important(px(100)) },
+      '&:last-child': { marginBottom: important(px(70)) },
       display: 'flex',
       justifyContent: 'center',
     },
     msg: {
-      width: '65ch',
+      maxWidth: '65ch',
+      flexGrow: 1,
     },
-    userMsg: {
+    botMsg: {
       backgroundColor: cssVar('$neutralLighter'),
     },
     text: {
       display: 'inline-block',
-      maxWidth: '65ch',
       textAlign: 'left',
     },
     textInput: {
@@ -83,6 +83,8 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     [msgs, setMsgs] = React.useState<ChatMessage[]>([]),
     [userInput, setUserInput] = React.useState(''),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
+    theme = Fluent.useTheme(),
+    botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[model.name] = newVal
@@ -97,7 +99,10 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     }
 
   React.useEffect(() => {
-    if (msgContainerRef.current) msgContainerRef.current.scrollTo({ top: msgContainerRef.current.scrollHeight, behavior: 'smooth' })
+    const msgContainer = msgContainerRef.current
+    if (!msgContainer) return
+    else if (msgContainer?.scrollTo) msgContainer.scrollTo({ top: msgContainer.scrollHeight, behavior: 'smooth' })
+    else msgContainer.scrollTop = msgContainer.scrollHeight
   }, [msgs])
   React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
 
@@ -107,11 +112,11 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
         {msgs.map(({ msg, fromUser }, idx) => (
           <div
             key={idx}
-            className={clas(css.msgWrapper, fromUser ? css.userMsg : '')}
+            className={clas(css.msgWrapper, fromUser ? '' : css.botMsg)}
             style={{
               paddingTop: msgs[idx - 1]?.fromUser !== fromUser ? rem(0.7) : 0,
               paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.85) : 0,
-              color: cssVar(fromUser ? '$neutralDark' : '$themePrimary')
+              color: fromUser ? '$text' : botTextColor
             }} >
             <div
               className={clas(css.msg, 'wave-s14')}
