@@ -301,9 +301,9 @@ class Ref:
 
     def __iadd__(self, value):
         if not getattr(self, KEY).endswith('data'):
-            raise ValueError('+= can only be used on cyclic data buffers.')
+            raise ValueError('+= can only be used on list data buffers.')
         page = getattr(self, PAGE)
-        page._track(_set_op(self, '__wave_append__', _dump(value)))
+        page._track(_set_op(self, '__append__', _dump(value)))
         page._skip_next_track = True
 
 
@@ -317,31 +317,35 @@ class Data:
         data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers.
     """
 
-    def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
+    def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None, t: Optional[str] = None):
         self.fields = fields
         self.data = data
         self.size = size
+        self.type = t
 
     def dump(self):
         f = self.fields
         d = self.data
         n = self.size
+        t = self.type
         if d:
+            if t == 'list':
+                return dict(l=dict(f=f, d=d))
             if isinstance(d, dict):
                 return dict(m=dict(f=f, d=d))
+            if n < 0:
+                return dict(c=dict(f=f, d=d))
             else:
-                if n < 0:
-                    return dict(c=dict(f=f, d=d))
-                else:
-                    return dict(f=dict(f=f, d=d))
+                return dict(f=dict(f=f, d=d))
         else:
+            if t == 'list':
+                return dict(l=dict(f=f))
             if n == 0:
                 return dict(m=dict(f=f))
+            if n < 0:
+                return dict(c=dict(f=f, n=-n))
             else:
-                if n < 0:
-                    return dict(c=dict(f=f, n=-n))
-                else:
-                    return dict(f=dict(f=f, n=n))
+                return dict(f=dict(f=f, n=n))
 
 
 def data(
@@ -350,6 +354,7 @@ def data(
         rows: Optional[Union[dict, list]] = None,
         columns: Optional[Union[dict, list]] = None,
         pack=False,
+        t: Optional[str] = None,
 ) -> Union[Data, str]:
     """
     Create a `h2o_wave.core.Data` instance for associating data with cards.
@@ -411,7 +416,7 @@ def data(
     if not _is_int(size):
         raise ValueError('size must be int')
 
-    return Data(fields, size, rows)
+    return Data(fields, size, rows, t)
 
 
 class _ServerCacheBase:

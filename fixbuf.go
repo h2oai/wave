@@ -43,10 +43,6 @@ func (b *FixBuf) set(k string, v interface{}) {
 }
 
 func (b *FixBuf) seti(i int, v interface{}) {
-	// Support negative indices.
-	if i < 0 && i > -len(b.tups) {
-		i += len(b.tups)
-	}
 	if i >= 0 && i < len(b.tups) {
 		if v == nil {
 			b.tups[i] = nil

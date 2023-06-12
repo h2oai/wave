@@ -144,7 +144,7 @@ build-docker:
 		.
 
 run: ## Run server
-	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy -public-dir /assets/@./assets
+	go run cmd/wave/main.go -web-dir ./ui/build -debug -proxy -public-dir /assets/@./assets
 
 run-db: ## Run database server
 	go run cmd/wavedb/main.go
@@ -178,7 +178,7 @@ release-nightly: build-ui ## Prepare nightly release builds.
 	$(MAKE) OS=darwin ARCH=arm64 release-os
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
 	cd py && $(MAKE) build-wave
-	# $(MAKE) build-r-nightly
+	$(MAKE) build-r-nightly
 
 publish-release-s3:
 	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"

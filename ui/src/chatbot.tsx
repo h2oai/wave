@@ -114,9 +114,11 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
 
   React.useEffect(() => {
     if (!msgContainerRef.current) return
-    const offsetTop = msgContainerRef.current.scrollHeight
-    if (msgContainerRef.current?.scrollTo) msgContainerRef.current.scrollTo({ top: offsetTop, behavior: 'smooth' })
-    else msgContainerRef.current.scrollTop = offsetTop
+    const topOffset = msgContainerRef.current.scrollHeight
+
+    msgContainerRef.current?.scrollTo
+      ? msgContainerRef.current.scrollTo({ top: topOffset, behavior: 'smooth' })
+      : msgContainerRef.current.scrollTop = topOffset
   }, [msgs])
   React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
 

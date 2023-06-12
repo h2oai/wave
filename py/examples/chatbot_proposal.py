@@ -5,21 +5,19 @@
 from h2o_wave import main, app, Q, ui, data
 
 
-MAX_MESSAGES = 100
-
-
-@app('/')
+@app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        # Cyclic buffer drops oldest messages when full.
-        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data(size=-MAX_MESSAGES), name='chatbot')
+        # Use list buffer to allow easy streaming.
+        list_buffer = data(fields='msg fromUser', t='list')
+        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=list_buffer, name='chatbot')
         q.client.initialized = True
 
     # A new message arrived.
     if q.args.chatbot:
         # Append user message.
         q.page['example'].data += [q.args.chatbot, True]
-        # Append bot message.
+        # Append bot response.
         q.page['example'].data += ['', False]
         await q.page.save()
 

@@ -201,6 +201,7 @@ interface OpD {
   c?: CycBufD
   f?: FixBufD
   m?: MapBufD
+  l?: ListBufD
   d?: Dict<Datum>
   b?: BufD[]
 }
@@ -217,6 +218,7 @@ interface BufD {
   c: CycBufD
   f: FixBufD
   m: MapBufD
+  l: ListBufD
 }
 interface MapBufD {
   f: S[]
@@ -231,6 +233,11 @@ interface CycBufD {
   f: S[]
   d: (Tup | null)[]
   n: U
+  i: U
+}
+interface ListBufD {
+  f: S[]
+  d: (Tup | null)[]
   i: U
 }
 interface Cur {
@@ -258,6 +265,7 @@ interface FixBuf extends DataBuf {
   geti(i: U): Cur | null
 }
 type CycBuf = DataBuf
+type ListBuf = DataBuf
 type MapBuf = DataBuf
 
 /** A page. */
@@ -545,9 +553,6 @@ const
         if (!isNaN(i)) seti(i, v)
       },
       seti = (i: U, v: any) => {
-        if (i < 0 && -i > -n) {
-          i += n
-        }
         if (i >= 0 && i < n) {
           if (v === null) {
             tups[i] = null
@@ -585,21 +590,7 @@ const
       put = (xs: any) => {
         if (Array.isArray(xs)) for (const x of xs) set(cur, x)
       },
-      set = (key: S, v: any) => {
-        // Check if key is a valid index.
-        const numKey = +key
-        if (!isNaN(numKey)) {
-          let idx = numKey
-          // If negative, start from last inserted idx.
-          if (idx < 0) idx = i + idx
-          // If out of bounds, wrap around.
-          if (idx < 0) idx += n
-          if (idx >= 0 && idx < n) {
-            b.seti(idx, v)
-            return
-          }
-        }
-        // Otherwise, append to the end.
+      set = (_k: S, v: any) => {
         b.seti(i, v)
         i++
         if (i >= n) i = 0
@@ -614,6 +605,45 @@ const
           const tup = tups[j]
           if (tup) xs.push(t.make(tup))
         }
+        return xs
+      },
+      dict = (): Dict<Rec> => ({})
+    return { __buf__: true, put, set, get, list, dict }
+  },
+  newListBuf = (t: Typ, tups: (Tup | null)[], i: U): ListBuf => {
+    let b = newFixBuf(t, tups)
+    const
+      put = (xs: any) => {
+        if (Array.isArray(xs)) for (const x of xs) set("", x)
+      },
+      set = (key: S, v: any) => {
+        // Check if key is a valid index.
+        const numKey = +key
+        if (!isNaN(numKey)) {
+          let idx = numKey
+          // If negative, start from last inserted idx.
+          if (idx < 0) idx = i + idx
+          // If out of bounds, wrap around.
+          if (idx < 0) idx += tups.length
+          if (idx >= 0 && idx < tups.length) {
+            b.seti(idx, v)
+            return
+          }
+        }
+        // Otherwise, append to the end.
+        b.seti(i, v)
+        i++
+        if (i >= tups.length) {
+          tups = doubleTupsSize(tups)
+          b = newFixBuf(t, tups)
+        }
+      },
+      get = (_k: S): Cur | null => {
+        return b.geti(i)
+      },
+      list = (): (Rec | null)[] => {
+        const xs: (Rec | null)[] = []
+        for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
       },
       dict = (): Dict<Rec> => ({})
@@ -660,11 +690,23 @@ const
     for (let i = 0; i < n; i++) xs[i] = null
     return xs
   },
+  doubleTupsSize = (tups: (Tup | null)[]) => {
+    const n = tups.length
+    const xs = new Array<Tup | null>(n * 2)
+    for (let i = 0; i < n; i++) xs[i] = tups[i]
+    return xs
+  },
   loadCycBuf = (b: CycBufD): CycBuf => {
     const t = newType(b.f)
     return b.d && b.d.length
       ? newCycBuf(t, b.d, b.i)
       : newCycBuf(t, newTups(b.n <= 0 ? 10 : b.n), 0)
+  },
+  loadListBuf = (b: ListBufD): ListBuf => {
+    const t = newType(b.f)
+    return b.d && b.d.length
+      ? newListBuf(t, b.d, b.i)
+      : newListBuf(t, newTups(10), 0)
   },
   loadFixBuf = (b: FixBufD): FixBuf => {
     const t = newType(b.f)
@@ -678,6 +720,7 @@ const
     if (b.c) return loadCycBuf(b.c)
     if (b.f) return loadFixBuf(b.f)
     if (b.m) return loadMapBuf(b.m)
+    if (b.l) return loadListBuf(b.l)
     return null
   },
   loadCard = (key: S, c: CardD): Card => {
@@ -823,6 +866,8 @@ const
           page.set(op.k, loadFixBuf(op.f))
         } else if (op.m) {
           page.set(op.k, loadMapBuf(op.m))
+        } else if (op.l) {
+          page.set(op.k, loadListBuf(op.l))
         } else if (op.d) {
           page.add(op.k, loadCard(op.k, { d: op.d, b: op.b || [] }))
         } else {
