@@ -24,24 +24,18 @@ const
   SUBMIT_BTN_SIZE = 30,
   css = Fluent.mergeStyleSets({
     chatWindow: {
-      height: '100%',
-      minHeight: 400,
-      // HACK: Use absolute positionning due to Safari being Safari.
-      position: 'relative',
-      flexGrow: 1,
+      display: 'flex',
+      flex: '1 0 400px',
+      flexDirection: 'column',
+      overflowY: 'auto',
     },
     msgContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      overflowY: 'auto',
+      flexGrow: 1,
+      overflowY: 'scroll',
       padding: padding(0, 0),
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
-      '&:last-child': { marginBottom: important(px(70)) },
       display: 'flex',
       justifyContent: 'center',
     },
@@ -57,12 +51,8 @@ const
       textAlign: 'left',
     },
     textInput: {
-      position: 'absolute',
+      position: 'relative',
       padding: 15,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      backgroundImage: `linear-gradient(180deg,rgba(0,0,0,0),${cssVar('$card')} 45%)`
     }
   })
 
