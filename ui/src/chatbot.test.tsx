@@ -139,8 +139,8 @@ describe('XChatbot', () => {
     expect(getByText('Stop generating')).toBeVisible()
   })
 
-  it('Emits the stop event when stop button is clicked', () => {
-    const { getByText } = render(<XChatbot model={{ ...model, generating: true }} />)
+  it('Fires a stop event when stop button is clicked', () => {
+    const { getByText } = render(<XChatbot model={{ ...model, generating: true, events: ['stop'] }} />)
     const emitMock = jest.fn()
     wave.emit = emitMock
     fireEvent.click(getByText('Stop generating'))

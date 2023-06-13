@@ -77,6 +77,8 @@ export interface Chatbot {
   data: Rec[]
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
+  /** The events to capture on this chatbot. One of 'stop'. */
+  events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
 }
@@ -100,7 +102,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
       wave.push()
       setUserInput('')
     },
-    stopGenerating = () => wave.emit(model.name, 'stop', true)
+    stopGenerating = () => { if (model.events?.includes('stop')) wave.emit(model.name, 'stop', true) }
 
   React.useEffect(() => {
     if (!msgContainerRef.current) return
@@ -175,13 +177,15 @@ interface State {
   placeholder?: S
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
+  /** The events to capture on this chatbot. One of 'stop'. */
+  events?: S[]
 }
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
       <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
-        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder, generating: state.generating }} />
+        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder, generating: state.generating, events: state.events }} />
       </div>
     )
     return { render, changed }
