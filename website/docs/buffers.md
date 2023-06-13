@@ -152,21 +152,19 @@ b.cin = ['cinnamon', 2.99]
 Modify a buffer value:
 
 ```py
-# Array buffer (the following two forms are equivalent)
+# Array and list buffer (the following two forms are equivalent).
 b[2]['price'] = 2.99
 b[2].price = 2.99
 
-# Cyclic buffer (the following two forms are equivalent)
-b[-1]['price'] = 2.99 # last donut on menu now costs 2.99
-b[-1].price = 2.99
-
-# Map buffer (the following three forms are equivalent)
+# Map buffer (the following three forms are equivalent).
 b['cin']['price'] = 2.99
 b['cin'].price = 2.99
 b.cin.price = 2.99
 ```
 
 ## Packed buffers
+
+The following is true for Wave scripts only. Unicast apps do not store data buffers on server unless started with `-editable` option.
 
 If you intend to create tabular data once and never change individual rows or values, it is better to avoid allocating memory on the server by using a *packed buffer*. Packed buffers use less memory on the server and improve performance. To create a packed buffer, use `data(..., pack=True)`. Note that `size` is not required, and is ignored if provided.
 
