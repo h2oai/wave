@@ -371,6 +371,7 @@ def data(
         columns: The columns in this data.
         pack: True to return a packed string representing the data instead of a `h2o_wave.core.Data` placeholder.
         t: Buffer type. One of 'list', 'map', 'circular' or 'fixed'. Overrides the buffer type inferred from the size.
+
     Returns:
         Either a `h2o_wave.core.Data` placeholder or a packed string representing the data.
     """
