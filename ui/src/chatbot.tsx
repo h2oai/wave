@@ -25,13 +25,14 @@ const
   css = Fluent.mergeStyleSets({
     chatWindow: {
       display: 'flex',
-      flex: '1 0 400px',
+      flex: '1 0 0px',
+      height: '100%',
+      minHeight: 400,
       flexDirection: 'column',
-      overflowY: 'auto',
     },
     msgContainer: {
       flexGrow: 1,
-      overflowY: 'scroll',
+      overflowY: 'auto',
       padding: padding(0, 0),
     },
     msgWrapper: {
