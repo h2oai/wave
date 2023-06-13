@@ -78,7 +78,7 @@ func (b *ListBuf) dump() BufD {
 func loadListBuf(ns *Namespace, b *ListBufD) *ListBuf {
 	t := ns.make(b.F)
 	if len(b.D) == 0 {
-		return &ListBuf{newFixBuf(t, 10), 0}
+		return &ListBuf{newFixBuf(t, 10), 9}
 	}
 	return &ListBuf{&FixBuf{t, b.D}, len(b.D)}
 }
