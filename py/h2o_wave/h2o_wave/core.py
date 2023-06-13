@@ -315,6 +315,7 @@ class Data:
         fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
         size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
         data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers.
+        t: Buffer type. One of 'list', 'map', 'circular' or 'fixed'. Overrides the buffer type inferred from the size.
     """
 
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None, t: Optional[str] = None):
@@ -331,21 +332,19 @@ class Data:
         if d:
             if t == 'list':
                 return dict(l=dict(f=f, d=d))
-            if isinstance(d, dict):
+            if t == 'map' or isinstance(d, dict):
                 return dict(m=dict(f=f, d=d))
-            if n < 0:
+            if t == 'circular' or n < 0:
                 return dict(c=dict(f=f, d=d))
-            else:
-                return dict(f=dict(f=f, d=d))
+            return dict(f=dict(f=f, d=d))
         else:
             if t == 'list':
                 return dict(l=dict(f=f))
-            if n == 0:
+            if t == 'map' or n == 0:
                 return dict(m=dict(f=f))
-            if n < 0:
+            if t == 'circular' or n < 0:
                 return dict(c=dict(f=f, n=-n))
-            else:
-                return dict(f=dict(f=f, n=n))
+            return dict(f=dict(f=f, n=n))
 
 
 def data(
@@ -371,7 +370,7 @@ def data(
         rows: The rows in this data.
         columns: The columns in this data.
         pack: True to return a packed string representing the data instead of a `h2o_wave.core.Data` placeholder.
-
+        t: Buffer type. One of 'list', 'map', 'circular' or 'fixed'. Overrides the buffer type inferred from the size.
     Returns:
         Either a `h2o_wave.core.Data` placeholder or a packed string representing the data.
     """
