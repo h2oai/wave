@@ -17,7 +17,7 @@ import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
-import { clas, cssVar, getContrast, important, padding, px, rem } from './theme'
+import { clas, cssVar, getContrast, important, px, rem } from './theme'
 import { bond, wave } from './ui'
 
 const
@@ -37,7 +37,6 @@ const
       right: 0,
       bottom: 62, // Height of input box + padding.
       overflowY: 'auto',
-      padding: padding(0, 15),
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
@@ -51,14 +50,12 @@ const
     botMsg: {
       backgroundColor: cssVar('$neutralLighter'),
     },
-    text: {
-      display: 'inline-block',
-      textAlign: 'left',
-    },
     textInput: {
-      // position: 'relative',
-      // padding: 15,
-      padding: 15, position: 'absolute', bottom: 0, left: 0, right: 0
+      padding: 15,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0
     }
   })
 
@@ -110,16 +107,14 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
             key={idx}
             className={clas(css.msgWrapper, fromUser ? '' : css.botMsg)}
             style={{
-              paddingTop: msgs[idx - 1]?.fromUser !== fromUser ? rem(0.7) : 0,
-              paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.85) : 0,
+              paddingTop: msgs[idx - 1]?.fromUser !== fromUser ? rem(0.8) : 0,
+              paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.8) : 0,
               color: fromUser ? '$text' : botTextColor
             }} >
             <div
               className={clas(css.msg, 'wave-s14')}
               style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
-              <span className={css.text}>
-                <Markdown source={msg || ''} />
-              </span>
+              <Markdown source={msg || ''} />
             </div>
           </div>
         ))}
