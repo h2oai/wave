@@ -637,8 +637,17 @@ const
         b.seti(i, v)
         i++
       },
-      get = (_k: S): Cur | null => {
-        return b.geti(i)
+      get = (k: S): Cur | null => {
+        const i = parseI(k)
+        if (!isNaN(i)) return geti(i)
+        return null
+      },
+      geti = (i: U): Cur | null => {
+        if (i >= 0 && i < tups.length) {
+          const tup = tups[i]
+          if (tup) return newCur(t, tup)
+        }
+        return null
       },
       list = (): Rec[] => {
         const xs: Rec[] = []
