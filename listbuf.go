@@ -34,11 +34,9 @@ func (b *ListBuf) set(key string, v any) {
 	fb := b.b
 	// Check if key is a valid index.
 	if i, err := strconv.Atoi(key); err == nil {
+		// Support negative indices.
 		if i < 0 {
 			i += b.i
-		}
-		if i < 0 {
-			i += len(fb.tups)
 		}
 		if i >= 0 && i < len(fb.tups) {
 			fb.seti(i, v)

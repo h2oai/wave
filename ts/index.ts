@@ -622,8 +622,6 @@ const
           let idx = numKey
           // If negative, start from last inserted idx.
           if (idx < 0) idx += i
-          // If out of bounds, wrap around.
-          if (idx < 0) idx += tups.length
           if (idx >= 0 && idx < tups.length) {
             b.seti(idx, v)
             return
