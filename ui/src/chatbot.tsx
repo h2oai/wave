@@ -35,7 +35,6 @@ const
       top: 15,
       left: 0,
       right: 0,
-      // bottom: 62, // Height of input box + padding.
       overflowY: 'auto',
     },
     msgWrapper: {
