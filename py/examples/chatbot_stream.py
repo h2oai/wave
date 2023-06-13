@@ -8,7 +8,7 @@ from h2o_wave import main, app, Q, ui, data
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        # Use list buffer to allow easy streaming.
+        # Use list buffer to allow easy streaming. Must have exactly 2 fields - msg and fromUser.
         list_buffer = data(fields='msg fromUser', t='list')
         q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=list_buffer, name='chatbot')
         q.client.initialized = True
