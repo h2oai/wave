@@ -46,17 +46,25 @@ func (b *ListBuf) set(key string, v any) {
 		}
 	}
 	// Otherwise, append to the current end.
+	if b.i >= len(fb.tups) {
+		xs := make([][]interface{}, len(fb.tups)*2)
+		tups := fb.tups
+		fb.tups = xs
+
+		for i, t := range tups {
+			fb.seti(i, t)
+		}
+	}
 	fb.seti(b.i, v)
 	b.i++
-	if b.i >= len(fb.tups) {
-		b.i = 0
-	}
 }
 
 func (b *ListBuf) get(key string) (Cur, bool) {
 	// Check if key is a valid index.
 	if i, err := strconv.Atoi(key); err == nil {
-		// TODO: Add negative indexing.
+		if i < 0 {
+			i += len(b.b.tups)
+		}
 		return b.b.geti(i)
 	}
 
@@ -64,14 +72,13 @@ func (b *ListBuf) get(key string) (Cur, bool) {
 }
 
 func (b *ListBuf) dump() BufD {
-	return BufD{L: &ListBufD{b.b.t.f, b.b.tups, b.i}}
+	return BufD{L: &ListBufD{b.b.t.f, b.b.tups}}
 }
 
 func loadListBuf(ns *Namespace, b *ListBufD) *ListBuf {
 	t := ns.make(b.F)
 	if len(b.D) == 0 {
-		// TODO: Make length dynamic.
 		return &ListBuf{newFixBuf(t, 10), 0}
 	}
-	return &ListBuf{&FixBuf{t, b.D}, b.I}
+	return &ListBuf{&FixBuf{t, b.D}, len(b.D)}
 }

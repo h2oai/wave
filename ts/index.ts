@@ -238,7 +238,6 @@ interface CycBufD {
 interface ListBufD {
   f: S[]
   d: (Tup | null)[]
-  i: U
 }
 interface Cur {
   __cur__: true
@@ -622,7 +621,7 @@ const
         if (!isNaN(numKey)) {
           let idx = numKey
           // If negative, start from last inserted idx.
-          if (idx < 0) idx = i + idx
+          if (idx < 0) idx += i
           // If out of bounds, wrap around.
           if (idx < 0) idx += tups.length
           if (idx >= 0 && idx < tups.length) {
@@ -631,19 +630,19 @@ const
           }
         }
         // Otherwise, append to the end.
-        b.seti(i, v)
-        i++
         if (i >= tups.length) {
           tups = doubleTupsSize(tups)
           b = newFixBuf(t, tups)
         }
+        b.seti(i, v)
+        i++
       },
       get = (_k: S): Cur | null => {
         return b.geti(i)
       },
-      list = (): (Rec | null)[] => {
-        const xs: (Rec | null)[] = []
-        for (const tup of tups) xs.push(tup ? t.make(tup) : null)
+      list = (): Rec[] => {
+        const xs: Rec[] = []
+        for (const tup of tups) if (tup) xs.push(t.make(tup))
         return xs
       },
       dict = (): Dict<Rec> => ({})
@@ -705,7 +704,7 @@ const
   loadListBuf = (b: ListBufD): ListBuf => {
     const t = newType(b.f)
     return b.d && b.d.length
-      ? newListBuf(t, b.d, b.i)
+      ? newListBuf(t, b.d, b.d.length)
       : newListBuf(t, newTups(10), 0)
   },
   loadFixBuf = (b: FixBufD): FixBuf => {

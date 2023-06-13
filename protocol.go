@@ -86,7 +86,6 @@ type CycBufD struct {
 type ListBufD struct {
 	F []string        `json:"f"` // fields
 	D [][]interface{} `json:"d"` // tuples
-	I int             `json:"i"` // index
 }
 
 // AppRequest represents a request from an app.
