@@ -1056,19 +1056,21 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chatbot" value="ui.chatbot(name='$name$',placeholder='$placeholder$',data=[&#10;	$data$	&#10;]),$END$" description="Create Wave Chatbot with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chatbot" value="ui.chatbot(name='$name$',placeholder='$placeholder$',generating=$generating$,data=[&#10;	$data$	&#10;]),$END$" description="Create Wave Chatbot with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="generating" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chatbot_card" value="ui.chatbot_card(box='$box$',name='$name$',data=$data$,placeholder='$placeholder$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatbotCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chatbot_card" value="ui.chatbot_card(box='$box$',name='$name$',data=$data$,placeholder='$placeholder$',generating=$generating$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatbotCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="generating" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

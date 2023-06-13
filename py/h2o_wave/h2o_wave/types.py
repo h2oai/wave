@@ -7181,24 +7181,30 @@ class Chatbot:
             name: str,
             data: List[PackedRecord],
             placeholder: Optional[str] = None,
+            generating: Optional[bool] = None,
     ):
         _guard_scalar('Chatbot.name', name, (str,), True, False, False)
         _guard_scalar('Chatbot.placeholder', placeholder, (str,), False, True, False)
+        _guard_scalar('Chatbot.generating', generating, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.data = data
         """Chat messages data. Requires cyclic buffer."""
         self.placeholder = placeholder
         """Chat input box placeholder. Use for prompt examples."""
+        self.generating = generating
+        """True to show a button to stop the text generation. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Chatbot.name', self.name, (str,), True, False, False)
         _guard_scalar('Chatbot.placeholder', self.placeholder, (str,), False, True, False)
+        _guard_scalar('Chatbot.generating', self.generating, (bool,), False, True, False)
         return _dump(
             name=self.name,
             data=self.data,
             placeholder=self.placeholder,
+            generating=self.generating,
         )
 
     @staticmethod
@@ -7209,13 +7215,17 @@ class Chatbot:
         __d_data: Any = __d.get('data')
         __d_placeholder: Any = __d.get('placeholder')
         _guard_scalar('Chatbot.placeholder', __d_placeholder, (str,), False, True, False)
+        __d_generating: Any = __d.get('generating')
+        _guard_scalar('Chatbot.generating', __d_generating, (bool,), False, True, False)
         name: str = __d_name
         data: List[PackedRecord] = __d_data
         placeholder: Optional[str] = __d_placeholder
+        generating: Optional[bool] = __d_generating
         return Chatbot(
             name,
             data,
             placeholder,
+            generating,
         )
 
 
@@ -8072,11 +8082,13 @@ class ChatbotCard:
             name: str,
             data: PackedRecord,
             placeholder: Optional[str] = None,
+            generating: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ChatbotCard.box', box, (str,), False, False, False)
         _guard_scalar('ChatbotCard.name', name, (str,), True, False, False)
         _guard_scalar('ChatbotCard.placeholder', placeholder, (str,), False, True, False)
+        _guard_scalar('ChatbotCard.generating', generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8086,6 +8098,8 @@ class ChatbotCard:
         """Chat messages data. Requires cyclic buffer."""
         self.placeholder = placeholder
         """Chat input box placeholder. Use for prompt examples."""
+        self.generating = generating
+        """True to show a button to stop the text generation. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8094,6 +8108,7 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ChatbotCard.name', self.name, (str,), True, False, False)
         _guard_scalar('ChatbotCard.placeholder', self.placeholder, (str,), False, True, False)
+        _guard_scalar('ChatbotCard.generating', self.generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='chatbot',
@@ -8101,6 +8116,7 @@ class ChatbotCard:
             name=self.name,
             data=self.data,
             placeholder=self.placeholder,
+            generating=self.generating,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8114,18 +8130,22 @@ class ChatbotCard:
         __d_data: Any = __d.get('data')
         __d_placeholder: Any = __d.get('placeholder')
         _guard_scalar('ChatbotCard.placeholder', __d_placeholder, (str,), False, True, False)
+        __d_generating: Any = __d.get('generating')
+        _guard_scalar('ChatbotCard.generating', __d_generating, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ChatbotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         name: str = __d_name
         data: PackedRecord = __d_data
         placeholder: Optional[str] = __d_placeholder
+        generating: Optional[bool] = __d_generating
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ChatbotCard(
             box,
             name,
             data,
             placeholder,
+            generating,
             commands,
         )
 

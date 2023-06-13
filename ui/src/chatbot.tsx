@@ -35,7 +35,7 @@ const
       top: 15,
       left: 0,
       right: 0,
-      bottom: 62, // Height of input box + padding.
+      // bottom: 62, // Height of input box + padding.
       overflowY: 'auto',
     },
     msgWrapper: {
@@ -56,6 +56,15 @@ const
       bottom: 0,
       left: 0,
       right: 0
+    },
+    stopButton: {
+      position: 'absolute',
+      bottom: 54,
+      left: 0,
+      right: 0,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      width: 180
     }
   })
 
@@ -69,6 +78,8 @@ export interface Chatbot {
   data: Rec[]
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
+  /** True to show a button to stop the text generation. Defaults to False. */
+  generating?: B
 }
 
 export const XChatbot = ({ model }: { model: Chatbot }) => {
@@ -89,7 +100,8 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
       setMsgs([...msgs, { msg: userInput, fromUser: true }])
       wave.push()
       setUserInput('')
-    }
+    },
+    stopGenerating = () => wave.emit(model.name, 'stop', true)
 
   React.useEffect(() => {
     if (!msgContainerRef.current) return
@@ -101,7 +113,12 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
 
   return (
     <div className={css.chatWindow}>
-      <div className={css.msgContainer} ref={msgContainerRef}>
+      <div
+        ref={msgContainerRef}
+        className={css.msgContainer}
+        // Height of input box + padding (+ height of stop button).
+        style={{ bottom: model.generating ? 94 : 62 }}
+      >
         {msgs.map(({ msg, fromUser }, idx) => (
           <div
             key={idx}
@@ -119,6 +136,11 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           </div>
         ))}
       </div>
+      {model.generating &&
+        <Fluent.DefaultButton className={css.stopButton} onClick={stopGenerating} iconProps={{ iconName: 'Stop' }}>
+          Stop generating
+        </Fluent.DefaultButton>
+      }
       <div className={css.textInput}>
         <Fluent.TextField
           data-test={model.name}
@@ -152,13 +174,15 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
+  /** True to show a button to stop the text generation. Defaults to False. */
+  generating?: B
 }
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
       <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
-        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder }} />
+        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder, generating: state.generating }} />
       </div>
     )
     return { render, changed }
