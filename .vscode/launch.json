@@ -99,7 +99,7 @@
       "cwd": "${workspaceFolder}/py/examples",
       "args": [
         "run",
-        "chatbot",
+        "tour",
         "--no-reload",
       ],
     },

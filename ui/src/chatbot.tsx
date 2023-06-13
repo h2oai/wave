@@ -139,9 +139,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
               paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.8) : 0,
               color: fromUser ? '$text' : botTextColor
             }} >
-            <span
-              className={clas(css.msg, 'wave-s14')}
-              style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
               <Markdown source={msg || ''} />
             </span>
           </div>
