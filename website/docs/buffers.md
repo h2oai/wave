@@ -49,6 +49,7 @@ There are three types of data buffers:
 - **Array buffers** hold tabular data with a fixed number of rows, and allow random access to rows using 0-based integers as keys.
 - **Cyclic buffers** also hold tabular data with a fixed number of rows, but do not allow random access to rows. They can only be appended to. Rows are first-in first-out (FIFO), and adding rows beyond its capacity overwrites the oldest rows.
 - **Map buffers** (or dictionary buffers) hold tabular data with a variable number of rows, and allow random access to rows using string keys.
+- **List buffers** (or dynamic array buffers) hold tabular data with a variable number of rows, allow random access to rows using 0-based integers as keys (negative indexing supported), and allow appending via `+=` operator.
 
 :::caution
 Map buffers are convenient to use, but use more memory on the server compared to array buffers and cyclic buffers, so use them sparingly.
@@ -70,6 +71,7 @@ Use the `data()` function to declare a data buffer. The Wave server uses this de
   - For map buffers, pass a dict with strings as keys and rows as values.
 - `columns`: A `list` of columns to initialize the data buffer with. All columns must be of the same length. The columns are automatically transposed to `rows`.
 - `pack`: `True` to pack (compress) the provided rows or columns, use less memory on the server-side, and improve performance. Set `pack=True` if you intend to never make any changes to the data buffer once created. Defaults to `False`.
+- `t`: Buffer type. One of 'list', 'map', 'circular' or 'fixed'. Overrides the buffer type inferred from the size.
 
 ## Buffers in practice
 
@@ -84,6 +86,9 @@ b = data(fields='donut price', size=-5)
 
 # Map buffer
 b = data(fields='donut price')
+
+# List buffer
+b = data(fields='donut price', t='list')
 ```
 
 Declare and initialize a 5-row buffer with columns `donut` and `price`.
@@ -115,6 +120,15 @@ data(fields='donut price', rows=dict(
     spr=['sprinkles', 2.49],
     sug=['sugar', 1.99],
 ))
+
+# List buffer
+data(fields='donut price', t='list', rows=[ 
+    ['cream', 3.99],
+    ['custard', 2.99],
+    ['cinnamon', 2.49],
+    ['sprinkles', 2.49],
+    ['sugar', 1.99],
+ ])
 ```
 
 A buffer can only be modified via card. To get a reference to the buffer:
@@ -142,11 +156,17 @@ Modify a buffer row:
 b[2] = ['cinnamon', 2.99]
 
 # Cyclic buffer
-b[-1] = ['fruit', 2.99] # replaces ['cream', 3.99]
+# Appends to the end, shifts all elements by 1,
+# dropping the first one as it would be the 6th element.
+b[-1] = ['fruit', 2.99]
 
 # Map buffer (the following two forms are equivalent)
 b['cin'] = ['cinnamon', 2.99]
 b.cin = ['cinnamon', 2.99]
+
+# List buffer
+b[2] += ['fruit', 2.99]
+b[-2] += ['fruit', 2.99] # Modify second index from the end.
 ```
 
 Modify a buffer value:
@@ -160,6 +180,13 @@ b[2].price = 2.99
 b['cin']['price'] = 2.99
 b['cin'].price = 2.99
 b.cin.price = 2.99
+
+# List buffer (the following two forms are equivalent)
+b[2]['price'] = 2.99 # third donut on menu now costs 2.99
+b[2].price = 2.99
+
+b[-1]['price'] = 2.99 # last donut from end on menu now costs 2.99
+b[-1].price = 2.99
 ```
 
 ## Packed buffers
