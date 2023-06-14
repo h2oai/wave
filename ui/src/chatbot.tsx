@@ -175,10 +175,10 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** True to show a button to stop the text generation. Defaults to False. */
-  generating?: B
   /** The events to capture on this chatbot. One of 'stop'. */
   events?: S[]
+  /** True to show a button to stop the text generation. Defaults to False. */
+  generating?: B
 }
 
 export const
