@@ -5,9 +5,6 @@
 from h2o_wave import main, app, Q, ui, data
 import asyncio
 
-
-MAX_MESSAGES = 100
-
 async def stream_message(q, msg):
     stream = ''
     # Show the "Stop generating" button
