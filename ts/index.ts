@@ -238,6 +238,7 @@ interface CycBufD {
 interface ListBufD {
   f: S[]
   d: (Tup | null)[]
+  n: U
 }
 interface Cur {
   __cur__: true
@@ -712,7 +713,7 @@ const
     const t = newType(b.f)
     return b.d && b.d.length
       ? newListBuf(t, b.d, b.d.length)
-      : newListBuf(t, newTups(10), 0)
+      : newListBuf(t, newTups(b.n <= 0 ? 10 : b.n), 0)
   },
   loadFixBuf = (b: FixBufD): FixBuf => {
     const t = newType(b.f)

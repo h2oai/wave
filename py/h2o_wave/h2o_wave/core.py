@@ -339,7 +339,7 @@ class Data:
             return dict(f=dict(f=f, d=d))
         else:
             if t == 'list':
-                return dict(l=dict(f=f))
+                return dict(l=dict(f=f, n=n))
             if t == 'map' or n == 0:
                 return dict(m=dict(f=f))
             if t == 'circular' or n < 0:

@@ -70,14 +70,17 @@ func (b *ListBuf) get(key string) (Cur, bool) {
 }
 
 func (b *ListBuf) dump() BufD {
-	return BufD{L: &ListBufD{b.b.t.f, b.b.tups}}
+	return BufD{L: &ListBufD{b.b.t.f, b.b.tups, len(b.b.tups)}}
 }
 
 func loadListBuf(ns *Namespace, b *ListBufD) *ListBuf {
 	t := ns.make(b.F)
 	if len(b.D) == 0 {
-		l := 10
-		return &ListBuf{newFixBuf(t, l), l - 1}
+		n := b.N
+		if n <= 0 {
+			n = 10
+		}
+		return &ListBuf{newFixBuf(t, n), n - 1}
 	}
 	return &ListBuf{&FixBuf{t, b.D}, len(b.D)}
 }
