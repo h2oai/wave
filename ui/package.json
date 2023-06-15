@@ -15,6 +15,7 @@
     "date-fns": "^2.29.1",
     "h2o-wave": "^1.1.0",
     "handlebars": "^4.7.7",
+    "highlight.js": "^11.8.0",
     "markdown-it": "^12.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

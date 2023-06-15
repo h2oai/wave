@@ -6,6 +6,56 @@ from h2o_wave import site, ui
 page = site['/demo']
 
 sample_markdown = '''=
+```typescript
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
+    },
+    body: {
+      flexGrow: 1,
+    },
+    markdown: {
+      $nest: {
+        '&>*:first-child': {
+          marginTop: 0
+        },
+        '&>*:last-child': {
+          marginBottom: 0
+        },
+        a: {
+          color: cssVar('$themePrimary'),
+          $nest: {
+            '&:hover': {
+              textDecoration: 'none',
+            },
+          },
+        },
+        table: {
+          width: pc(100),
+          borderCollapse: 'collapse',
+        },
+        tr: {
+          borderBottom: border(1, cssVar('$text5')),
+        },
+        th: {
+          padding: padding(11, 6),
+          textAlign: 'left',
+        },
+        td: {
+          padding: padding(11, 6),
+        },
+        img: {
+          maxWidth: '100%',
+          maxHeight: '100%',
+        },
+      },
+    },
+  })
+```
+
 The **quick** _brown_ fox jumped over the lazy dog.
 
 Block quote:
@@ -39,7 +89,7 @@ Table:
 '''
 
 page['example'] = ui.markdown_card(
-    box='1 1 3 10',
+    box='1 1 4 10',
     title='I was made using markdown!',
     content=sample_markdown,
 )
