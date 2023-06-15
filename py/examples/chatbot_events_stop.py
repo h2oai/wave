@@ -28,8 +28,15 @@ async def serve(q: Q):
         q.page['meta'] = ui.meta_card(box='', theme='h2o-dark')
         q.client.initialized = True
 
+    # Check if we get a stop event
+    if q.events.chatbot:
+        if q.events.chatbot.stop:
+            # Cancel the streaming task
+            q.client.task.cancel()
+            # Hide the "Stop generating" button
+            q.page['example'].generating = False
     # A new message arrived.
-    if q.args.chatbot:
+    elif q.args.chatbot:
         # Append user message.
         q.client.msg_num += 1
         q.page['example'].data[q.client.msg_num] = [q.args.chatbot, True]
@@ -39,13 +46,5 @@ async def serve(q: Q):
         chatbot_response = 'I am a fake chatbot. Sorry, I cannot help you.'
         # Create and run a task to stream the message
         q.client.task = asyncio.create_task(stream_message(q, chatbot_response))
-
-    # Check if we get a stop event
-    if q.events.chatbot:
-        if q.events.chatbot.stop:
-            # Cancel the streaming task
-            q.client.task.cancel()
-            # Hide the "Stop generating" button
-            q.page['example'].generating = False
 
     await q.page.save()
