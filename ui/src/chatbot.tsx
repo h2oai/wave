@@ -45,7 +45,8 @@ const
     msg: {
       maxWidth: '65ch',
       flexGrow: 1,
-      overflowWrap: 'break-word', // Breaks words longer than lines.
+      overflowWrap: 'break-word',
+      whiteSpace: 'pre-wrap',
     },
     botMsg: {
       backgroundColor: cssVar('$neutralLighter'),
@@ -170,7 +171,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           data-test={`${model.name}-submit`}
           iconProps={{ iconName: 'Send' }}
           onClick={submit}
-          disabled={!userInput.trim()}
+          disabled={!userInput.trim() || model.generating}
           styles={{
             root: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT },
             rootHovered: { backgroundColor: 'transparent' },
