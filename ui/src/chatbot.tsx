@@ -17,7 +17,7 @@ import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
-import { clas, cssVar, getContrast, important, px, rem } from './theme'
+import { clas, cssVar, getContrast, important, margin, px, rem } from './theme'
 import { bond, wave } from './ui'
 
 const
@@ -36,6 +36,7 @@ const
       left: 0,
       right: 0,
       overflowY: 'auto',
+      padding: margin(0, 15),
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
@@ -46,7 +47,9 @@ const
       maxWidth: '65ch',
       flexGrow: 1,
       overflowWrap: 'break-word',
-      whiteSpace: 'pre-wrap',
+      '& p': {
+        whiteSpace: 'pre-wrap'
+      },
     },
     botMsg: {
       backgroundColor: cssVar('$neutralLighter'),
@@ -60,7 +63,9 @@ const
     },
     stopButton: {
       left: '50%',
-      transform: 'translate(-50%, -7px)',
+      // Vertically centers the stop button between message container and text input container (textInput padding / 2).
+      marginBottom: 7.5,
+      transform: 'translateX(-50%)',
       width: 180
     }
   })
@@ -95,7 +100,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     },
     onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (!e.shiftKey && e.key === 'Enter') {
-        e.preventDefault() // Prevents a newline from being added to the text box.
+        e.preventDefault() // Do not add an extra newline to the input text box after submission.
         submit()
       }
     },
