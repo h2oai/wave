@@ -1003,14 +1003,14 @@
   "Wave Full Chatbot": {
     "prefix": "w_full_chatbot",
     "body": [
-      "ui.chatbot(name='$1', placeholder='$2', data=[\n\t\t$3\t\t\n]),$0"
+      "ui.chatbot(name='$1', placeholder='$2', generating=${3:False}, data=[\n\t\t$4\t\t\n], events=[\n\t\t$5\t\t\n]),$0"
     ],
     "description": "Create a full Wave Chatbot."
   },
   "Wave Full ChatbotCard": {
     "prefix": "w_full_chatbot_card",
     "body": [
-      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', commands=[\n\t\t$5\t\t\n])$0"
+      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', generating=${5:False}, events=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
     ],
     "description": "Create a full Wave ChatbotCard."
   },

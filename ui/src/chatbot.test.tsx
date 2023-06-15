@@ -133,4 +133,19 @@ describe('XChatbot', () => {
     fireEvent.change(getByRole('textbox'), { target: { value: ' ' } })
     expect(getByTestId(`${name}-submit`)).toBeDisabled()
   })
+
+  it('Renders stop button when generating prop is specified', () => {
+    const { getByText } = render(<XChatbot model={{ ...model, generating: true }} />)
+    expect(getByText('Stop generating')).toBeVisible()
+  })
+
+  it('Fires a stop event when stop button is clicked', () => {
+    const { getByText } = render(<XChatbot model={{ ...model, generating: true, events: ['stop'] }} />)
+    const emitMock = jest.fn()
+    wave.emit = emitMock
+    fireEvent.click(getByText('Stop generating'))
+    expect(emitMock).toHaveBeenCalled()
+    expect(emitMock).toHaveBeenCalledTimes(1)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'stop', true)
+  })
 })

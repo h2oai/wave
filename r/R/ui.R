@@ -3097,19 +3097,27 @@ ui_time_picker <- function(
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
+#' @param events The events to capture on this chatbot. One of 'stop'.
+#' @param generating True to show a button to stop the text generation. Defaults to False.
 #' @return A Chatbot instance.
 #' @export
 ui_chatbot <- function(
   name,
   data,
-  placeholder = NULL) {
+  placeholder = NULL,
+  events = NULL,
+  generating = NULL) {
   .guard_scalar("name", "character", name)
   # TODO Validate data: repeated Rec
   .guard_scalar("placeholder", "character", placeholder)
+  .guard_vector("events", "character", events)
+  .guard_scalar("generating", "logical", generating)
   .o <- list(chatbot=list(
     name=name,
     data=data,
-    placeholder=placeholder))
+    placeholder=placeholder,
+    events=events,
+    generating=generating))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3270,6 +3278,8 @@ ui_chat_card <- function(
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
+#' @param generating True to show a button to stop the text generation. Defaults to False.
+#' @param events The events to capture on this chatbot. One of 'stop'.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
 #' @export
@@ -3278,17 +3288,23 @@ ui_chatbot_card <- function(
   name,
   data,
   placeholder = NULL,
+  generating = NULL,
+  events = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
   # TODO Validate data: Rec
   .guard_scalar("placeholder", "character", placeholder)
+  .guard_scalar("generating", "logical", generating)
+  .guard_vector("events", "character", events)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     name=name,
     data=data,
     placeholder=placeholder,
+    generating=generating,
+    events=events,
     commands=commands,
     view='chatbot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatbotCard"))
