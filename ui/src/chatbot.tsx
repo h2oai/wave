@@ -21,7 +21,7 @@ import { clas, cssVar, getContrast, important, px, rem } from './theme'
 import { bond, wave } from './ui'
 
 const
-  SUBMIT_BTN_SIZE = 30,
+  INPUT_HEIGHT = 30,
   css = Fluent.mergeStyleSets({
     chatWindow: {
       height: '100%',
@@ -45,6 +45,7 @@ const
     msg: {
       maxWidth: '65ch',
       flexGrow: 1,
+      overflowWrap: 'break-word', // Breaks words longer than lines.
     },
     botMsg: {
       backgroundColor: cssVar('$neutralLighter'),
@@ -57,12 +58,8 @@ const
       right: 0
     },
     stopButton: {
-      position: 'absolute',
-      bottom: 54,
-      left: 0,
-      right: 0,
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      left: '50%',
+      transform: 'translate(-50%, -7px)',
       width: 180
     }
   })
@@ -95,7 +92,12 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
       wave.args[model.name] = newVal
       setUserInput(newVal)
     },
-    onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => { if (e.key === 'Enter') submit() },
+    onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (!e.shiftKey && e.key === 'Enter') {
+        e.preventDefault() // Prevents a newline from being added to the text box.
+        submit()
+      }
+    },
     submit = () => {
       if (!userInput.trim()) return
       setMsgs([...msgs, { msg: userInput, fromUser: true }])
@@ -137,20 +139,32 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           </div>
         ))}
       </div>
-      {model.generating &&
-        <Fluent.DefaultButton className={css.stopButton} onClick={stopGenerating} iconProps={{ iconName: 'Stop' }}>
-          Stop generating
-        </Fluent.DefaultButton>
-      }
       <div className={css.textInput}>
+        {model.generating &&
+          <Fluent.DefaultButton className={css.stopButton} onClick={stopGenerating} iconProps={{ iconName: 'Stop' }}>
+            Stop generating
+          </Fluent.DefaultButton>
+        }
         <Fluent.TextField
           data-test={model.name}
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
           autoComplete='off'
+          multiline
+          autoAdjustHeight
           placeholder={model.placeholder || 'Type your message'}
-          styles={{ root: { flexGrow: 1 }, field: { width: `calc(100% - ${SUBMIT_BTN_SIZE}px)`, paddingRight: 0 } }}
+          styles={{
+            root: { flexGrow: 1 },
+            fieldGroup: { minHeight: INPUT_HEIGHT },
+            field: {
+              paddingRight: INPUT_HEIGHT,
+              height: INPUT_HEIGHT,
+              maxHeight: 100,
+              overflowY: 'auto',
+              resize: 'none'
+            }
+          }}
         />
         <Fluent.IconButton
           data-test={`${model.name}-submit`}
@@ -158,9 +172,10 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
           onClick={submit}
           disabled={!userInput.trim()}
           styles={{
-            root: { position: 'absolute', top: 15, right: 15, height: SUBMIT_BTN_SIZE },
+            root: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT },
             rootHovered: { backgroundColor: 'transparent' },
-            rootDisabled: { position: 'absolute', top: 15, right: 15, height: SUBMIT_BTN_SIZE, backgroundColor: 'transparent' }
+            rootDisabled: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT, backgroundColor: 'transparent' },
+            icon: { height: 'auto' } // Makes icon vertically centered.
           }} />
       </div>
     </div>
