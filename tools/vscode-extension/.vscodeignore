@@ -15,12 +15,6 @@ server/tests/
 *__pycache__*
 requirements.txt
 venv
-!venv/lib/python3.8/site-packages/parso
-!venv/lib/python3.8/site-packages/pygls
-!venv/lib/python3.8/site-packages/pydantic
-!venv/lib/python3.8/site-packages/typeguard
-!venv/lib/python3.8/site-packages/typing_extensions.py
-!venv/lib/python3.8/site-packages/**/LICENSE*
 
 # General
 Makefile
