@@ -299,6 +299,13 @@ class Ref:
             raise ValueError('Data instances cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
+    def __iadd__(self, value):
+        if not getattr(self, KEY).endswith('data'):
+            raise ValueError('+= can only be used on list data buffers.')
+        page = getattr(self, PAGE)
+        page._track(_set_op(self, '__append__', _dump(value)))
+        page._skip_next_track = True
+
 
 class Data:
     """
@@ -306,35 +313,38 @@ class Data:
 
     Args:
         fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
-        size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
-        data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers.
+        size: The number of rows to allocate memory for. Positive for fixed buffers, negative for cyclic buffers and zero for variable length buffers.
+        data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and cyclic buffers.
+        t: Buffer type. One of 'list', 'map', 'cyclic' or 'fixed'. Overrides the buffer type inferred from the size.
     """
 
-    def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
+    def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None, t: Optional[str] = None):
         self.fields = fields
         self.data = data
         self.size = size
+        self.type = t
 
     def dump(self):
         f = self.fields
         d = self.data
         n = self.size
+        t = self.type
         if d:
-            if isinstance(d, dict):
+            if t == 'list':
+                return dict(l=dict(f=f, d=d))
+            if t == 'map' or isinstance(d, dict):
                 return dict(m=dict(f=f, d=d))
-            else:
-                if n < 0:
-                    return dict(c=dict(f=f, d=d))
-                else:
-                    return dict(f=dict(f=f, d=d))
+            if t == 'cyclic' or n < 0:
+                return dict(c=dict(f=f, d=d))
+            return dict(f=dict(f=f, d=d))
         else:
-            if n == 0:
+            if t == 'list':
+                return dict(l=dict(f=f, n=n))
+            if t == 'map' or n == 0:
                 return dict(m=dict(f=f))
-            else:
-                if n < 0:
-                    return dict(c=dict(f=f, n=-n))
-                else:
-                    return dict(f=dict(f=f, n=n))
+            if t == 'cyclic' or n < 0:
+                return dict(c=dict(f=f, n=-n))
+            return dict(f=dict(f=f, n=n))
 
 
 def data(
@@ -343,6 +353,7 @@ def data(
         rows: Optional[Union[dict, list]] = None,
         columns: Optional[Union[dict, list]] = None,
         pack=False,
+        t: Optional[str] = None,
 ) -> Union[Data, str]:
     """
     Create a `h2o_wave.core.Data` instance for associating data with cards.
@@ -355,10 +366,11 @@ def data(
 
     Args:
         fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
-        size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
+        size: The number of rows to allocate memory for. Positive for fixed buffers, negative for cyclic buffers and zero for variable length buffers.
         rows: The rows in this data.
         columns: The columns in this data.
         pack: True to return a packed string representing the data instead of a `h2o_wave.core.Data` placeholder.
+        t: Buffer type. One of 'list', 'map', 'cyclic' or 'fixed'. Overrides the buffer type inferred from the size.
 
     Returns:
         Either a `h2o_wave.core.Data` placeholder or a packed string representing the data.
@@ -404,7 +416,7 @@ def data(
     if not _is_int(size):
         raise ValueError('size must be int')
 
-    return Data(fields, size, rows)
+    return Data(fields, size, rows, t)
 
 
 class _ServerCacheBase:
@@ -468,6 +480,8 @@ class PageBase:
     def __init__(self, url: str):
         self.url = url
         self._changes = []
+        # HACK: Overloading += operator makes unnecessary __setattr__ call. Skip it to prevent redundant ops.
+        self._skip_next_track = False
 
     def add(self, key: str, card: Any) -> Ref:
         """
@@ -510,6 +524,9 @@ class PageBase:
         return Ref(self, key)
 
     def _track(self, op: dict):
+        if self._skip_next_track:
+            self._skip_next_track = False
+            return
         self._changes.append(op)
 
     def _diff(self):
@@ -1151,4 +1168,4 @@ def _can_do_local_upload(data_dir: str, waved_dir: str) -> bool:
     if not _is_loopback_address():
         return False
 
-    return os.path.isabs(data_dir) or (waved_dir and data_dir)
+    return bool(os.path.isabs(data_dir) or (waved_dir and data_dir))

@@ -114,9 +114,11 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
 
   React.useEffect(() => {
     if (!msgContainerRef.current) return
-    const offsetTop = msgContainerRef.current.scrollHeight
-    if (msgContainerRef.current?.scrollTo) msgContainerRef.current.scrollTo({ top: offsetTop, behavior: 'smooth' })
-    else msgContainerRef.current.scrollTop = offsetTop
+    const topOffset = msgContainerRef.current.scrollHeight
+
+    msgContainerRef.current?.scrollTo
+      ? msgContainerRef.current.scrollTo({ top: topOffset, behavior: 'smooth' })
+      : msgContainerRef.current.scrollTop = topOffset
   }, [msgs])
   React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
 
@@ -137,9 +139,7 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
               paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.8) : 0,
               color: fromUser ? '$text' : botTextColor
             }} >
-            <span
-              className={clas(css.msg, 'wave-s14')}
-              style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
               <Markdown source={msg || ''} />
             </span>
           </div>

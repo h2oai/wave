@@ -41,6 +41,9 @@ func loadBuf(ns *Namespace, b BufD) Buf {
 	if b.M != nil {
 		return loadMapBuf(ns, b.M)
 	}
+	if b.L != nil {
+		return loadListBuf(ns, b.L)
+	}
 	return nil
 }
 

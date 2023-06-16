@@ -38,6 +38,7 @@ type OpD struct {
 	C *CycBufD               `json:"c,omitempty"` // value
 	F *FixBufD               `json:"f,omitempty"` // value
 	M *MapBufD               `json:"m,omitempty"` // value
+	L *ListBufD              `json:"l,omitempty"` // value
 	D map[string]interface{} `json:"d,omitempty"` // card data
 	B []BufD                 `json:"b,omitempty"` // card buffers
 }
@@ -55,9 +56,10 @@ type CardD struct {
 
 // BufD represents the marshaled data for a buffer. This is a discriminated union.
 type BufD struct {
-	C *CycBufD `json:"c,omitempty"`
-	F *FixBufD `json:"f,omitempty"`
-	M *MapBufD `json:"m,omitempty"`
+	C *CycBufD  `json:"c,omitempty"`
+	F *FixBufD  `json:"f,omitempty"`
+	M *MapBufD  `json:"m,omitempty"`
+	L *ListBufD `json:"l,omitempty"`
 }
 
 // MapBufD represents the marshaled data for a MapBuf.
@@ -79,6 +81,12 @@ type CycBufD struct {
 	D [][]interface{} `json:"d"` // tuples
 	N int             `json:"n"` // size
 	I int             `json:"i"` // index
+}
+
+type ListBufD struct {
+	F []string        `json:"f"` // fields
+	D [][]interface{} `json:"d"` // tuples
+	N int             `json:"n"` // size
 }
 
 // AppRequest represents a request from an app.
