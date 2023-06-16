@@ -66,6 +66,7 @@
     "build": "npx vite build",
     "test": "LC_ALL=en_US.UTF8 TZ=Europe/London jest --watch",
     "test:ci": "CI=true LC_ALL=en_US.UTF8 TZ=Europe/London jest --bail --ci",
-    "typeCheck": "npx tsc --noEmit --project tsconfig.json"
+    "typeCheck": "npx tsc --noEmit --project tsconfig.json",
+    "postinstall": "node setup.js > src/markdownCodeSyntaxHighlighting.json"
   }
 }
