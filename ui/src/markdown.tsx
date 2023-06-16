@@ -73,19 +73,19 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   if (!codeBlock) return
   if (language) {
     try {
-      const [languageModule] = await Promise.all([
-        // https://www.npmjs.com/package/@rollup/plugin-dynamic-import-vars.
-        import(`../node_modules/highlight.js/es/languages/${language}.js`),
-        import('highlight.js/styles/androidstudio.css')
-      ])
+      // Need to use relative path due to https://www.npmjs.com/package/@rollup/plugin-dynamic-import-vars.
+      const languageModule = await import(`../node_modules/highlight.js/es/languages/${language}.js`)
       hljs.registerLanguage(language, languageModule.default)
-
-      // Replace the code block with highlighted code.
-      codeBlock.outerHTML = `<code class="hljs">${hljs.highlight(str, { language, ignoreIllegals: true }).value}</code>`
     } catch (e) {
-      console.error(e)
+      language = ''
+      // console.error(e)
     }
   }
+  // Replace the code block with highlighted code.
+  const highlightedCode = language
+    ? hljs.highlight(str, { language, ignoreIllegals: true }).value
+    : hljs.highlightAuto(str).value
+  codeBlock.outerHTML = `<code class="hljs">${highlightedCode}</code>`
 }
 
 export const
