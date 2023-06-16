@@ -402,7 +402,7 @@ const
           isMultiline: c.cell_overflow === 'wrap',
           filters: c.filterable ? c.filters : undefined,
         }
-      }, [m.pagination, onColumnClick]),
+      }, [onColumnClick]),
       [columns, setColumns] = React.useState(m.columns.map(tableToWaveColumn)),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
