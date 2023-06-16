@@ -9,11 +9,7 @@ from h2o_wave import main, app, Q, ui, data
 async def serve(q: Q):
     if not q.client.initialized:
         # List buffer is a dynamic array. Cyclic buffer can also be used. Must have exactly 2 fields - msg and fromUser.
-        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data('msg fromUser', t='list'), name='chatbot', generating=True)
-        q.page['example'].data = [
-            ['Hello, buddy. Can you help me?', True],
-            ['Sure, what you need?', False],
-        ]
+        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data('msg fromUser', t='list'), name='chatbot')
         q.client.initialized = True
 
     # A new message arrived.
