@@ -71,7 +71,7 @@ Use the `data()` function to declare a data buffer. The Wave server uses this de
   - For map buffers, pass a dict with strings as keys and rows as values.
 - `columns`: A `list` of columns to initialize the data buffer with. All columns must be of the same length. The columns are automatically transposed to `rows`.
 - `pack`: `True` to pack (compress) the provided rows or columns, use less memory on the server-side, and improve performance. Set `pack=True` if you intend to never make any changes to the data buffer once created. Defaults to `False`.
-- `t`: Buffer type. One of 'list', 'map', 'circular' or 'fixed'. Overrides the buffer type inferred from the size.
+- `t`: Buffer type. One of 'list', 'map', 'cyclic' or 'fixed'. Overrides the buffer type inferred from the size.
 
 ## Buffers in practice
 
