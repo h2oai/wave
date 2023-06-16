@@ -471,7 +471,12 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
-      if (model.events?.includes('click')) wave.emit(model.name, 'click', { x: start?.x, y: start?.y })
+      if (model.events?.includes('click') && start?.x && start?.y) {
+        wave.emit(model.name, 'click', {
+          x: Math.round(start.x / aspectRatioRef.current),
+          y: Math.round(start.y / aspectRatioRef.current)
+        })
+      }
 
       switch (activeShape) {
         case 'rect': {
@@ -738,7 +743,9 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
   React.useEffect(() => {
     cancelOngoingAction()
-    setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
+    const newDrawnShapes = mapShapesToWaveArgs(model.items || [], aspectRatioRef.current)
+    setDrawnShapes(newDrawnShapes)
+    setWaveArgs(newDrawnShapes)
     redrawExistingShapes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.items, redrawExistingShapes])
