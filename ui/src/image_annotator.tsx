@@ -80,6 +80,8 @@ export interface ImageAnnotator {
   image_height?: S
   /** List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default. */
   allowed_shapes?: S[]
+  /** The events to capture on this image annotator. One of `click` or `tool_change`. */
+  events?: S[]
 }
 
 export type Position = {
@@ -310,6 +312,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         canvasRef.current.style.cursor = getCorrectCursorNonDragging(x, y, drawnShapes, shape === 'select')
       }
       setActiveShape(shape)
+      if (model.events?.includes('tool_change')) wave.emit(model.name, 'tool_change', shape)
     },
     recreatePreviewLine = () => {
       const { x, y } = mousePositionRef.current
@@ -467,6 +470,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         rect = canvas.getBoundingClientRect(),
         { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+
+      if (model.events?.includes('click')) wave.emit(model.name, 'click', { x: start?.x, y: start?.y })
 
       switch (activeShape) {
         case 'rect': {
@@ -732,8 +737,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   }, [model.name, model.items])
 
   React.useEffect(() => {
+    cancelOngoingAction()
     setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
     redrawExistingShapes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.items, redrawExistingShapes])
 
   // Handle case when changing active tag by "l" shortcut while annotating polygon.

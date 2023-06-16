@@ -2482,6 +2482,7 @@ def image_annotator(
         trigger: Optional[bool] = None,
         image_height: Optional[str] = None,
         allowed_shapes: Optional[List[str]] = None,
+        events: Optional[List[str]] = None,
 ) -> Component:
     """Create an image annotator component.
 
@@ -2496,6 +2497,7 @@ def image_annotator(
         trigger: True if the form should be submitted as soon as an annotation is drawn.
         image_height: The card’s image height. The actual image size is used by default.
         allowed_shapes: List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
+        events: The events to capture on this image annotator. One of `click` or `tool_change`.
     Returns:
         A `h2o_wave.types.ImageAnnotator` instance.
     """
@@ -2508,6 +2510,7 @@ def image_annotator(
         trigger,
         image_height,
         allowed_shapes,
+        events,
     ))
 
 
