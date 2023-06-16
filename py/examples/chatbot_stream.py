@@ -19,7 +19,6 @@ async def serve(q: Q):
         q.page['example'].data += [q.args.chatbot, True]
         # Append bot response.
         q.page['example'].data += ['', False]
-        await q.page.save()
 
         # Stream bot response.
         stream = ''
