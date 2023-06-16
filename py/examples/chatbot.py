@@ -1,20 +1,19 @@
 # Chatbot
-# Use this card for chat interactions.
-# #chat
+# Use this card for chatbot interactions.
+# #chatbot
 # ---
 from h2o_wave import main, app, Q, ui, data
-
-
-MAX_MESSAGES = 500
 
 
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        # Cyclic buffer drops oldest messages when full. Must have exactly 2 fields - msg and fromUser.
-        # Useful for append and forget chatbots. Cyclic buffer is not suitable for streaming.
-        cyclic_buffer = data(fields='msg fromUser', size=-MAX_MESSAGES)
-        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=cyclic_buffer, name='chatbot')
+        # List buffer is a dynamic array. Cyclic buffer can also be used. Must have exactly 2 fields - msg and fromUser.
+        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data('msg fromUser', t='list'), name='chatbot', generating=True)
+        q.page['example'].data = [
+            ['Hello, buddy. Can you help me?', True],
+            ['Sure, what you need?', False],
+        ]
         q.client.initialized = True
 
     # A new message arrived.

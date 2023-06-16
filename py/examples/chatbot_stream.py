@@ -1,6 +1,6 @@
 # Chatbot
-# Use this card for chat interactions.
-# #chat
+# Use this card for chatbot interactions, supports text streaming.
+# #chatbot
 # ---
 from h2o_wave import main, app, Q, ui, data
 
@@ -9,8 +9,7 @@ from h2o_wave import main, app, Q, ui, data
 async def serve(q: Q):
     if not q.client.initialized:
         # Use list buffer to allow easy streaming. Must have exactly 2 fields - msg and fromUser.
-        list_buffer = data(fields='msg fromUser', t='list')
-        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=list_buffer, name='chatbot')
+        q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data(fields='msg fromUser', t='list'), name='chatbot')
         q.client.initialized = True
 
     # A new message arrived.

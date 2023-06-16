@@ -618,7 +618,7 @@ const
       },
       set = (key: S, v: any) => {
         // Check if key is a valid index.
-        const numKey = +key
+        const numKey = key !== "" ? +key : NaN
         if (!isNaN(numKey)) {
           let idx = numKey
           // If negative, start from last inserted idx.
@@ -706,7 +706,7 @@ const
   loadCycBuf = (b: CycBufD): CycBuf => {
     const t = newType(b.f)
     return b.d && b.d.length
-      ? newCycBuf(t, b.d, b.i)
+      ? newCycBuf(t, b.d, b.i ?? b.d.length)
       : newCycBuf(t, newTups(b.n <= 0 ? 10 : b.n), 0)
   },
   loadListBuf = (b: ListBufD): ListBuf => {
