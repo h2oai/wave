@@ -78,7 +78,6 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
       hljs.registerLanguage(language, languageModule.default)
     } catch (e) {
       language = ''
-      // console.error(e)
     }
   }
   // Replace the code block with highlighted code.
