@@ -61,3 +61,35 @@ q.page['example'] = ui.markdown_card(
     content='The quick brown [fox](?fox) jumps over the lazy [dog](?dog)'
 )
 ```
+
+## Code blocks syntax highlighting
+
+```py
+sample_markdown = '''=
+```html
+<!DOCTYPE html>
+<title>Title</title>
+
+<style>body {width: 500px;}</style>
+
+<script type="application/javascript">
+  function $init() {return true;}
+</script>
+
+<body>
+  <p checked class="title" id='title'>Title</p>
+  <!-- here goes the rest of the page -->
+</body>
+'''
+
+q.page['example'] = ui.markdown_card(
+    box='1 1 4 4',
+    title='I was made using markdown!',
+    content=sample_markdown
+)
+
+```
+
+Displaying code with proper syntax highlighting is supported out of the box. The list of supported languages can be found [here](https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md).
+
+Wave uses [AndroidStudio](https://developer.android.com/studio) theme as default, but can be changed by picking one of the plenty [other themes](https://highlightjs.org/static/demo/), downloading its [CSS](https://github.com/highlightjs/highlight.js/tree/main/src/styles) and loading it within the Wave app. See [this example](/docs/examples/markdown-code-theme) to learn how to change the code highlighting theme into a popular `Atom One Dark`.

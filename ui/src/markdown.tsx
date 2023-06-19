@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S, unpack } from 'h2o-wave'
+import { Model, Rec, S, unpack, xid } from 'h2o-wave'
+import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -67,9 +68,40 @@ const
       },
     },
   })
+const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
+  const codeBlock = document.getElementById(codeBlockId)
+  if (!codeBlock) return
+  if (language) {
+    try {
+      // TS cannot do dynamic JSON imports properly. Use any as a workaround.
+      // https://stackoverflow.com/questions/70601733/dynamic-import-with-json-file-doesnt-work-typescript.
+      const langAliases: any = await import('./markdownCodeSyntaxHighlighting.json')
+      language = langAliases[language]
+      if (language && !hljs.getLanguage(language)) {
+        // Need to use relative path due to https://www.npmjs.com/package/@rollup/plugin-dynamic-import-vars.
+        const languageModule = await import(`../node_modules/highlight.js/es/languages/${language}.js`)
+        hljs.registerLanguage(language, languageModule.default)
+      }
+    } catch (e) {
+      language = '' // Fallback to auto-detection.
+    }
+  }
+  const highlightedCode = language
+    ? hljs.highlight(str, { language, ignoreIllegals: true }).value
+    : hljs.highlightAuto(str).value
+  codeBlock.outerHTML = `<code class="hljs">${highlightedCode}</code>`
+}
 
 export const
-  markdown = MarkdownIt({ html: true, linkify: true, typographer: true, }),
+  markdown = MarkdownIt({
+    html: true, linkify: true, typographer: true, highlight: (str, language) => {
+      const codeBlockId = xid()
+      // HACK: MarkdownIt does not support async rules. Render the code block with hidden visibility and highlight it later.
+      // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
+      setTimeout(() => highlightSyntax(str, language, codeBlockId), 0)
+      return `<code id='${codeBlockId}' class="hljs">${str}</code>`
+    }
+  }),
   Markdown = ({ source }: { source: S }) => {
     const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
       const hrefAttr = (e.target as HTMLAnchorElement).getAttribute('href')
