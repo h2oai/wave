@@ -89,7 +89,7 @@ The legend can be brought up by clicking the Info icon in the top right toolbar.
 
 ## Click event
 
-Sometimes you may want to handle the annotating yourself and this is where `click` event comes into place. By setting `events=['click']` prop, the event containing cursor `x` and `y` coordinates is fired everytime you click on the image while `rect` or `polygon` tool is selected, e.g. `{x: 100, y: 120}`. The event can be accessed through `q.events.<image_annotator_name>.click`, where `image_annotator_name` is the `name` attribute of the image annotator component.
+Sometimes you may want to handle the annotating yourself and this is where `click` event comes into place. By setting `events=['click']` prop, the event is fired every time you click on the image canvas while using a `rect` or `polygon` tool and contains the `x` and `y` coordinates of the clicked point, e.g. `{x: 100, y: 120}`. The event can be accessed through `q.events.<image_annotator_name>.click`, where `image_annotator_name` is the `name` attribute of the image annotator component.
 
 ```py
 image = 'https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
@@ -112,7 +112,7 @@ q.page['example'] = ui.form_card(box='1 1 9 10', items=[
 
 ## Tool change event
 
-When handling the annotating yourself with the use of [click event](#click-event), you may also want to know the tool you are currently using. By setting `events=['tool_change']` prop, the event containing the name of the tool is fired everytime you choose the `rect`, `polygon` or `select` tool. The event can be accessed through `q.events.<image_annotator_name>.tool_change`, where `image_annotator_name` is the `name` attribute of the image annotator component.
+When handling the annotating yourself with the use of [click event](#click-event), you may also want to know the tool you are currently using. By setting `events=['tool_change']` prop, the event containing the name of the tool is fired every time you choose the `rect`, `polygon` or `select` tool. The event can be accessed through `q.events.<image_annotator_name>.tool_change`, where `image_annotator_name` is the `name` attribute of the image annotator component.
 
 ```py
 image = 'https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
