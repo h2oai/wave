@@ -37,6 +37,7 @@ def get_smart_annotation(x, y, active_tool):
     elif is_inside_object(x, y, animal):
         if active_tool == 'rect': return animal_annotation_rect
         if active_tool == 'polygon': return animal_annotation_polygon
+    else: return None
 
 
 @app('/demo')
@@ -67,7 +68,11 @@ async def serve(q: Q):
     elif q.events.annotator:
         if q.events.annotator.click:
             x, y = q.events.annotator.click.values()
-            q.page['example'].annotator.items = [get_smart_annotation(x, y, q.client.active_tool)]
+            smart_annotation = get_smart_annotation(x, y, q.client.active_tool)
+            if smart_annotation:
+                q.page['example'].annotator.items = [smart_annotation]
+            else: 
+                q.page['non-existent'].items = []
         if q.events.annotator.tool_change:
             q.client.active_tool = q.events.annotator.tool_change
             q.page['non-existent'].items = []
