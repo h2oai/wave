@@ -62,7 +62,7 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
     A function annotated with `@on('foo.bar', lambda x: 42 <= x <= 420)` is invoked whenever `q.events.foo.bar` between 42 and 420.
     A function annotated with `@on('#foo')` is invoked whenever `q.args['#']` equals 'foo'.
     A function annotated with `@on('#foo/bar')` is invoked whenever `q.args['#']` equals 'foo/bar'.
-    A function annotated with `@on('#foo/&lcub;fruit&rcub;')` is invoked whenever `q.args['#']` matches 'foo/apple', 'foo/orange', etc. The parameter 'fruit' is passed to the function (in this case, 'apple', 'orange', etc.)
+    A function annotated with `@on('#foo/{"{fruit}"}')` is invoked whenever `q.args['#']` matches 'foo/apple', 'foo/orange', etc. The parameter 'fruit' is passed to the function (in this case, 'apple', 'orange', etc.)
 
     Parameters in patterns (indicated within curly braces) can be converted to `str`, `int`, `float` or `uuid.UUID` instances by suffixing the parameters with `str`, `int`, `float` or `uuid`, respectively.
 
