@@ -77,16 +77,15 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
       // https://stackoverflow.com/questions/70601733/dynamic-import-with-json-file-doesnt-work-typescript.
       const langAliases: any = await import('./markdownCodeSyntaxHighlighting.json')
       language = langAliases[language]
-      if (language) {
+      if (language && !hljs.getLanguage(language)) {
         // Need to use relative path due to https://www.npmjs.com/package/@rollup/plugin-dynamic-import-vars.
         const languageModule = await import(`../node_modules/highlight.js/es/languages/${language}.js`)
         hljs.registerLanguage(language, languageModule.default)
       }
     } catch (e) {
-      language = ''
+      language = '' // Fallback to auto-detection.
     }
   }
-  // Replace the code block with highlighted code.
   const highlightedCode = language
     ? hljs.highlight(str, { language, ignoreIllegals: true }).value
     : hljs.highlightAuto(str).value
@@ -100,7 +99,7 @@ export const
       // HACK: MarkdownIt does not support async rules. Render the code block with hidden visibility and highlight it later.
       // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
       setTimeout(() => highlightSyntax(str, language, codeBlockId), 0)
-      return `<code id='${codeBlockId}' style="visibility: hidden" class="hljs">${str}</code>`
+      return `<code id='${codeBlockId}' class="hljs">${str}</code>`
     }
   }),
   Markdown = ({ source }: { source: S }) => {
