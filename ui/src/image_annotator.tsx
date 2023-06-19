@@ -337,13 +337,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgRef.current.style.transform = `translate(${imgPositionRef.current.x}px, ${imgPositionRef.current.y}px) scale(${zoom})`
       redrawExistingShapes()
     },
-    cancelOngoingAction = () => {
-      deselectAllShapes()
+    resetShapeCreation = () => {
       polygonRef.current?.cancelAnnotating()
       polygonRef.current?.resetDragging()
       rectRef.current?.resetDragging()
       // Prevent creating shapes when active shape is changed with shortcuts during dragging.
       if (clickStartPositionRef.current) clickStartPositionRef.current = undefined
+    },
+    cancelOngoingAction = () => {
+      deselectAllShapes()
+      resetShapeCreation()
       // Set correct wave args when drag moving is interrupted by changing active shape.
       setWaveArgs(drawnShapes)
       redrawExistingShapes()
@@ -742,10 +745,8 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   }, [model.name, model.items])
 
   React.useEffect(() => {
-    cancelOngoingAction()
-    const newDrawnShapes = mapShapesToWaveArgs(model.items || [], aspectRatioRef.current)
-    setDrawnShapes(newDrawnShapes)
-    setWaveArgs(newDrawnShapes)
+    resetShapeCreation()
+    setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
     redrawExistingShapes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.items, redrawExistingShapes])
