@@ -76,6 +76,8 @@ ui.theme(
     html = html.replace('<pre>', '<pre style="margin: 0">')
     return html
 
+header_height = 61
+footer_height = 66
 
 @app('/demo')
 async def serve(q: Q):
@@ -90,13 +92,24 @@ async def serve(q: Q):
                 breakpoint='xs',
                 zones=[
                     ui.zone('header'),
-                    ui.zone('content', direction=ui.ZoneDirection.ROW, zones=[
-                        ui.zone('colors', size='400px'),
-                        ui.zone('preview')
+                    ui.zone('content', zones=[
+                        ui.zone('colors', size=f'calc(50vh - {(header_height + footer_height) / 2}px)'),
+                        ui.zone('preview', size=f'calc(50vh - {(header_height + footer_height) / 2}px)')
                     ]),
                     ui.zone('footer')
                 ]
-            )
+            ),
+            ui.layout(
+                breakpoint='m',
+                zones=[
+                    ui.zone('header'),
+                    ui.zone('content', direction=ui.ZoneDirection.ROW, zones=[
+                        ui.zone('colors', size='30%'),
+                        ui.zone('preview', size='70%')
+                    ]),
+                    ui.zone('footer')
+                ]
+            ),
         ])
         q.page['header'] = ui.header_card(box='header', title='Theme generator', subtitle='Color your app easily',
                                           icon='Color', icon_color='$card')
@@ -111,18 +124,26 @@ async def serve(q: Q):
             ui.message_bar(name='text_page', type='success', text='Contrast between **text** and **page** is great!'),
             ui.message_bar(name='page_primary', type='success', text='Contrast between **page** and **primary** is great!'),
             ui.text_xl('Copy code'),
-            ui.frame(name='frame', content=get_theme_code(q), height='180px'),
+            ui.frame(name='frame', content=get_theme_code(q), height='130px'),
         ])
         q.page['sample'] = ui.form_card(box='preview', items=[
-            ui.text_xl(content='Sample App to show colors'),
+            ui.text_xl(content='Sample app to show colors'),
             ui.progress(label='A progress bar'),
-            ui.inline([
-                ui.checkbox(name='checkbox1', label='A checkbox', value=True),
-                ui.checkbox(name='checkbox2', label='Another checkbox'),
-                ui.checkbox(name='checkbox3', label='Yet another checkbox'),
-                ui.toggle(name='toggle', label='Toggle', value=True),
+            # ui.toggle(name='toggle', label='Toggle', value=True),
+            ui.inline(justify='between', items=[
+                ui.tabs(name='menu', value='email', items=[
+                    ui.tab(name='email', label='Mail', icon='Mail'),
+                    ui.tab(name='events', label='Events', icon='Calendar'),
+                    ui.tab(name='spam', label='Spam'),
+                ]),
+                ui.slider(name='slider', label='Slider', value=70),
             ]),
             ui.inline([
+                ui.checkbox(name='checkbox1', label='Checkbox', value=True),
+                ui.checkbox(name='checkbox2', label='Another checkbox'),
+                ui.checkbox(name='checkbox3', label='Yet another checkbox'),
+            ]),
+            ui.inline(justify='start', items=[
                 ui.date_picker(name='date_picker', label='Date picker'),
                 ui.picker(name='picker', label='Picker', choices=[
                     ui.choice('choice1', label='Choice 1'),
@@ -130,42 +151,36 @@ async def serve(q: Q):
                     ui.choice('choice3', label='Choice 3'),
                 ]),
                 ui.combobox(name='combobox', label='Combobox', choices=['Choice 1', 'Choice 2', 'Choice 3']),
-                ui.persona(title='John Doe', subtitle='Data Scientist', size='s', image=image),
             ]),
-            ui.slider(name='slider', label='Slider', value=70),
-            ui.link(label='Link'),
-            ui.inline(justify='between', items=[
+            ui.inline([
+                ui.link(label='Link'),
+                ui.persona(title='John Doe', subtitle='Data Scientist', size='s', image=image),
+                ui.toggle(name='toggle', label='Toggle', value=True),
+            ]),
+            ui.inline([
                 ui.stepper(name='stepper', width='500px', items=[
                     ui.step(label='Step 1', icon='MailLowImportance'),
                     ui.step(label='Step 2', icon='TaskManagerMirrored'),
                     ui.step(label='Step 3', icon='Cafe'),
                 ]),
-                ui.tabs(name='menu', value='email', items=[
-                    ui.tab(name='email', label='Mail', icon='Mail'),
-                    ui.tab(name='events', label='Events', icon='Calendar'),
-                    ui.tab(name='spam', label='Spam'),
-                ]),
             ]),
             ui.inline(items=[
                 ui.table(
                     name='table',
-                    width='50%',
+                    width='45%',
                     columns=[
                         ui.table_column(name='name', label='Name', min_width='80px'),
-                        ui.table_column(name='surname', label='Surname', filterable=True),
+                        ui.table_column(name='surname', label='Surname', filterable=True, max_width='90px'),
                         ui.table_column(name='age', label='Age', sortable=True, max_width='80px'),
-                        ui.table_column(name='progress', label='Progress',
-                                        cell_type=ui.progress_table_cell_type(color='$themePrimary')),
+                        ui.table_column(name='progress', label='Progress', max_width='80px', cell_type=ui.progress_table_cell_type(color='$themePrimary')),
                     ],
                     rows=[
                         ui.table_row(name='row1', cells=['John', 'Doe', '25', '0.90']),
                         ui.table_row(name='row2', cells=['Ann', 'Doe', '35', '0.75']),
-                        ui.table_row(name='row3', cells=['Casey', 'Smith', '40', '0.33']),
                     ],
-                    height='330px',
                 ),
                 ui.visualization(
-                    width='50%',
+                    width='55%',
                     data=data('profession salary', 5, rows=[
                         ('medicine', 23000),
                         ('fire fighting', 18000),
