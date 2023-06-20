@@ -28,8 +28,6 @@ async def serve(q: Q):
             title='Selected tool',
             content='The active tool is "rect".',
         )
-    else:
-        if q.events.annotator:
-            if q.events.annotator.tool_change:
-                q.page['details'].content = f'The active tool is "{q.events.annotator.tool_change}".'
+    if q.events.annotator and q.events.annotator.tool_change:
+        q.page['details'].content = f'The active tool is "{q.events.annotator.tool_change}".'
     await q.page.save()
