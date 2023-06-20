@@ -474,7 +474,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
 
-      if (model.events?.includes('click') && start?.x && start?.y) {
+      if (model.events?.includes('click') && activeShape !== 'select' && start?.x !== undefined && start?.y !== undefined) {
         wave.emit(model.name, 'click', {
           x: Math.round(start.x / aspectRatioRef.current),
           y: Math.round(start.y / aspectRatioRef.current)
