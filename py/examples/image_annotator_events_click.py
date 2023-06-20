@@ -37,7 +37,6 @@ async def serve(q: Q):
     if q.events.annotator and q.events.annotator.click:
         x, y = q.events.annotator.click.values()
         if is_inside_object(x, y, vehicle):
-            # Update the UI with the new annotation
             q.page['example'].annotator.items = [vehicle_annotation_rect]
         else:
             # Make a fake UI update

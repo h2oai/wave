@@ -30,4 +30,5 @@ async def serve(q: Q):
         )
     if q.events.annotator and q.events.annotator.tool_change:
         q.page['details'].content = f'The active tool is "{q.events.annotator.tool_change}".'
+        
     await q.page.save()
