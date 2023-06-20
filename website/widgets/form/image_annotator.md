@@ -87,9 +87,9 @@ The legend can be brought up by clicking the Info icon in the top right toolbar.
 |          **p**           |                       Select polygon tool                     |
 |          **s**           |                     Activate selection tool                   |
 
-## Click event
+## Handling custom click event
 
-Sometimes you may want to handle the annotating yourself and this is where `click` event comes into place. By setting `events=['click']` prop, the event is fired every time you click on the image canvas while using a `rect` or `polygon` tool and contains the `x` and `y` coordinates of the clicked point, e.g. `{x: 100, y: 120}`. The event can be accessed through `q.events.<image_annotator_name>.click`, where `image_annotator_name` is the `name` attribute of the image annotator component.
+Sometimes it can be useful to handle the annotating yourself and this is where `click` event comes into place. When the `click` event is specified, the event is fired on every click on the image canvas while using a `rect` or `polygon` tool and contains the `x` and `y` coordinates of the clicked point, e.g. `{x: 100, y: 120}`.
 
 ```py
 image = 'https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
@@ -110,9 +110,9 @@ q.page['example'] = ui.form_card(box='1 1 9 10', items=[
 ])
 ```
 
-## Tool change event
+## Handling a tool change event
 
-When handling the annotating yourself with the use of [click event](#click-event), you may also want to know the tool you are currently using. By setting `events=['tool_change']` prop, the event containing the name of the tool is fired every time you choose the `rect`, `polygon` or `select` tool. The event can be accessed through `q.events.<image_annotator_name>.tool_change`, where `image_annotator_name` is the `name` attribute of the image annotator component.
+When self handling the annotating with the use of [click event](#handling-custom-click-event), it can be handy to know the tool currently being used. By specifying a `tool_change` event, the event containing the name of the tool is fired every time the `rect`, `polygon` or `select` tool is chosen.
 
 ```py
 image = 'https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
