@@ -127,9 +127,8 @@ async def serve(q: Q):
             ui.frame(name='frame', content=get_theme_code(q), height='130px'),
         ])
         q.page['sample'] = ui.form_card(box='preview', items=[
-            ui.text_xl(content='Sample app to show colors'),
+            ui.text_xl(content='Sample App to show colors'),
             ui.progress(label='A progress bar'),
-            # ui.toggle(name='toggle', label='Toggle', value=True),
             ui.inline(justify='between', items=[
                 ui.tabs(name='menu', value='email', items=[
                     ui.tab(name='email', label='Mail', icon='Mail'),
@@ -143,7 +142,7 @@ async def serve(q: Q):
                 ui.checkbox(name='checkbox2', label='Another checkbox'),
                 ui.checkbox(name='checkbox3', label='Yet another checkbox'),
             ]),
-            ui.inline(justify='start', items=[
+            ui.inline([
                 ui.date_picker(name='date_picker', label='Date picker'),
                 ui.picker(name='picker', label='Picker', choices=[
                     ui.choice('choice1', label='Choice 1'),
@@ -164,7 +163,7 @@ async def serve(q: Q):
                     ui.step(label='Step 3', icon='Cafe'),
                 ]),
             ]),
-            ui.inline(items=[
+            ui.inline([
                 ui.table(
                     name='table',
                     width='45%',
