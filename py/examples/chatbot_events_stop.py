@@ -1,5 +1,5 @@
 # Chatbot / Events/ Stop
-# Register the `stop` #event to emit Wave event when `Stop generating` button is clicked.
+# Use this card for chatbot interactions. Streaming can be stopped by the user.
 # #chatbot #events #stop
 # ---
 from h2o_wave import main, app, Q, ui, data
