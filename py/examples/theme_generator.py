@@ -119,10 +119,8 @@ async def serve(q: Q):
         q.page['header'] = ui.header_card(box='header', title='Theme generator', subtitle='Color your app easily',
                                           icon='Color', icon_color='$card')
         q.page['mobile_header'] = ui.header_card(box='mobile_header', title='Theme generator',
-                                                 subtitle='Color your app easily',
-                                                 icon='Color', icon_color='$card', items=[
-                ui.button(name='show_side_panel', label='Colors', icon='Palette'),
-            ])
+                                                 subtitle='Color your app easily', items=[
+                ui.button(name='show_side_panel', label='Adjust colors', icon='Color')])
         q.client.color_items = [
             ui.color_picker(name='primary', label='Primary', trigger=True, alpha=False, inline=True,
                             value=q.client.primary),
