@@ -81,10 +81,6 @@ ui.theme(
     return html
 
 
-header_height = 61
-footer_height = 66
-
-
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
@@ -98,9 +94,7 @@ async def serve(q: Q):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('content', zones=[
-                        ui.zone('preview')
-                    ]),
+                    ui.zone('preview'),
                     ui.zone('footer')
                 ]
             ),
