@@ -2894,6 +2894,7 @@ ui_image_annotator_item <- function(
 #' @param trigger True if the form should be submitted as soon as an annotation is drawn.
 #' @param image_height The card’s image height. The actual image size is used by default.
 #' @param allowed_shapes List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
+#' @param events The events to capture on this image annotator. One of `click` or `tool_change`.
 #' @return A ImageAnnotator instance.
 #' @export
 ui_image_annotator <- function(
@@ -2904,7 +2905,8 @@ ui_image_annotator <- function(
   items = NULL,
   trigger = NULL,
   image_height = NULL,
-  allowed_shapes = NULL) {
+  allowed_shapes = NULL,
+  events = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("image", "character", image)
   .guard_scalar("title", "character", title)
@@ -2913,6 +2915,7 @@ ui_image_annotator <- function(
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("image_height", "character", image_height)
   .guard_vector("allowed_shapes", "character", allowed_shapes)
+  .guard_vector("events", "character", events)
   .o <- list(image_annotator=list(
     name=name,
     image=image,
@@ -2921,7 +2924,8 @@ ui_image_annotator <- function(
     items=items,
     trigger=trigger,
     image_height=image_height,
-    allowed_shapes=allowed_shapes))
+    allowed_shapes=allowed_shapes,
+    events=events))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

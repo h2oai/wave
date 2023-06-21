@@ -1,6 +1,6 @@
-# Chatbot
+# Chatbot / Events/ Stop
 # Use this card for chatbot interactions. Streaming can be stopped by the user.
-# #chatbot
+# #chatbot #events #stop
 # ---
 from h2o_wave import main, app, Q, ui, data
 import asyncio

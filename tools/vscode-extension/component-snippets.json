@@ -1248,7 +1248,7 @@
   "Wave Full ImageAnnotator": {
     "prefix": "w_full_image_annotator",
     "body": [
-      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n], allowed_shapes=[\n\t\t$8\t\t\n]),$0"
+      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n], allowed_shapes=[\n\t\t$8\t\t\n], events=[\n\t\t$9\t\t\n]),$0"
     ],
     "description": "Create a full Wave ImageAnnotator."
   },

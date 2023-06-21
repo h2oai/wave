@@ -6708,6 +6708,7 @@ class ImageAnnotator:
             trigger: Optional[bool] = None,
             image_height: Optional[str] = None,
             allowed_shapes: Optional[List[str]] = None,
+            events: Optional[List[str]] = None,
     ):
         _guard_scalar('ImageAnnotator.name', name, (str,), True, False, False)
         _guard_scalar('ImageAnnotator.image', image, (str,), False, False, False)
@@ -6717,6 +6718,7 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('ImageAnnotator.image_height', image_height, (str,), False, True, False)
         _guard_vector('ImageAnnotator.allowed_shapes', allowed_shapes, (str,), False, True, False)
+        _guard_vector('ImageAnnotator.events', events, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.image = image
@@ -6733,6 +6735,8 @@ class ImageAnnotator:
         """The card’s image height. The actual image size is used by default."""
         self.allowed_shapes = allowed_shapes
         """List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default."""
+        self.events = events
+        """The events to capture on this image annotator. One of `click` or `tool_change`."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6744,6 +6748,7 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('ImageAnnotator.image_height', self.image_height, (str,), False, True, False)
         _guard_vector('ImageAnnotator.allowed_shapes', self.allowed_shapes, (str,), False, True, False)
+        _guard_vector('ImageAnnotator.events', self.events, (str,), False, True, False)
         return _dump(
             name=self.name,
             image=self.image,
@@ -6753,6 +6758,7 @@ class ImageAnnotator:
             trigger=self.trigger,
             image_height=self.image_height,
             allowed_shapes=self.allowed_shapes,
+            events=self.events,
         )
 
     @staticmethod
@@ -6774,6 +6780,8 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.image_height', __d_image_height, (str,), False, True, False)
         __d_allowed_shapes: Any = __d.get('allowed_shapes')
         _guard_vector('ImageAnnotator.allowed_shapes', __d_allowed_shapes, (str,), False, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('ImageAnnotator.events', __d_events, (str,), False, True, False)
         name: str = __d_name
         image: str = __d_image
         title: str = __d_title
@@ -6782,6 +6790,7 @@ class ImageAnnotator:
         trigger: Optional[bool] = __d_trigger
         image_height: Optional[str] = __d_image_height
         allowed_shapes: Optional[List[str]] = __d_allowed_shapes
+        events: Optional[List[str]] = __d_events
         return ImageAnnotator(
             name,
             image,
@@ -6791,6 +6800,7 @@ class ImageAnnotator:
             trigger,
             image_height,
             allowed_shapes,
+            events,
         )
 
 

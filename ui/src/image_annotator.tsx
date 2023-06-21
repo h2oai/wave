@@ -80,6 +80,8 @@ export interface ImageAnnotator {
   image_height?: S
   /** List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default. */
   allowed_shapes?: S[]
+  /** The events to capture on this image annotator. One of `click` or `tool_change`. */
+  events?: S[]
 }
 
 export type Position = {
@@ -310,6 +312,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         canvasRef.current.style.cursor = getCorrectCursorNonDragging(x, y, drawnShapes, shape === 'select')
       }
       setActiveShape(shape)
+      if (model.events?.includes('tool_change')) wave.emit(model.name, 'tool_change', shape)
     },
     recreatePreviewLine = () => {
       const { x, y } = mousePositionRef.current
@@ -334,13 +337,16 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgRef.current.style.transform = `translate(${imgPositionRef.current.x}px, ${imgPositionRef.current.y}px) scale(${zoom})`
       redrawExistingShapes()
     },
-    cancelOngoingAction = () => {
-      deselectAllShapes()
+    resetShapeCreation = () => {
       polygonRef.current?.cancelAnnotating()
       polygonRef.current?.resetDragging()
       rectRef.current?.resetDragging()
       // Prevent creating shapes when active shape is changed with shortcuts during dragging.
       if (clickStartPositionRef.current) clickStartPositionRef.current = undefined
+    },
+    cancelOngoingAction = () => {
+      deselectAllShapes()
+      resetShapeCreation()
       // Set correct wave args when drag moving is interrupted by changing active shape.
       setWaveArgs(drawnShapes)
       redrawExistingShapes()
@@ -467,6 +473,13 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         rect = canvas.getBoundingClientRect(),
         { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
         intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+
+      if (model.events?.includes('click') && activeShape !== 'select' && start) {
+        wave.emit(model.name, 'click', {
+          x: Math.round(start.x / aspectRatioRef.current),
+          y: Math.round(start.y / aspectRatioRef.current)
+        })
+      }
 
       switch (activeShape) {
         case 'rect': {
@@ -732,8 +745,10 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
   }, [model.name, model.items])
 
   React.useEffect(() => {
+    resetShapeCreation()
     setDrawnShapes(mapShapesToWaveArgs(model.items || [], aspectRatioRef.current))
     redrawExistingShapes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.items, redrawExistingShapes])
 
   // Handle case when changing active tag by "l" shortcut while annotating polygon.
