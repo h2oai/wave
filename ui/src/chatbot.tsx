@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
+import { B, Id, Model, Rec, S, isBuf, unpack } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
@@ -22,6 +22,7 @@ import { bond, wave } from './ui'
 
 const
   INPUT_HEIGHT = 30,
+  SCROLL_EVENT_OFFSET = 50,
   css = Fluent.mergeStyleSets({
     chatWindow: {
       height: '100%',
@@ -70,29 +71,58 @@ const
     }
   })
 
-type ChatMessage = { msg: S, fromUser: B }
+/* Chatbot message entity. */
+interface ChatbotMessage {
+  /* Text of the message. */
+  content: S
+  /* True if the message is from the user. */
+  from_user: B
+}
 
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
 export interface Chatbot {
   /** An identifying name for this component. */
   name: Id
-  /** Chat messages data. Requires cyclic buffer. */
-  data: Rec[]
+  /** Chat messages data. Requires list or cyclic buffer. */
+  data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
+  /** The previous messages to show as the user scrolls up. */
+  prev_items?: ChatbotMessage[]
 }
 
-export const XChatbot = ({ model }: { model: Chatbot }) => {
+const ChatbotMessage = ({ content, from_user, idx, msgs }: any) => {
   const
-    [msgs, setMsgs] = React.useState<ChatMessage[]>([]),
+    theme = Fluent.useTheme(),
+    botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter])
+
+  return (
+    <div
+      className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
+      style={{
+        paddingTop: msgs[idx - 1]?.from_user !== from_user ? rem(0.8) : 0,
+        paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
+        color: from_user ? '$text' : botTextColor
+      }} >
+      <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
+        <Markdown source={content || ''} />
+      </span>
+    </div>
+  )
+}
+const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
+
+export const XChatbot = (model: Chatbot) => {
+  const
+    [msgs, setMsgs] = React.useState<ChatbotMessage[]>(model.data ? processData(model.data) : []),
+    [prevMsgs, setPrevMsgs] = React.useState<ChatbotMessage[]>([]),
     [userInput, setUserInput] = React.useState(''),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
-    theme = Fluent.useTheme(),
-    botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
+    skipNextScrollHandler = React.useRef(false),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[model.name] = newVal
@@ -106,21 +136,34 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
     },
     submit = () => {
       if (!userInput.trim()) return
-      setMsgs([...msgs, { msg: userInput, fromUser: true }])
+      setMsgs([...msgs, { content: userInput, from_user: true }])
       wave.push()
       setUserInput('')
     },
-    stopGenerating = () => { if (model.events?.includes('stop')) wave.emit(model.name, 'stop', true) }
+    stopGenerating = () => { if (model.events?.includes('stop')) wave.emit(model.name, 'stop', true) },
+    handleScroll = () => {
+      if (skipNextScrollHandler.current) {
+        skipNextScrollHandler.current = false
+        return
+      }
+      if (!msgContainerRef.current) return
+      if (msgContainerRef.current.scrollTop <= SCROLL_EVENT_OFFSET && model.events?.includes('scroll_up')) {
+        wave.emit(model.name, 'scroll_up', true)
+      }
+    },
+    onDataChange = React.useCallback(() => { if (model.data) setMsgs(processData(model.data)) }, [model.data])
 
   React.useEffect(() => {
     if (!msgContainerRef.current) return
-    const topOffset = msgContainerRef.current.scrollHeight
 
+    skipNextScrollHandler.current = true
+    const topOffset = msgContainerRef.current.scrollHeight
     msgContainerRef.current?.scrollTo
-      ? msgContainerRef.current.scrollTo({ top: topOffset, behavior: 'smooth' })
+      ? msgContainerRef.current.scrollTo({ top: topOffset })
       : msgContainerRef.current.scrollTop = topOffset
   }, [msgs])
-  React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
+  React.useEffect(() => { if (isBuf(model.data)) model.data.registerOnChange(onDataChange) }, [model.data, onDataChange])
+  React.useEffect(() => { if (model.prev_items) setPrevMsgs(prev => [...model.prev_items!, ...prev]) }, [model.prev_items])
 
   return (
     <div className={css.chatWindow}>
@@ -129,21 +172,10 @@ export const XChatbot = ({ model }: { model: Chatbot }) => {
         className={css.msgContainer}
         // Height of input box + padding (+ height of stop button).
         style={{ bottom: model.generating ? 94 : 62 }}
+        onScroll={handleScroll}
       >
-        {msgs.map(({ msg, fromUser }, idx) => (
-          <div
-            key={idx}
-            className={clas(css.msgWrapper, fromUser ? '' : css.botMsg)}
-            style={{
-              paddingTop: msgs[idx - 1]?.fromUser !== fromUser ? rem(0.8) : 0,
-              paddingBottom: msgs?.[idx + 1]?.fromUser !== fromUser ? rem(0.8) : 0,
-              color: fromUser ? '$text' : botTextColor
-            }} >
-            <span className={clas(css.msg, 'wave-s14')} style={{ padding: msg?.includes('\n') ? 12 : 6 }}>
-              <Markdown source={msg || ''} />
-            </span>
-          </div>
-        ))}
+        {prevMsgs.map((msg, idx) => <ChatbotMessage key={prevMsgs.length - idx} content={msg.content} from_user={msg.from_user} idx={idx} msgs={prevMsgs} />)}
+        {msgs.map((msg, idx) => <ChatbotMessage key={idx} {...msg} idx={idx} msgs={msgs} />)}
       </div>
       <div className={css.textInput}>
         {model.generating &&
@@ -202,14 +234,14 @@ interface State {
   generating?: B
 }
 
-export const
-  View = bond(({ name, state, changed }: Model<State>) => {
-    const render = () => (
-      <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
-        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder, generating: state.generating, events: state.events }} />
-      </div>
-    )
-    return { render, changed }
-  })
+export const View = bond(({ name, state, changed }: Model<State>) => {
+  const render = () => (
+    <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
+      <XChatbot {...state} />
+    </div>
+  )
+
+  return { render, changed }
+})
 
 cards.register('chatbot', View)

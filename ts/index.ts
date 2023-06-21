@@ -249,6 +249,7 @@ interface Buf {
   put(xs: any): void
   set(k: S, v: any): void
   get(k: S): Cur | null
+  registerOnChange(f: () => void): void
 }
 interface Typ {
   readonly f: S[] // fields
@@ -397,7 +398,8 @@ export const
   parseU = (s: S): U => {
     const i = parseI(s)
     return isNaN(i) || i < 0 ? NaN : i
-  }
+  },
+  isBuf = (x: any): x is Buf => x != null && x.__buf__ === true
 
 export function unpack<T>(data: any): T {
   return (typeof data === 'string')
@@ -498,7 +500,6 @@ const
     }
     return true
   },
-  isBuf = (x: any): x is Buf => x != null && x.__buf__ === true,
   isData = (x: any): x is Data => isBuf(x),
   isCur = (x: any): x is Cur => x != null && x.__cur__ === true,
   reverseIndex = (xs: S[]): Dict<U> => {
@@ -543,6 +544,7 @@ const
     return { __cur__: true, get, set }
   },
   newFixBuf = (t: Typ, tups: (Tup | null)[]): FixBuf => {
+    let onChange: (() => void) | null = null
     const
       n = tups.length,
       put = (xs: any) => {
@@ -558,7 +560,10 @@ const
             tups[i] = null
           } else {
             const tup = t.match(v)
-            if (tup) tups[i] = tup
+            if (tup) {
+              tups[i] = tup
+              if (onChange) onChange()
+            }
           }
         }
       },
@@ -579,8 +584,11 @@ const
         for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
       },
-      dict = (): Dict<Rec> => ({})
-    return { __buf__: true, n, put, set, seti, get, geti, list, dict }
+      dict = (): Dict<Rec> => ({}),
+      registerOnChange = (f: () => void) => {
+        onChange = f
+      }
+    return { __buf__: true, n, put, set, seti, get, geti, list, dict, registerOnChange }
   },
   newCycBuf = (t: Typ, tups: (Tup | null)[], i: U): CycBuf => {
     const
@@ -607,15 +615,18 @@ const
         }
         return xs
       },
-      dict = (): Dict<Rec> => ({})
-    return { __buf__: true, put, set, get, list, dict }
+      dict = (): Dict<Rec> => ({}),
+      registerOnChange = (f: () => void) => {
+        b.registerOnChange(f)
+      }
+    return { __buf__: true, put, set, get, list, dict, registerOnChange }
   },
   newListBuf = (t: Typ, tups: (Tup | null)[], i: U): ListBuf => {
-    let b = newFixBuf(t, tups)
+    let
+      b = newFixBuf(t, tups),
+      onChange: (() => void) | null = null
     const
-      put = (xs: any) => {
-        if (Array.isArray(xs)) for (const x of xs) set("", x)
-      },
+      put = (xs: any) => { if (Array.isArray(xs)) for (const x of xs) set("", x) },
       set = (key: S, v: any) => {
         // Check if key is a valid index.
         const numKey = key !== "" ? +key : NaN
@@ -632,6 +643,7 @@ const
         if (i >= tups.length) {
           tups = doubleTupsSize(tups)
           b = newFixBuf(t, tups)
+          if (onChange) b.registerOnChange(onChange)
         }
         b.seti(i, v)
         i++
@@ -653,16 +665,24 @@ const
         for (const tup of tups) if (tup) xs.push(t.make(tup))
         return xs
       },
-      dict = (): Dict<Rec> => ({})
-    return { __buf__: true, put, set, get, list, dict }
+      dict = (): Dict<Rec> => ({}),
+      registerOnChange = (f: () => void) => {
+        onChange = f
+        b.registerOnChange(f)
+      }
+    return { __buf__: true, put, set, get, list, dict, registerOnChange }
   },
   newMapBuf = (t: Typ, tups: Dict<Tup>): MapBuf => {
+    let onChange: (() => void) | null = null
     const
       put = (xs: any) => {
         const ts: Dict<Tup> = {}
         for (const k in xs) {
           const x = xs[k], tup = t.match(x)
-          if (tup) ts[k] = tup
+          if (tup) {
+            ts[k] = tup
+            if (onChange) onChange()
+          }
         }
         tups = ts
       },
@@ -689,8 +709,9 @@ const
         const d: Dict<Rec> = {}
         for (const k in tups) d[k] = t.make(tups[k])
         return d
-      }
-    return { __buf__: true, put, set, get, list, dict }
+      },
+      registerOnChange = (f: () => void) => onChange = f
+    return { __buf__: true, put, set, get, list, dict, registerOnChange }
   },
   newTups = (n: U) => {
     const xs = new Array<Tup | null>(n)
