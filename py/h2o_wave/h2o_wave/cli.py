@@ -339,6 +339,8 @@ async def _share(port: int, subdomain: str, remote_host: str):
     print('Press Ctrl+C to stop sharing.')
 
     max_conn_count = res['max_conn_count']
+    # The server can be configured to either support 10 concurrent connections (default) or more.
+    # If more, connect in batches of 100 for better performance.
     step = 100 if max_conn_count > 10 else max_conn_count
 
     tasks = []
