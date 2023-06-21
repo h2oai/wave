@@ -33,7 +33,7 @@ def hex_to_rgb(hex_color: str) -> Tuple[int, ...]:
 
 
 # Source: https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors. # noqa
-def update_contrast_check(color1: str, color2: str, q:Q, min_contrast=4.5):
+def update_contrast_check(color1: str, color2: str, q: Q, min_contrast=4.5):
     rgb1 = hex_to_rgb(q.client[color1].lstrip('#'))
     rgb2 = hex_to_rgb(q.client[color2].lstrip('#'))
     lum1 = get_luminance(rgb1[0], rgb1[1], rgb1[2])
@@ -41,12 +41,16 @@ def update_contrast_check(color1: str, color2: str, q:Q, min_contrast=4.5):
     brightest = max(lum1, lum2)
     darkest = min(lum1, lum2)
     contrast = (brightest + 0.05) / (darkest + 0.05)
+    message_bar_names = ['text_card', 'card_primary', 'text_page', 'page_primary']
+    # TODO: Use by-name component access to index side panel items.
+    message_bar_mobile = q.page['meta'].side_panel.items[5 + message_bar_names.index(f'{color1}_{color2}')].message_bar
+    message_bar = q.page['form'][f'{color1}_{color2}']
     if contrast < min_contrast:
-        q.page['form'][f'{color1}_{color2}'].type = 'error'
-        q.page['form'][f'{color1}_{color2}'].text = f'Improve contrast between **{color1}** and **{color2}**.'
+        message_bar.type = message_bar_mobile.type = 'error'
+        message_bar.text = message_bar_mobile.text = f'Improve contrast between **{color1}** and **{color2}**.'
     else:
-        q.page['form'][f'{color1}_{color2}'].type = 'success'
-        q.page['form'][f'{color1}_{color2}'].text = f'Contrast between **{color1}** and **{color2}** is great!'
+        message_bar.type = message_bar_mobile.type = 'success'
+        message_bar.text = message_bar_mobile.text = f'Contrast between **{color1}** and **{color2}** is great!'
 
 
 def get_theme_code(q: Q):
@@ -76,8 +80,10 @@ ui.theme(
     html = html.replace('<pre>', '<pre style="margin: 0">')
     return html
 
+
 header_height = 61
 footer_height = 66
+
 
 @app('/demo')
 async def serve(q: Q):
@@ -91,10 +97,9 @@ async def serve(q: Q):
             ui.layout(
                 breakpoint='xs',
                 zones=[
-                    ui.zone('header'),
+                    ui.zone('mobile_header'),
                     ui.zone('content', zones=[
-                        ui.zone('colors', size=f'calc(50vh - {(header_height + footer_height) / 2}px)'),
-                        ui.zone('preview', size=f'calc(50vh - {(header_height + footer_height) / 2}px)')
+                        ui.zone('preview')
                     ]),
                     ui.zone('footer')
                 ]
@@ -113,19 +118,28 @@ async def serve(q: Q):
         ])
         q.page['header'] = ui.header_card(box='header', title='Theme generator', subtitle='Color your app easily',
                                           icon='Color', icon_color='$card')
-        q.page['form'] = ui.form_card(box='colors', items=[
-            ui.color_picker(name='primary', label='Primary', trigger=True, alpha=False, inline=True, value=q.client.primary),
+        q.page['mobile_header'] = ui.header_card(box='mobile_header', title='Theme generator',
+                                                 subtitle='Color your app easily',
+                                                 icon='Color', icon_color='$card', items=[
+                ui.button(name='show_side_panel', label='Colors', icon='Palette'),
+            ])
+        q.client.color_items = [
+            ui.color_picker(name='primary', label='Primary', trigger=True, alpha=False, inline=True,
+                            value=q.client.primary),
             ui.color_picker(name='text', label='Text', trigger=True, alpha=False, inline=True, value=q.client.text),
             ui.color_picker(name='card', label='Card', trigger=True, alpha=False, inline=True, value=q.client.card),
             ui.color_picker(name='page', label='Page', trigger=True, alpha=False, inline=True, value=q.client.page),
             ui.text_xl('Check contrast'),
             ui.message_bar(name='text_card', type='success', text='Contrast between **text** and **card** is great!'),
-            ui.message_bar(name='card_primary', type='success', text='Contrast between **card** and **primary** is great!'),
+            ui.message_bar(name='card_primary', type='success',
+                           text='Contrast between **card** and **primary** is great!'),
             ui.message_bar(name='text_page', type='success', text='Contrast between **text** and **page** is great!'),
-            ui.message_bar(name='page_primary', type='success', text='Contrast between **page** and **primary** is great!'),
+            ui.message_bar(name='page_primary', type='success',
+                           text='Contrast between **page** and **primary** is great!'),
             ui.text_xl('Copy code'),
             ui.frame(name='frame', content=get_theme_code(q), height='130px'),
-        ])
+        ]
+        q.page['form'] = ui.form_card(box='colors', items=q.client.color_items)
         q.page['sample'] = ui.form_card(box='preview', items=[
             ui.text_xl(content='Sample App to show colors'),
             ui.progress(label='A progress bar'),
@@ -171,7 +185,8 @@ async def serve(q: Q):
                         ui.table_column(name='name', label='Name', min_width='80px'),
                         ui.table_column(name='surname', label='Surname', filterable=True, max_width='90px'),
                         ui.table_column(name='age', label='Age', sortable=True, max_width='80px'),
-                        ui.table_column(name='progress', label='Progress', max_width='80px', cell_type=ui.progress_table_cell_type(color='$themePrimary')),
+                        ui.table_column(name='progress', label='Progress', max_width='80px',
+                                        cell_type=ui.progress_table_cell_type(color='$themePrimary')),
                     ],
                     rows=[
                         ui.table_row(name='row1', cells=['John', 'Doe', '25', '0.90']),
@@ -202,6 +217,9 @@ async def serve(q: Q):
                                     page=q.client.page, primary=q.client.primary)]
         q.client.initialized = True
 
+    if q.args.show_side_panel:
+        q.page['meta'].side_panel = ui.side_panel(name='sidepanel', title='Adjust theme colors',
+                                                  items=q.client.color_items, closable=True, width='75%')
     if q.args.primary:
         q.client.themes[0].primary = q.args.primary
         q.client.primary = q.args.primary
