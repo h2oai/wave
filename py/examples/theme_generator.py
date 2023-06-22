@@ -94,12 +94,12 @@ async def serve(q: Q):
                 breakpoint='xs',
                 zones=[
                     ui.zone('mobile_header'),
-                    ui.zone('preview'),
+                    ui.zone('mobile_preview'),
                     ui.zone('footer')
                 ]
             ),
             ui.layout(
-                breakpoint='m',
+                breakpoint='817px',
                 zones=[
                     ui.zone('header'),
                     ui.zone('content', direction=ui.ZoneDirection.ROW, zones=[
@@ -135,18 +135,11 @@ async def serve(q: Q):
         q.page['sample'] = ui.form_card(box='preview', items=[
             ui.text_xl(content='Sample App to show colors'),
             ui.progress(label='A progress bar'),
-            ui.inline(justify='between', items=[
-                ui.tabs(name='menu', value='email', items=[
-                    ui.tab(name='email', label='Mail', icon='Mail'),
-                    ui.tab(name='events', label='Events', icon='Calendar'),
-                    ui.tab(name='spam', label='Spam'),
-                ]),
-                ui.slider(name='slider', label='Slider', value=70),
-            ]),
             ui.inline([
-                ui.checkbox(name='checkbox1', label='Checkbox', value=True),
-                ui.checkbox(name='checkbox2', label='Another checkbox'),
-                ui.checkbox(name='checkbox3', label='Yet another checkbox'),
+                ui.checkbox(name='checkbox1', label='Checkbox 1', value=True),
+                ui.checkbox(name='checkbox2', label='Checkbox 2'),
+                ui.checkbox(name='checkbox3', label='Checkbox 3'),
+                ui.toggle(name='toggle', label='Toggle', value=True),
             ]),
             ui.inline([
                 ui.date_picker(name='date_picker', label='Date picker'),
@@ -156,9 +149,62 @@ async def serve(q: Q):
                     ui.choice('choice3', label='Choice 3'),
                 ]),
                 ui.combobox(name='combobox', label='Combobox', choices=['Choice 1', 'Choice 2', 'Choice 3']),
+                ui.persona(title='John Doe', subtitle='Data Scientist', size='s', image=image),
             ]),
-            ui.inline([
-                ui.link(label='Link'),
+            ui.slider(name='slider', label='Slider', value=70),
+            ui.link(label='Link'),
+            ui.inline(justify='between', items=[
+                ui.stepper(name='stepper', width='500px', items=[
+                    ui.step(label='Step 1', icon='MailLowImportance'),
+                    ui.step(label='Step 2', icon='TaskManagerMirrored'),
+                    ui.step(label='Step 3', icon='Cafe'),
+                ]),
+                ui.tabs(name='menu', value='email', items=[
+                    ui.tab(name='email', label='Mail', icon='Mail'),
+                    ui.tab(name='events', label='Events', icon='Calendar'),
+                    ui.tab(name='spam', label='Spam'),
+                ]),
+            ]),
+            ui.inline(items=[
+                ui.table(
+                    name='table',
+                    width='50%',
+                    columns=[
+                        ui.table_column(name='name', label='Name', min_width='80px'),
+                        ui.table_column(name='surname', label='Surname', filterable=True),
+                        ui.table_column(name='age', label='Age', sortable=True, max_width='80px'),
+                        ui.table_column(name='progress', label='Progress',
+                                        cell_type=ui.progress_table_cell_type(color='$themePrimary')),
+                    ],
+                    rows=[
+                        ui.table_row(name='row1', cells=['John', 'Doe', '25', '0.90']),
+                        ui.table_row(name='row2', cells=['Ann', 'Doe', '35', '0.75']),
+                        ui.table_row(name='row3', cells=['Casey', 'Smith', '40', '0.33']),
+                    ],
+                    height='330px',
+                ),
+                ui.visualization(
+                    width='50%',
+                    data=data('profession salary', 5, rows=[
+                        ('medicine', 23000),
+                        ('fire fighting', 18000),
+                        ('pedagogy', 24000),
+                        ('psychology', 22500),
+                        ('computer science', 36000),
+                    ], pack=True),
+                    plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)])
+                ),
+            ]),
+            ui.buttons([
+                ui.button(name='primary_button', label='Primary', primary=True),
+                ui.button(name='standard_button', label='Standard'),
+                ui.button(name='standard_disabled_button', label='Disabled', disabled=True),
+                ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
+            ]),
+        ])
+        q.page['sample_mobile'] = ui.form_card(box='mobile_preview', items=[
+            ui.text_xl(content='Sample App to show colors'),
+            ui.inline(justify='between', items=[
                 ui.persona(title='John Doe', subtitle='Data Scientist', size='s', image=image),
                 ui.toggle(name='toggle', label='Toggle', value=True),
             ]),
@@ -169,24 +215,47 @@ async def serve(q: Q):
                     ui.step(label='Step 3', icon='Cafe'),
                 ]),
             ]),
+            ui.progress(label='A progress bar'),
+            ui.inline(justify='between', items=[
+                ui.tabs(name='menu', value='email', items=[
+                    ui.tab(name='email', label='Mail', icon='Mail'),
+                    ui.tab(name='events', label='Events', icon='Calendar'),
+                    ui.tab(name='spam', label='Spam'),
+                ]),
+                ui.link(label='Link'),
+            ]),
+            ui.slider(name='slider', label='Slider', value=70),
             ui.inline([
+                ui.date_picker(name='date_picker', label='Date picker'),
+                ui.picker(name='picker', label='Picker', choices=[
+                    ui.choice('choice1', label='Choice 1'),
+                    ui.choice('choice2', label='Choice 2'),
+                    ui.choice('choice3', label='Choice 3'),
+                ]),
+                ui.combobox(name='combobox', label='Combobox', choices=['Choice 1', 'Choice 2', 'Choice 3']),
+            ]),
+            ui.inline([
+                ui.checkbox(name='checkbox1', label='Checkbox 1', value=True),
+                ui.checkbox(name='checkbox2', label='Checkbox 2'),
+                ui.checkbox(name='checkbox3', label='Checkbox 3'),
+            ]),
+            ui.inline(direction='column', items=[
                 ui.table(
                     name='table',
-                    width='45%',
+                    width='100%',
                     columns=[
                         ui.table_column(name='name', label='Name', min_width='80px'),
                         ui.table_column(name='surname', label='Surname', filterable=True, max_width='90px'),
-                        ui.table_column(name='age', label='Age', sortable=True, max_width='80px'),
                         ui.table_column(name='progress', label='Progress', max_width='80px',
                                         cell_type=ui.progress_table_cell_type(color='$themePrimary')),
                     ],
                     rows=[
-                        ui.table_row(name='row1', cells=['John', 'Doe', '25', '0.90']),
-                        ui.table_row(name='row2', cells=['Ann', 'Doe', '35', '0.75']),
+                        ui.table_row(name='row1', cells=['John', 'Doe', '0.90']),
+                        ui.table_row(name='row2', cells=['Ann', 'Doe', '0.75']),
                     ],
                 ),
                 ui.visualization(
-                    width='55%',
+                    width='100%',
                     data=data('profession salary', 5, rows=[
                         ('medicine', 23000),
                         ('fire fighting', 18000),
@@ -210,8 +279,8 @@ async def serve(q: Q):
         q.client.initialized = True
 
     if q.args.show_side_panel:
-        q.page['meta'].side_panel = ui.side_panel(name='sidepanel', title='Adjust theme colors',
-                                                  items=q.client.color_items, closable=True, width='75%')
+        q.page['meta'].side_panel = ui.side_panel(title='Adjust theme colors',
+                                                  items=q.client.color_items, closable=True, width='min(75%, 420px)')
     if q.args.primary:
         q.client.themes[0].primary = q.args.primary
         q.client.primary = q.args.primary
