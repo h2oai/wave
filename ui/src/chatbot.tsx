@@ -95,25 +95,6 @@ export interface Chatbot {
   prev_items?: ChatbotMessage[]
 }
 
-const ChatbotMessage = ({ content, from_user, idx, msgs }: any) => {
-  const
-    theme = Fluent.useTheme(),
-    botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter])
-
-  return (
-    <div
-      className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
-      style={{
-        paddingTop: msgs[idx - 1]?.from_user !== from_user ? rem(0.8) : 0,
-        paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
-        color: from_user ? '$text' : botTextColor
-      }} >
-      <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
-        <Markdown source={content || ''} />
-      </span>
-    </div>
-  )
-}
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
 
 export const XChatbot = (props: Chatbot) => {
@@ -121,6 +102,8 @@ export const XChatbot = (props: Chatbot) => {
     [msgs, setMsgs] = React.useState<ChatbotMessage[]>(props.data ? processData(props.data) : []),
     [userInput, setUserInput] = React.useState(''),
     [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
+    theme = Fluent.useTheme(),
+    botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     skipNextBottomScroll = React.useRef(true),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
@@ -181,7 +164,20 @@ export const XChatbot = (props: Chatbot) => {
         isInfiniteLoading={isInfiniteLoading}
         loadingComponent={<Fluent.Spinner label='Loading...' />}
       >
-        {msgs.map((msg, idx) => <ChatbotMessage key={idx} {...msg} idx={idx} msgs={msgs} />)}
+        {msgs.map(({ from_user, content }, idx) => (
+          <div
+            key={idx}
+            className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
+            style={{
+              paddingTop: msgs[idx - 1]?.from_user !== from_user ? rem(0.8) : 0,
+              paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
+              color: from_user ? '$text' : botTextColor
+            }} >
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
+              <Markdown source={content || ''} />
+            </span>
+          </div>
+        ))}
       </InfiniteScrollList>
       <div className={css.textInput}>
         {props.generating &&
