@@ -448,6 +448,7 @@ describe('ImageAnnotator.tsx', () => {
       const emitMock = jest.fn()
       wave.emit = emitMock
 
+      fireEvent.keyDown(canvasEl, { key: 'r' })
       userEvent.click(canvasEl, { clientX: 100, clientY: 120 })
       expect(emitMock).toHaveBeenCalled()
       expect(emitMock).toHaveBeenCalledWith(model.name, 'click', { x: 100, y: 120 })
