@@ -39,8 +39,13 @@ async def serve(q: Q):
 
     # User scrolled up, load chat history.
     if q.events.chatbot and q.events.chatbot.scroll_up:
-        end = q.client.current_load_page - LOAD_SIZE
-        q.page['example'].prev_items = prev_messages[end:q.client.current_load_page]
-        q.client.current_load_page = end
+        if q.client.current_load_page == 0:
+            # If we reached the end, signal it to Wave by setting prev_items to empty list.
+            q.page['example'].prev_items = []
+        else:
+            end = q.client.current_load_page - LOAD_SIZE
+            q.page['example'].prev_items = prev_messages[end:q.client.current_load_page]
+            q.client.current_load_page = end
+            await q.sleep(0.5)  # Simulate network latency.
 
     await q.page.save()

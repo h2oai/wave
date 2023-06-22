@@ -19,10 +19,10 @@ import { cards } from './layout'
 import { Markdown } from './markdown'
 import { clas, cssVar, getContrast, important, margin, px, rem } from './theme'
 import { bond, wave } from './ui'
+import InfiniteScrollList from './parts/infiniteScroll'
 
 const
   INPUT_HEIGHT = 30,
-  SCROLL_EVENT_OFFSET = 50,
   css = Fluent.mergeStyleSets({
     chatWindow: {
       height: '100%',
@@ -119,10 +119,10 @@ const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content
 export const XChatbot = (model: Chatbot) => {
   const
     [msgs, setMsgs] = React.useState<ChatbotMessage[]>(model.data ? processData(model.data) : []),
-    [prevMsgs, setPrevMsgs] = React.useState<ChatbotMessage[]>([]),
     [userInput, setUserInput] = React.useState(''),
+    [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
-    skipNextScrollHandler = React.useRef(false),
+    skipNextBottomScroll = React.useRef(true),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[model.name] = newVal
@@ -141,42 +141,48 @@ export const XChatbot = (model: Chatbot) => {
       setUserInput('')
     },
     stopGenerating = () => { if (model.events?.includes('stop')) wave.emit(model.name, 'stop', true) },
-    handleScroll = () => {
-      if (skipNextScrollHandler.current) {
-        skipNextScrollHandler.current = false
-        return
-      }
-      if (!msgContainerRef.current) return
-      if (msgContainerRef.current.scrollTop <= SCROLL_EVENT_OFFSET && model.events?.includes('scroll_up')) {
+    onLoad = React.useCallback(() => {
+      if (model.events?.includes('scroll_up')) {
         wave.emit(model.name, 'scroll_up', true)
+        setIsInfiniteLoading(true)
       }
-    },
+    }, [model.events, model.name]),
     onDataChange = React.useCallback(() => { if (model.data) setMsgs(processData(model.data)) }, [model.data])
 
+  React.useEffect(() => { if (isBuf(model.data)) model.data.registerOnChange(onDataChange) }, [model.data, onDataChange])
   React.useEffect(() => {
+    if (model.prev_items) {
+      setMsgs(prev => [...model.prev_items!, ...prev])
+      setIsInfiniteLoading(false)
+      skipNextBottomScroll.current = false
+    }
+  }, [model.prev_items])
+  React.useLayoutEffect(() => {
     if (!msgContainerRef.current) return
-
-    skipNextScrollHandler.current = true
+    if (!skipNextBottomScroll.current) {
+      skipNextBottomScroll.current = true
+      return
+    }
     const topOffset = msgContainerRef.current.scrollHeight
     msgContainerRef.current?.scrollTo
-      ? msgContainerRef.current.scrollTo({ top: topOffset })
+      ? msgContainerRef.current.scrollTo({ top: topOffset, behavior: 'smooth' })
       : msgContainerRef.current.scrollTop = topOffset
   }, [msgs])
-  React.useEffect(() => { if (isBuf(model.data)) model.data.registerOnChange(onDataChange) }, [model.data, onDataChange])
-  React.useEffect(() => { if (model.prev_items) setPrevMsgs(prev => [...model.prev_items!, ...prev]) }, [model.prev_items])
 
   return (
     <div className={css.chatWindow}>
-      <div
-        ref={msgContainerRef}
+      <InfiniteScrollList
+        forwardedRef={msgContainerRef}
         className={css.msgContainer}
         // Height of input box + padding (+ height of stop button).
         style={{ bottom: model.generating ? 94 : 62 }}
-        onScroll={handleScroll}
+        hasMore={model.prev_items?.length !== 0}
+        onInfiniteLoad={onLoad}
+        isInfiniteLoading={isInfiniteLoading}
+        loadingComponent={<Fluent.Spinner label='Loading...' />}
       >
-        {prevMsgs.map((msg, idx) => <ChatbotMessage key={prevMsgs.length - idx} content={msg.content} from_user={msg.from_user} idx={idx} msgs={prevMsgs} />)}
         {msgs.map((msg, idx) => <ChatbotMessage key={idx} {...msg} idx={idx} msgs={msgs} />)}
-      </div>
+      </InfiniteScrollList>
       <div className={css.textInput}>
         {model.generating &&
           <Fluent.DefaultButton className={css.stopButton} onClick={stopGenerating} iconProps={{ iconName: 'Stop' }}>
