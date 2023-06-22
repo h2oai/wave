@@ -1,2 +1,1 @@
 h2o_wave=={{VERSION}}
-pygments==2.11.2
