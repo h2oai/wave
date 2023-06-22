@@ -116,16 +116,16 @@ const ChatbotMessage = ({ content, from_user, idx, msgs }: any) => {
 }
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
 
-export const XChatbot = (model: Chatbot) => {
+export const XChatbot = (props: Chatbot) => {
   const
-    [msgs, setMsgs] = React.useState<ChatbotMessage[]>(model.data ? processData(model.data) : []),
+    [msgs, setMsgs] = React.useState<ChatbotMessage[]>(props.data ? processData(props.data) : []),
     [userInput, setUserInput] = React.useState(''),
     [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     skipNextBottomScroll = React.useRef(true),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
-      wave.args[model.name] = newVal
+      wave.args[props.name] = newVal
       setUserInput(newVal)
     },
     onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -140,23 +140,23 @@ export const XChatbot = (model: Chatbot) => {
       wave.push()
       setUserInput('')
     },
-    stopGenerating = () => { if (model.events?.includes('stop')) wave.emit(model.name, 'stop', true) },
+    stopGenerating = () => { if (props.events?.includes('stop')) wave.emit(props.name, 'stop', true) },
     onLoad = React.useCallback(() => {
-      if (model.events?.includes('scroll_up')) {
-        wave.emit(model.name, 'scroll_up', true)
+      if (props.events?.includes('scroll_up')) {
+        wave.emit(props.name, 'scroll_up', true)
         setIsInfiniteLoading(true)
       }
-    }, [model.events, model.name]),
-    onDataChange = React.useCallback(() => { if (model.data) setMsgs(processData(model.data)) }, [model.data])
+    }, [props.events, props.name]),
+    onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data])
 
-  React.useEffect(() => { if (isBuf(model.data)) model.data.registerOnChange(onDataChange) }, [model.data, onDataChange])
+  React.useEffect(() => { if (isBuf(props.data)) props.data.registerOnChange(onDataChange) }, [props.data, onDataChange])
   React.useEffect(() => {
-    if (model.prev_items) {
-      setMsgs(prev => [...model.prev_items!, ...prev])
+    if (props.prev_items) {
+      setMsgs(prev => [...props.prev_items!, ...prev])
       setIsInfiniteLoading(false)
       skipNextBottomScroll.current = false
     }
-  }, [model.prev_items])
+  }, [props.prev_items])
   React.useLayoutEffect(() => {
     if (!msgContainerRef.current) return
     if (!skipNextBottomScroll.current) {
@@ -175,8 +175,8 @@ export const XChatbot = (model: Chatbot) => {
         forwardedRef={msgContainerRef}
         className={css.msgContainer}
         // Height of input box + padding (+ height of stop button).
-        style={{ bottom: model.generating ? 94 : 62 }}
-        hasMore={model.prev_items?.length !== 0}
+        style={{ bottom: props.generating ? 94 : 62 }}
+        hasMore={props.prev_items?.length !== 0}
         onInfiniteLoad={onLoad}
         isInfiniteLoading={isInfiniteLoading}
         loadingComponent={<Fluent.Spinner label='Loading...' />}
@@ -184,20 +184,20 @@ export const XChatbot = (model: Chatbot) => {
         {msgs.map((msg, idx) => <ChatbotMessage key={idx} {...msg} idx={idx} msgs={msgs} />)}
       </InfiniteScrollList>
       <div className={css.textInput}>
-        {model.generating &&
+        {props.generating &&
           <Fluent.DefaultButton className={css.stopButton} onClick={stopGenerating} iconProps={{ iconName: 'Stop' }}>
             Stop generating
           </Fluent.DefaultButton>
         }
         <Fluent.TextField
-          data-test={model.name}
+          data-test={props.name}
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
           autoComplete='off'
           multiline
           autoAdjustHeight
-          placeholder={model.placeholder || 'Type your message'}
+          placeholder={props.placeholder || 'Type your message'}
           styles={{
             root: { flexGrow: 1 },
             fieldGroup: { minHeight: INPUT_HEIGHT },
@@ -211,10 +211,10 @@ export const XChatbot = (model: Chatbot) => {
           }}
         />
         <Fluent.IconButton
-          data-test={`${model.name}-submit`}
+          data-test={`${props.name}-submit`}
           iconProps={{ iconName: 'Send' }}
           onClick={submit}
-          disabled={!userInput.trim() || model.generating}
+          disabled={!userInput.trim() || props.generating}
           styles={{
             root: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT },
             rootHovered: { backgroundColor: 'transparent' },

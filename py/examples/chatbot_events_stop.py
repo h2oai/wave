@@ -26,7 +26,7 @@ async def serve(q: Q):
     if not q.client.initialized:
         q.page['example'] = ui.chatbot_card(
             box='1 1 5 5',
-            data=data(fields='msg fromUser', t='list'),
+            data=data(fields='content from_user', t='list'),
             name='chatbot',
             events=['stop']
         )

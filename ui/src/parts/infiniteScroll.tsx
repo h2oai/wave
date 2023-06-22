@@ -43,7 +43,7 @@ export default class InfiniteScrollList extends React.Component<Props> {
   getSnapshotBeforeUpdate(prevProps: Props) {
     const isNolongerLoading = prevProps.isInfiniteLoading && !this.props.isInfiniteLoading
     const hasMoreChildren = this.props.children.length > prevProps.children.length
-    if (isNolongerLoading && hasMoreChildren) return this.props.forwardedRef.current?.scrollHeight
+    return isNolongerLoading && hasMoreChildren ? this.props.forwardedRef.current?.scrollHeight : null
   }
 
   componentDidUpdate(_prevProps: Props, _prevState: unknown, scrollDelta?: U) {

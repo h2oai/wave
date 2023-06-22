@@ -15,7 +15,7 @@ Check the full API at [ui.chatbot_card](/docs/api/ui#chatbot_card).
 ```py
 from h2o_wave import data
 
-q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data(fields='msg fromUser', t='list'), name='chatbot')
+q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data(fields='content from_user', t='list'), name='chatbot')
 q.page['example'].data = [
     ['Hello, buddy. Can you help me?', True],
     ['Sure, what you need?', False],
@@ -31,7 +31,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.chatbot_card(
     box='1 1 5 5',
-    data=data(fields='msg fromUser', t='list'),
+    data=data(fields='content from_user', t='list'),
     name='chatbot', 
     generating=True,
     events=['stop']
