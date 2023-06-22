@@ -161,7 +161,7 @@ def get_wave_completions(line, character, file_content):
         return [{'label': icon, 'kind': 13, 'sort_text': '0'} for icon in fluent_icons]
         '''
     js_code = ''
-    with open(os.path.join(university_dir, 'static','university.js'), 'r') as f:
+    with open(os.path.join(university_dir, 'static', 'university.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(
         baseURL=_base_url,
@@ -215,7 +215,7 @@ def get_wave_completions(line, character, file_content):
         image=f'{_base_url}assets/h2o-logo.svg',
         nav=[
             ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1], path=link[2]) for link in nav_links])
-        ]
+            ]
     )
     q.page['mobile_nav'] = ui.form_card(box='nav', items=[])
     q.page['code'] = ui.markup_card(
@@ -241,7 +241,7 @@ def make_blurb(q: Q):
         ui.button(name=f'#{next_lesson_name}', label='Next', disabled=next_lesson_name == '')
     ]
     q.page['header'].items = items
-    q.page['mobile_nav'].items = [ui.inline(justify='center' ,items=items)]
+    q.page['mobile_nav'].items = [ui.inline(justify='center', items=items)]
     q.page['description'].content = lesson.description
 
 
@@ -288,7 +288,8 @@ async def show_lesson(q: Q, lesson: Lesson):
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
-            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()', requires=['editor'])
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()',
+                                                     requires=['editor'])
 
     # HACK
     # The ?e= appended to the path forces the frame to reload.
@@ -324,7 +325,7 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
-        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py') )
+        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py'))
         lesson_files.sort(key=natural_keys)
         q.app.catalog = load_lessons(lesson_files)
         q.app.initialized = True
