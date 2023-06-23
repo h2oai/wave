@@ -757,6 +757,9 @@ const
           case 1:
             {
               const p = ks[0], b = data[p]
+              if (v && (p === "side_panel" || p === "dialog" || p === "notification_bar")) {
+                fillComponentNameMap(componentCache, v.items || v.buttons)
+              }
               if (b && isBuf(b)) {
                 b.put(v)
                 return
@@ -802,6 +805,7 @@ const
     return null
   },
   fillComponentNameMap = (nameComponentMap: Dict<any>, items: any) => {
+    if (!items) return
     for (const item of items) {
       // Form components are always wrapped in a single key object.
       let component = item[Object.keys(item)[0]]

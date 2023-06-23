@@ -33,9 +33,7 @@ def update_contrast_check(color1: str, color2: str, q: Q, min_contrast=4.5):
     brightest = max(lum1, lum2)
     darkest = min(lum1, lum2)
     contrast = (brightest + 0.05) / (darkest + 0.05)
-    message_bar_names = ['text_card', 'card_primary', 'text_page', 'page_primary']
-    # TODO: Use by-name component access to index side panel items.
-    message_bar_mobile = q.page['meta'].side_panel.items[5 + message_bar_names.index(f'{color1}_{color2}')].message_bar
+    message_bar_mobile = q.page['meta'][f'{color1}_{color2}']
     message_bar = q.page['form'][f'{color1}_{color2}']
     if contrast < min_contrast:
         message_bar.type = message_bar_mobile.type = 'error'
