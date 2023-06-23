@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
-import React, { PropsWithChildren, useEffect, useRef } from 'react'
+import React, { PropsWithChildren, useEffect, useLayoutEffect, useRef } from 'react'
 
 interface Props {
   forwardedRef: React.RefObject<HTMLDivElement>
@@ -34,7 +34,7 @@ export default ({ forwardedRef, className, style, hasMore, children, isInfiniteL
     onInfiniteLoad()
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const isNolongerLoading = prevIsInfiniteLoading.current && !isInfiniteLoading
     if (!forwardedRef.current || !isNolongerLoading) return
     forwardedRef.current.scrollTop = forwardedRef.current.scrollHeight - prevScrollHeight.current
