@@ -17,7 +17,10 @@ package wave
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 // AppMode represents app modes.
@@ -38,6 +41,7 @@ type App struct {
 	addr      string  // upstream address http://host:port
 	keyID     string  // access key ID
 	keySecret string  // access key secret
+	conf      *AppConf
 }
 
 func toAppMode(mode string) AppMode {
@@ -59,6 +63,7 @@ func newApp(broker *Broker, mode, route, addr, keyID, keySecret string) *App {
 		addr,
 		keyID,
 		keySecret,
+		broker.appConf,
 	}
 }
 
@@ -86,9 +91,32 @@ func (app *App) disconnect(clientID string) error {
 }
 
 func (app *App) forward(clientID string, session *Session, data []byte) {
-	if err := app.send(clientID, session, data); err != nil {
+	maxRetries := app.conf.MaxRequestRetryCount
+	retryInterval := app.conf.RequestRetryInterval
+
+	err := app.send(clientID, session, data)
+	if err != nil {
 		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
-		app.broker.dropApp(app.route)
+
+		retries := int64(0)
+		for retries < maxRetries {
+			err = app.send(clientID, session, data)
+			if err != nil {
+				retries++
+				echo(Log{"t": "app", "route": app.route, "host": app.addr,
+					"error": err.Error(), "retry count": strconv.Itoa(int(retries))})
+				time.Sleep(retryInterval)
+			} else {
+				break
+			}
+		}
+
+		if retries == maxRetries {
+			retryDuration := time.Duration(maxRetries) * retryInterval
+			log.Printf("App wasn't be able to recover with %d attempts. [Retry duration: %s]",
+				maxRetries, retryDuration)
+			app.broker.dropApp(app.route)
+		}
 	}
 }
 

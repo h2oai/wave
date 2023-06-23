@@ -50,6 +50,7 @@ type ServerConf struct {
 	Debug                bool
 	Auth                 *AuthConf
 	ForwardedHeaders     map[string]bool
+	AppConfig            *AppConf
 }
 
 type AuthConf struct {
@@ -64,6 +65,11 @@ type AuthConf struct {
 	SkipLogin             bool
 	SessionExpiry         time.Duration
 	InactivityTimeout     time.Duration
+}
+
+type AppConf struct {
+	MaxRequestRetryCount int64
+	RequestRetryInterval time.Duration
 }
 
 type Conf struct {
@@ -98,6 +104,8 @@ type Conf struct {
 	NoStore               bool   `cfg:"no-store" env:"H2O_WAVE_NO_STORE" cfgDefault:"false" cfgHelper:"disable storage (scripts and multicast/broadcast apps will not work)"`
 	NoLog                 bool   `cfg:"no-log" env:"H2O_WAVE_NO_LOG" cfgDefault:"false" cfgHelper:"disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)"`
 	Debug                 bool   `cfg:"debug" env:"H2O_WAVE_DEBUG" cfgDefault:"false" cfgHelper:"enable debug mode (profiling, inspection, etc.)"`
+	MaxRequestRetryCount  string `cfg:"max-request-retry-count" env:"H2O_WAVE_MAX_REQUEST_RETRY_COUNT" cfgDefault:"0" cfgHelper:"maximum request retry count for the failed requests between WaveD and ASGI server. If not specified, Waved drops the app immediate after a single request failure."`
+	RequestRetryInterval  string `cfg:"request-retry-interval" env:"H2O_WAVE_REQUEST_RETRY_INTERVAL" cfgDefault:"1s" cfgHelper:"time interval for request retry between WaveD and ASGI server for failed requests"`
 	ClientID              string `cfg:"oidc-client-id" env:"H2O_WAVE_OIDC_CLIENT_ID" cfgDefault:"" cfgHelper:"OIDC client ID"`
 	ClientSecret          string `cfg:"oidc-client-secret" env:"H2O_WAVE_OIDC_CLIENT_SECRET" cfgDefault:"" cfgHelper:"OIDC client secret"`
 	ProviderUrl           string `cfg:"oidc-provider-url" env:"H2O_WAVE_OIDC_PROVIDER_URL" cfgDefault:"" cfgHelper:"OIDC provider URL"`

@@ -26,6 +26,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -63,6 +64,7 @@ func main() {
 	conf := wave.Conf{}
 	serverConf := wave.ServerConf{}
 	authConf := wave.AuthConf{}
+	appConf := wave.AppConf{}
 
 	goconfig.File = ".env"
 	if v, ok := os.LookupEnv("H2O_WAVE_CONF"); ok {
@@ -254,6 +256,14 @@ func main() {
 	if emptyRequiredOIDCParamsCount > 0 && emptyRequiredOIDCParamsCount != len(requiredEnvOIDC) {
 		log.Println("#", "warning: the following OIDC required params were not set: ", emptyRequiredOIDCParams)
 	}
+
+	if appConf.MaxRequestRetryCount, err = strconv.ParseInt(conf.MaxRequestRetryCount, 10, 64); err != nil {
+		panic(err)
+	}
+	if appConf.RequestRetryInterval, err = time.ParseDuration(conf.RequestRetryInterval); err != nil {
+		panic(err)
+	}
+	serverConf.AppConfig = &appConf
 
 	wave.Run(serverConf)
 }

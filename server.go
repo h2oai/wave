@@ -87,7 +87,7 @@ func Run(conf ServerConf) {
 
 	handle := handleWithBaseURL(conf.BaseURL)
 
-	broker := newBroker(site, conf.Editable, conf.NoStore, conf.NoLog)
+	broker := newBroker(site, conf.Editable, conf.NoStore, conf.NoLog, conf.AppConfig)
 	go broker.run()
 
 	if conf.Debug {

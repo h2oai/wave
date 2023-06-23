@@ -75,9 +75,10 @@ type Broker struct {
 	appsMux     sync.RWMutex    // mutex for tracking apps
 	unicasts    map[string]bool // "/client_id" => true
 	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
+	appConf     *AppConf
 }
 
-func newBroker(site *Site, editable, noStore, noLog bool) *Broker {
+func newBroker(site *Site, editable, noStore, noLog bool, appConf *AppConf) *Broker {
 	return &Broker{
 		site,
 		editable,
@@ -92,6 +93,7 @@ func newBroker(site *Site, editable, noStore, noLog bool) *Broker {
 		sync.RWMutex{},
 		make(map[string]bool),
 		sync.RWMutex{},
+		appConf,
 	}
 }
 
