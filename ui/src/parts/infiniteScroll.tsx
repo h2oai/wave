@@ -45,7 +45,7 @@ export default ({ forwardedRef, className, style, hasMore, children, isInfiniteL
   useEffect(() => { prevIsInfiniteLoading.current = isInfiniteLoading }, [isInfiniteLoading])
 
   return (
-    <div ref={forwardedRef} onScroll={handleScroll} className={className} style={{ overflow: 'auto', ...style }}>
+    <div ref={forwardedRef} onScroll={handleScroll} className={className} style={style}>
       {hasMore && <Fluent.Spinner label='Loading...' />}
       {children}
     </div>
