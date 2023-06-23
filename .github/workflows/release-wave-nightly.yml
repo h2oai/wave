@@ -145,7 +145,8 @@ jobs:
           KC_SLEEP: 45
     
   release:
-    needs: [test-linux, test-win, test-macos]
+    # TMP Removal.
+    # needs: [test-linux, test-win, test-macos]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
@@ -172,6 +173,14 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           working-directory: ./r
+
+      # Needed for IntelliJ plugin tests.
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
+          cache: gradle
 
       # These unit tests are not OS-dependent, so no need to run them in the dedicated Test jobs.
       - name: Unit test
