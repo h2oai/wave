@@ -99,7 +99,7 @@ func (app *App) forward(clientID string, session *Session, data []byte) {
 		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
 
 		retries := int64(0)
-		for retries < maxRetries {
+		for retries < maxRetries && !app.broker.isAppDropped(app.route) { //request entering into recovery path
 			err = app.send(clientID, session, data)
 			if err != nil {
 				retries++

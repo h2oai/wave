@@ -137,6 +137,12 @@ func (b *Broker) dropApp(route string) {
 	b.resetSubscribers(route)
 }
 
+func (b *Broker) isAppDropped(route string) bool {
+	b.appsMux.RLock()
+	defer b.appsMux.RUnlock()
+	return b.apps[route] == nil
+}
+
 func parseMsgT(s []byte) MsgT {
 	if len(s) == 1 {
 		switch s[0] {
