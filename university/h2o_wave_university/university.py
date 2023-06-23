@@ -121,7 +121,7 @@ def load_lessons(filenames: List[str]) -> Dict[str, Lesson]:
     return lessons
 
 
-app_title = 'H2O Wave University'
+app_title = 'Wave University'
 
 
 async def setup_page(q: Q):
@@ -177,13 +177,13 @@ def get_wave_completions(line, character, file_content):
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('mobile_header'),
-                ui.zone('nav'),
                 ui.zone('main', direction=ui.ZoneDirection.COLUMN, zones=[
                     ui.zone('description'),
                     ui.zone('rhs', size='100vh')
-                ])
+                ]),
+                ui.zone('nav'),
             ]),
-            ui.layout(breakpoint='m', zones=[
+            ui.layout(breakpoint='l', zones=[
                 ui.zone('header'),
                 ui.zone('main', size='calc(100vh - 76px)', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('description', size='30%'),
@@ -192,11 +192,9 @@ def get_wave_completions(line, character, file_content):
             ])
         ])
     nav_links = [
-        ('docs', 'Wave docs', 'https://wave.h2o.ai/docs/getting-started'),
-        ('discussions', 'Discussions', 'https://github.com/h2oai/wave/discussions'),
-        ('blog', 'Blog', 'https://wave.h2o.ai/blog'),
-        ('cloud', 'H2O AI Cloud', 'https://h2o.ai/platform/ai-cloud/'),
-        ('h2o', 'H2O', 'https://www.h2o.ai/'),
+        ('docs', 'Docs', 'https://wave.h2o.ai/docs/getting-started'),
+        ('discussions', 'Forum', 'https://github.com/h2oai/wave/discussions'),
+        ('cloud', 'AI Cloud', 'https://h2o.ai/platform/ai-cloud/'),
     ]
     q.page['header'] = ui.header_card(
         box='header',
@@ -213,9 +211,7 @@ def get_wave_completions(line, character, file_content):
         title=app_title,
         subtitle='Learn Wave interactively',
         image=f'{_base_url}assets/h2o-logo.svg',
-        nav=[
-            ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1], path=link[2]) for link in nav_links])
-            ]
+        nav=[ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1]) for link in nav_links])]
     )
     q.page['mobile_nav'] = ui.form_card(box='nav', items=[])
     q.page['code'] = ui.markup_card(
