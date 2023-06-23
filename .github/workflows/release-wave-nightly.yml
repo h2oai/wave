@@ -173,6 +173,7 @@ jobs:
         with:
           working-directory: ./r
 
+      # These unit tests are not OS-dependent, so no need to run them in the dedicated Test jobs.
       - name: Unit test
         run: |
           make test-ui-ci
