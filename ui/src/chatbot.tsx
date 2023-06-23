@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, Rec, S, isBuf, unpack } from 'h2o-wave'
+import { B, Id, Model, Rec, S, isBuf, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
+import InfiniteScrollList from './parts/infiniteScroll'
 import { clas, cssVar, getContrast, important, margin, px, rem } from './theme'
 import { bond, wave } from './ui'
-import InfiniteScrollList from './parts/infiniteScroll'
 
 const
   INPUT_HEIGHT = 30,
@@ -71,6 +71,8 @@ const
     }
   })
 
+type Message = ChatbotMessage & { id?: S }
+
 /* Chatbot message entity. */
 interface ChatbotMessage {
   /* Text of the message. */
@@ -99,13 +101,13 @@ const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content
 
 export const XChatbot = (props: Chatbot) => {
   const
-    [msgs, setMsgs] = React.useState<ChatbotMessage[]>(props.data ? processData(props.data) : []),
+    [msgs, setMsgs] = React.useState<Message[]>(props.data ? processData(props.data) : []),
     [userInput, setUserInput] = React.useState(''),
     [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
     theme = Fluent.useTheme(),
     botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
-    skipNextBottomScroll = React.useRef(true),
+    skipNextBottomScroll = React.useRef(false),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[props.name] = newVal
@@ -132,18 +134,22 @@ export const XChatbot = (props: Chatbot) => {
     }, [props.events, props.name]),
     onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data])
 
-  React.useEffect(() => { if (isBuf(props.data)) props.data.registerOnChange(onDataChange) }, [props.data, onDataChange])
   React.useEffect(() => {
-    if (props.prev_items) {
-      setMsgs(prev => [...props.prev_items!, ...prev])
-      setIsInfiniteLoading(false)
-      skipNextBottomScroll.current = false
-    }
+    if (isBuf(props.data)) props.data.registerOnChange(onDataChange)
+  }, [props.data, onDataChange])
+  React.useEffect(() => {
+    if (!props.prev_items) return
+    // Perf: Assign stable ID to prevent React from recreating the entire list.
+    // Currently for prev_items only, needs to be done for the rest as well.
+    const newMsgs = props.prev_items.map(i => ({ ...i, id: xid() }))
+    setMsgs(prev => [...newMsgs, ...prev])
+    setIsInfiniteLoading(false)
+    skipNextBottomScroll.current = true
   }, [props.prev_items])
   React.useLayoutEffect(() => {
     if (!msgContainerRef.current) return
-    if (!skipNextBottomScroll.current) {
-      skipNextBottomScroll.current = true
+    if (skipNextBottomScroll.current) {
+      skipNextBottomScroll.current = false
       return
     }
     const topOffset = msgContainerRef.current.scrollHeight
@@ -163,9 +169,9 @@ export const XChatbot = (props: Chatbot) => {
         onInfiniteLoad={onLoad}
         isInfiniteLoading={isInfiniteLoading}
       >
-        {msgs.map(({ from_user, content }, idx) => (
+        {msgs.map(({ from_user, content, id }, idx) => (
           <div
-            key={idx}
+            key={id ?? idx}
             className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
             style={{
               paddingTop: msgs[idx - 1]?.from_user !== from_user ? rem(0.8) : 0,
