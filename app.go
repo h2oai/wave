@@ -103,8 +103,9 @@ func (app *App) forward(clientID string, session *Session, data []byte) {
 			err = app.send(clientID, session, data)
 			if err != nil {
 				retries++
-				echo(Log{"t": "app", "route": app.route, "host": app.addr,
-					"error": err.Error(), "retry count": strconv.Itoa(int(retries))})
+				echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error(),
+					"retry count": strconv.Itoa(int(retries)), "max retry count": strconv.Itoa(int(maxRetries)),
+					"retry interval": retryInterval.String()})
 				time.Sleep(retryInterval)
 			} else {
 				break
