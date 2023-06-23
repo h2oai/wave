@@ -121,7 +121,7 @@ def load_lessons(filenames: List[str]) -> Dict[str, Lesson]:
     return lessons
 
 
-app_title = 'H2O Wave University'
+app_title = 'Wave University'
 
 
 async def setup_page(q: Q):
@@ -161,7 +161,7 @@ def get_wave_completions(line, character, file_content):
         return [{'label': icon, 'kind': 13, 'sort_text': '0'} for icon in fluent_icons]
         '''
     js_code = ''
-    with open(os.path.join(university_dir, 'static','university.js'), 'r') as f:
+    with open(os.path.join(university_dir, 'static', 'university.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(
         baseURL=_base_url,
@@ -176,13 +176,26 @@ def get_wave_completions(line, character, file_content):
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
+                ui.zone('mobile_header'),
+                ui.zone('main', direction=ui.ZoneDirection.COLUMN, zones=[
+                    ui.zone('description'),
+                    ui.zone('rhs', size='100vh')
+                ]),
+                ui.zone('nav'),
+            ]),
+            ui.layout(breakpoint='l', zones=[
                 ui.zone('header'),
-                ui.zone('main', size='calc(100vh - 80px)', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('main', size='calc(100vh - 76px)', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('description', size='30%'),
                     ui.zone('rhs', size='70%')
                 ])
             ])
         ])
+    nav_links = [
+        ('docs', 'Docs', 'https://wave.h2o.ai/docs/getting-started'),
+        ('discussions', 'Forum', 'https://github.com/h2oai/wave/discussions'),
+        ('cloud', 'AI Cloud', 'https://h2o.ai/platform/ai-cloud/'),
+    ]
     q.page['header'] = ui.header_card(
         box='header',
         title=app_title,
@@ -190,15 +203,17 @@ def get_wave_completions(line, character, file_content):
         image=f'{_base_url}assets/h2o-logo.svg',
         items=[],
         secondary_items=[
-            ui.links(inline=True, items=[
-                ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
-                ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
-                ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
-                ui.link(label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/', target='_blank'),
-                ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
-            ])
+            ui.links(inline=True, items=[ui.link(label=link[1], path=link[2], target='_blank') for link in nav_links])
         ]
     )
+    q.page['mobile_header'] = ui.header_card(
+        box='mobile_header',
+        title=app_title,
+        subtitle='Learn Wave interactively',
+        image=f'{_base_url}assets/h2o-logo.svg',
+        nav=[ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1]) for link in nav_links])]
+    )
+    q.page['mobile_nav'] = ui.form_card(box='nav', items=[])
     q.page['code'] = ui.markup_card(
         box=ui.box('rhs', height='calc((100vh - 80px - 30px) / 2)'),
         title='',
@@ -216,12 +231,13 @@ def make_blurb(q: Q):
     prev_lesson_name = lesson.previous_lesson.name if lesson.previous_lesson is not None else ''
     next_lesson_name = lesson.next_lesson.name if lesson.next_lesson is not None else ''
     items = [
-        ui.dropdown(name=q.args['#'] or default_lesson, width='300px', value=lesson.name, trigger=True,
+        ui.dropdown(name=q.args['#'] or default_lesson, width='230px', value=lesson.name, trigger=True,
                     choices=[ui.choice(name=e.name, label=e.title) for e in q.app.catalog.values()]),
-        ui.button(name=f'#{prev_lesson_name}', label='Previous', disabled=prev_lesson_name == ''),
+        ui.button(name=f'#{prev_lesson_name}', label='Prev', disabled=prev_lesson_name == ''),
         ui.button(name=f'#{next_lesson_name}', label='Next', disabled=next_lesson_name == '')
     ]
     q.page['header'].items = items
+    q.page['mobile_nav'].items = [ui.inline(justify='center', items=items)]
     q.page['description'].content = lesson.description
 
 
@@ -268,7 +284,8 @@ async def show_lesson(q: Q, lesson: Lesson):
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
-            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()', requires=['editor'])
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()',
+                                                     requires=['editor'])
 
     # HACK
     # The ?e= appended to the path forces the frame to reload.
@@ -304,7 +321,7 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
-        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py') )
+        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py'))
         lesson_files.sort(key=natural_keys)
         q.app.catalog = load_lessons(lesson_files)
         q.app.initialized = True
