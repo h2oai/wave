@@ -162,7 +162,6 @@ export const XChatbot = (props: Chatbot) => {
         hasMore={props.prev_items?.length !== 0}
         onInfiniteLoad={onLoad}
         isInfiniteLoading={isInfiniteLoading}
-        loadingComponent={<Fluent.Spinner label='Loading...' />}
       >
         {msgs.map(({ from_user, content }, idx) => (
           <div

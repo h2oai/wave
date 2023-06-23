@@ -12,58 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, S, U } from 'h2o-wave'
-import React from 'react'
+import * as Fluent from '@fluentui/react'
+import { B, S } from 'h2o-wave'
+import React, { PropsWithChildren, useEffect, useRef } from 'react'
 
 interface Props {
   forwardedRef: React.RefObject<HTMLDivElement>
   hasMore: B
   className: S
   style: React.CSSProperties
-  onInfiniteLoad: () => void
-  children: JSX.Element[]
-  loadingComponent: JSX.Element
   isInfiniteLoading: B
+  onInfiniteLoad: () => void
 }
 
-// React functional components do not supprt getting snapshots BEFORE updates to measure proper scroll position.
-// So we need to use a class component here.
-// https://github.com/facebook/react/issues/15221.
-// Credit: https://github.com/tonix-tuft/react-really-simple-infinite-scroll.
-export default class InfiniteScrollList extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props)
-    this.handleScroll = this.handleScroll.bind(this)
+export default ({ forwardedRef, className, style, hasMore, children, isInfiniteLoading, onInfiniteLoad }: PropsWithChildren<Props>) => {
+  const prevScrollHeight = useRef(0)
+  const prevIsInfiniteLoading = useRef(isInfiniteLoading)
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (forwardedRef.current?.scrollTop !== 0 || !hasMore) return
+    prevScrollHeight.current = (e.target as HTMLDivElement).scrollHeight
+    onInfiniteLoad()
   }
 
-  componentDidMount() {
-    if (this.props.forwardedRef.current) this.props.forwardedRef.current.scrollTop = this.props.forwardedRef.current.scrollHeight
-  }
+  useEffect(() => {
+    const isNolongerLoading = prevIsInfiniteLoading.current && !isInfiniteLoading
+    if (!forwardedRef.current || !isNolongerLoading) return
+    forwardedRef.current.scrollTop = forwardedRef.current.scrollHeight - prevScrollHeight.current
+  }, [children, forwardedRef, isInfiniteLoading])
+  useEffect(() => {
+    if (forwardedRef.current) forwardedRef.current.scrollTop = forwardedRef.current.scrollHeight
+  }, [forwardedRef])
+  useEffect(() => { prevIsInfiniteLoading.current = isInfiniteLoading }, [isInfiniteLoading])
 
-  getSnapshotBeforeUpdate(prevProps: Props) {
-    const isNolongerLoading = prevProps.isInfiniteLoading && !this.props.isInfiniteLoading
-    const hasMoreChildren = this.props.children.length > prevProps.children.length
-    return isNolongerLoading && hasMoreChildren ? this.props.forwardedRef.current?.scrollHeight : null
-  }
-
-  componentDidUpdate(_prevProps: Props, _prevState: unknown, scrollDelta?: U) {
-    if (!scrollDelta || !this.props.forwardedRef.current) return
-    this.props.forwardedRef.current.scrollTop = this.props.forwardedRef.current.scrollHeight - scrollDelta
-  }
-
-  handleScroll() {
-    if (this.props.forwardedRef.current?.scrollTop === 0 && this.props.hasMore) {
-      this.props.onInfiniteLoad()
-    }
-  }
-
-  render() {
-    const { forwardedRef, className, style, hasMore, children, loadingComponent, isInfiniteLoading } = this.props
-    return (
-      <div ref={forwardedRef} onScroll={this.handleScroll} className={className} style={{ overflow: 'auto', ...style }}>
-        {hasMore && isInfiniteLoading && loadingComponent}
-        {children}
-      </div>
-    )
-  }
+  return (
+    <div ref={forwardedRef} onScroll={handleScroll} className={className} style={{ overflow: 'auto', ...style }}>
+      {hasMore && <Fluent.Spinner label='Loading...' />}
+      {children}
+    </div>
+  )
 }

@@ -72,7 +72,7 @@
   "Wave Chatbot": {
     "prefix": "w_chatbot",
     "body": [
-      "ui.chatbot(name='$1', data=[\n\t\t$2\t\t\n]),$0"
+      "ui.chatbot(name='$1', data=$2),$0"
     ],
     "description": "Create a minimal Wave Chatbot."
   },
@@ -1017,7 +1017,7 @@
   "Wave Full Chatbot": {
     "prefix": "w_full_chatbot",
     "body": [
-      "ui.chatbot(name='$1', placeholder='$2', generating=${3:False}, data=[\n\t\t$4\t\t\n], events=[\n\t\t$5\t\t\n], prev_items=[\n\t\t$6\t\t\n]),$0"
+      "ui.chatbot(name='$1', data=$2, placeholder='$3', generating=${4:False}, events=[\n\t\t$5\t\t\n], prev_items=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave Chatbot."
   },
