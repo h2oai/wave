@@ -22,7 +22,7 @@
     "react-intl": "^5.7.1",
     "react-router-dom": "^5.2.0",
     "typestyle": "^2.0.4",
-    "vega-embed": "^6.9.0"
+    "vega-embed": "^6.22.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",
