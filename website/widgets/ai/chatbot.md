@@ -29,7 +29,7 @@ q.page['example'] = ui.chatbot_card(
 
 Chatbot card supports [text streaming](/docs/examples/chatbot-stream) out of the box. Specifying the `generating` attribute renders a stop button that notifies the app about the user wishing to stop the stream. See [full example](/docs/examples/chatbot-events-stop) to learn more.
 
-```py
+```py {11}
 from h2o_wave import data
 
 q.page['example'] = ui.chatbot_card(
@@ -48,7 +48,9 @@ q.page['example'] = ui.chatbot_card(
 
 Some chats can get lengthy very quickly. Use `scroll_up` event to avoid loading the whole chat history in a single go for better performance (loading smaller chunks is faster then loading a big one) and stability (too many messages can break the browser + user may not even want to see them all). See [this example](/docs/examples/chatbot-events-scroll) to learn more.
 
-```py
+![chabot-infinite-scroll](/img/widgets/chatbot-events-scroll.png)
+
+```py {10} ignore
 from h2o_wave import data
 
 q.page['example'] = ui.chatbot_card(
@@ -58,7 +60,6 @@ q.page['example'] = ui.chatbot_card(
         ['Hello, buddy. Can you help me?', True],
         ['Sure, what you need?', False],
     ]),
-    generating=True,
     events=['scroll']
 )
 ```
