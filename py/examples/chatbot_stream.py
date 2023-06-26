@@ -1,6 +1,6 @@
-# Chatbot
+# Chatbot / Stream
 # Use this card for chatbot interactions, supports text streaming.
-# #chatbot
+# #chatbot #stream
 # ---
 from h2o_wave import main, app, Q, ui, data
 
