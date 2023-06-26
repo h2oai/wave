@@ -25,6 +25,8 @@ interface Props {
   onInfiniteLoad: () => void
 }
 
+const SPINNER_HEIGHT = 42.5 // When scrolling back after load, show 40px of the newly loaded content.
+
 export default ({ forwardedRef, className, style, hasMore, children, isInfiniteLoading, onInfiniteLoad }: PropsWithChildren<Props>) => {
   const prevScrollHeight = useRef(0)
   const prevIsInfiniteLoading = useRef(isInfiniteLoading)
@@ -37,7 +39,7 @@ export default ({ forwardedRef, className, style, hasMore, children, isInfiniteL
   useLayoutEffect(() => {
     const isNolongerLoading = prevIsInfiniteLoading.current && !isInfiniteLoading
     if (!forwardedRef.current || !isNolongerLoading) return
-    forwardedRef.current.scrollTop = forwardedRef.current.scrollHeight - prevScrollHeight.current
+    forwardedRef.current.scrollTop = forwardedRef.current.scrollHeight - prevScrollHeight.current - SPINNER_HEIGHT
   }, [children, forwardedRef, isInfiniteLoading])
   useEffect(() => {
     if (forwardedRef.current) forwardedRef.current.scrollTop = forwardedRef.current.scrollHeight
@@ -46,7 +48,7 @@ export default ({ forwardedRef, className, style, hasMore, children, isInfiniteL
 
   return (
     <div ref={forwardedRef} onScroll={handleScroll} className={className} style={style}>
-      {hasMore && <Fluent.Spinner label='Loading...' />}
+      {hasMore && isInfiniteLoading && <Fluent.Spinner styles={{ root: { height: SPINNER_HEIGHT } }} label='Loading...' />}
       {children}
     </div>
   )
