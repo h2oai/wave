@@ -235,6 +235,7 @@ publish-lightwave:
 .PHONY: tag
 tag: ## Bump version and tag
 	cd py && $(MAKE) tag
+	cd ui && $(MAKE) tag
 	cd r && $(MAKE) tag
 	cd tools/vscode-extension && $(MAKE) tag
 	cd tools/intellij-plugin && $(MAKE) tag
