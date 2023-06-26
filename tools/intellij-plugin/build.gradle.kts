@@ -61,6 +61,7 @@ tasks {
     patchPluginXml {
         version.set(System.getenv("VERSION") ?: properties("pluginVersion"))
         sinceBuild.set(properties("pluginSinceBuild"))
+        untilBuild.set(properties("pluginUntilBuild"))
         doFirst {
             mergeSnippets()
         }
