@@ -15,11 +15,14 @@ Check the full API at [ui.chatbot_card](/docs/api/ui#chatbot_card).
 ```py
 from h2o_wave import data
 
-q.page['example'] = ui.chatbot_card(box='1 1 5 5', data=data(fields='content from_user', t='list'), name='chatbot')
-q.page['example'].data = [
-    ['Hello, buddy. Can you help me?', True],
-    ['Sure, what you need?', False],
-]
+q.page['example'] = ui.chatbot_card(
+    box='1 1 5 5',
+    name='chatbot',
+    data=data(fields='content from_user', t='list', rows=[
+        ['Hello, buddy. Can you help me?', True],
+        ['Sure, what you need?', False],
+    ]),
+)
 ```
 
 ## With a stop button
@@ -32,13 +35,13 @@ from h2o_wave import data
 q.page['example'] = ui.chatbot_card(
     box='1 1 5 5',
     name='chatbot', 
+    data=data(fields='content from_user', t='list', rows=[
+        ['Hello, buddy. Can you help me?', True],
+        ['Sure, what you need?', False],
+    ]),
     generating=True,
     events=['stop']
 )
-q.page['example'].data = [
-    ['Hello, buddy. Can you help me?', True],
-    ['Sure, what you need?', False],
-]
 ```
 
 ## With infinite scroll
@@ -51,11 +54,11 @@ from h2o_wave import data
 q.page['example'] = ui.chatbot_card(
     box='1 1 5 5',
     name='chatbot', 
+    data=data(fields='content from_user', t='list', rows=[
+        ['Hello, buddy. Can you help me?', True],
+        ['Sure, what you need?', False],
+    ]),
     generating=True,
     events=['scroll']
 )
-q.page['example'].data = [
-    ['Hello, buddy. Can you help me?', True],
-    ['Sure, what you need?', False],
-]
 ```
