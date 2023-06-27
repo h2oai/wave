@@ -1,1 +1,1 @@
-Code for this app can be found at https://github.com/h2oai/wave/blob/master/py/demo.
+Code for this app can be found at <https://github.com/h2oai/wave/blob/main/py/demo>.

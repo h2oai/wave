@@ -1,5 +1,5 @@
 <p align="center">
-  <img src='https://github.com/h2oai/wave/blob/master/assets/brand/wave-university-wide.png?raw=true' alt='wave-university-logo'/>
+  <img src='https://github.com/h2oai/wave/blob/main/assets/brand/wave-university-wide.png?raw=true' alt='wave-university-logo'/>
 </p>
 
 # Wave university
