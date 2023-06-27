@@ -114,7 +114,7 @@ func (app *App) forward(clientID string, session *Session, data []byte) {
 
 		if retries == maxRetries {
 			retryDuration := time.Duration(maxRetries) * retryInterval
-			log.Printf("App wasn't be able to recover with %d attempts. [Retry duration: %s]",
+			log.Printf("Error: App wasn't be able to recover with %d retry attempts. [Retry duration: %s]",
 				maxRetries, retryDuration)
 			app.broker.dropApp(app.route)
 		}
