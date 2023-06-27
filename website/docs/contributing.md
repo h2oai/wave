@@ -52,11 +52,11 @@ Additional test coverage is appreciated.  Help us make the codebase more robust.
 
 ## Security vulnerabilities
 
-If you discover a security vulnerability within H2O Wave, please send an email to Prithvi Prabhu at prithvi@h2o.ai. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within H2O Wave, please send an email to Prithvi Prabhu at <prithvi@h2o.ai>. All security vulnerabilities will be promptly addressed.
 
 ## Code of Conduct
 
-See <https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md>.
+See <https://github.com/h2oai/wave/blob/main/.github/CODE_OF_CONDUCT.md>.
 
 ## Development Setup
 
@@ -96,7 +96,7 @@ If you want to run for example a python button example:
 wave run examples.button
 ```
 
-All examples are located in [py/examples](https://github.com/h2oai/wave/tree/master/py/examples) folder.
+All examples are located in [py/examples](https://github.com/h2oai/wave/tree/main/py/examples) folder.
 
 If you intend to modify the UI (Typescript), also launch the UI development server at <http://localhost:3000/> to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
 

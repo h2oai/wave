@@ -6,7 +6,7 @@ from h2o_wave import site, ui
 page = site['/demo']
 page.drop()
 
-content = '![Wave University](https://raw.githubusercontent.com/h2oai/wave/master/assets/brand/wave-university-wide.png)'
+content = '![Wave University](https://raw.githubusercontent.com/h2oai/wave/main/assets/brand/wave-university-wide.png)'
 
 # The meta card's 'zones' attribute defines placeholder zones to lay out cards for different viewport sizes.
 # We define three layout schemes here.

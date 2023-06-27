@@ -15,7 +15,7 @@ To switch to a flex layout, simply define a page layout using the `ui.layout()` 
 The flex layout system allows you to build user interfaces and dashboards that adapt to various device and screen sizes ("responsive layout").
 
 :::info
-To view examples of flex and responsive layouts in actions, see <https://github.com/h2oai/wave/tree/master/py/demo>
+To view examples of flex and responsive layouts in actions, see <https://github.com/h2oai/wave/tree/main/py/demo>
 :::
 
 To define a layout for your page, attach a layout to your page's meta card using `ui.layout()`.
