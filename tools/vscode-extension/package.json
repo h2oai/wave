@@ -5,7 +5,7 @@
   "author": "Martin Turoci",
   "repository": "https://github.com/h2oai/wave",
   "license": "Apache-2.0",
-  "version": "0.25.0",
+  "version": "0.26.1",
   "publisher": "h2oai",
   "contributes": {
     "snippets": [
@@ -42,7 +42,7 @@
     "package": "npx vsce package",
     "build": "node build.js && npm run bundle && npm run package",
     "watch": "tsc -b -w",
-    "publish": "npm run build && npm run package && npx vsce publish"
+    "publish": "npx vsce publish"
   },
   "devDependencies": {
     "@types/node": "^14.14.41",

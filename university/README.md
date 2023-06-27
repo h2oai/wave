@@ -1,5 +1,5 @@
 <p align="center">
-  <img src='https://github.com/h2oai/wave/blob/master/assets/brand/wave-university-wide.png?raw=true' alt='wave-university-logo'/>
+  <img src='https://github.com/h2oai/wave/blob/main/assets/brand/wave-university-wide.png?raw=true' alt='wave-university-logo'/>
 </p>
 
 # Wave university
@@ -13,7 +13,13 @@ Each lesson explains a single topic and shows a short demonstration example. The
 ## Installation
 
 ```sh
+# Create a virtual env.
+python -m venv venv
+# Activate virtual env (.\venv\Scripts\activate for Windows)
+venv/bin/activate
+# Install h2o-wave-university.
 pip install h2o-wave-university
+# Run it.
 wave-university
 ```
 

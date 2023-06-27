@@ -12,9 +12,6 @@ generate:
 run:
 	./gradlew runIde
 
-verify:
-	./gradlew runPluginVerifier
-
 help:
 	./gradlew -q :tasks --all
 
@@ -25,7 +22,6 @@ publish:
 	$(MAKE) clean
 	$(MAKE) generate
 	$(MAKE) test
-	$(MAKE) verify
 	$(MAKE) build
 	./gradlew publishPlugin
 

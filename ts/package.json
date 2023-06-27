@@ -1,12 +1,13 @@
 {
   "name": "h2o-wave",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "H2O Wave browser module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "build-dev": "tsc --project dev.tsconfig.json",
+    "watch": "tsc --project dev.tsconfig.json --watch",
     "minify": "terser dist/index.js -c -m -o dist/index.min.js",
     "prepublishOnly": "npm run build && npm run minify"
   },

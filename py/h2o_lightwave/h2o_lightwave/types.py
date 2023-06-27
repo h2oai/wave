@@ -6708,6 +6708,7 @@ class ImageAnnotator:
             trigger: Optional[bool] = None,
             image_height: Optional[str] = None,
             allowed_shapes: Optional[List[str]] = None,
+            events: Optional[List[str]] = None,
     ):
         _guard_scalar('ImageAnnotator.name', name, (str,), True, False, False)
         _guard_scalar('ImageAnnotator.image', image, (str,), False, False, False)
@@ -6717,6 +6718,7 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('ImageAnnotator.image_height', image_height, (str,), False, True, False)
         _guard_vector('ImageAnnotator.allowed_shapes', allowed_shapes, (str,), False, True, False)
+        _guard_vector('ImageAnnotator.events', events, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.image = image
@@ -6733,6 +6735,8 @@ class ImageAnnotator:
         """The card’s image height. The actual image size is used by default."""
         self.allowed_shapes = allowed_shapes
         """List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default."""
+        self.events = events
+        """The events to capture on this image annotator. One of `click` or `tool_change`."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6744,6 +6748,7 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('ImageAnnotator.image_height', self.image_height, (str,), False, True, False)
         _guard_vector('ImageAnnotator.allowed_shapes', self.allowed_shapes, (str,), False, True, False)
+        _guard_vector('ImageAnnotator.events', self.events, (str,), False, True, False)
         return _dump(
             name=self.name,
             image=self.image,
@@ -6753,6 +6758,7 @@ class ImageAnnotator:
             trigger=self.trigger,
             image_height=self.image_height,
             allowed_shapes=self.allowed_shapes,
+            events=self.events,
         )
 
     @staticmethod
@@ -6774,6 +6780,8 @@ class ImageAnnotator:
         _guard_scalar('ImageAnnotator.image_height', __d_image_height, (str,), False, True, False)
         __d_allowed_shapes: Any = __d.get('allowed_shapes')
         _guard_vector('ImageAnnotator.allowed_shapes', __d_allowed_shapes, (str,), False, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('ImageAnnotator.events', __d_events, (str,), False, True, False)
         name: str = __d_name
         image: str = __d_image
         title: str = __d_title
@@ -6782,6 +6790,7 @@ class ImageAnnotator:
         trigger: Optional[bool] = __d_trigger
         image_height: Optional[str] = __d_image_height
         allowed_shapes: Optional[List[str]] = __d_allowed_shapes
+        events: Optional[List[str]] = __d_events
         return ImageAnnotator(
             name,
             image,
@@ -6791,6 +6800,7 @@ class ImageAnnotator:
             trigger,
             image_height,
             allowed_shapes,
+            events,
         )
 
 
@@ -7173,52 +7183,6 @@ class TimePicker:
         )
 
 
-class Chatbot:
-    """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
-    """
-    def __init__(
-            self,
-            name: str,
-            data: List[PackedRecord],
-            placeholder: Optional[str] = None,
-    ):
-        _guard_scalar('Chatbot.name', name, (str,), True, False, False)
-        _guard_scalar('Chatbot.placeholder', placeholder, (str,), False, True, False)
-        self.name = name
-        """An identifying name for this component."""
-        self.data = data
-        """Chat messages data. Requires cyclic buffer."""
-        self.placeholder = placeholder
-        """Chat input box placeholder. Use for prompt examples."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('Chatbot.name', self.name, (str,), True, False, False)
-        _guard_scalar('Chatbot.placeholder', self.placeholder, (str,), False, True, False)
-        return _dump(
-            name=self.name,
-            data=self.data,
-            placeholder=self.placeholder,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Chatbot':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Chatbot.name', __d_name, (str,), True, False, False)
-        __d_data: Any = __d.get('data')
-        __d_placeholder: Any = __d.get('placeholder')
-        _guard_scalar('Chatbot.placeholder', __d_placeholder, (str,), False, True, False)
-        name: str = __d_name
-        data: List[PackedRecord] = __d_data
-        placeholder: Optional[str] = __d_placeholder
-        return Chatbot(
-            name,
-            data,
-            placeholder,
-        )
-
-
 class Component:
     """Create a component.
     """
@@ -7274,7 +7238,6 @@ class Component:
             menu: Optional[Menu] = None,
             tags: Optional[Tags] = None,
             time_picker: Optional[TimePicker] = None,
-            chatbot: Optional[Chatbot] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -7326,7 +7289,6 @@ class Component:
         _guard_scalar('Component.menu', menu, (Menu,), False, True, False)
         _guard_scalar('Component.tags', tags, (Tags,), False, True, False)
         _guard_scalar('Component.time_picker', time_picker, (TimePicker,), False, True, False)
-        _guard_scalar('Component.chatbot', chatbot, (Chatbot,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -7427,8 +7389,6 @@ class Component:
         """Tags."""
         self.time_picker = time_picker
         """Time picker."""
-        self.chatbot = chatbot
-        """Chatbot."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7482,7 +7442,6 @@ class Component:
         _guard_scalar('Component.menu', self.menu, (Menu,), False, True, False)
         _guard_scalar('Component.tags', self.tags, (Tags,), False, True, False)
         _guard_scalar('Component.time_picker', self.time_picker, (TimePicker,), False, True, False)
-        _guard_scalar('Component.chatbot', self.chatbot, (Chatbot,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -7534,7 +7493,6 @@ class Component:
             menu=None if self.menu is None else self.menu.dump(),
             tags=None if self.tags is None else self.tags.dump(),
             time_picker=None if self.time_picker is None else self.time_picker.dump(),
-            chatbot=None if self.chatbot is None else self.chatbot.dump(),
         )
 
     @staticmethod
@@ -7640,8 +7598,6 @@ class Component:
         _guard_scalar('Component.tags', __d_tags, (dict,), False, True, False)
         __d_time_picker: Any = __d.get('time_picker')
         _guard_scalar('Component.time_picker', __d_time_picker, (dict,), False, True, False)
-        __d_chatbot: Any = __d.get('chatbot')
-        _guard_scalar('Component.chatbot', __d_chatbot, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7692,7 +7648,6 @@ class Component:
         menu: Optional[Menu] = None if __d_menu is None else Menu.load(__d_menu)
         tags: Optional[Tags] = None if __d_tags is None else Tags.load(__d_tags)
         time_picker: Optional[TimePicker] = None if __d_time_picker is None else TimePicker.load(__d_time_picker)
-        chatbot: Optional[Chatbot] = None if __d_chatbot is None else Chatbot.load(__d_chatbot)
         return Component(
             text,
             text_xl,
@@ -7744,7 +7699,6 @@ class Component:
             menu,
             tags,
             time_picker,
-            chatbot,
         )
 
 
@@ -8072,11 +8026,15 @@ class ChatbotCard:
             name: str,
             data: PackedRecord,
             placeholder: Optional[str] = None,
+            events: Optional[List[str]] = None,
+            generating: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ChatbotCard.box', box, (str,), False, False, False)
         _guard_scalar('ChatbotCard.name', name, (str,), True, False, False)
         _guard_scalar('ChatbotCard.placeholder', placeholder, (str,), False, True, False)
+        _guard_vector('ChatbotCard.events', events, (str,), False, True, False)
+        _guard_scalar('ChatbotCard.generating', generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8086,6 +8044,10 @@ class ChatbotCard:
         """Chat messages data. Requires cyclic buffer."""
         self.placeholder = placeholder
         """Chat input box placeholder. Use for prompt examples."""
+        self.events = events
+        """The events to capture on this chatbot. One of 'stop'."""
+        self.generating = generating
+        """True to show a button to stop the text generation. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8094,6 +8056,8 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ChatbotCard.name', self.name, (str,), True, False, False)
         _guard_scalar('ChatbotCard.placeholder', self.placeholder, (str,), False, True, False)
+        _guard_vector('ChatbotCard.events', self.events, (str,), False, True, False)
+        _guard_scalar('ChatbotCard.generating', self.generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='chatbot',
@@ -8101,6 +8065,8 @@ class ChatbotCard:
             name=self.name,
             data=self.data,
             placeholder=self.placeholder,
+            events=self.events,
+            generating=self.generating,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8114,18 +8080,26 @@ class ChatbotCard:
         __d_data: Any = __d.get('data')
         __d_placeholder: Any = __d.get('placeholder')
         _guard_scalar('ChatbotCard.placeholder', __d_placeholder, (str,), False, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('ChatbotCard.events', __d_events, (str,), False, True, False)
+        __d_generating: Any = __d.get('generating')
+        _guard_scalar('ChatbotCard.generating', __d_generating, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ChatbotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         name: str = __d_name
         data: PackedRecord = __d_data
         placeholder: Optional[str] = __d_placeholder
+        events: Optional[List[str]] = __d_events
+        generating: Optional[bool] = __d_generating
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ChatbotCard(
             box,
             name,
             data,
             placeholder,
+            events,
+            generating,
             commands,
         )
 

@@ -313,6 +313,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
         ui.table_row(name='row3', cells=['Bob', 'Adams']),
     ])
 ])
+```
 
 ## With tags
 

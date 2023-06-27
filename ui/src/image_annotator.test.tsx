@@ -440,6 +440,19 @@ describe('ImageAnnotator.tsx', () => {
         polygon
       ])
     })
+
+    it('Fires a click event if specified and active shape is rect', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, events: ['click'] }} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      const emitMock = jest.fn()
+      wave.emit = emitMock
+
+      fireEvent.keyDown(canvasEl, { key: 'r' })
+      userEvent.click(canvasEl, { clientX: 100, clientY: 120 })
+      expect(emitMock).toHaveBeenCalled()
+      expect(emitMock).toHaveBeenCalledWith(model.name, 'click', { x: 100, y: 120 })
+    })
   })
   describe('Polygon', () => {
     it('Draws a new polygon', async () => {
@@ -683,6 +696,19 @@ describe('ImageAnnotator.tsx', () => {
       fireEvent.click(canvasEl, { clientX: 10, clientY: 10 })
 
       expect(wave.args[name]).toMatchObject(items)
+    })
+
+    it('Fires a click event if specified and active shape is polygon', async () => {
+      const { container } = render(<XImageAnnotator model={{ ...model, events: ['click'] }} />)
+      await waitForLoad(container)
+      const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+      const emitMock = jest.fn()
+      wave.emit = emitMock
+
+      fireEvent.keyDown(canvasEl, { key: 'p' })
+      userEvent.click(canvasEl, { clientX: 100, clientY: 120 })
+      expect(emitMock).toHaveBeenCalled()
+      expect(emitMock).toHaveBeenCalledWith(model.name, 'click', { x: 100, y: 120 })
     })
   })
 
@@ -1269,6 +1295,32 @@ describe('ImageAnnotator.tsx', () => {
         fireEvent.click(canvasEl, { clientX: 80, clientY: 80 })
         fireEvent.click(canvasEl, { clientX: 60, clientY: 60 })
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 20, x2: 110, y1: 20, y2: 110 } } }, polygon])
+      })
+
+      it('Fires a tool_change event if specified', async () => {
+        const { container } = render(<XImageAnnotator model={{ ...model, events: ['tool_change'] }} />)
+        await waitForLoad(container)
+        const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+        const emitMock = jest.fn()
+        wave.emit = emitMock
+
+        fireEvent.keyDown(canvasEl, { key: 'p' })
+        expect(emitMock).toHaveBeenCalled()
+        expect(emitMock).toHaveBeenCalledWith(model.name, 'tool_change', 'polygon')
+
+        fireEvent.keyDown(canvasEl, { key: 'r' })
+        expect(emitMock).toHaveBeenCalled()
+        expect(emitMock).toHaveBeenCalledWith(model.name, 'tool_change', 'rect')
+
+        fireEvent.keyDown(canvasEl, { key: 's' })
+        expect(emitMock).toHaveBeenCalled()
+        expect(emitMock).toHaveBeenCalledWith(model.name, 'tool_change', 'select')
+
+        fireEvent.keyDown(canvasEl, { key: 'b' })
+        expect(emitMock).toHaveBeenCalled()
+        expect(emitMock).toHaveBeenCalledWith(model.name, 'tool_change', 'rect')
+
+        expect(emitMock).toHaveBeenCalledTimes(4)
       })
     })
 

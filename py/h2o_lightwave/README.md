@@ -68,7 +68,7 @@ async def ws(ws: WebSocket):
 app.mount("/", StaticFiles(directory=web_directory, html=True), name="/")
 ```
 
-We also recommend reading the [blog post](https://medium.com/@unusualcode/h2o-lightwave-building-web-uis-with-fastapi-and-python-88a915383490) and other [integration examples](https://github.com/h2oai/wave/tree/master/py/h2o_lightwave/examples).
+We also recommend reading the [blog post](https://medium.com/@unusualcode/h2o-lightwave-building-web-uis-with-fastapi-and-python-88a915383490) and other [integration examples](https://github.com/h2oai/wave/tree/main/py/h2o_lightwave/examples).
 
 ## Installation
 

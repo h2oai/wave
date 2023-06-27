@@ -2482,6 +2482,7 @@ def image_annotator(
         trigger: Optional[bool] = None,
         image_height: Optional[str] = None,
         allowed_shapes: Optional[List[str]] = None,
+        events: Optional[List[str]] = None,
 ) -> Component:
     """Create an image annotator component.
 
@@ -2496,6 +2497,7 @@ def image_annotator(
         trigger: True if the form should be submitted as soon as an annotation is drawn.
         image_height: The card’s image height. The actual image size is used by default.
         allowed_shapes: List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
+        events: The events to capture on this image annotator. One of `click` or `tool_change`.
     Returns:
         A `h2o_wave.types.ImageAnnotator` instance.
     """
@@ -2508,6 +2510,7 @@ def image_annotator(
         trigger,
         image_height,
         allowed_shapes,
+        events,
     ))
 
 
@@ -2659,27 +2662,6 @@ def time_picker(
     ))
 
 
-def chatbot(
-        name: str,
-        data: List[PackedRecord],
-        placeholder: Optional[str] = None,
-) -> Component:
-    """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
-
-    Args:
-        name: An identifying name for this component.
-        data: Chat messages data. Requires cyclic buffer.
-        placeholder: Chat input box placeholder. Use for prompt examples.
-    Returns:
-        A `h2o_wave.types.Chatbot` instance.
-    """
-    return Component(chatbot=Chatbot(
-        name,
-        data,
-        placeholder,
-    ))
-
-
 def article_card(
         box: str,
         title: str,
@@ -2820,6 +2802,8 @@ def chatbot_card(
         name: str,
         data: PackedRecord,
         placeholder: Optional[str] = None,
+        events: Optional[List[str]] = None,
+        generating: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
     """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
@@ -2829,6 +2813,8 @@ def chatbot_card(
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
         placeholder: Chat input box placeholder. Use for prompt examples.
+        events: The events to capture on this chatbot. One of 'stop'.
+        generating: True to show a button to stop the text generation. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatbotCard` instance.
@@ -2838,6 +2824,8 @@ def chatbot_card(
         name,
         data,
         placeholder,
+        events,
+        generating,
         commands,
     )
 

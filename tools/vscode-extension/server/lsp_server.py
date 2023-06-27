@@ -1,35 +1,25 @@
-############################################################################
-# Copyright(c) Open Law Library. All rights reserved.                      #
-# See ThirdPartyNotices.txt in the project root for additional notices.    #
-#                                                                          #
-# Licensed under the Apache License, Version 2.0 (the "License")           #
-# you may not use this file except in compliance with the License.         #
-# You may obtain a copy of the License at                                  #
-#                                                                          #
-#     http: // www.apache.org/licenses/LICENSE-2.0                         #
-#                                                                          #
-# Unless required by applicable law or agreed to in writing, software      #
-# distributed under the License is distributed on an "AS IS" BASIS,        #
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. #
-# See the License for the specific language governing permissions and      #
-# limitations under the License.                                           #
-############################################################################
 from typing import List, Optional, Set
 
-from pygls.lsp.methods import COMPLETION, INITIALIZED, TEXT_DOCUMENT_DID_SAVE
-from pygls.lsp.types import CompletionItem, CompletionList, CompletionOptions, CompletionParams
-from pygls.lsp.types.language_features.completion import CompletionItemKind
-from pygls.lsp.types.text_synchronization import TextDocumentSaveRegistrationOptions
-from pygls.lsp.types.workspace import DidSaveTextDocumentParams
-from pygls.lsp.types.general_messages import InitializedParams
+from lsprotocol.types import (INITIALIZED, TEXT_DOCUMENT_COMPLETION,
+                              TEXT_DOCUMENT_DID_SAVE, CompletionItem,
+                              CompletionItemKind, CompletionList,
+                              CompletionOptions, CompletionParams,
+                              DidSaveTextDocumentParams, InitializedParams,
+                              TextDocumentSaveRegistrationOptions)
+from pygls.lsp import METHOD_TO_OPTIONS
 from pygls.server import LanguageServer
-from .parser import FileMetadata, fill_completion, get_completion_type, get_initial_completions
+
+from .parser import (FileMetadata, fill_completion, get_completion_type,
+                     get_initial_completions)
 from .utils import fluent_icons, themes
+
+# HACK: Add support for textDocument/didSave until pygls 1.0.3 is released.
+METHOD_TO_OPTIONS[TEXT_DOCUMENT_DID_SAVE] = TextDocumentSaveRegistrationOptions
 
 
 class WaveLanguageServer(LanguageServer):
     def __init__(self):
-        super().__init__()
+        super().__init__('wave-language-server', '0.25.3')
         self.store = {}
 
 
@@ -51,7 +41,7 @@ def get_completions_from_deps(ls: WaveLanguageServer, file: FileMetadata, comple
             get_completions_from_deps(ls, ls.store.get(dep), completion_type, completions, visited, leaf_val)
 
 
-@server.feature(COMPLETION, CompletionOptions(trigger_characters=['.', '\'', '"']))
+@server.feature(TEXT_DOCUMENT_COMPLETION, CompletionOptions(trigger_characters=['.', '\'', '"']))
 def completions(ls: WaveLanguageServer, params: Optional[CompletionParams] = None) -> CompletionList:
     items = []
     if params:

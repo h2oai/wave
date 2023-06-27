@@ -11,6 +11,9 @@
 # production
 /build
 
+# Generated stuff
+src/markdownCodeSyntaxHighlighting.json
+
 # misc
 .DS_Store
 .env.local

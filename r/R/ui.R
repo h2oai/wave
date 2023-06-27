@@ -2894,6 +2894,7 @@ ui_image_annotator_item <- function(
 #' @param trigger True if the form should be submitted as soon as an annotation is drawn.
 #' @param image_height The card’s image height. The actual image size is used by default.
 #' @param allowed_shapes List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
+#' @param events The events to capture on this image annotator. One of `click` or `tool_change`.
 #' @return A ImageAnnotator instance.
 #' @export
 ui_image_annotator <- function(
@@ -2904,7 +2905,8 @@ ui_image_annotator <- function(
   items = NULL,
   trigger = NULL,
   image_height = NULL,
-  allowed_shapes = NULL) {
+  allowed_shapes = NULL,
+  events = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("image", "character", image)
   .guard_scalar("title", "character", title)
@@ -2913,6 +2915,7 @@ ui_image_annotator <- function(
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("image_height", "character", image_height)
   .guard_vector("allowed_shapes", "character", allowed_shapes)
+  .guard_vector("events", "character", events)
   .o <- list(image_annotator=list(
     name=name,
     image=image,
@@ -2921,7 +2924,8 @@ ui_image_annotator <- function(
     items=items,
     trigger=trigger,
     image_height=image_height,
-    allowed_shapes=allowed_shapes))
+    allowed_shapes=allowed_shapes,
+    events=events))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3092,28 +3096,6 @@ ui_time_picker <- function(
   return(.o)
 }
 
-#' Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
-#'
-#' @param name An identifying name for this component.
-#' @param data Chat messages data. Requires cyclic buffer.
-#' @param placeholder Chat input box placeholder. Use for prompt examples.
-#' @return A Chatbot instance.
-#' @export
-ui_chatbot <- function(
-  name,
-  data,
-  placeholder = NULL) {
-  .guard_scalar("name", "character", name)
-  # TODO Validate data: repeated Rec
-  .guard_scalar("placeholder", "character", placeholder)
-  .o <- list(chatbot=list(
-    name=name,
-    data=data,
-    placeholder=placeholder))
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
-  return(.o)
-}
-
 #' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -3270,6 +3252,8 @@ ui_chat_card <- function(
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
+#' @param events The events to capture on this chatbot. One of 'stop'.
+#' @param generating True to show a button to stop the text generation. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
 #' @export
@@ -3278,17 +3262,23 @@ ui_chatbot_card <- function(
   name,
   data,
   placeholder = NULL,
+  events = NULL,
+  generating = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
   # TODO Validate data: Rec
   .guard_scalar("placeholder", "character", placeholder)
+  .guard_vector("events", "character", events)
+  .guard_scalar("generating", "logical", generating)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     name=name,
     data=data,
     placeholder=placeholder,
+    events=events,
+    generating=generating,
     commands=commands,
     view='chatbot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatbotCard"))

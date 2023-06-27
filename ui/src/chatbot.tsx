@@ -13,15 +13,16 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, Rec, S, unpack } from 'h2o-wave'
+import { B, Id, Model, Rec, S, isBuf, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
-import { clas, cssVar, getContrast, important, padding, px } from './theme'
+import InfiniteScrollList from './parts/infiniteScroll'
+import { clas, cssVar, getContrast, important, margin, px, rem } from './theme'
 import { bond, wave } from './ui'
 
 const
-  SUBMIT_BTN_SIZE = 30,
+  INPUT_HEIGHT = 30,
   css = Fluent.mergeStyleSets({
     chatWindow: {
       height: '100%',
@@ -35,116 +36,191 @@ const
       top: 15,
       left: 0,
       right: 0,
-      bottom: 62, // Height of input box + padding.
       overflowY: 'auto',
-      padding: padding(0, 15),
-    },
-    msg: {
-      display: 'inline-block',
-      backgroundColor: cssVar('$text'),
-      padding: 6,
-      borderRadius: 4,
-      maxWidth: '65ch',
-      borderTopLeftRadius: 0,
-      textAlign: 'left',
-    },
-    userMsg: {
-      backgroundColor: cssVar('$themePrimary'),
-      borderTopLeftRadius: 4,
-      borderTopRightRadius: 0,
+      padding: margin(0, 15),
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    msg: {
+      maxWidth: '65ch',
+      flexGrow: 1,
+      overflowWrap: 'break-word',
+      '& p': {
+        whiteSpace: 'pre-wrap'
+      },
+    },
+    botMsg: {
+      backgroundColor: cssVar('$neutralLighter'),
+    },
+    textInput: {
+      padding: 15,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0
+    },
+    stopButton: {
+      left: '50%',
+      // Vertically centers the stop button between message container and text input container (textInput padding / 2).
+      marginBottom: 7.5,
+      transform: 'translateX(-50%)',
+      width: 180
     }
-  }),
-  getCornerStyle = (prev?: B, curr?: B, next?: B): React.CSSProperties | undefined => {
-    // First.
-    if (curr && curr !== prev && curr === next) return { borderBottomRightRadius: 0, borderTopRightRadius: 4 }
-    if (!curr && curr !== prev && curr === next) return { borderBottomLeftRadius: 0, borderTopLeftRadius: 4 }
+  })
 
-    // Middle.
-    if (curr && prev === curr && curr === next) return { borderTopRightRadius: 0, borderBottomRightRadius: 0 }
-    if (!curr && prev === curr && curr === next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }
+type Message = ChatbotMessage & { id?: S }
 
-    // Last.
-    if (curr && prev === curr && curr !== next) return { borderTopRightRadius: 0, borderBottomRightRadius: 4 }
-    if (!curr && prev === curr && curr !== next) return { borderTopLeftRadius: 0, borderBottomLeftRadius: 4 }
-  }
-
-type ChatMessage = { msg: S, fromUser: B }
+/* Chatbot message entity. */
+interface ChatbotMessage {
+  /* Text of the message. */
+  content: S
+  /* True if the message is from the user. */
+  from_user: B
+}
 
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
 export interface Chatbot {
   /** An identifying name for this component. */
   name: Id
-  /** Chat messages data. Requires cyclic buffer. */
-  data: Rec[]
+  /** Chat messages data. Requires list or cyclic buffer. */
+  data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up'. */
+  events?: S[]
+  /** True to show a button to stop the text generation. Defaults to False. */
+  generating?: B
+  /** The previous messages to show as the user scrolls up. */
+  prev_items?: ChatbotMessage[]
 }
 
-export const XChatbot = ({ model }: { model: Chatbot }) => {
+const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
+
+export const XChatbot = (props: Chatbot) => {
   const
-    [msgs, setMsgs] = React.useState<ChatMessage[]>([]),
+    [msgs, setMsgs] = React.useState<Message[]>(props.data ? processData(props.data) : []),
     [userInput, setUserInput] = React.useState(''),
+    [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
+    theme = Fluent.useTheme(),
+    botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
+    skipNextBottomScroll = React.useRef(false),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
-      wave.args[model.name] = newVal
+      wave.args[props.name] = newVal
       setUserInput(newVal)
     },
-    onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => { if (e.key === 'Enter') submit() },
+    onKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (!e.shiftKey && e.key === 'Enter') {
+        e.preventDefault() // Do not add an extra newline to the input text box after submission.
+        submit()
+      }
+    },
     submit = () => {
       if (!userInput.trim()) return
-      setMsgs([...msgs, { msg: userInput, fromUser: true }])
+      setMsgs([...msgs, { content: userInput, from_user: true }])
       wave.push()
       setUserInput('')
-    }
+    },
+    stopGenerating = () => { if (props.events?.includes('stop')) wave.emit(props.name, 'stop', true) },
+    onLoad = React.useCallback(() => {
+      if (props.events?.includes('scroll_up')) {
+        wave.emit(props.name, 'scroll_up', true)
+        setIsInfiniteLoading(true)
+      }
+    }, [props.events, props.name]),
+    onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data])
 
-  React.useEffect(() => { if (msgContainerRef.current) msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight }, [msgs])
-  React.useEffect(() => { if (model.data) setMsgs(model.data as ChatMessage[]) }, [model.data])
+  React.useEffect(() => {
+    if (isBuf(props.data)) props.data.registerOnChange(onDataChange)
+  }, [props.data, onDataChange])
+  React.useEffect(() => {
+    if (!props.prev_items) return
+    // Perf: Assign stable ID to prevent React from recreating the entire list.
+    // Currently for prev_items only, needs to be done for the rest as well.
+    const newMsgs = props.prev_items.map(i => ({ ...i, id: xid() }))
+    setMsgs(prev => [...newMsgs, ...prev])
+    setIsInfiniteLoading(false)
+    skipNextBottomScroll.current = true
+  }, [props.prev_items])
+  React.useLayoutEffect(() => {
+    if (!msgContainerRef.current) return
+    if (skipNextBottomScroll.current) {
+      skipNextBottomScroll.current = false
+      return
+    }
+    const topOffset = msgContainerRef.current.scrollHeight
+    msgContainerRef.current?.scrollTo
+      ? msgContainerRef.current.scrollTo({ top: topOffset, behavior: 'smooth' })
+      : msgContainerRef.current.scrollTop = topOffset
+  }, [msgs])
 
   return (
     <div className={css.chatWindow}>
-      <div className={css.msgContainer} ref={msgContainerRef}>
-        {msgs.map(({ msg, fromUser }, idx) => (
+      <InfiniteScrollList
+        forwardedRef={msgContainerRef}
+        className={css.msgContainer}
+        // Height of input box + padding (+ height of stop button).
+        style={{ bottom: props.generating ? 94 : 62 }}
+        hasMore={props.prev_items?.length !== 0}
+        onInfiniteLoad={onLoad}
+        isInfiniteLoading={isInfiniteLoading}
+      >
+        {msgs.map(({ from_user, content, id }, idx) => (
           <div
-            key={idx}
-            className={css.msgWrapper}
+            key={id ?? idx}
+            className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
             style={{
-              marginTop: msgs[idx - 1]?.fromUser !== fromUser ? 3 : 10,
-              textAlign: fromUser ? 'right' : 'left',
-              color: getContrast(fromUser ? '$themePrimary' : '$text')
+              paddingTop: msgs[idx - 1]?.from_user !== from_user ? rem(0.8) : 0,
+              paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
+              color: from_user ? '$text' : botTextColor
             }} >
-            <span
-              className={clas(css.msg, fromUser ? css.userMsg : '', 'wave-s14')}
-              style={{
-                ...getCornerStyle(msgs[idx - 1]?.fromUser, fromUser, msgs[idx + 1]?.fromUser),
-                padding: msg?.includes('\n') ? 12 : 6,
-              }}>
-              <Markdown source={msg || ''} />
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
+              <Markdown source={content || ''} />
             </span>
           </div>
         ))}
-      </div>
-      <div style={{ padding: 15, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+      </InfiniteScrollList>
+      <div className={css.textInput}>
+        {props.generating &&
+          <Fluent.DefaultButton className={css.stopButton} onClick={stopGenerating} iconProps={{ iconName: 'Stop' }}>
+            Stop generating
+          </Fluent.DefaultButton>
+        }
         <Fluent.TextField
-          data-test={model.name}
+          data-test={props.name}
           value={userInput}
           onChange={onChange}
           onKeyDown={onKeyDown}
-          placeholder={model.placeholder || 'Type your message'}
-          styles={{ root: { flexGrow: 1 }, field: { width: `calc(100% - ${SUBMIT_BTN_SIZE}px)`, paddingRight: 0 } }}
+          autoComplete='off'
+          multiline
+          autoAdjustHeight
+          placeholder={props.placeholder || 'Type your message'}
+          styles={{
+            root: { flexGrow: 1 },
+            fieldGroup: { minHeight: INPUT_HEIGHT },
+            field: {
+              paddingRight: INPUT_HEIGHT,
+              height: INPUT_HEIGHT,
+              maxHeight: 100,
+              overflowY: 'auto',
+              resize: 'none'
+            }
+          }}
         />
         <Fluent.IconButton
-          data-test={`${model.name}-submit`}
+          data-test={`${props.name}-submit`}
           iconProps={{ iconName: 'Send' }}
           onClick={submit}
-          disabled={!userInput.trim()}
+          disabled={!userInput.trim() || props.generating}
           styles={{
-            root: { position: 'absolute', top: 15, right: 15, height: SUBMIT_BTN_SIZE },
+            root: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT },
             rootHovered: { backgroundColor: 'transparent' },
-            rootDisabled: { position: 'absolute', top: 15, right: 15, height: SUBMIT_BTN_SIZE, backgroundColor: 'transparent' }
+            rootDisabled: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT, backgroundColor: 'transparent' },
+            icon: { height: 'auto' } // Makes icon vertically centered.
           }} />
       </div>
     </div>
@@ -159,16 +235,20 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
+  /** The events to capture on this chatbot. One of 'stop'. */
+  events?: S[]
+  /** True to show a button to stop the text generation. Defaults to False. */
+  generating?: B
 }
 
-export const
-  View = bond(({ name, state, changed }: Model<State>) => {
-    const render = () => (
-      <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
-        <XChatbot model={{ name: state.name, data: unpack<ChatMessage[]>(state.data), placeholder: state.placeholder }} />
-      </div>
-    )
-    return { render, changed }
-  })
+export const View = bond(({ name, state, changed }: Model<State>) => {
+  const render = () => (
+    <div data-test={name} style={{ display: 'flex', flexDirection: 'column' }}>
+      <XChatbot {...state} />
+    </div>
+  )
+
+  return { render, changed }
+})
 
 cards.register('chatbot', View)

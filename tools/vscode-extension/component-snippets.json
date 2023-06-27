@@ -62,10 +62,17 @@
     ],
     "description": "Create a minimal Wave ChatCard."
   },
+  "Wave ChatbotMessage": {
+    "prefix": "w_chatbot_message",
+    "body": [
+      "ui.chatbot_message(content='$1', from_user=${2:False}),$0"
+    ],
+    "description": "Create a minimal Wave ChatbotMessage."
+  },
   "Wave Chatbot": {
     "prefix": "w_chatbot",
     "body": [
-      "ui.chatbot(name='$1', data=[\n\t\t$2\t\t\n]),$0"
+      "ui.chatbot(name='$1', data=$2),$0"
     ],
     "description": "Create a minimal Wave Chatbot."
   },
@@ -1000,17 +1007,24 @@
     ],
     "description": "Create a full Wave ChatCard."
   },
+  "Wave Full ChatbotMessage": {
+    "prefix": "w_full_chatbot_message",
+    "body": [
+      "ui.chatbot_message(content='$1', from_user=${2:False}),$0"
+    ],
+    "description": "Create a full Wave ChatbotMessage."
+  },
   "Wave Full Chatbot": {
     "prefix": "w_full_chatbot",
     "body": [
-      "ui.chatbot(name='$1', placeholder='$2', data=[\n\t\t$3\t\t\n]),$0"
+      "ui.chatbot(name='$1', data=$2, placeholder='$3', generating=${4:False}, events=[\n\t\t$5\t\t\n], prev_items=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave Chatbot."
   },
   "Wave Full ChatbotCard": {
     "prefix": "w_full_chatbot_card",
     "body": [
-      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', commands=[\n\t\t$5\t\t\n])$0"
+      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', generating=${5:False}, events=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
     ],
     "description": "Create a full Wave ChatbotCard."
   },
@@ -1129,7 +1143,7 @@
   "Wave Full Component": {
     "prefix": "w_full_component",
     "body": [
-      "ui.component(text=${1:None}, text_xl=${2:None}, text_l=${3:None}, text_m=${4:None}, text_s=${5:None}, text_xs=${6:None}, label=${7:None}, separator=${8:None}, progress=${9:None}, message_bar=${10:None}, textbox=${11:None}, checkbox=${12:None}, toggle=${13:None}, choice_group=${14:None}, checklist=${15:None}, dropdown=${16:None}, combobox=${17:None}, slider=${18:None}, spinbox=${19:None}, date_picker=${20:None}, color_picker=${21:None}, button=${22:None}, buttons=${23:None}, mini_button=${24:None}, mini_buttons=${25:None}, file_upload=${26:None}, table=${27:None}, link=${28:None}, links=${29:None}, tabs=${30:None}, expander=${31:None}, frame=${32:None}, markup=${33:None}, template=${34:None}, picker=${35:None}, range_slider=${36:None}, stepper=${37:None}, visualization=${38:None}, vega_visualization=${39:None}, stats=${40:None}, inline=${41:None}, image=${42:None}, persona=${43:None}, text_annotator=${44:None}, image_annotator=${45:None}, facepile=${46:None}, copyable_text=${47:None}, menu=${48:None}, tags=${49:None}, time_picker=${50:None}, chatbot=${51:None}),$0"
+      "ui.component(text=${1:None}, text_xl=${2:None}, text_l=${3:None}, text_m=${4:None}, text_s=${5:None}, text_xs=${6:None}, label=${7:None}, separator=${8:None}, progress=${9:None}, message_bar=${10:None}, textbox=${11:None}, checkbox=${12:None}, toggle=${13:None}, choice_group=${14:None}, checklist=${15:None}, dropdown=${16:None}, combobox=${17:None}, slider=${18:None}, spinbox=${19:None}, date_picker=${20:None}, color_picker=${21:None}, button=${22:None}, buttons=${23:None}, mini_button=${24:None}, mini_buttons=${25:None}, file_upload=${26:None}, table=${27:None}, link=${28:None}, links=${29:None}, tabs=${30:None}, expander=${31:None}, frame=${32:None}, markup=${33:None}, template=${34:None}, picker=${35:None}, range_slider=${36:None}, stepper=${37:None}, visualization=${38:None}, vega_visualization=${39:None}, stats=${40:None}, inline=${41:None}, image=${42:None}, persona=${43:None}, text_annotator=${44:None}, image_annotator=${45:None}, facepile=${46:None}, copyable_text=${47:None}, menu=${48:None}, tags=${49:None}, time_picker=${50:None}),$0"
     ],
     "description": "Create a full Wave Component."
   },
@@ -1248,7 +1262,7 @@
   "Wave Full ImageAnnotator": {
     "prefix": "w_full_image_annotator",
     "body": [
-      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n], allowed_shapes=[\n\t\t$8\t\t\n]),$0"
+      "ui.image_annotator(name='$1', image='$2', title='$3', trigger=${4:False}, image_height='$5', tags=[\n\t\t$6\t\t\n], items=[\n\t\t$7\t\t\n], allowed_shapes=[\n\t\t$8\t\t\n], events=[\n\t\t$9\t\t\n]),$0"
     ],
     "description": "Create a full Wave ImageAnnotator."
   },

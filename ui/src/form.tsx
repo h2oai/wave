@@ -20,9 +20,9 @@ import { Button, Buttons, MiniButton, MiniButtons, XButtons, XMiniButton, XMiniB
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
-import { CopyableText, XCopyableText } from "./copyable_text"
 import { ColorPicker, XColorPicker } from './color_picker'
 import { Combobox, XCombobox } from './combobox'
+import { CopyableText, XCopyableText } from "./copyable_text"
 import { DatePicker, XDatePicker } from './date_picker'
 import { Dropdown, XDropdown } from './dropdown'
 import { Expander, XExpander } from './expander'
@@ -30,14 +30,15 @@ import { Facepile, XFacepile } from "./facepile"
 import { FileUpload, XFileUpload } from './file_upload'
 import { Frame, XFrame } from './frame'
 import { Image, XImage } from './image'
+import { ImageAnnotator, XImageAnnotator } from './image_annotator'
 import { Label, XLabel } from './label'
 import { cards } from './layout'
-import { Link, XLink, Links, XLinks } from './link'
+import { Link, Links, XLink, XLinks } from './link'
 import { Markup, XMarkup } from './markup'
+import { Menu, XMenu } from './menu'
 import { MessageBar, XMessageBar } from './message_bar'
 import { Persona, XPersona } from "./persona"
 import { Picker, XPicker } from './picker'
-import { Chatbot, XChatbot } from './chatbot'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
 import { RangeSlider, XRangeSlider } from './range_slider'
@@ -48,19 +49,17 @@ import { Stats, XStats } from './stats'
 import { Stepper, XStepper } from './stepper'
 import { Table, XTable } from './table'
 import { Tabs, XTabs } from './tabs'
+import { Tags, XTags } from './tags'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
-import { Textbox, XTextbox } from './textbox'
 import { TextAnnotator, XTextAnnotator } from './text_annotator'
-import { ImageAnnotator, XImageAnnotator } from './image_annotator'
-import { clas, cssVar, justifications, alignments, padding } from './theme'
+import { Textbox, XTextbox } from './textbox'
+import { alignments, clas, cssVar, justifications, padding } from './theme'
+import { TimePicker, XTimePicker } from './time_picker'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
-import { Menu, XMenu } from './menu'
-import { XTags, Tags } from './tags'
-import { TimePicker, XTimePicker } from './time_picker'
 
 /** Create a component. */
 export interface Component {
@@ -164,8 +163,6 @@ export interface Component {
   tags?: Tags
   /** Time picker. */
   time_picker?: TimePicker
-  /** Chatbot. */
-  chatbot?: Chatbot
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -347,7 +344,6 @@ const
     if (m.menu) return <XMenu model={m.menu} />
     if (m.tags) return <XTags model={m.tags} />
     if (m.time_picker) return <XTimePicker model={m.time_picker} />
-    if (m.chatbot) return <XChatbot model={m.chatbot} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

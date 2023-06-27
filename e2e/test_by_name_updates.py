@@ -66,3 +66,122 @@ async def serve(q: Q):
         expect(page.get_by_text("foo4")).to_be_visible()
         expect(page.get_by_text("foo5")).to_be_visible()
         expect(page.get_by_text("foo6")).to_be_visible()
+
+
+def test_by_name_updates_dialog_init(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['meta'] = ui.meta_card(box='', dialog=ui.dialog(title='Order Donuts', items=[
+        ui.button(name='next_step', label='Next')
+    ]))
+    q.page['meta'].next_step.label = 'New next'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("New next")).to_be_visible()
+
+
+def test_by_name_updates_dialog(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['meta'] = ui.meta_card(box='')
+    q.page['meta'].dialog = ui.dialog(title='Order Donuts', items=[
+        ui.button(name='next_step', label='Next')
+    ])
+    q.page['meta'].next_step.label = 'New next'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("New next")).to_be_visible()
+
+
+def test_by_name_updates_side_panel_init(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['meta'] = ui.meta_card(box='', side_panel=ui.side_panel(title='Order Donuts', items=[
+        ui.button(name='next_step', label='Next')
+    ]))
+    q.page['meta'].next_step.label = 'New next'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("New next")).to_be_visible()
+
+
+def test_by_name_updates_side_panel(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['meta'] = ui.meta_card(box='')
+    q.page['meta'].side_panel = ui.side_panel(title='Order Donuts', items=[
+        ui.button(name='next_step', label='Next')
+    ])
+    q.page['meta'].next_step.label = 'New next'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("New next")).to_be_visible()
+
+
+def test_by_name_updates_notification_bar_init(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['meta'] = ui.meta_card(box='', notification_bar=ui.notification_bar(
+        text='Success notification',
+        buttons=[ui.button(name='btn1', label='Button 1')]
+    ))
+    q.page['meta'].btn1.label = 'New text'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("New text")).to_be_visible()
+
+
+def test_by_name_updates_notification_bar(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['meta'] = ui.meta_card(box='')
+    q.page['meta'].notification_bar = ui.notification_bar(
+        text='Success notification',
+        buttons=[ui.button(name='btn1', label='Button 1')]
+    )
+    q.page['meta'].btn1.label = 'New text'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("New text")).to_be_visible()

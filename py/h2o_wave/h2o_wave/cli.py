@@ -12,24 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import tarfile
-import shutil
-import sys
-import socket
-from contextlib import closing
-import subprocess
-from pathlib import Path
-import platform
-import uvicorn
-import click
-import inquirer
+import asyncio
 import os
-from click import Choice, option
+import platform
+import shutil
+import socket
+import subprocess
+import sys
+import tarfile
+import time
+from contextlib import closing
+from pathlib import Path
 from urllib import request
 from urllib.parse import urlparse
+
+import click
+import httpx
+import inquirer
+import uvicorn
+from click import Choice, option
+from h2o_wave.share import listen_on_socket
+
+from .metadata import __arch__, __platform__
 from .version import __version__
-from .metadata import __platform__, __arch__
 
 _localhost = '127.0.0.1'
 
@@ -119,15 +124,18 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     # Try to start Wave daemon if not running or turned off.
     server_port = int(os.environ.get('H2O_WAVE_LISTEN', ':10101').split(':')[-1])
     server_not_running = _scan_free_port(server_port) == server_port
+
+    waved_process = None
+    if no_autostart:
+        autostart = False
+    else:
+        autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
+
+    waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
+    # OS agnostic wheels do not have waved - needed for HAC.
+    is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
+
     try:
-        waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
-        waved_process = None
-        # OS agnostic wheels do not have waved - needed for HAC.
-        is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
-        if no_autostart:
-            autostart = False
-        else:
-            autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
         if autostart and is_waved_present and server_not_running:
             waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
             time.sleep(1)
@@ -277,3 +285,71 @@ def learn():
         cli.main()
     except ImportError:
         print('You need to run \x1b[7;30;43mpip install h2o_wave_university\x1b[0m first.')
+
+
+@main.command()
+@click.option('--port', default=10101, help='Port your app is running on (defaults to 10101).')
+@click.option('--subdomain', default='?new', help='Subdomain to use. If not available, a random one is generated.')
+@click.option('--remote-host', default='h2oai.app', help='Remote host to use (defaults to h2oai.app).')
+def share(port: int, subdomain: str, remote_host: str):
+    """Share your locally running app with the world.
+
+    \b
+    $ wave share
+    """
+    if 'Windows' in platform.system():
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    if 'Windows' in platform.system():
+
+        async def wakeup():
+            while True:
+                await asyncio.sleep(1)
+
+        # HACK: Enable Ctrl-C on Windows when opening multiple TCP connections.
+        # https://stackoverflow.com/questions/27480967/why-does-the-asyncios-event-loop-suppress-the-keyboardinterrupt-on-windows.
+        loop.create_task(wakeup())
+
+    try:
+        loop.run_until_complete(_share(port, subdomain, remote_host))
+    except KeyboardInterrupt:
+        tasks = asyncio.all_tasks(loop)
+        for task in tasks:
+            task.cancel()
+        loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
+        loop.close()
+
+
+async def _share(port: int, subdomain: str, remote_host: str):
+    if _scan_free_port(port) == port:
+        print(f'Could not connect to localhost:{port}. Please make sure your app is running.')
+        exit(1)
+
+    res = httpx.get(f'https://{remote_host}/{subdomain}', headers={'Content-Type': 'application/json'})
+    if res.status_code != 200:
+        print('Could not connect to the remote sharing server.')
+        exit(1)
+
+    res = res.json()
+    print(f'BETA: Proxying localhost:{port} ==> {res["url"]}')
+    print('\x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
+    print('Press Ctrl+C to stop sharing.')
+
+    max_conn_count = res['max_conn_count']
+    # The server can be configured to either support 10 concurrent connections (default) or more.
+    # If more, connect in batches of 100 for better performance.
+    step = 100 if max_conn_count > 10 else max_conn_count
+
+    tasks = []
+    for _ in range(max_conn_count // step):
+        for _ in range(step):
+            tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, res['port'])))
+        await asyncio.sleep(1)
+    # Handle the rest if any.
+    for _ in range(max_conn_count % step):
+        tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, res['port'])))
+
+    await asyncio.gather(*tasks)

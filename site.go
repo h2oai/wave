@@ -102,6 +102,8 @@ func (site *Site) exec(url string, ops OpsD) {
 				page.set(op.K, loadFixBuf(site.ns, op.F))
 			} else if op.M != nil {
 				page.set(op.K, loadMapBuf(site.ns, op.M))
+			} else if op.L != nil {
+				page.set(op.K, loadListBuf(site.ns, op.L))
 			} else if op.D != nil {
 				page.cards[op.K] = loadCard(site.ns, CardD{op.D, op.B})
 			} else {

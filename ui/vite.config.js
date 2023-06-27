@@ -31,6 +31,10 @@ export default defineConfig({
     assetsDir: 'wave-static',
     chunkSizeWarningLimit: 900
   },
+  optimizeDeps: {
+    // When linking a dependency, start vite with --force to bust prebundled cache.
+    include: ['h2o-wave'],
+  },
   server: {
     port: 3000,
     proxy: {
