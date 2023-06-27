@@ -65,21 +65,13 @@ You can register multiple themes, which might be handy for switching between the
 
 ### Theme generator
 
-Wave ships with a simple app that allows you to pick colors and see how they work together instantly.
+Wave comes with a simple [Theme generator app](https://huggingface.co/spaces/h2oai/theme-generator) that allows you to pick colors and see how they work together instantly.
 
 This Wave app provides:
 
 * Immediate visual feedback.
 * Color contrast warnings when a particular contrast ratio is less than [4.5](https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html).
 * Quick theme copy-pasting.
-
-Simply run:
-
-```sh
-./venv/bin/wave run examples.theme_generator
-```
-
-Then visit <http://localhost:10101/demo>.
 
 ![theme-generator](assets/theme-generator.gif)
 

@@ -1,1 +1,1 @@
-Code for this app can be found at https://github.com/h2oai/wave/blob/master/py/examples/theme_generator.py.
+Code for this app can be found at <https://github.com/h2oai/wave/blob/main/py/examples/theme_generator.py>.

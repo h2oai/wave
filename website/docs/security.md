@@ -160,7 +160,7 @@ Access to a Wave app is controlled via [HTTP Basic Authentication](https://tools
 
 You can make the Wave daemon include additional HTTP response headers by using the `-http-headers-file` command line argument to `waved`, pointing to a [MIME-formatted](https://en.wikipedia.org/wiki/MIME#MIME_header_fields) file.
 
-[A sample file](https://github.com/h2oai/wave/blob/master/headers.txt) (make sure there's an empty line at the end):
+[A sample file](https://github.com/h2oai/wave/blob/main/headers.txt) (make sure there's an empty line at the end):
 
 ```txt title="headers.txt"
 X-Frame-Options: SAMEORIGIN

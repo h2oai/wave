@@ -28,6 +28,7 @@ tag: # Bump version
 
 publish:
 	$(MAKE) test
+	$(MAKE) build
 	npm run publish
 
 clean:

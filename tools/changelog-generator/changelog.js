@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { version } = require('../../ui/package.json')
 
 // WARNING: Works only on Linux and macOS. Windows is not supported.
 if (process.platform === 'win32') {
@@ -14,7 +15,7 @@ const typesToChangelog = {
 }
 
 const categorizedCommits = require('child_process')
-  .execSync('git log $(git describe --tags --abbrev=0)..HEAD --oneline')
+  .execSync(`git log v${version}..HEAD --oneline`)
   .toString()
   .split('\n')
   .reduce((categorizedCommits, commit) => {

@@ -122,7 +122,7 @@ module.exports = {
             },
             {
               label: 'Code of Conduct',
-              href: 'https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md',
+              href: 'https://github.com/h2oai/wave/blob/main/.github/CODE_OF_CONDUCT.md',
             },
           ],
         },
@@ -148,7 +148,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} <a href='https://h2o.ai' style='color:#ffe52b'>H2O.ai</a>, Inc. Licensed under the <a href='https://github.com/h2oai/wave/blob/master/LICENSE' style='color:#ffe52b'>Apache License 2.0</a>.`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href='https://h2o.ai' style='color:#ffe52b'>H2O.ai</a>, Inc. Licensed under the <a href='https://github.com/h2oai/wave/blob/main/LICENSE' style='color:#ffe52b'>Apache License 2.0</a>.`,
     },
   },
   presets: [
@@ -157,7 +157,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/h2oai/wave/edit/master/website/',
+          editUrl: 'https://github.com/h2oai/wave/edit/main/website/',
         },
         blog: {
           showReadingTime: true,

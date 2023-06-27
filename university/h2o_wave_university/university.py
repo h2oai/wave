@@ -15,25 +15,26 @@
 import collections
 import os
 import os.path
-import re
 import shutil
 import subprocess
 import sys
+import uuid
+from asyncio import create_subprocess_exec
 from glob import glob
 from pathlib import Path
 from string import Template
 from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
-from h2o_wave import Q, app, main, ui
+from h2o_wave import Q, app, handle_on, main, on, ui
+
+from .utils import natural_keys, read_file, scan_free_port, strip_comment
 
 tmp_dir = '__tmp_apps_dir'
 university_dir = 'h2o_wave_university'
 
 _base_url = os.environ.get('H2O_WAVE_BASE_URL', '/')
 _app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
-_app_host = _app_address.hostname
-_app_port = '10102'
 default_lesson = 'lesson1'
 vsc_extension_path = os.path.join('..', 'tools', 'vscode-extension')
 
@@ -49,7 +50,7 @@ class Lesson:
         self.next_lesson: Optional[Lesson] = None
         self.process: Optional[subprocess.Popen] = None
 
-    async def start(self, filename: str, code: str):
+    async def start(self, filename: str, is_app: bool, q: Q):
         env = os.environ.copy()
         env['H2O_WAVE_BASE_URL'] = _base_url
         env['H2O_WAVE_ADDRESS'] = os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
@@ -57,45 +58,23 @@ class Lesson:
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
         if sys.platform.lower().startswith('win'):
             env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
-        if code.find('@app(') > 0:
-            env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_host}:{_app_port}'
-            self.process = subprocess.Popen([
+        if is_app:
+            q.app.app_port = scan_free_port(q.app.app_port)
+            env['H2O_WAVE_APP_ADDRESS'] = f'http://{_app_address.hostname}:{q.app.app_port}'
+            cmd = [
                 sys.executable, '-m', 'uvicorn',
                 '--host', '0.0.0.0',
-                '--port', _app_port,
+                '--port', str(q.app.app_port),
                 f'{filename.replace(".py", "")}:main',
-            ], env=env)
+            ]
+            self.process = await create_subprocess_exec(*cmd, env=env)
         else:
-            self.process = subprocess.Popen([sys.executable, filename], env=env)
+            self.process = await create_subprocess_exec(sys.executable, filename, env=env)
 
     async def stop(self):
         if self.process and self.process.returncode is None:
             self.process.terminate()
-            self.process.wait()
-
-
-def read_file(p: str) -> str:
-    with open(p, encoding='utf-8') as f:
-        return f.read()
-
-
-def atoi(text):
-    return int(text) if text.isdigit() else text
-
-
-def natural_keys(text):
-    return [atoi(c) for c in re.split(r'(\d+)', text)]
-
-
-def strip_comment(line: str) -> str:
-    """Returns the content of a line without '#' and ' ' characters
-
-    remove leading '#', but preserve '#' that is part of a tag
-    lesson:
-    >>> '# #hello '.strip('#').strip()
-    '#hello'
-    """
-    return line.strip('#').strip()
+            await self.process.wait()
 
 
 def load_lesson(filename: str) -> Lesson:
@@ -121,7 +100,7 @@ def load_lessons(filenames: List[str]) -> Dict[str, Lesson]:
     return lessons
 
 
-app_title = 'H2O Wave University'
+app_title = 'Wave University'
 
 
 async def setup_page(q: Q):
@@ -161,7 +140,7 @@ def get_wave_completions(line, character, file_content):
         return [{'label': icon, 'kind': 13, 'sort_text': '0'} for icon in fluent_icons]
         '''
     js_code = ''
-    with open(os.path.join(university_dir, 'static','university.js'), 'r') as f:
+    with open(os.path.join(university_dir, 'static', 'university.js'), 'r') as f:
         js_code = f.read()
     template = Template(js_code).substitute(
         baseURL=_base_url,
@@ -176,13 +155,26 @@ def get_wave_completions(line, character, file_content):
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[
             ui.layout(breakpoint='xs', zones=[
+                ui.zone('mobile_header'),
+                ui.zone('main', direction=ui.ZoneDirection.COLUMN, zones=[
+                    ui.zone('description'),
+                    ui.zone('rhs', size='100vh')
+                ]),
+                ui.zone('nav'),
+            ]),
+            ui.layout(breakpoint='l', zones=[
                 ui.zone('header'),
-                ui.zone('main', size='calc(100vh - 80px)', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('main', size='calc(100vh - 76px)', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('description', size='30%'),
                     ui.zone('rhs', size='70%')
                 ])
             ])
         ])
+    nav_links = [
+        ('docs', 'Docs', 'https://wave.h2o.ai/docs/getting-started'),
+        ('discussions', 'Forum', 'https://github.com/h2oai/wave/discussions'),
+        ('cloud', 'AI Cloud', 'https://h2o.ai/platform/ai-cloud/'),
+    ]
     q.page['header'] = ui.header_card(
         box='header',
         title=app_title,
@@ -190,15 +182,17 @@ def get_wave_completions(line, character, file_content):
         image=f'{_base_url}assets/h2o-logo.svg',
         items=[],
         secondary_items=[
-            ui.links(inline=True, items=[
-                ui.link(label='Wave docs', path='https://wave.h2o.ai/docs/getting-started', target='_blank'),
-                ui.link(label='Discussions', path='https://github.com/h2oai/wave/discussions', target='_blank'),
-                ui.link(label='Blog', path='https://wave.h2o.ai/blog', target='_blank'),
-                ui.link(label='H2O AI Cloud', path='https://h2o.ai/platform/ai-cloud/', target='_blank'),
-                ui.link(label='H2O', path='https://www.h2o.ai/', target='_blank'),
-            ])
+            ui.links(inline=True, items=[ui.link(label=link[1], path=link[2], target='_blank') for link in nav_links])
         ]
     )
+    q.page['mobile_header'] = ui.header_card(
+        box='mobile_header',
+        title=app_title,
+        subtitle='Learn Wave interactively',
+        image=f'{_base_url}assets/h2o-logo.svg',
+        nav=[ui.nav_group('Links', items=[ui.nav_item(name=link[0], label=link[1]) for link in nav_links])]
+    )
+    q.page['mobile_nav'] = ui.form_card(box='nav', items=[])
     q.page['code'] = ui.markup_card(
         box=ui.box('rhs', height='calc((100vh - 80px - 30px) / 2)'),
         title='',
@@ -211,49 +205,55 @@ def get_wave_completions(line, character, file_content):
 
 
 def make_blurb(q: Q):
-    lesson = q.user.active_lesson
+    lesson = q.client.active_lesson
     # HACK: Recreate dropdown every time (by dynamic name) to control value (needed for next / prev btn functionality).
     prev_lesson_name = lesson.previous_lesson.name if lesson.previous_lesson is not None else ''
     next_lesson_name = lesson.next_lesson.name if lesson.next_lesson is not None else ''
     items = [
-        ui.dropdown(name=q.args['#'] or default_lesson, width='300px', value=lesson.name, trigger=True,
+        ui.dropdown(name=q.args['#'] or default_lesson, width='230px', value=lesson.name, trigger=True,
                     choices=[ui.choice(name=e.name, label=e.title) for e in q.app.catalog.values()]),
-        ui.button(name=f'#{prev_lesson_name}', label='Previous', disabled=prev_lesson_name == ''),
+        ui.button(name=f'#{prev_lesson_name}', label='Prev', disabled=prev_lesson_name == ''),
         ui.button(name=f'#{next_lesson_name}', label='Next', disabled=next_lesson_name == '')
     ]
     q.page['header'].items = items
+    q.page['mobile_nav'].items = [ui.inline(justify='center', items=items)]
     q.page['description'].content = lesson.description
 
 
 async def show_lesson(q: Q, lesson: Lesson):
     # Clear demo page
-    demo_page = q.site['/demo']
+    demo_page = q.site[f'/{q.client.path}']
     demo_page.drop()
     await demo_page.save()
 
-    filename = os.path.join(tmp_dir, 'tmp.py')
+    filename = os.path.join(tmp_dir, f'{q.client.path}.py')
     code = q.events.editor.change if q.events.editor else lesson.source
     code = code.replace("`", "\\`")
+    is_app = '@app(' in code
     with open(filename, 'w', encoding='utf-8') as f:
-        f.write(code)
-    filename = '.'.join([tmp_dir, 'tmp.py']).split(os.sep)[-1] if code.find('@app(') > 0 else filename
+        fixed_path = code
+        if is_app:
+            fixed_path = fixed_path.replace("@app('/demo')", f"@app('/{q.client.path}')")
+        else:
+            fixed_path = fixed_path.replace("site['/demo']", f"site['/{q.client.path}']")
+        f.write(fixed_path)
+    if is_app:
+        filename = '.'.join([tmp_dir, f'{q.client.path}.py']).split(os.sep)[-1]
 
     # Stop active lesson, if any.
-    active_lesson = q.user.active_lesson
+    active_lesson = q.client.active_lesson
     if active_lesson:
         await active_lesson.stop()
 
     # Start new lesson
-    await lesson.start(filename, code)
-    q.user.active_lesson = lesson
+    await lesson.start(filename, is_app, q)
+    q.client.active_lesson = lesson
 
     # Update lesson blurb
     make_blurb(q)
 
-    preview_card = q.page['preview']
-
     # Update preview title
-    preview_card.title = f'Preview of {lesson.filename}'
+    q.page['preview'].title = f'Preview of {lesson.filename}'
     q.page['code'].title = lesson.filename
     await q.page.save()
 
@@ -268,12 +268,13 @@ async def show_lesson(q: Q, lesson: Lesson):
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
-            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()', requires=['editor'])
+            q.page['meta'].script = ui.inline_script('editor.setScrollPosition({ scrollTop: 0 }); editor.focus()',
+                                                     requires=['editor'])
 
     # HACK
     # The ?e= appended to the path forces the frame to reload.
     # The url param is not actually used.
-    preview_card.path = f'{_base_url}demo?e={lesson.name}'
+    q.page['preview'].path = f'{_base_url}{q.client.path}?e={lesson.name}'
     await q.page.save()
 
 
@@ -289,9 +290,23 @@ async def on_shutdown():
         shutil.rmtree(dirpath)
 
 
+@on("@system.client_disconnect")
+async def client_disconnect(q: Q):
+    demo_page = q.site[f'/{q.client.path}']
+    demo_page.drop()
+    await demo_page.save()
+
+    if q.client.active_lesson:
+        await q.client.active_lesson.stop()
+    filename = os.path.join(tmp_dir, f'{q.client.path}.py')
+    if os.path.exists(filename):
+        os.remove(filename)
+
+
 @app('/', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
+        q.app.app_port = 10102
         base_snippets_path = os.path.join(university_dir, 'static', 'base-snippets.json')
         component_snippets_path = os.path.join(university_dir, 'static', 'component-snippets.json')
         # Prod.
@@ -304,13 +319,14 @@ async def serve(q: Q):
                 os.path.join(vsc_extension_path, 'base-snippets.json'),
                 os.path.join(vsc_extension_path, 'component-snippets.json')
             ])
-        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py') )
+        lesson_files = glob(os.path.join(university_dir, 'lessons', '*.py'))
         lesson_files.sort(key=natural_keys)
         q.app.catalog = load_lessons(lesson_files)
         q.app.initialized = True
     if not q.client.initialized:
         q.client.initialized = True
         q.client.is_first_load = True
+        q.client.path = uuid.uuid4()
         await setup_page(q)
 
     search = q.args[q.args['#'] or default_lesson]
@@ -318,3 +334,4 @@ async def serve(q: Q):
         q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
     await show_lesson(q, q.app.catalog[q.args['#'] or default_lesson])
+    await handle_on(q)
