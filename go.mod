@@ -6,7 +6,7 @@ require (
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/websocket v1.4.2
-	github.com/h2oai/goconfig v1.3.2-0.20230607113525-ec7811bd2c8e
+	github.com/h2oai/goconfig v1.3.2-0.20230628122159-683a9532f8d2
 	github.com/hashicorp/golang-lru v0.5.4
 	github.com/lo5/sqlite3 v0.1.0
 	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee
