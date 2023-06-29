@@ -62,23 +62,23 @@ type Sub struct {
 
 // Broker represents a message broker.
 type Broker struct {
-	site                    *Site
-	editable                bool
-	noStore                 bool
-	noLog                   bool
-	clients                 map[string]map[*Client]interface{} // route => client-set
-	publish                 chan Pub
-	subscribe               chan Sub
-	unsubscribe             chan *Client
-	logout                  chan Pub
-	apps                    map[string]*App // route => app
-	appsMux                 sync.RWMutex    // mutex for tracking apps
-	unicasts                map[string]bool // "/client_id" => true
-	unicastsMux             sync.RWMutex    // mutex for tracking unicast routes
-	noAppDropIfUnresponsive bool
+	site        *Site
+	editable    bool
+	noStore     bool
+	noLog       bool
+	clients     map[string]map[*Client]interface{} // route => client-set
+	publish     chan Pub
+	subscribe   chan Sub
+	unsubscribe chan *Client
+	logout      chan Pub
+	apps        map[string]*App // route => app
+	appsMux     sync.RWMutex    // mutex for tracking apps
+	unicasts    map[string]bool // "/client_id" => true
+	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
+	keepAppLive bool
 }
 
-func newBroker(site *Site, editable, noStore, noLog, noAppDropIfUnresponsive bool) *Broker {
+func newBroker(site *Site, editable, noStore, noLog, keepAppLive bool) *Broker {
 	return &Broker{
 		site,
 		editable,
@@ -93,7 +93,7 @@ func newBroker(site *Site, editable, noStore, noLog, noAppDropIfUnresponsive boo
 		sync.RWMutex{},
 		make(map[string]bool),
 		sync.RWMutex{},
-		noAppDropIfUnresponsive,
+		keepAppLive,
 	}
 }
 

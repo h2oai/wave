@@ -207,7 +207,7 @@ func main() {
 	serverConf.NoStore = conf.NoStore
 	serverConf.NoLog = conf.NoLog
 	serverConf.Keychain = kc
-	serverConf.NoAppDropIfUnresponsive = conf.NoAppDropIfUnresponsive
+	serverConf.KeepAppLive = conf.KeepAppLive
 
 	authConf.Scopes = strings.Split(conf.RawAuthScopes, ",")
 	if len(conf.RawAuthURLParams) > 0 {
