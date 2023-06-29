@@ -11,9 +11,9 @@ Wave allows starting Wave server in 2 ways:
 
 Wave can be configured via configuration (`.env`) file, environment variables or command line arguments with the following priority: `cmd arg > env var > config > default`.
 
-<!-- CREDIT: https://kdelmonte.github.io/json-to-markdown-table/ -->
+<!-- CREDIT: https://www.tablesgenerator.com/markdown_tables. -->
 
-| ENV var or config (wave run or waved)            | CLI args (waved)                      | Description                                                                                                                                                                                                                                                                                                          |
+| ENV var or config (wave run or waved)  | CLI args (waved)                      | Description                                                                                                                                                                                                                                                                                                          |
 |----------------------------------------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | H2O_WAVE_ACCESS_KEY_ID                 | -access-key-id string                 | default API access key ID (default "access_key_id")                                                                                                                                                                                                                                                                  |
 | H2O_WAVE_ACCESS_KEY_SECRET             | -access-key-secret string             | default API access key secret (default "access_key_secret")                                                                                                                                                                                                                                                          |
@@ -54,6 +54,7 @@ Wave can be configured via configuration (`.env`) file, environment variables or
 | H2O_WAVE_TLS_KEY_FILE                  | -tls-key-file string                  | path to private key file (TLS only)                                                                                                                                                                                                                                                                                  |
 | H2O_WAVE_NO_TLS_VERIFY [^1]            | -no-tls-verify                        | do not verify TLS certificates during external communication - DO NOT USE IN PRODUCTION                                                                                                                                                                                                                              |
 |                                        | -version                              | print version and exit                                                                                                                                                                                                                                                                                               |
+| H2O_WAVE_KEEP_APP_LIVE [^1]            | -keep-app-live                        | do not unregister unresponsive apps (default false)                                                                                                                                                                                                                                                                  |
 | H2O_WAVE_WEB_DIR                       | -web-dir string                       | directory to serve web assets from (default "./www")                                                                                                                                                                                                                                                                 |
 | H2O_WAVE_CONF                          | -conf string                          | path to a configuration file (default ".env")                                                                                                                                                                                                                                                                        |
 [^1]: `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
@@ -146,7 +147,7 @@ This environment variable will be removed in v1.0.
 
 The local host/port on which the app server should listen. Defaults to `http://127.0.0.1:8000`. For example, if you want your app to listen on a specific port, execute your app as follows (replace `66666` with a port number of your choice):
 
-```
+```sh
 H2O_WAVE_INTERNAL_ADDRESS=ws://127.0.0.1:66666 ./venv/bin/python my_app.py
 ```
 
