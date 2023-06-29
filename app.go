@@ -88,7 +88,9 @@ func (app *App) disconnect(clientID string) error {
 func (app *App) forward(clientID string, session *Session, data []byte) {
 	if err := app.send(clientID, session, data); err != nil {
 		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
-		app.broker.dropApp(app.route)
+		if !app.broker.noAppDropIfUnresponsive {
+			app.broker.dropApp(app.route)
+		}
 	}
 }
 
