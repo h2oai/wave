@@ -121,13 +121,16 @@ export const
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled, tooltip, path }): Fluent.INavLink => ({
+      links: g.items.map(({ name, label, icon, disabled, tooltip, path }, idx): Fluent.INavLink => ({
         key: name,
         name: label,
         icon,
         disabled,
         title: tooltip,
-        style: disabled ? { opacity: 0.7 } : undefined,
+        style: {
+          opacity: disabled ? 0.7 : undefined,
+          marginTop: idx === 0 && !g.label ? 30 : undefined
+        },
         url: '',
         onClick: () => {
           if (hideNav) hideNav()
