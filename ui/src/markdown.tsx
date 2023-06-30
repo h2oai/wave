@@ -114,7 +114,8 @@ export const
         return false
       }
     }
-    return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />
+    const html = React.useMemo(() => markdown.render(source), [source])
+    return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: html }} />
   }
 
 /**
