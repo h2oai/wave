@@ -10,7 +10,7 @@
     "@fluentui/react-icons-mdl2": "^1.2.12",
     "@mui/material": "^5.9.3",
     "@mui/system": "^5.9.3",
-    "@mui/x-date-pickers": "^5.0.0-beta.3",
+    "@mui/x-date-pickers": "^5.0.20",
     "d3": "^5.15.0",
     "date-fns": "^2.29.1",
     "h2o-wave": "^1.1.0",
