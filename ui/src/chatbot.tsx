@@ -60,7 +60,9 @@ const
       position: 'absolute',
       bottom: 0,
       left: 0,
-      right: 0
+      right: 0,
+      maxWidth: 800,
+      margin: '0 auto'
     },
     stopButton: {
       left: '50%',
