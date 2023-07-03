@@ -29,7 +29,7 @@ tag: # Bump version
 publish:
 	$(MAKE) test
 	$(MAKE) build
-	npm run publish
+	npx vsce package --packagePath *.vsix
 
 clean:
 	rm -rf venv
