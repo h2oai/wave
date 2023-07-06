@@ -117,7 +117,7 @@ const css = stylesheet({
 })
 
 export const
-  XNav = ({ items, value, hideNav }: State & { hideNav?: () => void }) => {
+  XNav = ({ items, value, hideNav, linksOnly = false }: State & { hideNav?: () => void, linksOnly?: B }) => {
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
@@ -129,7 +129,7 @@ export const
         title: tooltip,
         style: {
           opacity: disabled ? 0.7 : undefined,
-          marginTop: idx === 0 && !g.label ? 30 : undefined
+          marginTop: !linksOnly && idx === 0 && !g.label ? 30 : undefined
         },
         url: '',
         onClick: () => {
@@ -161,7 +161,7 @@ export const
             {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
             {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
           </div>
-          <XNav {...state} />
+          <XNav {...state} linksOnly={!image && !icon && !title && !subtitle && !persona} />
           {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
         </div>)
     }
