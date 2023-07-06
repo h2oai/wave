@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S, unpack, xid } from 'h2o-wave'
+import { Model, Rec, S, unpack } from 'h2o-wave'
 import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'
@@ -70,7 +70,7 @@ const
   })
 const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   const codeBlock = document.getElementById(codeBlockId)
-  if (!codeBlock) return
+  if (!codeBlock) return ''
   if (language) {
     try {
       // TS cannot do dynamic JSON imports properly. Use any as a workaround.
@@ -89,21 +89,33 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   const highlightedCode = language
     ? hljs.highlight(str, { language, ignoreIllegals: true }).value
     : hljs.highlightAuto(str).value
-  codeBlock.outerHTML = `<code class="hljs">${highlightedCode}</code>`
+
+  if (codeBlock.parentNode) codeBlock.outerHTML = `<code class="hljs">${highlightedCode}</code>`
+  return highlightedCode
 }
 
-export const
-  markdown = MarkdownIt({
-    html: true, linkify: true, typographer: true, highlight: (str, language) => {
-      const codeBlockId = xid()
-      // HACK: MarkdownIt does not support async rules. Render the code block with hidden visibility and highlight it later.
-      // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
-      setTimeout(() => highlightSyntax(str, language, codeBlockId), 0)
-      return `<code id='${codeBlockId}' class="hljs">${str}</code>`
-    }
-  }),
-  Markdown = ({ source }: { source: S }) => {
-    const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+export const Markdown = ({ source }: { source: S }) => {
+  const
+    prevHighlights = React.useRef<S[]>([]), // Prevent flicker during streaming.
+    codeBlockIdx = React.useRef(0),
+    markdown = React.useMemo(() => MarkdownIt({
+      html: true, linkify: true, typographer: true, highlight: (str, lang) => {
+        codeBlockIdx.current = codeBlockIdx.current === prevHighlights.current.length - 1 ? 0 : codeBlockIdx.current + 1
+        const codeBlockId = codeBlockIdx.current.toString()
+
+        // Empty string marks the beginning of the new parsed code block.
+        if (!str) codeBlockIdx.current = prevHighlights.current.push('') - 1
+        // HACK: MarkdownIt does not support async rules.
+        // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
+        setTimeout(async () => {
+          prevHighlights.current[codeBlockIdx.current] = await highlightSyntax(str, lang, codeBlockId)
+        }, 0)
+        // TODO: Sanitize the HTML.
+        return `<code id='${codeBlockId}' class="hljs">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+      }
+    }), []),
+    html = React.useMemo(() => markdown.render(source), [markdown, source]),
+    onClick = (e: React.MouseEvent<HTMLDivElement>) => {
       const hrefAttr = (e.target as HTMLAnchorElement).getAttribute('href')
       if (e.target instanceof HTMLAnchorElement && hrefAttr?.startsWith('?')) {
         // Handled in app.tsx. 
@@ -114,9 +126,8 @@ export const
         return false
       }
     }
-    const html = React.useMemo(() => markdown.render(source), [source])
-    return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: html }} />
-  }
+  return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: html }} />
+}
 
 /**
  * Create a card that renders Markdown content.
