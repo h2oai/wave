@@ -8,7 +8,7 @@ custom_edit_url: null
 Make your app come to life by including interesting imagery.
 
 ```py
-path = 'https://raw.githubusercontent.com/h2oai/wave/master/assets/brand/wave-university-wide.png'
+path = 'https://raw.githubusercontent.com/h2oai/wave/main/assets/brand/wave-university-wide.png'
 q.page['example'] = ui.form_card(box='1 1 8 6', items=[
     ui.image(title='Image title', path=path),
 ])

@@ -87,7 +87,6 @@ q.page['example'] = ui.markdown_card(
     title='I was made using markdown!',
     content=sample_markdown
 )
-
 ```
 
 Displaying code with proper syntax highlighting is supported out of the box. The list of supported languages can be found [here](https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md).

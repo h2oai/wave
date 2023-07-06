@@ -24,7 +24,7 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 - [Download](https://github.com/h2oai/wave/releases) / [How to install](https://wave.h2o.ai/docs/installation/)
 - [Documentation](https://wave.h2o.ai/): [Getting Started](https://wave.h2o.ai/docs/getting-started/) / [Gallery and Examples](https://wave.h2o.ai/docs/examples/) / [Python API](https://wave.h2o.ai/docs/api/index/)
 - [Roadmap 2021](https://github.com/h2oai/wave/issues/693)
-- [Developing](https://github.com/h2oai/wave/blob/master/.github/CONTRIBUTING.md#development-setup)
+- [Developing](https://github.com/h2oai/wave/blob/main/.github/CONTRIBUTING.md#development-setup)
 - [Discuss / Support / Q&A / Ideas](https://github.com/h2oai/wave/discussions)
 - [Report a problem](https://github.com/h2oai/wave/issues/new/choose)
 - [Blog](https://wave.h2o.ai/blog/) / [@h2o_wave](https://twitter.com/h2o_wave)
@@ -45,7 +45,7 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 
 ![Dashboard](website/blog/assets/2021-01-17/dashboard_purple.png)
 
-Code: <https://github.com/h2oai/wave/tree/master/py/demo>
+Code: <https://github.com/h2oai/wave/tree/main/py/demo>
 
 ### Themes
 

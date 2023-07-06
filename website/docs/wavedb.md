@@ -8,7 +8,7 @@ It is a ~6MB (~2MB [UPX](https://upx.github.io/)-compressed) self-contained, zer
 
 If you are already a fan of SQLite, WaveDB acts as a thin HTTP-server wrapper that lets you access your SQLite databases over a network.
 
-WaveDB can be used as a lightweight, cross-platform, installation-free companion SQL database for Wave apps. The `h2o-wave` package includes non-blocking `async` functions to access WaveDB. 
+WaveDB can be used as a lightweight, cross-platform, installation-free companion SQL database for Wave apps. The `h2o-wave` package includes non-blocking `async` functions to access WaveDB.
 
 Database files managed by WaveDB are 100% interoperable with SQLite, which means you can manage them with the `sqlite3` CLI, backup/restore/transfer them as usual, or use [Litestream](https://litestream.io/) for replication.
 
@@ -19,22 +19,24 @@ Database files managed by WaveDB are 100% interoperable with SQLite, which means
 [Download the executable](https://github.com/h2oai/wave/releases) for your platform. No installation required.
 
 ### Other Platforms
+
 Compiling WaveDB on other platforms is easy if you have the [Go](https://golang.org) and C compilers handy (uses [cgo](https://golang.org/cmd/cgo/)):
 
-```
-$ git clone --depth 1 https://github.com/h2oai/wave.git
-$ cd wave
-$ go build -o wavedb cmd/wavedb/main.go
+```sh
+git clone --depth 1 https://github.com/h2oai/wave.git
+cd wave
+go build -o wavedb cmd/wavedb/main.go
 ```
 
 ## Launch
 
-Launch WaveDB (defaults to http://localhost:10100/):
+Launch WaveDB (defaults to <http://localhost:10100/>):
 
+```sh
+./wavedb
 ```
-$ ./wavedb
-```
-```
+
+```sh
 2021/05/07 14:00:41
 2021/05/07 14:00:41 ┌────────┐┌────┐ H2O WaveDB
 2021/05/07 14:00:41 │  ┐┌┐┐┌─┘│─┐  │ DEV 20210507132041
@@ -46,38 +48,39 @@ $ ./wavedb
 
 Launch WaveDB on a different port:
 
-```
-$ ./wavedb -listen :8080
+```sh
+./wavedb -listen :8080
 ```
 
 Launch WaveDB with verbose logging (useful during development):
 
-```
-$ ./wavedb -verbose
+```sh
+./wavedb -verbose
 ```
 
 Launch WaveDB with a custom API access key/secret pair:
 
-```
-$ ./wavedb -access-key-id uzer -access-key-secret pa55word
+```sh
+./wavedb -access-key-id uzer -access-key-secret pa55word
 ```
 
 Serve your existing SQLite database files using WaveDB (defaults to current directory):
 
+```sh
+./wavedb -dir /path/to/my/db/files
 ```
-$ ./wavedb -dir /path/to/my/db/files
-```
+
 ## Examples
 
-- [Using WaveDB from a Wave app - A To-do list](https://github.com/h2oai/wave/blob/master/py/examples/db_todo.py)
-- [Using WaveDB from a Wave app - Paginated table](https://github.com/h2oai/wave/blob/master/py/examples/table_pagination_wavedb.py)
-- [Using WaveDB from a standalone script](https://github.com/h2oai/wave/blob/master/py/examples/db.py)
+- [Using WaveDB from a Wave app - A To-do list](https://github.com/h2oai/wave/blob/main/py/examples/db_todo.py)
+- [Using WaveDB from a Wave app - Paginated table](https://github.com/h2oai/wave/blob/main/py/examples/table_pagination_wavedb.py)
+- [Using WaveDB from a standalone script](https://github.com/h2oai/wave/blob/main/py/examples/db.py)
 
 ## Usage
 
 For this example, we'll use the [Chinook Sample Database](https://www.sqlitetutorial.net/sqlite-sample-database/) from [sqlitetutorial.net](https://www.sqlitetutorial.net/).
 
-```
+```sh
 $ wget https://www.sqlitetutorial.net/wp-content/uploads/2018/03/chinook.zip
 $ unzip chinook.zip
 $ ls -l
@@ -116,9 +119,7 @@ The query API is simple:
 2. `db.exec_many(...)`: Execute multiple queries.
 3. `db.exec_atomic(...)`: Excute multiple queries as a transaction (rollback all on failure)
 
-
 All three APIs support both DDL (`CREATE`, `ALTER`, `DROP`, etc.) and DML (`SELECT`, `INSERT`, `UPDATE`, etc.) statements:
-
 
 ```py
 result, error = db.exec('CREATE TABLE student(name TEXT, age INTEGER)')
@@ -147,25 +148,24 @@ results, error = db.exec_many(
 
 In the above example, substituting `exec_many()` with `exec_atomic()` executes all the queries in the batch as part of a transaction, rolling back all queries on any failures.
 
-
 ### From curl
 
 Use `curl` to send a query:
 
-```
-$ curl -s -u uzer:pa55word -d '{"e":{"d":"chinook", "s":[{"q": "select name, composer from tracks limit 5"}]}}' http://localhost:10100
+```sh
+curl -s -u uzer:pa55word -d '{"e":{"d":"chinook", "s":[{"q": "select name, composer from tracks limit 5"}]}}' http://localhost:10100
 ```
 
-```
+```json
 {"r":[[["For Those About To Rock (We Salute You)","Angus Young, Malcolm Young, Brian Johnson"],["Balls to the Wall",null],["Fast As a Shark","F. Baltes, S. Kaufman, U. Dirkscneider \u0026 W. Hoffman"],["Restless and Wild","F. Baltes, R.A. Smith-Diesel, S. Kaufman, U. Dirkscneider \u0026 W. Hoffman"],["Princess of the Dawn","Deaffy \u0026 R.A. Smith-Diesel"]]]}
 ```
 
 Use [jq](https://stedolan.github.io/jq/) to pretty-print the response:
 
+```sh
+curl -s -u uzer:pa55word -d '{"e":{"d":"chinook", "s":[{"q": "SELECT name, composer FROM tracks LIMIT 5"}]}}' http://localhost:10100 | jq '.'
+```
 
-```
-$ curl -s -u uzer:pa55word -d '{"e":{"d":"chinook", "s":[{"q": "SELECT name, composer FROM tracks LIMIT 5"}]}}' http://localhost:10100 | jq '.'
-```
 ```js
 {
   "r": [
@@ -195,9 +195,7 @@ $ curl -s -u uzer:pa55word -d '{"e":{"d":"chinook", "s":[{"q": "SELECT name, com
 }
 ```
 
-
 ## JSON protocol
-
 
 ### Grammar
 
@@ -275,6 +273,7 @@ Sample `reply`:
 ## Deployment
 
 For production deployments:
+
 - Use the `-access-keychain` option to control API keys. [See documentation](security.md#production).
 - Use the `-tls-cert-file` and `-tls-key-file` options to enable HTTPS.
 
@@ -291,25 +290,25 @@ $ ./wavedb \
 $ ./wavedb -help
 Usage of ./wavedb:
   -access-key-id string
-    	default API access key ID (default "access_key_id")
+     default API access key ID (default "access_key_id")
   -access-key-secret string
-    	default API access key secret (default "access_key_secret")
+     default API access key secret (default "access_key_secret")
   -access-keychain string
-    	path to file containing API access keys (default ".wave-keychain")
+     path to file containing API access keys (default ".wave-keychain")
   -benchmark int
-    	run benchmarks for the given number of iterations
+     run benchmarks for the given number of iterations
   -dir string
-    	path to directory containing database (.db) files (default ".")
+     path to directory containing database (.db) files (default ".")
   -listen string
-    	listen on this address (default ":10100")
+     listen on this address (default ":10100")
   -tls-cert-file string
-    	path to certificate file (TLS only)
+     path to certificate file (TLS only)
   -tls-key-file string
-    	path to private key file (TLS only)
+     path to private key file (TLS only)
   -verbose
-    	enable verbose logging
+     enable verbose logging
   -version
-    	print version and exit
+     print version and exit
 
 ```
 
@@ -317,4 +316,4 @@ Usage of ./wavedb:
 
 WaveDB is based on [SQLite](https://www.sqlite.org) and [bvinc/go-sqlite-lite](https://github.com/bvinc/go-sqlite-lite), built with [Go](https://golang.org/). The Python client uses [HTTPX](https://www.python-httpx.org/) under the hood. Thank you to the authors and contributors.
 
-WaveDB can be used from any language or platform that has libraries for HTTP and JSON. The reference implementation of the client is [~75 lines of code](https://github.com/h2oai/wave/blob/master/py/h2o_wave/db.py) if you're interested in porting it to other languages.
+WaveDB can be used from any language or platform that has libraries for HTTP and JSON. The reference implementation of the client is [~75 lines of code](https://github.com/h2oai/wave/blob/main/py/h2o_wave/db.py) if you're interested in porting it to other languages.
