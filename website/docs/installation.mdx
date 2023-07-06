@@ -1,9 +1,10 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 ---
 title: Installation
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 ## Install
 
@@ -21,7 +22,7 @@ To install in a virtual environment (recommended):
 
 <Tabs groupId="operating-systems">
 
-<TabItem value="lin" label="Linux">
+<TabItem value="lin" label="Linux/MacOs">
 
 ```shell
 python3 -m venv venv
@@ -36,9 +37,21 @@ pip install h2o-wave
 ```shell
 python -m venv venv
 cd venv/Scripts/
-./activate.bat(CMD) or ./Activate.ps1(poweshell)
+```
+For command prompt
+
+```shell
+./activate.bat
+pip install h2o-wave 
+```
+
+For Powershell
+
+```shell
+./Activate.ps1
 pip install h2o-wave
 ```
+
 </TabItem>
 
 <TabItem value="conda" label="Conda">

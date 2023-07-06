@@ -1,9 +1,9 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 ---
 title: "Tutorial: Hello World"
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 import StartQ from './_start_q.md'
 
@@ -36,7 +36,7 @@ A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us m
 
 <Tabs groupId="operating-systems">
 
-<TabItem value="lin" label="Linux">
+<TabItem value="lin" label="Linux/MacOs">
 
 ```shell
 python3 -m venv venv
@@ -49,8 +49,19 @@ source venv/bin/activate
 ```shell
 python -m venv venv
 cd venv/Scripts/
-./activate.bat(CMD) or ./Activate.ps1(poweshell)
 ```
+For command prompt
+
+```shell
+./activate.bat
+```
+
+For Powershell
+
+```shell
+./Activate.ps1
+```
+
 </TabItem>
 
 <TabItem value="con" label="conda">
@@ -67,22 +78,13 @@ conda activate venv
 
 ### Install the Wave Python driver
 
-<Tabs groupId="operating-systems">
+<Tabs groupId="package-manager">
 
-<TabItem value="lin" label="Linux">
-
-```shell
-pip install h2o-wave
-```
-
-</TabItem>
-
-<TabItem value="win" label="Windows">
+<TabItem value="pip-pkg" label="pip">
 
 ```shell
 pip install h2o-wave
 ```
-
 </TabItem>
 
 <TabItem value="con" label="conda">

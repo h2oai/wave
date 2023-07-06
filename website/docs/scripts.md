@@ -9,7 +9,7 @@ A Wave script is the simplest way to publish content with Wave, especially live 
 
 A Wave script is one kind of program you can author to interact with Wave. The other kind is a [Wave App](apps.md). The primary difference between an app and a script is that apps are interactive (able to handle user interactions) and scripts are not. If you are not interested in handling user interactions, and only want to publish content, use a Wave script.
 
-Here is the skeleton of a Wave script ([example](tutorial-hello.md)):
+Here is the skeleton of a Wave script ([example](tutorial-hello.mdx)):
 
 ```py
 from h2o_wave import site, ui
