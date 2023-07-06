@@ -31,7 +31,6 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 - [Wave Tour](https://huggingface.co/spaces/h2oai/wave-tour) - 200+ interactive examples.
 - [Wave University](https://huggingface.co/spaces/h2oai/wave-university) - Learn Wave basics interactively.
 - [Wave Theme Generator](https://huggingface.co/spaces/h2oai/theme-generator) - Create your color theme.
-- [Tour](https://huggingface.co/spaces/h2oai/wave-tour) - 200+ interactive examples.
 
 ### Responsive Layouts
 
