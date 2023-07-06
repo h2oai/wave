@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ---
 title: Installation v0.19 or older
 ---
@@ -35,23 +38,48 @@ import { Downloads } from '@site/src/components/downloads'
 
 Extract your download.
 
+<Tabs groupId="operating-system">
+
+<TabItem value="lin" label="linux">
+
 ```shell
 tar -xzf wave-x.y.z-linux-amd64.tar.gz
 ```
+</TabItem>
+
+<TabItem value="win" label="windows">
+
+Use Extractors for windows. Eg - [7zip](https://www.7-zip.org/download.html) to extract
+
+</TabItem>
+
+</Tabs>
 
 ### Step 3: Move
 
 Move it to a convenient location, say `$HOME/wave/`.
 
+<Tabs groupId="operating-system">
+
+<TabItem value="lin" label="linux">
+
 ```shell
  mv wave-x.y.z-linux-amd64 $HOME/wave
 ```
+</TabItem>
 
+<TabItem value="win" label="windows">
+
+Use The windows file explorer to move to a convinient location, say desktop
+
+</TabItem>
+
+</Tabs>
 :::note
 If you have a previous version of Wave installed, be sure to remove it before installing another. To remove it, simply delete the previous directory.
 :::
 
-Inspect your `$HOME/wave` directory. You should see the following content:
+Inspect your `$HOME/wave (desktop/wave for windows)` directory. You should see the following content:
 
 ```
 .

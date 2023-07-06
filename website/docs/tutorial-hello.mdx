@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ---
 title: "Tutorial: Hello World"
 ---
@@ -31,10 +34,26 @@ cd $HOME/wave-apps
 ### Set up a virtual environment
 A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us manage our program's dependencies without interfering with system-wide packages.
 
+<Tabs groupId="operating-systems">
+
+<TabItem value="lin" label="Linux">
+
 ```shell
 python3 -m venv venv
 source venv/bin/activate
 ```
+</TabItem>
+
+<TabItem value="win" label="Windows">
+
+```shell
+python -m venv venv
+cd venv/Scripts/
+./activate.bat(CMD) or ./Activate.ps1(poweshell)
+```
+</TabItem>
+
+<TabItem value="con" label="conda">
 
 If you are using Conda as your package manager,
 
@@ -42,12 +61,31 @@ If you are using Conda as your package manager,
 conda create -n venv
 conda activate venv
 ```
+</TabItem>
+
+</Tabs>
 
 ### Install the Wave Python driver
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="lin" label="Linux">
 
 ```shell
 pip install h2o-wave
 ```
+
+</TabItem>
+
+<TabItem value="win" label="Windows">
+
+```shell
+pip install h2o-wave
+```
+
+</TabItem>
+
+<TabItem value="con" label="conda">
 
 If you are using Conda as your package manager,
 
@@ -55,6 +93,9 @@ If you are using Conda as your package manager,
 conda config --append channels conda-forge
 conda install -c h2oai h2o-wave
 ```
+</TabItem>
+
+</Tabs>
 
 ## Step 3: Write your program
 
