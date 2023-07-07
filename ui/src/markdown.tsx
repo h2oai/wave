@@ -90,31 +90,34 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
     ? hljs.highlight(str, { language, ignoreIllegals: true }).value
     : hljs.highlightAuto(str).value
 
-  if (codeBlock.parentNode) codeBlock.outerHTML = `<code class="hljs">${highlightedCode}</code>`
+  codeBlock.innerHTML = highlightedCode
   return highlightedCode
 }
 
 export const Markdown = ({ source }: { source: S }) => {
   const
     prevHighlights = React.useRef<S[]>([]), // Prevent flicker during streaming.
-    codeBlockIdx = React.useRef(0),
+    codeBlockIdx = React.useRef(0), // MarkdownIt parses code blocks sequentially, which is a problem for streaming.
     markdown = React.useMemo(() => MarkdownIt({
       html: true, linkify: true, typographer: true, highlight: (str, lang) => {
-        codeBlockIdx.current = codeBlockIdx.current === prevHighlights.current.length - 1 ? 0 : codeBlockIdx.current + 1
         const codeBlockId = codeBlockIdx.current.toString()
+        if (prevHighlights.current.length === codeBlockIdx.current) prevHighlights.current.push('')
 
-        // Empty string marks the beginning of the new parsed code block.
-        if (!str) codeBlockIdx.current = prevHighlights.current.push('') - 1
         // HACK: MarkdownIt does not support async rules.
         // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
-        setTimeout(async () => {
-          prevHighlights.current[codeBlockIdx.current] = await highlightSyntax(str, lang, codeBlockId)
-        }, 0)
+        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId), 0)
+
         // TODO: Sanitize the HTML.
-        return `<code id='${codeBlockId}' class="hljs">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+        const ret = `<code id='${codeBlockId}' class="hljs">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+        codeBlockIdx.current++
+        return ret
       }
     }), []),
-    html = React.useMemo(() => markdown.render(source), [markdown, source]),
+    html = React.useMemo(() => {
+      const html = markdown.render(source)
+      codeBlockIdx.current = 0
+      return html
+    }, [markdown, source]),
     onClick = (e: React.MouseEvent<HTMLDivElement>) => {
       const hrefAttr = (e.target as HTMLAnchorElement).getAttribute('href')
       if (e.target instanceof HTMLAnchorElement && hrefAttr?.startsWith('?')) {

@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-* {
+@mixin scrollbar-styles() {
   // For Firefox
   scrollbar-width: thin;
   scrollbar-color: var(--wave-text2) var(--wave-text0);
@@ -21,11 +21,12 @@
   &::-webkit-scrollbar-thumb {
     background-color: var(--wave-text2);
     border-radius: 12px;
-    border: 3px solid var(--wave-card8);
+    border: 1px solid var(--wave-card8);
   }
 
   &::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
+    height: 8px;
   }
 
   &::-webkit-scrollbar-track {
@@ -35,6 +36,10 @@
   &::-webkit-scrollbar-corner {
     background: var(--wave-text0);
   }
+}
+
+* {
+  @include scrollbar-styles();
 }
 
 body {
@@ -232,7 +237,8 @@ code.hljs {
 
 .hljs {
   color: #a9b7c6;
-  background: #282b2e
+  background: #282b2e;
+  @include scrollbar-styles();
 }
 
 .hljs-bullet,
