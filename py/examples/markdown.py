@@ -61,7 +61,6 @@ async def serve(q: Q):
     )
 
     await q.page`.save()
-```
 ''',
 )
 

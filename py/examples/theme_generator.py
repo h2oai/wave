@@ -53,7 +53,6 @@ ui.theme(
     card='{q.client.card}',
     page='{q.client.page}',
 )
-```
 '''
 
 

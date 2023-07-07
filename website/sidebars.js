@@ -2,12 +2,6 @@ const examples = require('./examples')
 
 module.exports = {
   someSidebar: {
-    'Prologue': [
-      'change-log',
-      'migrating-0-8',
-      'migrating-0',
-      'contributing',
-    ],
     'Getting Started': [
       'getting-started',
       'installation',
@@ -50,6 +44,7 @@ module.exports = {
       'backup',
       'wave-ml',
       'wavedb',
+      'contributing',
     ],
     'Widgets': [
       "widgets/overview",
