@@ -2,6 +2,9 @@
 title: "Tutorial: Hello World"
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 import StartQ from './_start_q.md'
 
 In this section, we'll learn how to author our first Wave program from scratch, and understand the basics of how to display content in a web browser.
@@ -31,10 +34,26 @@ cd $HOME/wave-apps
 ### Set up a virtual environment
 A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us manage our program's dependencies without interfering with system-wide packages.
 
+<Tabs groupId="operating-systems">
+
+<TabItem value="lin" label="Linux/MacOS">
+
 ```shell
 python3 -m venv venv
 source venv/bin/activate
 ```
+</TabItem>
+
+<TabItem value="win" label="Windows">
+
+```shell
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+</TabItem>
+
+<TabItem value="conda" label="Conda">
 
 If you are using Conda as your package manager,
 
@@ -42,19 +61,30 @@ If you are using Conda as your package manager,
 conda create -n venv
 conda activate venv
 ```
+</TabItem>
+
+</Tabs>
 
 ### Install the Wave Python driver
+
+<Tabs groupId="package-manager">
+
+<TabItem value="pip-pkg" label="Pip">
 
 ```shell
 pip install h2o-wave
 ```
+</TabItem>
 
-If you are using Conda as your package manager,
+<TabItem value="conda" label="Conda">
 
 ```shell
 conda config --append channels conda-forge
 conda install -c h2oai h2o-wave
 ```
+</TabItem>
+
+</Tabs>
 
 ## Step 3: Write your program
 
