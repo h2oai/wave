@@ -27,6 +27,6 @@ async def serve(q: Q):
         content='Hello, world!'
     )
 
-    await q.page`.save()
+    await q.page.save()
     ''')
     await q.page.save()
