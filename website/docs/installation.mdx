@@ -2,19 +2,45 @@
 title: Installation
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
 ## Install
 
 :::important
 These instructions apply to v0.20 or later. For previous versions, [click here](/docs/installation-8-20).
 :::
 
-Install the `h2o-wave` package from PyPI:
+<Tabs groupId="pypi/conda">
+
+<TabItem value="pip" label="Pip">
 
 ```shell
 pip install h2o-wave
 ```
 
+</TabItem>
+
+<TabItem value="conda" label="Conda">
+
+```shell
+conda config --append channels conda-forge
+conda install -c h2oai h2o-wave
+```
+:::info
+Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) yourself. See how to run it [here](/docs/installation-8-20#setup).
+:::
+
+</TabItem>
+
+</Tabs>
+
 To install in a virtual environment (recommended):
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="lin" label="Linux/MacOS">
 
 ```shell
 python3 -m venv venv
@@ -22,22 +48,20 @@ source venv/bin/activate
 pip install h2o-wave
 ```
 
-To install in a virtual environment (Windows):
+</TabItem>
+
+<TabItem value="win" label="Windows">
 
 ```shell
-python3 -m venv venv
-venv\Scripts\activate
-pip install h2o-wave
+python -m venv venv
+.\venv\Scripts\activate
+pip install h2o-wave 
 ```
 
-To install using Conda:
+</TabItem>
 
-```shell
-conda config --append channels conda-forge
-conda install -c h2oai h2o-wave
-```
+<TabItem value="conda" label="Conda">
 
-To install in a Conda virtual environment:
 
 ```shell
 conda create -n venv
@@ -49,6 +73,10 @@ conda install -c h2oai h2o-wave
 :::info
 Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) yourself. See how to run it [here](/docs/installation-8-20#setup).
 :::
+
+</TabItem>
+</Tabs>
+
 
 ## Project templates
 
