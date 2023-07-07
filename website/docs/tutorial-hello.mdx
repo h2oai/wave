@@ -48,23 +48,12 @@ source venv/bin/activate
 
 ```shell
 python -m venv venv
-cd venv/Scripts/
-```
-For command prompt
-
-```shell
-./activate.bat
-```
-
-For Powershell
-
-```shell
-./Activate.ps1
+.\venv\Scripts\activate
 ```
 
 </TabItem>
 
-<TabItem value="con" label="conda">
+<TabItem value="conda" label="Conda">
 
 If you are using Conda as your package manager,
 
@@ -80,16 +69,14 @@ conda activate venv
 
 <Tabs groupId="package-manager">
 
-<TabItem value="pip-pkg" label="pip">
+<TabItem value="pip-pkg" label="Pip">
 
 ```shell
 pip install h2o-wave
 ```
 </TabItem>
 
-<TabItem value="con" label="conda">
-
-If you are using Conda as your package manager,
+<TabItem value="conda" label="Conda">
 
 ```shell
 conda config --append channels conda-forge
