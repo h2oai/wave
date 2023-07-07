@@ -12,17 +12,37 @@ import TabItem from '@theme/TabItem';
 These instructions apply to v0.20 or later. For previous versions, [click here](/docs/installation-8-20).
 :::
 
+<Tabs groupId="pypi/conda">
+
+<TabItem value="pip" label="Pip">
+
 Install the `h2o-wave` package from PyPI:
 
 ```shell
 pip install h2o-wave
 ```
 
+</TabItem>
+
+<TabItem value="conda" label="Conda">
+
+```shell
+conda config --append channels conda-forge
+conda install -c h2oai h2o-wave
+```
+:::info
+Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) yourself. See how to run it [here](/docs/installation-8-20#setup).
+:::
+
+</TabItem>
+
+</Tabs>
+
 To install in a virtual environment (recommended):
 
 <Tabs groupId="operating-systems">
 
-<TabItem value="lin" label="Linux/MacOs">
+<TabItem value="lin" label="Linux/MacOS">
 
 ```shell
 python3 -m venv venv
@@ -50,15 +70,6 @@ For Powershell
 ```shell
 ./Activate.ps1
 pip install h2o-wave
-```
-
-</TabItem>
-
-<TabItem value="conda" label="Conda">
-
-```shell
-conda config --append channels conda-forge
-conda install -c h2oai h2o-wave
 ```
 
 </TabItem>
