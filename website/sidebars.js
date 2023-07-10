@@ -5,7 +5,6 @@ module.exports = {
     'Getting Started': [
       'getting-started',
       'installation',
-      'installation-8-20',
       'tutorial-hello',
       'tutorial-beer',
       'tutorial-monitor',

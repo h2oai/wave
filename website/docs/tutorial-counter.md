@@ -12,13 +12,13 @@ This tutorial outlines the basics of how to handle events, update the UI, manage
 
 ## Prerequisites
 
-This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.mdx) and complete steps 1 and 2.
+This tutorial assumes you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.mdx) and complete step 2.
 
 ## Step 1: Start listening
 
 The first step towards listening to events from the UI is to define an `@app` function:
 
-```py title="$HOME/wave-apps/counter.py"
+```py title="counter.py"
 from h2o_wave import Q, main, app
 
 @app('/counter')
@@ -34,15 +34,13 @@ We named the function `serve()`, but you can call it anything you please, like `
 
 Lastly, note that we've imported the symbol `main` into our `.py` file. You don't have to do anything with `main` except import it.
 
-To run your app, use `wave run`:
+To run your app, use `wave run` within your activated virtual environment:
 
 ```shell
-cd $HOME/wave-apps
-source venv/bin/activate
 wave run counter
 ```
 
-The `wave run` command runs your app in *development mode*, and the app is automatically reloaded when edited.
+The `wave run` command runs your app in *development mode*, and the app is automatically reloaded when edited. Additionally, it starts Wave server under the hood for you if not already running or explicitly told not to.
 
 At this point, your app will be up and running, but it doesn't do anything yet. Let's change that in a second.
 
@@ -52,7 +50,7 @@ Let's add a button to our app. Our goal is to increment and display the bean cou
 
 To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](/docs/widgets/form/overview) (also called *widgets*). In this case, our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
 
-```py {5-18} title="$HOME/wave-apps/counter.py"
+```py {5-18} title="counter.py"
 from h2o_wave import Q, main, app, ui
 
 @app('/counter')
@@ -93,7 +91,7 @@ If you click on the button, you'll notice that it doesn't do anything. This is b
 
 Add a condition to check if the button is clicked, and if so, increment the bean count.
 
-```py {5-7} title="$HOME/wave-apps/counter.py"
+```py {5-7} title="counter.py"
 from h2o_wave import Q, main, app, ui
 
 @app('/counter')
@@ -143,7 +141,7 @@ To view the Wave server's log, switch to the terminal window running the Wave se
 
 Let's wrinkle our noses in disgust and fix this gross inefficiency right away to make our little bean counter web-scale for great good.
 
-```py {9-10,22-23} title="$HOME/wave-apps/counter.py"
+```py {9-10,22-23} title="counter.py"
 from h2o_wave import Q, main, app, ui
 
 @app('/counter')
@@ -166,14 +164,14 @@ async def serve(q: Q):
             ],
         )
     else:
-        q.page['beans'].items[0].button.caption = f'{bean_count} beans'
+        q.page['beans'].increment.caption = f'{bean_count} beans'
     await q.page.save()
 ```
 
 In the above edit, we check for an arbitrary flag in `q.client` called `initialized`.
 
 - If the flag is not set, we assume that the request is originating from a new, empty client. If so, we set `initialized` to `True` (to make a note to ourselves that the client is not empty anymore), then add our form card to the page.
-- If the flag is already set, we assume that the form card (and the button inside it) are already on the page, and simply update the button's caption with the new bean count.
+- If the flag is already set, we assume that the form card (and the button inside it) are already on the page, and simply update the button's caption with the new bean count. We can refereence the button by simply using its `name` attribute - `increment`.
 
 ## Intermission: Understanding state
 
@@ -201,7 +199,7 @@ In other words, your Wave app is multi-user by default, but how the app manages 
 
 To maintain bean counts at the user level, all we have to do is store `bean_count` in `q.user` instead of `q.client`.
 
-```py {5,7} title="$HOME/wave-apps/counter.py"
+```py {5,7} title="counter.py"
 from h2o_wave import Q, main, app, ui
 
 @app('/counter')
@@ -224,7 +222,7 @@ async def serve(q: Q):
             ],
         )
     else:
-        q.page['beans'].items[0].button.caption = f'{bean_count} beans'
+        q.page['beans'].increment.caption = f'{bean_count} beans'
     await q.page.save()
 ```
 
@@ -236,7 +234,7 @@ This would be considered normal behavior for a typical web application, and most
 
 This is easier done than said - simply change the app mode to `multicast` to enable realtime sync across clients:
 
-```py {27} title="$HOME/wave-apps/counter.py"
+```py {27} title="counter.py"
 from h2o_wave import Q, main, app, ui
 
 @app('/counter', mode='multicast')
@@ -259,7 +257,7 @@ async def serve(q: Q):
             ],
         )
     else:
-        q.page['beans'].items[0].button.caption = f'{bean_count} beans'
+        q.page['beans'].increment.caption = f'{bean_count} beans'
     await q.page.save()
 ```
 
@@ -275,7 +273,7 @@ If you play with your app now, you'll see that the user-level bean count indeed 
 
 Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the app mode to `broadcast`:
 
-```py {5,7,27} title="$HOME/wave-apps/counter.py"
+```py {5,7,27} title="counter.py"
 from h2o_wave import Q, main, app, ui
 
 @app('/counter', mode='broadcast')
@@ -298,7 +296,7 @@ async def serve(q: Q):
             ],
         )
     else:
-        q.page['beans'].items[0].button.caption = f'{bean_count} beans'
+        q.page['beans'].increment.caption = f'{bean_count} beans'
     await q.page.save()
 ```
 
