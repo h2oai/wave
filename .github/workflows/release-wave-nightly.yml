@@ -29,18 +29,18 @@ jobs:
     name: Check Last Commit
     runs-on: ubuntu-20.04
     outputs:
-      24h-commit-count: ${{ steps.get-new-commits.outputs.24H_COMMIT_COUNT }}
+      yesterday-commit-count: ${{ steps.get-new-commits.outputs.YESTERDAY_COMMIT_COUNT }}
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
       - id: get-new-commits
-        run: echo "24H_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
+        run: echo "YESTERDAY_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
 
   test-linux:
     name: Test Linux
     needs: check-last-commit
-    if: ${{needs.check-last-commit.outputs.24h-commit-count > 0}}
+    if: ${{needs.check-last-commit.outputs.yesterday-commit-count > 0}}
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
@@ -82,7 +82,7 @@ jobs:
   test-win:
     name: Test Windows
     needs: check-last-commit
-    if: ${{needs.check-last-commit.outputs.24h-commit-count > 0}}
+    if: ${{needs.check-last-commit.outputs.yesterday-commit-count > 0}}
     strategy:
       matrix:
         py: ["3.8", "3.9", "3.10"]
@@ -117,7 +117,7 @@ jobs:
   test-macos:
     name: Test MacOS
     needs: check-last-commit
-    if: ${{needs.check-last-commit.outputs.24h-commit-count > 0}}
+    if: ${{needs.check-last-commit.outputs.yesterday-commit-count > 0}}
     strategy:
       matrix:
         py: ["3.8", "3.9", "3.10"]
