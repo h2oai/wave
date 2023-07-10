@@ -24,7 +24,7 @@ page['qux'] = ui.some_card()
 page.save()
 ```
 
-You can run it by using `python my_script.py` assuming your [Wave server](/docs/installation-8-20#step-4-run) is running.
+You can run it by using `python my_script.py` assuming your [Wave server](/docs/tutorial-hello#step-1-start-the-wave-server) is running.
 
 Here is the skeleton of a Wave script that continuously updates a page ([example](tutorial-monitor.md)):
 

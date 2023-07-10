@@ -14,7 +14,7 @@ We'll start with a basic skeleton and then work our way up from there.
 
 The first step is to define an `@app` function. Also, we want the landing page to show a list of to-dos, so we'll throw in an empty `show_todos()` function for now, and call it from `serve()`.
 
-```py {6,10-11} title="$HOME/wave-apps/todo.py"
+```py {6,10-11} title="todo.py"
 from h2o_wave import Q, main, app, ui
 
 
@@ -32,7 +32,7 @@ def show_todos(q: Q):
 
 A to-do item has some basic attributes: an ID, some text content, and whether it's completed or not. Let's define a `class` for that, with a global one-up `id`.
 
-```py {3-13} title="$HOME/wave-apps/todo.py"
+```py {3-13} title="todo.py"
 from h2o_wave import Q, main, app, ui
 
 _id = 0
@@ -64,7 +64,7 @@ Since we want each user to have a separate to-do list, it's appropriate to keep 
 
 Here, we attempt to fetch the list from `q.user` and create one if it doesn't exist. We also throw in some sample to-do items for good measure.
 
-```py {1,23-28} title="$HOME/wave-apps/todo.py"
+```py {1,23-28} title="todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
 
@@ -104,7 +104,7 @@ Also, we want each checkbox to raise an event immediately when checked, so we se
 Several [components](/docs/widgets/form/overview) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
 :::
 
-```py {1,30-37} title="$HOME/wave-apps/todo.py"
+```py {1,30-37} title="todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
 
@@ -148,7 +148,7 @@ def show_todos(q: Q):
 
 We also turn each completed to-do item into another list of checkboxes, checked by default (using its `value` attribute). We append this to the form card and put a separator in between (using `ui.separator()`) to distinguish the completed items from the incomplete ones.
 
-```py {31,38-39} title="$HOME/wave-apps/todo.py"
+```py {31,38-39} title="todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
 
@@ -214,7 +214,7 @@ Each time a checkbox is checked or unchecked, our `serve()` function is called, 
 
 So, we iterate through all the to-do items and set their `done` attribute based on the value of their corresponding checkbox.
 
-```py {30-33} title="$HOME/wave-apps/todo.py"
+```py {30-33} title="todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
 
@@ -274,7 +274,7 @@ Next, let's display a form to add new items to our list. For that, we'll add a n
 
 In the `new_todo()` function, we display a new form containing a textbox (using `ui.textbox()`) and a set of buttons to add the item or return to to-do list (a `ui.buttons()` helps us display buttons side-by-side).
 
-```py {18-21,45,52-61} title="$HOME/wave-apps/todo.py"
+```py {18-21,45,52-61} title="todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
 
@@ -350,7 +350,7 @@ Finally, we handle the `add_todo` button-click, redirecting `serve()` to a new `
 In this example, for clarity, we named both the buttons and their corresponding functions `new_todo` and `add_todo`, but this is not necessary.
 :::
 
-```py {20-21,54-59} title="$HOME/wave-apps/todo.py"
+```py {20-21,54-59} title="todo.py"
 from typing import List
 from h2o_wave import Q, main, app, ui
 
@@ -432,7 +432,7 @@ You should now be able to add new to-do items to your list. Congratulations!
 
 To make your app realtime, simply pass `mode='multicast'` to `@app()`.
 
-```py title="$HOME/wave-apps/todo.py"
+```py title="todo.py"
 @app('/todo', mode='multicast')
 ```
 

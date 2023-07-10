@@ -28,7 +28,7 @@ This tutorial assumes your Wave server is up and running, and you have a working
 
 Our program looks like this. It's mostly similar to the one in the  [Hello World tutorial](tutorial-hello.mdx), with one exception: we're setting the markdown card's content inside a `for` loop.
 
-```py {13-18} title="$HOME/wave-apps/beer_wall.py"
+```py {13-18} title="beer_wall.py"
 import time
 from h2o_wave import site, ui
 
@@ -53,8 +53,7 @@ Take one down, pass it around, {i - 1} bottles of beer on the wall...
 ## Step 2: Run your program
 
 ```shell
-cd $HOME/wave-apps
-./venv/bin/python beer_wall.py
+python beer_wall.py
 ```
 
 ## Step 3: Watch updates live
@@ -67,7 +66,7 @@ Point your browser to [http://localhost:10101/beer](http://localhost:10101/beer)
 
 Our program is accurate, but not necessarily efficient. Every second, it sends the entire verse in its entirety to the Wave server, with only minuscule changes (`i` and `i-1`). You can observe this in the Wave server's log (switch to the terminal window running the Wave server to view the log):  
 
-```
+```sh
 2020/10/02 12:13:43 * /beer {"d":[{"k":"wall content","v":"\n98 bottles of beer on the wall, 98 bottles of beer.\n\nTake one down, pass it around, 97 bottles of beer on the wall...\n"}]}
 2020/10/02 12:13:44 * /beer {"d":[{"k":"wall content","v":"\n97 bottles of beer on the wall, 97 bottles of beer.\n\nTake one down, pass it around, 96 bottles of beer on the wall...\n"}]}
 2020/10/02 12:13:46 * /beer {"d":[{"k":"wall content","v":"\n96 bottles of beer on the wall, 96 bottles of beer.\n\nTake one down, pass it around, 95 bottles of beer on the wall...\n"}]}
@@ -138,7 +137,7 @@ for i in range(99, 0, -1):
 
 Run your program again. You should see the same results in your browser as before, but you'll notice that the information flowing through the Wave server is significantly less than before:
 
-```
+```sh
 2020/10/02 13:53:11 * /beer {"d":[{"k":"wall data before","v":"98"},{"k":"wall data after","v":"97"}]}
 2020/10/02 13:53:12 * /beer {"d":[{"k":"wall data before","v":"97"},{"k":"wall data after","v":"96"}]}
 2020/10/02 13:53:13 * /beer {"d":[{"k":"wall data before","v":"96"},{"k":"wall data after","v":"95"}]}
