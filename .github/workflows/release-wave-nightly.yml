@@ -35,7 +35,7 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
       - id: get-new-commits
-        run: echo "YESTERDAY_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
+        run: echo "YESTERDAY_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_OUTPUT
 
   test-linux:
     name: Test Linux
