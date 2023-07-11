@@ -40,7 +40,7 @@ jobs:
   test-linux:
     name: Test Linux
     needs: check-last-commit
-    if: ${{needs.check-last-commit.outputs.yesterday-commit-count > 0}}
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
