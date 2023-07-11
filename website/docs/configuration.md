@@ -183,6 +183,12 @@ If the Wave server and Wave app run on the same machine, `q.site.upload()` will 
 
 Provides the location of the Wave server's root directory to the Wave app, if both the server and the app are running on the same machine. Useful for performance optimizations during file uploads. Makes `q.site.upload()` copy files instead of using HTTP requests.
 
+### H2O_WAVE_RELOAD_EXCLUDE
+
+Excludes certain files or directories from being watched for app reload. Only relative paths are allowed and requires [watchfiles](https://pypi.org/project/watchfiles/) to be installed. See [Uvicorn docs](https://www.uvicorn.org/settings/#reloading-with-watchfiles).
+
+Multiple values are supported. Use OS path separator (`:` for Unix and `;` for Windows) as a delimiter. E.g. `H2O_WAVE_RELOAD_EXCLUDE=tmp_dir1/*.py:tmp_dir2/*.txt`.
+
 ## Web Analytics
 
 You can configure your app's web pages to send basic usage information to a third-party web analytics or tracking site. This lets you measure and analyze how users are interacting with various parts of your app.

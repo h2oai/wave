@@ -132,7 +132,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
 
     waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
-    # OS agnostic wheels do not have waved - needed for HAC.
+    # OS agnostic wheels do not include waved - needed for HAC.
     is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
 
     try:
@@ -153,7 +153,10 @@ def run(app: str, no_reload: bool, no_autostart: bool):
         try:
             if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
                 os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
-            uvicorn.run(f'{app}:main', host=host, port=port, reload=not no_reload)
+            reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
+            if reload_exclude:
+                reload_exclude = reload_exclude.split(os.pathsep)
+            uvicorn.run(f'{app}:main', host=host, port=port, reload=not no_reload, reload_excludes=reload_exclude)
         except Exception as e:
             if waved_process:
                 waved_process.kill()
