@@ -51,8 +51,8 @@ Changelog = "https://github.com/h2oai/wave/releases"
 [tool.hatch.version]
 path = "h2o_wave/version.py"
 [tool.hatch.build.targets.wheel.hooks.custom]
-path = "build_hook.py"
+path = "hatch_build.py"
 [tool.hatch.metadata.hooks.custom]
-path = "build_hook.py"
+path = "hatch_build.py"
 [tool.hatch.build.targets.wheel.shared-data]
 "tmp" = "."
