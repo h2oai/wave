@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "h2o_wave"
+description = "Python driver for H2O Wave Realtime Apps"
+requires-python = ">=3.8"
+readme = "README.rst"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Prithvi Prabhu", email = "prithvi@h2o.ai"},
+]
+maintainers = [
+    {name = "Martin Turoci", email = "martin.turoci@h2o.ai"},
+    {name = "Marek Mihok", email = "marek.mihok@h2o.ai"},
+]
+keywords = ["UI", "Realtime", "Low code", "Data Science", "Machine Learning"]
+dynamic = ["version"]
+dependencies = [
+    "Click",
+    "inquirer",
+    "httpx>=0.16.1",
+    "starlette>=0.13.8",
+    "uvicorn>=0.17.6",
+]
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Communications :: Chat",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Widget Sets",
+    "Topic :: System :: Distributed Computing",
+]
+[project.scripts]
+wave = "h2o_wave.cli:main"
+[project.urls]
+Homepage = "https://wave.h2o.ai/"
+Documentation = "https://wave.h2o.ai/"
+Repository = "https://github.com/h2oai/wave"
+Changelog = "https://github.com/h2oai/wave/releases"
+[tool.hatch.version]
+path = "h2o_wave/version.py"
+[tool.hatch.build.targets.wheel.hooks.custom]
+path = "build_hook.py"
+[tool.hatch.metadata.hooks.custom]
+path = "build_hook.py"
+[tool.hatch.build.targets.wheel.shared-data]
+"tmp" = "."
