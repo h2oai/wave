@@ -23,9 +23,7 @@ class CustomBuildHook(BuildHookInterface):
         if not version:
             raise Exception('VERSION environment variable must be set.')
 
-        arch = 'amd64'
-        if platform.endswith('arm64'):
-            arch = 'arm64'
+        arch = 'arm64' if platform.endswith('arm64') else 'amd64'
         operating_system = 'darwin'
         if platform == 'win_amd64':
             operating_system = 'windows'
