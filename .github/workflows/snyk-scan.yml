@@ -79,7 +79,7 @@ jobs:
       - name: pip install
         if: steps.changed-py-deps.outputs.any_changed == 'true'
         run: |
-          pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
+          pip install build httpx uvicorn starlette pdoc3 pytest flake8
           pip install -r py/examples/requirements.txt
           pip freeze > py/requirements.txt
           cat py/requirements.txt
