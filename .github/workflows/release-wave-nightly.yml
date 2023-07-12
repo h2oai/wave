@@ -15,7 +15,6 @@ on:
     - cron: "0 0 * * *" # Schedule at midnight.
 
 env:
-  VERSION: "nightly"
   TAG: "nightly"
 
 # Cancel a currently running workflow.
@@ -30,12 +29,15 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       yesterday-commit-count: ${{ steps.get-new-commits.outputs.YESTERDAY_COMMIT_COUNT }}
+      nightly-dev-version: ${{ steps.get-dev-version.outputs.NIGHTLY_DEV_VERSION }}
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
       - id: get-new-commits
         run: echo "YESTERDAY_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_OUTPUT
+      - id: get-dev-version
+        run: echo "NIGHTLY_DEV_VERSION=$(awk -F"'" '/__version__/ {split($2,a,"."); a[2]++; print a[1] "." a[2] ".0.dev0"}' py/h2o_wave/h2o_wave/version.py)" >> $GITHUB_OUTPUT
 
   test-linux:
     name: Test Linux
@@ -163,13 +165,13 @@ jobs:
           KC_SLEEP: 45
     
   release:
-    needs: [test-linux, test-win, test-macos]
+    needs: [test-linux, test-win, test-macos, check-last-commit]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
       - name: Set ENV vars
         run: |
-          echo "VERSION=${{ github.event.inputs.version || env.VERSION }}" >> $GITHUB_ENV
+          echo "VERSION=${{ github.event.inputs.version || needs.check-last-commit.outputs.nightly-dev-version }}" >> $GITHUB_ENV
           echo "TAG=${{ github.event.inputs.tag || env.TAG }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
