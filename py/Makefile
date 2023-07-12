@@ -29,7 +29,7 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install build httpx uvicorn starlette pdoc3 flake8
 	./venv/bin/python -m pip install h2o_wave_ml/
 	# TODO examples pip install is wasteful for CI
-	# ./venv/bin/python -m pip install -r examples/requirements.txt
+	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable h2o_wave
 	[ -d ../ui/build ] && $(MAKE) build-lightwave-web || echo "WARN: ../ui/build doesn't exist, skipping build-lightwave-web"
 	./venv/bin/python -m pip install --editable h2o_lightwave
