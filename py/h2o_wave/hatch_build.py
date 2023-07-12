@@ -41,7 +41,7 @@ class CustomBuildHook(BuildHookInterface):
         # Create a metadata file to get easy access to platform/OS arch when needed.
         with open(os.path.join('h2o_wave', 'metadata.py'), 'w') as f:
             f.write(f'''
-# Generated in build_hook.py.
+# Generated in hatch_build.py.
 __platform__ = "{platform}"
 __arch__ = "{arch}"
         ''')
