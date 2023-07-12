@@ -7,4 +7,4 @@ class CustomMetadataHook(MetadataHookInterface):
     def update(self, metadata: dict) -> None:
         version = os.environ.get('VERSION', metadata['version'])
         metadata['version'] = version
-        metadata['dependencies'] = [f'h2o_lightwave_web=={version}']
+        metadata['optional-dependencies'] = { 'web': [f'h2o_lightwave_web=={version}'] }

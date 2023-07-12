@@ -12,7 +12,7 @@ authors = [
     {name = "Martin Turoci", email = "martin.turoci@h2o.ai"},
 ]
 keywords = ["UI", "Realtime", "Low code", "Data Science", "Machine Learning"]
-dynamic = ["version", "dependencies"]
+dynamic = ["version", "optional-dependencies"]
 classifiers=[
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
