@@ -25,8 +25,6 @@ build-lightwave-web:
 setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
 	python3 -m venv venv
-	# Remove when migrated to hatch.
-	./venv/bin/python -m pip install setuptools wheel 
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install build httpx uvicorn starlette pdoc3 flake8
 	./venv/bin/python -m pip install h2o_wave_ml/
