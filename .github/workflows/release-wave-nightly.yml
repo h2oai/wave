@@ -202,13 +202,13 @@ jobs:
           github-token: ${{ secrets.GIT_TOKEN }}
           script: |
             const tag = "${{ env.TAG }}";
-            const { data: releases } = await octokit.rest.repos.listReleases({
+            const { data: releases } = await github.rest.repos.listReleases({
               owner: context.repo.owner,
               repo: context.repo.repo
             });
             const release = releases.find(r => r.tag_name === tag);
             if (release) {
-              await octokit.rest.repos.deleteRelease({
+              await github.rest.repos.deleteRelease({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 release_id: release.id
