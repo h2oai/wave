@@ -30,133 +30,133 @@ jobs:
       - id: get-dev-version
         run: echo "NIGHTLY_DEV_VERSION=$(awk -F"'" '/__version__/ {split($2,a,"."); a[2]++; print a[1] "." a[2] ".0.dev0"}' py/h2o_wave/h2o_wave/version.py)" >> $GITHUB_OUTPUT
 
-  # test-linux:
-  #   name: Test Linux
-  #   needs: check-last-commit
-  #   if: needs.check-last-commit.outputs.yesterday-commit-count > 0
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-20.04, ubuntu-22.04]
-  #       py: ["3.8", "3.9", "3.10"]
-  #   runs-on: ${{ matrix.os }}
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         token: ${{ secrets.GIT_TOKEN }}
+  test-linux:
+    name: Test Linux
+    needs: check-last-commit
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
 
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ matrix.py }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
 
-  #     - uses: actions/setup-go@v4
-  #       with:
-  #         go-version: '1.19.4'
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
       
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version-file: '.nvmrc'
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
 
-  #     - name: Setup
-  #       run: |
-  #         make setup-ui build-ui
-  #         make setup-py-tests
-  #         make setup-vsc
-  #         make setup-e2e
-  #         make build-server
-  #       env:
-  #         NODE_OPTIONS: '--max-old-space-size=8192'
+      - name: Setup
+        run: |
+          make setup-ui build-ui
+          make setup-py-tests
+          make setup-vsc
+          make setup-e2e
+          make build-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
 
-  #     - name: Test
-  #       run: |
-  #         make test-e2e-ci
-  #         make test-py-ci
-  #         make test-vsc-ci
+      - name: Test
+        run: |
+          make test-e2e-ci
+          make test-py-ci
+          make test-vsc-ci
 
-  # test-win:
-  #   name: Test Windows
-  #   needs: check-last-commit
-  #   if: needs.check-last-commit.outputs.yesterday-commit-count > 0
-  #   strategy:
-  #     matrix:
-  #       py: ["3.8", "3.9", "3.10"]
-  #   runs-on: windows-2022
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         token: ${{ secrets.GIT_TOKEN }}
+  test-win:
+    name: Test Windows
+    needs: check-last-commit
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
+    strategy:
+      matrix:
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
 
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ matrix.py }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
 
-  #     - uses: actions/setup-go@v4
-  #       with:
-  #         go-version: '1.19.4'
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
       
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version-file: '.nvmrc'
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
 
-  #     - name: Setup
-  #       run: .\setup.ps1
-  #       shell: pwsh
-  #       env:
-  #         NODE_OPTIONS: '--max-old-space-size=8192'
+      - name: Setup
+        run: .\setup.ps1
+        shell: pwsh
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
 
-  #     - name: Test
-  #       run: .\test.ps1
-  #       shell: pwsh
+      - name: Test
+        run: .\test.ps1
+        shell: pwsh
 
-  # test-macos:
-  #   name: Test MacOS
-  #   needs: check-last-commit
-  #   if: needs.check-last-commit.outputs.yesterday-commit-count > 0
-  #   strategy:
-  #     matrix:
-  #       py: ["3.8", "3.9", "3.10"]
-  #   runs-on: macos-12
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         token: ${{ secrets.GIT_TOKEN }}
+  test-macos:
+    name: Test MacOS
+    needs: check-last-commit
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
+    strategy:
+      matrix:
+        py: ["3.8", "3.9", "3.10"]
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
 
-  #     - name: Install docker
-  #       run: |
-  #         brew install docker
-  #         colima start
+      - name: Install docker
+        run: |
+          brew install docker
+          colima start
 
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ matrix.py }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
 
-  #     - uses: actions/setup-go@v4
-  #       with:
-  #         go-version: '1.19.4'
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.4'
       
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version-file: '.nvmrc'
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
 
-  #     - name: Setup
-  #       run: |
-  #         make setup-ui build-ui
-  #         make setup-py-tests
-  #         make setup-vsc
-  #         make setup-e2e
-  #         make build-server
-  #       env:
-  #         NODE_OPTIONS: '--max-old-space-size=8192'
+      - name: Setup
+        run: |
+          make setup-ui build-ui
+          make setup-py-tests
+          make setup-vsc
+          make setup-e2e
+          make build-server
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
 
-  #     - name: Test
-  #       run: |
-  #         make test-e2e-macos-ci
-  #         make test-py-ci
-  #         make test-vsc-ci
-  #       env:
-  #         KC_SLEEP: 45
+      - name: Test
+        run: |
+          make test-e2e-macos-ci
+          make test-py-ci
+          make test-vsc-ci
+        env:
+          KC_SLEEP: 45
     
   release:
-    needs: [check-last-commit]
+    needs: [test-linux, test-win, test-macos, check-last-commit]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
