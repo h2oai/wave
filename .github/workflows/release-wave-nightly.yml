@@ -2,15 +2,6 @@ name: Release Wave Nightly
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version'
-        default: 'nightly'
-        required: false
-      tag:
-        description: 'Release Tag'
-        default: 'nightly'
-        required: false
   schedule:
     - cron: "0 0 * * *" # Schedule at midnight.
 
@@ -171,8 +162,7 @@ jobs:
     steps:
       - name: Set ENV vars
         run: |
-          echo "VERSION=${{ github.event.inputs.version || needs.check-last-commit.outputs.nightly-dev-version }}" >> $GITHUB_ENV
-          echo "TAG=${{ github.event.inputs.tag || env.TAG }}" >> $GITHUB_ENV
+          echo "VERSION=${{ needs.check-last-commit.outputs.nightly-dev-version }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
