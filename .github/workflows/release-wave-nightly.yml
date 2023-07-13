@@ -208,26 +208,26 @@ jobs:
         run: git tag -f ${{ env.TAG }} && git push -f --tags
 
       - name: Delete previous release
-          uses: actions/github-script@v4
-          with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            script: |
-              const tag = "${{ env.TAG }}";
-              const { data: releases } = await octokit.rest.repos.listReleases({
+      - uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GIT_TOKEN }}
+          script: |
+            const tag = "${{ env.TAG }}";
+            const { data: releases } = await octokit.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const release = releases.find(r => r.tag_name === tag);
+            if (release) {
+              await octokit.rest.repos.deleteRelease({
                 owner: context.repo.owner,
-                repo: context.repo.repo
+                repo: context.repo.repo,
+                release_id: release.id
               });
-              const release = releases.find(r => r.tag_name === tag);
-              if (release) {
-                await octokit.rest.repos.deleteRelease({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: release.id
-                });
-                console.log(`Deleted release ${tag}`);
-              } else {
-                console.log(`Release ${tag} not found`);
-              }
+              console.log(`Deleted release ${tag}`);
+            } else {
+              console.log(`Release ${tag} not found`);
+            }
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
