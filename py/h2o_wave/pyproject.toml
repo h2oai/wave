@@ -7,7 +7,7 @@ name = "h2o_wave"
 description = "Python driver for H2O Wave Realtime Apps"
 requires-python = ">=3.8"
 readme = "README.rst"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
 authors = [
     {name = "Prithvi Prabhu", email = "prithvi@h2o.ai"},
 ]
