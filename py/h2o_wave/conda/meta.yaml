@@ -1,9 +1,8 @@
-{% set pyproject = load_file_data('pyproject.toml') %}
+{% set pyproject = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
 {% set project = pyproject['project'] %}
 
 package:
-  # TODO: Figure out why name or entry_points are not being picked up from pyproject.toml.
-  name: h2o-wave
+  name: {{ project['name'] }}
   version: {{ VERSION }}
 
 about:
@@ -29,4 +28,6 @@ source:
 build:
   script: python -m pip install . -vv
   entry_points:
-    - wave = h2o_wave.cli:main
+    {% for module, entrypoints in project['scripts'].items() %}
+      - {{ module }} = {{ entrypoints }}
+    {% endfor %}

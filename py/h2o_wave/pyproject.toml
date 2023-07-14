@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "h2o_wave"
+name = "h2o-wave"
 description = "Python driver for H2O Wave Realtime Apps"
 requires-python = ">=3.8"
 readme = "README.rst"
