@@ -177,6 +177,7 @@ $fontTrackings: (
 @each $size,
 $tracking in $fontTrackings {
   .wave-s#{$size} {
+    white-space: pre-wrap;
     font-size: $size + px;
     letter-spacing: $tracking + em;
     line-height: round(1.4 * $size) + px;
