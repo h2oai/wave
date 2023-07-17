@@ -36,6 +36,7 @@ setup: ## Install dependencies
 
 setup-tests: ## Install dependencies for tests only
 	python3 -m venv venv
+	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 	./venv/bin/python -m pip install --editable h2o_wave
 	./venv/bin/pip install httpx
 
