@@ -41,7 +41,6 @@ module.exports = {
       'configuration',
       'deployment',
       'backup',
-      'wave-ml',
       'wavedb',
       'contributing',
     ],
@@ -191,10 +190,6 @@ module.exports = {
       'api/graphics',
       'api/types',
       'api/test',
-      'api/h2o_wave_ml/index',
-      'api/h2o_wave_ml/ml',
-      'api/h2o_wave_ml/types',
-      'api/h2o_wave_ml/utils',
     ],
   },
 }
