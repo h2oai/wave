@@ -21,6 +21,15 @@ import React from 'react'
 
 configure({ testIdAttribute: 'data-test' })
 
+// TODO: Remove once we have a proper solution for mocking d3.
+jest.mock('d3', () => ({
+  extent: () => '',
+  scaleOrdinal: () => ({ domain: () => ({ range: () => '' }) }),
+  arc: () => '',
+  pie: () => ({ value: () => () => [] }),
+}))
+jest.mock('d3-interpolate', () => ({ extent: () => '' }))
+
 const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
   if ('displayName' in iconComponent) acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
   return acc
