@@ -7,7 +7,7 @@ name = "h2o_lightwave"
 description = "H2O Wave Python driver for integration with arbitrary python web frameworks."
 requires-python = ">=3.8"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
 authors = [
     {name = "Martin Turoci", email = "martin.turoci@h2o.ai"},
 ]

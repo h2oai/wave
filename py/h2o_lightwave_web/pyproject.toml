@@ -7,7 +7,7 @@ name = "h2o_lightwave_web"
 description = "Web assets package for H2O Lightwave apps."
 requires-python = ">=3.8"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
 authors = [
     {name = "Martin Turoci", email = "martin.turoci@h2o.ai"},
 ]
