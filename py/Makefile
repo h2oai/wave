@@ -27,10 +27,10 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install build httpx uvicorn starlette pdoc3 flake8
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
-	./venv/bin/python -m pip install --no-deps --editable h2o_wave
+	./venv/bin/python -m pip install --editable h2o_wave
 	[ -d ../ui/build ] && $(MAKE) build-lightwave-web || echo "WARN: ../ui/build doesn't exist, skipping build-lightwave-web"
-	./venv/bin/python -m pip install --no-deps --editable h2o_lightwave
-	./venv/bin/python -m pip install --no-deps --editable h2o_lightwave_web
+	./venv/bin/python -m pip install --editable h2o_lightwave
+	./venv/bin/python -m pip install --editable h2o_lightwave_web
 	rm -f h2o_wave/h2o_wave/metadata.py
 	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
@@ -38,7 +38,7 @@ setup-tests: ## Install dependencies for tests only
 	python3 -m venv venv
 	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 	./venv/bin/python -m pip install --editable h2o_wave
-	./venv/bin/pip install httpx
+	./venv/bin/pip install httpx typing_extensions
 
 .PHONY: docs
 docs: ## Build API docs
