@@ -10,6 +10,7 @@ Set-Location ..
 Set-Location py
 python -m venv venv
 .\venv\Scripts\python -m pip install --editable h2o_wave
+.\venv\Scripts\python -m pip install --upgrade pip
 .\venv\Scripts\pip install httpx
 if ($LastExitCode -ne 0) { exit $LastExitCode }
 
