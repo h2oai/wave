@@ -26,7 +26,7 @@ setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel httpx uvicorn starlette pdoc3 flake8
+	./venv/bin/python -m pip install build httpx uvicorn starlette pdoc3 flake8
 	./venv/bin/python -m pip install h2o_wave_ml/
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
@@ -35,7 +35,7 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install --editable h2o_lightwave
 	./venv/bin/python -m pip install --editable h2o_lightwave_web
 	rm -f h2o_wave/h2o_wave/metadata.py
-	echo "# Generated in setup.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
+	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
 setup-tests: ## Install dependencies for tests only
 	python3 -m venv venv

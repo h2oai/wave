@@ -237,6 +237,7 @@ tag: ## Bump version and tag
 	cd py && $(MAKE) tag
 	cd ui && $(MAKE) tag
 	cd r && $(MAKE) tag
+	cd university && $(MAKE) tag
 	cd tools/vscode-extension && $(MAKE) tag
 	cd tools/intellij-plugin && $(MAKE) tag
 	git add .

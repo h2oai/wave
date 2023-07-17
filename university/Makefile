@@ -6,7 +6,7 @@ setup:
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install -r requirements.txt
-	./venv/bin/python -m pip install wheel
+	./venv/bin/python -m pip install build
 
 run:
 	H2O_WAVE_PUBLIC_DIR="/assets/@../h2o_wave_university/static/" venv/bin/wave run h2o_wave_university/university.py --no-reload
@@ -25,15 +25,10 @@ build: # Prepare bundle for HAIC.
 		rm -rf tmp
 
 build-pypi: purge # For PyPi publish.
-	rsync -a . tmp --exclude "venv" --exclude "*__pycache__*" --exclude "Makefile" --exclude ".gitignore"
-	cp ../tools/vscode-extension/server/parser.py tmp/h2o_wave_university/autocomplete_parser.py
-	cp ../tools/vscode-extension/server/utils.py tmp/h2o_wave_university/autocomplete_utils.py
-	cp ../tools/vscode-extension/base-snippets.json tmp/h2o_wave_university/static/base-snippets.json
-	cp ../tools/vscode-extension/component-snippets.json tmp/h2o_wave_university/static/component-snippets.json
-	cd tmp && ../venv/bin/python3 setup.py bdist_wheel
-	mv tmp/dist .
-	mv tmp/build .
-	rm -rf tmp
+	venv/bin/python3 -m build --wheel
+
+tag:
+	$(SED) -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave_university/version.py
 
 publish:
 	$(MAKE) setup

@@ -30,26 +30,24 @@ Hello world
 
 .. code-block:: python
 
-    from h2o_wave import site, ui
+    from h2o_wave import main, app, Q, ui
 
-    # Access the web page at http://localhost:10101/demo
-    page = site['/demo']
 
-    # Add some content.
-    page['example'] = ui.markdown_card(
-      box='1 1 2 2',
-      title='Hello World!',
-      content='And now for something completely different.',
-    )
+    @app('/')
+    async def serve(q: Q):
+        q.page['hello'] = ui.markdown_card(
+            box='1 1 3 3',
+            title='Hello world!',
+            content='Welcome to Wave!'
+        )
+        await q.page.save()
 
-    # Save the page
-    page.save()
 
 Run ``hello.py``:
 
 .. code-block:: text
 
-    $ python hello.py
+    $ wave run hello.py
 
 
 Links
