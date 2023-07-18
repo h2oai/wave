@@ -961,12 +961,12 @@ export const
     React.useEffect(() => {
       wave.args[m.name] = []
       if (isSingle && m.value) {
-        selection.setKeySelected(m.value, true, false)
         wave.args[m.name] = [m.value]
+        selection.setKeySelected(m.value, true, false)
       }
       else if (isMultiple && m.values) {
-        m.values.forEach(v => selection.setKeySelected(v, true, false))
         wave.args[m.name] = m.values
+        m.values.forEach(v => selection.setKeySelected(v, true, false))
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
