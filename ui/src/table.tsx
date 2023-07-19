@@ -913,12 +913,12 @@ export const
         onSelectionChanged: () => {
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
           const args = wave.args[m.name] as S[]
-          if (args.length !== selectedItemKeys.length || args.some((item, idx) => item !== selectedItemKeys[idx])) {
-            wave.args[m.name] = selectedItemKeys
-            if (m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
-          }
+          if (isSingle && m.value === args[0] && m.value === selectedItemKeys[0]) return
+          if (isMultiple && m.values && m.values.every((item, idx) => item === selectedItemKeys[idx] && item === args[idx])) return
+          wave.args[m.name] = selectedItemKeys
+          if (m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
         }
-      }), [m.name, m.events]),
+      }), [m.name, m.value, m.values, m.events, isSingle, isMultiple]),
       computeHeight = () => {
         if (m.height) return m.height
         if (items.length > 10) return 500
