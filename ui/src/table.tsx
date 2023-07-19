@@ -912,11 +912,8 @@ export const
       selection = React.useMemo(() => new Fluent.Selection({
         onSelectionChanged: () => {
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
-          const areEqual = (arr1: any, arr2: any) => {
-            if (arr1.length !== arr2.length) return false
-            return arr1.every((el, idx) => el === arr2[idx])
-          }
-          if (!areEqual(wave.args[m.name], selectedItemKeys)) {
+          const args = wave.args[m.name] as S[]
+          if (args.length !== selectedItemKeys.length || args.some((item, idx) => item !== selectedItemKeys[idx])) {
             wave.args[m.name] = selectedItemKeys
             if (m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
           }
