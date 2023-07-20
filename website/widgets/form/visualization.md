@@ -21,7 +21,7 @@ from h2o_wave import data
 q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.visualization(
         plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
-        data=data(fields='product price', pack=True, rows=[
+        data=data(fields='product price', rows=[
             ('category1', 7),
             ('category2', 8),
             ('category3', 9),
@@ -45,7 +45,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.visualization(
         height='300px',
         plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
-        data=data(fields='product price', pack=True, rows=[
+        data=data(fields='product price', rows=[
             ('category1', 7),
             ('category2', 8),
             ('category3', 9),
@@ -68,7 +68,7 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
         name='viz',
         height='300px',
         plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
-        data=data(fields='product price', pack=True, rows=[
+        data=data(fields='product price', rows=[
             ('category1', 7),
             ('category2', 8),
             ('category3', 9),

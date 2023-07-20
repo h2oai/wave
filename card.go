@@ -15,6 +15,7 @@
 package wave
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -94,22 +95,33 @@ func (c *Card) set(ks []string, v any) {
 				return
 			}
 		}
-		if v == nil {
-			delete(c.data, p)
-		} else {
-			c.data[p] = v
+
+		keys := strings.Split(p, ".")
+		lastKey := keys[len(keys)-1]
+		var x any = c.data
+		// Get the object even if nested.
+		for i := 0; i < len(keys)-1; i++ {
+			x = get(x, keys[i])
+		}
+
+		if x, ok := x.(map[string]any); ok {
+			if v == nil {
+				delete(x, lastKey)
+			} else {
+				x[lastKey] = v
+			}
 		}
 	default: // .foo.bar.baz = qux
 		var x any = c.data
 
-		// By-name access.
-		if v, ok := c.nameComponentMap[ks[0]]; ok && len(ks) == 2 {
-			x = v
-		} else {
-			// DEPRECATED: Access via page.items[idx].wrapper.prop.
-			for _, k := range ks[:len(ks)-1] {
-				x = get(x, k)
-			}
+		startIdx := 0
+		if _, ok := c.data[ks[0]]; !ok && c.nameComponentMap[ks[0]] != nil {
+			// By-name access.
+			x = c.nameComponentMap[ks[0]]
+			startIdx = 1
+		}
+		for i := startIdx; i < len(ks)-1; i++ {
+			x = get(x, ks[i])
 		}
 
 		p := ks[len(ks)-1]
@@ -163,6 +175,12 @@ func get(ix any, k string) any {
 func (c *Card) dump() CardD {
 	data := make(map[string]any)
 	var bufs []BufD
+
+	// Look for nested buffers within form_card.
+	if v, ok := c.data["view"]; ok && v.(string) == "form" {
+		fillFormCardBufs(c.data, data, &bufs, make([]string, 0))
+	}
+
 	for k, iv := range c.data {
 		if v, ok := iv.(Buf); ok {
 			data[dataPrefix+k] = len(bufs)
@@ -218,6 +236,53 @@ func fillNameComponentMap(m map[string]any, wrappedItems any) {
 			if buttons, ok := component["buttons"]; ok {
 				fillNameComponentMap(m, buttons)
 			}
+		}
+	}
+}
+
+func fillFormCardBufs(data map[string]any, outData map[string]any, bufs *[]BufD, keys []string) {
+	items, ok := data["items"]
+	if !ok {
+		return
+	}
+	itemsSlice, ok := items.([]any)
+	if !ok {
+		return
+	}
+
+	keys = append(keys, "items")
+	for idx, item := range itemsSlice {
+		itemMap, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		if v, ok := itemMap["inline"]; ok {
+			if v, ok := v.(map[string]any); ok {
+				keys = append(keys, strconv.Itoa(idx), "inline")
+				fillFormCardBufs(v, outData, bufs, keys)
+				keys = keys[:len(keys)-2]
+			}
+		}
+		visualizationMap, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		v, ok := visualizationMap["visualization"]
+		if !ok {
+			continue
+		}
+		valueMap, ok := v.(map[string]any)
+		if !ok {
+			continue
+		}
+		b, ok := valueMap["data"]
+		if !ok {
+			continue
+		}
+		if b, ok := b.(Buf); ok {
+			key := fmt.Sprintf("%s.%d.visualization.data", strings.Join(keys, "."), idx)
+			outData[dataPrefix+key] = len(*bufs)
+			*bufs = append(*bufs, b.dump())
 		}
 	}
 }

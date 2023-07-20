@@ -52,6 +52,39 @@ def _guard_key(key: str):
             raise KeyError('invalid key type: want str or int')
 
 
+def _fill_data_buffers(props: Dict, data: list, bufs: list, keys=[], is_form_card=False):
+    for k, v in props.items():
+        if isinstance(v, Data):
+            keys.append(k)
+            data.append(('.'.join(keys), len(bufs)))
+            bufs.append(v.dump())
+            keys.pop()
+        elif not is_form_card:
+            continue
+        elif isinstance(v, list):
+            keys.append(k)
+            for idx, e in enumerate(v):
+                if isinstance(e, dict):
+                    keys.append(str(idx))
+                    _fill_data_buffers(e, data, bufs, keys, is_form_card)
+                    keys.pop()
+            keys.pop()
+        elif isinstance(v, dict):
+            keys.append(k)
+            _fill_data_buffers(v, data, bufs, keys, is_form_card)
+            keys.pop()
+
+
+def _del_dict_key(d: dict, keys: List[str]):
+    if len(keys) == 1:
+        del d[keys[0]]
+    else:
+        next_key = keys[0]
+        key = int(next_key) if next_key.isdigit() else next_key
+        _del_dict_key(d[key], keys[1:])
+
+
+
 DICT = '__kv'
 
 
@@ -375,13 +408,11 @@ class PageBase:
 
         data = []
         bufs = []
-        for k, v in props.items():
-            if isinstance(v, Data):
-                data.append((k, len(bufs)))
-                bufs.append(v.dump())
+
+        _fill_data_buffers(props, data, bufs, [], props['view'] == 'form')
 
         for k, v in data:
-            del props[k]
+            _del_dict_key(props, k.split('.'))
             props[f'~{k}'] = v
 
         if len(bufs) > 0:

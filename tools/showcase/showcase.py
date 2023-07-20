@@ -100,7 +100,7 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, groups: List[s
         os.makedirs(os.path.dirname(path), exist_ok=True)
         card_name = match[0][2] if match[0][2] != 'meta' else match[1][2]
         selector = f'[data-test="{card_name}"]'
-        if('ui.form_card' in code_str):
+        if 'ui.form_card' in code_str:
             widget_count = len(page.query_selector_all(f'{selector} > :first-child > *'))
             selector = f'{selector} > *' if widget_count > 1 else f'{selector} > :first-child > *'
         page.wait_for_selector(selector)

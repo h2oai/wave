@@ -79,6 +79,14 @@
       ]
     },
     {
+      "name": "Debug Wave Script",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "python": "${workspaceFolder}/py/venv/bin/python",
+      "console": "integratedTerminal",
+    },
+    {
       "name": "Debug Wave App",
       "type": "python",
       "request": "launch",
