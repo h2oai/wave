@@ -177,8 +177,10 @@ func (c *Card) dump() CardD {
 	var bufs []BufD
 
 	// Look for nested buffers within form_card.
-	if v, ok := c.data["view"]; ok && v.(string) == "form" {
-		fillFormCardBufs(c.data, data, &bufs, make([]string, 0))
+	if v, ok := c.data["view"]; ok {
+		if v, ok := v.(string); ok && v == "form" {
+			fillFormCardBufs(c.data, data, &bufs, make([]string, 0))
+		}
 	}
 
 	for k, iv := range c.data {
