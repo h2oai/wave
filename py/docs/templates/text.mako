@@ -12,7 +12,7 @@
     url = dobj.url(relative_to=module, link_prefix=link_prefix,
                    top_ancestor=not show_inherited_members).replace('.html','')
     ## Replace "." with "_" because Docusarus doesn't seem to like "." in custom heading ids.
-    return '<a title="{}" href="{}">{}</a>'.format(dobj.refname, url.replace('.', '_'), name)
+    return f'<a title="{dobj.refname}" href={{useBaseUrl("docs/api/{url.replace(".", "_")}")}}>{name}</a>'
 
 
   def to_html(text):
@@ -84,6 +84,7 @@ title: ${'Namespace' if module.is_namespace else  \
                       'Package' if module.is_package and not module.supermodule else \
                       'Module'} ${module.name}
 ---
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ${module.docstring | to_html}
 
