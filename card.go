@@ -285,4 +285,6 @@ func fillFormCardBufs(data map[string]any, outData map[string]any, bufs *[]BufD,
 			*bufs = append(*bufs, b.dump())
 		}
 	}
+	//lint:ignore SA4006 this function is recursive so mutation is necessary.
+	keys = keys[:len(keys)-1]
 }
