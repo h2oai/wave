@@ -527,7 +527,7 @@ class PageBase:
 
         data = []
         bufs = []
-        _fill_data_buffers(props, data, bufs, [], props['view'] == 'form')
+        _fill_data_buffers(props, data, bufs, [], props.get('view') == 'form')
 
         for k, v in data:
             _del_dict_key(props, k.split('.'))
