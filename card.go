@@ -97,7 +97,6 @@ func (c *Card) set(ks []string, v any) {
 		}
 
 		keys := strings.Split(p, ".")
-		lastKey := keys[len(keys)-1]
 		var x any = c.data
 		// Get the object even if nested.
 		for i := 0; i < len(keys)-1; i++ {
@@ -105,6 +104,7 @@ func (c *Card) set(ks []string, v any) {
 		}
 
 		if x, ok := x.(map[string]any); ok {
+			lastKey := keys[len(keys)-1]
 			if v == nil {
 				delete(x, lastKey)
 			} else {
@@ -120,8 +120,8 @@ func (c *Card) set(ks []string, v any) {
 			x = c.nameComponentMap[ks[0]]
 			startIdx = 1
 		}
-		for i := startIdx; i < len(ks)-1; i++ {
-			x = get(x, ks[i])
+		for _, k := range ks[startIdx : len(ks)-1] {
+			x = get(x, k)
 		}
 
 		p := ks[len(ks)-1]
