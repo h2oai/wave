@@ -58,4 +58,11 @@ describe('Toggle.tsx', () => {
     expect(wave.args[name]).toBe(true)
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XToggle model={toggleProps} />)
+    expect(wave.args[name]).toBe(false)
+    rerender(<XToggle model={{ name, value: true }} />)
+    expect(wave.args[name]).toBe(true)
+  })
+
 })
