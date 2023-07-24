@@ -116,8 +116,12 @@ export const
         trigger ? debouncedHandleOnInput.current(numVal) : handleOnInput(numVal)
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[name] = (value < min) ? min : ((value > max) ? max : value) }, [])
+    React.useEffect(() => {
+      const val = (value < min) ? min : ((value > max) ? max : value)
+      wave.args[name] = val
+      setVal(String(val))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
 
     return (
       <Fluent.SpinButton

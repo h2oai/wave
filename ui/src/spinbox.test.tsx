@@ -115,6 +115,13 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(1)
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XSpinbox model={spinboxProps} />)
+    expect(wave.args[name]).toBe(0)
+    rerender(<XSpinbox model={{ ...spinboxProps, value: 40 }} />)
+    expect(wave.args[name]).toBe(40)
+  })
+
   it('Calls push on input if trigger specified', () => {
     const
       { container, getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />),
