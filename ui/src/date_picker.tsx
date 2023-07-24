@@ -73,8 +73,11 @@ export const
         if (m.trigger) wave.push()
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = defaultVal }, [])
+    React.useEffect(() => {
+      wave.args[m.name] = defaultVal
+      setValue(parsedVal ? new Date(parsedVal) : undefined)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [m.value])
 
     return (
       <Fluent.DatePicker

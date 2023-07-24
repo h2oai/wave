@@ -46,6 +46,13 @@ describe('Datepicker.tsx', () => {
     expect(wave.args[name]).toBeTruthy()
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XDatePicker model={{ name, value: '1999-12-30' }} />)
+    expect(wave.args[name]).toBe('1999-12-30')
+    rerender(<XDatePicker model={{ name, value: '1999-12-31' }} />)
+    expect(wave.args[name]).toBe('1999-12-31')
+  })
+
   it('Calls sync when trigger specified', () => {
     const pushMock = jest.fn()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={{ ...datepickerProps, trigger: true }} />)
