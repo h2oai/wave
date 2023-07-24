@@ -66,4 +66,11 @@ describe('Checkbox.tsx', () => {
     expect(wave.args[name]).toBe(true)
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XCheckbox model={{ name, value: true }} />)
+    expect(wave.args[name]).toBe(true)
+    rerender(<XCheckbox model={{ name, value: false }} />)
+    expect(wave.args[name]).toBe(false)
+  })
+
 })

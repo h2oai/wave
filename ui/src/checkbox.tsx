@@ -56,24 +56,31 @@ export interface Checkbox {
 
 export const
   XCheckbox = ({ model: m }: { model: Checkbox }) => {
-    const onChange = (_e?: React.FormEvent<HTMLElement>, checked?: B) => {
-      wave.args[m.name] = checked === null ? null : !!checked
-      if (m.trigger) wave.push()
-    }
+    const
+      { name, label, value = false, indeterminate, disabled, trigger } = m,
+      [checked, setChecked] = React.useState(value),
+      onChange = (_e?: React.FormEvent<HTMLElement>, checked?: B) => {
+        wave.args[name] = checked === null ? null : !!checked
+        setChecked(!!checked)
+        if (trigger) wave.push()
+      }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = !!m.value }, [])
+    React.useEffect(() => {
+      wave.args[name] = value
+      setChecked(value)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
 
     return (
       <Fluent.Checkbox
-        data-test={m.name}
-        inputProps={{ 'data-test': m.name } as React.ButtonHTMLAttributes<HTMLButtonElement>}
+        data-test={name}
+        inputProps={{ 'data-test': name } as React.ButtonHTMLAttributes<HTMLButtonElement>}
         styles={{ checkmark: { display: 'flex' } }} // Fix: Center the checkmark in the checkbox.
-        label={m.label}
-        defaultIndeterminate={m.indeterminate}
-        defaultChecked={m.value}
+        label={label}
+        defaultIndeterminate={indeterminate}
+        checked={checked}
         onChange={onChange}
-        disabled={m.disabled}
+        disabled={disabled}
       />
     )
   }
