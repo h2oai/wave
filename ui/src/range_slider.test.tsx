@@ -60,6 +60,13 @@ describe('rangeSlider.tsx', () => {
     expect(wave.args[name]).toMatchObject([50, 100])
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XRangeSlider model={{ ...rangeSliderProps, min_value: 40, max_value: 60 }} />)
+    expect(wave.args[name]).toMatchObject([40, 60])
+    rerender(<XRangeSlider model={{ ...rangeSliderProps, min_value: 30, max_value: 70 }} />)
+    expect(wave.args[name]).toMatchObject([30, 70])
+  })
+
   it('Calls sync on slide', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
