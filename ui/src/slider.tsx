@@ -63,11 +63,18 @@ export const
     const
       { min = 0, max = 100, step = 1, value = 0 } = m,
       defaultValue = (value < min) ? min : ((value > max) ? max : value),
-      onChange = (v: U) => wave.args[m.name] = v,
+      [val, setVal] = React.useState(defaultValue),
+      onChange = (v: U) => {
+        wave.args[m.name] = v
+        setVal(v)
+      },
       onChanged = React.useCallback((_e: MouseEvent | KeyboardEvent | TouchEvent, _value: U) => { if (m.trigger) wave.push() }, [m.trigger])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = defaultValue }, [])
+    React.useEffect(() => {
+      wave.args[m.name] = defaultValue
+      setVal(defaultValue)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
 
     return (
       <Fluent.Slider
@@ -77,7 +84,7 @@ export const
         min={min}
         max={max}
         step={step}
-        defaultValue={defaultValue}
+        value={val}
         showValue
         originFromZero={min < 0 && max >= 0}
         onChange={onChange}

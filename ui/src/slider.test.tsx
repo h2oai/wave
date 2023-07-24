@@ -54,6 +54,14 @@ describe('Slider.tsx', () => {
 
     expect(wave.args[name]).toBe(50)
   })
+
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XSlider model={sliderProps} />)
+    expect(wave.args[name]).toBe(0)
+    rerender(<XSlider model={{ ...sliderProps, value: 40 }} />)
+    expect(wave.args[name]).toBe(40)
+  })
+
   it('Calls sync on slide', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
