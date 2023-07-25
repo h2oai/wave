@@ -63,6 +63,14 @@ describe('time_picker.tsx', () => {
     expect(wave.args[name]).toBe('16:00')
   })
 
+  it('Set args when value is updated', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, value: '15:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('15:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, value: '15:30' }} />)
+    expect(wave.args[name]).toBe('15:30')
+  })
+
   it('Show correct input value in 12 hour time format', async () => {
     const { getByDisplayValue } = render(<XTimePicker model={{ ...timepickerProps, value: '14:30' }} />)
     await waitForIdleEventLoop()
