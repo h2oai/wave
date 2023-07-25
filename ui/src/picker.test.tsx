@@ -50,6 +50,13 @@ describe('Picker.tsx', () => {
     expect(wave.args[name]).toMatchObject([name])
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XPicker model={pickerProps} />)
+    expect(wave.args[name]).toBe(null)
+    rerender(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(wave.args[name]).toMatchObject([name])
+  })
+
   it('Renders label if specified', () => {
     const { getByText } = render(<XPicker model={{ ...pickerProps, label: name }} />)
     expect(getByText(name)).toBeInTheDocument()
@@ -90,6 +97,13 @@ describe('Picker.tsx', () => {
     expect(queryAllByRole('listitem')).toHaveLength(1)
     fireEvent.click(getByRole('listitem').querySelector('.ms-TagItem-close')!)
     expect(queryAllByRole('listitem')).toHaveLength(0)
+  })
+
+  it('Shows correct values - value updated', () => {
+    const { rerender, queryAllByRole } = render(<XPicker model={pickerProps} />)
+    expect(queryAllByRole('listitem')).toHaveLength(0)
+    rerender(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(queryAllByRole('listitem')).toHaveLength(1)
   })
 
   it('Does not render label if not specified', () => {
