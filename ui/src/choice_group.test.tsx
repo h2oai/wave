@@ -43,6 +43,13 @@ describe('ChoiceGroup.tsx', () => {
     expect(wave.args[name]).toBe('Choice3')
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XChoiceGroup model={choiceGroupProps} />)
+    expect(wave.args[name]).toBe(null)
+    rerender(<XChoiceGroup model={{ ...choiceGroupProps, value: 'Choice3' }} />)
+    expect(wave.args[name]).toBe('Choice3')
+  })
+
   it('Does not call sync - trigger not specified', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
     const pushMock = jest.fn()

@@ -67,15 +67,22 @@ export interface ChoiceGroup {
 export const
   XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
     const
+      [value, setValue] = React.useState(m.value),
       optionStyles = { choiceFieldWrapper: { marginRight: 15 } },
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled, styles: optionStyles })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
-        if (option) wave.args[m.name] = option.key
+        if (option) {
+          wave.args[m.name] = option.key
+          setValue(option.key)
+        }
         if (m.trigger) wave.push()
       }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
+    React.useEffect(() => {
+      wave.args[m.name] = m.value || null
+      setValue(m.value)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [m.value])
 
     return (
       <Fluent.ChoiceGroup
@@ -83,7 +90,7 @@ export const
         data-test={m.name}
         label={m.label}
         required={m.required}
-        defaultSelectedKey={m.value}
+        selectedKey={value}
         options={options}
         onChange={onChange}
       />
