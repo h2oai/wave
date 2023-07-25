@@ -67,7 +67,7 @@ export const
           ))
         return (
           <div data-test={name} className={css.card}>
-            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
+            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={state.value}>{items}</Pivot>
           </div>
         )
       }

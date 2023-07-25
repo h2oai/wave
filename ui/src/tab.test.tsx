@@ -64,6 +64,17 @@ describe('Meta.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
+  it('Set args when value is updated', () => {
+    const items = [{ name: 'tab1' }, { name: 'tab2' }]
+    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab1' } }} />)
+    // expect(window.location.hash).toBe('#tab1')
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    rerender(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
+    // expect(window.location.hash).toBe('#tab2')
+    // TODO:
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
   it('Sets url hash - hash name', () => {
     const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: hashName }] } }} />)
     fireEvent.click(getByRole('tab'))
