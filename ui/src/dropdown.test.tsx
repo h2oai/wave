@@ -708,6 +708,27 @@ describe('Dropdown.tsx', () => {
           rerender(<XDropdown model={{ ...dialogProps, value: '1' }} />)
           expect(wave.args[name]).toEqual('1')
         })
+
+        it('Updates choices of single-valued dialog dropdown', () => {
+          const
+            choices = [{ name: 'A', label: 'Choice A' }],
+            updatedChoices = [
+              { name: 'D', label: 'Choice D' },
+              { name: 'E', label: 'Choice E' },
+              { name: 'F', label: 'Choice F' },
+            ],
+            { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices }} />)
+
+          fireEvent.click(getByTestId(name))
+          expect(getByText('Choice A')).toBeInTheDocument()
+
+          rerender(<XDropdown model={{ ...dialogProps, choices: updatedChoices }} />)
+          fireEvent.click(getByTestId(name))
+
+          expect(getByText('Choice D')).toBeInTheDocument()
+          expect(getByText('Choice E')).toBeInTheDocument()
+          expect(getByText('Choice F')).toBeInTheDocument()
+        })
       })
 
       describe('Multi-valued', () => {
@@ -803,6 +824,27 @@ describe('Dropdown.tsx', () => {
           expect(checkboxes).toHaveLength(2)
           expect(checkboxes[0]).toBeChecked()
           expect(checkboxes[1]).toBeChecked()
+        })
+
+        it('Updates choices of multi-valued dialog dropdown', () => {
+          const
+            choices = [{ name: 'A', label: 'Choice A' }],
+            updatedChoices = [
+              { name: 'D', label: 'Choice D' },
+              { name: 'E', label: 'Choice E' },
+              { name: 'F', label: 'Choice F' },
+            ],
+            { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices, values: ['A'] }} />)
+
+          fireEvent.click(getByTestId(name))
+          expect(getByText('Choice A')).toBeInTheDocument()
+
+          rerender(<XDropdown model={{ ...dialogProps, choices: updatedChoices, values: ['D'] }} />)
+          fireEvent.click(getByTestId(name))
+
+          expect(getByText('Choice D')).toBeInTheDocument()
+          expect(getByText('Choice E')).toBeInTheDocument()
+          expect(getByText('Choice F')).toBeInTheDocument()
         })
       })
     })

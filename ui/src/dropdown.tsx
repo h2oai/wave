@@ -168,11 +168,11 @@ const
   ROW_HEIGHT = 44,
   PAGE_SIZE = 40,
   getPageSpecification = () => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE } as Fluent.IPageSpecification),
+  choicesToItems = (choices: Choice[], v?: S | S[]) => choices.map(({ name, label, disabled = false }, idx) =>
+    ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled })),
   useItems = (choices: Choice[], v?: S | S[]) => {
-    const
-      [items, setItems] = React.useState<DropdownItem[]>(choices.map(({ name, label, disabled = false }, idx) =>
-        ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled }))),
-      onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) })))
+    const [items, setItems] = React.useState<DropdownItem[]>(choicesToItems(choices, v))
+    const onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) })))
 
     return [items, setItems, onSearchChange] as const
   },
@@ -211,6 +211,9 @@ const
         setItems(items => items.map(i => ({ ...i, checked: model.value === i.name })))
       }
     }, [name, model.value, setItems])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => setItems(choicesToItems(choices, model.value)), [choices])
 
     return (
       <>
@@ -279,6 +282,9 @@ const
         setItems(items => items.map(i => ({ ...i, checked: values.includes(i.name) })))
       }
     }, [name, values, setItems])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => setItems(choicesToItems(choices, values)), [choices])
 
     return (
       <>
