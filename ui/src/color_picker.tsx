@@ -81,11 +81,18 @@ const
         setColor(fluentColor)
         onChange(null, fluentColor)
       },
-      onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
+      changeColor = (color: Fluent.IColor) => {
         setColor(color)
         setColorText(color.str)
         onChange(null, color)
-      }
+      },
+      onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => changeColor(color)
+
+    React.useEffect(() => {
+      const color = Fluent.getColorFromString(val)
+      if (color) changeColor(color)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [model.value])
 
     return (
       <div className={css.inlinePickerContainer}>
@@ -121,8 +128,11 @@ export const
       normalizedWidth = formItemWidth(width),
       minMaxWidth = !normalizedWidth?.includes('%') ? `calc(${normalizedWidth} - 35px)` : 'initial'
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[name] = defaultValue }, [])
+    React.useEffect(() => {
+      wave.args[name] = defaultValue
+      setSelectedColorId(defaultValue)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
 
     return (
       <div data-test={name}>
