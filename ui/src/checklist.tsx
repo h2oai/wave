@@ -105,7 +105,7 @@ export const
         />
       ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.values || [] }, [])
+    React.useEffect(() => { wave.args[m.name] = m.values || [] }, [m.values])
     React.useEffect(() => { setChoices(getMappedChoices()) }, [getMappedChoices, m.choices])
     return (
       <div data-test={m.name}>

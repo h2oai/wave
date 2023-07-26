@@ -46,6 +46,24 @@ describe('Checklist.tsx', () => {
     expect(wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
   })
 
+  it('Set args when value is updated', () => {
+    const { rerender } = render(<XChecklist model={checklistProps} />)
+    expect(wave.args[name]).toMatchObject([])
+    rerender(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
+    expect(wave.args[name]).toMatchObject(['Choice1'])
+  })
+
+  it('Updates choices', () => {
+    const { rerender, getByText } = render(<XChecklist model={checklistProps} />)
+    expect(getByText('Choice1')).toBeInTheDocument()
+    expect(getByText('Choice2')).toBeInTheDocument()
+    expect(getByText('Choice3')).toBeInTheDocument()
+    rerender(<XChecklist model={{ ...checklistProps, choices: [{ name: 'Choice3' }, { name: 'Choice4' }] }} />)
+
+    expect(getByText('Choice3')).toBeInTheDocument()
+    expect(getByText('Choice4')).toBeInTheDocument()
+  })
+
   it('Sets all choices as args after select all', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Select All'))
