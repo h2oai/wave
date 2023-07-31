@@ -54,6 +54,12 @@ type Card struct {
 	nameComponentMap map[string]any // Cache for cards with items, secondary_items or buttons.
 }
 
+// Tmp placeholder for key-buffer pairs.
+type BufEntry struct {
+	k   string
+	buf interface{}
+}
+
 const dataPrefix = "~"
 
 func loadCard(ns *Namespace, c CardD) *Card {
@@ -61,13 +67,16 @@ func loadCard(ns *Namespace, c CardD) *Card {
 		data:             make(map[string]any),
 		nameComponentMap: nil,
 	}
-	ks := make([]string, 1) // to avoid allocation during card.set() below
+	ks := make([]string, 1)         // to avoid allocation during card.set() below
+	bufAttrs := make([]BufEntry, 0) // Go does not guarantee map iteration order, set buffers after all other attributes.
+
 	for k, v := range c.D {
-		if len(k) > 0 && strings.HasPrefix(k, dataPrefix) {
+		if strings.HasPrefix(k, dataPrefix) {
 			if f, ok := v.(float64); ok {
 				i := int(f)
 				if i >= 0 && i < len(c.B) {
-					k, v = strings.TrimPrefix(k, dataPrefix), loadBuf(ns, c.B[i])
+					bufAttrs = append(bufAttrs, BufEntry{strings.TrimPrefix(k, dataPrefix), loadBuf(ns, c.B[i])})
+					continue
 				}
 			}
 		}
@@ -79,6 +88,10 @@ func loadCard(ns *Namespace, c CardD) *Card {
 		}
 		ks[0] = k
 		card.set(ks, v)
+	}
+	for b := range bufAttrs {
+		ks[0] = bufAttrs[b].k
+		card.set(ks, bufAttrs[b].buf)
 	}
 	return card
 }
