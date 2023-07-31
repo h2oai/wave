@@ -14,7 +14,7 @@
 
 import { Chart } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, TooltipItem } from '@antv/g2/lib/interface'
-import { B, Dict, Disposable, F, Model, on, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
+import { B, Dict, Disposable, F, isBuf, Model, on, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
@@ -1131,22 +1131,27 @@ export const
             chart.render(true)
           })
         }
-      }
+      },
+      updateData = React.useCallback(() => {
+        const el = container.current
+        if (!el || !currentChart.current || !currentPlot.current) return
+        const
+          raw_data = unpack<any[]>(model.data),
+          data = refactorData(raw_data, currentPlot.current.marks)
+        originalDataRef.current = unpack<any[]>(model.data)
+        currentChart.current.changeData(data)
+      }, [model.data])
+
+    React.useEffect(() => {
+      if (isBuf(model.data)) model.data.registerOnChange(updateData)
+    }, [model.data, updateData])
 
     React.useEffect(() => {
       init()
       return () => themeWatchRef.current?.dispose()
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    React.useEffect(() => {
-      const el = container.current
-      if (!el || !currentChart.current || !currentPlot.current) return
-      const
-        raw_data = unpack<any[]>(model.data),
-        data = refactorData(raw_data, currentPlot.current.marks)
-      originalDataRef.current = unpack<any[]>(model.data)
-      currentChart.current.changeData(data)
-    }, [currentChart, currentPlot, model])
+    React.useEffect(() => updateData(), [updateData])
 
     const
       { width = 'auto', height = 'auto', name } = model,

@@ -17,7 +17,7 @@ import unittest
 from h2o_wave import Expando, data, site, ui
 import httpx
 
-from .utils import (compare, make_card, make_cyc_buf, make_fix_buf,
+from .utils import (compare, make_card, make_cyc_buf, make_fix_buf, make_form_card,
                     make_map_buf, make_page, read_file, sample_fields)
 
 base_url = os.getenv('H2O_WAVE_BASE_URL', '/')
@@ -40,7 +40,6 @@ class TestPythonServer(unittest.TestCase):
         page.save()
         assert compare(page.load(), make_page(card1=make_card(s="foo", i=42, f=4.2, bt=True, bf=False)))
 
-
     def test_new_card_with_map_buf(self):
         page = site['/test']
         page.drop()
@@ -48,6 +47,35 @@ class TestPythonServer(unittest.TestCase):
         page.save()
         assert compare(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data={}))))
 
+    def test_form_card_with_map_buf(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = dict(data=data(fields=sample_fields))
+        page['card1'] = ui.form_card(box='1 1 1 1', items=[
+            ui.visualization(
+                name='my_plot',
+                plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)]),
+                data=data(fields=sample_fields, rows={}),
+            ),
+        ])
+        page.save()
+        assert compare(page.load(), make_form_card(buf=dict(m=dict(d={}, f=['a', 'b', 'c']))))
+
+    def test_form_card_with_map_buf_update(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = dict(data=data(fields=sample_fields))
+        page['card1'] = ui.form_card(box='1 1 1 1', items=[
+            ui.visualization(
+                name='my_plot',
+                plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)]),
+                data=data(fields=sample_fields, rows={}),
+            ),
+        ])
+        page.save()
+        page['card1'].my_plot.data['foo'] = [1,2,3]
+        page.save()
+        assert compare(page.load(), make_form_card(buf=dict(m=dict(d={'foo': [1,2,3]}, f=['a', 'b', 'c']))))
 
     def test_new_card_with_fix_buf(self):
         page = site['/test']
@@ -55,6 +83,73 @@ class TestPythonServer(unittest.TestCase):
         page['card1'] = dict(data=data(fields=sample_fields, size=3))
         page.save()
         assert compare(page.load(), make_page(card1=make_card(data=make_fix_buf(fields=sample_fields, data=[None] * 3))))
+
+
+    def test_form_card_with_fix_buf(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = ui.form_card(box='1 1 1 1', items=[
+            ui.visualization(
+                name='my_plot',
+                plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)]),
+                data=data(fields=sample_fields, rows=[None] * 3),
+            ),
+        ])
+        page.save()
+        assert compare(page.load(), make_form_card(buf=dict(f=dict(d=[None] * 3, f=['a', 'b', 'c'], n =3))))
+
+
+    def test_form_card_with_fix_buf_update(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = ui.form_card(box='1 1 1 1', items=[
+            ui.visualization(
+                name='my_plot',
+                plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)]),
+                data=data(fields=sample_fields, rows=[None] * 3),
+            ),
+        ])
+        page.save()
+        page['card1'].my_plot.data[0] = [1,2,3]
+        page.save()
+        assert compare(page.load(), make_form_card(buf=dict(f=dict(d=[[1,2,3], None, None], f=['a', 'b', 'c'], n =3))))
+
+    def test_new_card_with_cyc_buf(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = dict(data=data(fields=sample_fields, size=-3))
+        page.save()
+        assert compare(page.load(),
+                      make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[None] * 3, i=0))))
+
+    def test_form_card_with_cyc_buf(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = ui.form_card(box='1 1 1 1', items=[
+            ui.visualization(
+                name='my_plot',
+                plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)]),
+                data=data(fields=sample_fields, rows=[None] * 3, size=-3),
+            ),
+        ])
+        page.save()
+        assert compare(page.load(), make_form_card(buf=dict(c=dict(d=[None, None, None], f=['a', 'b', 'c'], n=3, i=0))))
+
+
+    def test_form_card_with_cyc_buf_update(self):
+        page = site['/test']
+        page.drop()
+        page['card1'] = ui.form_card(box='1 1 1 1', items=[
+            ui.visualization(
+                name='my_plot',
+                plot=ui.plot([ui.mark(type='interval', x='=profession', y='=salary', y_min=0)]),
+                data=data(fields=sample_fields, rows=[None] * 3, size=-3),
+            ),
+        ])
+        page.save()
+        page['card1'].my_plot.data[-1] = [1,2,3]
+        page.save()
+        assert compare(page.load(), make_form_card(buf=dict(c=dict(d=[[1,2,3], None, None], f=['a', 'b', 'c'], n=3, i=1))))
 
 
     def test_new_card_with_cyc_buf(self):

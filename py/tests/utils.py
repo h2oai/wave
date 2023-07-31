@@ -18,6 +18,40 @@ def make_card(**props):
             d[k] = v
     return dict(d=d, b=b) if len(b) else dict(d=d)
 
+def make_form_card(buf):
+    return {
+    "p": {
+      "c": {
+        "card1": {
+          "b": [ buf ],
+          "d": {
+            "box": "1 1 1 1",
+            "items": [
+              {
+                "visualization": {
+                  "data": {},
+                  "name": "my_plot",
+                  "plot": {
+                    "marks": [
+                      {
+                        "type": "interval",
+                        "x": "=profession",
+                        "y": "=salary",
+                        "y_min": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "view": "form",
+            "~items.0.visualization.data": 0
+            }
+          }
+        }
+      },
+    }
+
 
 def make_map_buf(fields, data): return {'__m__': dict(f=fields, d=data)}
 

@@ -15,6 +15,7 @@
 package wave
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -53,6 +54,12 @@ type Card struct {
 	nameComponentMap map[string]any // Cache for cards with items, secondary_items or buttons.
 }
 
+// Tmp placeholder for key-buffer pairs.
+type BufEntry struct {
+	k   string
+	buf interface{}
+}
+
 const dataPrefix = "~"
 
 func loadCard(ns *Namespace, c CardD) *Card {
@@ -60,13 +67,16 @@ func loadCard(ns *Namespace, c CardD) *Card {
 		data:             make(map[string]any),
 		nameComponentMap: nil,
 	}
-	ks := make([]string, 1) // to avoid allocation during card.set() below
+	ks := make([]string, 1)         // to avoid allocation during card.set() below
+	bufAttrs := make([]BufEntry, 0) // Go does not guarantee map iteration order, set buffers after all other attributes.
+
 	for k, v := range c.D {
-		if len(k) > 0 && strings.HasPrefix(k, dataPrefix) {
+		if strings.HasPrefix(k, dataPrefix) {
 			if f, ok := v.(float64); ok {
 				i := int(f)
 				if i >= 0 && i < len(c.B) {
-					k, v = strings.TrimPrefix(k, dataPrefix), loadBuf(ns, c.B[i])
+					bufAttrs = append(bufAttrs, BufEntry{strings.TrimPrefix(k, dataPrefix), loadBuf(ns, c.B[i])})
+					continue
 				}
 			}
 		}
@@ -78,6 +88,10 @@ func loadCard(ns *Namespace, c CardD) *Card {
 		}
 		ks[0] = k
 		card.set(ks, v)
+	}
+	for b := range bufAttrs {
+		ks[0] = bufAttrs[b].k
+		card.set(ks, bufAttrs[b].buf)
 	}
 	return card
 }
@@ -94,22 +108,33 @@ func (c *Card) set(ks []string, v any) {
 				return
 			}
 		}
-		if v == nil {
-			delete(c.data, p)
-		} else {
-			c.data[p] = v
+
+		keys := strings.Split(p, ".")
+		var x any = c.data
+		// Get the object even if nested.
+		for _, key := range keys[:len(keys)-1] {
+			x = get(x, key)
+		}
+
+		if x, ok := x.(map[string]any); ok {
+			lastKey := keys[len(keys)-1]
+			if v == nil {
+				delete(x, lastKey)
+			} else {
+				x[lastKey] = v
+			}
 		}
 	default: // .foo.bar.baz = qux
 		var x any = c.data
 
-		// By-name access.
-		if v, ok := c.nameComponentMap[ks[0]]; ok && len(ks) == 2 {
-			x = v
-		} else {
-			// DEPRECATED: Access via page.items[idx].wrapper.prop.
-			for _, k := range ks[:len(ks)-1] {
-				x = get(x, k)
-			}
+		startIdx := 0
+		if _, ok := c.data[ks[0]]; !ok && c.nameComponentMap[ks[0]] != nil {
+			// By-name access.
+			x = c.nameComponentMap[ks[0]]
+			startIdx = 1
+		}
+		for _, k := range ks[startIdx : len(ks)-1] {
+			x = get(x, k)
 		}
 
 		p := ks[len(ks)-1]
@@ -163,6 +188,14 @@ func get(ix any, k string) any {
 func (c *Card) dump() CardD {
 	data := make(map[string]any)
 	var bufs []BufD
+
+	// Look for nested buffers within form_card.
+	if v, ok := c.data["view"]; ok {
+		if v, ok := v.(string); ok && v == "form" {
+			fillFormCardBufs(c.data, data, &bufs, make([]string, 0))
+		}
+	}
+
 	for k, iv := range c.data {
 		if v, ok := iv.(Buf); ok {
 			data[dataPrefix+k] = len(bufs)
@@ -220,4 +253,53 @@ func fillNameComponentMap(m map[string]any, wrappedItems any) {
 			}
 		}
 	}
+}
+
+func fillFormCardBufs(data map[string]any, outData map[string]any, bufs *[]BufD, keys []string) {
+	items, ok := data["items"]
+	if !ok {
+		return
+	}
+	itemsSlice, ok := items.([]any)
+	if !ok {
+		return
+	}
+
+	keys = append(keys, "items")
+	for idx, item := range itemsSlice {
+		itemMap, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		if v, ok := itemMap["inline"]; ok {
+			if v, ok := v.(map[string]any); ok {
+				keys = append(keys, strconv.Itoa(idx), "inline")
+				fillFormCardBufs(v, outData, bufs, keys)
+				keys = keys[:len(keys)-2]
+			}
+		}
+		visualizationMap, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		v, ok := visualizationMap["visualization"]
+		if !ok {
+			continue
+		}
+		valueMap, ok := v.(map[string]any)
+		if !ok {
+			continue
+		}
+		b, ok := valueMap["data"]
+		if !ok {
+			continue
+		}
+		if b, ok := b.(Buf); ok {
+			key := fmt.Sprintf("%s.%d.visualization.data", strings.Join(keys, "."), idx)
+			outData[dataPrefix+key] = len(*bufs)
+			*bufs = append(*bufs, b.dump())
+		}
+	}
+	//lint:ignore SA4006 this function is recursive so mutation is necessary.
+	keys = keys[:len(keys)-1]
 }
