@@ -6,17 +6,21 @@ import { clas, cssVar, pc } from './theme'
 
 const
   css = stylesheet({
-    btnMultiline: {
+    animate: {
       opacity: 0,
       transition: 'opacity .5s'
     },
+    visible: {
+      opacity: 1,
+    },
     btn: {
       minWidth: 'initial',
-      position: 'absolute',
+      position: 'fixed',
       width: 24,
       height: 24,
-      right: 0,
-      transform: 'translate(-4px, 4px)',
+      // TODO: Compute dynamically based on anchor element.
+      // right: 0,
+      // transform: 'translate(-4px, 4px)',
       zIndex: 1,
     },
     copiedBtn: {
@@ -54,19 +58,17 @@ export interface CopyableText {
   height?: S
 }
 
-export const XCopyableText = ({ model }: { model: CopyableText }) => {
+export const ClipboardCopyButton = ({ value, anchorElementRef, showOnHover }: { value: S, anchorElementRef: any, showOnHover: B }) => {
   const
-    { name, multiline, label, value, height } = model,
-    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
-    ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
+    [visible, setVisible] = React.useState(!showOnHover),
     onClick = async () => {
-      const el = ref.current
+      const el = anchorElementRef.current
       if (!el) return
       try {
         if (document.queryCommandSupported('copy')) {
-          el.select()
+          el.select() // TODO: Test, replace with componentRef
           document.execCommand('copy')
           window.getSelection()?.removeAllRanges()
         }
@@ -78,36 +80,59 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
     }
 
+  React.useEffect(() => {
+    const el = anchorElementRef.current
+    if (el) {
+      console.log(anchorElementRef.current.getBoundingClientRect())
+      // textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined // TODO: Re-implement with pure CSS: '&hover childId'
+      el.addEventListener('mouseenter', () => { setVisible(true) })
+      el.addEventListener('mouseleave', () => { setVisible(false) })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
+  return (<Fluent.PrimaryButton
+    title='Copy to clipboard'
+    onClick={onClick}
+    iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
+    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHover ? css.animate : '', visible ? css.visible : '')}
+  />)
+}
+
+export const XCopyableText = ({ model }: { model: CopyableText }) => {
+  const
+    { name, multiline, label, value, height } = model,
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
+    ref = React.useRef<Fluent.ITextField>(null),
+    domRef = React.useRef<HTMLDivElement>(null)
+
   return (
-    <Fluent.TextField
-      data-test={name}
-      componentRef={ref}
-      value={value}
-      multiline={multiline}
-      onRenderLabel={() =>
-        <div className={css.labelContainer}>
-          <Fluent.Label>{label}</Fluent.Label>
-          <Fluent.PrimaryButton
-            title='Copy to clipboard'
-            onClick={onClick}
-            iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-            className={clas(css.btn, copied ? css.copiedBtn : '', multiline ? css.btnMultiline : '')}
-          />
-        </div>
-      }
-      styles={{
-        root: {
-          ...heightStyle,
-          textFieldRoot: { position: 'relative', width: pc(100) },
-          textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined
-        },
-        wrapper: heightStyle,
-        fieldGroup: heightStyle || { minHeight: height },
-        field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
-      }}
-      readOnly
-    />
+    <>
+      <Fluent.TextField
+        data-test={name}
+        componentRef={ref}
+        elementRef={domRef} // Temporary solution which will be replaced with ref once TextField is converted to a function component.
+        value={value}
+        multiline={multiline}
+        onRenderLabel={() =>
+          <div className={css.labelContainer}>
+            <Fluent.Label>{label}</Fluent.Label>
+          </div>
+        }
+        styles={{
+          root: {
+            ...heightStyle,
+            textFieldRoot: { position: 'relative', width: pc(100) },
+          },
+          wrapper: heightStyle,
+          fieldGroup: heightStyle || { minHeight: height },
+          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
+        }}
+        readOnly
+      />
+      <ClipboardCopyButton anchorElementRef={domRef} showOnHover={!!multiline} value={value} />
+    </>
   )
 }

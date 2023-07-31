@@ -20,6 +20,8 @@ import { stylesheet } from 'typestyle'
 import { cards, grid, substitute } from './layout'
 import { border, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
+import { ClipboardCopyButton } from './copyable_text'
+import ReactDOM from 'react-dom'
 
 const
   css = stylesheet({
