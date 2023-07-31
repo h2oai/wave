@@ -99,8 +99,8 @@ func (c *Card) set(ks []string, v any) {
 		keys := strings.Split(p, ".")
 		var x any = c.data
 		// Get the object even if nested.
-		for i := 0; i < len(keys)-1; i++ {
-			x = get(x, keys[i])
+		for _, key := range keys[:len(keys)-1] {
+			x = get(x, key)
 		}
 
 		if x, ok := x.(map[string]any); ok {
