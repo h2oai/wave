@@ -26,8 +26,8 @@ async def serve(q: Q):
                 title='Drag to annotate',
                 src=q.app.uploaded_mp3,
                 tags=[
-                    ui.audio_annotator_tag(name='m', label='Flute', color='$blue'),
-                    ui.audio_annotator_tag(name='f', label='Drum', color='$brown'),
+                    ui.audio_annotator_tag(name='f', label='Flute', color='$blue'),
+                    ui.audio_annotator_tag(name='d', label='Drum', color='$brown'),
                 ],
             ),
             ui.button(name='submit', label='Submit', primary=True)

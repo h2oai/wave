@@ -453,6 +453,7 @@ export const
     const visited = new Set()
     const mergedAnnotations: DrawnAnnotation[] = []
     let zoomAnnotation: DrawnAnnotation | null = null
+
     for (let i = 0; i < annotations.length; i++) {
       const currAnnotation = annotations[i]
       if (currAnnotation.isZoom) {
@@ -606,13 +607,15 @@ export const
       }
 
     React.useEffect(() => {
-      const focused = annotations.find(a => a.isFocused)
-      if (focused) {
-        const tagChanged = focused.tag !== activeTag
-        focused.tag = activeTag
-        if (tagChanged) onAnnotate(annotations)
-      }
-    }, [activeTag, onAnnotate, annotations])
+      setAnnotations(annotations => annotations.map(a => {
+        if (a.isFocused) {
+          const tagChanged = a.tag !== activeTag
+          a.tag = activeTag
+          if (tagChanged) onAnnotate(annotations)
+        }
+        return a
+      }))
+    }, [activeTag, onAnnotate])
 
     return (
       <>
