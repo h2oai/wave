@@ -46,9 +46,20 @@ describe('Checklist.tsx', () => {
     expect(wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
   })
 
-  it('Set args when value is updated', () => {
+  it('Set args when value is updated to different value', () => {
     const { rerender } = render(<XChecklist model={checklistProps} />)
     expect(wave.args[name]).toMatchObject([])
+    rerender(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
+    expect(wave.args[name]).toMatchObject(['Choice1'])
+  })
+
+  it('Set args when value is updated to initial value', () => {
+    const { getByText, rerender } = render(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
+    expect(wave.args[name]).toMatchObject(['Choice1'])
+
+    fireEvent.click(getByText('Choice2').parentElement!)
+    expect(wave.args[name]).toMatchObject(['Choice1', 'Choice2'])
+
     rerender(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
     expect(wave.args[name]).toMatchObject(['Choice1'])
   })
