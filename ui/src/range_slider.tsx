@@ -59,8 +59,11 @@ export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
     onChange = React.useCallback((_val: U, val_range?: [U, U]) => {
       if (val_range) {
         wave.args[name] = val_range
+        model.min_value = val_range[0]
+        model.max_value = val_range[1]
         setValRange(val_range)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name]),
     onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger])
 
