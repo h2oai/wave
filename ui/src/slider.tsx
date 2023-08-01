@@ -66,6 +66,7 @@ export const
       [val, setVal] = React.useState(defaultValue),
       onChange = (v: U) => {
         wave.args[m.name] = v
+        m.value = v
         setVal(v)
       },
       onChanged = React.useCallback((_e: MouseEvent | KeyboardEvent | TouchEvent, _value: U) => { if (m.trigger) wave.push() }, [m.trigger])
