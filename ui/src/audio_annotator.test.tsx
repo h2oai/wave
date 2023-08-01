@@ -788,5 +788,29 @@ describe('AudioAnnotator.tsx', () => {
         { id: '4', ...base, canvasStart: 70, canvasEnd: 90, canvasHeight: WAVE_FORM_HEIGHT / 3, canvasY: 0, tag: 'tag3' },
       ])
     })
+
+    it('Handles intersection tag1 tag2 tag2 after moving from right to left', async () => {
+      const { container, getByText } = render(<XAudioAnnotator model={model} />)
+      await waitForComponentLoad()
+      expect(wave.args[name]).toMatchObject(items)
+      fireEvent.click(getByText('Tag 2'))
+
+      const canvasEl = container.querySelector('canvas')!
+
+      fireEvent.mouseDown(canvasEl, { clientX: 200, clientY: 10, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 380, clientY: 10, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 380, clientY: 10, buttons: 1 })
+
+      expect(wave.args[name]).toHaveLength(3)
+      expect(wave.args[name]).toMatchObject([...items, { start: 200, end: 380, tag: 'tag2' }])
+
+      fireEvent.click(canvasEl, { clientX: 210, clientY: 50 })
+      fireEvent.mouseDown(canvasEl, { clientX: 210, clientY: 50, buttons: 1 })
+      fireEvent.mouseMove(canvasEl, { clientX: 150, clientY: 60, buttons: 1 })
+      fireEvent.click(canvasEl, { clientX: 150, clientY: 60 })
+
+      expect(wave.args[name]).toHaveLength(2)
+      expect(wave.args[name]).toMatchObject([items[0], { start: 140, end: 320, tag: 'tag2' }])
+    })
   })
 })

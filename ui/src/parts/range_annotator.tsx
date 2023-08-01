@@ -166,6 +166,7 @@ const
   getCanvasDimensions = (intersections: DrawnAnnotation[], annotation: DrawnAnnotation, maxDepth?: U) => {
     const verticalIntersections = intersections
       .filter(a => a !== annotation && isAnnotationIntersectingAtEnd(a, annotation))
+      // TODO: Prev array is already sorted so adding a new element can be made O(N) instead of O(NlogN).
       .sort((a, b) => a.canvasY - b.canvasY)
     let canvasY = 0
     let j = 0
@@ -563,6 +564,7 @@ export const
             annotation.canvasStart = startOffset + (annotation.canvasStart / canvasWidth * (zoom.to - zoom.from))
             annotation.canvasEnd = startOffset + (annotation.canvasEnd / canvasWidth * (zoom.to - zoom.from))
           }
+          // TODO: Prev array is already sorted so adding a new element can be made O(N) instead of O(NlogN).
           return [...prev, annotation].sort((a, b) => a.canvasStart - b.canvasStart)
         })
         recalcAnnotations(true)
@@ -578,6 +580,8 @@ export const
             return annotations
           })
         }
+        // TODO: Prev array is already sorted so adding a new element can be made O(N) instead of O(NlogN).
+        setAnnotations(prev => prev.sort((a, b) => a.canvasStart - b.canvasStart))
         recalcAnnotations(true)
       }, [canvasWidth, recalcAnnotations, zoom.from, zoom.to]),
       reset = () => {
