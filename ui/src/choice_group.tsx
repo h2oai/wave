@@ -73,6 +73,7 @@ export const
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) {
           wave.args[m.name] = option.key
+          m.value = option.key
           setValue(option.key)
         }
         if (m.trigger) wave.push()

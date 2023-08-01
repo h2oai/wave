@@ -27,6 +27,24 @@ describe('ChoiceGroup.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Set args when value is updated to different value', () => {
+    const { rerender } = render(<XChoiceGroup model={choiceGroupProps} />)
+    expect(wave.args[name]).toBe(null)
+    rerender(<XChoiceGroup model={{ ...choiceGroupProps, value: 'Choice3' }} />)
+    expect(wave.args[name]).toBe('Choice3')
+  })
+
+  it('Set args when value is updated to initial value', () => {
+    const { getByText, rerender } = render(<XChoiceGroup model={{ ...choiceGroupProps, value: 'Choice3' }} />)
+    expect(wave.args[name]).toBe('Choice3')
+
+    fireEvent.click(getByText('Choice2').parentElement!)
+    expect(wave.args[name]).toBe('Choice2')
+
+    rerender(<XChoiceGroup model={{ ...choiceGroupProps, value: 'Choice3' }} />)
+    expect(wave.args[name]).toBe('Choice3')
+  })
+
   it('Sets args - single selection', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)
@@ -43,11 +61,14 @@ describe('ChoiceGroup.tsx', () => {
     expect(wave.args[name]).toBe('Choice3')
   })
 
-  it('Set args when value is updated', () => {
-    const { rerender } = render(<XChoiceGroup model={choiceGroupProps} />)
-    expect(wave.args[name]).toBe(null)
-    rerender(<XChoiceGroup model={{ ...choiceGroupProps, value: 'Choice3' }} />)
-    expect(wave.args[name]).toBe('Choice3')
+  it('Calls sync - trigger specified', () => {
+    const { getByText } = render(<XChoiceGroup model={{ ...choiceGroupProps, trigger: true }} />)
+    const pushMock = jest.fn()
+
+    wave.push = pushMock
+    fireEvent.click(getByText('Choice1').parentElement!)
+
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call sync - trigger not specified', () => {
@@ -58,15 +79,5 @@ describe('ChoiceGroup.tsx', () => {
     fireEvent.click(getByText('Choice1').parentElement!)
 
     expect(pushMock).toBeCalledTimes(0)
-  })
-
-  it('Calls sync - trigger specified', () => {
-    const { getByText } = render(<XChoiceGroup model={{ ...choiceGroupProps, trigger: true }} />)
-    const pushMock = jest.fn()
-
-    wave.push = pushMock
-    fireEvent.click(getByText('Choice1').parentElement!)
-
-    expect(pushMock).toHaveBeenCalled()
   })
 })
