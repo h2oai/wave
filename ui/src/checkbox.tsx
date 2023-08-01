@@ -62,6 +62,7 @@ export const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: B) => {
         wave.args[name] = checked === null ? null : !!checked
         setChecked(!!checked)
+        m.value = !!checked
         if (trigger) wave.push()
       }
 
