@@ -65,8 +65,9 @@ const
     return -groups[1]?.length || groups[2]?.length || 0
   }
 export const
-  XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
+  XSpinbox = ({ model: m }: { model: Spinbox }) => {
     const
+      { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } = m,
       [val, setVal] = React.useState<S>(String(value)),
       precision = Math.max(calculatePrecision(step), 0),
       parseValue = React.useCallback((v: F) => {
@@ -78,6 +79,7 @@ export const
         wave.args[name] = newValue
         if (trigger) wave.push()
         setVal(String(newValue))
+        m.value = newValue
         return String(newValue)
       },
       onDecrement = () => {
@@ -85,6 +87,7 @@ export const
         wave.args[name] = newValue
         if (trigger) wave.push()
         setVal(String(newValue))
+        m.value = newValue
         return String(newValue)
       },
       handleValue = React.useCallback((val: S) => {
@@ -108,7 +111,9 @@ export const
       }, [max, min, parseValue, precision]),
       handleOnInput = React.useCallback((val: U) => {
         wave.args[name] = val
+        m.value = val
         if (trigger) wave.push()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [name, trigger]),
       debouncedHandleOnInput = React.useRef(wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput)),
       onInput = (e: React.SyntheticEvent<HTMLElement>) => {
@@ -117,6 +122,7 @@ export const
       }
 
     React.useEffect(() => {
+      if (value === wave.args[name]) return
       const val = (value < min) ? min : ((value > max) ? max : value)
       wave.args[name] = val
       setVal(String(val))
