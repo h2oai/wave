@@ -146,13 +146,17 @@ export const
         setValue((prevValue) => {
           const date = new Date(prevValue!)
           date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-          wave.args[m.name] = formatDateToTimeString(date, '24')
+          const newValue = formatDateToTimeString(date, '24')
+          wave.args[m.name] = newValue
+          m.value = newValue
           return date
         })
       },
       onChangeTime = (time: unknown) => {
         if (time instanceof Date) {
-          wave.args[m.name] = formatDateToTimeString(time, '24')
+          const newValue = formatDateToTimeString(time, '24')
+          wave.args[m.name] = newValue
+          m.value = newValue
           setValue(time)
         }
       },
