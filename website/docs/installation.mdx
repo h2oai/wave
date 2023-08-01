@@ -2,19 +2,39 @@
 title: Installation
 ---
 
-## Install
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-:::important
-These instructions apply to v0.20 or later. For previous versions, [click here](/docs/installation-8-20).
-:::
 
-Install the `h2o-wave` package from PyPI:
+<Tabs groupId="pypi/conda">
+
+<TabItem value="pip" label="Pip">
 
 ```shell
 pip install h2o-wave
 ```
 
+</TabItem>
+
+<TabItem value="conda" label="Conda">
+
+```shell
+conda config --append channels conda-forge
+conda install -c h2oai h2o-wave
+```
+:::info
+Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) [separately](/docs/tutorial-hello#step-1-start-the-wave-server).
+:::
+
+</TabItem>
+
+</Tabs>
+
 To install in a virtual environment (recommended):
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="lin" label="Unix/MacOS">
 
 ```shell
 python3 -m venv venv
@@ -22,22 +42,20 @@ source venv/bin/activate
 pip install h2o-wave
 ```
 
-To install in a virtual environment (Windows):
+</TabItem>
+
+<TabItem value="win" label="Windows">
 
 ```shell
-python3 -m venv venv
-venv\Scripts\activate
-pip install h2o-wave
+python -m venv venv
+.\venv\Scripts\activate
+pip install h2o-wave 
 ```
 
-To install using Conda:
+</TabItem>
 
-```shell
-conda config --append channels conda-forge
-conda install -c h2oai h2o-wave
-```
+<TabItem value="conda" label="Conda">
 
-To install in a Conda virtual environment:
 
 ```shell
 conda create -n venv
@@ -47,8 +65,12 @@ conda install -c h2oai h2o-wave
 ```
 
 :::info
-Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) yourself. See how to run it [here](/docs/installation-8-20#setup).
+Conda packaging does not contain Wave server which means, you will still need to run the wave server (waved) [separately](/docs/tutorial-hello#step-1-start-the-wave-server).
 :::
+
+</TabItem>
+</Tabs>
+
 
 ## Project templates
 
@@ -92,7 +114,7 @@ Automated test harness........ /home/wave/test
 Wave daemon for deployments... /home/wave
 ```
 
-You should now have access to 200+ examples locally.
+You now have access to 200+ examples locally.
 
 :::info
 On recent versions of OSX, it's possible to run into certificate verification errors while running `wave fetch`, specifically `urllib.error.URLError: urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate`. To fix this problem, navigate to `Application/Python 3.7` on your system and execute `Install Certificates.command`.
@@ -122,11 +144,11 @@ To play with the tour's active example in isolation, simply open a new browser t
 
 ## Downloading Wave
 
-If you would like to run Wave server manually (e.g. for [deployment](/docs/deployment)), you can download it either from here or from our [Github releases](https://github.com/h2oai/wave/releases).
+If you would like to run Wave server manually (e.g. for [deployment](/docs/deployment) or [Wave scripts](/docs/scripts)), you can download it either from here or from our [Github releases](https://github.com/h2oai/wave/releases).
 
-If you are unsure which package to pick, here is a helper table:
+If unsure which package to pick, here is a helper table:
 
-| **Your OS** | **Wave server** |  **Python client** |
+|   **OS**   | **Wave server** |  **Python client** |
 |:-----------:|:---------------:|:------------------:|
 |     Mac     |   darwin-amd64  | macosx_10_9_x86_64 |
 |    Mac M1   |   darwin-arm64  |  macosx_11_0_arm64 |

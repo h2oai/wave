@@ -9,7 +9,7 @@ from requests.adapters import HTTPAdapter, Retry
 cwd = os.path.join(os.path.dirname(__file__))
 wave_executable = os.path.join(cwd, 'venv', 'bin', 'wave')
 s = requests.Session()
-s.mount('http://', HTTPAdapter(max_retries=Retry(total=15, backoff_factor=2)))
+s.mount('http://', HTTPAdapter(max_retries=Retry(total=5, backoff_factor=2)))
 
 
 def start_waved(env: Optional[Dict[str, str]] = None):
@@ -21,7 +21,7 @@ def start_waved(env: Optional[Dict[str, str]] = None):
     if waved_p.returncode is not None:
         raise Exception('Failed to start waved')
 
-    res = s.get(f'http://localhost:10101/{os.environ.get("H2O_WAVE_BASE_URL", "/")}')
+    res = s.get(f'http://localhost:10101/{os.environ.get("H2O_WAVE_BASE_URL", "/")}', timeout=10)
     if res.status_code != 200:
         raise Exception('Failed to start waved')
 

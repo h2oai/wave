@@ -21,8 +21,9 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Publish to Conda
-        uses: amauryval/publish_conda_package_action@1.1.0
+        uses: amauryval/publish_conda_package_action@2.0.3
         with:
           CondaDir: 'py/conda'
+          Platforms: 'noarch'
           CondaUsername: ${{ secrets.CONDA_USERNAME }}
           CondaPassword: ${{ secrets.CONDA_PASSWORD }}

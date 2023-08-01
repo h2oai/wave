@@ -2,7 +2,8 @@
 title: "Tutorial: Hello World"
 ---
 
-import StartQ from './_start_q.md'
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 In this section, we'll learn how to author our first Wave program from scratch, and understand the basics of how to display content in a web browser.
 
@@ -12,57 +13,113 @@ These tutorials assume that you have some familiarity with the Python programmin
 
 ## Step 1: Start the Wave server
 
-:::important
-You can skip this step if you're running Wave 0.20.0 or later.
-:::
+[Download](/docs/installation#downloading-wave) the most recent version `.tar.gz` file for your operating system, and extract (unzip) it to a directory of your choice.
+Once done, open a terminal, cd into the extracted dir and start the Wave server.
 
-<StartQ/>
+<Tabs groupId="operating-systems">
+
+<TabItem value="unix" label="Unix/MacOS">
+
+```shell
+./waved
+```
+</TabItem>
+
+<TabItem value="win" label="Windows">
+
+```shell
+waved.exe
+```
+
+</TabItem>
+
+</Tabs>
+
+
+```sh
+2020/10/27 16:16:34 # 
+2020/10/27 16:16:34 # ┌─────────────────────────┐
+2020/10/27 16:16:34 # │  ┌    ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
+2020/10/27 16:16:34 # │  │ ┌──┘ │──│ │  │ └┐    │ (version) (build)
+2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
+2020/10/27 16:16:34 # └─────────────────────────┘
+2020/10/27 16:16:34 # 
+2020/10/27 16:16:34 # {"address":":10101","t":"listen","webroot":"/home/elp/wave/www"}
+```
+
+The Wave server should now be running at <http://localhost:10101>.
+
+:::caution Don't close this terminal window!
+To run any Wave app or script, you need the Wave server up and running at all times. Your web browser communicates with the Wave server, and the Wave server in turn communicates with the Wave app.
+
+Apps can start Wave server automatically via `wave run` command. So this step is only necessary for Wave scripts.
+:::
 
 ## Step 2: Set up a working directory
 
-Next, let's set up a working directory to author our program.
-
-### Create a directory
-```shell
-mkdir $HOME/wave-apps
-cd $HOME/wave-apps
-```
+Next, let's set up a working directory to author our program. Create a new directory and open it in a terminal.
 
 ### Set up a virtual environment
+
 A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us manage our program's dependencies without interfering with system-wide packages.
+
+<Tabs groupId="operating-systems">
+
+<TabItem value="unix" label="Unix/MacOS">
 
 ```shell
 python3 -m venv venv
 source venv/bin/activate
 ```
+</TabItem>
 
-If you are using Conda as your package manager,
+<TabItem value="win" label="Windows">
+
+```shell
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+</TabItem>
+
+<TabItem value="conda" label="Conda">
 
 ```shell
 conda create -n venv
 conda activate venv
 ```
+</TabItem>
+
+</Tabs>
 
 ### Install the Wave Python driver
+
+<Tabs groupId="package-manager">
+
+<TabItem value="pip-pkg" label="Pip">
 
 ```shell
 pip install h2o-wave
 ```
+</TabItem>
 
-If you are using Conda as your package manager,
+<TabItem value="conda" label="Conda">
 
 ```shell
 conda config --append channels conda-forge
 conda install -c h2oai h2o-wave
 ```
+</TabItem>
+
+</Tabs>
 
 ## Step 3: Write your program
 
-Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/wave-apps` directory, and copy-paste the following.
+Next, open your preferred text editor, create a Python script called `hello_world.py`, and copy-paste the following.
 
 For now, don't worry too much about what this program is doing. We'll get to that shortly.
 
-```py title="$HOME/wave-apps/hello_world.py"
+```py title="hello_world.py"
 from h2o_wave import site, ui
 
 # Grab a reference to the page at route '/hello'
@@ -83,8 +140,7 @@ page.save()
 ## Step 4: Run your program
 
 ```shell
-cd $HOME/wave-apps
-./venv/bin/python hello_world.py
+python hello_world.py
 ```
 
 ## Step 5: Admire your creation

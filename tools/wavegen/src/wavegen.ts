@@ -535,7 +535,7 @@ const
         p('from .core import Data')
         p('')
         p('Value = Union[str, float, int]')
-        p('PackedRecord = Union[dict, str]')
+        p('PackedRecord = Union[dict, str, Data]')
         p('PackedRecords = Union[List[dict], str]')
         p('PackedData = Union[Data, str]') // special-cased during packing, Go allocation and unpacking.
         p('')

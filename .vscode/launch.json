@@ -27,18 +27,6 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
-      "name": "Debug PY Build",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/py",
-      "program": "${workspaceFolder}/py/setup.py",
-      "python": "${workspaceFolder}/py/venv/bin/python3",
-      "console": "integratedTerminal",
-      "args": [
-        "bdist_wheel",
-      ]
-    },
-    {
       "name": "Debug Py Tests",
       "type": "python",
       "cwd": "${workspaceFolder}/py",
@@ -89,6 +77,14 @@
       "outFiles": [
         "${workspaceFolder}/tools/wavegen/build/**/*.js"
       ]
+    },
+    {
+      "name": "Debug Wave Script",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "python": "${workspaceFolder}/py/venv/bin/python",
+      "console": "integratedTerminal",
     },
     {
       "name": "Debug Wave App",

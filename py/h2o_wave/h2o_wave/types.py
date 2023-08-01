@@ -20,7 +20,7 @@ from typing import Any, Optional, Union, Dict, List
 from .core import Data
 
 Value = Union[str, float, int]
-PackedRecord = Union[dict, str]
+PackedRecord = Union[dict, str, Data]
 PackedRecords = Union[List[dict], str]
 PackedData = Union[Data, str]
 

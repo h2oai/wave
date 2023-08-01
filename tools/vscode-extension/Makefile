@@ -4,6 +4,9 @@ SED=$(shell command -v gsed || command -v sed)
 build:
 	mkdir deps
 	cp -r venv/lib/*/site-packages/* deps
+	rm -rf deps/pip*
+	rm -rf deps/setuptools*
+	rm -rf deps/pkg_resources*
 	npm run build
 	rm -rf deps
 
@@ -29,7 +32,7 @@ tag: # Bump version
 publish:
 	$(MAKE) test
 	$(MAKE) build
-	npm run publish
+	npx vsce publish --packagePath *.vsix
 
 clean:
 	rm -rf venv

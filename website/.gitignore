@@ -26,7 +26,6 @@ yarn-error.log*
 /widgets.js
 /docs/examples/*.md
 /docs/api/*.md
-/docs/api/h2o_wave_ml/*.md
 /docs/widgets
 /serve-linux
 /serve-darwin

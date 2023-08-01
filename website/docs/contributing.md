@@ -30,6 +30,8 @@ If you want to fix a specific issue, it’s best to comment on the individual is
 
 Issues that are labeled **good first issue**, **low** or **medium** priority are great places to start. Only issues that have assigned a milestone or are tagged with **help needed** / **good first issue** will be merged.
 
+Please be respectful of maintainer's time and do not ask questions like "Which file should I edit" etc. Do some due diligence first. Chances are that if you are not able to find the file that needs to be changed, the feature implementation might be overwhelming for you as well.
+
 ## Improving documentation and tutorials
 
 We aim to produce high quality documentation and tutorials. On rare occasions that content includes typos or bugs. If you find something you can fix, send us a pull request for consideration.
@@ -64,91 +66,73 @@ Prerequisites:
 
 - [Go](https://golang.org/) v1.19+
 - [Node.js](http://nodejs.org) v16+
-- [Python](https://www.python.org/) 3.7+
+- [Python](https://www.python.org/) 3.8+
 - A C/C++ compiler [XCode](https://developer.apple.com/xcode/) on OSX, `build-essential` on Debian, `base-devel` on Arch, etc.) to build Python/Node.js dependencies.
 
-:warning: This project is best developed on OSX or Linux. If you are on Windows, use [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
+:warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) is recommended.
 
-Setup:
+You will need [Go](https://golang.org/) 1.19+, [Node.js](http://nodejs.org) 16+, [Python](https://www.python.org/) 3.7+. You should already have Python 3.7+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
+
+### Getting started
+
+To set up all development dependencies, clone the repo and run:
 
 ``` bash
-git clone https://github.com/h2oai/wave.git
-cd wave
 make all
 ```
 
-Launch the Wave server at <http://localhost:10101/>
+To launch the Wave server, run:
 
 ``` bash
 make run
 ```
 
-To modify the `h2o-wave` Python package or examples, open `./py` in PyCharm or your preferred IDE. To test your modifications, first activate the `venv` in `./py`:
+Try running the button example to verify if your setup is functional:
 
 ``` bash
-cd py
-./venv/bin/activate
+cd py && ./venv/bin/wave run examples.button
 ```
 
-If you want to run for example a python button example:
+You should now see the button example at <http://localhost:10101/demo>.
 
-```bash
-wave run examples.button
-```
-
-All examples are located in [py/examples](https://github.com/h2oai/wave/tree/main/py/examples) folder.
-
-If you intend to modify the UI (Typescript), also launch the UI development server at <http://localhost:3000/> to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
+For front-end development, you'll also need to start the a UI dev server:
 
 ``` bash
 make run-ui
 ```
 
-If you modify the Typescript card/component definitions (TS interfaces), run `make generate` to re-generate the corresponding Python and R definitions.
+You should now see the button example at <http://localhost:3000/demo>.
 
-To view a list of additional make tasks:
+Once you have the UI dev server running, you should be able to visualize any changes to `./ui` in real time.
 
-```bash
+Happy hacking!
+
+### Daily development
+
+For daily development, you'll only need to pull `main` from git and run `make run` and `make run-ui`. Running `make setup` is not necessary unless `make run` or `make run-ui` fail due to missing dependencies.
+
+### Other make targets
+
+``` bash
+# Generates Python and R APIs.
+# Run only if you add new cards/components or fix docstrings).
+$ make generate
+
+# Displays all the available make targets.
 $ make help
-all                            Setup and build everything
-build                          Build everything
-build-db                       Build database server for current OS/Arch
-build-ide                      Build IDE
-build-py                       Build h2o_wave wheel
-build-server                   Build server for current OS/Arch
-build-server-micro             Build smaller (~2M instead of ~10M) server executable
-build-ui                       Build UI
-build-website                  Build website
-clean                          Clean
-docs                           Generate API docs and copy to website
-generate                       Generate driver bindings
-generator                      Build driver generator
-help                           List all make tasks
-preview-website                Preview website
-publish-website                Publish website
-release                        Prepare release builds (e.g. "VERSION=1.2.3 make release)"
-run-cypress                    Run Cypress
-run-db                         Run database server
-run-micro                      Run microwave
-run                            Run server
-run-ui                         Run UI in development mode (hot reloading)
-setup                          Set up development dependencies
-tag                            Bump version and tag
-test-ui-ci                     Run UI unit tests in CI mode
-test-ui-watch                  Run UI unit tests
 ```
 
-## Project Structure
+## Repo Structure
 
-- `cmd`: Go executable.
-- `pkg`: Go shared package.
-- `ide`: Browser-based IDE.
-- `py`: Python package (`h2o-wave`) and examples.
-- `r`: R package and examples.
-- `tools`: additional tools, including Typescript-to-Python/R generator.
-- `ui`: UI (Typescript + React + Fluent UI):
-- `ts`: NPM package (`h2o-wave`).
-- `website`: Documentation website (Docusaurus 2).
+- `cmd`: Go executables
+- `data`: contains data created by a Wave-app itself (e.g. file upload files)
+- `py`: Python package
+- `r`: R package
+- `tools/wavegen`: Typescript to Python/R code-generator
+- `ui`: Typescript + React sources, primarily built using Fluent UI.
+  - `config` contains webpack configuration
+  - `eslint` contains custom eslint rules for `ts` and `tsx` files.  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect.
+- `website`: documentation sources
 
 ### Committing Changes
 

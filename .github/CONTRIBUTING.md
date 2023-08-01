@@ -28,6 +28,8 @@ If you want to fix a specific issue, it’s best to comment on the individual is
 
 Issues that are labeled **good first issue**, **low** or **medium** priority are great places to start. Only issues that have assigned a milestone or are tagged with **help needed** / **good first issue** will be merged.
 
+Please be respectful of maintainer's time and do not ask questions like "Which file should I edit" etc. Do some due diligence first. Chances are that if you are not able to find the file that needs to be changed, the feature implementation might be overwhelming for you as well.
+
 ## Improving documentation and tutorials
 
 We aim to produce high quality documentation and tutorials. On rare occasions that content includes typos or bugs. If you find something you can fix, send us a pull request for consideration.
@@ -54,6 +56,13 @@ If you discover a security vulnerability within H2O Wave, please send an email t
 
 ## Development Setup
 
+Prerequisites:
+
+- [Go](https://golang.org/) v1.19+
+- [Node.js](http://nodejs.org) v16+
+- [Python](https://www.python.org/) 3.8+
+- A C/C++ compiler [XCode](https://developer.apple.com/xcode/) on OSX, `build-essential` on Debian, `base-devel` on Arch, etc.) to build Python/Node.js dependencies.
+
 :warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) is recommended.
 
 You will need [Go](https://golang.org/) 1.19+, [Node.js](http://nodejs.org) 16+, [Python](https://www.python.org/) 3.7+. You should already have Python 3.7+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
@@ -72,23 +81,23 @@ To launch the Wave server, run:
 make run
 ```
 
-Try running the Wave tour to verify if your setup is functional:
+Try running the button example to verify if your setup is functional:
 
 ``` bash
-cd py && ./venv/bin/wave run examples.tour
+cd py && ./venv/bin/wave run examples.button
 ```
 
-You should now see the Wave Tour at <http://localhost:10101/tour>, and examples running at <http://localhost:10101/demo>.
+You should now see the button example at <http://localhost:10101/demo>.
 
-For front-end development, you'll also need to start the Webpack dev server:
+For front-end development, you'll also need to start the a UI dev server:
 
 ``` bash
 make run-ui
 ```
 
-You should now see the Wave Tour at <http://localhost:3000/tour>, and examples running at <http://localhost:3000/demo>.
+You should now see the button example at <http://localhost:3000/demo>.
 
-Once you have the Webpack dev server running, you should be able to visualize any changes to `./ui` in real time.
+Once you have the UI dev server running, you should be able to visualize any changes to `./ui` in real time.
 
 Happy hacking!
 
@@ -100,14 +109,11 @@ For daily development, you'll only need to pull `main` from git and run `make ru
 
 ``` bash
 # Generates Python and R APIs.
-# Run only if you add new cards/components or fix docs).
+# Run only if you add new cards/components or fix docstrings).
 $ make generate
 
-# Starts jest UI unit tests in watch mode.
-$ make test-ui-watch
-
-# Starts Cypress e2e server for python tests.
-$ make run-cypress-bridge
+# Displays all the available make targets.
+$ make help
 ```
 
 ## Repo Structure
@@ -120,10 +126,7 @@ $ make run-cypress-bridge
 - `ui`: Typescript + React sources, primarily built using Fluent UI.
   - `config` contains webpack configuration
   - `eslint` contains custom eslint rules for `ts` and `tsx` files.  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect.
-- `docs`: published documentation website
 - `website`: documentation sources
-- `ide`: Browser-based IDE (future)
-- `db`: Application Database (future)
 
 ### Committing Changes
 

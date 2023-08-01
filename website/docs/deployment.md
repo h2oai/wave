@@ -2,7 +2,11 @@
 title: Deployment
 ---
 
-Ath the end of the day, Wave produces web-apps with their own web server. This means any VM provider can be used for Wave deployment.
+At the end of the day, Wave produces web-apps with their own web server. This means any VM provider can be used for Wave deployment.
+
+It's highly recommended to run Wave server (waved) [separately](/docs/tutorial-hello/#step-1-start-the-wave-server) from Wave app for production deployment.
+
+More info about various configuration options can be found in the [configuration section](/docs/configuration).
 
 ## Deploying Wave scripts
 
@@ -41,13 +45,11 @@ If different than default ports are used for Wave server (<http://localhost:1010
 * Wave server - `H2O_WAVE_LISTEN`.
 * Wave app - `H2O_WAVE_APP_ADDRESS` and `H2O_WAVE_ADDRESS`.
 
-More info about configuration options can be found in the [configuration section](https://wave.h2o.ai/docs/configuration).
-
 ### Deploying with HTTPS
 
 Wave consists of 2 servers and both need to be configured separately.
 
-* Wave server - `H2O_WAVE_TLS_CERT_FILE` and `H2O_WAVE_TLS_KEY_FILE`
+* Wave server - `H2O_WAVE_TLS_CERT_FILE` and `H2O_WAVE_TLS_KEY_FILE` environment variables.
 * Wave app - `uvicorn foo:main <other-params> --ssl-keyfile=<key file> --ssl-certfile=<cert file>`. See [uvicorn docs](https://www.uvicorn.org/deployment/#running-with-https).
 
 HTTPS is all or nothing meaning either both server and app use TLS or none does.

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "h2o_lightwave_web"
+description = "Web assets package for H2O Lightwave apps."
+requires-python = ">=3.8"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [
+    {name = "Martin Turoci", email = "martin.turoci@h2o.ai"},
+]
+keywords = ["UI", "Realtime", "Low code", "Data Science", "Machine Learning"]
+dynamic = ["version"]
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Communications :: Chat",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Widget Sets",
+]
+[project.urls]
+Homepage = "https://wave.h2o.ai/"
+Documentation = "https://wave.h2o.ai/"
+Repository = "https://github.com/h2oai/wave"
+Changelog = "https://github.com/h2oai/wave/releases"
+[tool.hatch.build]
+include = [
+  "h2o_lightwave_web",
+]
+artifacts = [
+  "h2o_lightwave_web/www",
+]
+[tool.hatch.version]
+path = "h2o_lightwave_web/version.py"
+[tool.hatch.metadata.hooks.custom]
+path = "hatch_build.py"

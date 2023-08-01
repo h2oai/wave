@@ -785,17 +785,22 @@ const
                 b.put(v)
                 return
               }
-              if (v == null) delete data[p]; else data[p] = v
+              const keys = p.split('.')
+              const lastKey = keys.pop() as S
+              let x = data
+              for (const k of keys) x = gget(x, k)
+              v === null ? delete x[lastKey] : x[lastKey] = v
               return
             }
           default:
             {
               let x: any = data
-              if (ks.length === 2 && componentCache[ks[0]]) x = componentCache[ks[0]]
-              // DEPRECATED: Access via page.items[idx].wrapper.prop.
-              else for (const k of ks.slice(0, ks.length - 1)) x = gget(x, k)
-              const prop = ks[ks.length - 1]
-              gset(x, prop, v)
+              if (!data.hasOwnProperty(ks[0]) && componentCache[ks[0]]) {
+                x = componentCache[ks.shift() as S]
+              }
+              const lastKey = ks.pop() as S
+              for (const k of ks) x = gget(x, k)
+              gset(x, lastKey, v)
               return
             }
         }

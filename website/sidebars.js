@@ -2,16 +2,9 @@ const examples = require('./examples')
 
 module.exports = {
   someSidebar: {
-    'Prologue': [
-      'change-log',
-      'migrating-0-8',
-      'migrating-0',
-      'contributing',
-    ],
     'Getting Started': [
       'getting-started',
       'installation',
-      'installation-8-20',
       'tutorial-hello',
       'tutorial-beer',
       'tutorial-monitor',
@@ -48,8 +41,8 @@ module.exports = {
       'configuration',
       'deployment',
       'backup',
-      'wave-ml',
       'wavedb',
+      'contributing',
     ],
     'Widgets': [
       "widgets/overview",
@@ -197,10 +190,6 @@ module.exports = {
       'api/graphics',
       'api/types',
       'api/test',
-      'api/h2o_wave_ml/index',
-      'api/h2o_wave_ml/ml',
-      'api/h2o_wave_ml/types',
-      'api/h2o_wave_ml/utils',
     ],
   },
 }

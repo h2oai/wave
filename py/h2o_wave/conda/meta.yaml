@@ -1,42 +1,33 @@
-{% set data = load_setup_py_data() %}
+{% set pyproject = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
+{% set project = pyproject['project'] %}
 
 package:
-  name: "h2o-wave"
-  version: "{{ VERSION }}"
+  name: {{ project['name'] }}
+  version: {{ VERSION }}
 
 about:
-  home: https://h2o.ai/products/h2o-wave
-  license: Apache License Version 2.0
-  license_family: Apache
-  summary: {{ data.get('description') }}
-  description: |
-    {{ data.get('conda_description') | replace('\n', '\n    ') }}
-
-  dev_url: https://github.com/h2oai/wave
-  doc_url: https://wave.h2o.ai/
+  home: {{ project['urls']['Homepage'] }}
+  license: {{ project['license'] }}
+  summary: {{ project['description'] }}
+  description: H2O Wave is a lightweight software stack for programming interactive web applications entirely in Python (no HTML/Javascript/CSS required).
+  dev_url: {{ project['urls']['Repository'] }}
+  doc_url: {{ project['urls']['Homepage'] }}
 
 requirements:
-  build:
-    - python={{ python_version }}
-    - pip
-    - wheel
-    - Click
-    - inquirer
-    - httpx>=0.16.1
-    - uvicorn>=0.17.6
-    - starlette>=0.13.8
-
+  build: 
+    {% for dep in pyproject['build-system']['requires'] %}
+    - {{ dep.lower() }}
+    {% endfor %}
   run:
-    - python={{ python_version }}
-    - Click
-    - inquirer
-    - httpx>=0.16.1
-    - uvicorn>=0.17.6
-    - starlette>=0.13.8
-
+    {% for dep in project['dependencies'] %}
+    - {{ dep.lower() }}
+    {% endfor %}
 source:
   path: ..
 
 build:
-  script: python setup.py install
-  string: py{{ python_version | replace(".", "") }}
+  script: python -m pip install . -vv
+  entry_points:
+    {% for module, entrypoints in project['scripts'].items() %}
+      - {{ module }} = {{ entrypoints }}
+    {% endfor %}

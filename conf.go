@@ -50,6 +50,7 @@ type ServerConf struct {
 	Debug                bool
 	Auth                 *AuthConf
 	ForwardedHeaders     map[string]bool
+	KeepAppLive          bool
 }
 
 type AuthConf struct {
@@ -107,5 +108,6 @@ type Conf struct {
 	RawAuthScopes         string `cfg:"oidc-scopes" env:"H2O_WAVE_OIDC_SCOPES" cfgDefault:"openid,profile" cfgHelper:"OIDC scopes, comma-separated (default \"openid,profile\")"`
 	RawAuthURLParams      string `cfg:"oidc-auth-url-params" env:"H2O_WAVE_OIDC_AUTH_URL_PARAMS" cfgDefault:"" cfgHelper:"additional URL parameters to pass during OIDC authorization, in the format \"key:value\", comma-separated, e.g. \"foo:bar,qux:42\""`
 	SkipLogin             bool   `cfg:"oidc-skip-login" env:"H2O_WAVE_OIDC_SKIP_LOGIN" cfgDefault:"false" cfgHelper:"do not display the login form during OIDC authorization"`
+	KeepAppLive           bool   `cfg:"keep-app-live" env:"H2O_WAVE_KEEP_APP_LIVE" cfgDefault:"false" cfgHelper:"do not unregister unresponsive apps"`
 	Conf                  string `cfg:"conf" env:"H2O_WAVE_CONF" cfgDefault:".env" cfgHelper:"path to configuration file"`
 }

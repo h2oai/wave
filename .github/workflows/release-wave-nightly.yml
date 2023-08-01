@@ -2,20 +2,10 @@ name: Release Wave Nightly
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version'
-        default: 'nightly'
-        required: false
-      tag:
-        description: 'Release Tag'
-        default: 'nightly'
-        required: false
   schedule:
-    - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
+    - cron: "0 0 * * *" # Schedule at midnight.
 
 env:
-  VERSION: "nightly"
   TAG: "nightly"
 
 # Cancel a currently running workflow.
@@ -25,8 +15,25 @@ concurrency:
 
 # TODO: Use composite action to make the configuration more DRY.
 jobs:
+  check-last-commit:
+    name: Check Last Commit
+    runs-on: ubuntu-20.04
+    outputs:
+      yesterday-commit-count: ${{ steps.get-new-commits.outputs.YESTERDAY_COMMIT_COUNT }}
+      nightly-dev-version: ${{ steps.get-dev-version.outputs.NIGHTLY_DEV_VERSION }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+      - id: get-new-commits
+        run: echo "YESTERDAY_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_OUTPUT
+      - id: get-dev-version
+        run: echo "NIGHTLY_DEV_VERSION=$(awk -F"'" '/__version__/ {split($2,a,"."); a[2]++; print a[1] "." a[2] ".0.dev0"}' py/h2o_wave/h2o_wave/version.py)" >> $GITHUB_OUTPUT
+
   test-linux:
     name: Test Linux
+    needs: check-last-commit
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
@@ -67,6 +74,8 @@ jobs:
 
   test-win:
     name: Test Windows
+    needs: check-last-commit
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
         py: ["3.8", "3.9", "3.10"]
@@ -100,6 +109,8 @@ jobs:
 
   test-macos:
     name: Test MacOS
+    needs: check-last-commit
+    if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
         py: ["3.8", "3.9", "3.10"]
@@ -145,14 +156,13 @@ jobs:
           KC_SLEEP: 45
     
   release:
-    needs: [test-linux, test-win, test-macos]
+    needs: [test-linux, test-win, test-macos, check-last-commit]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
       - name: Set ENV vars
         run: |
-          echo "VERSION=${{ github.event.inputs.version || env.VERSION }}" >> $GITHUB_ENV
-          echo "TAG=${{ github.event.inputs.tag || env.TAG }}" >> $GITHUB_ENV
+          echo "VERSION=${{ needs.check-last-commit.outputs.nightly-dev-version }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
@@ -187,6 +197,26 @@ jobs:
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags
 
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GIT_TOKEN }}
+          script: |
+            const tag = "${{ env.TAG }}";
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const release = releases.find(r => r.tag_name === tag);
+            if (release) {
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+              console.log(`Deleted release ${tag}`);
+            } else {
+              console.log(`Release ${tag} not found`);
+            }
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

@@ -2,7 +2,7 @@
 title: "Tutorial: System Monitor"
 ---
 
-In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page.
+In this tutorial, we'll put our learnings from the [first](tutorial-hello.mdx) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page.
 
 ![CPU](assets/tutorial-monitor__cpu_mem.png)
 
@@ -12,22 +12,21 @@ We'll also introduce a new concept, called [data buffers](buffers.md), which all
 
 ## Prerequisites
 
-This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.mdx) and complete steps 1 and 2.
 
 ## Step 1: Install dependencies
 
 We'll be using the excellent `psutil` package to read system stats. Let's go ahead and install that in our virtual environment:
 
 ```shell
-cd $HOME/wave-apps
-./venv/bin/pip install psutil
+pip install psutil
 ```
 
 ## Step 2: Monitor CPU usage
 
 Here's what our program looks like:
 
-```py {7,12,25} title="$HOME/wave-apps/system_monitor.py"
+```py {7,12,25} title="system_monitor.py"
 import time
 import psutil
 from h2o_wave import site, ui, data
@@ -61,8 +60,7 @@ while True:
 ## Step 3: Run your program
 
 ```shell
-cd $HOME/wave-apps
-./venv/bin/python system_monitor.py
+python system_monitor.py
 ```
 
 Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor).
@@ -100,7 +98,7 @@ The [data buffer](buffers.md) topic covers different types of buffers in more de
 In this case, we declare a *cyclic buffer*, a [FIFO](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)) data structure that holds a fixed number of rows, and can only be appended to. Our buffer holds at most 15 rows, and has exactly two columns: `tick` (a one-up integer) and `usage` (the CPU usage).
 
 ```py
-    plot_data=data('tick usage', -15),
+plot_data=data('tick usage', -15),
 ```
 
 Internally, the card's data buffer might look like this in memory when first created:
@@ -118,7 +116,7 @@ Internally, the card's data buffer might look like this in memory when first cre
 Lastly, we measure CPU usage every second and append a new row to the end of card's data buffer, like this:
 
 ```py
-    cpu_card.plot_data[-1] = [tick, cpu_usage]
+cpu_card.plot_data[-1] = [tick, cpu_usage]
 ```
 
 Internally, the card's data buffer might look like this in memory while in use:
@@ -135,7 +133,7 @@ Internally, the card's data buffer might look like this in memory while in use:
 
 As a final step, we can duplicate parts of our program to create another card that displays memory stats. The two cards behave identically, except that one displays CPU usage and the other, memory.
 
-```py {18-28,38-40} title="$HOME/wave-apps/system_monitor.py"
+```py {18-28,38-40} title="system_monitor.py"
 import time
 import psutil
 from h2o_wave import site, ui, data
@@ -183,11 +181,10 @@ while True:
 
 ## Step 6: Run your program again
 
-Terminate your program (`^C`) and restart it:
+Terminate your program (`CTRL + C`) and restart it:
 
 ```shell
-cd $HOME/wave-apps
-./venv/bin/python system_monitor.py
+python system_monitor.py
 ```
 
 Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor). You should now see both CPU and memory stats live:

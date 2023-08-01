@@ -28,7 +28,7 @@
 
     # A prefix to use for every HTML hyperlink in the generated documentation.
     # No prefix results in all links being relative.
-    link_prefix = ''
+    link_prefix = 'docs/api/'
 
     # Enable syntax highlighting for code/source blocks by including Highlight.js
     syntax_highlighting = False
