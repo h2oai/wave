@@ -70,6 +70,7 @@ export const
         const val = (d === null || d === undefined) ? defaultVal : formatDate(d)
         wave.args[m.name] = val
         setValue(val ? new Date(`${val}T00:00:00`) : undefined)
+        m.value = val || undefined
         if (m.trigger) wave.push()
       }
 
