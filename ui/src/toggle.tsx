@@ -54,7 +54,9 @@ export const
       onChange = React.useCallback((_e?: React.FormEvent<HTMLElement>, checked?: B) => {
         wave.args[name] = !!checked
         setChecked(!!checked)
+        m.value = !!checked
         if (trigger) wave.push()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [name, trigger])
 
     React.useEffect(() => {
