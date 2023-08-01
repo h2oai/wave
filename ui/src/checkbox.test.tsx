@@ -33,6 +33,13 @@ describe('Checkbox.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Sets args on click', () => {
+    const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
+    fireEvent.click(getByTestId(name))
+
+    expect(wave.args[name]).toBe(true)
+  })
+
   it('Does not display checkbox when visible is false', () => {
     const { queryByTestId } = render(<XCheckbox model={{ ...checkboxProps, visible: false }} />)
     expect(queryByTestId(name)).toBeInTheDocument()
@@ -59,11 +66,19 @@ describe('Checkbox.tsx', () => {
     expect(pushMock).toHaveBeenCalled()
   })
 
-  it('Sets args on click', () => {
-    const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
-    fireEvent.click(getByTestId(name))
-
+  it('Set args when value is updated to different value', () => {
+    const { rerender } = render(<XCheckbox model={{ name, value: true }} />)
     expect(wave.args[name]).toBe(true)
+    rerender(<XCheckbox model={{ name, value: false }} />)
+    expect(wave.args[name]).toBe(false)
   })
 
+  it('Set args when value is updated to initial value', () => {
+    const { getByTestId, rerender } = render(<XCheckbox model={{ name, value: true }} />)
+    expect(wave.args[name]).toBe(true)
+    fireEvent.click(getByTestId(name))
+    expect(wave.args[name]).toBe(false)
+    rerender(<XCheckbox model={{ name, value: true }} />)
+    expect(wave.args[name]).toBe(true)
+  })
 })
