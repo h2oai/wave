@@ -18,6 +18,7 @@ import { Picker, XPicker } from './picker'
 import { wave } from './ui'
 
 const name = 'picker'
+const altName = 'something else'
 let pickerProps: Picker
 
 const typeToInput = (input: HTMLInputElement, value: string) => {
@@ -30,7 +31,7 @@ describe('Picker.tsx', () => {
   beforeEach(() => {
     pickerProps = {
       name,
-      choices: [{ name }, { name: 'something else' }]
+      choices: [{ name }, { name: altName }]
     }
     wave.args[name] = null
   })
@@ -50,9 +51,24 @@ describe('Picker.tsx', () => {
     expect(wave.args[name]).toMatchObject([name])
   })
 
-  it('Set args when value is updated', () => {
+  it('Set args when value is updated to different value', () => {
     const { rerender } = render(<XPicker model={pickerProps} />)
     expect(wave.args[name]).toBe(null)
+    rerender(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(wave.args[name]).toMatchObject([name])
+  })
+
+  it('Set args when value is updated to initial value', () => {
+    const { queryAllByRole, getByRole, rerender } = render(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(wave.args[name]).toMatchObject([name])
+
+    expect(queryAllByRole('listitem')).toHaveLength(1)
+    const input = (getByRole('combobox') as HTMLInputElement)
+
+    typeToInput(input, altName)
+    fireEvent.click(getByRole('option'))
+    expect(queryAllByRole('listitem')).toHaveLength(2)
+
     rerender(<XPicker model={{ ...pickerProps, values: [name] }} />)
     expect(wave.args[name]).toMatchObject([name])
   })
