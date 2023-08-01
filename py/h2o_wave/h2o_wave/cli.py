@@ -37,6 +37,7 @@ from .metadata import __arch__, __platform__
 from .version import __version__
 
 _localhost = '127.0.0.1'
+IS_WINDOWS = 'Windows' in platform.system()
 
 
 def read_file(file: str) -> str:
@@ -131,13 +132,17 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     else:
         autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
 
-    waved = 'waved.exe' if 'Windows' in platform.system() else './waved'
-    # OS agnostic wheels do not have waved - needed for HAC.
+    waved = 'waved.exe' if IS_WINDOWS else './waved'
+    # OS agnostic wheels do not include waved - needed for HAC.
     is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
 
     try:
         if autostart and is_waved_present and server_not_running:
-            waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), shell=True)
+            kwargs = {}
+            if IS_WINDOWS:
+                kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP
+
+            waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), **kwargs)
             time.sleep(1)
             server_not_running = _scan_free_port(server_port) == server_port
             retries = 3
@@ -297,13 +302,13 @@ def share(port: int, subdomain: str, remote_host: str):
     \b
     $ wave share
     """
-    if 'Windows' in platform.system():
+    if IS_WINDOWS:
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    if 'Windows' in platform.system():
+    if IS_WINDOWS:
 
         async def wakeup():
             while True:
