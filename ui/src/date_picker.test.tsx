@@ -46,6 +46,25 @@ describe('Datepicker.tsx', () => {
     expect(wave.args[name]).toBeTruthy()
   })
 
+  it('Set args when value is updated to different value', () => {
+    const { rerender } = render(<XDatePicker model={{ name, value: '1999-12-30' }} />)
+    expect(wave.args[name]).toBe('1999-12-30')
+    rerender(<XDatePicker model={{ name, value: '1999-12-31' }} />)
+    expect(wave.args[name]).toBe('1999-12-31')
+  })
+
+  it('Set args when value is updated to intial value', () => {
+    const { getAllByRole, getAllByText, rerender } = render(<XDatePicker model={{ name, value: '1999-12-30' }} />)
+    expect(wave.args[name]).toBe('1999-12-30')
+
+    fireEvent.click(getAllByRole('combobox')[0])
+    fireEvent.click(getAllByText('1')[0])
+    expect(wave.args[name]).not.toBe('1999-12-30')
+
+    rerender(<XDatePicker model={{ name, value: '1999-12-30' }} />)
+    expect(wave.args[name]).toBe('1999-12-30')
+  })
+
   it('Calls sync when trigger specified', () => {
     const pushMock = jest.fn()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={{ ...datepickerProps, trigger: true }} />)
