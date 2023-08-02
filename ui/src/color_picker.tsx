@@ -81,18 +81,18 @@ const
         setColor(fluentColor)
         onChange(null, fluentColor)
       },
-      changeColor = (color: Fluent.IColor) => {
-        setColor(color)
-        setColorText(color.str)
-      },
       onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
         onChange(null, color)
-        changeColor(color)
+        setColor(color)
+        setColorText(color.str)
       }
 
     React.useEffect(() => {
       const color = Fluent.getColorFromString(val)
-      if (color) changeColor(color)
+      if (color) {
+        setColor(color)
+        setColorText(color.str)
+      }
       wave.args[model.name] = val
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [model.value])
@@ -125,13 +125,10 @@ export const
         setSelectedColorId(color)
         if (trigger) wave.push()
       },
-      onChange = (_e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => {
-        model.value = str || undefined
-        wave.args[name] = str || defaultValue
-        if (trigger) wave.push()
-      },
+      onChange = (e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => onSwatchChange(e, undefined, str),
       normalizedWidth = formItemWidth(width),
       minMaxWidth = !normalizedWidth?.includes('%') ? `calc(${normalizedWidth} - 35px)` : 'initial'
+
 
     React.useEffect(() => {
       wave.args[name] = defaultValue
@@ -153,7 +150,7 @@ export const
                     : (
                       <Fluent.ColorPicker
                         alphaType={alpha ? 'alpha' : 'none'}
-                        color={defaultValue || '#000'}
+                        color={selectedColorId || '#000'}
                         onChange={onChange}
                         styles={{ root: { width: normalizedWidth, maxWidth: normalizedWidth }, colorRectangle: { minWidth: minMaxWidth, maxWidth: minMaxWidth } }}
                       />
