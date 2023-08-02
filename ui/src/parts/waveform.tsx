@@ -16,6 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cssVarValue } from '../theme'
 import { F, S } from 'h2o-wave'
+import { debounce } from '../ui'
 
 interface Props {
   color: S
@@ -38,13 +39,20 @@ export const Waveform = ({ color, data }: Props) => {
     ref = React.useRef<HTMLDivElement | null>(null),
     [height, setHeight] = React.useState(0),
     [width, setWidth] = React.useState(0),
-    xStep = React.useMemo(() => width / data.length, [data.length, width])
+    xStep = React.useMemo(() => width / data.length, [data.length, width]),
+    updateDimensions = () => {
+      if (!ref.current) return
+      const { width, height } = ref.current.getBoundingClientRect()
+      setWidth(width)
+      setHeight(height)
+    }
 
   React.useLayoutEffect(() => {
-    if (!ref.current) return
-    const { width, height } = ref.current.getBoundingClientRect()
-    setWidth(width)
-    setHeight(height)
+    updateDimensions()
+    const onResize = debounce(1000, updateDimensions)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
