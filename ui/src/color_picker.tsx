@@ -84,16 +84,16 @@ const
       changeColor = (color: Fluent.IColor) => {
         setColor(color)
         setColorText(color.str)
-        onChange(null, color)
       },
       onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
+        onChange(null, color)
         changeColor(color)
-        model.value = color.str
       }
 
     React.useEffect(() => {
       const color = Fluent.getColorFromString(val)
       if (color) changeColor(color)
+      wave.args[model.name] = val
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [model.value])
 
@@ -126,6 +126,7 @@ export const
         if (trigger) wave.push()
       },
       onChange = (_e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => {
+        model.value = str || undefined
         wave.args[name] = str || defaultValue
         if (trigger) wave.push()
       },

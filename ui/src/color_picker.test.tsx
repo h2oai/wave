@@ -66,12 +66,34 @@ describe('ColorPicker.tsx', () => {
     expect(wave.args[name]).toBe('blue')
   })
 
+  it('Set args when value is updated to initial value', () => {
+    const { container, rerender } = render(<XColorPicker model={{ ...colorPickerProps, value: 'blue' }} />)
+    expect(wave.args[name]).toBe('blue')
+
+    fireEvent.input(container.querySelectorAll('input')[0]!, { target: { value: 'dddddd' } })
+    expect(wave.args[name]).toBe('#dddddd')
+
+    rerender(<XColorPicker model={{ ...colorPickerProps, value: 'blue' }} />)
+    expect(wave.args[name]).toBe('blue')
+  })
+
   it('Set args when value is updated to different value - Inline picker', () => {
     const { rerender } = render(<XColorPicker model={{ ...colorPickerProps, inline: true }} />)
     expect(wave.args[name]).toBeFalsy()
     rerender(<XColorPicker model={{ ...colorPickerProps, inline: true, value: '#DDD' }} />)
 
     expect(wave.args[name]).toBe('#DDD')
+  })
+
+  it('Set args when value is updated to initial value - Inline picker', () => {
+    const { container, rerender } = render(<XColorPicker model={{ ...colorPickerProps, inline: true, value: '#AAA' }} />)
+    expect(wave.args[name]).toBe('#AAA')
+
+    fireEvent.input(container.querySelectorAll('input')[0]!, { target: { value: '#BBB' } })
+    expect(wave.args[name]).toBe('#BBB')
+
+    rerender(<XColorPicker model={{ ...colorPickerProps, inline: true, value: '#AAA' }} />)
+    expect(wave.args[name]).toBe('#AAA')
   })
 
   it('Calls sync when trigger is specified', () => {
