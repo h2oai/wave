@@ -188,20 +188,9 @@ const
     return currmax
   },
   itemsToAnnotations = (items?: AudioAnnotatorItem[]) => {
-    const zoomAnnotation: DrawnAnnotation = {
-      id: xid(),
-      canvasStart: 0,
-      canvasY: ZOOM_STROKE_WIDTH - 1,
-      canvasEnd: 100,
-      canvasHeight: WAVEFORM_HEIGHT - (2 * (ZOOM_STROKE_WIDTH - 1)),
-      start: -1,
-      end: -1,
-      tag: '',
-      isZoom: true
-    }
-    const mappedItems = items?.map(i => ({ ...i, id: xid(), canvasHeight: WAVEFORM_HEIGHT, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
-    return [zoomAnnotation, ...mappedItems]
+    return items?.map(i => ({ ...i, id: xid(), canvasHeight: WAVEFORM_HEIGHT, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
   },
+  needsZoom = (duration: F) => duration > 120,
   Annotator = (props: React.PropsWithChildren<AnnotatorProps>) => {
     const
       { annotations, activeTag, addNewAnnotation, trackPosition, duration, setActiveTag,
@@ -617,6 +606,23 @@ export const
       }))
     }, [activeTag, onAnnotate])
 
+    React.useEffect(() => {
+      if (needsZoom(duration)) {
+        const zoomAnnotation: DrawnAnnotation = {
+          id: xid(),
+          canvasStart: 0,
+          canvasY: ZOOM_STROKE_WIDTH - 1,
+          canvasEnd: 100,
+          canvasHeight: WAVEFORM_HEIGHT - (2 * (ZOOM_STROKE_WIDTH - 1)),
+          start: -1,
+          end: -1,
+          tag: '',
+          isZoom: true
+        }
+        setAnnotations(annotations => [zoomAnnotation, ...annotations])
+      }
+    }, [duration])
+
     return (
       <>
         <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
@@ -651,25 +657,27 @@ export const
           colorsMap={colorsMap}
           setZoom={setZoom}
         >{onRenderBackground(backgroundData)}</Annotator>
-        <div ref={annotatorContainerRef}>
-          {annotatorContainerRef.current && (
-            <Annotator
-              annotations={getAnnotationsWithinRange(annotations, zoom, canvasWidth)}
-              activeTag={activeTag}
-              trackPosition={getZoomedTrackPosition()}
-              start={zoom.from / canvasWidth * duration}
-              duration={zoom.to / canvasWidth * duration}
-              setActiveTag={setActiveTag}
-              addNewAnnotation={addNewAnnotation}
-              moveOrResizeAnnotation={moveOrResizeAnnotation}
-              focusAnnotation={focusAnnotation}
-              colorsMap={colorsMap}
-            >{onRenderBackground(backgroundData.slice(
-              Math.ceil(zoom.from / canvasWidth * backgroundData.length),
-              Math.floor(zoom.to / canvasWidth * backgroundData.length)
-            ))}</Annotator>
-          )}
-        </div>
+        {needsZoom(duration) && (
+          <div ref={annotatorContainerRef}>
+            {annotatorContainerRef.current && (
+              <Annotator
+                annotations={getAnnotationsWithinRange(annotations, zoom, canvasWidth)}
+                activeTag={activeTag}
+                trackPosition={getZoomedTrackPosition()}
+                start={zoom.from / canvasWidth * duration}
+                duration={zoom.to / canvasWidth * duration}
+                setActiveTag={setActiveTag}
+                addNewAnnotation={addNewAnnotation}
+                moveOrResizeAnnotation={moveOrResizeAnnotation}
+                focusAnnotation={focusAnnotation}
+                colorsMap={colorsMap}
+              >{onRenderBackground(backgroundData.slice(
+                Math.ceil(zoom.from / canvasWidth * backgroundData.length),
+                Math.floor(zoom.to / canvasWidth * backgroundData.length)
+              ))}</Annotator>
+            )}
+          </div>
+        )}
       </>
     )
   }
