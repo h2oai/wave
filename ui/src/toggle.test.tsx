@@ -31,6 +31,13 @@ describe('Toggle.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Sets args on click', () => {
+    const { getByTestId } = render(<XToggle model={toggleProps} />)
+    fireEvent.click(getByTestId(name))
+
+    expect(wave.args[name]).toBe(true)
+  })
+
   it('Calls sync when trigger is on', () => {
     const pushMock = jest.fn()
     const { getByTestId } = render(<XToggle model={{ ...toggleProps, trigger: true }} />)
@@ -51,11 +58,19 @@ describe('Toggle.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
-  it('Sets args on click', () => {
-    const { getByTestId } = render(<XToggle model={toggleProps} />)
-    fireEvent.click(getByTestId(name))
-
+  it('Set args when value is updated to different value', () => {
+    const { rerender } = render(<XToggle model={toggleProps} />)
+    expect(wave.args[name]).toBe(false)
+    rerender(<XToggle model={{ name, value: true }} />)
     expect(wave.args[name]).toBe(true)
   })
 
+  it('Set args when value is updated to initial value', () => {
+    const { getByTestId, rerender } = render(<XToggle model={toggleProps} />)
+    expect(wave.args[name]).toBe(false)
+    fireEvent.click(getByTestId(name))
+    expect(wave.args[name]).toBe(true)
+    rerender(<XToggle model={{ name, value: false }} />)
+    expect(wave.args[name]).toBe(false)
+  })
 })

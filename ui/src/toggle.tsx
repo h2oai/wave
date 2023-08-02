@@ -48,25 +48,34 @@ export interface Toggle {
 
 export const
   XToggle = ({ model: m }: { model: Toggle }) => {
-    const onChange = React.useCallback((_e?: React.FormEvent<HTMLElement>, checked?: B) => {
-      wave.args[m.name] = !!checked
-      if (m.trigger) wave.push()
-    }, [m.name, m.trigger])
+    const
+      { name, value = false, label, disabled, trigger } = m,
+      [checked, setChecked] = React.useState(value),
+      onChange = React.useCallback((_e?: React.FormEvent<HTMLElement>, checked?: B) => {
+        wave.args[name] = !!checked
+        setChecked(!!checked)
+        m.value = !!checked
+        if (trigger) wave.push()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [name, trigger])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = !!m.value }, [])
+    React.useEffect(() => {
+      wave.args[name] = value
+      setChecked(value)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
 
     return (
       <Fluent.Toggle
-        data-test={m.name}
+        data-test={name}
         styles={{
           root: { marginBottom: 0 },
           text: { width: 21 }  // Prevent jumping when the label changes from 'On' to 'Off'.
         }}
-        label={m.label}
-        defaultChecked={m.value}
+        label={label}
+        checked={checked}
         onChange={onChange}
-        disabled={m.disabled}
+        disabled={disabled}
         onText="On"
         offText="Off"
         inlineLabel
