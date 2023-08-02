@@ -106,6 +106,7 @@ const
         },
         '.wave-time-delimiter': {
           width: 10,
+          marginLeft: 3
         }
       }
     },

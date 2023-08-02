@@ -259,6 +259,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                 styles={{
                   root: { backgroundColor: cssVar('$themePrimary'), borderRadius: 50, marginTop: 1.5 },
                   rootHovered: { backgroundColor: cssVar('$themeSecondary') },
+                  rootPressed: { backgroundColor: cssVar('$themeSecondary') },
                   icon: { marginBottom: 2, color: cssVar('$white'), fontSize: 18 }
                 }}
               />
