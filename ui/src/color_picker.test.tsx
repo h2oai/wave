@@ -58,7 +58,7 @@ describe('ColorPicker.tsx', () => {
     expect(wave.args[name]).toBe('#DDD')
   })
 
-  it('Set args when value is updated', () => {
+  it('Set args when value is updated to different value', () => {
     const { rerender } = render(<XColorPicker model={colorPickerProps} />)
     expect(wave.args[name]).toBeFalsy()
     rerender(<XColorPicker model={{ ...colorPickerProps, value: 'blue' }} />)
@@ -66,20 +66,12 @@ describe('ColorPicker.tsx', () => {
     expect(wave.args[name]).toBe('blue')
   })
 
-  it('Set args when value is updated - Inline picker', () => {
+  it('Set args when value is updated to different value - Inline picker', () => {
     const { rerender } = render(<XColorPicker model={{ ...colorPickerProps, inline: true }} />)
     expect(wave.args[name]).toBeFalsy()
     rerender(<XColorPicker model={{ ...colorPickerProps, inline: true, value: '#DDD' }} />)
 
     expect(wave.args[name]).toBe('#DDD')
-  })
-
-  it('Set args when value is updated - Swatch picker', () => {
-    const { rerender } = render(<XColorPicker model={{ ...colorPickerProps, value: 'yellow', choices: ['yellow', 'red', 'blue'] }} />)
-    expect(wave.args[name]).toBe('yellow')
-    rerender(<XColorPicker model={{ ...colorPickerProps, choices: ['yellow', 'red', 'blue'], value: 'red' }} />)
-
-    expect(wave.args[name]).toBe('red')
   })
 
   it('Calls sync when trigger is specified', () => {
@@ -125,6 +117,25 @@ describe('ColorPicker.tsx', () => {
 
       expect(getAllByRole('radio')[0]).toHaveProperty('title', 'yellow')
       expect(getAllByRole('radio')[1]).toHaveProperty('title', 'orange')
+    })
+
+    it('Set args when value is updated to different value - Swatch picker', () => {
+      const { rerender } = render(<XColorPicker model={{ ...colorPickerProps, value: '#AAA' }} />)
+      expect(wave.args[name]).toBe('#AAA')
+      rerender(<XColorPicker model={{ ...colorPickerProps, value: '#BBB' }} />)
+
+      expect(wave.args[name]).toBe('#BBB')
+    })
+
+    it('Set args when value is updated to initial value - Swatch picker', () => {
+      const { rerender, getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, value: '#AAA' }} />)
+      expect(wave.args[name]).toBe('#AAA')
+
+      fireEvent.click(getAllByRole('radio')[1])
+      expect(wave.args[name]).toBe('#BBB')
+
+      rerender(<XColorPicker model={{ ...colorPickerProps, value: '#AAA' }} />)
+      expect(wave.args[name]).toBe('#AAA')
     })
   })
 })

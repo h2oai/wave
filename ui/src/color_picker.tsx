@@ -86,7 +86,10 @@ const
         setColorText(color.str)
         onChange(null, color)
       },
-      onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => changeColor(color)
+      onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
+        changeColor(color)
+        model.value = color.str
+      }
 
     React.useEffect(() => {
       const color = Fluent.getColorFromString(val)
@@ -118,6 +121,7 @@ export const
       [selectedColorId, setSelectedColorId] = React.useState<S | null>(defaultValue),
       onSwatchChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color = defaultValue) => {
         wave.args[name] = color
+        model.value = color || undefined
         setSelectedColorId(color)
         if (trigger) wave.push()
       },
