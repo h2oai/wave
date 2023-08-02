@@ -113,8 +113,7 @@ export const
         wave.args[name] = val
         m.value = val
         if (trigger) wave.push()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [name, trigger]),
+      }, [m, name, trigger]),
       debouncedHandleOnInput = React.useRef(wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput)),
       onInput = (e: React.SyntheticEvent<HTMLElement>) => {
         const numVal = handleValue((e.target as HTMLInputElement).value)
@@ -126,8 +125,7 @@ export const
       const val = (value < min) ? min : ((value > max) ? max : value)
       wave.args[name] = val
       setVal(String(val))
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
+    }, [max, min, name, value])
 
     return (
       <Fluent.SpinButton
