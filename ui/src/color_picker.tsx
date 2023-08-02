@@ -82,9 +82,9 @@ const
         onChange(null, fluentColor)
       },
       onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
-        onChange(null, color)
         setColor(color)
         setColorText(color.str)
+        onChange(null, color)
       }
 
     React.useEffect(() => {
