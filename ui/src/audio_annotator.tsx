@@ -2,8 +2,8 @@ import * as Fluent from '@fluentui/react'
 import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { MicroBars } from './parts/microbars'
-import { DrawnAnnotation, TimeComponent, RangeAnnotator } from './parts/range_annotator'
+import { DrawnAnnotation, RangeAnnotator, TimeComponent } from './parts/range_annotator'
+import { Waveform } from './parts/waveform'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar } from './theme'
 import { wave } from './ui'
@@ -83,12 +83,10 @@ declare global {
 // Shim for AudioContext in Safari.
 window.AudioContext = window.AudioContext || window.webkitAudioContext
 
-type WaveformDataPoint = { val: U, cat: U }
-
 export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
   const
     [activeTag, setActiveTag] = React.useState(model.tags[0]?.name),
-    [waveFormData, setWaveFormData] = React.useState<WaveformDataPoint[] | null>(null),
+    [waveFormData, setWaveFormData] = React.useState<F[] | null>(null),
     [isPlaying, setIsPlaying] = React.useState(false),
     [duration, setDuration] = React.useState(0),
     [currentTime, setCurrentTime] = React.useState(0),
@@ -138,7 +136,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         filteredData[i] = sum / blockSize // divide the sum by the block size to get the average
       }
       const multiplier = Math.pow(Math.max(...filteredData), -1)
-      setWaveFormData(filteredData.map(n => ({ val: n * multiplier, cat: n * multiplier * 100 })))
+      setWaveFormData(filteredData.map(n => n * multiplier))
       setDuration(audioBuffer.duration)
       setLoadingMsg('')
     },
@@ -209,7 +207,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         waveFormData ? (
           <>
             <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
-            <RangeAnnotator<WaveformDataPoint>
+            <RangeAnnotator<F>
               items={model.items}
               onAnnotate={onAnnotate}
               activeTag={activeTag}
@@ -239,7 +237,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                 </Fluent.Stack>
               )}
               backgroundData={waveFormData}
-              onRenderBackground={data => <MicroBars data={data} value='val' category='cat' color='$primary5' zeroValue={0} />}
+              onRenderBackground={data => <Waveform data={data} color='$primary5' />}
             />
             <Fluent.Slider
               key={isPlaying ? currentTime : undefined} // HACK: Avoid Fluent batch updates to achieve smooth thumb movement synced with canvas.
