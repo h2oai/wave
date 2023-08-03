@@ -74,8 +74,7 @@ export const
     React.useEffect(() => {
       wave.args[m.name] = defaultValue
       setVal(defaultValue)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
+    }, [defaultValue, m.name])
 
     return (
       <Fluent.Slider
