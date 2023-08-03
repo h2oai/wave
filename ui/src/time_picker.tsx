@@ -198,10 +198,15 @@ export const
         to ${formatDateToTimeString(parseTimeStringToDate(max), hour_format)}.`
 
     React.useEffect(() => {
-      if (format) wave.args[m.name] = m.value ? m.value : null
-      setValue(m.value ? parseTimeStringToDate(m.value) : null)
+      const
+        time = m.value ? parseTimeStringToDate(m.value) : null,
+        minTime = min ? parseTimeStringToDate(min) : null,
+        maxTime = max ? parseTimeStringToDate(max) : null,
+        newTime = time && minTime && time < minTime ? minTime : time && maxTime && time > maxTime ? maxTime : time
+      if (format) wave.args[m.name] = newTime ? formatDateToTimeString(newTime, '24') : null
+      setValue(newTime)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [format, m.value])
+    }, [format, m.name, m.value, max, min])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
