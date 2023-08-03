@@ -63,17 +63,15 @@ export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
         model.max_value = val_range[1]
         setValRange(val_range)
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [name]),
+    }, [model, name]),
     onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger])
 
   React.useEffect(() => {
     const lowerValue = typeof min_value == 'number' && min_value > min && min_value <= max ? min_value : min
-    const value = typeof max_value == 'number' && max_value > min && max_value <= max ? max_value : max
-    wave.args[name] = [lowerValue, value]
-    setValRange([lowerValue, value])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [min_value, max_value])
+    const upperValue = typeof max_value == 'number' && max_value > min && max_value <= max ? max_value : max
+    wave.args[name] = [lowerValue, upperValue]
+    setValRange([lowerValue, upperValue])
+  }, [min_value, max_value, min, max, name])
 
   return (
     <div data-test={name}>
