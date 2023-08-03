@@ -54,17 +54,24 @@ export interface RangeSlider {
 
 export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
   const
-    { min = 0, max = 100, step = 1, min_value, max_value = max, disabled, trigger, name, label } = model,
-    onChange = React.useCallback((_val: U, val_range?: [U, U]) => { if (val_range) wave.args[name] = val_range }, [name]),
+    { min = 0, max = 100, step = 1, min_value = min, max_value = max, disabled, trigger, name, label } = model,
+    [valRange, setValRange] = React.useState<[U, U]>([min_value, max_value]),
+    onChange = React.useCallback((_val: U, val_range?: [U, U]) => {
+      if (val_range) {
+        wave.args[name] = val_range
+        model.min_value = val_range[0]
+        model.max_value = val_range[1]
+        setValRange(val_range)
+      }
+    }, [model, name]),
     onChanged = React.useCallback(() => { if (trigger) wave.push() }, [trigger])
 
   React.useEffect(() => {
-    wave.args[name] = [
-      typeof min_value == 'number' && min_value > min && min_value <= max ? min_value : min,
-      typeof max_value == 'number' && max_value > min && max_value <= max ? max_value : max,
-    ]
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const lowerValue = typeof min_value == 'number' && min_value > min && min_value <= max ? min_value : min
+    const upperValue = typeof max_value == 'number' && max_value > min && max_value <= max ? max_value : max
+    wave.args[name] = [lowerValue, upperValue]
+    setValRange([lowerValue, upperValue])
+  }, [min_value, max_value, min, max, name])
 
   return (
     <div data-test={name}>
@@ -74,8 +81,8 @@ export const XRangeSlider = ({ model }: { model: RangeSlider }) => {
         min={min}
         step={step}
         label={label}
-        defaultLowerValue={min_value}
-        defaultValue={max_value}
+        lowerValue={valRange[0]}
+        value={valRange[1]}
         disabled={disabled}
         onChange={onChange}
         onChanged={onChanged}
