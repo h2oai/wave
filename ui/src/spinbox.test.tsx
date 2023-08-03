@@ -63,6 +63,13 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(40)
   })
 
+  it('Changes out of bounds value when min/max is updated', () => {
+    const { rerender } = render(<XSpinbox model={{ ...spinboxProps, value: 40, min: 20, max: 50 }} />)
+    expect(wave.args[name]).toBe(40)
+    rerender(<XSpinbox model={{ ...spinboxProps, value: 40, min: 20, max: 30 }} />)
+    expect(wave.args[name]).toBe(30)
+  })
+
   it('Sets args - init - min specified', () => {
     render(<XSpinbox model={{ ...spinboxProps, min: 1 }} />)
     expect(wave.args[name]).toBe(1)
