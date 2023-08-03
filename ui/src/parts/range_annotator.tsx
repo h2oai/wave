@@ -155,9 +155,12 @@ const
 
     for (let i = 0; i < annotations.length; i++) {
       const a = annotations[i]
-      if (!a.isZoom && ((a.canvasStart >= from && a.canvasStart <= to) || (a.canvasEnd >= from && a.canvasEnd <= to))) {
-        const canvasStart = (a.canvasStart - from) / rangeSize * canvasWidth
-        const canvasEnd = (a.canvasEnd - from) / rangeSize * canvasWidth
+      if (a.isZoom) continue
+      const aStart = a.canvasStart
+      const aEnd = a.canvasEnd
+      if ((aStart >= from && aStart <= to) || (aEnd >= from && aEnd <= to) || (aStart <= from && aEnd >= to)) {
+        const canvasStart = (aStart - from) / rangeSize * canvasWidth
+        const canvasEnd = (aEnd - from) / rangeSize * canvasWidth
         annotationsWithinRange.push({ ...a, canvasStart, canvasEnd })
       }
     }
