@@ -111,17 +111,17 @@ export const
       }, [max, min, parseValue, precision]),
       handleOnInput = React.useCallback((val: U) => {
         wave.args[name] = val
-        m.value = val
         if (trigger) wave.push()
-      }, [m, name, trigger]),
+      }, [name, trigger]),
       debouncedHandleOnInput = React.useRef(wave.debounce(DEBOUNCE_TIMEOUT, handleOnInput)),
       onInput = (e: React.SyntheticEvent<HTMLElement>) => {
-        const numVal = handleValue((e.target as HTMLInputElement).value)
+        const inputValue = (e.target as HTMLInputElement).value
+        const numVal = handleValue(inputValue)
+        if (String(numVal) === inputValue) m.value = numVal
         trigger ? debouncedHandleOnInput.current(numVal) : handleOnInput(numVal)
       }
 
     React.useEffect(() => {
-      if (value === wave.args[name]) return
       const val = (value < min) ? min : ((value > max) ? max : value)
       wave.args[name] = val
       setVal(String(val))
