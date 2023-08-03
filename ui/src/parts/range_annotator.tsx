@@ -220,6 +220,8 @@ const
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         const action = currDrawnAnnotation.current?.action
         const moveOrResize = action === 'move' || action === 'resize'
+        const intersected = currDrawnAnnotation.current?.intersected
+
         for (let i = 0; i < annotations.length; i++) {
           const { id, canvasStart, canvasEnd, canvasHeight, canvasY, isZoom } = annotations[i]
           if (isZoom && !setZoom) continue
@@ -229,7 +231,7 @@ const
             ctx.strokeRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
             continue
           }
-          if (moveOrResize && currDrawnAnnotation.current?.intersected?.id === id) continue
+          if (moveOrResize && intersected?.id === id) continue
           drawAnnotation(ctx, annotations[i], colorsMap)
         }
 
@@ -238,10 +240,7 @@ const
           ctx.fillStyle = colorsMap.get(activeTag)?.transparent || 'red'
           ctx.fillRect(from, 0, to - from, WAVEFORM_HEIGHT)
         }
-        if (moveOrResize) {
-          const intersected = currDrawnAnnotation.current?.intersected
-          if (intersected) drawAnnotation(ctx, intersected, colorsMap)
-        }
+        if (moveOrResize && intersected && !intersected.isZoom) drawAnnotation(ctx, intersected, colorsMap)
 
         // Draw track.
         if (trackPosition !== null) {
