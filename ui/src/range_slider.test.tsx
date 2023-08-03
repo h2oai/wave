@@ -79,7 +79,7 @@ describe('rangeSlider.tsx', () => {
     expect(wave.args[name]).toMatchObject([40, 60])
   })
 
-  it('Changes our of bounds values when min/max is updated', () => {
+  it('Changes out of bounds values when min/max is updated', () => {
     const { rerender } = render(<XRangeSlider model={{ ...rangeSliderProps, min: 0, max: 100, min_value: 30, max_value: 60 }} />)
     expect(wave.args[name]).toMatchObject([30, 60])
 
