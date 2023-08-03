@@ -132,9 +132,30 @@ describe('time_picker.tsx', () => {
     expect(getByText('Wrong input. Please enter the time in range from 02:00 AM to 03:00 PM.')).toBeTruthy()
   })
 
-  it('Show error if input out of the boundaries - 24 hour time format', async () => {
-    const { getByText } = render(<XTimePicker model={{ ...timepickerProps, hour_format: '24', min: '02:00', max: '15:00', value: '16:00' }} />)
+  it('Value cannot be updated to be outside of boundaries', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
     await waitForIdleEventLoop()
-    await waitFor(() => expect(getByText('Wrong input. Please enter the time in range from 02:00 to 15:00.')).toBeTruthy())
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '14:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('10:00')
+  })
+
+  it('Changes out of bounds value when min is updated', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '05:00', max: '10:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('05:00')
+  })
+
+  it('Changes out of bounds value when max is updated', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '03:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('03:00')
   })
 })

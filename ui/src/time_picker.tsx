@@ -142,13 +142,18 @@ export const
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
       popperRef = React.useRef<HTMLDivElement | null>(null),
+      isOutOfBounds = (date: Date) => {
+        if (min && date < parseTimeStringToDate(min)) return true
+        if (max && date > parseTimeStringToDate(max)) return true
+        return false
+      },
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
           date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
           const newValue = formatDateToTimeString(date, '24')
           wave.args[m.name] = newValue
-          m.value = newValue
+          if (!isOutOfBounds(date)) m.value = newValue
           return date
         })
       },
@@ -156,7 +161,7 @@ export const
         if (time instanceof Date) {
           const newValue = formatDateToTimeString(time, '24')
           wave.args[m.name] = newValue
-          m.value = newValue
+          if (!isOutOfBounds(time)) m.value = newValue
           setValue(time)
         }
       },
