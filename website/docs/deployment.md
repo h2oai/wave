@@ -54,6 +54,8 @@ Wave consists of 2 servers and both need to be configured separately.
 
 HTTPS is all or nothing meaning either both server and app use TLS or none does.
 
+Once set, the Wave app needs to know it should talk to the Wave server via `https` and not `http` as it does by default. This can be set using `H2O_WAVE_ADDRESS="https://127.0.0.1:10101"` env variable when starting the Wave app.
+
 ### Deployment to separate machines
 
 Although most people deploy their Wave server and Wave app to the same machine, it's not the only way. When deploying to separate machines, the main challenge is to make sure Wave server and Wave app can communicate properly.
