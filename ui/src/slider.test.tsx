@@ -47,6 +47,25 @@ describe('Slider.tsx', () => {
     expect(wave.args[name]).toBe(100)
   })
 
+  it('Set args when value is updated to different value', () => {
+    const { rerender } = render(<XSlider model={sliderProps} />)
+    expect(wave.args[name]).toBe(0)
+    rerender(<XSlider model={{ ...sliderProps, value: 40 }} />)
+    expect(wave.args[name]).toBe(40)
+  })
+
+  it('Set args when value is updated to intial value', () => {
+    const { container, rerender } = render(<XSlider model={{ ...sliderProps, value: 40 }} />)
+    expect(wave.args[name]).toBe(40)
+
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
+    fireEvent.mouseDown(container.querySelector('.ms-Slider-slideBox')!, mouseEvent)
+    expect(wave.args[name]).toBe(50)
+
+    rerender(<XSlider model={{ ...sliderProps, value: 40 }} />)
+    expect(wave.args[name]).toBe(40)
+  })
+
   it('Sets args on slide', () => {
     const { container } = render(<XSlider model={sliderProps} />)
     container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
@@ -54,6 +73,7 @@ describe('Slider.tsx', () => {
 
     expect(wave.args[name]).toBe(50)
   })
+
   it('Calls sync on slide', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
