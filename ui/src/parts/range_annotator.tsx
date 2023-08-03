@@ -195,6 +195,15 @@ const
     return items?.map(i => ({ ...i, id: xid(), canvasHeight: WAVEFORM_HEIGHT, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
   },
   needsZoom = (duration: F) => duration > 120,
+  drawAnnotation = (ctx: CanvasRenderingContext2D, { tag, canvasStart, canvasEnd, canvasHeight, canvasY, isFocused }: DrawnAnnotation, colorsMap: Map<S, TagColor>) => {
+    ctx.fillStyle = colorsMap.get(tag)?.transparent || 'red'
+    ctx.fillRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
+    if (isFocused) {
+      ctx.strokeStyle = colorsMap.get(tag)?.color || 'red'
+      ctx.lineWidth = ZOOM_STROKE_WIDTH
+      ctx.strokeRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
+    }
+  },
   Annotator = (props: React.PropsWithChildren<AnnotatorProps>) => {
     const
       { annotations, activeTag, addNewAnnotation, trackPosition, duration, setActiveTag,
@@ -209,8 +218,10 @@ const
         const ctx = ctxRef.current
         if (!ctx || !canvas) return
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+        const action = currDrawnAnnotation.current?.action
+        const moveOrResize = action === 'move' || action === 'resize'
         for (let i = 0; i < annotations.length; i++) {
-          const { canvasStart, canvasEnd, tag, canvasHeight, canvasY, isFocused, isZoom } = annotations[i]
+          const { id, canvasStart, canvasEnd, canvasHeight, canvasY, isZoom } = annotations[i]
           if (isZoom && !setZoom) continue
           if (isZoom) {
             ctx.strokeStyle = cssVarValue('$themePrimary')
@@ -218,19 +229,18 @@ const
             ctx.strokeRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
             continue
           }
-          ctx.fillStyle = colorsMap.get(tag)?.transparent || 'red'
-          ctx.fillRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
-          if (isFocused) {
-            ctx.strokeStyle = colorsMap.get(tag)?.color || 'red'
-            ctx.lineWidth = ZOOM_STROKE_WIDTH
-            ctx.strokeRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
-          }
+          if (moveOrResize && currDrawnAnnotation.current?.intersected?.id === id) continue
+          drawAnnotation(ctx, annotations[i], colorsMap)
         }
 
-        if (currDrawnAnnotation.current && currDrawnAnnotation.current.action === 'new') {
+        if (currDrawnAnnotation.current && action === 'new') {
           const { from, to } = currDrawnAnnotation.current
           ctx.fillStyle = colorsMap.get(activeTag)?.transparent || 'red'
           ctx.fillRect(from, 0, to - from, WAVEFORM_HEIGHT)
+        }
+        if (moveOrResize) {
+          const intersected = currDrawnAnnotation.current?.intersected
+          if (intersected) drawAnnotation(ctx, intersected, colorsMap)
         }
 
         // Draw track.
@@ -391,7 +401,6 @@ const
           canvasRef.current.width = canvasRef.current.getBoundingClientRect().width
           ctxRef.current = canvasRef.current.getContext('2d')
           isDefaultCanvasWidthFixed.current = true
-          // recalculateAnnotations()
           redrawAnnotations()
         }
         // If canvas is not ready or didn't resize yet, try again later.
