@@ -69,8 +69,10 @@ export const XPicker = ({ model: m }: { model: Picker }) => {
     },
     onEmptyResolveSuggestions = () => tags
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { wave.args[m.name] = m.values || null }, [])
+  React.useEffect(() => {
+    wave.args[m.name] = m.values || null
+    setSelectedTags(tags.filter(({ key }) => m.values?.includes(key as S)))
+  }, [m.name, m.values, tags])
 
   return (
     <>
