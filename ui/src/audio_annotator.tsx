@@ -92,6 +92,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
     [currentTime, setCurrentTime] = React.useState(0),
     [volumeIcon, setVolumeIcon] = React.useState('Volume3'),
     [loadingMsg, setLoadingMsg] = React.useState(''),
+    [errMsg, setErrMsg] = React.useState(''),
     audioRef = React.useRef<HTMLAudioElement>(null),
     audioContextRef = React.useRef<AudioContext>(),
     gainNodeRef = React.useRef<GainNode>(),
@@ -111,16 +112,28 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         .connect(audioContext.destination)
 
       setLoadingMsg('Fetching audio data...')
-      // The data audio needs to be fetched and processed manually to generate a waveform later.
-      const res = await fetch(model.src)
-      const arrBuffer = await res.arrayBuffer()
+      let arrBuffer: ArrayBuffer
+      try {
+        // The data audio needs to be fetched and processed manually to generate a waveform later.
+        const res = await fetch(model.src)
+        arrBuffer = await res.arrayBuffer()
+      } catch (e) {
+        setErrMsg('Could not download audio file.')
+        return
+      }
       // Store the URL into the ref so that it can be revoked on destroy and mem leak prevented.
       fetchedAudioUrlRef.current = URL.createObjectURL(new Blob([arrBuffer]))
       // Do not set src directly within HTML to prevent double fetching.
       audioRef.current.src = fetchedAudioUrlRef.current
 
       setLoadingMsg('Decoding audio data...')
-      const audioBuffer = await audioContext.decodeAudioData(arrBuffer)
+      let audioBuffer: AudioBuffer
+      try {
+        audioBuffer = await audioContext.decodeAudioData(arrBuffer)
+      } catch (e) {
+        setErrMsg('Could not decode audio data. The file is either corrupted or the format is not supported.')
+        return
+      }
       const rawData = audioBuffer.getChannelData(0) // We only need to work with one channel of data
 
       // TODO: Compute samples dynamically based on available width.
@@ -268,7 +281,15 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
           </>
         ) : (
           <Fluent.Stack horizontalAlign='center' verticalAlign='center' styles={{ root: { minHeight: BODY_MIN_HEGHT } }}>
-            <Fluent.Spinner size={Fluent.SpinnerSize.large} label={loadingMsg} />
+            {errMsg
+              ? (
+                <>
+                  <Fluent.Icon iconName='Error' styles={{ root: { fontSize: 48, color: cssVar('$errorText'), marginBottom: 15 } }} />
+                  <Fluent.Text >{errMsg}</Fluent.Text>
+                </>
+              )
+              : <Fluent.Spinner size={Fluent.SpinnerSize.large} label={loadingMsg} />}
+
           </Fluent.Stack>
         )
       }
