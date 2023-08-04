@@ -24,7 +24,7 @@ interface Props {
 }
 
 const
-  TICK_WIDTH = 2,
+  TICK_WIDTH = 1,
   css = stylesheet({
     container: {
       width: '100%',

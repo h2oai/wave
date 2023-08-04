@@ -136,8 +136,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       }
       const rawData = audioBuffer.getChannelData(0) // We only need to work with one channel of data
 
-      // TODO: Compute samples dynamically based on available width.
-      const samples = 300
+      const samples = audioRef.current.parentElement?.clientWidth || 600
       const blockSize = Math.floor(rawData.length / samples)
       const filteredData = new Array<U>(samples)
       for (let i = 0; i < samples; i++) {
