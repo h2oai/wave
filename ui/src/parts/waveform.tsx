@@ -34,7 +34,7 @@ const
     }
   })
 
-export const Waveform = ({ color, data }: Props) => {
+export const Waveform = React.memo(({ color, data }: Props) => {
   const
     ref = React.useRef<HTMLDivElement | null>(null),
     [height, setHeight] = React.useState(0),
@@ -71,4 +71,4 @@ export const Waveform = ({ color, data }: Props) => {
       </svg>
     </div>
   )
-}
+})

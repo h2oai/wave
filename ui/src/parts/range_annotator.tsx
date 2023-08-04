@@ -194,7 +194,7 @@ const
   itemsToAnnotations = (items?: AudioAnnotatorItem[]) => {
     return items?.map(i => ({ ...i, id: xid(), canvasHeight: WAVEFORM_HEIGHT, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
   },
-  needsZoom = (duration: F) => duration > 120,
+  needsZoom = (duration: F) => duration > 10,
   drawAnnotation = (ctx: CanvasRenderingContext2D, { tag, canvasStart, canvasEnd, canvasHeight, canvasY, isFocused }: DrawnAnnotation, colorsMap: Map<S, TagColor>) => {
     ctx.fillStyle = colorsMap.get(tag)?.transparent || 'red'
     ctx.fillRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
