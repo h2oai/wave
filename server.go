@@ -148,6 +148,10 @@ func Run(conf ServerConf) {
 
 	echo(Log{"t": "listen", "address": conf.Listen, "web-dir": conf.WebDir, "base-url": conf.BaseURL})
 
+	if conf.SkipCertVerification {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
 	if isTLS {
 		if err := http.ListenAndServeTLS(conf.Listen, conf.CertFile, conf.KeyFile, nil); err != nil {
 			echo(Log{"t": "listen_tls", "error": err.Error()})
@@ -156,9 +160,6 @@ func Run(conf ServerConf) {
 		if err := http.ListenAndServe(conf.Listen, nil); err != nil {
 			echo(Log{"t": "listen_no_tls", "error": err.Error()})
 		}
-	}
-	if conf.SkipCertVerification {
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 }
 
