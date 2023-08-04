@@ -104,8 +104,7 @@ export const
           styles={{ root: { marginBottom: 4 }, checkmark: { display: 'flex' } }} // Fix: Center the checkmark in the checkbox.
         />
       ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = m.values || [] }, [m.values])
+    React.useEffect(() => { wave.args[m.name] = m.values || [] }, [m.name, m.values])
     React.useEffect(() => { setChoices(getMappedChoices()) }, [getMappedChoices, m.choices])
     return (
       <div data-test={m.name}>
