@@ -82,8 +82,7 @@ export const
     React.useEffect(() => {
       wave.args[m.name] = m.value || null
       setValue(m.value)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [m.value])
+    }, [m.name, m.value])
 
     return (
       <Fluent.ChoiceGroup
