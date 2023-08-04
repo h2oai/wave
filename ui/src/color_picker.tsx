@@ -94,8 +94,7 @@ const
         setColorText(color.str)
       }
       wave.args[model.name] = val
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [model.value])
+    }, [model.name, model.value, val])
 
     return (
       <div className={css.inlinePickerContainer}>
@@ -133,8 +132,7 @@ export const
     React.useEffect(() => {
       wave.args[name] = defaultValue
       setSelectedColorId(defaultValue)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value])
+    }, [defaultValue, name])
 
     return (
       <div data-test={name}>
