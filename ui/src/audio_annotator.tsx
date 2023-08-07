@@ -4,7 +4,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { averageChannels } from './parts/audioUtils'
 import { DrawnAnnotation, RangeAnnotator, TimeComponent } from './parts/range_annotator'
-import { Waveform } from './parts/waveform'
 import { AnnotatorTags } from './text_annotator'
 import { clas, cssVar } from './theme'
 import { wave } from './ui'
@@ -207,7 +206,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         waveFormData ? (
           <>
             <AnnotatorTags tags={model.tags} activateTag={activateTag} activeTag={activeTag} />
-            <RangeAnnotator<F>
+            <RangeAnnotator
               items={model.items}
               onAnnotate={onAnnotate}
               activeTag={activeTag}
@@ -237,7 +236,6 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
                 </Fluent.Stack>
               )}
               backgroundData={waveFormData}
-              onRenderBackground={data => <Waveform data={data} color='$primary5' />}
             />
             <Fluent.Slider
               key={isPlaying ? currentTime : undefined} // HACK: Avoid Fluent batch updates to achieve smooth thumb movement synced with canvas.

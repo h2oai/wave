@@ -7,18 +7,18 @@ import { isIntersectingRect } from '../image_annotator_rect'
 import { clas, cssVar, cssVarValue } from '../theme'
 import { eventToCursor } from './annotator_utils'
 import { parseAudioData } from './audioUtils'
+import { Waveform } from './waveform'
 
-type RangeAnnotatorProps<T> = {
+type RangeAnnotatorProps = {
   activeTag: S
   tags: AudioAnnotatorTag[]
   trackPosition: F
   duration: F
   items?: AudioAnnotatorItem[]
-  backgroundData: T[]
+  backgroundData: Float32Array
   setActiveTag: (tag: S) => void
   onAnnotate: (annotations: DrawnAnnotation[]) => void
   onRenderToolbar?: () => JSX.Element
-  onRenderBackground: (data: T[]) => JSX.Element
 }
 type AnnotatorProps = {
   annotations: DrawnAnnotation[]
@@ -529,24 +529,22 @@ export const
       </div>
     )
   },
-  RangeAnnotator = <T,>(props: RangeAnnotatorProps<T>) => {
+  RangeAnnotator = (props: RangeAnnotatorProps) => {
     const
       { onAnnotate, activeTag, tags, trackPosition, items, duration, setActiveTag,
-        onRenderToolbar, onRenderBackground, backgroundData } = props,
+        onRenderToolbar, backgroundData } = props,
       [removeAllDisabled, setRemoveAllDisabled] = React.useState(!items?.length),
       [removeDisabled, setRemoveDisabled] = React.useState(true),
       [annotations, setAnnotations] = React.useState<DrawnAnnotation[]>(itemsToAnnotations(items)),
       [zoom, setZoom] = React.useState({ from: 0, to: 100 }),
       annotatorContainerRef = React.useRef<HTMLDivElement>(null),
       canvasWidth = annotatorContainerRef.current?.getBoundingClientRect().width || 0,
-      parsedAudioData = React.useMemo(() => parseAudioData(canvasWidth, backgroundData as any), [backgroundData, canvasWidth]),
-      parsedZoomAudioData = React.useMemo(() => {
-        return parseAudioData(canvasWidth,
-          backgroundData.slice(
-            Math.ceil(zoom.from / canvasWidth * backgroundData.length),
-            Math.floor(zoom.to / canvasWidth * backgroundData.length)
-          ) as any)
-      }, [backgroundData, canvasWidth, zoom.from, zoom.to]),
+      parsedAudioData = React.useMemo(() => parseAudioData(canvasWidth, backgroundData), [backgroundData, canvasWidth]),
+      parsedZoomAudioData = React.useMemo(() => parseAudioData(canvasWidth,
+        backgroundData.slice(
+          Math.ceil(zoom.from / canvasWidth * backgroundData.length),
+          Math.floor(zoom.to / canvasWidth * backgroundData.length)
+        )), [backgroundData, canvasWidth, zoom.from, zoom.to]),
       theme = Fluent.useTheme(),
       colorsMap = React.useMemo(() => new Map<S, TagColor>(tags.map(tag => {
         const color = Fluent.getColorFromString(cssVarValue(tag.color))
@@ -677,7 +675,9 @@ export const
           focusAnnotation={focusAnnotation}
           colorsMap={colorsMap}
           setZoom={setZoom}
-        >{onRenderBackground(parsedAudioData as any)}</Annotator>
+        >
+          <Waveform data={parsedAudioData} color='$primary5' />
+        </Annotator>
         {needsZoom(duration) && (
           <div ref={annotatorContainerRef}>
             {annotatorContainerRef.current && (
@@ -692,7 +692,9 @@ export const
                 moveOrResizeAnnotation={moveOrResizeAnnotation}
                 focusAnnotation={focusAnnotation}
                 colorsMap={colorsMap}
-              >{onRenderBackground(parsedZoomAudioData as any)}</Annotator>
+              >
+                <Waveform data={parsedZoomAudioData} color='$primary5' />
+              </Annotator>
             )}
           </div>
         )}

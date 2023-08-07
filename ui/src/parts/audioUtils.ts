@@ -9,9 +9,8 @@ export const
     }
     return result
   },
-  parseAudioData = (samples: F, rawData: F[]) => {
+  parseAudioData = (samples: F, rawData: Float32Array) => {
     if (!samples) return []
-    console.log('parse', samples)
 
     const blockSize = Math.floor(rawData.length / samples)
     const filteredData = new Array<F>(samples)
