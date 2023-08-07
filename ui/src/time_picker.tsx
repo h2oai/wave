@@ -144,7 +144,9 @@ export const
       popperRef = React.useRef<HTMLDivElement | null>(null),
       minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00'), [min]),
       maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
-      isOutOfBounds = React.useCallback((date: Date) => (date < minTime) || (date > maxTime), [minTime, maxTime]),
+      isBelowMin = React.useCallback((time: Date) => time < minTime, [minTime]),
+      isOverMax = React.useCallback((time: Date) => time > maxTime, [maxTime]),
+      isOutOfBounds = (date: Date) => isBelowMin(date) || isOverMax(date),
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
@@ -205,12 +207,11 @@ export const
         to ${formatDateToTimeString(maxTime, hour_format)}.`, [formatDateToTimeString, minTime, hour_format, maxTime])
 
     React.useEffect(() => {
-      const
-        time = m.value ? parseTimeStringToDate(m.value) : null,
-        newTime = time && time < minTime ? minTime : time && time > maxTime ? maxTime : time
+      const time = m.value ? parseTimeStringToDate(m.value) : null
+      const newTime = time && isBelowMin(time) ? minTime : time && isOverMax(time) ? maxTime : time
       if (format) wave.args[m.name] = newTime ? formatDateToTimeString(newTime, '24') : null
       setValue(newTime)
-    }, [format, formatDateToTimeString, m.name, m.value, maxTime, minTime])
+    }, [format, formatDateToTimeString, isBelowMin, isOverMax, m.name, m.value, maxTime, minTime])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
