@@ -97,7 +97,6 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
     audioContextRef = React.useRef<AudioContext>(),
     gainNodeRef = React.useRef<GainNode>(),
     fetchedAudioUrlRef = React.useRef<S>(),
-    audioPositionIntervalRef = React.useRef<U>(),
     activateTag = (tagName: S) => () => setActiveTag(tagName),
     // TODO: Move to a separate service worker.
     getAudioData = async () => {
@@ -139,31 +138,31 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       setDuration(audioBuffer.duration)
       setLoadingMsg('')
     },
+    updateTrack = (audioEl: HTMLAudioElement) => {
+      // We need higher frequency than HTMLAudioELEMENT's onTimeUpdate provides.
+      window.requestAnimationFrame(() => {
+        setCurrentTime(audioEl.currentTime)
+        setIsPlaying(isPlaying => {
+          if (isPlaying) updateTrack(audioEl)
+          return isPlaying
+        })
+      })
+    },
     onPlayerStateChange = () => {
       const audioContext = audioContextRef.current
       const audioEl = audioRef.current
       if (!audioContext || !audioEl) return
       if (audioContext.state === 'suspended') audioContext.resume()
 
-      if (isPlaying) {
-        audioEl.pause()
-        if (audioPositionIntervalRef.current) window.clearInterval(audioPositionIntervalRef.current)
-      }
+      setIsPlaying(isPlaying => !isPlaying)
+      if (isPlaying) audioEl.pause()
       else {
         audioEl.play()
-        // We need higher frequency than HTMLAudioELEMENT's onTimeUpdate provides.
-        // TODO: Think about whether requestAnimationFrame would make more sense here.
-        audioPositionIntervalRef.current = window.setInterval(() => setCurrentTime(audioEl.currentTime), 10)
+        updateTrack(audioEl)
       }
-      setIsPlaying(isPlaying => !isPlaying)
     },
-    onAudioEnded = () => {
-      setIsPlaying(false)
-      if (audioPositionIntervalRef.current) window.clearInterval(audioPositionIntervalRef.current)
-    },
-    onTrackChange = (value: F, _range?: [F, F], e?: unknown) => {
-      skipToTime(value)(e as any)
-    },
+    onAudioEnded = () => setIsPlaying(false),
+    onTrackChange = (value: F, _range?: [F, F], e?: unknown) => skipToTime(value)(e as any),
     onVolumeChange = (v: F) => {
       if (gainNodeRef.current) gainNodeRef.current.gain.value = v
       setVolumeIcon(v === 0 ? 'VolumeDisabled' : (v < 0.3 ? 'Volume1' : (v < 0.75 ? 'Volume2' : 'Volume3')))
@@ -191,10 +190,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
   React.useEffect(() => {
     getAudioData()
     wave.args[model.name] = (model.items as unknown as Rec[]) || []
-    return () => {
-      if (fetchedAudioUrlRef.current) URL.revokeObjectURL(fetchedAudioUrlRef.current)
-      if (audioPositionIntervalRef.current) window.clearInterval(audioPositionIntervalRef.current)
-    }
+    return () => { if (fetchedAudioUrlRef.current) URL.revokeObjectURL(fetchedAudioUrlRef.current) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -238,9 +234,10 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               backgroundData={waveFormData}
             />
             <Fluent.Slider
-              key={isPlaying ? currentTime : undefined} // HACK: Avoid Fluent batch updates to achieve smooth thumb movement synced with canvas.
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}
-              value={currentTime}
+              // HACK: React doesn't allow for skipping batch updates in 3rd party components. 
+              // Add a small offset to sync canvas and slider tracks.
+              value={currentTime + (isPlaying ? 0.05 : 0)}
               max={duration}
               step={0.01}
               onChange={onTrackChange}

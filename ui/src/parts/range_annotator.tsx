@@ -60,7 +60,7 @@ const
   ANNOTATION_HANDLE_OFFSET = 3,
   LEFT_TOOLTIP_OFFSET = 25,
   TOOLTIP_WIDTH = 200,
-  TRACK_WIDTH = 5,
+  TRACK_WIDTH = 4,
   ZOOM_STROKE_WIDTH = 3,
   css = stylesheet({
     annotatorContainer: {
