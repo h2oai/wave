@@ -2,6 +2,7 @@ import * as Fluent from '@fluentui/react'
 import { B, F, Id, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { averageChannels } from './parts/audioUtils'
 import { DrawnAnnotation, RangeAnnotator, TimeComponent } from './parts/range_annotator'
 import { Waveform } from './parts/waveform'
 import { AnnotatorTags } from './text_annotator'
@@ -86,7 +87,7 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext
 export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
   const
     [activeTag, setActiveTag] = React.useState(model.tags[0]?.name),
-    [waveFormData, setWaveFormData] = React.useState<F[] | null>(null),
+    [waveFormData, setWaveFormData] = React.useState<Float32Array | null>(null),
     [isPlaying, setIsPlaying] = React.useState(false),
     [duration, setDuration] = React.useState(0),
     [currentTime, setCurrentTime] = React.useState(0),
@@ -134,21 +135,8 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         setErrMsg('Could not decode audio data. The file is either corrupted or the format is not supported.')
         return
       }
-      const rawData = audioBuffer.getChannelData(0) // We only need to work with one channel of data
-
-      const samples = audioRef.current.parentElement?.clientWidth || 600
-      const blockSize = Math.floor(rawData.length / samples)
-      const filteredData = new Array<U>(samples)
-      for (let i = 0; i < samples; i++) {
-        const blockStart = blockSize * i // the location of the first sample in the block
-        let sum = 0
-        for (let j = 0; j < blockSize; j++) {
-          sum += Math.abs(rawData[blockStart + j]) // find the sum of all the samples in the block
-        }
-        filteredData[i] = sum / blockSize // divide the sum by the block size to get the average
-      }
-      const multiplier = Math.pow(Math.max(...filteredData), -1)
-      setWaveFormData(filteredData.map(n => n * multiplier))
+      const channel2 = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : undefined
+      setWaveFormData(averageChannels(audioBuffer.getChannelData(0), channel2))
       setDuration(audioBuffer.duration)
       setLoadingMsg('')
     },

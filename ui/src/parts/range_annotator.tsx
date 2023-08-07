@@ -6,6 +6,7 @@ import { AudioAnnotatorItem, AudioAnnotatorTag } from '../audio_annotator'
 import { isIntersectingRect } from '../image_annotator_rect'
 import { clas, cssVar, cssVarValue } from '../theme'
 import { eventToCursor } from './annotator_utils'
+import { parseAudioData } from './audioUtils'
 
 type RangeAnnotatorProps<T> = {
   activeTag: S
@@ -538,6 +539,14 @@ export const
       [zoom, setZoom] = React.useState({ from: 0, to: 100 }),
       annotatorContainerRef = React.useRef<HTMLDivElement>(null),
       canvasWidth = annotatorContainerRef.current?.getBoundingClientRect().width || 0,
+      parsedAudioData = React.useMemo(() => parseAudioData(canvasWidth, backgroundData as any), [backgroundData, canvasWidth]),
+      parsedZoomAudioData = React.useMemo(() => {
+        return parseAudioData(canvasWidth,
+          backgroundData.slice(
+            Math.ceil(zoom.from / canvasWidth * backgroundData.length),
+            Math.floor(zoom.to / canvasWidth * backgroundData.length)
+          ) as any)
+      }, [backgroundData, canvasWidth, zoom.from, zoom.to]),
       theme = Fluent.useTheme(),
       colorsMap = React.useMemo(() => new Map<S, TagColor>(tags.map(tag => {
         const color = Fluent.getColorFromString(cssVarValue(tag.color))
@@ -668,7 +677,7 @@ export const
           focusAnnotation={focusAnnotation}
           colorsMap={colorsMap}
           setZoom={setZoom}
-        >{onRenderBackground(backgroundData)}</Annotator>
+        >{onRenderBackground(parsedAudioData as any)}</Annotator>
         {needsZoom(duration) && (
           <div ref={annotatorContainerRef}>
             {annotatorContainerRef.current && (
@@ -683,10 +692,7 @@ export const
                 moveOrResizeAnnotation={moveOrResizeAnnotation}
                 focusAnnotation={focusAnnotation}
                 colorsMap={colorsMap}
-              >{onRenderBackground(backgroundData.slice(
-                Math.ceil(zoom.from / canvasWidth * backgroundData.length),
-                Math.floor(zoom.to / canvasWidth * backgroundData.length)
-              ))}</Annotator>
+              >{onRenderBackground(parsedZoomAudioData as any)}</Annotator>
             )}
           </div>
         )}
