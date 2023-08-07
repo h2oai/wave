@@ -87,6 +87,15 @@ const
         onChange(null, color)
       }
 
+    React.useEffect(() => {
+      const color = Fluent.getColorFromString(val)
+      if (color) {
+        setColor(color)
+        setColorText(color.str)
+      }
+      wave.args[model.name] = val
+    }, [model.name, model.value, val])
+
     return (
       <div className={css.inlinePickerContainer}>
         {model.label && <Fluent.Label>{model.label}</Fluent.Label>}
@@ -111,18 +120,19 @@ export const
       [selectedColorId, setSelectedColorId] = React.useState<S | null>(defaultValue),
       onSwatchChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color = defaultValue) => {
         wave.args[name] = color
+        model.value = color || undefined
         setSelectedColorId(color)
         if (trigger) wave.push()
       },
-      onChange = (_e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => {
-        wave.args[name] = str || defaultValue
-        if (trigger) wave.push()
-      },
+      onChange = (e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => onSwatchChange(e, undefined, str),
       normalizedWidth = formItemWidth(width),
       minMaxWidth = !normalizedWidth?.includes('%') ? `calc(${normalizedWidth} - 35px)` : 'initial'
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[name] = defaultValue }, [])
+
+    React.useEffect(() => {
+      wave.args[name] = defaultValue
+      setSelectedColorId(defaultValue)
+    }, [defaultValue, name])
 
     return (
       <div data-test={name}>
@@ -138,7 +148,7 @@ export const
                     : (
                       <Fluent.ColorPicker
                         alphaType={alpha ? 'alpha' : 'none'}
-                        color={defaultValue || '#000'}
+                        color={selectedColorId || '#000'}
                         onChange={onChange}
                         styles={{ root: { width: normalizedWidth, maxWidth: normalizedWidth }, colorRectangle: { minWidth: minMaxWidth, maxWidth: minMaxWidth } }}
                       />
