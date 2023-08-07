@@ -142,11 +142,9 @@ export const
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
       popperRef = React.useRef<HTMLDivElement | null>(null),
-      isOutOfBounds = (date: Date) => {
-        if (min && date < parseTimeStringToDate(min)) return true
-        if (max && date > parseTimeStringToDate(max)) return true
-        return false
-      },
+      minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00'), [min]),
+      maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
+      isOutOfBounds = React.useCallback((date: Date) => (date < minTime) || (date > maxTime), [minTime, maxTime]),
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
@@ -197,21 +195,18 @@ export const
         },
       },
       { format, AdapterDateFns, theme } = useTime(themeObj),
-      formatDateToTimeString = (date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '',
-      getErrMsg = (hour_format: S, min = '00:00', max = '00:00') =>
-        `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min), hour_format)} 
-        to ${formatDateToTimeString(parseTimeStringToDate(max), hour_format)}.`
+      formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '', [format]),
+      errMsg = React.useMemo(() =>
+        `Wrong input. Please enter the time in range from ${formatDateToTimeString(minTime, hour_format)} 
+        to ${formatDateToTimeString(maxTime, hour_format)}.`, [formatDateToTimeString, minTime, hour_format, maxTime])
 
     React.useEffect(() => {
       const
         time = m.value ? parseTimeStringToDate(m.value) : null,
-        minTime = min ? parseTimeStringToDate(min) : null,
-        maxTime = max ? parseTimeStringToDate(max) : null,
-        newTime = time && minTime && time < minTime ? minTime : time && maxTime && time > maxTime ? maxTime : time
+        newTime = time && time < minTime ? minTime : time && time > maxTime ? maxTime : time
       if (format) wave.args[m.name] = newTime ? formatDateToTimeString(newTime, '24') : null
       setValue(newTime)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [format, m.name, m.value, max, min])
+    }, [format, formatDateToTimeString, m.name, m.value, maxTime, minTime])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
@@ -250,8 +245,8 @@ export const
                   </Fluent.FocusTrapZone>
                 }
                 PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
-                minTime={min ? parseTimeStringToDate(min) : undefined}
-                maxTime={max ? parseTimeStringToDate(max) : undefined}
+                minTime={min ? minTime : undefined}
+                maxTime={max ? maxTime : undefined}
                 minutesStep={allowedMinutesSteps[minutes_step]}
                 disabled={disabled}
                 onOpen={onOpen}
@@ -268,7 +263,7 @@ export const
                       label={label}
                       required={required}
                       styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                      errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
+                      errorMessage={error ? errMsg : undefined}
                     />
                   </div>
                 }
