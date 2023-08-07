@@ -150,16 +150,20 @@ export const
           const date = new Date(prevValue!)
           date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
           const newValue = formatDateToTimeString(date, '24')
-          wave.args[m.name] = newValue
-          if (!isOutOfBounds(date)) m.value = newValue
+          if (!isOutOfBounds(date)) {
+            m.value = newValue
+            wave.args[m.name] = newValue
+          }
           return date
         })
       },
       onChangeTime = (time: unknown) => {
         if (time instanceof Date) {
           const newValue = formatDateToTimeString(time, '24')
-          wave.args[m.name] = newValue
-          if (!isOutOfBounds(time)) m.value = newValue
+          if (!isOutOfBounds(time)) {
+            m.value = newValue
+            wave.args[m.name] = newValue
+          }
           setValue(time)
         }
       },
