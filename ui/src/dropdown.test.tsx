@@ -717,7 +717,7 @@ describe('Dropdown.tsx', () => {
               { name: 'E', label: 'Choice E' },
               { name: 'F', label: 'Choice F' },
             ],
-            { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices }} />)
+            { getByTestId, getByText, queryByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices }} />)
 
           fireEvent.click(getByTestId(name))
           expect(getByText('Choice A')).toBeInTheDocument()
@@ -725,6 +725,7 @@ describe('Dropdown.tsx', () => {
           rerender(<XDropdown model={{ ...dialogProps, choices: updatedChoices }} />)
           fireEvent.click(getByTestId(name))
 
+          expect(queryByText('Choice A')).not.toBeInTheDocument()
           expect(getByText('Choice D')).toBeInTheDocument()
           expect(getByText('Choice E')).toBeInTheDocument()
           expect(getByText('Choice F')).toBeInTheDocument()
@@ -834,7 +835,7 @@ describe('Dropdown.tsx', () => {
               { name: 'E', label: 'Choice E' },
               { name: 'F', label: 'Choice F' },
             ],
-            { getByTestId, getByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices, values: ['A'] }} />)
+            { getByTestId, getByText, queryByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices, values: ['A'] }} />)
 
           fireEvent.click(getByTestId(name))
           expect(getByText('Choice A')).toBeInTheDocument()
@@ -842,6 +843,7 @@ describe('Dropdown.tsx', () => {
           rerender(<XDropdown model={{ ...dialogProps, choices: updatedChoices, values: ['D'] }} />)
           fireEvent.click(getByTestId(name))
 
+          expect(queryByText('Choice A')).not.toBeInTheDocument()
           expect(getByText('Choice D')).toBeInTheDocument()
           expect(getByText('Choice E')).toBeInTheDocument()
           expect(getByText('Choice F')).toBeInTheDocument()

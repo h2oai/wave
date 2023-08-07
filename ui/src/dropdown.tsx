@@ -206,14 +206,9 @@ const
       }
 
     React.useEffect(() => {
-      if (model.value !== undefined) {
-        wave.args[name] = model.value ?? null
-        setItems(items => items.map(i => ({ ...i, checked: model.value === i.name })))
-      }
-    }, [name, model.value, setItems])
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => setItems(choicesToItems(choices, model.value)), [choices])
+      wave.args[name] = model.value ?? null
+      setItems(choicesToItems(choices, model.value))
+    }, [name, model.value, choices, setItems])
 
     return (
       <>
@@ -277,14 +272,9 @@ const
       }
 
     React.useEffect(() => {
-      if (values) {
-        wave.args[name] = values
-        setItems(items => items.map(i => ({ ...i, checked: values.includes(i.name) })))
-      }
-    }, [name, values, setItems])
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => setItems(choicesToItems(choices, values)), [choices])
+      wave.args[name] = values
+      setItems(choicesToItems(choices, values))
+    }, [name, values, choices, setItems])
 
     return (
       <>
