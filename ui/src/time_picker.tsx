@@ -80,7 +80,12 @@ const
     },
     toolbarText: { fontSize: 26 },
     toolbarTextDisabled: {
-      color: cssVar('$neutralLighter')
+      color: cssVar('$neutralLighter'), // TODO: Use correct color.
+      $nest: {
+        '&:hover': {
+          cursor: 'default',
+        }
+      }
     },
     toolbarLabel: { maxWidth: '70%' }
   }),
@@ -110,6 +115,11 @@ const
   isBelowMin = (time: Date, minTime: Date) => time < minTime,
   isOverMax = (time: Date, maxTime: Date) => time > maxTime,
   isOutOfBounds = (time: Date, minTime: Date, maxTime: Date) => isBelowMin(time, minTime) || isOverMax(time, maxTime),
+  canSwitchAmPm = (time: Date, minTime: Date, maxTime: Date) => {
+    const date = new Date(time)
+    date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
+    return !isOutOfBounds(date, minTime, maxTime)
+  },
   parseTimeStringToDate = (time: S) => new Date(normalize(time)),
   useTime = (themeObj: ThemeOptions) => {
     const
@@ -155,9 +165,9 @@ export const
       maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
       switchAmPm = () => {
         setValue((prevValue) => {
-          const date = new Date(prevValue!)
-          date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-          if (!isOutOfBounds(date, minTime, maxTime)) {
+          if (prevValue && canSwitchAmPm(prevValue, minTime, maxTime)) {
+            const date = new Date(prevValue!)
+            date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
             const newValue = formatDateToTimeString(date, '24')
             m.value = newValue
             wave.args[m.name] = newValue
@@ -167,8 +177,8 @@ export const
         })
       },
       onChangeTime = (time: unknown) => {
-        const t = time instanceof Date && new Date(normalize(formatDateToTimeString(time, '24'))) // TODO: Refactor.
-        if (t && !isOutOfBounds(t, minTime, maxTime)) {
+        const date = time instanceof Date && new Date(normalize(formatDateToTimeString(time, '24')))
+        if (date && !isOutOfBounds(date, minTime, maxTime)) {
           const newValue = formatDateToTimeString(time, '24')
           m.value = newValue
           wave.args[m.name] = newValue
@@ -207,10 +217,7 @@ export const
         },
       },
       { format, AdapterDateFns, theme } = useTime(themeObj),
-      formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '', [format]),
-      getErrMsg = () =>
-        `Wrong input. Please enter the time in range from ${formatDateToTimeString(minTime, hour_format)} 
-        to ${formatDateToTimeString(maxTime, hour_format)}.`
+      formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '', [format])
 
     React.useEffect(() => {
       const time = m.value ? parseTimeStringToDate(m.value) : null
@@ -249,15 +256,14 @@ export const
                   <Fluent.FocusTrapZone isClickableOutsideFocusTrap>
                     <Toolbar
                       setOpenView={setOpenView}
-                      time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
+                      time={
+                        parsedValue
+                          ? formatDateToTimeString(value && isOutOfBounds(parsedValue as D, minTime, maxTime) ? value : parsedValue as D, ampm ? '12' : '24')
+                          : null
+                      }
                       label={label}
                       switchAmPm={switchAmPm}
-                      // TODO: Refactor
-                      amPmDisabled={parsedValue ? isOutOfBounds((() => {
-                        const date = new Date(parsedValue!)
-                        date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-                        return date
-                      })(), minTime, maxTime) : false}
+                      amPmDisabled={value ? !canSwitchAmPm(value, minTime, maxTime) : false}
                     />
                   </Fluent.FocusTrapZone>
                 }
@@ -267,7 +273,7 @@ export const
                 minutesStep={allowedMinutesSteps[minutes_step]}
                 disabled={disabled}
                 onOpen={onOpen}
-                renderInput={({ inputProps, error }: TextFieldProps) =>
+                renderInput={({ inputProps }: TextFieldProps) =>
                   <div ref={textInputRef} data-test={m.name}>
                     <Fluent.TextField
                       iconProps={{ iconName: 'Clock' }}
@@ -280,7 +286,6 @@ export const
                       label={label}
                       required={required}
                       styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                      errorMessage={error ? getErrMsg() : undefined}
                     />
                   </div>
                 }

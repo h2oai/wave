@@ -123,15 +123,6 @@ describe('time_picker.tsx', () => {
     expect(getByText('PM')).toBeVisible()
   })
 
-  it('Show error if input changed to be out of the boundaries - 12 hour time format', async () => {
-    const { getByText, container } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00', min: '02:00', max: '15:00' }} />)
-    await waitForIdleEventLoop()
-    fireEvent.click(container.querySelector("input")!)
-    fireEvent.click(getByText('AM')) // switches to PM
-    await waitForIdleEventLoop()
-    expect(getByText('Wrong input. Please enter the time in range from 02:00 AM to 03:00 PM.')).toBeTruthy()
-  })
-
   it('Value cannot be updated to be greater than max', async () => {
     const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
     await waitForIdleEventLoop()
