@@ -15,7 +15,7 @@
 import React from 'react'
 import * as Fluent from '@fluentui/react'
 import { B, D, Id, S, U } from 'h2o-wave'
-import { cssVar } from './theme'
+import { clas, cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
 import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
@@ -69,6 +69,8 @@ const
     toolbarTime: {
       fontSize: 26,
       cursor: 'pointer',
+    },
+    toolbarTimeActive: {
       $nest: {
         '&:hover': {
           backgroundColor: cssVar('$neutralLighter'),
@@ -77,6 +79,9 @@ const
       }
     },
     toolbarText: { fontSize: 26 },
+    toolbarTextDisabled: {
+      color: cssVar('$neutralLighter')
+    },
     toolbarLabel: { maxWidth: '70%' }
   }),
   popoverProps: Partial<PopperProps> | undefined = {
@@ -93,7 +98,7 @@ const
     }
   }
 
-type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void }
+type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void, amPmDisabled?: B }
 
 const
   // TODO: Import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider', config Jest to transpile the module to prevent err.
@@ -101,7 +106,11 @@ const
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers/LocalizationProvider').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers/TimePicker').then(({ TimePicker }) => ({ default: TimePicker }))),
   allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
-  parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
+  normalize = (time: S) => `2000-01-01T${time.slice(0, 5)}:00`,
+  isBelowMin = (time: Date, minTime: Date) => time < minTime,
+  isOverMax = (time: Date, maxTime: Date) => time > maxTime,
+  isOutOfBounds = (time: Date, minTime: Date, maxTime: Date) => isBelowMin(time, minTime) || isOverMax(time, maxTime),
+  parseTimeStringToDate = (time: S) => new Date(normalize(time)),
   useTime = (themeObj: ThemeOptions) => {
     const
       [theme, setTheme] = React.useState<Theme>(),
@@ -123,13 +132,13 @@ const
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
     </div>,
-  Toolbar = ({ setOpenView, time, label, switchAmPm }: ToolbarProps) =>
+  Toolbar = ({ setOpenView, time, label, switchAmPm, amPmDisabled }: ToolbarProps) =>
     <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>:
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>{' '}
-        <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
+        <Fluent.Text className={clas(css.toolbarTime, amPmDisabled ? css.toolbarTextDisabled : css.toolbarTimeActive)} onClick={amPmDisabled ? undefined : switchAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
       </Fluent.Text>
     </div>
 
@@ -144,28 +153,25 @@ export const
       popperRef = React.useRef<HTMLDivElement | null>(null),
       minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00'), [min]),
       maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
-      isBelowMin = React.useCallback((time: Date) => time < minTime, [minTime]),
-      isOverMax = React.useCallback((time: Date) => time > maxTime, [maxTime]),
-      isOutOfBounds = (date: Date) => isBelowMin(date) || isOverMax(date),
       switchAmPm = () => {
         setValue((prevValue) => {
           const date = new Date(prevValue!)
           date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-          const newValue = formatDateToTimeString(date, '24')
-          if (!isOutOfBounds(date)) {
+          if (!isOutOfBounds(date, minTime, maxTime)) {
+            const newValue = formatDateToTimeString(date, '24')
             m.value = newValue
             wave.args[m.name] = newValue
+            return date
           }
-          return date
+          return prevValue
         })
       },
       onChangeTime = (time: unknown) => {
-        if (time instanceof Date) {
+        const t = time instanceof Date && new Date(normalize(formatDateToTimeString(time, '24'))) // TODO: Refactor.
+        if (t && !isOutOfBounds(t, minTime, maxTime)) {
           const newValue = formatDateToTimeString(time, '24')
-          if (!isOutOfBounds(time)) {
-            m.value = newValue
-            wave.args[m.name] = newValue
-          }
+          m.value = newValue
+          wave.args[m.name] = newValue
           setValue(time)
         }
       },
@@ -202,16 +208,16 @@ export const
       },
       { format, AdapterDateFns, theme } = useTime(themeObj),
       formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '', [format]),
-      errMsg = React.useMemo(() =>
+      getErrMsg = () =>
         `Wrong input. Please enter the time in range from ${formatDateToTimeString(minTime, hour_format)} 
-        to ${formatDateToTimeString(maxTime, hour_format)}.`, [formatDateToTimeString, minTime, hour_format, maxTime])
+        to ${formatDateToTimeString(maxTime, hour_format)}.`
 
     React.useEffect(() => {
       const time = m.value ? parseTimeStringToDate(m.value) : null
-      const newTime = time && isBelowMin(time) ? minTime : time && isOverMax(time) ? maxTime : time
+      const newTime = time && isBelowMin(time, minTime) ? minTime : time && isOverMax(time, maxTime) ? maxTime : time
       if (format) wave.args[m.name] = newTime ? formatDateToTimeString(newTime, '24') : null
       setValue(newTime)
-    }, [format, formatDateToTimeString, isBelowMin, isOverMax, m.name, m.value, maxTime, minTime])
+    }, [format, formatDateToTimeString, m.name, m.value, maxTime, minTime])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
@@ -246,6 +252,12 @@ export const
                       time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
                       label={label}
                       switchAmPm={switchAmPm}
+                      // TODO: Refactor
+                      amPmDisabled={parsedValue ? isOutOfBounds((() => {
+                        const date = new Date(parsedValue!)
+                        date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
+                        return date
+                      })(), minTime, maxTime) : false}
                     />
                   </Fluent.FocusTrapZone>
                 }
@@ -268,7 +280,7 @@ export const
                       label={label}
                       required={required}
                       styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                      errorMessage={error ? errMsg : undefined}
+                      errorMessage={error ? getErrMsg() : undefined}
                     />
                   </div>
                 }
