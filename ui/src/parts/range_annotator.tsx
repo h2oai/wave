@@ -195,7 +195,7 @@ const
   itemsToAnnotations = (items?: AudioAnnotatorItem[]) => {
     return items?.map(i => ({ ...i, id: xid(), canvasHeight: WAVEFORM_HEIGHT, canvasY: 0, canvasStart: i.start, canvasEnd: i.end })) || []
   },
-  needsZoom = (duration: F) => duration > 120,
+  needsZoom = (duration: F) => duration > 10,
   drawAnnotation = (ctx: CanvasRenderingContext2D, { tag, canvasStart, canvasEnd, canvasHeight, canvasY, isFocused }: DrawnAnnotation, colorsMap: Map<S, TagColor>) => {
     ctx.fillStyle = colorsMap.get(tag)?.transparent || 'red'
     ctx.fillRect(canvasStart, canvasY, canvasEnd - canvasStart, canvasHeight)
@@ -664,40 +664,43 @@ export const
           />
           {onRenderToolbar && onRenderToolbar()}
         </Fluent.Stack>
-        <Annotator
-          annotations={annotations}
-          activeTag={activeTag}
-          trackPosition={trackPosition}
-          duration={duration}
-          setActiveTag={setActiveTag}
-          addNewAnnotation={addNewAnnotation}
-          moveOrResizeAnnotation={moveOrResizeAnnotation}
-          focusAnnotation={focusAnnotation}
-          colorsMap={colorsMap}
-          setZoom={setZoom}
-        >
-          <Waveform data={parsedAudioData} color='$primary5' />
-        </Annotator>
-        {needsZoom(duration) && (
-          <div ref={annotatorContainerRef}>
-            {annotatorContainerRef.current && (
+        <div ref={annotatorContainerRef}>
+          {
+            annotatorContainerRef.current && (
               <Annotator
-                annotations={getAnnotationsWithinRange(annotations, zoom, canvasWidth)}
+                annotations={annotations}
                 activeTag={activeTag}
-                trackPosition={getZoomedTrackPosition()}
-                start={zoom.from / canvasWidth * duration}
-                duration={zoom.to / canvasWidth * duration}
+                trackPosition={trackPosition}
+                duration={duration}
                 setActiveTag={setActiveTag}
                 addNewAnnotation={addNewAnnotation}
                 moveOrResizeAnnotation={moveOrResizeAnnotation}
                 focusAnnotation={focusAnnotation}
                 colorsMap={colorsMap}
+                setZoom={setZoom}
               >
-                <Waveform data={parsedZoomAudioData} color='$primary5' />
+                <Waveform data={parsedAudioData} color='$primary5' />
               </Annotator>
-            )}
-          </div>
-        )}
+            )
+          }
+        </div>
+        {needsZoom(duration) && (
+          <Annotator
+            annotations={getAnnotationsWithinRange(annotations, zoom, canvasWidth)}
+            activeTag={activeTag}
+            trackPosition={getZoomedTrackPosition()}
+            start={zoom.from / canvasWidth * duration}
+            duration={zoom.to / canvasWidth * duration}
+            setActiveTag={setActiveTag}
+            addNewAnnotation={addNewAnnotation}
+            moveOrResizeAnnotation={moveOrResizeAnnotation}
+            focusAnnotation={focusAnnotation}
+            colorsMap={colorsMap}
+          >
+            <Waveform data={parsedZoomAudioData} color='$primary5' />
+          </Annotator>
+        )
+        }
       </>
     )
   }
