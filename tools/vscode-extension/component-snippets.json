@@ -23,7 +23,7 @@
   "Wave AudioAnnotator": {
     "prefix": "w_audio_annotator",
     "body": [
-      "ui.audio_annotator(name='$1', title='$2', src='$3', tags=[\n\t\t$4\t\t\n]),$0"
+      "ui.audio_annotator(name='$1', title='$2', path='$3', tags=[\n\t\t$4\t\t\n]),$0"
     ],
     "description": "Create a minimal Wave AudioAnnotator."
   },
@@ -989,7 +989,7 @@
   "Wave Full AudioAnnotator": {
     "prefix": "w_full_audio_annotator",
     "body": [
-      "ui.audio_annotator(name='$1', title='$2', src='$3', trigger=${4:False}, tags=[\n\t\t$5\t\t\n], items=[\n\t\t$6\t\t\n]),$0"
+      "ui.audio_annotator(name='$1', title='$2', path='$3', trigger=${4:False}, tags=[\n\t\t$5\t\t\n], items=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave AudioAnnotator."
   },

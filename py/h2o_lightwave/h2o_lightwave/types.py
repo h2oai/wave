@@ -6736,7 +6736,7 @@ class ImageAnnotator:
         self.allowed_shapes = allowed_shapes
         """List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default."""
         self.events = events
-        """The events to capture on this image annotator. One of `click` or `tool_change`."""
+        """The events to capture on this image annotator. One of `click` | `tool_change`."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6911,14 +6911,14 @@ class AudioAnnotator:
             self,
             name: str,
             title: str,
-            src: str,
+            path: str,
             tags: List[AudioAnnotatorTag],
             items: Optional[List[AudioAnnotatorItem]] = None,
             trigger: Optional[bool] = None,
     ):
         _guard_scalar('AudioAnnotator.name', name, (str,), True, False, False)
         _guard_scalar('AudioAnnotator.title', title, (str,), False, False, False)
-        _guard_scalar('AudioAnnotator.src', src, (str,), False, False, False)
+        _guard_scalar('AudioAnnotator.path', path, (str,), False, False, False)
         _guard_vector('AudioAnnotator.tags', tags, (AudioAnnotatorTag,), False, False, False)
         _guard_vector('AudioAnnotator.items', items, (AudioAnnotatorItem,), False, True, False)
         _guard_scalar('AudioAnnotator.trigger', trigger, (bool,), False, True, False)
@@ -6926,8 +6926,8 @@ class AudioAnnotator:
         """An identifying name for this component."""
         self.title = title
         """The audio annotator's title."""
-        self.src = src
-        """The source of the audio. We advise using mp3 or wav formats to achieve the best cross-browser experience. See https://caniuse.com/?search=audio%20format for other formats."""
+        self.path = path
+        """The path to the audio file. Use mp3 or wav formats to achieve the best cross-browser support. See https://caniuse.com/?search=audio%20format for other formats."""
         self.tags = tags
         """The master list of tags that can be used for annotations."""
         self.items = items
@@ -6939,14 +6939,14 @@ class AudioAnnotator:
         """Returns the contents of this object as a dict."""
         _guard_scalar('AudioAnnotator.name', self.name, (str,), True, False, False)
         _guard_scalar('AudioAnnotator.title', self.title, (str,), False, False, False)
-        _guard_scalar('AudioAnnotator.src', self.src, (str,), False, False, False)
+        _guard_scalar('AudioAnnotator.path', self.path, (str,), False, False, False)
         _guard_vector('AudioAnnotator.tags', self.tags, (AudioAnnotatorTag,), False, False, False)
         _guard_vector('AudioAnnotator.items', self.items, (AudioAnnotatorItem,), False, True, False)
         _guard_scalar('AudioAnnotator.trigger', self.trigger, (bool,), False, True, False)
         return _dump(
             name=self.name,
             title=self.title,
-            src=self.src,
+            path=self.path,
             tags=[__e.dump() for __e in self.tags],
             items=None if self.items is None else [__e.dump() for __e in self.items],
             trigger=self.trigger,
@@ -6959,8 +6959,8 @@ class AudioAnnotator:
         _guard_scalar('AudioAnnotator.name', __d_name, (str,), True, False, False)
         __d_title: Any = __d.get('title')
         _guard_scalar('AudioAnnotator.title', __d_title, (str,), False, False, False)
-        __d_src: Any = __d.get('src')
-        _guard_scalar('AudioAnnotator.src', __d_src, (str,), False, False, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('AudioAnnotator.path', __d_path, (str,), False, False, False)
         __d_tags: Any = __d.get('tags')
         _guard_vector('AudioAnnotator.tags', __d_tags, (dict,), False, False, False)
         __d_items: Any = __d.get('items')
@@ -6969,14 +6969,14 @@ class AudioAnnotator:
         _guard_scalar('AudioAnnotator.trigger', __d_trigger, (bool,), False, True, False)
         name: str = __d_name
         title: str = __d_title
-        src: str = __d_src
+        path: str = __d_path
         tags: List[AudioAnnotatorTag] = [AudioAnnotatorTag.load(__e) for __e in __d_tags]
         items: Optional[List[AudioAnnotatorItem]] = None if __d_items is None else [AudioAnnotatorItem.load(__e) for __e in __d_items]
         trigger: Optional[bool] = __d_trigger
         return AudioAnnotator(
             name,
             title,
-            src,
+            path,
             tags,
             items,
             trigger,

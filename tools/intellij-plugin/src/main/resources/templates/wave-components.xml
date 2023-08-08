@@ -22,10 +22,10 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_audio_annotator" value="ui.audio_annotator(name='$name$',title='$title$',src='$src$',tags=[&#10;	$tags$	&#10;]),$END$" description="Create a minimal Wave AudioAnnotator." toReformat="true" toShortenFQNames="true">
+  <template name="w_audio_annotator" value="ui.audio_annotator(name='$name$',title='$title$',path='$path$',tags=[&#10;	$tags$	&#10;]),$END$" description="Create a minimal Wave AudioAnnotator." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="src" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="tags" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1025,10 +1025,10 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_audio_annotator" value="ui.audio_annotator(name='$name$',title='$title$',src='$src$',trigger=$trigger$,tags=[&#10;	$tags$	&#10;],items=[&#10;	$items$	&#10;]),$END$" description="Create Wave AudioAnnotator with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_audio_annotator" value="ui.audio_annotator(name='$name$',title='$title$',path='$path$',trigger=$trigger$,tags=[&#10;	$tags$	&#10;],items=[&#10;	$items$	&#10;]),$END$" description="Create Wave AudioAnnotator with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="src" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="trigger" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="tags" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>

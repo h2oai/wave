@@ -2497,7 +2497,7 @@ def image_annotator(
         trigger: True if the form should be submitted as soon as an annotation is drawn.
         image_height: The card’s image height. The actual image size is used by default.
         allowed_shapes: List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
-        events: The events to capture on this image annotator. One of `click` or `tool_change`.
+        events: The events to capture on this image annotator. One of `click` | `tool_change`.
     Returns:
         A `h2o_wave.types.ImageAnnotator` instance.
     """
@@ -2559,7 +2559,7 @@ def audio_annotator_item(
 def audio_annotator(
         name: str,
         title: str,
-        src: str,
+        path: str,
         tags: List[AudioAnnotatorTag],
         items: Optional[List[AudioAnnotatorItem]] = None,
         trigger: Optional[bool] = None,
@@ -2571,7 +2571,7 @@ def audio_annotator(
     Args:
         name: An identifying name for this component.
         title: The audio annotator's title.
-        src: The source of the audio. We advise using mp3 or wav formats to achieve the best cross-browser experience. See https://caniuse.com/?search=audio%20format for other formats.
+        path: The path to the audio file. Use mp3 or wav formats to achieve the best cross-browser support. See https://caniuse.com/?search=audio%20format for other formats.
         tags: The master list of tags that can be used for annotations.
         items: Annotations to display on the image, if any.
         trigger: True if the form should be submitted as soon as an annotation is made.
@@ -2581,7 +2581,7 @@ def audio_annotator(
     return Component(audio_annotator=AudioAnnotator(
         name,
         title,
-        src,
+        path,
         tags,
         items,
         trigger,

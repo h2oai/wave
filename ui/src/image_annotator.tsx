@@ -80,7 +80,7 @@ export interface ImageAnnotator {
   image_height?: S
   /** List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default. */
   allowed_shapes?: S[]
-  /** The events to capture on this image annotator. One of `click` or `tool_change`. */
+  /** The events to capture on this image annotator. One of `click` | `tool_change`. */
   events?: S[]
 }
 

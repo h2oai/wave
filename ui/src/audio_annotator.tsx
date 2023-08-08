@@ -38,8 +38,8 @@ export interface AudioAnnotator {
   name: Id,
   /** The audio annotator's title. */
   title: S
-  /** The source of the audio. We advise using mp3 or wav formats to achieve the best cross-browser experience. See https://caniuse.com/?search=audio%20format for other formats. */
-  src: S
+  /** The path to the audio file. Use mp3 or wav formats to achieve the best cross-browser support. See https://caniuse.com/?search=audio%20format for other formats. */
+  path: S
   /** The master list of tags that can be used for annotations. */
   tags: AudioAnnotatorTag[]
   /** Annotations to display on the image, if any. */
@@ -114,7 +114,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       let arrBuffer: ArrayBuffer
       try {
         // The data audio needs to be fetched and processed manually to generate a waveform later.
-        const res = await fetch(model.src)
+        const res = await fetch(model.path)
         arrBuffer = await res.arrayBuffer()
       } catch (e) {
         setErrMsg('Could not download audio file.')
