@@ -162,18 +162,14 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       }
     },
     onAudioEnded = () => setIsPlaying(false),
-    onTrackChange = (value: F, _range?: [F, F], e?: unknown) => skipToTime(value)(e as any),
+    onTrackChange = (value: F, _range?: [F, F]) => skipToTime(value)(),
     onVolumeChange = (v: F) => {
       if (gainNodeRef.current) gainNodeRef.current.gain.value = v
       setVolumeIcon(v === 0 ? 'VolumeDisabled' : (v < 0.3 ? 'Volume1' : (v < 0.75 ? 'Volume2' : 'Volume3')))
     },
     onSpeedChange = (v: U) => { if (audioRef.current) audioRef.current.playbackRate = v },
-    skipToTime = (newTime?: F) => (e: React.MouseEvent<HTMLCanvasElement>) => {
+    skipToTime = (newTime: F) => () => {
       if (!audioRef.current) return
-      if (newTime === undefined) {
-        const xRelativeToCurrTarget = (e.pageX || 0) - e.currentTarget.getBoundingClientRect().left
-        newTime = xRelativeToCurrTarget / e.currentTarget.width * duration
-      }
       setCurrentTime(newTime)
       audioRef.current.currentTime = newTime
     },
