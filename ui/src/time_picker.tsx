@@ -80,7 +80,7 @@ const
     },
     toolbarText: { fontSize: 26 },
     toolbarTextDisabled: {
-      color: cssVar('$neutralLighter'), // TODO: Use correct color.
+      color: cssVar('$neutralTertiaryAlt'),
       $nest: {
         '&:hover': {
           cursor: 'default',
@@ -103,7 +103,7 @@ const
     }
   }
 
-type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void, amPmDisabled?: B }
+type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void, amPmDisabled: B }
 
 const
   // TODO: Import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider', config Jest to transpile the module to prevent err.
