@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Pivot, PivotItem } from '@fluentui/react'
-import { B, Model, S } from 'h2o-wave'
+import { B, Box, Model, S, box, on } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -32,6 +32,8 @@ interface State {
   name?: S
 }
 
+type TabsProps = State & { valueB: Box<S | undefined> }
+
 const
   css = stylesheet({
     card: {
@@ -42,35 +44,45 @@ const
     },
   })
 
+const Tabs = ({ items, value, link, name, valueB }: TabsProps) => {
+  const
+    [val, setVal] = React.useState(value),
+    onLinkClick = (item?: PivotItem) => {
+      const name = item?.props.itemKey
+      if (!name) return
+      setVal(name)
+      valueB(name)
+      if (name.startsWith('#')) {
+        window.location.hash = name.substring(1)
+        return
+      }
+      if (name === value) return
+      if (name === '#') {
+        wave.args[name] = true
+      } else {
+        wave.args[name] = true
+      }
+      wave.push()
+    },
+    linkFormat = link ? 'links' : 'tabs',
+    tabItems = React.useMemo(() => items.map(({ name, label, icon }: Tab) =>
+      <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
+    ), [items])
+
+  React.useEffect(() => { if (value !== val) setVal(value) }, [val, value])
+
+  return (
+    <div data-test={name} className={css.card}>
+      <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={val}>{tabItems}</Pivot>
+    </div>
+  )
+}
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
-    const
-      onLinkClick = (item?: PivotItem) => {
-        const name = item?.props.itemKey
-        if (!name) return
-        if (name.startsWith('#')) {
-          window.location.hash = name.substring(1)
-          return
-        }
-        if (state.name) {
-          wave.args[state.name] = name
-        } else {
-          wave.args[name] = true
-        }
-        wave.push()
-      },
-      render = () => {
-        const
-          linkFormat = state.link ? 'links' : 'tabs',
-          items = state.items.map(({ name, label, icon }) => (
-            <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
-          ))
-        return (
-          <div data-test={name} className={css.card}>
-            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={state.value}>{items}</Pivot>
-          </div>
-        )
-      }
+    const valueB = box<S | undefined>(state.value)
+    const render = () => <Tabs items={state.items} value={state.value} link={state.link} name={name} valueB={valueB} />
+
+    on(valueB, v => state.value = v)
     return { render, changed }
   })
 
