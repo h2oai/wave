@@ -645,23 +645,25 @@ export const
     return (
       <>
         <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
-          <Fluent.CommandBar styles={{ root: { padding: 0, minWidth: 280 } }} items={[
-            {
-              key: 'remove-all',
-              text: 'Remove all',
-              onClick: reset,
-              disabled: removeAllDisabled,
-              iconProps: { iconName: 'DependencyRemove', styles: { root: { fontSize: 20 } } },
-            },
-            {
-              key: 'remove',
-              text: 'Remove selected',
-              onClick: removeAnnotation,
-              disabled: removeDisabled,
-              iconProps: { iconName: 'Delete', styles: { root: { fontSize: 20 } } },
-            },
-          ]}
-          />
+          <Fluent.StackItem grow={1}>
+            <Fluent.CommandBar styles={{ root: { padding: 0, minWidth: 280 } }} items={[
+              {
+                key: 'remove-all',
+                text: 'Remove all',
+                onClick: reset,
+                disabled: removeAllDisabled,
+                iconProps: { iconName: 'DependencyRemove', styles: { root: { fontSize: 20 } } },
+              },
+              {
+                key: 'remove',
+                text: 'Remove selected',
+                onClick: removeAnnotation,
+                disabled: removeDisabled,
+                iconProps: { iconName: 'Delete', styles: { root: { fontSize: 20 } } },
+              },
+            ]}
+            />
+          </Fluent.StackItem>
           {onRenderToolbar && onRenderToolbar()}
         </Fluent.Stack>
         <div ref={annotatorContainerRef}>

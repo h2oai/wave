@@ -43,7 +43,7 @@ class MockAudioContext {
   createGain = () => ({ gain: {} })
   createMediaElementSource = () => this
   connect = () => this
-  decodeAudioData = () => ({ duration: WIDTH_AND_DURATION, getChannelData: () => new Array(300).fill(1) })
+  decodeAudioData = (_data: any, res: any) => res({ duration: WIDTH_AND_DURATION, getChannelData: () => new Array(300).fill(1) })
 }
 
 describe('AudioAnnotator.tsx', () => {

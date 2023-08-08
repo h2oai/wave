@@ -75,7 +75,11 @@ const
     { key: 1.25, text: '1.25x' },
     { key: 1.5, text: '1.5x' },
     { key: 2, text: '2x' },
-  ]
+  ],
+  // Love ya Safari.
+  promisifyDecodeAudioData = (audioContext: AudioContext, audioData: ArrayBuffer) => new Promise<AudioBuffer>((resolve, reject) => {
+    audioContext.decodeAudioData(audioData, resolve, reject)
+  })
 
 declare global {
   interface Window { webkitAudioContext: typeof window.AudioContext }
@@ -121,14 +125,14 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         return
       }
       // Store the URL into the ref so that it can be revoked on destroy and mem leak prevented.
-      fetchedAudioUrlRef.current = URL.createObjectURL(new Blob([arrBuffer]))
+      fetchedAudioUrlRef.current = URL.createObjectURL(new Blob([arrBuffer], { type: 'audio/mpeg' }))
       // Do not set src directly within HTML to prevent double fetching.
       audioRef.current.src = fetchedAudioUrlRef.current
 
       setLoadingMsg('Decoding audio data...')
       let audioBuffer: AudioBuffer
       try {
-        audioBuffer = await audioContext.decodeAudioData(arrBuffer)
+        audioBuffer = await promisifyDecodeAudioData(audioContext, arrBuffer)
       } catch (e) {
         setErrMsg('Could not decode audio data. The file is either corrupted or the format is not supported.')
         return
