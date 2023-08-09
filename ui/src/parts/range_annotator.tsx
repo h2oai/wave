@@ -168,14 +168,13 @@ const
 
     return annotationsWithinRange
   },
-  getCanvasDimensions = (intersections: DrawnAnnotation[], annotation: DrawnAnnotation, maxDepth?: U) => {
+  getCanvasDimensions = (intersections: DrawnAnnotation[], annotation: DrawnAnnotation, isFirst: B, maxDepth?: U) => {
     const verticalIntersections = intersections
-      .filter(a => a !== annotation && isAnnotationIntersectingAtEnd(a, annotation))
-      // TODO: Prev array is already sorted so adding a new element can be made O(N) instead of O(NlogN).
+      .filter(a => isAnnotationIntersectingAtEnd(a, annotation))
       .sort((a, b) => a.canvasY - b.canvasY)
     let canvasY = 0
     let j = 0
-    while (canvasY === verticalIntersections[j]?.canvasY) {
+    while (!isFirst && canvasY === verticalIntersections[j]?.canvasY) {
       canvasY += verticalIntersections[j].canvasHeight
       j++
     }
@@ -475,6 +474,9 @@ export const
       }
     }
 
+    // Reset vertical position of annotations.
+    mergedAnnotations.forEach(annotation => annotation.canvasY = Infinity)
+
     let currMaxDepth = 1
     for (let i = 0; i < mergedAnnotations.length; i++) {
       const annotation = mergedAnnotations[i]
@@ -490,10 +492,11 @@ export const
 
       const intersections = [...prevIntersections, ...nextIntersections]
       const maxDepth = getMaxDepth(mergedAnnotations, i, annotation, 1)
-      const shouldFillRemainingSpace = !nextIntersections.length || maxDepth < currMaxDepth
+      const shouldFillRemainingSpace = !nextIntersections.length
+      const isFirst = !prevIntersections.length
       currMaxDepth = intersections.length ? Math.max(currMaxDepth, maxDepth) : 1
 
-      const { canvasY, canvasHeight } = getCanvasDimensions(intersections, annotation, shouldFillRemainingSpace ? 0 : maxDepth)
+      const { canvasY, canvasHeight } = getCanvasDimensions(intersections, annotation, isFirst, shouldFillRemainingSpace ? 0 : maxDepth)
       annotation.canvasY = canvasY
       annotation.canvasHeight = canvasHeight
     }

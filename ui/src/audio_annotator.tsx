@@ -125,6 +125,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         return
       }
       // Store the URL into the ref so that it can be revoked on destroy and mem leak prevented.
+      // Safari needs Blob type to be specified, doesn't need to match the real sound format.
       fetchedAudioUrlRef.current = URL.createObjectURL(new Blob([arrBuffer], { type: 'audio/mpeg' }))
       // Do not set src directly within HTML to prevent double fetching.
       audioRef.current.src = fetchedAudioUrlRef.current
