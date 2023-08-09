@@ -15,7 +15,7 @@
 import React from 'react'
 import * as Fluent from '@fluentui/react'
 import { B, D, Id, S, U } from 'h2o-wave'
-import { clas, cssVar } from './theme'
+import { cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
 import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
@@ -69,8 +69,6 @@ const
     toolbarTime: {
       fontSize: 26,
       cursor: 'pointer',
-    },
-    toolbarTimeActive: {
       $nest: {
         '&:hover': {
           backgroundColor: cssVar('$neutralLighter'),
@@ -78,15 +76,10 @@ const
         }
       }
     },
-    toolbarText: { fontSize: 26 },
-    toolbarTextDisabled: {
-      color: cssVar('$neutralTertiaryAlt'),
-      $nest: {
-        '&:hover': {
-          cursor: 'default',
-        }
-      }
+    toolbarAmPm: {
+      fontSize: 16,
     },
+    toolbarText: { fontSize: 26 },
     toolbarLabel: { maxWidth: '70%' }
   }),
   popoverProps: Partial<PopperProps> | undefined = {
@@ -103,7 +96,7 @@ const
     }
   }
 
-type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void, amPmDisabled: B }
+type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S }
 
 const
   // TODO: Import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider', config Jest to transpile the module to prevent err.
@@ -115,11 +108,6 @@ const
   isBelowMin = (time: Date, minTime: Date) => time < minTime,
   isOverMax = (time: Date, maxTime: Date) => time > maxTime,
   isOutOfBounds = (time: Date, minTime: Date, maxTime: Date) => isBelowMin(time, minTime) || isOverMax(time, maxTime),
-  canSwitchAmPm = (time: Date, minTime: Date, maxTime: Date) => {
-    const date = new Date(time)
-    date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-    return !isOutOfBounds(date, minTime, maxTime)
-  },
   parseTimeStringToDate = (time: S) => new Date(normalize(time)),
   useTime = (themeObj: ThemeOptions) => {
     const
@@ -142,13 +130,13 @@ const
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
     </div>,
-  Toolbar = ({ setOpenView, time, label, switchAmPm, amPmDisabled }: ToolbarProps) =>
+  Toolbar = ({ setOpenView, time, label }: ToolbarProps) =>
     <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>:
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>{' '}
-        <Fluent.Text className={clas(css.toolbarTime, amPmDisabled ? css.toolbarTextDisabled : css.toolbarTimeActive)} onClick={amPmDisabled ? undefined : switchAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
+        <Fluent.Text className={css.toolbarAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
       </Fluent.Text>
     </div>
 
@@ -163,27 +151,14 @@ export const
       popperRef = React.useRef<HTMLDivElement | null>(null),
       minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00'), [min]),
       maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
-      switchAmPm = () => {
-        setValue((prevValue) => {
-          if (prevValue && canSwitchAmPm(prevValue, minTime, maxTime)) {
-            const date = new Date(prevValue!)
-            date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-            const newValue = formatDateToTimeString(date, '24')
-            m.value = newValue
-            wave.args[m.name] = newValue
-            return date
-          }
-          return prevValue
-        })
-      },
       onChangeTime = (time: unknown) => {
-        const date = time instanceof Date && new Date(normalize(formatDateToTimeString(time, '24')))
-        if (date && !isOutOfBounds(date, minTime, maxTime)) {
-          const newValue = formatDateToTimeString(time, '24')
-          m.value = newValue
-          wave.args[m.name] = newValue
-          setValue(time)
-        }
+        if (!(time instanceof Date)) return
+        const newValue = formatDateToTimeString(time, '24')
+        const date = new Date(normalize(newValue))
+        if (isOutOfBounds(date, minTime, maxTime)) return
+        m.value = newValue
+        wave.args[m.name] = newValue
+        setValue(time)
       },
       onSelectTime = () => { if (m.trigger) wave.push() },
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
@@ -262,8 +237,6 @@ export const
                           : null
                       }
                       label={label}
-                      switchAmPm={switchAmPm}
-                      amPmDisabled={value ? !canSwitchAmPm(value, minTime, maxTime) : false}
                     />
                   </Fluent.FocusTrapZone>
                 }
