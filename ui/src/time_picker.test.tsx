@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, act, waitFor } from '@testing-library/react'
+import { fireEvent, render, act, waitFor, screen } from '@testing-library/react'
 import React from 'react'
 import { TimePicker, XTimePicker } from './time_picker'
 import { wave } from './ui'
@@ -62,14 +62,15 @@ describe('time_picker.tsx', () => {
   })
 
   it('Set args when value is updated to initial value', async () => {
-    const { container, getByText, rerender } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
+    const { container, rerender } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
     await waitForIdleEventLoop()
     expect(wave.args[name]).toBe('04:00')
 
-    fireEvent.click(container.querySelector("input")!)
-    fireEvent.click(getByText('AM')) // switches to PM
+    await waitFor(() => fireEvent.click(container.querySelector("input")!))
+    fireEvent.keyDown(screen.getByRole('listbox'), { key: 'ArrowUp' })
+
     await waitForIdleEventLoop()
-    expect(wave.args[name]).toBe('16:00')
+    expect(wave.args[name]).toBe('05:00')
 
     rerender(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
     expect(wave.args[name]).toBe('04:00')
