@@ -73,7 +73,13 @@ const Tabs = ({ items, value, link, name, valueB }: TabsProps) => {
 
   return (
     <div data-test={name} className={css.card}>
-      <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={val}>{tabItems}</Pivot>
+      <Pivot
+        linkFormat={linkFormat}
+        onLinkClick={onLinkClick}
+        selectedKey={val || items[0].name}
+      >
+        {tabItems}
+      </Pivot>
     </div>
   )
 }
