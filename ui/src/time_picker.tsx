@@ -18,7 +18,7 @@ import { B, D, Id, S, U } from 'h2o-wave'
 import { cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
+import { PopperProps, Theme, ThemeOptions } from '@mui/material'
 import DateFnsUtils from '@date-io/date-fns'
 import { VirtualElement } from '@popperjs/core/lib'
 import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models'
@@ -246,12 +246,11 @@ export const
                 minutesStep={allowedMinutesSteps[minutes_step]}
                 disabled={disabled}
                 onOpen={onOpen}
-                renderInput={({ inputProps }: TextFieldProps) =>
+                renderInput={() =>
                   <div ref={textInputRef} data-test={m.name}>
                     <Fluent.TextField
                       iconProps={{ iconName: 'Clock' }}
                       onClick={() => setIsDialogOpen(true)}
-                      onChange={inputProps?.onChange}
                       placeholder={placeholder}
                       disabled={disabled}
                       readOnly
