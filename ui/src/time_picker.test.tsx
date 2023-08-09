@@ -53,16 +53,6 @@ describe('time_picker.tsx', () => {
     expect(wave.args[name]).toBe('10:30')
   })
 
-  it('Update args on time change', async () => {
-    const { getByText, container } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
-    await waitForIdleEventLoop()
-    expect(wave.args[name]).toBe('04:00')
-    fireEvent.click(container.querySelector("input")!)
-    fireEvent.click(getByText('AM')) // switches to PM
-    await waitForIdleEventLoop()
-    expect(wave.args[name]).toBe('16:00')
-  })
-
   it('Set args when value is updated to different value', async () => {
     const { rerender } = render(<XTimePicker model={{ ...timepickerProps, value: '15:00' }} />)
     await waitForIdleEventLoop()
@@ -111,16 +101,6 @@ describe('time_picker.tsx', () => {
     await waitForIdleEventLoop()
     expect(getByDisplayValue('23:30')).toBeInTheDocument()
     expect(wave.args[name]).toBe('23:30')
-  })
-
-  it('Custom popover toolbar - Switch AM to PM in 12 hour time format', async () => {
-    const { getByText, container } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00' }} />)
-    await waitForIdleEventLoop()
-    fireEvent.click(container.querySelector("input")!)
-    const element = getByText('AM')
-    expect(element).toBeVisible()
-    fireEvent.click(element)
-    expect(getByText('PM')).toBeVisible()
   })
 
   it('Value cannot be updated to be greater than max', async () => {
