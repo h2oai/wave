@@ -615,6 +615,12 @@ export const
       }
 
     React.useEffect(() => {
+      const annotations = itemsToAnnotations(items)
+      annotations.sort((a, b) => a.start - b.start)
+      setAnnotations(recalculateAnnotations(annotations))
+    }, [items])
+
+    React.useEffect(() => {
       setAnnotations(annotations => annotations.map(a => {
         if (a.isFocused) {
           const tagChanged = a.tag !== activeTag
