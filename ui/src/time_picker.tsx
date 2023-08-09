@@ -18,7 +18,7 @@ import { B, D, Id, S, U } from 'h2o-wave'
 import { cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'
-import { PopperProps, TextFieldProps, Theme, ThemeOptions } from '@mui/material'
+import { PopperProps, Theme, ThemeOptions } from '@mui/material'
 import DateFnsUtils from '@date-io/date-fns'
 import { VirtualElement } from '@popperjs/core/lib'
 import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models'
@@ -76,6 +76,9 @@ const
         }
       }
     },
+    toolbarAmPm: {
+      fontSize: 16,
+    },
     toolbarText: { fontSize: 26 },
     toolbarLabel: { maxWidth: '70%' }
   }),
@@ -93,7 +96,7 @@ const
     }
   }
 
-type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S, switchAmPm: () => void }
+type ToolbarProps = { time: S | null, setOpenView: (view: CalendarOrClockPickerView) => void, label?: S }
 
 const
   // TODO: Import 'ThemeProvider' directly from '@mui/material/styles/ThemeProvider', config Jest to transpile the module to prevent err.
@@ -101,7 +104,11 @@ const
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers/LocalizationProvider').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers/TimePicker').then(({ TimePicker }) => ({ default: TimePicker }))),
   allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
-  parseTimeStringToDate = (time: S) => new Date(`2000-01-01T${time.slice(0, 5)}:00`),
+  normalize = (time: S) => `2000-01-01T${time.slice(0, 5)}:00`,
+  isBelowMin = (time: Date, minTime: Date) => time < minTime,
+  isOverMax = (time: Date, maxTime: Date) => time > maxTime,
+  isOutOfBounds = (time: Date, minTime: Date, maxTime: Date) => isBelowMin(time, minTime) || isOverMax(time, maxTime),
+  parseTimeStringToDate = (time: S) => new Date(normalize(time)),
   useTime = (themeObj: ThemeOptions) => {
     const
       [theme, setTheme] = React.useState<Theme>(),
@@ -123,13 +130,13 @@ const
     <div data-test='lazyload' style={{ height: 59 }}>
       <Fluent.Spinner styles={{ root: { height: '100%' } }} size={Fluent.SpinnerSize.small} />
     </div>,
-  Toolbar = ({ setOpenView, time, label, switchAmPm }: ToolbarProps) =>
+  Toolbar = ({ setOpenView, time, label }: ToolbarProps) =>
     <div className={css.toolbar}>
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>:
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>{' '}
-        <Fluent.Text className={css.toolbarTime} onClick={switchAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
+        <Fluent.Text className={css.toolbarAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
       </Fluent.Text>
     </div>
 
@@ -142,19 +149,16 @@ export const
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
       popperRef = React.useRef<HTMLDivElement | null>(null),
-      switchAmPm = () => {
-        setValue((prevValue) => {
-          const date = new Date(prevValue!)
-          date.setTime(date.getTime() + 12 * 60 * 60 * 1000)
-          wave.args[m.name] = formatDateToTimeString(date, '24')
-          return date
-        })
-      },
+      minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00'), [min]),
+      maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
       onChangeTime = (time: unknown) => {
-        if (time instanceof Date) {
-          wave.args[m.name] = formatDateToTimeString(time, '24')
-          setValue(time)
-        }
+        if (!(time instanceof Date)) return
+        const newValue = formatDateToTimeString(time, '24')
+        const date = new Date(normalize(newValue))
+        if (isOutOfBounds(date, minTime, maxTime)) return
+        m.value = newValue
+        wave.args[m.name] = newValue
+        setValue(time)
       },
       onSelectTime = () => { if (m.trigger) wave.push() },
       // HACK: https://stackoverflow.com/questions/70106353/material-ui-date-time-picker-safari-browser-issue
@@ -188,15 +192,14 @@ export const
         },
       },
       { format, AdapterDateFns, theme } = useTime(themeObj),
-      formatDateToTimeString = (date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '',
-      getErrMsg = (hour_format: S, min = '00:00', max = '00:00') =>
-        `Wrong input. Please enter the time in range from ${formatDateToTimeString(parseTimeStringToDate(min), hour_format)} 
-        to ${formatDateToTimeString(parseTimeStringToDate(max), hour_format)}.`
+      formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '', [format])
 
     React.useEffect(() => {
-      if (format) wave.args[m.name] = value ? formatDateToTimeString(value, '24') : null
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [format])
+      const time = m.value ? parseTimeStringToDate(m.value) : null
+      const newTime = time && isBelowMin(time, minTime) ? minTime : time && isOverMax(time, maxTime) ? maxTime : time
+      if (format) wave.args[m.name] = newTime ? formatDateToTimeString(newTime, '24') : null
+      setValue(newTime)
+    }, [format, formatDateToTimeString, m.name, m.value, maxTime, minTime])
 
     // TODO: Remove once CSS vars are fully supported - https://github.com/mui/material-ui/issues/27651
     React.useEffect(() => {
@@ -228,24 +231,26 @@ export const
                   <Fluent.FocusTrapZone isClickableOutsideFocusTrap>
                     <Toolbar
                       setOpenView={setOpenView}
-                      time={parsedValue ? formatDateToTimeString(parsedValue as D, ampm ? '12' : '24') : parsedValue as null}
+                      time={
+                        parsedValue
+                          ? formatDateToTimeString(value && isOutOfBounds(parsedValue as D, minTime, maxTime) ? value : parsedValue as D, ampm ? '12' : '24')
+                          : null
+                      }
                       label={label}
-                      switchAmPm={switchAmPm}
                     />
                   </Fluent.FocusTrapZone>
                 }
                 PopperProps={{ ref: popperRef, anchorEl: () => textInputRef.current as VirtualElement, onBlur, ...popoverProps }}
-                minTime={min ? parseTimeStringToDate(min) : undefined}
-                maxTime={max ? parseTimeStringToDate(max) : undefined}
+                minTime={min ? minTime : undefined}
+                maxTime={max ? maxTime : undefined}
                 minutesStep={allowedMinutesSteps[minutes_step]}
                 disabled={disabled}
                 onOpen={onOpen}
-                renderInput={({ inputProps, error }: TextFieldProps) =>
+                renderInput={() =>
                   <div ref={textInputRef} data-test={m.name}>
                     <Fluent.TextField
                       iconProps={{ iconName: 'Clock' }}
                       onClick={() => setIsDialogOpen(true)}
-                      onChange={inputProps?.onChange}
                       placeholder={placeholder}
                       disabled={disabled}
                       readOnly
@@ -253,7 +258,6 @@ export const
                       label={label}
                       required={required}
                       styles={{ field: { cursor: 'pointer', height: 32 }, icon: { bottom: 7 } }}
-                      errorMessage={error ? getErrMsg(hour_format, min, max) : undefined}
                     />
                   </div>
                 }

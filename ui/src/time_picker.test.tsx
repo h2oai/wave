@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render, act, waitFor } from '@testing-library/react'
+import { fireEvent, render, act, waitFor, screen } from '@testing-library/react'
 import React from 'react'
 import { TimePicker, XTimePicker } from './time_picker'
 import { wave } from './ui'
@@ -53,14 +53,27 @@ describe('time_picker.tsx', () => {
     expect(wave.args[name]).toBe('10:30')
   })
 
-  it('Update args on time change', async () => {
-    const { getByText, container } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
+  it('Set args when value is updated to different value', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, value: '15:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('15:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, value: '15:30' }} />)
+    expect(wave.args[name]).toBe('15:30')
+  })
+
+  it('Set args when value is updated to initial value', async () => {
+    const { container, rerender } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
     await waitForIdleEventLoop()
     expect(wave.args[name]).toBe('04:00')
-    fireEvent.click(container.querySelector("input")!)
-    fireEvent.click(getByText('AM')) // switches to PM
+
+    await waitFor(() => fireEvent.click(container.querySelector("input")!))
+    fireEvent.keyDown(screen.getByRole('listbox'), { key: 'ArrowUp' })
+
     await waitForIdleEventLoop()
-    expect(wave.args[name]).toBe('16:00')
+    expect(wave.args[name]).toBe('05:00')
+
+    rerender(<XTimePicker model={{ ...timepickerProps, value: '04:00' }} />)
+    expect(wave.args[name]).toBe('04:00')
   })
 
   it('Show correct input value in 12 hour time format', async () => {
@@ -91,28 +104,39 @@ describe('time_picker.tsx', () => {
     expect(wave.args[name]).toBe('23:30')
   })
 
-  it('Custom popover toolbar - Switch AM to PM in 12 hour time format', async () => {
-    const { getByText, container } = render(<XTimePicker model={{ ...timepickerProps, value: '03:00' }} />)
+  it('Value cannot be updated to be greater than max', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
     await waitForIdleEventLoop()
-    fireEvent.click(container.querySelector("input")!)
-    const element = getByText('AM')
-    expect(element).toBeVisible()
-    fireEvent.click(element)
-    expect(getByText('PM')).toBeVisible()
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '14:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('10:00')
   })
 
-  it('Show error if input changed to be out of the boundaries - 12 hour time format', async () => {
-    const { getByText, container } = render(<XTimePicker model={{ ...timepickerProps, value: '04:00', min: '02:00', max: '15:00' }} />)
+  it('Value cannot be updated to be lower than min', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '02:00', max: '10:00', value: '04:00' }} />)
     await waitForIdleEventLoop()
-    fireEvent.click(container.querySelector("input")!)
-    fireEvent.click(getByText('AM')) // switches to PM
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '02:00', max: '10:00', value: '01:00' }} />)
     await waitForIdleEventLoop()
-    expect(getByText('Wrong input. Please enter the time in range from 02:00 AM to 03:00 PM.')).toBeTruthy()
+    expect(wave.args[name]).toBe('02:00')
   })
 
-  it('Show error if input out of the boundaries - 24 hour time format', async () => {
-    const { getByText } = render(<XTimePicker model={{ ...timepickerProps, hour_format: '24', min: '02:00', max: '15:00', value: '16:00' }} />)
+  it('Changes out of bounds value when min is updated', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
     await waitForIdleEventLoop()
-    await waitFor(() => expect(getByText('Wrong input. Please enter the time in range from 02:00 to 15:00.')).toBeTruthy())
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '05:00', max: '10:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('05:00')
+  })
+
+  it('Changes out of bounds value when max is updated', async () => {
+    const { rerender } = render(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '10:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('04:00')
+    rerender(<XTimePicker model={{ ...timepickerProps, min: '00:00', max: '03:00', value: '04:00' }} />)
+    await waitForIdleEventLoop()
+    expect(wave.args[name]).toBe('03:00')
   })
 })
