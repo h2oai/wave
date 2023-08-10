@@ -179,6 +179,9 @@ async def run_on(q: Q) -> bool:
     return False
 
 
+_handle_on_deprecated_warning_printed = False
+
+
 async def handle_on(q: Q) -> bool:
     """
     Handle the query using a query handler (a function annotated with `@on()`).
@@ -189,6 +192,11 @@ async def handle_on(q: Q) -> bool:
     Returns:
         True if a matching query handler was found and invoked, else False.
     """
+    global _handle_on_deprecated_warning_printed
+    if not _handle_on_deprecated_warning_printed:
+        print('\033[93m' + 'Warning: handle_on() is deprecated, use run_on() instead.' + '\033[0m')
+        _handle_on_deprecated_warning_printed = True
+
     event_sources = expando_to_dict(q.events)
     for event_source in event_sources:
         event = q.events[event_source]
