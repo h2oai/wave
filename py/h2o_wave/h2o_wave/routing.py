@@ -144,13 +144,14 @@ async def run_on(q: Q) -> bool:
     submitted = str(q.args['__wave_submission_name__'])
 
     # Event handlers.
-    event = q.events[submitted]
-    for entry in _event_handlers.get(submitted, []):
-        event_type, predicate, func, arity = entry
-        if event_type in event:
-            arg_value = event[event_type]
-            if await _match_predicate(predicate, func, arity, q, arg_value):
-                return True
+    for event_source in expando_to_dict(q.events):
+        for entry in _event_handlers.get(event_source, []):
+            event_type, predicate, func, arity = entry
+            event = q.events[event_source]
+            if event_type in event:
+                arg_value = event[event_type]
+                if await _match_predicate(predicate, func, arity, q, arg_value):
+                    return True
 
     # Hash handlers.
     if submitted == '#':
