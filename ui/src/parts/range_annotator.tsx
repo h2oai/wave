@@ -635,20 +635,23 @@ export const
     }, [activeTag, onAnnotate])
 
     React.useEffect(() => {
-      if (needsZoom(duration)) {
-        const zoomAnnotation: DrawnAnnotation = {
-          id: xid(),
-          canvasStart: 0,
-          canvasY: ZOOM_STROKE_WIDTH - 1,
-          canvasEnd: 100,
-          canvasHeight: WAVEFORM_HEIGHT - (2 * (ZOOM_STROKE_WIDTH - 1)),
-          start: -1,
-          end: -1,
-          tag: '',
-          isZoom: true
+      setAnnotations(annotations => {
+        if (needsZoom(duration) && !annotations[0]?.isZoom) {
+          const zoomAnnotation: DrawnAnnotation = {
+            id: xid(),
+            canvasStart: 0,
+            canvasY: ZOOM_STROKE_WIDTH - 1,
+            canvasEnd: 100,
+            canvasHeight: WAVEFORM_HEIGHT - (2 * (ZOOM_STROKE_WIDTH - 1)),
+            start: -1,
+            end: -1,
+            tag: '',
+            isZoom: true
+          }
+          return [zoomAnnotation, ...annotations]
         }
-        setAnnotations(annotations => [zoomAnnotation, ...annotations])
-      }
+        return annotations
+      })
     }, [duration])
 
     return (
