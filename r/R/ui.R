@@ -2894,7 +2894,7 @@ ui_image_annotator_item <- function(
 #' @param trigger True if the form should be submitted as soon as an annotation is drawn.
 #' @param image_height The card’s image height. The actual image size is used by default.
 #' @param allowed_shapes List of allowed shapes. Available values are 'rect' and 'polygon'. If not set, all shapes are available by default.
-#' @param events The events to capture on this image annotator. One of `click` or `tool_change`.
+#' @param events The events to capture on this image annotator. One of `click` | `tool_change`.
 #' @return A ImageAnnotator instance.
 #' @export
 ui_image_annotator <- function(
@@ -2926,6 +2926,86 @@ ui_image_annotator <- function(
     image_height=image_height,
     allowed_shapes=allowed_shapes,
     events=events))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a unique tag type for use in an audio annotator.
+#'
+#' @param name An identifying name for this tag.
+#' @param label Text to be displayed for the annotation.
+#' @param color Hex or RGB color string to be used as the background color.
+#' @return A AudioAnnotatorTag instance.
+#' @export
+ui_audio_annotator_tag <- function(
+  name,
+  label,
+  color) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("color", "character", color)
+  .o <- list(
+    name=name,
+    label=label,
+    color=color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveAudioAnnotatorTag"))
+  return(.o)
+}
+
+#' Create an annotator item with initial selected tags or no tags.
+#'
+#' @param start The start of the audio annotation in seconds.
+#' @param end The end of the audio annotation in seconds.
+#' @param tag The `name` of the audio annotator tag to refer to for the `label` and `color` of this item.
+#' @return A AudioAnnotatorItem instance.
+#' @export
+ui_audio_annotator_item <- function(
+  start,
+  end,
+  tag) {
+  .guard_scalar("start", "numeric", start)
+  .guard_scalar("end", "numeric", end)
+  .guard_scalar("tag", "character", tag)
+  .o <- list(
+    start=start,
+    end=end,
+    tag=tag)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveAudioAnnotatorItem"))
+  return(.o)
+}
+
+#' Create an audio annotator component.
+#' 
+#' This component allows annotating and labeling parts of audio file.
+#'
+#' @param name An identifying name for this component.
+#' @param title The audio annotator's title.
+#' @param path The path to the audio file. Use mp3 or wav formats to achieve the best cross-browser support. See https://caniuse.com/?search=audio%20format for other formats.
+#' @param tags The master list of tags that can be used for annotations.
+#' @param items Annotations to display on the image, if any.
+#' @param trigger True if the form should be submitted as soon as an annotation is made.
+#' @return A AudioAnnotator instance.
+#' @export
+ui_audio_annotator <- function(
+  name,
+  title,
+  path,
+  tags,
+  items = NULL,
+  trigger = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("path", "character", path)
+  .guard_vector("tags", "WaveAudioAnnotatorTag", tags)
+  .guard_vector("items", "WaveAudioAnnotatorItem", items)
+  .guard_scalar("trigger", "logical", trigger)
+  .o <- list(audio_annotator=list(
+    name=name,
+    title=title,
+    path=path,
+    tags=tags,
+    items=items,
+    trigger=trigger))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

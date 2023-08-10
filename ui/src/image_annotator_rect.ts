@@ -154,7 +154,7 @@ export const
     if (isFocused && getCorner(cursor_x, cursor_y, rect)) return true
 
     const { x2, x1, y2, y1 } = rect
-    return cursor_x > x1 && cursor_x < x2 && cursor_y > y1 && cursor_y < y2
+    return cursor_x >= x1 && cursor_x <= x2 && cursor_y >= y1 && cursor_y <= y2
   },
   getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect) => {
     if (x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS) return 'topLeft'

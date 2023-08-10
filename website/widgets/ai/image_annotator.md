@@ -34,7 +34,7 @@ q.page['example'] = ui.form_card(box='1 1 9 10', items=[
 ])
 ```
 
-## Allowonly certain drawing shapes
+## Allow only certain drawing shapes
 
 Use the `allowed_shapes` attribute to limit the available shapes your users might use. The attribute takes a list of strings (either 'rect' or 'polygon'). If not specified, the annotator allows every supported shape.
 

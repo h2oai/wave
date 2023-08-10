@@ -73,7 +73,8 @@ def generate_diff_view():
             f.write(content)
 
 
-def make_snippet_screenshot(code: List[str], img_name: str, page, groups: List[str], pool_idx: int, is_test: bool, browser: str):
+def make_screenshot(code: List[str], img_name: str, page,
+                            groups: List[str], pool_idx: int, is_test: bool, browser: str, sleep=1):
     code_str = ''.join(code)
     match = re.findall('(q.page\\[)(\'|\")([\\w-]+)', code_str)
     if not match:
@@ -88,7 +89,7 @@ def make_snippet_screenshot(code: List[str], img_name: str, page, groups: List[s
         page.goto(f'http://localhost:10101/{pool_idx}', wait_until='networkidle')
 
         # Wait for all the resources to be loaded.
-        time.sleep(1)
+        time.sleep(sleep)
 
         groups = os.path.join(*groups)
         path = os.path.join(docs_path, 'docs', 'widgets', groups, 'assets', img_name)
@@ -126,17 +127,21 @@ def generate_screenshots(files: List[DocFile], pool_idx: int, is_test: bool):
             for file in files:
                 with open(os.path.join(docs_path, file.path), 'r') as f:
                     is_code = False
+                    sleep = 1
                     code = []
                     file_idx = 0
                     for line in f.readlines():
+                        if line.startswith('```py') and 'sleep' in line:
+                            sleep = int(line.split('sleep')[1].replace(' ', '').replace('\n', ''))
                         if line.startswith('```py') and 'ignore' not in line:
                             is_code = True
                         elif line.replace(' ', '').replace('\n', '') == '```' and is_code:
                             screenshot_name = f"{file.name}-{file_idx}.png"
-                            make_snippet_screenshot(code, screenshot_name, page, file.groups, pool_idx, is_test, b)
+                            make_screenshot(code, screenshot_name, page, file.groups, pool_idx, is_test, b, sleep)
                             file_idx = file_idx + 1
                             code = []
                             is_code = False
+                            sleep = 1
                         elif is_code:
                             code.append(line)
             browser.close()
