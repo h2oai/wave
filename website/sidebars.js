@@ -107,7 +107,6 @@ module.exports = {
           "widgets/form/file_upload",
           "widgets/form/frame",
           "widgets/form/image",
-          "widgets/form/image_annotator",
           "widgets/form/inline",
           "widgets/form/label",
           "widgets/form/link",
@@ -176,7 +175,9 @@ module.exports = {
         "type": "category",
         "label": "AI",
         "items": [
+          "widgets/ai/audio_annotator",
           "widgets/ai/chatbot",
+          "widgets/ai/image_annotator",
         ]
       },
     ],
