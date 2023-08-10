@@ -51,6 +51,7 @@ export interface AudioAnnotator {
 const
   WAVEFORM_HEIGHT = 200,
   BODY_MIN_HEGHT = 370,
+  TRACK_SYNC_OFFSET = 0.05,
   css = stylesheet({
     body: {
       minHeight: BODY_MIN_HEGHT,
@@ -167,7 +168,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       }
     },
     onAudioEnded = () => setIsPlaying(false),
-    onTrackChange = (value: F, _range?: [F, F]) => skipToTime(value)(),
+    onTrackChange = (value: F, _range?: [F, F]) => skipToTime(value - (isPlaying ? TRACK_SYNC_OFFSET : 0))(),
     onVolumeChange = (v: F) => {
       if (gainNodeRef.current) gainNodeRef.current.gain.value = v
       setVolumeIcon(v === 0 ? 'VolumeDisabled' : (v < 0.3 ? 'Volume1' : (v < 0.75 ? 'Volume2' : 'Volume3')))
@@ -238,7 +239,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}
               // HACK: React doesn't allow for skipping batch updates in 3rd party components. 
               // Add a small offset to sync canvas and slider tracks.
-              value={currentTime + (isPlaying ? 0.05 : 0)}
+              value={currentTime + (isPlaying ? TRACK_SYNC_OFFSET : 0)}
               max={duration}
               step={0.01}
               onChange={onTrackChange}
