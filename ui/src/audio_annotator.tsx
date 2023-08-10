@@ -99,7 +99,6 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
     [errMsg, setErrMsg] = React.useState(''),
     audioRef = React.useRef<HTMLAudioElement>(null),
     audioContextRef = React.useRef<AudioContext>(),
-    skipNextDurationOffsetRef = React.useRef(false),
     gainNodeRef = React.useRef<GainNode>(),
     fetchedAudioUrlRef = React.useRef<S>(),
     activateTag = (tagName: S) => () => setActiveTag(tagName),
@@ -147,7 +146,6 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
     updateTrack = (audioEl: HTMLAudioElement) => {
       // We need higher frequency than HTMLAudioELEMENT's onTimeUpdate provides.
       window.requestAnimationFrame(() => {
-        skipNextDurationOffsetRef.current = false
         setCurrentTime(audioEl.currentTime)
         setIsPlaying(isPlaying => {
           if (isPlaying) updateTrack(audioEl)
@@ -169,10 +167,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       }
     },
     onAudioEnded = () => setIsPlaying(false),
-    onTrackChange = (value: F, _range?: [F, F]) => {
-      skipNextDurationOffsetRef.current = true
-      skipToTime(value)()
-    },
+    onTrackChange = (value: F, _range?: [F, F]) => skipToTime(value)(),
     onVolumeChange = (v: F) => {
       if (gainNodeRef.current) gainNodeRef.current.gain.value = v
       setVolumeIcon(v === 0 ? 'VolumeDisabled' : (v < 0.3 ? 'Volume1' : (v < 0.75 ? 'Volume2' : 'Volume3')))
@@ -243,7 +238,7 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               styles={{ root: { minWidth: 180 }, slideBox: { padding: 0 } }}
               // HACK: React doesn't allow for skipping batch updates in 3rd party components. 
               // Add a small offset to sync canvas and slider tracks.
-              value={currentTime + (isPlaying && !skipNextDurationOffsetRef.current ? 0.05 : 0)}
+              value={currentTime + (isPlaying ? 0.05 : 0)}
               max={duration}
               step={0.01}
               onChange={onTrackChange}
