@@ -111,7 +111,11 @@ const
   }),
   App = bond(() => {
     const
-      onHashChanged = () => wave.push(),
+      onHashChanged = () => {
+        const h = window.location.hash
+        if (h?.length > 1) wave.args['#'] = h.substring(1)
+        wave.push()
+      },
       onMdLinkClick = ({ detail }: any) => {
         wave.args[detail] = true
         wave.push()

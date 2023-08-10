@@ -46,7 +46,8 @@ var (
 // BootMsg represents the initial message sent to an app when a client first connects to it.
 type BootMsg struct {
 	Data struct {
-		Hash string `json:"#,omitempty"` // location hash
+		Hash           string `json:"#,omitempty"`                        // location hash
+		SubmissionName string `json:"__wave_submission_name__,omitempty"` // mark the cause of the serve invocation
 	} `json:"data"`
 	Headers http.Header `json:"headers"` // forwarded headers
 }
@@ -171,6 +172,7 @@ func (c *Client) listen() {
 
 				if len(m.data) > 0 { // location hash
 					boot.Data.Hash = string(m.data)
+					boot.Data.SubmissionName = "#"
 				}
 
 				body, err := json.Marshal(boot)

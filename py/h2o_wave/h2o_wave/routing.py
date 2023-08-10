@@ -131,6 +131,53 @@ async def _match_predicate(predicate: Callable, func: Callable, arity: int, q: Q
     return False
 
 
+async def run_on(q: Q) -> bool:
+    """
+    Handle the query using a query handler (a function annotated with `@on()`).
+
+    Args:
+        q: The query context.
+
+    Returns:
+        True if a matching query handler was found and invoked, else False.
+    """
+    submitted = str(q.args['__wave_submission_name__'])
+
+    # Event handlers.
+    event = q.events[submitted]
+    for entry in _event_handlers.get(submitted, []):
+        event_type, predicate, func, arity = entry
+        if event_type in event:
+            arg_value = event[event_type]
+            if await _match_predicate(predicate, func, arity, q, arg_value):
+                return True
+
+    # Hash handlers.
+    if submitted == '#':
+        for rx, conv, func, arity in _path_handlers:
+            match = rx.match(q.args[submitted])
+            if match:
+                params = match.groupdict()
+                for key, value in params.items():
+                    params[key] = conv[key].convert(value)
+                if len(params):
+                    if arity <= 1:
+                        await _invoke_handler(func, arity, q, None)
+                    else:
+                        await func(q, **params)
+                else:
+                    await _invoke_handler(func, arity, q, None)
+                return True
+
+    # Arg handlers.
+    for entry in _arg_handlers.get(submitted, []):
+        predicate, func, arity = entry
+        if await _match_predicate(predicate, func, arity, q, q.args[submitted]):
+            return True
+
+    return False
+
+
 async def handle_on(q: Q) -> bool:
     """
     Handle the query using a query handler (a function annotated with `@on()`).
