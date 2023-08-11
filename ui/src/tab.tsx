@@ -95,7 +95,7 @@ export const
     const render = () => <Tabs items={state.items} value={state.value} link={state.link} name={name} stateName={state.name} valueB={valueB} />
 
     on(valueB, v => state.value = v)
-    return { render, changed }
+    return { render, changed, valueB }
   })
 
 cards.register('tab', View, { effect: CardEffect.Transparent })
