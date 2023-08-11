@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Pivot, PivotItem } from '@fluentui/react'
-import { B, Box, Model, S, box, on } from 'h2o-wave'
+import { B, Model, S, box, on } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -32,8 +32,6 @@ interface State {
   name?: S
 }
 
-type TabsProps = State & { stateName?: S, valueB: Box<S | undefined> }
-
 const
   css = stylesheet({
     card: {
@@ -44,58 +42,49 @@ const
     },
   })
 
-const Tabs = ({ items, value, link, name, stateName, valueB }: TabsProps) => {
-  const
-    [val, setVal] = React.useState(value),
-    onLinkClick = (item?: PivotItem) => {
-      const name = item?.props.itemKey
-      if (!name) return
-      setVal(name)
-      valueB(name)
-      if (name.startsWith('#')) {
+export const
+  View = bond(({ name, state, changed }: Model<State>) => {
+    const
+      valueB = box<S | undefined>(state.value),
+      onLinkClick = (item?: PivotItem) => {
+        const name = item?.props.itemKey
+        if (!name) return
+        state.value = name
+        valueB(name)
+        if (name.startsWith('#')) {
+          window.location.hash = name.substring(1)
+          return
+        }
+        if (state.name) wave.args[state.name] = name
+        else wave.args[name] = true
+        wave.push()
+      },
+      render = () => {
+        const
+          linkFormat = state.link ? 'links' : 'tabs',
+          items = state.items.map(({ name, label, icon }) => (
+            <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
+          ))
+        return (
+          <div data-test={name} className={css.card}>
+            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={valueB() || state.items[0].name}>{items}</Pivot>
+          </div>
+        )
+      },
+      update = () => valueB(state.value),
+      dispose = () => valueB?.dispose()
+
+    on(valueB, val => {
+      if (!val || val === state.value) return
+      if (val.startsWith('#')) {
         window.location.hash = name.substring(1)
         return
       }
-      if (stateName) wave.args[stateName] = name
+      if (state.name) wave.args[state.name] = name
       else wave.args[name] = true
-      wave.push()
-    },
-    linkFormat = link ? 'links' : 'tabs',
-    tabItems = React.useMemo(() => items.map(({ name, label, icon }: Tab) =>
-      <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
-    ), [items])
+    })
 
-  React.useEffect(() => {
-    setVal(value)
-    valueB(value)
-    if (!value) return
-    if (value.startsWith('#')) {
-      window.location.hash = value.substring(1)
-      return
-    }
-    if (stateName) wave.args[stateName] = value
-    else wave.args[value] = true
-  }, [stateName, value, valueB])
-
-  return (
-    <div data-test={name} className={css.card}>
-      <Pivot
-        linkFormat={linkFormat}
-        onLinkClick={onLinkClick}
-        selectedKey={val || items[0].name}
-      >
-        {tabItems}
-      </Pivot>
-    </div>
-  )
-}
-export const
-  View = bond(({ name, state, changed }: Model<State>) => {
-    const valueB = box<S | undefined>(state.value)
-    const render = () => <Tabs items={state.items} value={state.value} link={state.link} name={name} stateName={state.name} valueB={valueB} />
-
-    on(valueB, v => state.value = v)
-    return { render, changed, valueB }
+    return { render, changed, update, dispose, valueB }
   })
 
 cards.register('tab', View, { effect: CardEffect.Transparent })
