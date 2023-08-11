@@ -147,9 +147,9 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     else:
         autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
 
-    waved = 'waved.exe' if IS_WINDOWS else './waved'
+    waved_path = os.path.join(sys.exec_prefix, 'waved.exe' if IS_WINDOWS else 'waved')
     # OS agnostic wheels do not include waved - needed for HAC.
-    is_waved_present = os.path.isfile(os.path.join(sys.exec_prefix, waved))
+    is_waved_present = os.path.isfile(waved_path)
 
     try:
         if autostart and is_waved_present and server_not_running:
@@ -157,7 +157,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
             if IS_WINDOWS:
                 kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP
 
-            waved_process = subprocess.Popen([waved], cwd=sys.exec_prefix, env=os.environ.copy(), **kwargs)
+            waved_process = subprocess.Popen([waved_path], cwd=sys.exec_prefix, env=os.environ.copy(), **kwargs)
             time.sleep(1)
             server_not_running = _scan_free_port(server_port) == server_port
             retries = 3
@@ -166,21 +166,22 @@ def run(app: str, no_reload: bool, no_autostart: bool):
                 time.sleep(2)
                 server_not_running = _scan_free_port(server_port) == server_port
                 retries = retries - 1
-    finally:
+
         if autostart and server_not_running:
             print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
             return
-        try:
-            if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
-                os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
-            reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
-            if reload_exclude:
-                reload_exclude = reload_exclude.split(os.pathsep)
-            uvicorn.run(f'{app}:main', host=host, port=port, reload=not no_reload, reload_excludes=reload_exclude)
-        except Exception as e:
-            if waved_process:
-                waved_process.kill()
-            raise e
+
+        if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
+            os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
+        reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
+        if reload_exclude:
+            reload_exclude = reload_exclude.split(os.pathsep)
+        uvicorn.run(f'{app}:main', host=host, port=port, reload=not no_reload, reload_excludes=reload_exclude)
+    except Exception as e:
+        raise e
+    finally:
+        if waved_process:
+            waved_process.kill()
 
 
 @main.command()
