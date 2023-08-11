@@ -32,7 +32,7 @@ interface State {
   name?: S
 }
 
-type TabsProps = State & { valueB: Box<S | undefined> }
+type TabsProps = State & { stateName?: S, valueB: Box<S | undefined> }
 
 const
   css = stylesheet({
@@ -44,7 +44,7 @@ const
     },
   })
 
-const Tabs = ({ items, value, link, name, valueB }: TabsProps) => {
+const Tabs = ({ items, value, link, name, stateName, valueB }: TabsProps) => {
   const
     [val, setVal] = React.useState(value),
     onLinkClick = (item?: PivotItem) => {
@@ -56,12 +56,8 @@ const Tabs = ({ items, value, link, name, valueB }: TabsProps) => {
         window.location.hash = name.substring(1)
         return
       }
-      if (name === value) return
-      if (name === '#') {
-        wave.args[name] = true
-      } else {
-        wave.args[name] = true
-      }
+      if (stateName) wave.args[stateName] = name
+      else wave.args[name] = true
       wave.push()
     },
     linkFormat = link ? 'links' : 'tabs',
@@ -69,7 +65,17 @@ const Tabs = ({ items, value, link, name, valueB }: TabsProps) => {
       <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
     ), [items])
 
-  React.useEffect(() => { if (value !== val) setVal(value) }, [val, value])
+  React.useEffect(() => {
+    setVal(value)
+    valueB(value)
+    if (!value) return
+    if (value.startsWith('#')) {
+      window.location.hash = value.substring(1)
+      return
+    }
+    if (stateName) wave.args[stateName] = value
+    else wave.args[value] = true
+  }, [stateName, value, valueB])
 
   return (
     <div data-test={name} className={css.card}>
@@ -86,7 +92,7 @@ const Tabs = ({ items, value, link, name, valueB }: TabsProps) => {
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const valueB = box<S | undefined>(state.value)
-    const render = () => <Tabs items={state.items} value={state.value} link={state.link} name={name} valueB={valueB} />
+    const render = () => <Tabs items={state.items} value={state.value} link={state.link} name={name} stateName={state.name} valueB={valueB} />
 
     on(valueB, v => state.value = v)
     return { render, changed }

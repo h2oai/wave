@@ -67,11 +67,36 @@ describe('Meta.tsx', () => {
   it('Set args when value is updated', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
     const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab1' } }} />)
-    // expect(window.location.hash).toBe('#tab1')
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
     rerender(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
-    // expect(window.location.hash).toBe('#tab2')
-    // TODO:
+    expect(wave.args[name]).toBe('tab2')
+  })
+
+  it('Does not set args when value is updated - hash name', () => {
+    const items = [{ name: '#tab1' }, { name: '#tab2' }]
+    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: '#tab1' } }} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    rerender(<View {...{ ...tabProps, state: { items, value: '#tab2' } }} />)
+    expect(wave.args[name]).toBeNull()
+  })
+
+  it('Selects tab when value is updated', () => {
+    const items = [{ name: 'tab1' }, { name: 'tab2' }]
+    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab1' } }} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    rerender(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
+  it('Selects tab when value is updated - hash name', () => {
+    const items = [{ name: '#tab1' }, { name: '#tab2' }]
+    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: '#tab1' } }} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    rerender(<View {...{ ...tabProps, state: { items, value: '#tab2' } }} />)
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
