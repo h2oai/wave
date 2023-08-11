@@ -14,7 +14,6 @@
 
 from typing import Optional, Callable
 from inspect import signature
-import asyncio
 import logging
 from starlette.routing import compile_path
 from .core import expando_to_dict
@@ -125,7 +124,7 @@ async def _match_predicate(predicate: Callable, func: Callable, arity: int, q: Q
             await _invoke_handler(func, arity, q, arg)
             return True
     else:
-        if arg:
+        if arg is not None:
             await _invoke_handler(func, arity, q, arg)
             return True
     return False
