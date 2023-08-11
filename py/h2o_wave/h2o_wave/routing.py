@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 _event_handlers = {}  # dictionary of event_source => [(event_type, predicate, handler)]
 _arg_handlers = {}  # dictionary of arg_name => [(predicate, handler)]
 _path_handlers = []
+_handle_on_deprecated_warning_printed = False
 
 
 def _get_arity(func: Callable) -> int:
@@ -178,12 +179,9 @@ async def run_on(q: Q) -> bool:
     return False
 
 
-_handle_on_deprecated_warning_printed = False
-
-
 async def handle_on(q: Q) -> bool:
     """
-    Handle the query using a query handler (a function annotated with `@on()`).
+    DEPRECATED: Handle the query using a query handler (a function annotated with `@on()`).
 
     Args:
         q: The query context.
@@ -193,7 +191,7 @@ async def handle_on(q: Q) -> bool:
     """
     global _handle_on_deprecated_warning_printed
     if not _handle_on_deprecated_warning_printed:
-        print('\033[93m' + 'Warning: handle_on() is deprecated, use run_on() instead.' + '\033[0m')
+        print('\033[93m' + 'WARNING: handle_on() is deprecated, use run_on() instead.' + '\033[0m')
         _handle_on_deprecated_warning_printed = True
 
     event_sources = expando_to_dict(q.events)
