@@ -87,9 +87,8 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
         # if not asyncio.iscoroutinefunction(func):
         #    raise ValueError(f"@on function '{func_name}' must be async")
 
-        if predicate:
-            if not callable(predicate):
-                raise ValueError(f"@on predicate must be callable for '{func_name}'")
+        if predicate and not callable(predicate):
+            raise ValueError(f"@on predicate must be callable for '{func_name}'")
         if isinstance(arg, str) and len(arg):
             if arg.startswith('#'):  # location hash
                 rx, _, conv = compile_path(arg[1:])
