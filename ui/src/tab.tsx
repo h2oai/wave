@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Pivot, PivotItem } from '@fluentui/react'
-import { B, Model, S, box, on } from 'h2o-wave'
+import { B, Model, S, box } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -54,6 +54,7 @@ export const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
+        state.value = name
         valueB(name)
         setArgs(name)
         if (!name.startsWith('#')) wave.push()
@@ -73,7 +74,7 @@ export const
       update = (prevProps: Model<State>) => {
         if (prevProps.state.value === valueB()) return
         valueB(prevProps.state.value)
-        setArgs(prevProps.state.value || state.items[0].name)
+        setArgs(prevProps.state.value || prevProps.state.items[0].name)
       }
 
     return { render, changed, update, valueB }
