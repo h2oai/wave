@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 _event_handlers = {}  # dictionary of event_source => [(event_type, predicate, handler)]
 _arg_handlers = {}  # dictionary of arg_name => [(predicate, handler)]
 _path_handlers = []
+_arg_with_params_handlers = []
 _handle_on_deprecated_warning_printed = False
 
 
@@ -100,6 +101,9 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
                 if not len(event):
                     raise ValueError(f"@on event type cannot be empty in '{arg}' for '{func_name}'")
                 _add_event_handler(source, event, func, predicate)
+            elif "{" in arg and "}" in arg:
+                rx, _, conv = compile_path(arg)
+                _arg_with_params_handlers.append((predicate, func, _get_arity(func), rx, conv))
             else:
                 _add_handler(arg, func, predicate)
         else:
@@ -110,23 +114,27 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
     return wrap
 
 
-async def _invoke_handler(func: Callable, arity: int, q: Q, arg: any):
+async def _invoke_handler(func: Callable, arity: int, q: Q, arg: any, **params: any):
     if arity == 0:
         await func()
     elif arity == 1:
         await func(q)
-    else:
+    elif len(params) == 0:
         await func(q, arg)
+    elif arity == len(params) + 1:
+        await func(q, **params)
+    else:
+        await func(q, arg, **params)
 
 
-async def _match_predicate(predicate: Callable, func: Callable, arity: int, q: Q, arg: any) -> bool:
+async def _match_predicate(predicate: Callable, func: Callable, arity: int, q: Q, arg: any, **params: any) -> bool:
     if predicate:
         if predicate(arg):
-            await _invoke_handler(func, arity, q, arg)
+            await _invoke_handler(func, arity, q, arg, **params)
             return True
     else:
         if arg is not None:
-            await _invoke_handler(func, arity, q, arg)
+            await _invoke_handler(func, arity, q, arg, **params)
             return True
     return False
 
@@ -175,6 +183,14 @@ async def run_on(q: Q) -> bool:
         predicate, func, arity = entry
         if await _match_predicate(predicate, func, arity, q, q.args[submitted]):
             return True
+    for predicate, func, arity, rx, conv in _arg_with_params_handlers:
+        match = rx.match(submitted)
+        if match:
+            params = match.groupdict()
+            for key, value in params.items():
+                params[key] = conv[key].convert(value)
+            if await _match_predicate(predicate, func, arity, q, q.args[submitted], **params):
+                return True
 
     return False
 

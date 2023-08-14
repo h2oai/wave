@@ -37,9 +37,9 @@ def mock_q(args={}, events={}):
 arg_handlers = {
     'button': AsyncMock(),
     'checkbox': AsyncMock(),
-    '#': AsyncMock(),
 }
 path_handlers = {
+    '#': AsyncMock(),
     '#page': AsyncMock(),
 }
 pattern_path_handlers = {
@@ -48,6 +48,13 @@ pattern_path_handlers = {
     '#page/cakes/{cake_name:int}': AsyncMock(),
     '#page/pies/{pie_name:float}': AsyncMock(),
     '#page/orders/{order_id:uuid}': AsyncMock(),
+}
+pattern_arg_handlers = {
+    'page/donuts/{donut_name}': AsyncMock(),
+    'page/muffins/{muffin_name:str}': AsyncMock(),
+    'page/cakes/{cake_name:int}': AsyncMock(),
+    'page/pies/{pie_name:float}': AsyncMock(),
+    'page/orders/{order_id:uuid}': AsyncMock(),
 }
 event_handlers = {
     'source.event': AsyncMock(),
@@ -61,6 +68,9 @@ for k, h in path_handlers.items():
 for k, h in pattern_path_handlers.items():
     rx, _, conv = compile_path(k[1:])
     h2o_wave.routing._path_handlers.append((rx, conv, h, 2))
+for k, h in pattern_arg_handlers.items():
+    rx, _, conv = compile_path(k)
+    h2o_wave.routing._arg_with_params_handlers.append((None, h, 2, rx, conv))
 for k, h in event_handlers.items():
     source, event = k.split('.', 1)
     h2o_wave.routing._add_event_handler(source, event, h, None)
@@ -68,7 +78,8 @@ for k, h in event_handlers.items():
 
 class TestRouting(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
-        for h in {**arg_handlers, **path_handlers, **pattern_path_handlers, **event_handlers}.values():
+        handlers = {**arg_handlers, **path_handlers, **pattern_path_handlers, **pattern_arg_handlers, **event_handlers}
+        for h in handlers.values():
             h.reset_mock()
 
     async def test_args(self):
@@ -93,7 +104,7 @@ class TestRouting(unittest.IsolatedAsyncioTestCase):
 
     async def test_empty_hash(self):
         await run_on(mock_q(args={'#': '', '__wave_submission_name__': '#'}))
-        arg_handlers['#'].assert_called_once()
+        path_handlers['#'].assert_called_once()
 
     async def test_events(self):
         await run_on(mock_q(args={'__wave_submission_name__': 'source'}, events={'source': {'event': True}}))
@@ -132,3 +143,31 @@ class TestRouting(unittest.IsolatedAsyncioTestCase):
         await run_on(q)
         uuid = UUID('123e4567-e89b-12d3-a456-426655440000')
         pattern_path_handlers['#page/orders/{order_id:uuid}'].assert_called_once_with(q, order_id=uuid)
+
+    async def test_arg_pattern_matching(self):
+        q = mock_q(args={'page/donuts/1': True, '__wave_submission_name__': 'page/donuts/1'})
+        await run_on(q)
+        pattern_arg_handlers['page/donuts/{donut_name}'].assert_called_once_with(q, donut_name='1')
+
+    async def test_arg_pattern_matching_str(self):
+        q = mock_q(args={'page/muffins/1': True, '__wave_submission_name__': 'page/muffins/1'})
+        await run_on(q)
+        pattern_arg_handlers['page/muffins/{muffin_name:str}'].assert_called_once_with(q, muffin_name='1')
+
+    async def test_arg_pattern_matching_int(self):
+        q = mock_q(args={'page/cakes/1': True, '__wave_submission_name__': 'page/cakes/1'})
+        await run_on(q)
+        pattern_arg_handlers['page/cakes/{cake_name:int}'].assert_called_once_with(q, cake_name=1)
+
+    async def test_arg_pattern_matching_float(self):
+        q = mock_q(args={'page/pies/3.14': True, '__wave_submission_name__': 'page/pies/3.14'})
+        await run_on(q)
+        pattern_arg_handlers['page/pies/{pie_name:float}'].assert_called_once_with(q, pie_name=3.14)
+
+    async def test_arg_pattern_matching_uuid(self):
+        uuid_str = '123e4567-e89b-12d3-a456-426655440000'
+        arg = f'page/orders/{uuid_str}'
+        q = mock_q(args={arg: True, '__wave_submission_name__': arg})
+        await run_on(q)
+        uuid = UUID(uuid_str)
+        pattern_arg_handlers['page/orders/{order_id:uuid}'].assert_called_once_with(q, order_id=uuid)
