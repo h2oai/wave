@@ -75,7 +75,7 @@ export const
       dispose = () => valueB?.dispose()
 
     on(valueB, val => {
-      if (!val || val === state.value) return
+      if (!val) return
       setArgs(val)
     })
 
