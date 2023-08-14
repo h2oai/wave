@@ -70,7 +70,7 @@ export const
           </div>
         )
       },
-      update = (prevProps: any) => {
+      update = (prevProps: Model<State>) => {
         if (prevProps.state.value === valueB()) return
         valueB(prevProps.state.value)
         setArgs(prevProps.state.value || state.items[0].name)
