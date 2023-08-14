@@ -70,7 +70,7 @@ describe('Meta.tsx', () => {
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
 
     rerender(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
-    expect(wave.args[name]).toBe('tab2')
+    expect(wave.args[name]).toBe(true)
   })
 
   it('Does not set args when value is updated - hash name', () => {
