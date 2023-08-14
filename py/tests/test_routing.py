@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import unittest
+from uuid import UUID
 import h2o_wave
 from unittest.mock import AsyncMock
 from starlette.routing import compile_path
@@ -41,6 +42,13 @@ arg_handlers = {
 path_handlers = {
     '#page': AsyncMock(),
 }
+pattern_path_handlers = {
+    '#page/donuts/{donut_name}': AsyncMock(),
+    '#page/muffins/{muffin_name:str}': AsyncMock(),
+    '#page/cakes/{cake_name:int}': AsyncMock(),
+    '#page/pies/{pie_name:float}': AsyncMock(),
+    '#page/orders/{order_id:uuid}': AsyncMock(),
+}
 event_handlers = {
     'source.event': AsyncMock(),
 }
@@ -50,6 +58,9 @@ for k, h in arg_handlers.items():
 for k, h in path_handlers.items():
     rx, _, conv = compile_path(k[1:])
     h2o_wave.routing._path_handlers.append((rx, conv, h, 0))
+for k, h in pattern_path_handlers.items():
+    rx, _, conv = compile_path(k[1:])
+    h2o_wave.routing._path_handlers.append((rx, conv, h, 2))
 for k, h in event_handlers.items():
     source, event = k.split('.', 1)
     h2o_wave.routing._add_event_handler(source, event, h, None)
@@ -57,7 +68,7 @@ for k, h in event_handlers.items():
 
 class TestRouting(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
-        for h in {**arg_handlers, **path_handlers, **event_handlers}.values():
+        for h in {**arg_handlers, **path_handlers, **pattern_path_handlers, **event_handlers}.values():
             h.reset_mock()
 
     async def test_args(self):
@@ -95,3 +106,29 @@ class TestRouting(unittest.IsolatedAsyncioTestCase):
     async def test_events_empty(self):
         await run_on(mock_q(args={'__wave_submission_name__': 'source'}, events={'source': {'event': ''}}))
         event_handlers['source.event'].assert_called_once()
+
+    async def test_hash_pattern_matching(self):
+        q = mock_q(args={'#': 'page/donuts/1', '__wave_submission_name__': '#'})
+        await run_on(q)
+        pattern_path_handlers['#page/donuts/{donut_name}'].assert_called_once_with(q, donut_name='1')
+
+    async def test_hash_pattern_matching_str(self):
+        q = mock_q(args={'#': 'page/muffins/1', '__wave_submission_name__': '#'})
+        await run_on(q)
+        pattern_path_handlers['#page/muffins/{muffin_name:str}'].assert_called_once_with(q, muffin_name='1')
+
+    async def test_hash_pattern_matching_int(self):
+        q = mock_q(args={'#': 'page/cakes/1', '__wave_submission_name__': '#'})
+        await run_on(q)
+        pattern_path_handlers['#page/cakes/{cake_name:int}'].assert_called_once_with(q, cake_name=1)
+
+    async def test_hash_pattern_matching_float(self):
+        q = mock_q(args={'#': 'page/pies/3.14', '__wave_submission_name__': '#'})
+        await run_on(q)
+        pattern_path_handlers['#page/pies/{pie_name:float}'].assert_called_once_with(q, pie_name=3.14)
+
+    async def test_hash_pattern_matching_uuid(self):
+        q = mock_q(args={'#': 'page/orders/123e4567-e89b-12d3-a456-426655440000', '__wave_submission_name__': '#'})
+        await run_on(q)
+        uuid = UUID('123e4567-e89b-12d3-a456-426655440000')
+        pattern_path_handlers['#page/orders/{order_id:uuid}'].assert_called_once_with(q, order_id=uuid)
