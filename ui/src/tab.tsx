@@ -46,18 +46,18 @@ export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       valueB = box<S | undefined>(state.value),
+      setArgs = (name: S) => {
+        if (name.startsWith('#')) window.location.hash = name.substring(1)
+        else if (state.name) wave.args[state.name] = name
+        else wave.args[name] = true
+      },
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
         state.value = name
         valueB(name)
-        if (name.startsWith('#')) {
-          window.location.hash = name.substring(1)
-          return
-        }
-        if (state.name) wave.args[state.name] = name
-        else wave.args[name] = true
-        wave.push()
+        setArgs(name)
+        if (!name.startsWith('#')) wave.push()
       },
       render = () => {
         const
@@ -76,12 +76,7 @@ export const
 
     on(valueB, val => {
       if (!val || val === state.value) return
-      if (val.startsWith('#')) {
-        window.location.hash = name.substring(1)
-        return
-      }
-      if (state.name) wave.args[state.name] = name
-      else wave.args[name] = true
+      setArgs(val)
     })
 
     return { render, changed, update, dispose, valueB }
