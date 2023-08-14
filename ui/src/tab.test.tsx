@@ -31,6 +31,7 @@ const
 
 describe('Tab.tsx', () => {
   beforeEach(() => {
+    window.location.hash = ''
     wave.args[name] = null
     jest.clearAllMocks()
   })
@@ -93,10 +94,46 @@ describe('Tab.tsx', () => {
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
+  it('Selects tab when value is updated twice to the same value', () => {
+    const items = [{ name: 'tab1' }, { name: 'tab2' }]
+    const props = { ...tabProps, state: { items, value: 'tab1' } }
+    const { rerender, getAllByRole } = render(<View {...props} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    props.state.value = 'tab2'
+    rerender(<View {...props} />)
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+
+    fireEvent.click(getAllByRole('tab')[0])
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    props.state.value = 'tab2'
+    rerender(<View {...props} />)
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
   it('Selects tab when value is updated - hash name', () => {
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
     const props = { ...tabProps, state: { items, value: '#tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    props.state.value = '#tab2'
+    rerender(<View {...props} />)
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
+  it('Selects tab when value is updated twice to the same value - hash name', () => {
+    const items = [{ name: '#tab1' }, { name: '#tab2' }]
+    const props = { ...tabProps, state: { items, value: '#tab1' } }
+    const { rerender, getAllByRole } = render(<View {...props} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+
+    props.state.value = '#tab2'
+    rerender(<View {...props} />)
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+
+    fireEvent.click(getAllByRole('tab')[0])
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
 
     props.state.value = '#tab2'
@@ -109,6 +146,17 @@ describe('Tab.tsx', () => {
     fireEvent.click(getByRole('tab'))
 
     expect(window.location.hash).toBe(hashName)
+  })
+
+  it('Sets url hash when value is updated - hash name', () => {
+    const items = [{ name: '#tab1' }, { name: '#tab2' }]
+    const props = { ...{ ...tabProps, state: { items, value: '#tab1' } } }
+    const { rerender } = render(<View {...props} />)
+    expect(window.location.hash).toBe('')
+
+    props.state.value = '#tab2'
+    rerender(<View {...props} />)
+    expect(window.location.hash).toBe('#tab2')
   })
 
   it('Sets default tab', () => {
