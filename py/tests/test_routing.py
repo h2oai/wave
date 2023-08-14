@@ -169,5 +169,4 @@ class TestRouting(unittest.IsolatedAsyncioTestCase):
         arg = f'page/orders/{uuid_str}'
         q = mock_q(args={arg: True, '__wave_submission_name__': arg})
         await run_on(q)
-        uuid = UUID(uuid_str)
-        pattern_arg_handlers['page/orders/{order_id:uuid}'].assert_called_once_with(q, order_id=uuid)
+        pattern_arg_handlers['page/orders/{order_id:uuid}'].assert_called_once_with(q, order_id=UUID(uuid_str))
