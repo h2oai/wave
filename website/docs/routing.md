@@ -155,10 +155,14 @@ async def serve(q: Q):
 
 ### Reducing boilerplate
 
-As your application gets larger, using the above `if/elif/else` conditionals can seem tedious or repetitive. If so, you can use `on` and `handle_on` to reduce the boilerplate.
+As your application gets larger, using the above `if/elif/else` conditionals can seem tedious or repetitive. If so, you can use `on` and `run_on` to reduce the boilerplate.
+
+:::warning
+In versions `<1.0` this function used to be called `handle_on`, but is now deprecated due to its drawbacks that the new `run_on` mechanism addressed.
+:::
 
 ```py {3,7,22}
-from h2o_wave import Q, main, app, ui, on, handle_on
+from h2o_wave import Q, main, app, ui, on, run_on
 
 @on('#heads')
 async def on_heads(q: Q):
@@ -179,7 +183,7 @@ async def setup_page(q: Q):
 
 @app('/toss')
 async def serve(q: Q):
-    if not await handle_on(q):
+    if not await run_on(q):
         await setup_page(q)
 
     await q.page.save()
