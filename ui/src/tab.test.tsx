@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { initializeIcons } from '@fluentui/react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './tab'
@@ -30,7 +30,7 @@ const
     changed: T.box(false)
   }
 
-describe('Meta.tsx', () => {
+describe('Tab.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     wave.args[name] = null
@@ -66,11 +66,13 @@ describe('Meta.tsx', () => {
 
   it('Set args when value is updated', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab1' } }} />)
+    const props = { ...tabProps, state: { items, value: 'tab1' } }
+    const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
 
-    rerender(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
-    expect(wave.args[name]).toBe(true)
+    props.state.value = 'tab2'
+    rerender(<View {...props} />)
+    expect(wave.args['tab2']).toBe(true)
   })
 
   it('Does not set args when value is updated - hash name', () => {
@@ -84,19 +86,23 @@ describe('Meta.tsx', () => {
 
   it('Selects tab when value is updated', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab1' } }} />)
+    const props = { ...tabProps, state: { items, value: 'tab1' } }
+    const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
 
-    rerender(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
+    props.state.value = 'tab2'
+    rerender(<View {...props} />)
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
   it('Selects tab when value is updated - hash name', () => {
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
-    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: '#tab1' } }} />)
+    const props = { ...tabProps, state: { items, value: '#tab1' } }
+    const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
 
-    rerender(<View {...{ ...tabProps, state: { items, value: '#tab2' } }} />)
+    props.state.value = '#tab2'
+    rerender(<View {...props} />)
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 

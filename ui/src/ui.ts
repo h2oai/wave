@@ -19,14 +19,14 @@ import * as React from 'react'
 // React Component + Dataflow
 //
 
-interface Renderable {
+interface Renderable<T> {
   render(): JSX.Element
   init?(): void
-  update?(): void
+  update?(prevProps: Readonly<T>, prevState: Readonly<any>, snapshot?: any): void
   dispose?(): void
 }
 
-export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) => TState) {
+export function bond<TProps, TState extends Renderable<TProps>>(ctor: (props: TProps) => TState) {
   return class extends React.Component<TProps> {
     private readonly model: TState
     private readonly arrows: Disposable[]
@@ -52,8 +52,8 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
     componentDidMount() {
       if (this.model.init) this.model.init()
     }
-    componentDidUpdate() {
-      if (this.model.update) this.model.update()
+    componentDidUpdate(prevProps: Readonly<TProps>, prevState: Readonly<any>, snapshot?: any): void {
+      if (this.model.update) this.model.update(prevProps, prevState, snapshot)
     }
     componentWillUnmount() {
       if (this.model.dispose) this.model.dispose()

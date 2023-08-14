@@ -54,7 +54,6 @@ export const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
-        state.value = name
         valueB(name)
         setArgs(name)
         if (!name.startsWith('#')) wave.push()
@@ -71,15 +70,13 @@ export const
           </div>
         )
       },
-      update = () => valueB(state.value),
-      dispose = () => valueB?.dispose()
+      update = (prevProps: any) => {
+        if (prevProps.state.value === valueB()) return
+        valueB(prevProps.state.value)
+        setArgs(prevProps.state.value || state.items[0].name)
+      }
 
-    on(valueB, val => {
-      if (!val) return
-      setArgs(val)
-    })
-
-    return { render, changed, update, dispose, valueB }
+    return { render, changed, update, valueB }
   })
 
 cards.register('tab', View, { effect: CardEffect.Transparent })
