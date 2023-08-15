@@ -909,16 +909,19 @@ export const
         filter(null)
         search()
       }, [filter, initGroups, m.events, m.groups, m.name, m.pagination, search]),
+      getSelectedItems = React.useCallback(() => {
+        if (isSingle && m.value) return filteredItems.map(item => ({ ...item, selected: item.key === m.value }))
+        if (isMultiple && m.values) return filteredItems.map(item => ({ ...item, selected: m.values.includes(item.key as S) }))
+        return []
+      }, [filteredItems, isMultiple, isSingle, m.value, m.values]),
       selection = React.useMemo(() => new Fluent.Selection({
         onSelectionChanged: () => {
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
-          const args = wave.args[m.name] as S[]
-          if (isSingle && m.value === args[0] && m.value === selectedItemKeys[0]) return
-          if (isMultiple && m.values && m.values.every((item, idx) => item === selectedItemKeys[idx] && item === args[idx])) return
           wave.args[m.name] = selectedItemKeys
           if (m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
-        }
-      }), [m.name, m.value, m.values, m.events, isSingle, isMultiple]),
+        },
+        items: getSelectedItems()
+      }), [getSelectedItems, m.name, m.events]),
       computeHeight = () => {
         if (m.height) return m.height
         if (items.length > 10) return 500
@@ -957,14 +960,8 @@ export const
 
     React.useEffect(() => {
       wave.args[m.name] = []
-      if (isSingle && m.value) {
-        wave.args[m.name] = [m.value]
-        selection.setKeySelected(m.value, true, false)
-      }
-      else if (isMultiple && m.values) {
-        wave.args[m.name] = m.values
-        m.values.forEach(v => selection.setKeySelected(v, true, false))
-      }
+      if (isSingle && m.value) wave.args[m.name] = [m.value]
+      else if (isMultiple && m.values) wave.args[m.name] = m.values
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
