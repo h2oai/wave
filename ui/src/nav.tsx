@@ -134,7 +134,6 @@ export const
         url: '',
         onClick: () => {
           valueB(name)
-          // TODO: Update 'state.value' without 'on' handler
           if (hideNav) hideNav()
           if (path) window.open(path, "_blank")
           else if (name.startsWith('#')) window.location.hash = name.substring(1)
