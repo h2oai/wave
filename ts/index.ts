@@ -767,7 +767,7 @@ const
               v = buf
             }
           }
-          if (k === "items" || k === "secondary_items" || k === "buttons") fillComponentNameMap(componentCache, v)
+          if (k === 'items' || k === 'secondary_items' || k === 'buttons' || k === 'commands') fillComponentNameMap(componentCache, v)
           set([k], v)
         }
       },

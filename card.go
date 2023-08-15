@@ -80,7 +80,7 @@ func loadCard(ns *Namespace, c CardD) *Card {
 				}
 			}
 		}
-		if k == "items" || k == "secondary_items" || k == "buttons" {
+		if k == "items" || k == "secondary_items" || k == "buttons" || k == "commands" {
 			if card.nameComponentMap == nil {
 				card.nameComponentMap = make(map[string]any)
 			}
@@ -239,7 +239,7 @@ func fillNameComponentMap(m map[string]any, wrappedItems any) {
 			}
 			if name, ok := component["name"]; ok {
 				if n, ok := name.(string); ok {
-					m[n] = item
+					m[n] = component
 				}
 			}
 			if items, ok := component["items"]; ok {

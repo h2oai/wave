@@ -185,3 +185,26 @@ async def serve(q: Q):
     with AppRunner(code):
         page.goto('http://localhost:10101')
         expect(page.get_by_text("New text")).to_be_visible()
+
+
+def test_by_name_updates_card_commands(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['form'] = ui.form_card(
+        box='1 1 3 3',
+        items=[],
+        commands=[
+            ui.command(name='step1', label='Step 1'),
+        ]
+    )
+    q.page['form'].step1.label = 'New text'
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        page.click('[data-test="form"]:nth-child(2) > div')
+        expect(page.get_by_text("New text")).to_be_visible()
