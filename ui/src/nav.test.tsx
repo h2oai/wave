@@ -131,4 +131,96 @@ describe('Nav.tsx', () => {
     fireEvent.click(getByTitle(label))
     expect(windowOpenMock).toHaveBeenCalled()
   })
+
+  describe('Value update', () => {
+    beforeEach(() => {
+      window.location.hash = ''
+      wave.args = [] as any
+    })
+
+    it('Sets args on value update', () => {
+      const
+        items = [{ label: 'group1', items: [{ name: 'nav1', label: 'Nav 1' }, { name: 'nav2', label: 'Nav 2' }] }],
+        props: T.Model<State> = { ...navProps, state: { items } },
+        { rerender } = render(<View {...props} />)
+      expect(wave.args['nav2']).toBeUndefined()
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+
+      expect(wave.args['nav2']).toBe(true)
+    })
+
+    it('Selects nav item on value update', () => {
+      const
+        items = [{ label: 'group1', items: [{ name: 'nav1', label: 'Nav 1' }, { name: 'nav2', label: 'Nav 2' }] }],
+        props: T.Model<State> = { ...navProps, state: { items } },
+        { rerender, getByTitle } = render(<View {...props} />)
+      expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+
+      expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).toHaveClass('is-selected')
+    })
+
+    it('Selects nav item when value is updated to the same value twice', () => {
+      const
+        items = [{ label: 'group1', items: [{ name: 'nav1', label: 'Nav 1' }, { name: 'nav2', label: 'Nav 2' }] }],
+        props: T.Model<State> = { ...navProps, state: { items } },
+        checkIfFirstItemIsSelected = () => {
+          expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+          expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+        },
+        checkIfSecondItemIsSelected = () => {
+          expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+          expect(getByTitle('Nav 2').parentElement).toHaveClass('is-selected')
+        },
+        { rerender, getByTitle } = render(<View {...props} />)
+
+      checkIfFirstItemIsSelected()
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+      expect(wave.args['nav2']).toBe(true)
+      checkIfSecondItemIsSelected()
+
+      fireEvent.click(getByTitle('Nav 1'))
+      expect(wave.args['nav1']).toBe(true)
+      checkIfFirstItemIsSelected()
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+      expect(wave.args['nav2']).toBe(true)
+      checkIfSecondItemIsSelected()
+    })
+
+    it('Does not set args on value update when name starts with hash', () => {
+      const
+        hashItems = [{ label: 'group1', items: [{ name: '#nav1', label: 'Nav 1' }, { name: '#nav2', label: 'Nav 2' }] }],
+        props: T.Model<State> = { ...navProps, state: { items: hashItems } },
+        { rerender } = render(<View {...props} />)
+      expect(wave.args['nav2']).toBeUndefined()
+
+      props.state.value = '#nav2'
+      rerender(<View {...props} />)
+
+      expect(wave.args['nav2']).toBeUndefined()
+    })
+
+    it('Set window location hash when updated value starts with hash', () => {
+      const
+        hashItems = [{ label: 'group1', items: [{ name: '#nav1', label: 'Nav 1' }, { name: '#nav2', label: 'Nav 2' }] }],
+        props: T.Model<State> = { ...navProps, state: { items: hashItems } },
+        { rerender } = render(<View {...props} />)
+      expect(window.location.hash).toBe('')
+
+      props.state.value = '#nav2'
+      rerender(<View {...props} />)
+
+      expect(window.location.hash).toBe('#nav2')
+    })
+  })
 })
