@@ -68,6 +68,7 @@ describe('Tab.tsx', () => {
     const props = { ...tabProps, state: { items, value: 'tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(wave.args['tab2']).toBeUndefined()
 
     props.state.value = 'tab2'
     rerender(<View {...props} />)
@@ -76,10 +77,13 @@ describe('Tab.tsx', () => {
 
   it('Does not set args when value is updated - hash name', () => {
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
-    const { rerender, getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: '#tab1' } }} />)
-    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    const props = { ...tabProps, state: { items, value: '#tab1' } }
+    const { rerender } = render(<View {...props} />)
+    expect(wave.args[name]).toBeNull()
 
-    rerender(<View {...{ ...tabProps, state: { items, value: '#tab2' } }} />)
+    props.state.value = '#tab2'
+    rerender(<View {...props} />)
+
     expect(wave.args[name]).toBeNull()
   })
 
@@ -88,9 +92,11 @@ describe('Tab.tsx', () => {
     const props = { ...tabProps, state: { items, value: 'tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
 
     props.state.value = 'tab2'
     rerender(<View {...props} />)
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
@@ -99,16 +105,20 @@ describe('Tab.tsx', () => {
     const props = { ...tabProps, state: { items, value: 'tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
 
     props.state.value = 'tab2'
     rerender(<View {...props} />)
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
 
     fireEvent.click(getAllByRole('tab')[0])
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
 
     props.state.value = 'tab2'
     rerender(<View {...props} />)
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
@@ -117,9 +127,11 @@ describe('Tab.tsx', () => {
     const props = { ...tabProps, state: { items, value: '#tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
 
     props.state.value = '#tab2'
     rerender(<View {...props} />)
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
@@ -128,16 +140,20 @@ describe('Tab.tsx', () => {
     const props = { ...tabProps, state: { items, value: '#tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
 
     props.state.value = '#tab2'
     rerender(<View {...props} />)
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
 
     fireEvent.click(getAllByRole('tab')[0])
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
 
     props.state.value = '#tab2'
     rerender(<View {...props} />)
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
