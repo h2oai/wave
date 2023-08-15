@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Pivot, PivotItem } from '@fluentui/react'
-import { B, Model, S } from 'h2o-wave'
+import { B, Model, S, box } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -45,19 +45,19 @@ const
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
+      valueB = box<S | undefined>(state.value),
+      setArgs = (name: S) => {
+        if (name.startsWith('#')) window.location.hash = name.substring(1)
+        else if (state.name) wave.args[state.name] = name
+        else wave.args[name] = true
+      },
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
-        if (name.startsWith('#')) {
-          window.location.hash = name.substring(1)
-          return
-        }
-        if (state.name) {
-          wave.args[state.name] = name
-        } else {
-          wave.args[name] = true
-        }
-        wave.push()
+        state.value = name
+        valueB(name)
+        setArgs(name)
+        if (!name.startsWith('#')) wave.push()
       },
       render = () => {
         const
@@ -67,11 +67,17 @@ export const
           ))
         return (
           <div data-test={name} className={css.card}>
-            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
+            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={valueB() || state.items[0].name}>{items}</Pivot>
           </div>
         )
+      },
+      update = (prevProps: Model<State>) => {
+        if (prevProps.state.value === valueB()) return
+        valueB(prevProps.state.value)
+        setArgs(prevProps.state.value || prevProps.state.items[0].name)
       }
-    return { render, changed }
+
+    return { render, changed, update, valueB }
   })
 
 cards.register('tab', View, { effect: CardEffect.Transparent })
