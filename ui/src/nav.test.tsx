@@ -168,31 +168,31 @@ describe('Nav.tsx', () => {
     it('Selects nav item when value is updated to the same value twice', () => {
       const
         props: T.Model<State> = { ...navProps, state: { items } },
-        checkIfFirstItemIsSelected = () => {
+        expectFirstSelected = () => {
           expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
           expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
         },
-        checkIfSecondItemIsSelected = () => {
+        expectSecondSelected = () => {
           expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
           expect(getByTitle('Nav 2').parentElement).toHaveClass('is-selected')
         },
         { rerender, getByTitle } = render(<View {...props} />)
 
-      checkIfFirstItemIsSelected()
+      expectFirstSelected()
 
       props.state.value = 'nav2'
       rerender(<View {...props} />)
       expect(wave.args['nav2']).toBe(true)
-      checkIfSecondItemIsSelected()
+      expectSecondSelected()
 
       fireEvent.click(getByTitle('Nav 1'))
       expect(wave.args['nav1']).toBe(true)
-      checkIfFirstItemIsSelected()
+      expectFirstSelected()
 
       props.state.value = 'nav2'
       rerender(<View {...props} />)
       expect(wave.args['nav2']).toBe(true)
-      checkIfSecondItemIsSelected()
+      expectSecondSelected()
     })
 
     it('Does not set args on value update when name starts with hash', () => {

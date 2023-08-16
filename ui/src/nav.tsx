@@ -147,26 +147,28 @@ export const
     return <Fluent.Nav groups={groups} selectedKey={valueB() || groups[0].links[0].key} styles={{ groupContent: { marginBottom: 0 } }} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
-    const valueB = box<S | undefined>(state.value)
-    const render = () => {
-      const { title, subtitle, icon, color = 'card', icon_color = color === 'primary' ? '$card' : '$text', image, persona, secondary_items } = state
-      return (
-        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: cssVar(`$${color}`) }}>
-          <div className={css.header}>
-            {(image || icon) && (
-              <div className={css.brand}>
-                {image && <img src={image} className={css.img} />}
-                {icon && !image && <Fluent.Icon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
-              </div>
-            )}
-            {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}
-            {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
-            {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
-          </div>
-          <XNav {...state} linksOnly={!image && !icon && !title && !subtitle && !persona} valueB={valueB} />
-          {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
-        </div>)
-    },
+    const
+      valueB = box<S | undefined>(state.value),
+      valueWatcher = on(valueB, val => state.value = val),
+      render = () => {
+        const { title, subtitle, icon, color = 'card', icon_color = color === 'primary' ? '$card' : '$text', image, persona, secondary_items } = state
+        return (
+          <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: cssVar(`$${color}`) }}>
+            <div className={css.header}>
+              {(image || icon) && (
+                <div className={css.brand}>
+                  {image && <img src={image} className={css.img} />}
+                  {icon && !image && <Fluent.Icon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
+                </div>
+              )}
+              {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}
+              {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
+              {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
+            </div>
+            <XNav {...state} linksOnly={!image && !icon && !title && !subtitle && !persona} valueB={valueB} />
+            {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
+          </div>)
+      },
       update = (prevProps: Model<State>) => {
         if (prevProps.state.value === valueB()) return
         valueB(prevProps.state.value)
@@ -174,11 +176,10 @@ export const
 
         if (name.startsWith('#')) window.location.hash = name.substring(1)
         else wave.args[name] = true
-      }
+      },
+      dispose = () => valueWatcher.dispose()
 
-    on(valueB, val => state.value = val)
-
-    return { render, changed, update, valueB }
+    return { render, changed, update, valueB, dispose }
   })
 
 cards.register('nav', View, { effect: CardEffect.Flat, marginless: true })
