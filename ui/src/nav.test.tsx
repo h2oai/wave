@@ -20,28 +20,36 @@ import { wave } from './ui'
 
 const
   name = 'nav',
-  hashName = `#${name}`,
   label = 'label',
+  items = [{
+    label: 'group1',
+    items: [
+      { name: 'nav1', label: 'Nav 1' },
+      { name: 'nav2', label: 'Nav 2' }
+    ]
+  }],
+  hashItems = [{
+    label: 'group1',
+    items: [
+      { name: '#nav1', label: 'Nav 1' },
+      { name: '#nav2', label: 'Nav 2' }
+    ]
+  }],
   navProps: T.Model<State> = {
     name,
-    state: {
-      items: [
-        { label: 'group1', items: [{ name, label }] }
-      ]
-    },
+    state: { items },
     changed: T.box(false)
   },
   navPropsHash: T.Model<State> = {
     name,
-    state: {
-      items: [
-        { label: 'group1', items: [{ name: hashName, label }] }
-      ]
-    },
+    state: { items: hashItems },
     changed: T.box(false)
   }
 describe('Nav.tsx', () => {
-  beforeEach(() => { wave.args[name] = null })
+  beforeEach(() => {
+    wave.args = [] as any
+    window.location.hash = ''
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...navProps} />)
@@ -50,13 +58,13 @@ describe('Nav.tsx', () => {
 
   it('Sets args - init', () => {
     render(<View {...navProps} />)
-    expect(wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeUndefined()
   })
 
   it('Makes link active when value specified', () => {
-    const props: T.Model<State> = { ...navProps, state: { ...navProps.state, value: name } }
+    const props: T.Model<State> = { ...navProps, state: { ...navProps.state, value: 'nav1' } }
     const { getByTitle } = render(<View {...props} />)
-    expect(getByTitle(label).parentElement).toHaveClass('is-selected')
+    expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
   })
 
   it('Makes link inactive when disabled is true', () => {
@@ -77,9 +85,9 @@ describe('Nav.tsx', () => {
     wave.push = pushMock
 
     const { getByTitle } = render(<View {...navProps} />)
-    fireEvent.click(getByTitle(label))
+    fireEvent.click(getByTitle('Nav 1'))
 
-    expect(wave.args[name]).toBe(true)
+    expect(wave.args['nav1']).toBe(true)
     expect(pushMock).toHaveBeenCalled()
   })
 
@@ -88,17 +96,17 @@ describe('Nav.tsx', () => {
     wave.push = pushMock
 
     const { getByTitle } = render(<View {...navPropsHash} />)
-    fireEvent.click(getByTitle(label))
+    fireEvent.click(getByTitle('Nav 1'))
 
-    expect(wave.args[name]).toBeNull()
+    expect(wave.args['nav1']).toBeUndefined()
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
-  it('Does set window window location hash when name starts with hash', () => {
+  it('Sets window location hash when name starts with hash', () => {
     const { getByTitle } = render(<View {...navPropsHash} />)
-    fireEvent.click(getByTitle(label))
+    fireEvent.click(getByTitle('Nav 1'))
 
-    expect(window.location.hash).toBe(hashName)
+    expect(window.location.hash).toBe('#nav1')
   })
 
   it('Collapses a group when collapse is specified', () => {
@@ -130,5 +138,83 @@ describe('Nav.tsx', () => {
     window.open = windowOpenMock
     fireEvent.click(getByTitle(label))
     expect(windowOpenMock).toHaveBeenCalled()
+  })
+
+  describe('Value update', () => {
+    it('Sets args on value update', () => {
+      const props: T.Model<State> = { ...navProps, state: { items } }
+      const { rerender } = render(<View {...props} />)
+      expect(wave.args['nav2']).toBeUndefined()
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+
+      expect(wave.args['nav2']).toBe(true)
+    })
+
+    it('Selects nav item on value update', () => {
+      const props: T.Model<State> = { ...navProps, state: { items } }
+      const { rerender, getByTitle } = render(<View {...props} />)
+      expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+
+      expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).toHaveClass('is-selected')
+    })
+
+    it('Selects nav item when value is updated to the same value twice', () => {
+      const
+        props: T.Model<State> = { ...navProps, state: { items } },
+        expectFirstSelected = () => {
+          expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+          expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+        },
+        expectSecondSelected = () => {
+          expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+          expect(getByTitle('Nav 2').parentElement).toHaveClass('is-selected')
+        },
+        { rerender, getByTitle } = render(<View {...props} />)
+
+      expectFirstSelected()
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+      expect(wave.args['nav2']).toBe(true)
+      expectSecondSelected()
+
+      fireEvent.click(getByTitle('Nav 1'))
+      expect(wave.args['nav1']).toBe(true)
+      expectFirstSelected()
+
+      props.state.value = 'nav2'
+      rerender(<View {...props} />)
+      expect(wave.args['nav2']).toBe(true)
+      expectSecondSelected()
+    })
+
+    it('Does not set args on value update when name starts with hash', () => {
+      const props: T.Model<State> = { ...navProps, state: { items: hashItems } }
+      const { rerender } = render(<View {...props} />)
+      expect(wave.args['nav2']).toBeUndefined()
+
+      props.state.value = '#nav2'
+      rerender(<View {...props} />)
+
+      expect(wave.args['nav2']).toBeUndefined()
+    })
+
+    it('Set window location hash when updated value starts with hash', () => {
+      const props: T.Model<State> = { ...navProps, state: { items: hashItems } }
+      const { rerender } = render(<View {...props} />)
+      expect(window.location.hash).toBe('')
+
+      props.state.value = '#nav2'
+      rerender(<View {...props} />)
+
+      expect(window.location.hash).toBe('#nav2')
+    })
   })
 })

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, S } from 'h2o-wave'
+import { B, Box, Id, Model, S, box, on } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
@@ -117,7 +117,7 @@ const css = stylesheet({
 })
 
 export const
-  XNav = ({ items, value, hideNav, linksOnly = false }: State & { hideNav?: () => void, linksOnly?: B }) => {
+  XNav = ({ items, hideNav, linksOnly = false, valueB }: State & { hideNav?: () => void, linksOnly?: B, valueB: Box<S | undefined> }) => {
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
@@ -133,6 +133,7 @@ export const
         },
         url: '',
         onClick: () => {
+          valueB(name)
           if (hideNav) hideNav()
           if (path) window.open(path, "_blank")
           else if (name.startsWith('#')) window.location.hash = name.substring(1)
@@ -143,29 +144,42 @@ export const
         }
       }))
     }))
-    return <Fluent.Nav groups={groups} selectedKey={value} styles={{ groupContent: { marginBottom: 0 } }} />
+    return <Fluent.Nav groups={groups} selectedKey={valueB() || groups[0].links[0].key} styles={{ groupContent: { marginBottom: 0 } }} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
-    const render = () => {
-      const { title, subtitle, icon, color = 'card', icon_color = color === 'primary' ? '$card' : '$text', image, persona, secondary_items } = state
-      return (
-        <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: cssVar(`$${color}`) }}>
-          <div className={css.header}>
-            {(image || icon) && (
-              <div className={css.brand}>
-                {image && <img src={image} className={css.img} />}
-                {icon && !image && <Fluent.Icon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
-              </div>
-            )}
-            {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}
-            {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
-            {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
-          </div>
-          <XNav {...state} linksOnly={!image && !icon && !title && !subtitle && !persona} />
-          {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
-        </div>)
-    }
-    return { render, changed }
+    const
+      valueB = box<S | undefined>(state.value),
+      valueWatcher = on(valueB, val => state.value = val),
+      render = () => {
+        const { title, subtitle, icon, color = 'card', icon_color = color === 'primary' ? '$card' : '$text', image, persona, secondary_items } = state
+        return (
+          <div data-test={name} className={clas(getEffectClass(toCardEffect(color)), css.card)} style={{ background: cssVar(`$${color}`) }}>
+            <div className={css.header}>
+              {(image || icon) && (
+                <div className={css.brand}>
+                  {image && <img src={image} className={css.img} />}
+                  {icon && !image && <Fluent.Icon iconName={icon} className={css.icon} style={{ color: cssVar(icon_color) }} />}
+                </div>
+              )}
+              {title && <div className={clas('wave-s24 wave-w6', color === 'card' ? 'wave-p9' : 'wave-c9')}>{title}</div>}
+              {subtitle && <div className={clas('wave-s13', color === 'card' ? 'wave-t8' : 'wave-c8')}>{subtitle}</div>}
+              {!image && !icon && persona?.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
+            </div>
+            <XNav {...state} linksOnly={!image && !icon && !title && !subtitle && !persona} valueB={valueB} />
+            {secondary_items && <div className={css.secondaryItems} style={{ marginTop: state.items.length ? 'auto' : 'initial' }}><XComponents items={secondary_items} /></div>}
+          </div>)
+      },
+      update = (prevProps: Model<State>) => {
+        if (prevProps.state.value === valueB()) return
+        valueB(prevProps.state.value)
+        const name = prevProps.state.value || prevProps.state.items[0].items[0].name
+
+        if (name.startsWith('#')) window.location.hash = name.substring(1)
+        else wave.args[name] = true
+      },
+      dispose = () => valueWatcher.dispose()
+
+    return { render, changed, update, valueB, dispose }
   })
 
 cards.register('nav', View, { effect: CardEffect.Flat, marginless: true })
