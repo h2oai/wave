@@ -34,11 +34,13 @@ class Project:
     def get_server_address(self) -> str:
         cloud_env = os.environ.get('H2O_CLOUD_ENVIRONMENT', None)
         return f'{cloud_env}{self.server_base_url}' if cloud_env else os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
-    
+
     def get_assets_url_for(self, url: str) -> str:
         return f'{self.server_base_url}assets/{url}'
 
+
 project = Project()
+
 
 def start(entry_point: str, is_app: bool):
     env = os.environ.copy()
@@ -61,6 +63,7 @@ def start(entry_point: str, is_app: bool):
     else:
         return Popen([sys.executable, entry_point], env=env, stdout=PIPE, stderr=STDOUT)
 
+
 async def stop_previous(q: Q) -> None:
     # Stop script if any.
     if not q.user.is_app and q.user.active_path:
@@ -73,6 +76,7 @@ async def stop_previous(q: Q) -> None:
         q.user.wave_process.wait()
     if q.user.display_logs_future:
         q.user.display_logs_future.cancel()
+
 
 async def setup_page(q: Q):
     py_content = ''
@@ -102,8 +106,7 @@ async def setup_page(q: Q):
             ui.script(project.get_assets_url_for('vue.prod.js')),
         ],
         script=ui.inline_script(content=template, requires=['require', 'Vue'], targets=['monaco-editor']),
-        
-        stylesheets=[ui.stylesheet(project.get_assets_url_for(f'studio.css?v={time.time()}'))], # Cache busting.
+        stylesheets=[ui.stylesheet(project.get_assets_url_for(f'studio.css?v={time.time()}'))],  # Cache busting.
         layouts=[
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
@@ -143,6 +146,7 @@ async def setup_page(q: Q):
     q.page['code'] = ui.markup_card(box=ui.box('main', width='100%'), title='', content=editor_html)
     show_empty_preview(q)
 
+
 def show_empty_preview(q: Q):
     del q.page['preview']
     q.page['preview'] = ui.tall_info_card(
@@ -154,20 +158,22 @@ def show_empty_preview(q: Q):
         caption='Try writing one in the code editor on the left.'
     )
 
+
 async def display_logs(q: Q) -> None:
-  lines = []
-  p = q.user.wave_process
-  os.set_blocking(p.stdout.fileno(), False)
-  while True:
-      line = p.stdout.readline() 
-      if line:
-          lines.append(line.decode('utf8')) 
-          code = ''.join(lines)
-          q.page['logs'].content = f'```\n{code}\n```'
-          q.page['meta'].script = ui.inline_script('scrollLogsToBottom()')
-          await q.page.save()
-      else:
-          await q.sleep(0.5)
+    lines = []
+    p = q.user.wave_process
+    os.set_blocking(p.stdout.fileno(), False)
+    while True:
+        line = p.stdout.readline()
+        if line:
+            lines.append(line.decode('utf8'))
+            code = ''.join(lines)
+            q.page['logs'].content = f'```\n{code}\n```'
+            q.page['meta'].script = ui.inline_script('scrollLogsToBottom()')
+            await q.page.save()
+        else:
+            await q.sleep(0.5)
+
 
 async def render_code(q: Q):
     if q.events.editor:
@@ -211,20 +217,25 @@ async def render_code(q: Q):
     q.page['header'].items[1].button.disabled = False
     q.page['header'].items[1].button.path = f'{project.server_adress}{path}'
 
+
 async def on_startup():
     file_utils.create_folder(project.dir)
     app_path = Path(project.entry_point)
     if not app_path.exists():
         shutil.copy('starter.py', app_path)
+    start(os.path.join(Path(__file__).parent, 'landing.py'), False).communicate()
+
 
 async def on_shutdown():
     file_utils.remove_folder(project.dir)
+
 
 async def export(q: Q):
     shutil.make_archive('app', 'zip', '.', project.dir)
     q.app.zip_path, = await q.site.upload(['app.zip'])
     q.page["meta"].script = ui.inline_script(f'window.open("{q.app.zip_path}", "_blank");')
     os.remove("app.zip")
+
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
@@ -252,9 +263,10 @@ async def serve(q: Q):
     elif q.args.export_project:
         await export(q)
     elif q.args.import_project:
-        q.page['meta'].dialog = ui.dialog(name='dialog', title='Import Project', events=['dismissed'], closable=True, items=[
+        q.page['meta'].dialog = ui.dialog(name='dialog', title='Import Project', events=['dismissed'], closable=True,
+                                          items=[
             ui.message_bar(type='warning', text='Current project files will be replaced with uploaded content.'),
-            ui.file_upload(name='imported_project', file_extensions=['zip']),		
+            ui.file_upload(name='imported_project', file_extensions=['zip']),
         ])
     elif q.args.imported_project:
         zip_path = await q.site.download(q.args.imported_project[0], os.getcwd())
@@ -355,9 +367,9 @@ async def serve(q: Q):
             if path == project.dir:
                 project.dir = new_name
             if file_utils.is_file_in_folder(q.client.opened_file, path):
-                q.client.opened_file = os.path.join(new_name, *q.client.opened_file.split(os.path.sep)[1:]) 
+                q.client.opened_file = os.path.join(new_name, *q.client.opened_file.split(os.path.sep)[1:])
             if file_utils.is_file_in_folder(project.entry_point, path):
-                project.entry_point = os.path.join(new_name, *project.entry_point.split(os.path.sep)[1:]) 
+                project.entry_point = os.path.join(new_name, *project.entry_point.split(os.path.sep)[1:])
             file_utils.rename(path, new_name)
         elif e.open:
             q.client.opened_file = e.open
