@@ -41,7 +41,7 @@ export interface Link {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
-  /** Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window. */
+  /** Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab. */
   target?: S
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

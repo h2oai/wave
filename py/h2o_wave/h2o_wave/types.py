@@ -3274,7 +3274,7 @@ class MarkdownTableCellType:
         self.name = name
         """An identifying name for this component."""
         self.target = target
-        """Where to display the link. Setting this to '_blank'` opens the link in a new tab or window."""
+        """Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3944,7 +3944,7 @@ class Link:
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
         self.target = target
-        """Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window."""
+        """Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name

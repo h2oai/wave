@@ -1280,7 +1280,7 @@ def markdown_table_cell_type(
 
     Args:
         name: An identifying name for this component.
-        target: Where to display the link. Setting this to '_blank'` opens the link in a new tab or window.
+        target: Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab.
     Returns:
         A `h2o_wave.types.MarkdownTableCellType` instance.
     """
@@ -1510,7 +1510,7 @@ def link(
         button: True if the link should be rendered as a button.
         width: The width of the link, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
-        target: Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
+        target: Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
     Returns:

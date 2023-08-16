@@ -1488,7 +1488,7 @@ ui_menu_table_cell_type <- function(
 #' Create a cell type that renders Markdown content.
 #'
 #' @param name An identifying name for this component.
-#' @param target Where to display the link. Setting this to '_blank'` opens the link in a new tab or window.
+#' @param target Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab.
 #' @return A MarkdownTableCellType instance.
 #' @export
 ui_markdown_table_cell_type <- function(
@@ -1742,7 +1742,7 @@ ui_table <- function(
 #' @param button True if the link should be rendered as a button.
 #' @param width The width of the link, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
-#' @param target Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
+#' @param target Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Link instance.

@@ -22,15 +22,15 @@ import { Markdown } from './markdown'
 export interface MarkdownTableCellType {
   /** An identifying name for this component. */
   name?: S
-  /** Where to display the link. Setting this to '_blank'` opens the link in a new tab or window. */
+  /** Where to display the link. An empty string or `'_blank'` opens the link in a new tab. `_self` opens in the current tab. */
   target?: S
 }
 
-export const XMarkdownTableCellType = ({ model: m }: { model: MarkdownTableCellType & { content: S}} ) => {
+export const XMarkdownTableCellType = ({ model: m }: { model: MarkdownTableCellType & { content: S } }) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    ref.current!.querySelectorAll<HTMLAnchorElement>('a')?.forEach(a => {if (m.target) a.target = m.target})
+    ref.current!.querySelectorAll<HTMLAnchorElement>('a')?.forEach(a => { if (m.target) a.target = m.target })
   }, [m.target])
 
   return (
