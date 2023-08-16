@@ -5,6 +5,11 @@ import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
 const
+  BUTTON_HEIGHT = 24,
+  BUTTON_WIDTH = 34,
+  CORNER_OFFSET = 6
+
+const
   css = stylesheet({
     animate: {
       opacity: 0,
@@ -16,11 +21,8 @@ const
     btn: {
       minWidth: 'initial',
       position: 'fixed',
-      width: 24,
-      height: 24,
-      // TODO: Compute dynamically based on anchor element.
-      // right: 0,
-      // transform: 'translate(-4px, 4px)',
+      width: BUTTON_WIDTH,
+      height: BUTTON_HEIGHT,
       zIndex: 1,
     },
     copiedBtn: {
@@ -63,6 +65,7 @@ export const ClipboardCopyButton = ({ value, anchorElementRef, showOnHover }: { 
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
     [visible, setVisible] = React.useState(!showOnHover),
+    [position, setPosition] = React.useState({ x: 0, y: 0 }),
     onClick = async () => {
       const el = anchorElementRef.current
       if (!el) return
@@ -83,20 +86,25 @@ export const ClipboardCopyButton = ({ value, anchorElementRef, showOnHover }: { 
   React.useEffect(() => {
     const el = anchorElementRef.current
     if (el) {
-      console.log(anchorElementRef.current.getBoundingClientRect())
-      // textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined // TODO: Re-implement with pure CSS: '&hover childId'
-      el.addEventListener('mouseenter', () => { setVisible(true) })
-      el.addEventListener('mouseleave', () => { setVisible(false) })
+      const rect = anchorElementRef.current.getBoundingClientRect()
+      setPosition({ x: rect.left + rect.width, y: rect.top })
+      el.addEventListener('mouseenter', () => setVisible(true))
+      el.addEventListener('mouseleave', (ev: MouseEvent) => {
+        if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
+        setVisible(false)
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [value])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return (<Fluent.PrimaryButton
+    id='copybutton'
     title='Copy to clipboard'
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
+    style={{ left: position.x - BUTTON_WIDTH - CORNER_OFFSET, top: position.y + CORNER_OFFSET }}
     className={clas(css.btn, copied ? css.copiedBtn : '', showOnHover ? css.animate : '', visible ? css.visible : '')}
   />)
 }
