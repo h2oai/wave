@@ -340,6 +340,27 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
+    it('Fires event - single selection with initial value', async () => {
+      const
+        props = { ...tableProps, single: true, events: ['select'], value: 'rowname2' },
+        { getAllByRole } = render(<XTable model={{ ...props }} />),
+        radioButtons = getAllByRole('radio')
+      fireEvent.click(radioButtons[0])
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1'])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Fires event - multiple selection - select single with initial values', async () => {
+      const
+        values = ['rowname2', 'rowname3'],
+        props = { ...tableProps, multiple: true, events: ['select'], values },
+        { getAllByRole } = render(<XTable model={{ ...props }} />),
+        checkboxes = getAllByRole('checkbox')
+      fireEvent.click(checkboxes[1])
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1', ...values])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
     it('Clicks a column - link set on second col', () => {
       tableProps = {
         ...tableProps,

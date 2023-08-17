@@ -709,6 +709,7 @@ export const
       [groupByKey, setGroupByKey] = React.useState('*'),
       contentRef = React.useRef<Fluent.IScrollablePane | null>(null),
       tableRef = React.useRef<{ resetSortIcons: () => void } | null>(null),
+      skipNextEventEmit = React.useRef<B>(false),
       groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
         groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, groupable]
       ),
@@ -913,7 +914,7 @@ export const
         onSelectionChanged: () => {
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
           wave.args[m.name] = selectedItemKeys
-          if (m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
+          if (!skipNextEventEmit.current && m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
         }
       }), [m.name, m.events]),
       computeHeight = () => {
@@ -955,11 +956,15 @@ export const
     React.useEffect(() => {
       wave.args[m.name] = []
       if (isSingle && m.value) {
+        skipNextEventEmit.current = true
         selection.setKeySelected(m.value, true, false)
+        skipNextEventEmit.current = false
         wave.args[m.name] = [m.value]
       }
       else if (isMultiple && m.values) {
+        skipNextEventEmit.current = true
         m.values.forEach(v => selection.setKeySelected(v, true, false))
+        skipNextEventEmit.current = false
         wave.args[m.name] = m.values
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
