@@ -7,7 +7,7 @@ import { clas, cssVar, pc } from './theme'
 const
   BUTTON_HEIGHT = 24,
   BUTTON_WIDTH = 34,
-  CORNER_OFFSET = 6
+  CORNER_OFFSET = 4
 
 const
   css = stylesheet({
@@ -33,9 +33,6 @@ const
         }
       }
     },
-    labelContainer: {
-      position: 'relative'
-    }
   }),
   fullHeightStyle = {
     display: 'flex',
@@ -60,18 +57,19 @@ export interface CopyableText {
   height?: S
 }
 
-export const ClipboardCopyButton = ({ value, anchorElementRef, showOnHover }: { value: S, anchorElementRef: any, showOnHover: B }) => {
+type CopyButton = { value: S, anchorElement: HTMLElement | undefined, showOnHoverOnly?: B }
+
+export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false }: CopyButton) => {
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
-    [visible, setVisible] = React.useState(!showOnHover),
+    [visible, setVisible] = React.useState(!showOnHoverOnly),
     [position, setPosition] = React.useState({ x: 0, y: 0 }),
     onClick = async () => {
-      const el = anchorElementRef.current
-      if (!el) return
+      if (!anchorElement) return
       try {
-        if (document.queryCommandSupported('copy')) {
-          el.select() // TODO: Test, replace with componentRef
+        if (document.queryCommandSupported('copy') && anchorElement.tagName === 'input') {
+          (anchorElement as HTMLInputElement).select()
           document.execCommand('copy')
           window.getSelection()?.removeAllRanges()
         }
@@ -84,12 +82,11 @@ export const ClipboardCopyButton = ({ value, anchorElementRef, showOnHover }: { 
     }
 
   React.useEffect(() => {
-    const el = anchorElementRef.current
-    if (el) {
-      const rect = anchorElementRef.current.getBoundingClientRect()
+    if (anchorElement) {
+      const rect = anchorElement.getBoundingClientRect()
       setPosition({ x: rect.left + rect.width, y: rect.top })
-      el.addEventListener('mouseenter', () => setVisible(true))
-      el.addEventListener('mouseleave', (ev: MouseEvent) => {
+      anchorElement.addEventListener('mouseenter', () => setVisible(true))
+      anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
         if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
         setVisible(false)
       })
@@ -105,7 +102,7 @@ export const ClipboardCopyButton = ({ value, anchorElementRef, showOnHover }: { 
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
     style={{ left: position.x - BUTTON_WIDTH - CORNER_OFFSET, top: position.y + CORNER_OFFSET }}
-    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHover ? css.animate : '', visible ? css.visible : '')}
+    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
   />)
 }
 
@@ -121,14 +118,11 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       <Fluent.TextField
         data-test={name}
         componentRef={ref}
-        elementRef={domRef} // Temporary solution which will be replaced with ref once TextField is converted to a function component.
+        // Temporary solution which will be replaced with ref once TextField is converted to a function component.
+        elementRef={domRef}
         value={value}
         multiline={multiline}
-        onRenderLabel={() =>
-          <div className={css.labelContainer}>
-            <Fluent.Label>{label}</Fluent.Label>
-          </div>
-        }
+        label={label}
         styles={{
           root: {
             ...heightStyle,
@@ -140,7 +134,11 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         }}
         readOnly
       />
-      <ClipboardCopyButton anchorElementRef={domRef} showOnHover={!!multiline} value={value} />
+      <ClipboardCopyButton
+        // Use text input as anchorElement.
+        anchorElement={domRef.current?.children[0]?.children[1]}
+        showOnHoverOnly={!!multiline} value={value}
+      />
     </>
   )
 }
