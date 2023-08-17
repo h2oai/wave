@@ -91,8 +91,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
         setVisible(false)
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
+  }, [value, anchorElement])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
@@ -110,14 +109,16 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
     heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
-    ref = React.useRef<Fluent.ITextField>(null),
-    domRef = React.useRef<HTMLDivElement>(null)
+    [inputEl, setInputEl] = React.useState(),
+    domRef = React.useCallback(node => {
+      const inputEl = node?.children[0]?.children[1]
+      if (inputEl) setInputEl(inputEl)
+    }, [])
 
   return (
     <>
       <Fluent.TextField
         data-test={name}
-        componentRef={ref}
         // Temporary solution which will be replaced with ref once TextField is converted to a function component.
         elementRef={domRef}
         value={value}
@@ -135,8 +136,7 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         readOnly
       />
       <ClipboardCopyButton
-        // Use text input as anchorElement.
-        anchorElement={domRef.current?.children[0]?.children[1]}
+        anchorElement={inputEl}
         showOnHoverOnly={!!multiline} value={value}
       />
     </>
