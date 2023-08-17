@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { CopyableText, XCopyableText } from './copyable_text'
 
@@ -34,4 +34,29 @@ describe('CopyableText.tsx', () => {
     expect(getByTestId(name)).toHaveValue('B')
   })
 
+  it('Shows copy to clipboard button', () => {
+    const { container } = render(<XCopyableText model={copyableTextProps} />)
+    const copyButton = container.querySelector('button')
+
+    expect(copyButton).toBeInTheDocument()
+    expect(copyButton).toBeVisible()
+  })
+
+  it('Shows copy to clipboard button on hover - multiline text', async () => {
+    const { container } = render(<XCopyableText model={{ ...copyableTextProps, multiline: true }} />)
+    const copyButton = container.querySelector('button')
+    const textfield = container.querySelector('textarea')!
+    expect(copyButton).toBeInTheDocument()
+    expect(copyButton).toBeVisible()
+    // Move cursor out of container.
+    fireEvent.mouseLeave(textfield)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    expect(copyButton).not.toBeVisible()
+
+    fireEvent.mouseEnter(textfield)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    expect(copyButton).toBeVisible()
+  })
 })
