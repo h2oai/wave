@@ -68,8 +68,8 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     onClick = async () => {
       if (!anchorElement) return
       try {
-        if (document.queryCommandSupported('copy') && anchorElement.tagName === 'input') {
-          (anchorElement as HTMLInputElement).select()
+        if (document.queryCommandSupported('copy')) {
+          anchorElement.select()
           document.execCommand('copy')
           window.getSelection()?.removeAllRanges()
         }
@@ -91,7 +91,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
         setVisible(false)
       })
     }
-  }, [value, anchorElement])
+  }, [anchorElement])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
@@ -111,7 +111,7 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
     heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     [inputEl, setInputEl] = React.useState(),
     domRef = React.useCallback(node => {
-      const inputEl = node?.children[0]?.children[1]
+      const inputEl = node?.children[0]?.children[1]?.children[0]
       if (inputEl) setInputEl(inputEl)
     }, [])
 
@@ -137,7 +137,8 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       />
       <ClipboardCopyButton
         anchorElement={inputEl}
-        showOnHoverOnly={!!multiline} value={value}
+        showOnHoverOnly={!!multiline}
+        value={value}
       />
     </>
   )
