@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom'
 const
   BUTTON_HEIGHT = 24,
   BUTTON_WIDTH = 34,
-  CORNER_OFFSET = 4
+  CORNER_OFFSET = 3
 
 const
   css = stylesheet({
