@@ -19,15 +19,18 @@ const
     visible: {
       opacity: 1,
     },
+    hover: {
+      $nest: {
+        '&:hover #copybutton': { opacity: 1 }
+      }
+    },
     btn: {
       minWidth: 'initial',
-      // position: 'fixed',
       position: 'absolute',
       top: CORNER_OFFSET,
       right: CORNER_OFFSET,
       width: BUTTON_WIDTH,
       height: BUTTON_HEIGHT,
-      zIndex: 1,
     },
     copiedBtn: {
       background: cssVar('$green'),
@@ -67,7 +70,6 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
-    [visible, setVisible] = React.useState(!showOnHoverOnly),
     onClick = async () => {
       if (!anchorElement) return
       try {
@@ -85,14 +87,8 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     }
 
   React.useEffect(() => {
-    if (!anchorElement) return
-
-    anchorElement.addEventListener('mouseenter', () => setVisible(true))
-    anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
-      if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
-      setVisible(false)
-    })
-  }, [anchorElement])
+    if (showOnHoverOnly && anchorElement) anchorElement.classList.add(css.hover)
+  }, [anchorElement, showOnHoverOnly])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
@@ -101,7 +97,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     title='Copy to clipboard'
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
+    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', showOnHoverOnly ? '' : css.visible)}
   />)
 }
 
