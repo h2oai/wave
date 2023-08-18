@@ -105,6 +105,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
   React.useEffect(() => {
     if (!anchorElement) return
     if (portal) {
+      // TODO: Prevent multiple portals from being created, e.g. when showOnHoverOnly prop changes.
       ReactDOM.render(
         ReactDOM.createPortal(CopyButton, anchorElement),
         document.createElement('div')
