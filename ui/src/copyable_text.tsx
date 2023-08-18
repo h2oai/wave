@@ -82,15 +82,30 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     }
 
   React.useEffect(() => {
-    if (anchorElement) {
-      const rect = anchorElement.getBoundingClientRect()
-      setPosition({ x: rect.left + rect.width, y: rect.top })
-      anchorElement.addEventListener('mouseenter', () => setVisible(true))
-      anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
-        if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
-        setVisible(false)
+    if (!anchorElement) return
+    const
+      { left, top, width } = anchorElement.getBoundingClientRect(),
+      x = left + width - BUTTON_WIDTH - CORNER_OFFSET,
+      y = top + CORNER_OFFSET
+    setPosition({ x, y })
+
+    anchorElement.addEventListener('mouseenter', (ev) => {
+      setPosition(prevPosition => {
+        const target = ev.target as HTMLElement
+        if (!target) return prevPosition
+        const
+          rect = target.getBoundingClientRect(),
+          newX = rect.left + rect.width - BUTTON_WIDTH - CORNER_OFFSET,
+          newY = rect.top + CORNER_OFFSET
+        if (newX !== prevPosition.x || newY !== prevPosition.y) return { x: newX, y: newY }
+        return prevPosition
       })
-    }
+      setVisible(true)
+    })
+    anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
+      if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
+      setVisible(false)
+    })
   }, [anchorElement])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
@@ -100,7 +115,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     title='Copy to clipboard'
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    style={{ left: position.x - BUTTON_WIDTH - CORNER_OFFSET, top: position.y + CORNER_OFFSET }}
+    style={{ left: position.x, top: position.y }}
     className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
   />)
 }
