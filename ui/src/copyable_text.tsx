@@ -3,6 +3,7 @@ import { B, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
+import ReactDOM from 'react-dom'
 
 const
   BUTTON_HEIGHT = 24,
@@ -20,7 +21,10 @@ const
     },
     btn: {
       minWidth: 'initial',
-      position: 'fixed',
+      // position: 'fixed',
+      position: 'absolute',
+      top: CORNER_OFFSET,
+      right: CORNER_OFFSET,
       width: BUTTON_WIDTH,
       height: BUTTON_HEIGHT,
       zIndex: 1,
@@ -64,7 +68,6 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
     [visible, setVisible] = React.useState(!showOnHoverOnly),
-    [position, setPosition] = React.useState({ x: 0, y: 0 }),
     onClick = async () => {
       if (!anchorElement) return
       try {
@@ -83,25 +86,8 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
 
   React.useEffect(() => {
     if (!anchorElement) return
-    const
-      { left, top, width } = anchorElement.getBoundingClientRect(),
-      x = left + width - BUTTON_WIDTH - CORNER_OFFSET,
-      y = top + CORNER_OFFSET
-    setPosition({ x, y })
 
-    anchorElement.addEventListener('mouseenter', (ev) => {
-      setPosition(prevPosition => {
-        const target = ev.target as HTMLElement
-        if (!target) return prevPosition
-        const
-          rect = target.getBoundingClientRect(),
-          newX = rect.left + rect.width - BUTTON_WIDTH - CORNER_OFFSET,
-          newY = rect.top + CORNER_OFFSET
-        if (newX !== prevPosition.x || newY !== prevPosition.y) return { x: newX, y: newY }
-        return prevPosition
-      })
-      setVisible(true)
-    })
+    anchorElement.addEventListener('mouseenter', () => setVisible(true))
     anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
       if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
       setVisible(false)
@@ -115,7 +101,6 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     title='Copy to clipboard'
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    style={{ left: position.x, top: position.y }}
     className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
   />)
 }
@@ -126,35 +111,36 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
     heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     [inputEl, setInputEl] = React.useState(),
     domRef = React.useCallback(node => {
-      const inputEl = node?.children[0]?.children[1]?.children[0]
+      const inputEl = node?.children[0]?.children[1]
       if (inputEl) setInputEl(inputEl)
     }, [])
 
+  React.useEffect(() => {
+    if (!inputEl) return
+    ReactDOM.render(
+      ReactDOM.createPortal(<ClipboardCopyButton value={value} anchorElement={inputEl} showOnHoverOnly={!!multiline} />, inputEl),
+      document.createElement('div')
+    )
+  }, [inputEl, multiline, value])
+
   return (
-    <>
-      <Fluent.TextField
-        data-test={name}
-        // Temporary solution which will be replaced with ref once TextField is converted to a function component.
-        elementRef={domRef}
-        value={value}
-        multiline={multiline}
-        label={label}
-        styles={{
-          root: {
-            ...heightStyle,
-            textFieldRoot: { position: 'relative', width: pc(100) },
-          },
-          wrapper: heightStyle,
-          fieldGroup: heightStyle || { minHeight: height },
-          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
-        }}
-        readOnly
-      />
-      <ClipboardCopyButton
-        anchorElement={inputEl}
-        showOnHoverOnly={!!multiline}
-        value={value}
-      />
-    </>
+    <Fluent.TextField
+      data-test={name}
+      // Temporary solution which will be replaced with ref once TextField is converted to a function component.
+      elementRef={domRef}
+      value={value}
+      multiline={multiline}
+      label={label}
+      styles={{
+        root: {
+          ...heightStyle,
+          textFieldRoot: { position: 'relative', width: pc(100) },
+        },
+        wrapper: heightStyle,
+        fieldGroup: heightStyle || { minHeight: height },
+        field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
+      }}
+      readOnly
+    />
   )
 }
