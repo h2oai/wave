@@ -64,13 +64,22 @@ export interface CopyableText {
   height?: S
 }
 
-type CopyButton = { value: S, anchorElement: HTMLElement | undefined, showOnHoverOnly?: B }
+type CopyButton = {
+  /** Text to be copied to clipboard. */
+  value: S,
+  /** The element to which the copy button is attached. */
+  anchorElement: HTMLElement | undefined,
+  /** Show copy button only on hover. */
+  showOnHoverOnly?: B,
+  /** Use portal if ClipboardCopyButton is not direct child of the anchor element. */
+  portal?: B
+}
 
-export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false }: CopyButton) => {
+export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false, portal = false }: CopyButton) => {
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
-    onClick = async () => {
+    onClick = React.useCallback(async () => {
       if (!anchorElement) return
       try {
         if (document.queryCommandSupported('copy')) {
@@ -84,21 +93,29 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
 
       setCopied(true)
       timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
-    }
+    }, [anchorElement, value]),
+    CopyButton = React.useMemo(() => <Fluent.PrimaryButton
+      id='copybutton'
+      title='Copy to clipboard'
+      onClick={onClick}
+      iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
+      className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', showOnHoverOnly ? '' : css.visible)}
+    />, [copied, onClick, showOnHoverOnly])
 
   React.useEffect(() => {
-    if (showOnHoverOnly && anchorElement) anchorElement.classList.add(css.hover)
-  }, [anchorElement, showOnHoverOnly])
+    if (!anchorElement) return
+    if (portal) {
+      ReactDOM.render(
+        ReactDOM.createPortal(CopyButton, anchorElement),
+        document.createElement('div')
+      )
+    }
+    if (showOnHoverOnly) anchorElement.classList.add(css.hover)
+  }, [CopyButton, anchorElement, portal, showOnHoverOnly])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
-  return (<Fluent.PrimaryButton
-    id='copybutton'
-    title='Copy to clipboard'
-    onClick={onClick}
-    iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', showOnHoverOnly ? '' : css.visible)}
-  />)
+  return portal ? null : CopyButton
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
@@ -111,32 +128,27 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       if (inputEl) setInputEl(inputEl)
     }, [])
 
-  React.useEffect(() => {
-    if (!inputEl) return
-    ReactDOM.render(
-      ReactDOM.createPortal(<ClipboardCopyButton value={value} anchorElement={inputEl} showOnHoverOnly={!!multiline} />, inputEl),
-      document.createElement('div')
-    )
-  }, [inputEl, multiline, value])
-
   return (
-    <Fluent.TextField
-      data-test={name}
-      // Temporary solution which will be replaced with ref once TextField is converted to a function component.
-      elementRef={domRef}
-      value={value}
-      multiline={multiline}
-      label={label}
-      styles={{
-        root: {
-          ...heightStyle,
-          textFieldRoot: { position: 'relative', width: pc(100) },
-        },
-        wrapper: heightStyle,
-        fieldGroup: heightStyle || { minHeight: height },
-        field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
-      }}
-      readOnly
-    />
+    <>
+      <Fluent.TextField
+        data-test={name}
+        // Temporary solution which will be replaced with ref once TextField is converted to a function component.
+        elementRef={domRef}
+        value={value}
+        multiline={multiline}
+        label={label}
+        styles={{
+          root: {
+            ...heightStyle,
+            textFieldRoot: { position: 'relative', width: pc(100) },
+          },
+          wrapper: heightStyle,
+          fieldGroup: heightStyle || { minHeight: height },
+          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
+        }}
+        readOnly
+      />
+      <ClipboardCopyButton value={value} anchorElement={inputEl} showOnHoverOnly={!!multiline} portal />
+    </>
   )
 }
