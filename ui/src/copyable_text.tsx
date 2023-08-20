@@ -64,7 +64,7 @@ export interface CopyableText {
   height?: S
 }
 
-type CopyButton = {
+type ClipboardCopyButton = {
   /** Text to be copied to clipboard. */
   value: S,
   /** The element to which the copy button is attached. */
@@ -75,7 +75,7 @@ type CopyButton = {
   portal?: B
 }
 
-export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false, portal = false }: CopyButton) => {
+export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false, portal = false }: ClipboardCopyButton) => {
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -125,9 +125,9 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
     heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     [inputEl, setInputEl] = React.useState(),
     domRef = React.useCallback(node => {
-      const inputEl = node?.children[0]?.children[1]
+      const inputEl = node?.children[0]?.children[label ? 1 : 0]
       if (inputEl) setInputEl(inputEl)
-    }, [])
+    }, [label])
 
   return (
     <>
