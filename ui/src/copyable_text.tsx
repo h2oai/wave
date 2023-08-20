@@ -105,12 +105,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
 
   React.useEffect(() => {
     if (!anchorElement) return
-    if (portal) {
-      ReactDOM.render(
-        ReactDOM.createPortal(CopyButton, anchorElement),
-        btnContainerRef.current
-      )
-    }
+    if (portal) ReactDOM.render(ReactDOM.createPortal(CopyButton, anchorElement), btnContainerRef.current)
     if (showOnHoverOnly) anchorElement.classList.add(css.hover)
   }, [CopyButton, anchorElement, portal, showOnHoverOnly])
 
