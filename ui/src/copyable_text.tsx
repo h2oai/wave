@@ -79,6 +79,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
+    btnContainerRef = React.useRef<HTMLDivElement>(document.createElement('div')),
     onClick = React.useCallback(async () => {
       if (!anchorElement) return
       try {
@@ -105,10 +106,9 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
   React.useEffect(() => {
     if (!anchorElement) return
     if (portal) {
-      // TODO: Prevent multiple portals from being created, e.g. when showOnHoverOnly prop changes.
       ReactDOM.render(
         ReactDOM.createPortal(CopyButton, anchorElement),
-        document.createElement('div')
+        btnContainerRef.current
       )
     }
     if (showOnHoverOnly) anchorElement.classList.add(css.hover)
