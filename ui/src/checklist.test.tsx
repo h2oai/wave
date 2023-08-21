@@ -65,6 +65,20 @@ describe('Checklist.tsx', () => {
     expect(wave.args[name]).toMatchObject(['Choice1'])
   })
 
+  it('Set correct args when value is cleared twice', () => {
+    const { getByText, rerender } = render(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
+    expect(wave.args[name]).toMatchObject(['Choice1'])
+
+    rerender(<XChecklist model={{ ...checklistProps }} />)
+    expect(wave.args[name]).toMatchObject([])
+
+    fireEvent.click(getByText('Choice2').parentElement!)
+    expect(wave.args[name]).toMatchObject(['Choice2'])
+
+    rerender(<XChecklist model={{ ...checklistProps }} />)
+    expect(wave.args[name]).toMatchObject([])
+  })
+
   it('Updates choices', () => {
     const { rerender, getByText } = render(<XChecklist model={checklistProps} />)
     expect(getByText('Choice1')).toBeInTheDocument()
