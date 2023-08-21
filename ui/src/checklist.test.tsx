@@ -23,6 +23,7 @@ describe('Checklist.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     wave.args[name] = null
+    checklistProps.values = undefined
   })
 
   it('Renders data-test attr', () => {

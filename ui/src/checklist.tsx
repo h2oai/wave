@@ -83,6 +83,7 @@ export const
         const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
         setChoices(_choices)
         capture(_choices)
+        m.values = value ? _choices.map(({ c }) => { return c.name }) : []
       },
       selectAll = () => select(true),
       deselectAll = () => select(false),
@@ -90,6 +91,7 @@ export const
         const _choices = [...choices]
         _choices[idx].selected = checked
         setChoices(_choices)
+        m.values = _choices.filter(({ selected }) => selected).map(({ c }) => c.name)
         capture(_choices)
       },
       items = choices.map(({ c, selected }, i) => (
