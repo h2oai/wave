@@ -730,6 +730,21 @@ describe('Dropdown.tsx', () => {
           expect(getByText('Choice E')).toBeInTheDocument()
           expect(getByText('Choice F')).toBeInTheDocument()
         })
+
+
+        it('Removes all choices of single-valued dialog dropdown', () => {
+          const
+            choices = [{ name: 'A', label: 'Choice A' }],
+            { getByTestId, getByText, queryByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices }} />)
+
+          fireEvent.click(getByTestId(name))
+          expect(getByText('Choice A')).toBeInTheDocument()
+
+          rerender(<XDropdown model={{ ...dialogProps, choices: undefined }} />)
+          fireEvent.click(getByTestId(name))
+
+          expect(queryByText('Choice A')).not.toBeInTheDocument()
+        })
       })
 
       describe('Multi-valued', () => {
@@ -847,6 +862,20 @@ describe('Dropdown.tsx', () => {
           expect(getByText('Choice D')).toBeInTheDocument()
           expect(getByText('Choice E')).toBeInTheDocument()
           expect(getByText('Choice F')).toBeInTheDocument()
+        })
+
+        it('Removes all choices of multi-valued dialog dropdown', () => {
+          const
+            choices = [{ name: 'A', label: 'Choice A' }],
+            { getByTestId, getByText, queryByText, rerender } = render(<XDropdown model={{ ...dialogProps, choices, values: ['A'] }} />)
+
+          fireEvent.click(getByTestId(name))
+          expect(getByText('Choice A')).toBeInTheDocument()
+
+          rerender(<XDropdown model={{ ...dialogProps, choices: undefined, values: ['A'] }} />)
+          fireEvent.click(getByTestId(name))
+
+          expect(queryByText('Choice A')).not.toBeInTheDocument()
         })
       })
     })
