@@ -22,7 +22,7 @@ const
   name = 'combobox',
   comboboxProps: Combobox = { name, choices: ['A', 'B', 'C'] },
   pushMock = jest.fn()
-  wave.push = pushMock
+wave.push = pushMock
 
 describe('Combobox.tsx', () => {
   it('Renders data-test attr', () => {
@@ -34,7 +34,7 @@ describe('Combobox.tsx', () => {
     it('Displays new typed option', () => {
       const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
       expect(wave.args[name]).toEqual('A')
-      
+
       userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
       expect(wave.args[name]).toEqual('D')
     })
@@ -65,7 +65,7 @@ describe('Combobox.tsx', () => {
         render(<XCombobox model={{ ...comboboxProps, value: 'D' }} />)
         expect(wave.args[name]).toBe('D')
       })
-  
+
       it('Sets args to manually selected option', () => {
         const { getByRole, getByTitle } = render(<XCombobox model={{ ...comboboxProps }} />)
         fireEvent.click(getByRole('presentation', { hidden: true }))
@@ -79,10 +79,10 @@ describe('Combobox.tsx', () => {
 
       it('Calls sync when trigger is on', () => {
         const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, trigger: true }} />)
-    
+
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('A'))
-    
+
         expect(pushMock).toHaveBeenCalled()
       })
 
@@ -95,7 +95,7 @@ describe('Combobox.tsx', () => {
 
       it('Sets wave args as string when a new valued is typed and user clicks away - after init', () => {
         const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
-    
+
         expect(wave.args[name]).toBe('A')
 
         userEvent.type(getByRole('combobox'), '{backspace}D')
@@ -109,7 +109,7 @@ describe('Combobox.tsx', () => {
 
       it('Sets wave args as string when a new valued is typed and tab is pressed - after init', () => {
         const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
-    
+
         expect(wave.args[name]).toBe('A')
 
         userEvent.type(getByRole('combobox'), '{backspace}D')
@@ -125,7 +125,7 @@ describe('Combobox.tsx', () => {
         const { getByRole, getAllByRole, rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
         fireEvent.click(getByRole('presentation', { hidden: true }))
         expect(getAllByRole('option')).toHaveLength(3)
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, choices: ['A', 'B'] }} />)
         expect(getAllByRole('option')).toHaveLength(2)
       })
@@ -134,47 +134,65 @@ describe('Combobox.tsx', () => {
         const { getByRole, getByText, rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
         expect(getByRole('combobox')).toHaveValue('A')
         expect(wave.args[name]).toEqual('A')
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, value: 'B' }} />)
         expect(getByRole('combobox')).toHaveValue('B')
         expect(wave.args[name]).toEqual('B')
-        
+
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('C'))
         expect(getByRole('combobox')).toHaveValue('C')
         expect(wave.args[name]).toEqual('C')
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, value: 'B' }} />)
         expect(getByRole('combobox')).toHaveValue('B')
         expect(wave.args[name]).toEqual('B')
       })
-  
+
       it('Updates "choices" prop and "value" prop to value different than the initial one', () => {
         const { getByRole, rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
         expect(wave.args[name]).toEqual('A')
         expect(getByRole('combobox')).toHaveValue('A')
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, choices: ['A', 'B'], value: 'B' }} />)
         expect(getByRole('combobox')).toHaveValue('B')
       })
-  
+
+      it('Clears all "choices"', () => {
+        const { getByRole, queryByText, rerender } = render(<XCombobox model={comboboxProps} />)
+        expect(getByRole('combobox')).not.toHaveValue()
+
+        fireEvent.click(getByRole('presentation', { hidden: true }))
+        expect(queryByText('A')).toBeInTheDocument()
+        expect(queryByText('B')).toBeInTheDocument()
+        expect(queryByText('C')).toBeInTheDocument()
+
+        rerender(<XCombobox model={{ ...comboboxProps, choices: undefined }} />)
+        expect(getByRole('combobox')).not.toHaveValue()
+
+        fireEvent.click(getByRole('presentation', { hidden: true }))
+        expect(queryByText('A')).not.toBeInTheDocument()
+        expect(queryByText('B')).not.toBeInTheDocument()
+        expect(queryByText('C')).not.toBeInTheDocument()
+      })
+
       it('Types new option and then updates combobox value when "value" prop changes', () => {
         const { getByRole, getByText, rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
         expect(getByRole('combobox')).toHaveValue('A')
         expect(wave.args[name]).toEqual('A')
-  
+
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('B'))
         fireEvent.blur(getByRole('presentation', { hidden: true }))
         userEvent.type(getByRole('combobox'), 'B{Enter}')
         expect(getByRole('combobox')).toHaveValue('BB')
         expect(wave.args[name]).toEqual('BB')
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, value: 'C' }} />)
         expect(getByRole('combobox')).toHaveValue('C')
         expect(wave.args[name]).toEqual('C')
       })
-  
+
       it('Adds initial value to options if it\'s not included in "choices" prop', () => {
         const { getByTitle, getAllByRole, getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'Z' }} />)
         expect(wave.args[name]).toEqual('Z')
@@ -187,7 +205,7 @@ describe('Combobox.tsx', () => {
       it('Adds value to choices when both are updated and value was included in previous choices but not in the new choices', () => {
         const { getByRole, getAllByRole, getByTitle, rerender } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
         expect(getByRole('combobox')).toHaveValue('A')
-        
+
         rerender(<XCombobox model={{ ...comboboxProps, value: 'C', choices: ['A', 'B'] }} />)
         expect(getByRole('combobox')).toHaveValue('C')
         fireEvent.click(getByRole('presentation', { hidden: true }))
@@ -196,7 +214,7 @@ describe('Combobox.tsx', () => {
       })
 
       it('Display same value if choices change and value is included in choices', () => {
-        const { getByRole, rerender,  } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />, { })
+        const { getByRole, rerender, } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />, {})
         expect(getByRole('combobox')).toHaveValue('A')
         rerender(<XCombobox model={{ ...comboboxProps, choices: ['A', 'B'], value: 'A' }} />)
         expect(getByRole('combobox')).toHaveValue('A')
@@ -217,7 +235,7 @@ describe('Combobox.tsx', () => {
     it('Displays new typed option', () => {
       const { getByRole } = render(<XCombobox model={{ ...comboboxProps, values: ['A'] }} />)
       expect(wave.args[name]).toEqual(['A'])
-      
+
       userEvent.type(getByRole('combobox'), 'D{enter}')
       expect(wave.args[name]).toEqual(['A', 'D'])
     })
@@ -225,19 +243,19 @@ describe('Combobox.tsx', () => {
     it('Unselects every option and types a new one', () => {
       const { getByText, getByRole } = render(<XCombobox model={{ ...comboboxProps, values: ['A', 'B'] }} />)
       expect(wave.args[name]).toEqual(['A', 'B'])
-  
+
       fireEvent.click(getByRole('presentation', { hidden: true }))
       fireEvent.click(getByText('A'))
       fireEvent.click(getByText('B'))
       expect(wave.args[name]).toEqual([])
-  
+
       userEvent.type(getByRole('combobox'), 'D{Enter}')
       expect(wave.args[name]).toEqual(['D'])
     })
 
     describe('Wave args', () => {
       it('Sets args to null when "values" is empty', () => {
-        render(<XCombobox model={{...comboboxProps, values: []}} />)
+        render(<XCombobox model={{ ...comboboxProps, values: [] }} />)
         expect(wave.args[name]).toBeNull()
       })
 
@@ -251,17 +269,17 @@ describe('Combobox.tsx', () => {
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('A'))
         fireEvent.click(getByText('B'))
-    
+
         expect(wave.args[name]).toEqual(['A', 'B'])
       })
 
       it('Calls sync when trigger is on', () => {
         const { getByRole, getByText } = render(<XCombobox model={{ ...comboboxProps, values: [], trigger: true }} />)
-    
+
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('A'))
         fireEvent.click(getByText('B'))
-    
+
         expect(pushMock).toHaveBeenCalled()
       })
     })
@@ -270,24 +288,24 @@ describe('Combobox.tsx', () => {
       it('Types new option and then updates combobox value when "values" prop changes', () => {
         const { getByRole, getByText, rerender } = render(<XCombobox model={{ ...comboboxProps, values: ['A', 'B'] }} />)
         expect(getByRole('combobox')).toHaveValue('A, B')
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, values: ['C'] }} />)
         expect(getByRole('combobox')).toHaveValue('C')
-  
+
         fireEvent.click(getByRole('presentation', { hidden: true }))
         fireEvent.click(getByText('B'))
         fireEvent.blur(getByRole('presentation', { hidden: true }))
         expect(getByRole('combobox')).toHaveValue('B, C')
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, values: ['A', 'B'] }} />)
         expect(getByRole('combobox')).toHaveValue('A, B')
       })
-  
+
       it('Displays new options in options list when "choices" prop is updated', () => {
         const { getByRole, getAllByRole, rerender } = render(<XCombobox model={{ ...comboboxProps, values: ['A'] }} />)
         fireEvent.click(getByRole('presentation', { hidden: true }))
         expect(getAllByRole('option')).toHaveLength(3)
-  
+
         rerender(<XCombobox model={{ ...comboboxProps, choices: ['A', 'B'] }} />)
         fireEvent.click(getByRole('presentation', { hidden: true }))
         expect(getAllByRole('option')).toHaveLength(2)
