@@ -61,6 +61,12 @@ describe('Nav.tsx', () => {
     expect(wave.args[name]).toBeUndefined()
   })
 
+  it('No item is selected by default', () => {
+    const { getByTitle } = render(<View {...navProps} />)
+    expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+    expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+  })
+
   it('Makes link active when value specified', () => {
     const props: T.Model<State> = { ...navProps, state: { ...navProps.state, value: 'nav1' } }
     const { getByTitle } = render(<View {...props} />)
@@ -155,7 +161,7 @@ describe('Nav.tsx', () => {
     it('Selects nav item on value update', () => {
       const props: T.Model<State> = { ...navProps, state: { items } }
       const { rerender, getByTitle } = render(<View {...props} />)
-      expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+      expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
       expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
 
       props.state.value = 'nav2'
@@ -168,6 +174,10 @@ describe('Nav.tsx', () => {
     it('Selects nav item when value is updated to the same value twice', () => {
       const
         props: T.Model<State> = { ...navProps, state: { items } },
+        expectNoneSelected = () => {
+          expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+          expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+        },
         expectFirstSelected = () => {
           expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
           expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
@@ -178,7 +188,7 @@ describe('Nav.tsx', () => {
         },
         { rerender, getByTitle } = render(<View {...props} />)
 
-      expectFirstSelected()
+      expectNoneSelected()
 
       props.state.value = 'nav2'
       rerender(<View {...props} />)

@@ -144,7 +144,7 @@ export const
         }
       }))
     }))
-    return <Fluent.Nav groups={groups} selectedKey={valueB() || groups[0].links[0].key} styles={{ groupContent: { marginBottom: 0 } }} />
+    return <Fluent.Nav groups={groups} selectedKey={valueB()} styles={{ groupContent: { marginBottom: 0 } }} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const
