@@ -46,18 +46,28 @@ export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       valueB = box<S | undefined>(state.value),
-      setArgs = (name: S) => {
-        if (name.startsWith('#')) window.location.hash = name.substring(1)
-        else if (state.name) wave.args[state.name] = name
-        else wave.args[name] = true
+      handleArgs = (name: S, trigger: B = false) => {
+        // TODO: name: undefined, m.name: 'name'
+        // TODO: name: undefined, m.name: ''
+        if (name.startsWith('#')) {
+          window.location.hash = name.substring(1)
+          return
+        }
+        if (state.name) {
+          if (name === wave.args[state.name]) return
+          wave.args[state.name] = name
+          if (trigger) wave.push()
+        } else {
+          wave.args[name] = true
+          if (trigger) wave.push()
+        }
       },
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
         state.value = name
         valueB(name)
-        setArgs(name)
-        if (!name.startsWith('#')) wave.push()
+        handleArgs(name, true)
       },
       render = () => {
         const
@@ -74,7 +84,7 @@ export const
       update = (prevProps: Model<State>) => {
         if (prevProps.state.value === valueB()) return
         valueB(prevProps.state.value)
-        setArgs(prevProps.state.value || prevProps.state.items[0].name)
+        handleArgs(prevProps.state.value || prevProps.state.items[0].name)
       }
 
     return { render, changed, update, valueB }

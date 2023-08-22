@@ -64,33 +64,35 @@ const
 export const
   XTabs = ({ model: m }: { model: Tabs }) => {
     const
-      onLinkClick = (item?: Fluent.PivotItem) => {
-        const name = item?.props.itemKey
-        if (!name) return
-        m.value = name
-        setSelected(name)
+      handleArgs = (name: S, trigger: B = false) => {
+        // TODO: name: undefined, m.name: 'name'
+        // TODO: name: undefined, m.name: ''
         if (name.startsWith('#')) {
           window.location.hash = name.substring(1)
           return
         }
         if (m.name) {
-          if (name !== wave.args[m.name]) {
-            wave.args[m.name] = name
-            wave.push()
-          }
+          if (name === wave.args[m.name]) return
+          wave.args[m.name] = name
+          if (trigger) wave.push()
         } else {
           wave.args[name] = true
-          wave.push()
+          if (trigger) wave.push()
         }
+      },
+      onLinkClick = (item?: Fluent.PivotItem) => {
+        const name = item?.props.itemKey
+        if (!name) return
+        m.value = name
+        setSelected(name)
+        handleArgs(name, true)
       },
       tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />),
       [selected, setSelected] = React.useState(m.value)
 
     useUpdateOnlyEffect(() => {
       setSelected(m.value)
-      if (!m.value) wave.args[m.name] = null
-      else if (m.value.startsWith('#')) window.location.hash = m.value.substring(1)
-      else if (m.name && m.value !== wave.args[m.name]) wave.args[m.name] = m.value
+      handleArgs(m.value)
     }, [m.name, m.value])
 
     return (
