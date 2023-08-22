@@ -42,7 +42,7 @@ describe('Tab.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Sets args and calls sync on click', () => {
+  it('Sets args and calls sync on click - state name is not defined', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
 
@@ -50,6 +50,18 @@ describe('Tab.tsx', () => {
     fireEvent.click(getByRole('tab'))
 
     expect(wave.args[name]).toBe(true)
+    expect(pushMock).toHaveBeenCalled()
+  })
+
+  it('Sets args and calls sync on click - state name is defined', () => {
+    const pushMock = jest.fn()
+    wave.push = pushMock
+
+    const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: 'tab1' }], name } }} />)
+    fireEvent.click(getByRole('tab'))
+
+    expect(wave.args[name]).toBe('tab1')
+    expect(wave.args['tab1']).toBeUndefined()
     expect(pushMock).toHaveBeenCalled()
   })
 
