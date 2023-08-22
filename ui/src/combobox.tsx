@@ -160,11 +160,11 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
   )
 }
 
-const useOptions = (choices: S[] = []): [Fluent.IComboBoxOption[], React.Dispatch<React.SetStateAction<Fluent.IComboBoxOption[]>>] => {
+const useOptions = (choices?: S[]): [Fluent.IComboBoxOption[], React.Dispatch<React.SetStateAction<Fluent.IComboBoxOption[]>>] => {
   const mappedChoices = React.useMemo(() => (choices || []).map((text): Fluent.IComboBoxOption => ({ key: text, text })), [choices])
   const [options, setOptions] = React.useState(mappedChoices)
 
-  React.useEffect(() => { setOptions(mappedChoices) }, [choices, mappedChoices])
+  React.useEffect(() => setOptions(mappedChoices), [choices, mappedChoices])
 
   return [options, setOptions]
 }
