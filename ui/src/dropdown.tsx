@@ -168,9 +168,9 @@ const
   ROW_HEIGHT = 44,
   PAGE_SIZE = 40,
   getPageSpecification = () => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE } as Fluent.IPageSpecification),
-  choicesToItems = (choices: Choice[], v?: S | S[]) => choices.map(({ name, label, disabled = false }, idx) =>
+  choicesToItems = (choices: Choice[] = [], v?: S | S[]) => choices.map(({ name, label, disabled = false }, idx) =>
     ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled })),
-  useItems = (choices: Choice[], v?: S | S[]) => {
+  useItems = (choices?: Choice[], v?: S | S[]) => {
     const [items, setItems] = React.useState<DropdownItem[]>(choicesToItems(choices, v))
     const onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) })))
 
@@ -192,7 +192,7 @@ const
 
   DialogDropdownSingle = ({ model }: { model: Dropdown }) => {
     const
-      { name, choices = [], disabled, required, trigger, placeholder, label } = model,
+      { name, choices, disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, model.value),
       toggleDialog = () => setIsDialogHidden(v => !v),
@@ -242,7 +242,7 @@ const
   },
   DialogDropdownMulti = ({ model }: { model: Dropdown }) => {
     const
-      { name, choices = [], values = [], disabled, required, trigger, placeholder, label } = model,
+      { name, choices, values, disabled, required, trigger, placeholder, label } = model,
       [isDialogHidden, setIsDialogHidden] = React.useState(true),
       [items, setItems, onSearchChange] = useItems(choices, values),
       itemsOnDialogOpen = React.useRef(items),
@@ -272,7 +272,7 @@ const
       }
 
     React.useEffect(() => {
-      wave.args[name] = values
+      wave.args[name] = values || []
       setItems(choicesToItems(choices, values))
     }, [name, values, choices, setItems])
 
