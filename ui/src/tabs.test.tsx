@@ -22,10 +22,7 @@ const hashName = `#${name}`
 const tabsProps: Tabs = { name, items: [{ name }] }
 
 describe('Tabs.tsx', () => {
-  beforeEach(() => {
-    window.location.hash = ''
-    wave.args[name] = null
-  })
+  beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XTabs model={tabsProps} />)
@@ -156,8 +153,8 @@ describe('Tabs.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
-  // TODO: Fix.
   it('Sets url hash when value is updated - hash name', () => {
+    window.location.hash = ''
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
     const props = { ...{ ...tabsProps, items, value: '#tab1' } }
     const { rerender } = render(<XTabs model={props} />)

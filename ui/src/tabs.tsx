@@ -17,6 +17,7 @@ import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { wave } from './ui'
+import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 
 /**
  * Create a tab.
@@ -85,7 +86,7 @@ export const
       tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />),
       [selected, setSelected] = React.useState(m.value)
 
-    React.useEffect(() => {
+    useUpdateOnlyEffect(() => {
       setSelected(m.value)
       if (!m.value) wave.args[m.name] = null
       else if (m.value.startsWith('#')) window.location.hash = m.value.substring(1)
