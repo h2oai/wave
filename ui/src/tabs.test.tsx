@@ -22,7 +22,10 @@ const hashName = `#${name}`
 const tabsProps: Tabs = { name, items: [{ name }] }
 
 describe('Tabs.tsx', () => {
-  beforeEach(() => { wave.args[name] = null })
+  beforeEach(() => {
+    wave.args = [] as any
+    wave.args[name] = null
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XTabs model={tabsProps} />)
@@ -60,8 +63,21 @@ describe('Tabs.tsx', () => {
 
     props.value = 'tab2'
     rerender(<XTabs model={props} />)
-    // TODO: Not consistent with ui.tab_card - wave.args['tab2'].toBe(true)
     expect(wave.args[name]).toBe('tab2')
+    expect(wave.args['tab2']).toBeUndefined()
+  })
+
+  it('Set args when value is updated - name is an empty string', () => {
+    const items = [{ name: 'tab1' }, { name: 'tab2' }]
+    const props = { ...tabsProps, items, value: 'tab1', name: '' }
+    const { rerender, getAllByRole } = render(<XTabs model={props} />)
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+    expect(wave.args['tab2']).toBeUndefined()
+
+    props.value = 'tab2'
+    rerender(<XTabs model={props} />)
+    expect(wave.args[name]).toBeUndefined()
+    expect(wave.args['tab2']).toBe(true)
   })
 
   it('Does not set args when value is updated - hash name', () => {
