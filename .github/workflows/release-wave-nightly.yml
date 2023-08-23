@@ -122,9 +122,8 @@ jobs:
 
       - name: Install docker
         run: |
-          limactl --version
           brew install docker
-          colima start
+          colima start --verbose
 
       - uses: actions/setup-python@v4
         with:
