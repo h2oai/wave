@@ -1,6 +1,5 @@
 import os
 import signal
-import time
 from utils import start_waved, AppRunner
 import pytest
 
