@@ -123,7 +123,6 @@ jobs:
       - name: Install docker
         run: |
           brew install docker
-          colima start --verbose
 
       - uses: actions/setup-python@v4
         with:
