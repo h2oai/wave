@@ -42,7 +42,7 @@ describe('Tab.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Sets args and calls sync on click - state name is not defined', () => {
+  it('Sets args and calls sync on click - name is not defined', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
 
@@ -53,7 +53,7 @@ describe('Tab.tsx', () => {
     expect(pushMock).toHaveBeenCalled()
   })
 
-  it('Sets args and calls sync on click - state name is defined', () => {
+  it('Sets args and calls sync on click - name is defined', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
 
@@ -76,7 +76,7 @@ describe('Tab.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
-  it('Does not call sync on click - args not changed - state name not defined', () => {
+  it('Does not call sync on click - args not changed - name not defined', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
 
@@ -87,7 +87,7 @@ describe('Tab.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
-  it('Does not call sync on click - args not changed - state name defined', () => {
+  it('Does not call sync on click - args not changed - name defined', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
 
@@ -99,7 +99,7 @@ describe('Tab.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
-  it('Set args when value is updated - state name not defined', () => {
+  it('Set args when value is updated - name not defined', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
     const props = { ...tabProps, state: { items, value: 'tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
@@ -112,7 +112,7 @@ describe('Tab.tsx', () => {
     expect(wave.args[name]).toBeNull()
   })
 
-  it('Set args when value is updated - state name defined', () => {
+  it('Set args when value is updated - name defined', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
     const props = { ...tabProps, state: { items, value: 'tab1', name } }
     const { rerender, getAllByRole } = render(<View {...props} />)
