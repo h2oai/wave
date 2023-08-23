@@ -65,8 +65,8 @@ export const
   XTabs = ({ model: m }: { model: Tabs }) => {
     const
       handleArgs = (name?: S, trigger: B = false) => {
-        if (!name) m.name ? wave.args[m.name] = null : wave.args = {}
-        else if (name.startsWith('#')) window.location.hash = name.substring(1)
+        if (!name) return
+        if (name.startsWith('#')) window.location.hash = name.substring(1)
         else if (m.name) {
           if (name === wave.args[m.name]) return
           wave.args[m.name] = name

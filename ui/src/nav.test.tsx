@@ -205,6 +205,20 @@ describe('Nav.tsx', () => {
       expectSecondSelected()
     })
 
+    it('Unselect all nav items', () => {
+      const props: T.Model<State> = { ...navProps, state: { items, value: 'nav1' } }
+      const { rerender, getByTitle } = render(<View {...props} />)
+
+      expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+
+      props.state.value = undefined
+      rerender(<View {...props} />)
+
+      expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+    })
+
     it('Does not set args on value update when name starts with hash', () => {
       const props: T.Model<State> = { ...navProps, state: { items: hashItems } }
       const { rerender } = render(<View {...props} />)

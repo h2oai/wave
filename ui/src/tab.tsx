@@ -47,8 +47,8 @@ export const
     const
       valueB = box<S | undefined>(state.value),
       handleArgs = (name?: S, trigger: B = false) => {
-        if (!name) state.name ? wave.args[state.name] = null : wave.args = {}
-        else if (name.startsWith('#')) window.location.hash = name.substring(1)
+        if (!name) return
+        if (name.startsWith('#')) window.location.hash = name.substring(1)
         else if (state.name) {
           if (name === wave.args[state.name]) return
           wave.args[state.name] = name
