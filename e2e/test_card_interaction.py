@@ -11,6 +11,7 @@ from playwright.sync_api import Page, expect
 @pytest.fixture(scope='session', autouse=True)
 def global_setup_teardown(playwright):
     playwright.selectors.set_test_id_attribute('data-test')
+    expect.set_options(timeout=10_000)
 
 
 @pytest.fixture(scope='module', autouse=True)
@@ -71,20 +72,12 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("Wizard Example")).to_be_visible()
         page.get_by_text('Of course!').click()
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text('What is your name?')).to_be_visible()
         page.get_by_test_id('nickname').fill('Fred')
         page.locator('text=Next').click()
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.locator('text=Hi Fred! How do you feel right now?')).to_be_visible()
         page.get_by_test_id('feeling').fill('happy')
         page.locator('text=Next').click()
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.locator('text=What a coincidence, Fred! I feel happy too!')).to_be_visible()

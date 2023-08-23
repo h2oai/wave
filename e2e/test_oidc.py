@@ -19,6 +19,7 @@ python_executable = os.path.join(cwd, 'venv', 'bin', 'python')
 @pytest.fixture(scope='session', autouse=True)
 def global_setup_teardown(playwright):
     playwright.selectors.set_test_id_attribute('data-test')
+    expect.set_options(timeout=10_000)
 
 
 @pytest.fixture(scope='module', autouse=True)

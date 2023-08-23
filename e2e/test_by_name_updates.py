@@ -10,6 +10,7 @@ from playwright.sync_api import Page, expect
 @pytest.fixture(scope='module', autouse=True)
 def setup_teardown():
     waved_p = None
+    expect.set_options(timeout=10_000)
     try:
         waved_p = start_waved()
         yield
@@ -85,8 +86,6 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -107,8 +106,6 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -128,8 +125,6 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -150,8 +145,6 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -172,8 +165,6 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("New text")).to_be_visible()
 
 
