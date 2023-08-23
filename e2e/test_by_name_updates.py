@@ -85,9 +85,8 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load
+        # Wait for page to load - needed for Firefox.
         time.sleep(1)
-        print(page.content())
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -108,7 +107,7 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load
+        # Wait for page to load - needed for Firefox.
         time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
@@ -129,6 +128,8 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
+        # Wait for page to load - needed for Firefox.
+        time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -149,6 +150,8 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
+        # Wait for page to load - needed for Firefox.
+        time.sleep(1)
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -169,6 +172,8 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
+        # Wait for page to load - needed for Firefox.
+        time.sleep(1)
         expect(page.get_by_text("New text")).to_be_visible()
 
 
@@ -190,6 +195,8 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
+        # Wait for page to load - needed for Firefox.
+        time.sleep(1)
         expect(page.get_by_text("New text")).to_be_visible()
 
 
