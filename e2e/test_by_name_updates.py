@@ -84,6 +84,7 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
+        print(page.content())
         expect(page.get_by_text("New next")).to_be_visible()
 
 
@@ -104,6 +105,7 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
+        print(page.content())
         expect(page.get_by_text("New next")).to_be_visible()
 
 
