@@ -120,9 +120,8 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Install docker
-        run: |
-          brew install docker
+      - name: Set up Docker
+        uses: crazy-max/ghaction-setup-docker@v1
 
       - uses: actions/setup-python@v4
         with:
