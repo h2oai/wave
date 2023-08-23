@@ -1,6 +1,5 @@
 import os
 import signal
-import time
 from utils import start_waved, AppRunner
 import pytest
 
@@ -186,8 +185,6 @@ async def serve(q: Q):
 '''
     with AppRunner(code):
         page.goto('http://localhost:10101')
-        # Wait for page to load - needed for Firefox.
-        time.sleep(1)
         expect(page.get_by_text("New text")).to_be_visible()
 
 
