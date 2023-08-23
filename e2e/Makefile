@@ -14,7 +14,7 @@ test-dev:
 	 SKIP_KC=1 ./venv/bin/pytest -s
 
 test:
-	./venv/bin/pytest -x --browser firefox --browser chromium
+	./venv/bin/pytest -s -x --browser firefox --browser chromium
 
 test-macos:
 	./venv/bin/pytest -x --browser webkit --browser firefox --browser chromium
