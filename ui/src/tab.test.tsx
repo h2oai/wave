@@ -76,11 +76,23 @@ describe('Tab.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
-  it('Does not call sync on click - args not changed', () => {
+  it('Does not call sync on click - args not changed - state name not defined', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
 
     const { getByRole } = render(<View {...tabProps} />)
+    wave.args[name] = true
+    fireEvent.click(getByRole('tab'))
+
+    expect(pushMock).toHaveBeenCalledTimes(0)
+  })
+
+  it('Does not call sync on click - args not changed - state name defined', () => {
+    const pushMock = jest.fn()
+    wave.push = pushMock
+
+    const props = { ...tabProps, state: { items: [{ name }], name } }
+    const { getByRole } = render(<View {...props} />)
     wave.args[name] = name
     fireEvent.click(getByRole('tab'))
 

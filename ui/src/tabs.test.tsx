@@ -65,6 +65,17 @@ describe('Tabs.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
+  it('Does not call sync on click - args not changed - name is an empty string', () => {
+    const pushMock = jest.fn()
+    wave.push = pushMock
+
+    const { getByRole } = render(<XTabs model={{ ...tabsProps, name: '' }} />)
+    wave.args[name] = true
+    fireEvent.click(getByRole('tab'))
+
+    expect(pushMock).toHaveBeenCalledTimes(0)
+  })
+
   it('Set args when value is updated', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
     const props = { ...tabsProps, items, value: 'tab1' }

@@ -46,9 +46,13 @@ export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       valueB = box<S | undefined>(state.value),
-      handleArgs = (name: S, trigger: B = false) => {
+      handleArgs = (name?: S, trigger: B = false) => {
         // TODO: name: undefined, m.name: 'name'
         // TODO: name: undefined, m.name: ''
+        if (!name) {
+          state.name ? wave.args[state.name] = null : wave.args = {}
+          return
+        }
         if (name.startsWith('#')) {
           window.location.hash = name.substring(1)
           return
@@ -58,6 +62,7 @@ export const
           wave.args[state.name] = name
           if (trigger) wave.push()
         } else {
+          if (wave.args[name] === true) return
           wave.args[name] = true
           if (trigger) wave.push()
         }
@@ -77,14 +82,14 @@ export const
           ))
         return (
           <div data-test={name} className={css.card}>
-            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={valueB() || state.items[0].name}>{items}</Pivot>
+            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={valueB()}>{items}</Pivot>
           </div>
         )
       },
       update = (prevProps: Model<State>) => {
         if (prevProps.state.value === valueB()) return
         valueB(prevProps.state.value)
-        handleArgs(prevProps.state.value || prevProps.state.items[0].name)
+        handleArgs(prevProps.state.value)
       }
 
     return { render, changed, update, valueB }
