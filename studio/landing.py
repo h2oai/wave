@@ -11,7 +11,7 @@ page['landing'] = ui.form_card(box='1 1 -1 -1', items=[
         items=[
             ui.text_xl('# 👋 Welcome to H2O Wave Studio'),
             ui.text('The app is listening on `/studio` route.'),
-            ui.link(label='Start coding', path='/studio', button=True, target='_self'),
+            ui.link(label='Start coding', path='studio', button=True, target='_self'),
         ]
     ),
 ])
