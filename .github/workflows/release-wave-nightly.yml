@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        py: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -78,7 +78,7 @@ jobs:
     if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
-        py: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
@@ -113,7 +113,7 @@ jobs:
     if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
-        py: ["3.8", "3.9", "3.10"]
+        py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v2
@@ -122,6 +122,9 @@ jobs:
 
       - name: Install docker
         run: |
+          curl -OSL https://raw.githubusercontent.com/Homebrew/homebrew-core/dc0669eca9479e9eeb495397ba3a7480aaa45c2e/Formula/qemu.rb
+          brew unlink qemu
+          brew install ./qemu.rb
           brew install docker
           colima start
 

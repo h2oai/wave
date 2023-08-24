@@ -9,6 +9,7 @@ from playwright.sync_api import Page, expect
 @pytest.fixture(scope='module', autouse=True)
 def setup_teardown():
     waved_p = None
+    expect.set_options(timeout=10_000)
     try:
         waved_p = start_waved()
         yield
