@@ -74,6 +74,7 @@ describe('Tab.tsx', () => {
     fireEvent.click(getByRole('tab'))
 
     expect(wave.args[name]).toBeNull()
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Does not set args when value is updated - hash name', () => {
