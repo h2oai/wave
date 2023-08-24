@@ -83,13 +83,17 @@ export const
         const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
         setChoices(_choices)
         capture(_choices)
+        m.values = value ? _choices.map(({ c }) => c.name) : []
       },
       selectAll = () => select(true),
       deselectAll = () => select(false),
       onChange = (idx: U) => (_e?: React.FormEvent<HTMLElement>, checked = false) => {
         const _choices = [...choices]
-        _choices[idx].selected = checked
+        const choice = _choices[idx]
+        choice.selected = checked
         setChoices(_choices)
+        checked ? defaultSelection.add(choice.c.name) : defaultSelection.delete(choice.c.name)
+        m.values = [...defaultSelection]
         capture(_choices)
       },
       items = choices.map(({ c, selected }, i) => (

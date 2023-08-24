@@ -70,13 +70,13 @@ describe('Checklist.tsx', () => {
     const { getByText, rerender } = render(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
     expect(wave.args[name]).toMatchObject(['Choice1'])
 
-    rerender(<XChecklist model={{ ...checklistProps, choices: [...choices] }} />)
+    rerender(<XChecklist model={{ ...checklistProps }} />)
     expect(wave.args[name]).toMatchObject([])
 
     fireEvent.click(getByText('Choice2').parentElement!)
     expect(wave.args[name]).toMatchObject(['Choice2'])
 
-    rerender(<XChecklist model={{ ...checklistProps, choices: [...choices] }} />)
+    rerender(<XChecklist model={{ ...checklistProps }} />)
     expect(wave.args[name]).toMatchObject([])
   })
 
