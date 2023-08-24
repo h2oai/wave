@@ -83,13 +83,17 @@ export const
         const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
         setChoices(_choices)
         capture(_choices)
+        m.values = value ? _choices.map(({ c }) => c.name) : []
       },
       selectAll = () => select(true),
       deselectAll = () => select(false),
       onChange = (idx: U) => (_e?: React.FormEvent<HTMLElement>, checked = false) => {
         const _choices = [...choices]
-        _choices[idx].selected = checked
+        const choice = _choices[idx]
+        choice.selected = checked
         setChoices(_choices)
+        checked ? defaultSelection.add(choice.c.name) : defaultSelection.delete(choice.c.name)
+        m.values = [...defaultSelection]
         capture(_choices)
       },
       items = choices.map(({ c, selected }, i) => (
@@ -104,8 +108,13 @@ export const
           styles={{ root: { marginBottom: 4 }, checkmark: { display: 'flex' } }} // Fix: Center the checkmark in the checkbox.
         />
       ))
-    React.useEffect(() => { wave.args[m.name] = m.values || [] }, [m.name, m.values])
-    React.useEffect(() => { setChoices(getMappedChoices()) }, [getMappedChoices, m.choices])
+
+    React.useEffect(() => {
+      const newChoices = getMappedChoices()
+      setChoices(newChoices)
+      wave.args[m.name] = newChoices.filter(({ selected }) => selected).map(({ c }) => c.name)
+    }, [getMappedChoices, m.choices, m.name, m.values])
+
     return (
       <div data-test={m.name}>
         <Fluent.Label>{m.label}</Fluent.Label>

@@ -61,6 +61,11 @@ describe('Nav.tsx', () => {
     expect(wave.args[name]).toBeUndefined()
   })
 
+  it('No item is selected by default', () => {
+    const { container } = render(<View {...navProps} />)
+    expect(container.querySelector('.is-selected')).not.toBeInTheDocument()
+  })
+
   it('Makes link active when value specified', () => {
     const props: T.Model<State> = { ...navProps, state: { ...navProps.state, value: 'nav1' } }
     const { getByTitle } = render(<View {...props} />)
@@ -154,9 +159,8 @@ describe('Nav.tsx', () => {
 
     it('Selects nav item on value update', () => {
       const props: T.Model<State> = { ...navProps, state: { items } }
-      const { rerender, getByTitle } = render(<View {...props} />)
-      expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
-      expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+      const { container, rerender, getByTitle } = render(<View {...props} />)
+      expect(container.querySelector('.is-selected')).not.toBeInTheDocument()
 
       props.state.value = 'nav2'
       rerender(<View {...props} />)
@@ -176,9 +180,10 @@ describe('Nav.tsx', () => {
           expect(getByTitle('Nav 1').parentElement).not.toHaveClass('is-selected')
           expect(getByTitle('Nav 2').parentElement).toHaveClass('is-selected')
         },
-        { rerender, getByTitle } = render(<View {...props} />)
+        { container, rerender, getByTitle } = render(<View {...props} />)
 
-      expectFirstSelected()
+
+      expect(container.querySelector('.is-selected')).not.toBeInTheDocument()
 
       props.state.value = 'nav2'
       rerender(<View {...props} />)
@@ -193,6 +198,19 @@ describe('Nav.tsx', () => {
       rerender(<View {...props} />)
       expect(wave.args['nav2']).toBe(true)
       expectSecondSelected()
+    })
+
+    it('Unselect all nav items', () => {
+      const props: T.Model<State> = { ...navProps, state: { items, value: 'nav1' } }
+      const { container, rerender, getByTitle } = render(<View {...props} />)
+
+      expect(getByTitle('Nav 1').parentElement).toHaveClass('is-selected')
+      expect(getByTitle('Nav 2').parentElement).not.toHaveClass('is-selected')
+
+      props.state.value = undefined
+      rerender(<View {...props} />)
+
+      expect(container.querySelector('.is-selected')).not.toBeInTheDocument()
     })
 
     it('Does not set args on value update when name starts with hash', () => {

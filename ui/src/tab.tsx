@@ -45,19 +45,20 @@ const
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
     const
-      valueB = box<S | undefined>(state.value),
-      setArgs = (name: S) => {
-        if (name.startsWith('#')) window.location.hash = name.substring(1)
-        else if (state.name) wave.args[state.name] = name
-        else wave.args[name] = true
-      },
+      valueB = box<S | undefined>(state.value || state.items[0]?.name),
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
-        if (!name) return
+        if (!name || valueB() === name) return
         state.value = name
         valueB(name)
-        setArgs(name)
-        if (!name.startsWith('#')) wave.push()
+
+        if (name.startsWith('#')) {
+          window.location.hash = name.substring(1)
+          return
+        }
+        if (state.name) wave.args[state.name] = name
+        else wave.args[name] = true
+        wave.push()
       },
       render = () => {
         const
@@ -67,14 +68,12 @@ export const
           ))
         return (
           <div data-test={name} className={css.card}>
-            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={valueB() || state.items[0].name}>{items}</Pivot>
+            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} selectedKey={valueB()}>{items}</Pivot>
           </div>
         )
       },
       update = (prevProps: Model<State>) => {
-        if (prevProps.state.value === valueB()) return
-        valueB(prevProps.state.value)
-        setArgs(prevProps.state.value || prevProps.state.items[0].name)
+        if (prevProps.state.value !== valueB()) valueB(prevProps.state.value)
       }
 
     return { render, changed, update, valueB }

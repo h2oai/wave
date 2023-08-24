@@ -144,7 +144,7 @@ export const
         }
       }))
     }))
-    return <Fluent.Nav groups={groups} selectedKey={valueB() || groups[0].links[0].key} styles={{ groupContent: { marginBottom: 0 } }} />
+    return <Fluent.Nav groups={groups} selectedKey={valueB() || ''} styles={{ groupContent: { marginBottom: 0 } }} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const
@@ -172,8 +172,9 @@ export const
       update = (prevProps: Model<State>) => {
         if (prevProps.state.value === valueB()) return
         valueB(prevProps.state.value)
-        const name = prevProps.state.value || prevProps.state.items[0].items[0].name
+        const name = prevProps.state.value
 
+        if (!name) return
         if (name.startsWith('#')) window.location.hash = name.substring(1)
         else wave.args[name] = true
       },

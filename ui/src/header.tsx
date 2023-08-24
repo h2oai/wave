@@ -107,6 +107,7 @@ const
   Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<B> }) => {
     const
       hideNav = () => isOpenB(false),
+      valueB = box<S | undefined>(),
       render = () => (
         <Fluent.Panel
           isLightDismiss
@@ -115,10 +116,10 @@ const
           onDismiss={hideNav}
           hasCloseButton={false}
         >
-          <XNav items={items} hideNav={hideNav} />
+          <XNav items={items} hideNav={hideNav} valueB={valueB} />
         </Fluent.Panel>
       )
-    return { render, isOpenB }
+    return { render, isOpenB, valueB }
   })
 
 

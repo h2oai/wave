@@ -18,11 +18,13 @@ import { Checklist, XChecklist } from './checklist'
 import { wave } from './ui'
 
 const name = 'checklist'
-const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
+const choices = [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },]
+const checklistProps: Checklist = { name, choices }
 describe('Checklist.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     wave.args[name] = null
+    checklistProps.values = undefined
   })
 
   it('Renders data-test attr', () => {
@@ -62,6 +64,20 @@ describe('Checklist.tsx', () => {
 
     rerender(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
     expect(wave.args[name]).toMatchObject(['Choice1'])
+  })
+
+  it('Set correct args when value is cleared twice', () => {
+    const { getByText, rerender } = render(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
+    expect(wave.args[name]).toMatchObject(['Choice1'])
+
+    rerender(<XChecklist model={{ ...checklistProps }} />)
+    expect(wave.args[name]).toMatchObject([])
+
+    fireEvent.click(getByText('Choice2').parentElement!)
+    expect(wave.args[name]).toMatchObject(['Choice2'])
+
+    rerender(<XChecklist model={{ ...checklistProps }} />)
+    expect(wave.args[name]).toMatchObject([])
   })
 
   it('Updates choices', () => {
