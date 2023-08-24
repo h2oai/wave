@@ -19,11 +19,6 @@ const
     visible: {
       opacity: 1,
     },
-    hover: {
-      $nest: {
-        '&:hover #copybutton': { opacity: 1 }
-      }
-    },
     btn: {
       minWidth: 'initial',
       position: 'absolute',
@@ -79,6 +74,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
+    [visible, setVisible] = React.useState(!showOnHoverOnly),
     btnContainerRef = React.useRef<HTMLDivElement>(document.createElement('div')),
     onClick = React.useCallback(async () => {
       if (!anchorElement) return
@@ -100,13 +96,19 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
       title='Copy to clipboard'
       onClick={onClick}
       iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-      className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', showOnHoverOnly ? '' : css.visible)}
-    />, [copied, onClick, showOnHoverOnly])
+      className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
+    />, [copied, onClick, showOnHoverOnly, visible])
 
   React.useEffect(() => {
     if (!anchorElement) return
     if (portal) ReactDOM.render(ReactDOM.createPortal(CopyButton, anchorElement), btnContainerRef.current)
-    if (showOnHoverOnly) anchorElement.classList.add(css.hover)
+    if (showOnHoverOnly) {
+      anchorElement.addEventListener('mouseenter', () => setVisible(true))
+      anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
+        if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
+        setVisible(false)
+      })
+    }
   }, [CopyButton, anchorElement, portal, showOnHoverOnly])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])

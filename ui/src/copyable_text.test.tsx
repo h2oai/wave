@@ -15,6 +15,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { CopyableText, XCopyableText } from './copyable_text'
+import userEvent from '@testing-library/user-event'
 
 const name = 'name'
 const copyableTextProps: CopyableText = { name, value: '', label: '' }
@@ -44,19 +45,17 @@ describe('CopyableText.tsx', () => {
 
   it('Shows copy to clipboard button on hover - multiline text', async () => {
     const { container } = render(<XCopyableText model={{ ...copyableTextProps, multiline: true }} />)
-    const copyButton = container.querySelector('button')
-    const textfield = container.querySelector('textarea')!
-    expect(copyButton).toBeInTheDocument()
-    expect(copyButton).toBeVisible()
-    // Move cursor out of container.
-    fireEvent.mouseLeave(textfield)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 500))
 
+    const copyButton = container.querySelector('button')
+    const textfield = container.querySelector('textarea')!.parentElement!
+    expect(copyButton).toBeInTheDocument()
     expect(copyButton).not.toBeVisible()
 
-    fireEvent.mouseEnter(textfield)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    userEvent.hover(textfield)
+    expect(container.querySelector('button')).toBeVisible()
 
-    expect(copyButton).toBeVisible()
+    fireEvent.mouseLeave(textfield)
+    expect(copyButton).not.toBeVisible()
   })
 })
