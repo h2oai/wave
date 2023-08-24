@@ -18,7 +18,8 @@ import { Checklist, XChecklist } from './checklist'
 import { wave } from './ui'
 
 const name = 'checklist'
-const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
+const choices = [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },]
+const checklistProps: Checklist = { name, choices }
 describe('Checklist.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -69,13 +70,13 @@ describe('Checklist.tsx', () => {
     const { getByText, rerender } = render(<XChecklist model={{ ...checklistProps, values: ['Choice1'] }} />)
     expect(wave.args[name]).toMatchObject(['Choice1'])
 
-    rerender(<XChecklist model={{ ...checklistProps }} />)
+    rerender(<XChecklist model={{ ...checklistProps, choices: [...choices] }} />)
     expect(wave.args[name]).toMatchObject([])
 
     fireEvent.click(getByText('Choice2').parentElement!)
     expect(wave.args[name]).toMatchObject(['Choice2'])
 
-    rerender(<XChecklist model={{ ...checklistProps }} />)
+    rerender(<XChecklist model={{ ...checklistProps, choices: [...choices] }} />)
     expect(wave.args[name]).toMatchObject([])
   })
 

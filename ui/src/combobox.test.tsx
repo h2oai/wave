@@ -25,13 +25,15 @@ const
 wave.push = pushMock
 
 describe('Combobox.tsx', () => {
+  beforeEach(() => pushMock.mockReset())
+
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XCombobox model={comboboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
   describe('Single Select', () => {
-    it('Displays new typed option', () => {
+    it('Sets new option on hitting enter', () => {
       const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
       expect(wave.args[name]).toEqual('A')
 
@@ -44,16 +46,25 @@ describe('Combobox.tsx', () => {
       const combobox = getByRole('combobox')
 
       userEvent.type(combobox, '{backspace}D')
-      fireEvent.blur(combobox)
+
+      // Need to update JSDOM to 16.3+ to use fireEvent.blur().
+      combobox.blur()
+      fireEvent.focusOut(combobox)
+
       expect(combobox).toHaveValue('D')
+      expect(wave.args[name]).toEqual('D')
     })
 
     it('Adds new typed option only once to options list', () => {
-      const { getAllByRole, getAllByTitle, getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+      const { getAllByRole, getByRole, queryAllByTitle, } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+      fireEvent.click(getByRole('presentation', { hidden: true }))
+      expect(getAllByRole('option')).toHaveLength(3)
+      expect(queryAllByTitle('D')).toHaveLength(0)
+
       userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
       fireEvent.click(getByRole('presentation', { hidden: true }))
       expect(getAllByRole('option')).toHaveLength(4)
-      expect(getAllByTitle('D')).toHaveLength(1)
+      expect(queryAllByTitle('D')).toHaveLength(1)
     })
 
     describe('Wave args', () => {
@@ -95,19 +106,20 @@ describe('Combobox.tsx', () => {
 
       it('Sets wave args as string when a new valued is typed and user clicks away - after init', () => {
         const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
+        const combobox = getByRole('combobox')
 
         expect(wave.args[name]).toBe('A')
 
         userEvent.type(getByRole('combobox'), '{backspace}D')
-        // fireEvent.blur(getByRole('combobox')) doesn't trigger blur. Might be related to https://github.com/testing-library/user-event/issues/592
-        getByRole('combobox').blur()
-        fireEvent.focusOut(getByRole('combobox'))
+        // Need to update JSDOM to 16.3+ to use fireEvent.blur().
+        combobox.blur()
+        fireEvent.focusOut(combobox)
 
         expect(getByRole('combobox')).not.toHaveFocus()
         expect(wave.args[name]).toBe('D')
       })
 
-      it('Sets wave args as string when a new valued is typed and tab is pressed - after init', () => {
+      it('Sets wave args as string when a new value is typed and tab is pressed - after init', () => {
         const { getByRole } = render(<XCombobox model={{ ...comboboxProps, value: 'A' }} />)
 
         expect(wave.args[name]).toBe('A')

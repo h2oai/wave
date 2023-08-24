@@ -21,15 +21,18 @@ import { wave } from './ui'
 const
   name = 'tab',
   hashName = `#${name}`,
-  tabProps: T.Model<any> = {
+  items = [{ name: 'tab1' }, { name: 'tab2' }],
+  getProps = (): T.Model<any> => ({
     name,
-    state: {
-      items: [{ name }]
-    },
+    state: { items },
     changed: T.box(false)
-  }
+  }),
+  pushMock = jest.fn()
 
 describe('Tab.tsx', () => {
+  beforeAll(() => {
+    wave.push = pushMock
+  })
   beforeEach(() => {
     window.location.hash = ''
     wave.args = [] as any
@@ -38,96 +41,44 @@ describe('Tab.tsx', () => {
   })
 
   it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<View {...tabProps} />)
+    const { queryByTestId } = render(<View {...getProps()} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Sets args and calls sync on click - name is not defined', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
+  it('Sets args and calls push on click - name is not defined', () => {
+    const { getAllByRole } = render(<View {...getProps()} />)
+    fireEvent.click(getAllByRole('tab')[1])
 
-    const { getByRole } = render(<View {...tabProps} />)
-    fireEvent.click(getByRole('tab'))
-
-    expect(wave.args[name]).toBe(true)
-    expect(pushMock).toHaveBeenCalled()
-  })
-
-  it('Sets args and calls sync on click - name is defined', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: 'tab1' }], name } }} />)
-    fireEvent.click(getByRole('tab'))
-
-    expect(wave.args[name]).toBe('tab1')
-    expect(wave.args['tab1']).toBeUndefined()
-    expect(pushMock).toHaveBeenCalled()
-  })
-
-  it('Does not set args and calls sync on click - hash name', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: hashName }] } }} />)
-    fireEvent.click(getByRole('tab'))
-
-    expect(wave.args[name]).toBeNull()
-    expect(pushMock).toHaveBeenCalledTimes(0)
-  })
-
-  it('Does not call sync on click - args not changed - name not defined', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getByRole } = render(<View {...tabProps} />)
-    wave.args[name] = true
-    fireEvent.click(getByRole('tab'))
-
-    expect(pushMock).toHaveBeenCalledTimes(0)
-  })
-
-  it('Does not call sync on click - args not changed - name defined', () => {
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const props = { ...tabProps, state: { items: [{ name }], name } }
-    const { getByRole } = render(<View {...props} />)
-    wave.args[name] = name
-    fireEvent.click(getByRole('tab'))
-
-    expect(pushMock).toHaveBeenCalledTimes(0)
-  })
-
-  it('Set args when value is updated - name not defined', () => {
-    const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const props = { ...tabProps, state: { items, value: 'tab1' } }
-    const { rerender, getAllByRole } = render(<View {...props} />)
-    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
-    expect(wave.args['tab2']).toBeUndefined()
-
-    props.state.value = 'tab2'
-    rerender(<View {...props} />)
     expect(wave.args['tab2']).toBe(true)
-    expect(wave.args[name]).toBeNull()
+    expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
-  it('Set args when value is updated - name defined', () => {
-    const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const props = { ...tabProps, state: { items, value: 'tab1', name } }
-    const { rerender, getAllByRole } = render(<View {...props} />)
-    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
-    expect(wave.args['tab2']).toBeUndefined()
+  it('Sets args and calls push on click - name is defined', () => {
+    const { getAllByRole } = render(<View {...{ ...getProps(), state: { items, name } }} />)
+    fireEvent.click(getAllByRole('tab')[1])
 
-    props.state.value = 'tab2'
-    rerender(<View {...props} />)
-    expect(wave.args['tab2']).toBeUndefined()
     expect(wave.args[name]).toBe('tab2')
+    expect(wave.args['tab1']).toBeUndefined()
+    expect(pushMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('Does not call push on click selecting already selected', () => {
+    const { getAllByRole } = render(<View {...getProps()} />)
+    fireEvent.click(getAllByRole('tab')[0])
+
+    expect(pushMock).toHaveBeenCalledTimes(0)
+  })
+
+  it('Does not set args and calls push on click - hash name', () => {
+    const { getByRole } = render(<View {...{ ...getProps(), state: { items: [{ name: hashName }] } }} />)
+    fireEvent.click(getByRole('tab'))
+
+    expect(wave.args[name]).toBeNull()
   })
 
   it('Does not set args when value is updated - hash name', () => {
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
-    const props = { ...tabProps, state: { items, value: '#tab1' } }
+    const props = { ...getProps(), state: { items, value: '#tab1' } }
     const { rerender } = render(<View {...props} />)
     expect(wave.args[name]).toBeNull()
 
@@ -135,11 +86,12 @@ describe('Tab.tsx', () => {
     rerender(<View {...props} />)
 
     expect(wave.args[name]).toBeNull()
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Selects tab when value is updated', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const props = { ...tabProps, state: { items, value: 'tab1' } }
+    const props = { ...getProps(), state: { items, value: 'tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
@@ -148,11 +100,12 @@ describe('Tab.tsx', () => {
     rerender(<View {...props} />)
     expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Selects tab when value is updated twice to the same value', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const props = { ...tabProps, state: { items, value: 'tab1' } }
+    const props = { ...getProps(), state: { items, value: 'tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
@@ -161,20 +114,24 @@ describe('Tab.tsx', () => {
     rerender(<View {...props} />)
     expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
 
     fireEvent.click(getAllByRole('tab')[0])
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(1)
+    pushMock.mockReset()
 
     props.state.value = 'tab2'
     rerender(<View {...props} />)
     expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Selects tab when value is updated - hash name', () => {
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
-    const props = { ...tabProps, state: { items, value: '#tab1' } }
+    const props = { ...getProps(), state: { items, value: '#tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
@@ -183,11 +140,12 @@ describe('Tab.tsx', () => {
     rerender(<View {...props} />)
     expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Selects tab when value is updated twice to the same value - hash name', () => {
     const items = [{ name: '#tab1' }, { name: '#tab2' }]
-    const props = { ...tabProps, state: { items, value: '#tab1' } }
+    const props = { ...getProps(), state: { items, value: '#tab1' } }
     const { rerender, getAllByRole } = render(<View {...props} />)
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
@@ -196,40 +154,39 @@ describe('Tab.tsx', () => {
     rerender(<View {...props} />)
     expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
 
     fireEvent.click(getAllByRole('tab')[0])
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).not.toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
 
     props.state.value = '#tab2'
     rerender(<View {...props} />)
     expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Sets url hash - hash name', () => {
-    const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: hashName }] } }} />)
-    fireEvent.click(getByRole('tab'))
+    const { getAllByRole } = render(<View {...{ ...getProps(), state: { items: [{ name: '#hash1' }, { name: hashName }] } }} />)
+    fireEvent.click(getAllByRole('tab')[1])
 
     expect(window.location.hash).toBe(hashName)
   })
 
-  it('Sets url hash when value is updated - hash name', () => {
-    const items = [{ name: '#tab1' }, { name: '#tab2' }]
-    const props = { ...{ ...tabProps, state: { items, value: '#tab1' } } }
-    const { rerender } = render(<View {...props} />)
-    expect(window.location.hash).toBe('')
-
-    props.state.value = '#tab2'
-    rerender(<View {...props} />)
-    expect(window.location.hash).toBe('#tab2')
-  })
-
   it('Sets default tab', () => {
     const items = [{ name: 'tab1' }, { name: 'tab2' }]
-    const { getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
+    const { getAllByRole } = render(<View {...{ ...getProps(), state: { items, value: 'tab2' } }} />)
 
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
+  it('Sets default tab - invalid value', () => {
+    const items = [{ name: 'tab1' }, { name: 'tab2' }]
+    const { getAllByRole } = render(<View {...{ ...getProps(), state: { items, value: 'tab3' } }} />)
+
+    expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
   })
 
 })
