@@ -149,8 +149,6 @@ class Query:
         """A `h2o_wave.core.Expando` instance containing arguments from the active request."""
         self.events = events
         """A `h2o_wave.core.Expando` instance containing events from the active request."""
-        self.username = auth.username
-        """The username of the user who initiated the active request. (DEPRECATED: Use q.auth.username instead)"""
         self.route = route
         """The route served by the server."""
         self.auth = auth
