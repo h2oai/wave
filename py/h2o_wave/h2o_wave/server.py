@@ -17,22 +17,16 @@ import datetime
 import asyncio
 from concurrent.futures import Executor
 
-try:
-    import contextvars  # Python 3.7+ only.
-except ImportError:
-    contextvars = None
+import contextvars
 
 import logging
 import functools
-import warnings
 import pickle
 import traceback
 import base64
 import binascii
 from typing import Dict, List, Tuple, Callable, Any, Awaitable, Optional
-from urllib.parse import urlparse
 
-import uvicorn
 import httpx
 from starlette.types import Scope, Receive, Send
 from starlette.applications import Router
@@ -189,17 +183,11 @@ class Query:
 
         loop = asyncio.get_event_loop()
 
-        if contextvars is not None:  # Python 3.7+ only.
-            return await loop.run_in_executor(
-                executor,
-                contextvars.copy_context().run,
-                functools.partial(func, *args, **kwargs)
-            )
-
-        if kwargs:
-            return await loop.run_in_executor(executor, functools.partial(func, *args, **kwargs))
-
-        return await loop.run_in_executor(executor, func, *args)
+        return await loop.run_in_executor(
+            executor,
+            contextvars.copy_context().run,
+            functools.partial(func, *args, **kwargs)
+        )
 
     async def run(self, func: Callable, *args: Any, **kwargs: Any) -> Any:
         """
