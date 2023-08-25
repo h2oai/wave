@@ -624,13 +624,6 @@ class AsyncPage(PageBase):
         """
         return await self.site.load(self.url)
 
-    async def push(self):
-        """
-        DEPRECATED: Use `h2o_wave.core.AsyncPage.save` instead.
-        """
-        warnings.warn('page.push() is deprecated. Please use page.save() instead.', DeprecationWarning)
-        await self.save()
-
     async def save(self):
         """
         Save the page. Sends all local changes made to this page to the remote site.
