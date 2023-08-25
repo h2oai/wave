@@ -12930,7 +12930,6 @@ class WideArticlePreviewCard:
             title: str,
             name: Optional[str] = None,
             aux_value: Optional[str] = None,
-            caption: Optional[str] = None,
             items: Optional[List[Component]] = None,
             content: Optional[str] = None,
             commands: Optional[List[Command]] = None,
@@ -12941,7 +12940,6 @@ class WideArticlePreviewCard:
         _guard_scalar('WideArticlePreviewCard.title', title, (str,), False, False, False)
         _guard_scalar('WideArticlePreviewCard.name', name, (str,), False, True, False)
         _guard_scalar('WideArticlePreviewCard.aux_value', aux_value, (str,), False, True, False)
-        _guard_scalar('WideArticlePreviewCard.caption', caption, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.items', items, (Component,), False, True, False)
         _guard_scalar('WideArticlePreviewCard.content', content, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.commands', commands, (Command,), False, True, False)
@@ -12957,8 +12955,6 @@ class WideArticlePreviewCard:
         """An identifying name for this card. Makes the card clickable, similar to a button."""
         self.aux_value = aux_value
         """The card's auxiliary text, displayed on the right-hand side of the header."""
-        self.caption = caption
-        """DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side."""
         self.items = items
         """The card's buttons, displayed under the caption."""
         self.content = content
@@ -12974,7 +12970,6 @@ class WideArticlePreviewCard:
         _guard_scalar('WideArticlePreviewCard.title', self.title, (str,), False, False, False)
         _guard_scalar('WideArticlePreviewCard.name', self.name, (str,), False, True, False)
         _guard_scalar('WideArticlePreviewCard.aux_value', self.aux_value, (str,), False, True, False)
-        _guard_scalar('WideArticlePreviewCard.caption', self.caption, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.items', self.items, (Component,), False, True, False)
         _guard_scalar('WideArticlePreviewCard.content', self.content, (str,), False, True, False)
         _guard_vector('WideArticlePreviewCard.commands', self.commands, (Command,), False, True, False)
@@ -12986,7 +12981,6 @@ class WideArticlePreviewCard:
             title=self.title,
             name=self.name,
             aux_value=self.aux_value,
-            caption=self.caption,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             content=self.content,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
@@ -13007,8 +13001,6 @@ class WideArticlePreviewCard:
         _guard_scalar('WideArticlePreviewCard.name', __d_name, (str,), False, True, False)
         __d_aux_value: Any = __d.get('aux_value')
         _guard_scalar('WideArticlePreviewCard.aux_value', __d_aux_value, (str,), False, True, False)
-        __d_caption: Any = __d.get('caption')
-        _guard_scalar('WideArticlePreviewCard.caption', __d_caption, (str,), False, True, False)
         __d_items: Any = __d.get('items')
         _guard_vector('WideArticlePreviewCard.items', __d_items, (dict,), False, True, False)
         __d_content: Any = __d.get('content')
@@ -13021,7 +13013,6 @@ class WideArticlePreviewCard:
         title: str = __d_title
         name: Optional[str] = __d_name
         aux_value: Optional[str] = __d_aux_value
-        caption: Optional[str] = __d_caption
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         content: Optional[str] = __d_content
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
@@ -13032,7 +13023,6 @@ class WideArticlePreviewCard:
             title,
             name,
             aux_value,
-            caption,
             items,
             content,
             commands,

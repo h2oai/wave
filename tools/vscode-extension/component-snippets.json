@@ -1962,7 +1962,7 @@
   "Wave Full WideArticlePreviewCard": {
     "prefix": "w_full_wide_article_preview_card",
     "body": [
-      "ui.wide_article_preview_card(box='$1', persona=$2, image='$3', title='$4', name='$5', aux_value='$6', caption='$7', content='$8', items=[\n\t\t$9\t\t\n], commands=[\n\t\t$10\t\t\n])$0"
+      "ui.wide_article_preview_card(box='$1', persona=$2, image='$3', title='$4', name='$5', aux_value='$6', content='$7', items=[\n\t\t$8\t\t\n], commands=[\n\t\t$9\t\t\n])$0"
     ],
     "description": "Create a full Wave WideArticlePreviewCard."
   },

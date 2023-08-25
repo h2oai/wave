@@ -103,8 +103,6 @@ export interface State {
   name?: S
   /** The card's auxiliary text, displayed on the right-hand side of the header. */
   aux_value?: S
-  /** DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side. */
-  caption?: S
   /** The card's buttons, displayed under the caption. */
   items?: Component[]
   /** The card's markdown content, displayed below the title on the right-hand side. */
@@ -114,7 +112,7 @@ export interface State {
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const render = () => {
     const
-      { persona, aux_value, name: stateName, image, title, caption, items, content } = state,
+      { persona, aux_value, name: stateName, image, title, items, content } = state,
       onClick = () => {
         if (!stateName) return
         if (stateName.startsWith('#')) {
@@ -140,9 +138,9 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
           <div className={css.rhs}>
             <div>
               {title && <div className={clas('wave-s16 wave-w6', css.title)}>{title}</div>}
-              {(content || caption) && (
+              {content && (
                 <div style={{ marginBottom: items ? 24 : 0 }} className='wave-s14 wave-w4 wave-t7'>
-                  {content ? <Markdown source={content} /> : caption}
+                  <Markdown source={content} />
                 </div>
               )}
             </div>

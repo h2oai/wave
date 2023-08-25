@@ -5382,7 +5382,6 @@ ui_vega_card <- function(
 #' @param title The card's title on the right-hand side
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param aux_value The card's auxiliary text, displayed on the right-hand side of the header.
-#' @param caption DEPRECATED. Use `content` instead. The card's caption, displayed below the title on the right-hand side.
 #' @param items The card's buttons, displayed under the caption.
 #' @param content The card's markdown content, displayed below the title on the right-hand side.
 #' @param commands Contextual menu commands for this component.
@@ -5395,7 +5394,6 @@ ui_wide_article_preview_card <- function(
   title,
   name = NULL,
   aux_value = NULL,
-  caption = NULL,
   items = NULL,
   content = NULL,
   commands = NULL) {
@@ -5405,7 +5403,6 @@ ui_wide_article_preview_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("name", "character", name)
   .guard_scalar("aux_value", "character", aux_value)
-  .guard_scalar("caption", "character", caption)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("content", "character", content)
   .guard_vector("commands", "WaveCommand", commands)
@@ -5416,7 +5413,6 @@ ui_wide_article_preview_card <- function(
     title=title,
     name=name,
     aux_value=aux_value,
-    caption=caption,
     items=items,
     content=content,
     commands=commands,
