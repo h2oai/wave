@@ -504,20 +504,3 @@ def app(route: str, mode=None, on_startup: Optional[Callable] = None,
         return handle
 
     return wrap
-
-
-def listen(route: str, handle: HandleAsync, mode=None):
-    """
-    Launch an application server.
-
-    Args:
-        route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
-        handle: The handler function.
-        mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
-    """
-    warnings.warn("'listen()' is deprecated. Instead, import 'main' and annotate your 'serve()' function with '@app'.",
-                  DeprecationWarning)
-
-    app_address = urlparse(_config.app_address)
-    logger.info(f'Listening on host "{app_address.hostname}", port "{app_address.port}"...')
-    uvicorn.run(_Main(_App(route, handle, mode)), host=app_address.hostname, port=app_address.port)
