@@ -108,8 +108,6 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     port = app_address.port
 
     addr = f'http://{host}:{port}'
-    os.environ['H2O_WAVE_INTERNAL_ADDRESS'] = addr  # TODO deprecated
-    os.environ['H2O_WAVE_EXTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_APP_ADDRESS'] = addr
 
     # Make "python -m h2o_wave run" behave identical to "wave run":

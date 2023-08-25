@@ -45,14 +45,12 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
 
 
-_default_internal_address = 'http://127.0.0.1:8000'
 _base_url = _get_env('BASE_URL', '/')
 
 
 class _Config:
     def __init__(self):
-        self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
-        self.app_address = _get_env('APP_ADDRESS', _get_env('EXTERNAL_ADDRESS', self.internal_address))
+        self.app_address = _get_env('APP_ADDRESS', 'http://127.0.0.1:8000')
         self.app_mode = _get_env('APP_MODE', UNICAST)
         self.hub_base_url = _get_env('BASE_URL', '/')
         self.hub_host_address = _get_env('ADDRESS', 'http://127.0.0.1:10101')

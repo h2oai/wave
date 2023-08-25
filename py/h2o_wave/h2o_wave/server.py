@@ -518,6 +518,6 @@ def listen(route: str, handle: HandleAsync, mode=None):
     warnings.warn("'listen()' is deprecated. Instead, import 'main' and annotate your 'serve()' function with '@app'.",
                   DeprecationWarning)
 
-    internal_address = urlparse(_config.internal_address)
-    logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
-    uvicorn.run(_Main(_App(route, handle, mode)), host=internal_address.hostname, port=internal_address.port)
+    app_address = urlparse(_config.app_address)
+    logger.info(f'Listening on host "{app_address.hostname}", port "{app_address.port}"...')
+    uvicorn.run(_Main(_App(route, handle, mode)), host=app_address.hostname, port=app_address.port)

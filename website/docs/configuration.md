@@ -139,26 +139,6 @@ The API access key ID to use when communicating with the app server. Automatical
 
 The API access key secret to use when communicating with the app server. Automatically generated if not specified.
 
-### H2O_WAVE_INTERNAL_ADDRESS
-
-:::caution Deprecated
-This environment variable will be removed in v1.0.
-:::
-
-The local host/port on which the app server should listen. Defaults to `http://127.0.0.1:8000`. For example, if you want your app to listen on a specific port, execute your app as follows (replace `66666` with a port number of your choice):
-
-```sh
-H2O_WAVE_INTERNAL_ADDRESS=ws://127.0.0.1:66666 ./venv/bin/python my_app.py
-```
-
-### H2O_WAVE_EXTERNAL_ADDRESS
-
-:::caution Deprecated
-Specify `H2O_WAVE_APP_ADDRESS` instead.
-:::
-
-The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
-
 ### H2O_WAVE_CHECKPOINT_DIR
 
 The directory to save/load application and session state. Enables checkpointing. If set, the app saves the contents of `q.app` and `q.user` before exiting. When restarted, the contents of `q.app` and `q.user` are restored. The directory is automatically created if it does not exist.
