@@ -11,6 +11,7 @@ module.exports = {
       'tutorial-counter',
       'tutorial-todo',
       'project-templates',
+      'lightwave'
     ],
     'Guide': [
       'guide',

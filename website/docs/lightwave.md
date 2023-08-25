@@ -1,15 +1,10 @@
-# H2O Lightwave
+---
+title: Lightwave
+---
 
-H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular async web frameworks like FastAPI, Starlette, etc.
+H2O Lightwave is a lightweight, pure-Python version of [H2O Wave](https://wave.h2o.ai/) that can be embedded in popular async web frameworks like [FastAPI](https://fastapi.tiangolo.com/), [Starlette](https://www.starlette.io/), etc.
 
-In other words, H2O Lightwave works without the Wave server.
-
-The integration consists of 2 steps:
-
-* Add Wave's web assets directory to your framework's static file handler.
-* Add a webSocket handler, and use `wave_serve()` to connect Wave to your web UI.
-
-That's it. You can now render UI elements using pure Python. Lightwave aims to be as minimal as possible and only provides:
+In other words, H2O Lightwave works without the Wave server. Lightwave aims to be as minimal as possible and only provides:
 
 * A simple way to render your UI.
 * A simple way of capturing the user interactions (like button clicks, dropdown values etc.).
@@ -17,7 +12,30 @@ That's it. You can now render UI elements using pure Python. Lightwave aims to b
 
 Nothing more, nothing less.
 
-Example FastAPI integration:
+## Installation
+
+```bash
+pip install "h2o-lightwave[web]"
+```
+
+Lightwave requires websockets to function properly. Not all libraries come with them out of the box so you might need to install them additionally. For example, Starlette & FastAPI requires
+
+```bash
+pip install websockets
+```
+
+to be able to expose websocket handlers. This might differ from framework to framework.
+
+## Integration
+
+The integration consists of 2 steps:
+
+* Add Wave's web assets directory to your framework's static file handler.
+* Add a webSocket handler, and use `wave_serve()` to connect Wave to your web UI.
+
+That's it. You can now render UI elements using pure Python.
+
+## FastAPI integration
 
 ```py
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -70,23 +88,9 @@ app.mount("/", StaticFiles(directory=web_directory, html=True), name="/")
 
 We also recommend reading the [blog post](https://medium.com/@unusualcode/h2o-lightwave-building-web-uis-with-fastapi-and-python-88a915383490) and other [integration examples](https://github.com/h2oai/wave/tree/main/py/h2o_lightwave/examples).
 
-## Installation
-
-```bash
-pip install "h2o-lightwave[web]"
-```
-
-Lightwave requires websockets to function properly. Not all libraries come with them out of the box so you might need to install them additionally. For example, Starlette & FastAPI requires
-
-```bash
-pip install websockets
-```
-
-to be able to expose websocket handlers. This might differ from framework to framework.
-
 ## Widgets
 
-All available widgets can be found [here](https://wave.h2o.ai/docs/widgets/overview). We are working on separate docs for Lightwave.
+See [all the available widgets](https://wave.h2o.ai/docs/widgets/overview) to use.
 
 ## Custom HTML page
 
@@ -132,10 +136,3 @@ Lightwave can also be used only for certain parts of your HTML pages, e.g. for c
 ### Configuration
 
 By default, Lightwave tries to connect to websocket route at `/_s/`. This can be configured by adding a `data-wave-socket-url` attribute on the HTML body element (`<body data-wave-socket-url='/my_socket_url/'>`).
-
-## Links
-
-* Website: [https://wave.h2o.ai/](https://wave.h2o.ai/)
-* Releases: [https://pypi.org/project/h2o-wave/](https://pypi.org/project/h2o-wave/)
-* Code: [https://github.com/h2oai/wave](https://github.com/h2oai/wave)
-* Issue tracker: [https://github.com/h2oai/wave/issues](https://github.com/h2oai/wave/issues)
