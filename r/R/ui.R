@@ -103,7 +103,6 @@ ui_text <- function(
 #' @param icon The icon to be displayed for this command.
 #' @param items Sub-commands, if any
 #' @param value Data associated with this command, if any.
-#' @param data DEPRECATED. Use `value` instead. Data associated with this command, if any.
 #' @return A Command instance.
 #' @export
 ui_command <- function(
@@ -112,23 +111,20 @@ ui_command <- function(
   caption = NULL,
   icon = NULL,
   items = NULL,
-  value = NULL,
-  data = NULL) {
+  value = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_vector("items", "WaveCommand", items)
   .guard_scalar("value", "character", value)
-  .guard_scalar("data", "character", data)
   .o <- list(
     name=name,
     label=label,
     caption=caption,
     icon=icon,
     items=items,
-    value=value,
-    data=data)
+    value=value)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveCommand"))
   return(.o)
 }

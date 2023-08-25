@@ -69,7 +69,7 @@ const
           window.location.hash = c.name.substring(1)
           return
         }
-        wave.args[c.name] = c.value ?? c.data ?? true
+        wave.args[c.name] = c.value ?? true
         wave.push()
       }
     return {

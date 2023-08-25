@@ -160,7 +160,6 @@ class Command:
             icon: Optional[str] = None,
             items: Optional[List['Command']] = None,
             value: Optional[str] = None,
-            data: Optional[str] = None,
     ):
         _guard_scalar('Command.name', name, (str,), True, False, False)
         _guard_scalar('Command.label', label, (str,), False, True, False)
@@ -168,7 +167,6 @@ class Command:
         _guard_scalar('Command.icon', icon, (str,), False, True, False)
         _guard_vector('Command.items', items, (Command,), False, True, False)
         _guard_scalar('Command.value', value, (str,), False, True, False)
-        _guard_scalar('Command.data', data, (str,), False, True, False)
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed."""
         self.label = label
@@ -181,8 +179,6 @@ class Command:
         """Sub-commands, if any"""
         self.value = value
         """Data associated with this command, if any."""
-        self.data = data
-        """DEPRECATED. Use `value` instead. Data associated with this command, if any."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -192,7 +188,6 @@ class Command:
         _guard_scalar('Command.icon', self.icon, (str,), False, True, False)
         _guard_vector('Command.items', self.items, (Command,), False, True, False)
         _guard_scalar('Command.value', self.value, (str,), False, True, False)
-        _guard_scalar('Command.data', self.data, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -200,7 +195,6 @@ class Command:
             icon=self.icon,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             value=self.value,
-            data=self.data,
         )
 
     @staticmethod
@@ -218,15 +212,12 @@ class Command:
         _guard_vector('Command.items', __d_items, (dict,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Command.value', __d_value, (str,), False, True, False)
-        __d_data: Any = __d.get('data')
-        _guard_scalar('Command.data', __d_data, (str,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
-        data: Optional[str] = __d_data
         return Command(
             name,
             label,
@@ -234,7 +225,6 @@ class Command:
             icon,
             items,
             value,
-            data,
         )
 
 

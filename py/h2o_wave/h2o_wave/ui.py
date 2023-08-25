@@ -58,7 +58,6 @@ def command(
         icon: Optional[str] = None,
         items: Optional[List[Command]] = None,
         value: Optional[str] = None,
-        data: Optional[str] = None,
 ) -> Command:
     """Create a command.
 
@@ -71,12 +70,9 @@ def command(
         icon: The icon to be displayed for this command.
         items: Sub-commands, if any
         value: Data associated with this command, if any.
-        data: DEPRECATED. Use `value` instead. Data associated with this command, if any.
     Returns:
         A `h2o_wave.types.Command` instance.
     """
-    if data is not None:
-        warnings.warn('The data argument is deprecated.')
     return Command(
         name,
         label,
@@ -84,7 +80,6 @@ def command(
         icon,
         items,
         value,
-        data,
     )
 
 

@@ -39,8 +39,6 @@ export interface Command {
   items?: Command[]
   /** Data associated with this command, if any. */
   value?: S
-  /** DEPRECATED. Use `value` instead. Data associated with this command, if any. */
-  data?: S
 }
 
 /** Create a card containing a toolbar. */
