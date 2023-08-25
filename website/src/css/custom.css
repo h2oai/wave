@@ -17,55 +17,68 @@
   --ifm-button-border-radius: 50px;
   --ifm-heading-font-weight: 800;
 }
+
 html[data-theme="dark"] {
   --ifm-color-primary: #ffe52b;
 }
+
 .hero--primary {
   --ifm-hero-background-color: #fff;
   --ifm-hero-text-color: #000;
 }
+
 .hero .button--outline {
   --ifm-button-background-color: var(--h2o-accent-color);
   --ifm-button-border-color: var(--h2o-accent-color);
   --ifm-font-color-base: #000;
   box-shadow: 0 4px 14px 0 rgba(255, 255, 0, 0.39);
 }
+
 .hero h1 {
   font-size: 5em;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.07em;
 }
+
 .hero p {
   font-weight: 800;
   letter-spacing: -0.03em;
 }
+
 .docusaurus-highlight-code-line {
   background-color: rgb(72, 77, 91);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
 }
+
 .markdown h1,
 h1 {
   letter-spacing: -0.05em;
 }
+
 h2 a {
   /* Blog post title */
   letter-spacing: -0.05em;
 }
+
 .markdown h2 {
   letter-spacing: -0.04em;
 }
+
 .markdown h3 {
   letter-spacing: -0.03em;
 }
+
 .markdown a {
   text-decoration: none;
 }
+
 .markdown a:link {
   border-bottom: 1px solid var(--ifm-color-primary);
 }
+
 .markdown a:hover {
   border-bottom: none;
 }
@@ -87,17 +100,20 @@ video {
   border: 1px solid #ccc;
   margin: 1rem 0;
 }
+
 .cover:hover {
   background-position: right bottom;
   border: 1px solid #999;
 }
+
 a.thumbnail:link {
   display: inline-block;
   padding: 1rem;
   font-size: 0.75rem;
   border: none;
 }
-a.thumbnail > div {
+
+a.thumbnail>div {
   width: 160px;
   height: 120px;
   background-size: cover;
@@ -107,7 +123,8 @@ a.thumbnail > div {
   border: 1px solid #ccc;
   margin: 0rem 0 0.3rem 0;
 }
-a.thumbnail > div:hover {
+
+a.thumbnail>div:hover {
   background-position: right bottom;
   border: 1px solid #999;
 }
@@ -115,20 +132,24 @@ a.thumbnail > div:hover {
 .api {
   margin-bottom: 4rem;
 }
+
 .api h3 {
   color: #fff;
   background: #555;
   padding: 5px 10px;
 }
+
 .api__body {
   margin: 0 0 0 1rem;
 }
+
 .api__signature {
   font-family: var(--ifm-font-family-monospace);
   font-size: var(--ifm-code-font-size);
   background-color: var(--ifm-code-background);
   padding: var(--ifm-code-padding-vertical) var(--ifm-code-padding-horizontal);
 }
+
 .api__description {
   margin: 1rem 0;
 }
@@ -147,15 +168,18 @@ a.thumbnail > div:hover {
   padding: 6px 60px;
   transition: opacity 0.5s;
 }
+
 .notice__close {
   cursor: pointer;
   margin: 0 40px;
   padding: 3px 9px;
   border: 1px solid #fff;
 }
+
 .notice p {
   display: inline;
 }
+
 .notice a {
   color: var(--h2o-accent-color);
 }
@@ -178,11 +202,9 @@ html[data-theme="dark"] .DocSearch {
   --docsearch-footer-background: var(--ifm-background-surface-color);
   --docsearch-footer-shadow: inset 0 1px 0 0 var(--ifm-color-emphasis-200), 0 -4px 8px 0 rgba(0, 0, 0, 0.2);
   /* Keys */
-  --docsearch-key-gradient: linear-gradient(
-    -26.5deg,
-    var(--ifm-color-emphasis-200) 0%,
-    var(--ifm-color-emphasis-100) 100%
-  );
+  --docsearch-key-gradient: linear-gradient(-26.5deg,
+      var(--ifm-color-emphasis-200) 0%,
+      var(--ifm-color-emphasis-100) 100%);
   --docsearch-key-shadow: inset 0 -2px 0 0 var(--ifm-color-emphasis-100),
     inset 0 0 1px 1px var(--ifm-color-emphasis-200), 0 2px 2px 0 rgba(3, 4, 9, 0.3);
 }
@@ -228,6 +250,7 @@ html[data-theme="dark"] .input {
   padding: 0;
   transition: background var(--ifm-transition-fast);
 }
+
 .navbar-icon:hover {
   background: var(--ifm-color-emphasis-200);
   color: inherit;
@@ -268,4 +291,9 @@ html[data-theme="dark"] .input {
   font-weight: bold;
   color: #000;
   z-index: 1;
+}
+
+/* Fix broken Prism syntax highlight for annotations. */
+span.token.decorator.annotation.punctuation {
+  color: #bbb529 !important;
 }

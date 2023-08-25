@@ -23,7 +23,6 @@ To define a layout for your page, attach a layout to your page's meta card using
 The following example defines a simple layout consisting of a header, a body and a footer. The body, in turn, is split horizontally into a content area and a sidebar.
 
 ```py
-
 q.page['meta'] = ui.meta_card(box='', layouts=[
     ui.layout(
         breakpoint='xl',
@@ -38,7 +37,6 @@ q.page['meta'] = ui.meta_card(box='', layouts=[
         ]
     )
 ])
-
 ```
 
 A layout, at a minimum, consists of a `breakpoint` and a set of `zones`.

@@ -18,6 +18,75 @@ module.exports = {
   themeConfig: {
     prism: {
       additionalLanguages: ['toml', 'r'],
+      theme: {
+        plain: { color: "#a9b7c6", backgroundColor: "#2b2b2b" },
+        styles: [
+          {
+            types: ["comment", "prolog", "cdata"],
+            style: { color: "#808080" },
+          },
+          {
+            types: ["delimiter", "boolean", "keyword", "selector", "important", "atrule"],
+            style: { color: "#cc7832" },
+          },
+          {
+            types: ["operator", "punctuation", "attr-name"],
+            style: { color: "#a9b7c6" },
+          },
+          {
+            types: ["tag", "tag .punctuation", "doctype", "builtin"],
+            style: { color: "#e8bf6a" },
+          },
+          {
+            types: ["entity", "number", "symbol"],
+            style: { color: "#6897bb" },
+          },
+          {
+            types: ["property", "constant", "variable"],
+            style: { color: "#9876aa" },
+          },
+          {
+            types: ["string", "char"],
+            style: { color: "#6a8759" },
+          },
+          {
+            types: ["attr-value", "attr-value .punctuation"],
+            style: { color: "#a5c261" },
+          },
+          {
+            types: ["attr-value .punctuation:first-child"],
+            style: { color: "#a9b7c6" },
+          },
+          {
+            types: ["url"],
+            style: { color: "#287bde", textDecoration: "underline" },
+          },
+          {
+            types: ["function"],
+            style: { color: "#ffc66d" },
+          },
+          {
+            types: ["regex"],
+            style: { backgroundColor: "#364135" },
+          },
+          {
+            types: ["bold"],
+            style: { fontWeight: "bold" },
+          },
+          {
+            types: ["italic"],
+            style: { fontStyle: "italic" },
+          },
+          {
+            types: ["inserted"],
+            style: { backgroundColor: "#294436" },
+          },
+          {
+            types: ["deleted"],
+            style: { backgroundColor: "#484a4a" },
+          },
+        ],
+      },
     },
     algolia: {
       appId: '1DCIS06TYN',
