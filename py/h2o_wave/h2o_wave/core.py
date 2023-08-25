@@ -591,13 +591,6 @@ class Page(PageBase):
         """
         return self.site.load(self.url)
 
-    def sync(self):
-        """
-        DEPRECATED: Use `h2o_wave.core.Page.save` instead.
-        """
-        warnings.warn('page.sync() is deprecated. Please use page.save() instead.', DeprecationWarning)
-        self.save()
-
     def save(self):
         """
         Save the page. Sends all local changes made to this page to the remote site.
