@@ -1,9 +1,9 @@
 altair==4.2.0
-bokeh==2.4.2
+bokeh==3.1.1
 Faker==13.3.4
 loguru==0.6.0
 matplotlib==3.5.1
-numpy==1.22.2
+numpy==1.24.4
 opencv-python==4.5.5.64
 pandas==1.3.5
 plotly==5.7.0
