@@ -64,7 +64,7 @@ type ClipboardCopyButton = {
   value: S,
   /** The element to which the copy button is attached. */
   anchorElement: HTMLElement | undefined,
-  /** Show copy button only on hover. */
+  /** Show copy button only on hover over anchor element. */
   showOnHoverOnly?: B,
   /** Use portal if ClipboardCopyButton is not direct child of the anchor element. */
   portal?: B
@@ -75,12 +75,11 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
     [visible, setVisible] = React.useState(!showOnHoverOnly),
-    btnContainerRef = React.useRef<HTMLDivElement>(document.createElement('div')),
     onClick = React.useCallback(async () => {
       if (!anchorElement) return
       try {
         if (document.queryCommandSupported('copy')) {
-          anchorElement.select()
+          (anchorElement as any)?.select()
           document.execCommand('copy')
           window.getSelection()?.removeAllRanges()
         }
@@ -92,7 +91,6 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
       timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
     }, [anchorElement, value]),
     CopyButton = React.useMemo(() => <Fluent.PrimaryButton
-      id='copybutton'
       title='Copy to clipboard'
       onClick={onClick}
       iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
@@ -100,20 +98,18 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
     />, [copied, onClick, showOnHoverOnly, visible])
 
   React.useEffect(() => {
-    if (!anchorElement) return
-    if (portal) ReactDOM.render(ReactDOM.createPortal(CopyButton, anchorElement), btnContainerRef.current)
-    if (showOnHoverOnly) {
+    if (anchorElement && showOnHoverOnly) {
       anchorElement.addEventListener('mouseenter', () => setVisible(true))
       anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
         if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
         setVisible(false)
       })
     }
-  }, [CopyButton, anchorElement, portal, showOnHoverOnly])
+  }, [anchorElement, showOnHoverOnly])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
-  return portal ? null : CopyButton
+  return portal && anchorElement ? ReactDOM.createPortal(CopyButton, anchorElement) : CopyButton
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
@@ -130,7 +126,7 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
     <>
       <Fluent.TextField
         data-test={name}
-        // Temporary solution which will be replaced with ref once TextField is converted to a function component.
+        // Temporary solution which will be replaced with 'ref' once Fluent.TextField is converted to a function component.
         elementRef={domRef}
         value={value}
         multiline={multiline}
