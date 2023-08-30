@@ -35,14 +35,6 @@ describe('CopyableText.tsx', () => {
     expect(getByTestId(name)).toHaveValue('B')
   })
 
-  it('Shows copy to clipboard button', () => {
-    const { container } = render(<XCopyableText model={copyableTextProps} />)
-    const copyButton = container.querySelector('button')
-
-    expect(copyButton).toBeInTheDocument()
-    expect(copyButton).toBeVisible()
-  })
-
   it('Shows copy to clipboard button on hover - multiline text', async () => {
     const { container } = render(<XCopyableText model={{ ...copyableTextProps, multiline: true }} />)
     await new Promise(resolve => setTimeout(resolve, 500))

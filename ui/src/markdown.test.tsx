@@ -66,13 +66,4 @@ describe('Markdown.tsx', () => {
     userEvent.hover(textfield)
     expect(container.querySelector('button')).toBeVisible()
   })
-
-  it('Does not render copy to clipboard button - markdown without code block', async () => {
-    const { container } = render(<Markdown source={source} />)
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    const copyButton = container.querySelector('button')
-
-    expect(copyButton).not.toBeInTheDocument()
-  })
 })

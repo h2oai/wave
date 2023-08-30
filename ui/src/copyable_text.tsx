@@ -26,6 +26,9 @@ const
       right: CORNER_OFFSET,
       width: BUTTON_WIDTH,
       height: BUTTON_HEIGHT,
+      outlineWidth: 1,
+      outlineStyle: 'solid',
+      outlineColor: cssVar('$white')
     },
     copiedBtn: {
       background: cssVar('$green'),
