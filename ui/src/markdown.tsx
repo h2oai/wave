@@ -92,7 +92,7 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
     ? hljs.highlight(str, { language, ignoreIllegals: true }).value
     : hljs.highlightAuto(str).value
 
-  codeBlock.innerHTML = highlightedCode
+  codeBlock.innerHTML += highlightedCode
   return highlightedCode
 }
 
@@ -103,14 +103,19 @@ export const Markdown = ({ source }: { source: S }) => {
     markdown = React.useMemo(() => MarkdownIt({
       html: true, linkify: true, typographer: true, highlight: (str, lang) => {
         const codeBlockId = codeBlockIdx.current.toString()
+        const buttonContainerId = `cpb-${codeBlockId}`
         if (prevHighlights.current.length === codeBlockIdx.current) prevHighlights.current.push('')
 
         // HACK: MarkdownIt does not support async rules.
         // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
-        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId), 0)
+        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId).finally(() => {
+          // Add copy button once code block is higlighted.
+          const codeBlock = document.getElementById(codeBlockId)
+          if (codeBlock) ReactDOM.render(<ClipboardCopyButton value={str} anchorElement={codeBlock} showOnHoverOnly />, document.getElementById(buttonContainerId))
+        }), 0)
 
         // TODO: Sanitize the HTML.
-        const ret = `<code id='${codeBlockId}' class="hljs">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+        const ret = `<code id='${codeBlockId}' class="hljs" style="position:relative;"><span id="${buttonContainerId}"/>${prevHighlights.current[codeBlockIdx.current] || str}</code>`
         codeBlockIdx.current++
         return ret
       }
