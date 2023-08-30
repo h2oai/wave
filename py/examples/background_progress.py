@@ -26,7 +26,7 @@ def blocking_function(q: Q, loop: asyncio.AbstractEventLoop):
         # If future is not done yet, skip the update to keep the correct order.
         if not future or future.done():
             # Assume you are able to emit some kind of progress.
-            future = asyncio.ensure_future(update_ui(q, count / total), loop=loop)
+            future = asyncio.ensure_future(update_ui(q, int(count / total)), loop=loop)
 
 
 async def show_cancel(q: Q):
