@@ -4,9 +4,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
-const
-  BUTTON_HEIGHT = 24,
-  BUTTON_WIDTH = 34
 
 const
   css = stylesheet({
@@ -20,8 +17,8 @@ const
     btn: {
       position: 'absolute',
       minWidth: 'initial',
-      width: BUTTON_WIDTH,
-      height: BUTTON_HEIGHT,
+      width: 34,
+      height: 24,
       right: 0,
       transform: 'translate(-4px, 4px)',
       outlineWidth: 1,
