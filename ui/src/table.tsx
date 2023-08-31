@@ -565,7 +565,8 @@ const
             onToggleCollapseAll,
             onRenderHeader: onRenderGroupHeader,
             headerProps: { onToggleCollapse },
-            isAllGroupsCollapsed: m.groups?.every(({ collapsed = true }) => collapsed)
+            isAllGroupsCollapsed: m.groups?.every(({ collapsed = true }) => collapsed),
+            showEmptyGroups: true
           }}
           getGroupHeight={getGroupHeight}
           selection={selection}
@@ -733,11 +734,12 @@ export const
           groupedBy: Dict<any> = []
 
         if (m.groups) {
-          groups = filteredItems.reduce((acc, { group }, idx) => {
-            const prevGroup = acc[acc.length - 1]
-            prevGroup?.key === group
-              ? prevGroup.count++
-              : acc.push({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group, expandedRefs.current) })
+          groups = m.groups.reduce((acc, { label }) => {
+            const
+              prevGroup = acc[acc.length - 1],
+              startIndex = prevGroup ? prevGroup.startIndex + prevGroup.count : 0,
+              count = filteredItems.filter(({ group }) => group === label).length
+            acc.push({ key: label, name: label, startIndex, count, isCollapsed: getIsCollapsed(label, expandedRefs.current) })
             return acc
           }, [] as Fluent.IGroup[])
         } else {
