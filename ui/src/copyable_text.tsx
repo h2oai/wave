@@ -3,12 +3,10 @@ import { B, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
-import ReactDOM from 'react-dom'
 
 const
   BUTTON_HEIGHT = 24,
-  BUTTON_WIDTH = 34,
-  CORNER_OFFSET = 3
+  BUTTON_WIDTH = 34
 
 const
   css = stylesheet({
@@ -20,15 +18,16 @@ const
       opacity: 1,
     },
     btn: {
-      minWidth: 'initial',
       position: 'absolute',
-      top: CORNER_OFFSET,
-      right: CORNER_OFFSET,
+      minWidth: 'initial',
       width: BUTTON_WIDTH,
       height: BUTTON_HEIGHT,
+      right: 0,
+      transform: 'translate(-4px, 4px)',
       outlineWidth: 1,
       outlineStyle: 'solid',
-      outlineColor: cssVar('$white')
+      outlineColor: cssVar('$white'),
+      zIndex: 1,
     },
     copiedBtn: {
       background: cssVar('$green'),
@@ -38,6 +37,9 @@ const
         }
       }
     },
+    labelContainer: {
+      position: 'relative'
+    }
   }),
   fullHeightStyle = {
     display: 'flex',
@@ -68,12 +70,10 @@ type ClipboardCopyButton = {
   /** The element to which the copy button is attached. */
   anchorElement: HTMLElement | undefined,
   /** Show copy button only on hover over anchor element. */
-  showOnHoverOnly?: B,
-  /** Use portal if ClipboardCopyButton is not direct child of the anchor element. */
-  portal?: B
+  showOnHoverOnly?: B
 }
 
-export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false, portal = false }: ClipboardCopyButton) => {
+export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false }: ClipboardCopyButton) => {
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -92,13 +92,7 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
 
       setCopied(true)
       timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
-    }, [anchorElement, value]),
-    CopyButton = React.useMemo(() => <Fluent.PrimaryButton
-      title='Copy to clipboard'
-      onClick={onClick}
-      iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-      className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
-    />, [copied, onClick, showOnHoverOnly, visible])
+    }, [anchorElement, value])
 
   React.useEffect(() => {
     if (anchorElement && showOnHoverOnly) {
@@ -112,7 +106,13 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
-  return portal && anchorElement ? ReactDOM.createPortal(CopyButton, anchorElement) : CopyButton
+  return <Fluent.PrimaryButton
+    id='copybutton'
+    title='Copy to clipboard'
+    onClick={onClick}
+    iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
+    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
+  />
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
@@ -126,26 +126,28 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
     }, [label])
 
   return (
-    <>
-      <Fluent.TextField
-        data-test={name}
-        // Temporary solution which will be replaced with 'ref' once Fluent.TextField is converted to a function component.
-        elementRef={domRef}
-        value={value}
-        multiline={multiline}
-        label={label}
-        styles={{
-          root: {
-            ...heightStyle,
-            textFieldRoot: { position: 'relative', width: pc(100) },
-          },
-          wrapper: heightStyle,
-          fieldGroup: heightStyle || { minHeight: height },
-          field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
-        }}
-        readOnly
-      />
-      <ClipboardCopyButton value={value} anchorElement={inputEl} showOnHoverOnly={!!multiline} portal />
-    </>
+    <Fluent.TextField
+      data-test={name}
+      // Temporary solution which will be replaced with 'ref' once Fluent.TextField is converted to a function component.
+      elementRef={domRef}
+      value={value}
+      multiline={multiline}
+      onRenderLabel={() =>
+        <div className={css.labelContainer}>
+          <Fluent.Label>{label}</Fluent.Label>
+          <ClipboardCopyButton value={value} anchorElement={inputEl} showOnHoverOnly={!!multiline} />
+        </div>
+      }
+      styles={{
+        root: {
+          ...heightStyle,
+          textFieldRoot: { position: 'relative', width: pc(100) },
+        },
+        wrapper: heightStyle,
+        fieldGroup: heightStyle || { minHeight: height },
+        field: { ...heightStyle, height, resize: multiline ? 'vertical' : 'none', },
+      }}
+      readOnly
+    />
   )
 }
