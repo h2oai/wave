@@ -121,9 +121,9 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
     heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
     [inputEl, setInputEl] = React.useState(),
     domRef = React.useCallback(node => {
-      const inputEl = node?.children[0]?.children[label ? 1 : 0]
+      const inputEl = node?.children[0]?.children[1]
       if (inputEl) setInputEl(inputEl)
-    }, [label])
+    }, [])
 
   return (
     <Fluent.TextField
