@@ -194,6 +194,7 @@ interface OpsD {
     u: S // active user's username
     e: B // can the user edit pages?
   }
+  c?: U // clear UI state
 }
 interface OpD {
   k?: S
@@ -327,6 +328,8 @@ export enum WaveEventType {
   Page,
   /** Daemon sent some data. */
   Data,
+  /** Daemon asked to clear any dirty state. */
+  Clear,
 }
 
 /** */
@@ -348,10 +351,13 @@ export type WaveEvent = {
   t: WaveEventType.Disconnect, retry: U
 } | {
   t: WaveEventType.Data
+} | {
+  t: WaveEventType.Clear
 }
 const
   connectEvent: WaveEvent = { t: WaveEventType.Connect },
   resetEvent: WaveEvent = { t: WaveEventType.Reset },
+  clearEvent: WaveEvent = { t: WaveEventType.Clear },
   dataEvent: WaveEvent = { t: WaveEventType.Data }
 
 type WaveEventHandler = (e: WaveEvent) => void
@@ -976,6 +982,8 @@ export const
                 handle({ t: WaveEventType.Page, page })
               } else if (msg.e) {
                 handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
+              } else if (msg.c) {
+                handle(clearEvent)
               } else if (msg.r) {
                 handle(resetEvent)
               } else if (msg.u) {
