@@ -33,13 +33,10 @@ module.exports = {
           if (!callee) return
 
           if (
-            callee.object &&
-            callee.object.name === 'cards' &&
-            callee.property &&
-            callee.property.name === 'register' &&
+            callee.object?.name === 'cards' &&
+            callee.property?.name === 'register' &&
             expression.arguments.length === 2 &&
-            expression.arguments[1] &&
-            expression.arguments[1].name !== 'View'
+            expression.arguments[1]?.name !== 'View'
           ) context.report(expression, `
           Component name should be "View" for card components.
           Replace ${expression.arguments[1].name} with View.

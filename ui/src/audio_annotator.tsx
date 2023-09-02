@@ -149,7 +149,9 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
       window.requestAnimationFrame(() => {
         setCurrentTime(audioEl.currentTime)
         setIsPlaying(isPlaying => {
-          if (isPlaying) updateTrack(audioEl)
+          if (isPlaying) {
+            updateTrack(audioEl)
+          }
           return isPlaying
         })
       })
@@ -157,11 +159,15 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
     onPlayerStateChange = () => {
       const audioContext = audioContextRef.current
       const audioEl = audioRef.current
-      if (!audioContext || !audioEl) return
+      if (!audioContext || !audioEl) {
+        return
+      }
       if (audioContext.state === 'suspended') audioContext.resume()
 
       setIsPlaying(isPlaying => !isPlaying)
-      if (isPlaying) audioEl.pause()
+      if (isPlaying) {
+        audioEl.pause()
+      }
       else {
         audioEl.play()
         updateTrack(audioEl)

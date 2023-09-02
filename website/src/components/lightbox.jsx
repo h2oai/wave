@@ -32,12 +32,20 @@ export const Lightbox = ({ images, defaultImageIdx, onDismiss }) => {
     handleShowPrevImage = () => setActiveImageIdx(prevIdx => prevIdx === 0 ? images.length - 1 : prevIdx - 1),
     handleShowNextImage = () => setActiveImageIdx(prevIdx => prevIdx === images.length - 1 ? 0 : prevIdx + 1),
     handleKeyDown = (ev) => {
-      if (ev.key === 'Escape') onDismiss()
-      else if (ev.key === 'ArrowRight') handleShowNextImage()
-      else if (ev.key === 'ArrowLeft') handleShowPrevImage()
+      if (ev.key === 'Escape') {
+        onDismiss()
+      }
+      else if (ev.key === 'ArrowRight') {
+        handleShowNextImage()
+      }
+      else if (ev.key === 'ArrowLeft') {
+        handleShowPrevImage()
+      }
     },
     handleCloseOnFreeSpaceClick = (ev) => {
-      if (ev.target === ev.currentTarget) onDismiss()
+      if (ev.target === ev.currentTarget) {
+        onDismiss()
+      }
     }
 
   React.useEffect(() => {
@@ -61,11 +69,19 @@ export const Lightbox = ({ images, defaultImageIdx, onDismiss }) => {
         scrollLeftActiveImage = activeImageIdx * NAV_IMAGE_SIZE,
         scrollBehavior = defaultScrollSetRef.current ? 'smooth' : 'auto'
       if (activeImageIdx === 0) navRef.scrollLeft = 0
-      else if (activeImageIdx === images.length - 1) navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
-      else if (scrollLeftActiveImage > scrollLeftMiddle) navRef.scrollTo({ left: scrollLeftActiveImage - scrollLeftMiddle, behavior: scrollBehavior })
-      else navRef.scrollTo({ left: 0, behavior: scrollBehavior })
+      else if (activeImageIdx === images.length - 1) {
+        navRef.scrollLeft = navRef.scrollWidth - navRef?.clientWidth
+      }
+      else if (scrollLeftActiveImage > scrollLeftMiddle) {
+        navRef.scrollTo({ left: scrollLeftActiveImage - scrollLeftMiddle, behavior: scrollBehavior })
+      }
+      else {
+        navRef.scrollTo({ left: 0, behavior: scrollBehavior })
+      }
 
-      if (!defaultScrollSetRef.current) defaultScrollSetRef.current = true
+      if (!defaultScrollSetRef.current) {
+        defaultScrollSetRef.current = true
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeImageIdx])

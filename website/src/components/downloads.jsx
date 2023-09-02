@@ -3,7 +3,7 @@ import React from 'react'
 export const Downloads = () => {
   const [items, setItems] = React.useState([])
   const isDestroyed = React.useRef(false)
-  const mapToLink = ({ Key }) => <div key={Key}><a href={'https://h2o-wave.s3.amazonaws.com/' + Key}>{Key.replace('releases/', '')}</a></div>
+  const mapToLink = ({ Key }) => <div key={Key}><a href={`https://h2o-wave.s3.amazonaws.com/${Key}`}>{Key.replace('releases/', '')}</a></div>
   React.useEffect(() => {
     new AWS
       .S3({ region: 'us-east-1', params: { Bucket: 'h2o-wave' } })
@@ -11,7 +11,7 @@ export const Downloads = () => {
         if (err) throw new Error(err)
         const files = data.Contents.filter(({ Key }) => Key !== 'releases/' && !Key.endsWith('index.html'))
         if (!isDestroyed.current) {
-          setItems([
+          setItems([  
             files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('wave-')).reverse(),
             files.filter(({ Key }) => Key.endsWith('.whl') && Key.includes('wave-')).reverse(),
             files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('_R')).reverse(),

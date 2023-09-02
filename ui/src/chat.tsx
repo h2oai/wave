@@ -101,12 +101,16 @@ const
         [],
       ),
       onKeyUp = ({ key, target }: React.KeyboardEvent<HTMLTextBox>, v?: S) => {
-        if (key == 'Enter') {
+        if (key === 'Enter') {
           let input = v ?? (target as HTMLTextBox).value
-          if (!input) return
+          if (!input) {
+            return
+          }
           input = input.trim()
           setValue('') // clear input field
-          if (input.length) inputB(input)
+          if (input.length) {
+            inputB(input)
+          }
         }
       }
     return (
@@ -119,9 +123,12 @@ const
     )
   },
   unpack = (d: any): Dict<ChatMessage> => {
-    if (!d) return {}
+    if (!d) {
+      return {}
+    }
     const shapes: Dict<ChatMessage> = {}
     for (const k in d) shapes[k] = JSON.parse(d[k])
+    
     return shapes
   }
 

@@ -48,12 +48,12 @@ const
     haystack = haystack.toLowerCase()
     needle = needle.toLowerCase()
     const
-      hlen = haystack.length,
-      nlen = needle.length
+      hLen = haystack.length,
+      nLen = needle.length
 
-    outer: for (let i = 0, j = 0; i < nlen; i++) {
+    outer: for (let i = 0, j = 0; i < nLen; i++) {
       const nch = needle.charCodeAt(i)
-      while (j < hlen) {
+      while (j < hLen) {
         if (haystack.charCodeAt(j++) === nch) {
           continue outer
         }
