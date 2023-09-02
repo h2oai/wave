@@ -11,7 +11,7 @@ export const Downloads = () => {
         if (err) throw new Error(err)
         const files = data.Contents.filter(({ Key }) => Key !== 'releases/' && !Key.endsWith('index.html'))
         if (!isDestroyed.current) {
-          setItems([  
+          setItems([
             files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('wave-')).reverse(),
             files.filter(({ Key }) => Key.endsWith('.whl') && Key.includes('wave-')).reverse(),
             files.filter(({ Key }) => Key.endsWith('.gz') && Key.includes('_R')).reverse(),
