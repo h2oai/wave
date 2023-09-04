@@ -141,6 +141,9 @@ export const
         case WaveEventType.Data:
           busyB(false)
           break
+        case WaveEventType.Clear:
+          clearRec(args)
+          break
       }
     })
   },
@@ -149,7 +152,7 @@ export const
 
     // Unconditionally set location hash so that the app doesn't have to track changes.
     const h = window.location.hash
-    if (h?.length > 1) args['#'] = h.substr(1)
+    if (h?.length > 1) args['#'] = h.substring(1)
 
     const d: Dict<any> = { ...args } // shallow clone
     clearRec(args) // clear

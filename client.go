@@ -39,9 +39,11 @@ const (
 )
 
 var (
-	newline     = []byte{'\n'}
-	notFoundMsg = []byte(`{"e":"not_found"}`)
-	upgrader    = websocket.Upgrader{
+	newline       = []byte{'\n'}
+	notFoundMsg   = []byte(`{"e":"not_found"}`)
+	disconnectMsg = []byte(`{"data": {"":{"@system":{"client_disconnect":true}}}}`)
+	clearStateMsg = []byte(`{"c":1}`)
+	upgrader      = websocket.Upgrader{
 		ReadBufferSize:  1024, // TODO review
 		WriteBufferSize: 1024, // TODO review
 	}
@@ -94,7 +96,7 @@ func (c *Client) listen() {
 	defer func() {
 		app := c.broker.getApp(c.appPath)
 		if app != nil {
-			app.forward(c.id, c.session, []byte(`{"data": {"":{"@system":{"client_disconnect":true}}}}`))
+			app.forward(c.id, c.session, disconnectMsg)
 			if err := app.disconnect(c.id); err != nil {
 				echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
 			}
@@ -148,6 +150,14 @@ func (c *Client) listen() {
 			}
 
 			app.forward(c.id, c.session, []byte("{\"data\":"+string(m.data)+"}"))
+
+			// Remove any dirty UI state if broadcast or multicast.
+			if app.mode == multicastMode {
+				c.broker.sendAll(c.broker.clients["/"+c.session.subject], clearStateMsg)
+			}
+			if app.mode == broadcastMode {
+				c.broker.sendAll(c.broker.clients[app.route], clearStateMsg)
+			}
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
