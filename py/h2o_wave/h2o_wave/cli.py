@@ -75,6 +75,22 @@ def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
     tar.extractall(path, members, numeric_owner=numeric_owner)
 
 
+def _print_launch_bar(local: str, remote: str):
+    logo = ''' _       _____ _    ________   _____ __  _____    ____  ______
+| |     / /   | |  / / ____/  / ___// / / /   |  / __ \/ ____/
+| | /| / / /| | | / / __/     \__ \/ /_/ / /| | / /_/ / __/
+| |/ |/ / ___ | |/ / /___    ___/ / __  / ___ |/ _, _/ /___
+|__/|__/_/  |_|___/_____/   /____/_/ /_/_/  |_/_/ |_/_____/
+    '''
+    message = f'Sharing {local} ==> {remote}'
+    bar = "─" * (len(message) + 4)
+    print(logo)
+    print('┌' + bar + '┐')
+    print('│  ' + message + '  │')
+    print('└' + bar + '┘\n')
+    print('\x1b[7;30;43mDO NOT SHARE IF YOUR APP CONTAINS SENSITIVE INFO\x1b[0m')
+
+
 @click.group()
 def main():
     pass
@@ -295,9 +311,10 @@ def learn():
 
 @main.command()
 @click.option('--port', default=10101, help='Port your app is running on (defaults to 10101).')
-@click.option('--subdomain', default='?new', help='Subdomain to use. If not available, a random one is generated.')
+@click.option('--subdomain', default='my-app', help='Subdomain to use. If not available, a random one is generated.')
 @click.option('--remote-host', default='h2oai.app', help='Remote host to use (defaults to h2oai.app).')
-def share(port: int, subdomain: str, remote_host: str):
+@click.option('--remote-port', default=443, help='Remote port to use (defaults to 443).')
+def share(port: int, subdomain: str, remote_host: str, remote_port: int):
     """Share your locally running app with the world.
 
     \b
@@ -320,29 +337,36 @@ def share(port: int, subdomain: str, remote_host: str):
         loop.create_task(wakeup())
 
     try:
-        loop.run_until_complete(_share(port, subdomain, remote_host))
+        loop.run_until_complete(_share(port, subdomain, remote_host, remote_port))
     except KeyboardInterrupt:
         tasks = asyncio.all_tasks(loop)
         for task in tasks:
             task.cancel()
         loop.run_until_complete(asyncio.gather(*tasks, return_exceptions=True))
         loop.close()
+        print('Sharing stopped.')
 
 
-async def _share(port: int, subdomain: str, remote_host: str):
+async def _share(port: int, subdomain: str, remote_host: str, remote_port: int):
     if _scan_free_port(port) == port:
-        print(f'Could not connect to localhost:{port}. Please make sure your app is running.')
+        print(f'Could not connect to {remote_host}:{port}. Please make sure your app is running.')
         exit(1)
 
-    res = httpx.get(f'https://{remote_host}/{subdomain}', headers={'Content-Type': 'application/json'})
+    protocol = 'https' if remote_port == 443 else 'http'
+    remote = f'{protocol}://{remote_host}:{remote_port}'
+    res = httpx.get(f'{remote}/register/{subdomain}')
     if res.status_code != 200:
         print('Could not connect to the remote sharing server.')
         exit(1)
 
     res = res.json()
-    print(f'BETA: Proxying localhost:{port} ==> {res["url"]}')
-    print('\x1b[7;30;43mDO NOT SHARE YOUR APP IF IT CONTAINS SENSITIVE INFO\x1b[0m.')
-    print('Press Ctrl+C to stop sharing.')
+    share_id = res['id']
+
+    remote = f'{protocol}://{share_id}.{remote_host}'
+    if remote_port != 80 and remote_port != 443:
+        remote += f':{remote_port}'
+
+    _print_launch_bar(f'http://localhost:{port}', remote)
 
     max_conn_count = res['max_conn_count']
     # The server can be configured to either support 10 concurrent connections (default) or more.
@@ -352,10 +376,11 @@ async def _share(port: int, subdomain: str, remote_host: str):
     tasks = []
     for _ in range(max_conn_count // step):
         for _ in range(step):
-            tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, res['port'])))
+            tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, remote_port, share_id)))
         await asyncio.sleep(1)
     # Handle the rest if any.
     for _ in range(max_conn_count % step):
-        tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, res['port'])))
+        tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, remote_port, share_id)))
 
     await asyncio.gather(*tasks)
+    print('Could not establish connection with the server.')
