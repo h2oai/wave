@@ -36,7 +36,6 @@ module.exports = {
   ],
   "rules": {
     "wave/box-variable-suffix": "error",
-    "wave/data-test-on-component": "error",
     "wave/card-variable-name": "error",
     "react/display-name": "off",
     "no-console": [
