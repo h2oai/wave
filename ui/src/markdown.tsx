@@ -69,6 +69,14 @@ const
         },
       },
     },
+    copyButton: {
+      position: 'relative',
+      $nest: {
+        '&:hover button': {
+          opacity: 1
+        }
+      }
+    }
   })
 const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   const codeBlock = document.getElementById(codeBlockId)
@@ -93,6 +101,16 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
     : hljs.highlightAuto(str).value
 
   codeBlock.innerHTML = highlightedCode
+
+  // Add copy button.
+  const codeBlockContainer = codeBlock.parentElement
+  if (codeBlockContainer) {
+    const buttonContainer = document.createElement('span')
+    ReactDOM.render(<ClipboardCopyButton value={str} defaultVisible={false} />, buttonContainer)
+    codeBlockContainer.classList.add(css.copyButton)
+    codeBlockContainer.insertAdjacentElement('afterbegin', buttonContainer)
+  }
+
   return highlightedCode
 }
 
@@ -107,18 +125,7 @@ export const Markdown = ({ source }: { source: S }) => {
 
         // HACK: MarkdownIt does not support async rules.
         // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
-        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId).finally(() => {
-          // Add copy button once code block is higlighted.
-          const codeBlockContainer = document.getElementById(codeBlockId)?.parentElement
-          if (codeBlockContainer) {
-            const buttonContainer = document.createElement('span')
-            ReactDOM.render(<ClipboardCopyButton value={str} anchorElement={codeBlockContainer} showOnHoverOnly />, buttonContainer,
-              () => {
-                codeBlockContainer.style.position = 'relative'
-                codeBlockContainer.insertAdjacentElement('afterbegin', buttonContainer)
-              })
-          }
-        }), 0)
+        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId), 0)
 
         // TODO: Sanitize the HTML.
         const ret = `<code id='${codeBlockId}' class="hljs">${prevHighlights.current[codeBlockIdx.current] || str}</code>`

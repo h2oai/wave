@@ -11,9 +11,6 @@ const
       opacity: 0,
       transition: 'opacity .5s'
     },
-    visible: {
-      opacity: 1,
-    },
     btn: {
       position: 'absolute',
       minWidth: 'initial',
@@ -61,27 +58,19 @@ export interface CopyableText {
   height?: S
 }
 
-type ClipboardCopyButton = {
-  /** Text to be copied to clipboard. */
-  value: S,
-  /** The element to which the copy button is attached. */
-  anchorElement: HTMLElement | undefined,
-  /** Show copy button only on hover over anchor element. */
-  showOnHoverOnly?: B
-}
-
-export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = false }: ClipboardCopyButton) => {
+export const ClipboardCopyButton = ({ value, defaultVisible = true }: { value: S, defaultVisible?: B }) => {
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
-    [visible, setVisible] = React.useState(!showOnHoverOnly),
     onClick = React.useCallback(async () => {
-      if (!anchorElement) return
       try {
         if (document.queryCommandSupported('copy')) {
-          (anchorElement as any)?.select()
+          const el = document.createElement('textarea')
+          el.value = value
+          document.body.appendChild(el)
+          el.select()
           document.execCommand('copy')
-          window.getSelection()?.removeAllRanges()
+          document.body.removeChild(el)
         }
       } catch (error) {
         await window.navigator.clipboard.writeText(value)
@@ -89,56 +78,39 @@ export const ClipboardCopyButton = ({ value, anchorElement, showOnHoverOnly = fa
 
       setCopied(true)
       timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
-    }, [anchorElement, value])
-
-  React.useEffect(() => {
-    if (anchorElement && showOnHoverOnly) {
-      anchorElement.addEventListener('mouseenter', () => setVisible(true))
-      anchorElement.addEventListener('mouseleave', (ev: MouseEvent) => {
-        if ((ev.relatedTarget as HTMLElement)?.id === 'copybutton') return
-        setVisible(false)
-      })
-    }
-  }, [anchorElement, showOnHoverOnly])
+    }, [value])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return <Fluent.PrimaryButton
-    id='copybutton'
     title='Copy to clipboard'
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    className={clas(css.btn, copied ? css.copiedBtn : '', showOnHoverOnly ? css.animate : '', visible ? css.visible : '')}
+    className={clas(css.btn, copied ? css.copiedBtn : '', defaultVisible ? '' : css.animate)}
   />
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
   const
     { name, multiline, label, value, height } = model,
-    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
-    [inputEl, setInputEl] = React.useState(),
-    domRef = React.useCallback(node => {
-      const inputEl = node?.children[0]?.children[1]
-      if (inputEl) setInputEl(inputEl)
-    }, [])
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined
 
   return (
     <Fluent.TextField
       data-test={name}
-      // Temporary solution which will be replaced with 'ref' once Fluent.TextField is converted to a function component.
-      elementRef={domRef}
       value={value}
       multiline={multiline}
       onRenderLabel={() =>
         <div className={css.labelContainer}>
           <Fluent.Label>{label}</Fluent.Label>
-          <ClipboardCopyButton value={value} anchorElement={inputEl} showOnHoverOnly={!!multiline} />
+          <ClipboardCopyButton value={value} defaultVisible={!multiline} />
         </div>
       }
       styles={{
         root: {
           ...heightStyle,
           textFieldRoot: { position: 'relative', width: pc(100) },
+          textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined
         },
         wrapper: heightStyle,
         fieldGroup: heightStyle || { minHeight: height },
