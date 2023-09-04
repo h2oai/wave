@@ -349,7 +349,7 @@ def share(port: int, subdomain: str, remote_host: str, remote_port: int):
 
 async def _share(port: int, subdomain: str, remote_host: str, remote_port: int):
     if _scan_free_port(port) == port:
-        print(f'Could not connect to {remote_host}:{port}. Please make sure your app is running.')
+        print(f'Could not connect to localhost:{port}. Please make sure your app is running.')
         exit(1)
 
     protocol = 'https' if remote_port == 443 else 'http'
