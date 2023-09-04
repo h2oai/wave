@@ -353,8 +353,7 @@ async def _share(port: int, subdomain: str, remote_host: str, remote_port: int):
         exit(1)
 
     protocol = 'https' if remote_port == 443 else 'http'
-    remote = f'{protocol}://{remote_host}:{remote_port}'
-    res = httpx.get(f'{remote}/register/{subdomain}')
+    res = httpx.get(f'{protocol}://{remote_host}:{remote_port}/register/{subdomain}')
     if res.status_code != 200:
         print('Could not connect to the remote sharing server.')
         exit(1)
