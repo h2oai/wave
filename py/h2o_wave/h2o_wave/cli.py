@@ -25,6 +25,7 @@ from contextlib import closing
 from pathlib import Path
 from urllib import request
 from urllib.parse import urlparse
+import webbrowser
 
 import click
 import httpx
@@ -314,7 +315,8 @@ def learn():
 @click.option('--subdomain', default='my-app', help='Subdomain to use. If not available, a random one is generated.')
 @click.option('--remote-host', default='h2oai.app', help='Remote host to use (defaults to h2oai.app).')
 @click.option('--remote-port', default=443, help='Remote port to use (defaults to 443).')
-def share(port: int, subdomain: str, remote_host: str, remote_port: int):
+@click.option('--open', is_flag=True, default=False, help='Open the shared app in your browser automatically.')
+def share(port: int, subdomain: str, remote_host: str, remote_port: int, open: bool):
     """Share your locally running app with the world.
 
     \b
@@ -337,7 +339,7 @@ def share(port: int, subdomain: str, remote_host: str, remote_port: int):
         loop.create_task(wakeup())
 
     try:
-        loop.run_until_complete(_share(port, subdomain, remote_host, remote_port))
+        loop.run_until_complete(_share(port, subdomain, remote_host, remote_port, open))
     except KeyboardInterrupt:
         tasks = asyncio.all_tasks(loop)
         for task in tasks:
@@ -347,7 +349,7 @@ def share(port: int, subdomain: str, remote_host: str, remote_port: int):
         print('Sharing stopped.')
 
 
-async def _share(port: int, subdomain: str, remote_host: str, remote_port: int):
+async def _share(port: int, subdomain: str, remote_host: str, remote_port: int, should_open: bool):
     if _scan_free_port(port) == port:
         print(f'Could not connect to localhost:{port}. Please make sure your app is running.')
         exit(1)
@@ -380,6 +382,10 @@ async def _share(port: int, subdomain: str, remote_host: str, remote_port: int):
     # Handle the rest if any.
     for _ in range(max_conn_count % step):
         tasks.append(asyncio.create_task(listen_on_socket('127.0.0.1', port, remote_host, remote_port, share_id)))
+
+    if should_open:
+        await asyncio.sleep(1)
+        webbrowser.open(remote)
 
     await asyncio.gather(*tasks)
     print('Could not establish connection with the server.')
