@@ -2453,7 +2453,7 @@ ui_plot <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param events The events to capture on this visualization. One of 'select_marks'.
 #' @param interactions The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
-#' @param animate True to turn on the chart animations. Defaults to False.
+#' @param animate EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
 #' @return A Visualization instance.
 #' @export
 ui_visualization <- function(
@@ -4392,7 +4392,7 @@ ui_stylesheet <- function(
 #' @param script Javascript code to execute on this page.
 #' @param stylesheet CSS stylesheet to be applied to this page.
 #' @param stylesheets External CSS files to load into the page.
-#' @param animate True to turn on the card animations. Defaults to False.
+#' @param animate EXPERIMENTAL: True to turn on the card animations. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -4558,7 +4558,7 @@ ui_pixel_art_card <- function(
 #' @param plot The plot to be displayed in this card.
 #' @param events The events to capture on this card. One of 'select_marks'.
 #' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
-#' @param animate True to turn on the chart animations. Defaults to False.
+#' @param animate EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
 #' @export

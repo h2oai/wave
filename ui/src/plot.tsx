@@ -1035,7 +1035,7 @@ export interface Visualization {
   events?: S[]
   /** The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
-  /** True to turn on the chart animations. Defaults to False. */
+  /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
   animate?: B
 }
 
@@ -1172,7 +1172,7 @@ interface State {
   events?: S[]
   /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
-  /** True to turn on the chart animations. Defaults to False. */
+  /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
   animate?: B
 }
 

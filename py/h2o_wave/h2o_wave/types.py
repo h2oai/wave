@@ -5653,7 +5653,7 @@ class Visualization:
         self.interactions = interactions
         """The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event."""
         self.animate = animate
-        """True to turn on the chart animations. Defaults to False."""
+        """EXPERIMENTAL: True to turn on the chart animations. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -10687,7 +10687,7 @@ class MetaCard:
         self.stylesheets = stylesheets
         """External CSS files to load into the page."""
         self.animate = animate
-        """True to turn on the card animations. Defaults to False."""
+        """EXPERIMENTAL: True to turn on the card animations. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -11060,7 +11060,7 @@ class PlotCard:
         self.interactions = interactions
         """The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event."""
         self.animate = animate
-        """True to turn on the chart animations. Defaults to False."""
+        """EXPERIMENTAL: True to turn on the chart animations. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

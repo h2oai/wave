@@ -2100,7 +2100,7 @@ def visualization(
         visible: True if the component should be visible. Defaults to True.
         events: The events to capture on this visualization. One of 'select_marks'.
         interactions: The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
-        animate: True to turn on the chart animations. Defaults to False.
+        animate: EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
     Returns:
         A `h2o_wave.types.Visualization` instance.
     """
@@ -3799,7 +3799,7 @@ def meta_card(
         script: Javascript code to execute on this page.
         stylesheet: CSS stylesheet to be applied to this page.
         stylesheets: External CSS files to load into the page.
-        animate: True to turn on the card animations. Defaults to False.
+        animate: EXPERIMENTAL: True to turn on the card animations. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -3921,7 +3921,7 @@ def plot_card(
         plot: The plot to be displayed in this card.
         events: The events to capture on this card. One of 'select_marks'.
         interactions: The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
-        animate: True to turn on the chart animations. Defaults to False.
+        animate: EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PlotCard` instance.

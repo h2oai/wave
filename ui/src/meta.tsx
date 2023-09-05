@@ -162,7 +162,7 @@ interface State {
   stylesheet?: InlineStylesheet
   /** External CSS files to load into the page. */
   stylesheets?: Stylesheet[]
-  /** True to turn on the card animations. Defaults to False. */
+  /** EXPERIMENTAL: True to turn on the card animations. Defaults to False. */
   animate?: B
 }
 
