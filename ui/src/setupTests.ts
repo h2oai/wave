@@ -15,7 +15,7 @@
 import { registerIcons } from '@fluentui/react'
 import * as Icons from '@fluentui/react-icons-mdl2'
 import { configure } from '@testing-library/dom'
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom'
 import 'jest-canvas-mock'
 import React from 'react'
 

@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 import { TextAnnotator, XTextAnnotator } from './text_annotator'
 import { wave } from './ui'
@@ -42,10 +42,10 @@ describe('TextAnnotator.tsx', () => {
     expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
-  it('Sets correct args on remove all', () => {
+  it('Sets correct args on remove all', async () => {
     const { getByRole } = render(<XTextAnnotator model={annotatorProps} />)
 
-    fireEvent.click(getByRole('menuitem'))
+    await waitFor(() => fireEvent.click(getByRole('menuitem')))
     expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
