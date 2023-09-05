@@ -183,4 +183,4 @@ export const
     return { render, changed, update, valueB, dispose }
   })
 
-cards.register('nav', View, { effect: CardEffect.Flat, marginless: true })
+cards.register('nav', View, { effect: CardEffect.Flat, marginless: true, animate: false })

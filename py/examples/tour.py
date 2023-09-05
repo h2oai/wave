@@ -233,6 +233,7 @@ def get_wave_completions(line, character, file_content):
     q.page['meta'] = ui.meta_card(
         box='',
         title=app_title,
+        animate=True,
         scripts=[ui.script(q.app.tour_assets + '/loader.min.js')],
         script=ui.inline_script(content=template, requires=['require'], targets=['monaco-editor']),
         layouts=[

@@ -150,4 +150,4 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
   return { render, changed }
 })
 
-cards.register('header', View, { effect: CardEffect.Transparent, marginless: true })
+cards.register('header', View, { effect: CardEffect.Transparent, marginless: true, animate: false })

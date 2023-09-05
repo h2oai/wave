@@ -71,4 +71,4 @@ export const
     return { render, changed }
   })
 
-cards.register('footer', View, { effect: CardEffect.Transparent, marginless: true })
+cards.register('footer', View, { effect: CardEffect.Transparent, marginless: true, animate: false })

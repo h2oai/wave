@@ -2087,6 +2087,7 @@ def visualization(
         visible: Optional[bool] = None,
         events: Optional[List[str]] = None,
         interactions: Optional[List[str]] = None,
+        animate: Optional[bool] = None,
 ) -> Component:
     """Create a visualization for display inside a form.
 
@@ -2099,6 +2100,7 @@ def visualization(
         visible: True if the component should be visible. Defaults to True.
         events: The events to capture on this visualization. One of 'select_marks'.
         interactions: The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
+        animate: True to turn on the chart animations. Defaults to False.
     Returns:
         A `h2o_wave.types.Visualization` instance.
     """
@@ -2111,6 +2113,7 @@ def visualization(
         visible,
         events,
         interactions,
+        animate,
     ))
 
 
@@ -3770,6 +3773,7 @@ def meta_card(
         script: Optional[InlineScript] = None,
         stylesheet: Optional[InlineStylesheet] = None,
         stylesheets: Optional[List[Stylesheet]] = None,
+        animate: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -3795,6 +3799,7 @@ def meta_card(
         script: Javascript code to execute on this page.
         stylesheet: CSS stylesheet to be applied to this page.
         stylesheets: External CSS files to load into the page.
+        animate: True to turn on the card animations. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -3817,6 +3822,7 @@ def meta_card(
         script,
         stylesheet,
         stylesheets,
+        animate,
         commands,
     )
 
@@ -3903,6 +3909,7 @@ def plot_card(
         plot: Plot,
         events: Optional[List[str]] = None,
         interactions: Optional[List[str]] = None,
+        animate: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> PlotCard:
     """Create a card displaying a plot.
@@ -3914,6 +3921,7 @@ def plot_card(
         plot: The plot to be displayed in this card.
         events: The events to capture on this card. One of 'select_marks'.
         interactions: The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
+        animate: True to turn on the chart animations. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PlotCard` instance.
@@ -3925,6 +3933,7 @@ def plot_card(
         plot,
         events,
         interactions,
+        animate,
         commands,
     )
 

@@ -150,6 +150,10 @@ body,
 
   /* Fluent semantic colors. */
   --wave-errorText: #a4262c;
+
+  // Animation settings.
+  --wave-animation-duration: 0s;
+  --wave-card-animation: wave-fade-in
 }
 
 $fontTrackings: (
@@ -207,10 +211,10 @@ $tracking in $fontTrackings {
 
 // Used by the Wave logo on empty pages.
 .wave-pulse {
-  animation: pulsate 1s linear 0s infinite;
+  animation: wave-pulsate 1s linear 0s infinite;
 }
 
-@keyframes pulsate {
+@keyframes wave-pulsate {
   0% {
     opacity: 0;
   }
@@ -221,6 +225,21 @@ $tracking in $fontTrackings {
 
   100% {
     opacity: 0;
+  }
+}
+
+.wave-animate-card {
+  animation: var(--wave-card-animation);
+  animation-duration: var(--wave-animation-duration);
+}
+
+@keyframes wave-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 
