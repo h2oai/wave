@@ -72,6 +72,10 @@ const
     copyButton: {
       position: 'relative',
       $nest: {
+        'button': {
+          opacity: 0,
+          top: 0
+        },
         '&:hover button': {
           opacity: 1
         }
@@ -106,9 +110,9 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   const codeBlockContainer = codeBlock.parentElement
   if (codeBlockContainer) {
     const buttonContainer = document.createElement('span')
-    ReactDOM.render(<ClipboardCopyButton value={str} defaultVisible={false} />, buttonContainer)
+    ReactDOM.render(<ClipboardCopyButton value={str} />, buttonContainer)
     codeBlockContainer.classList.add(css.copyButton)
-    codeBlockContainer.insertAdjacentElement('afterbegin', buttonContainer)
+    codeBlockContainer.appendChild(buttonContainer)
   }
 
   return highlightedCode

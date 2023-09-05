@@ -7,10 +7,6 @@ import { clas, cssVar, pc } from './theme'
 
 const
   css = stylesheet({
-    animate: {
-      opacity: 0,
-      transition: 'opacity .5s'
-    },
     btn: {
       position: 'absolute',
       minWidth: 'initial',
@@ -28,6 +24,14 @@ const
       $nest: {
         '&:hover': {
           background: cssVar('$green'),
+        }
+      }
+    },
+    animate: {
+      $nest: {
+        'button': {
+          opacity: 0,
+          transition: 'opacity .5s',
         }
       }
     },
@@ -58,7 +62,7 @@ export interface CopyableText {
   height?: S
 }
 
-export const ClipboardCopyButton = ({ value, defaultVisible = true }: { value: S, defaultVisible?: B }) => {
+export const ClipboardCopyButton = ({ value }: { value: S }) => {
   const
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
@@ -86,7 +90,7 @@ export const ClipboardCopyButton = ({ value, defaultVisible = true }: { value: S
     title='Copy to clipboard'
     onClick={onClick}
     iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    className={clas(css.btn, copied ? css.copiedBtn : '', defaultVisible ? '' : css.animate)}
+    className={clas(css.btn, copied ? css.copiedBtn : '')}
   />
 }
 
@@ -103,7 +107,9 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       onRenderLabel={() =>
         <div className={css.labelContainer}>
           <Fluent.Label>{label}</Fluent.Label>
-          <ClipboardCopyButton value={value} defaultVisible={!multiline} />
+          <span className={multiline ? clas(css.animate) : ''}>
+            <ClipboardCopyButton value={value} />
+          </span>
         </div>
       }
       styles={{
