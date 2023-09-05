@@ -160,3 +160,41 @@ async def serve(q: Q):
     page['bar'] = card
     await page.save()
 ```
+
+## Animations (experimental)
+
+Cards can be animated during their creation by setting `animate=True` on the `ui.meta_card`.
+
+```py
+page['meta'] = ui.meta_card(box='', animate=True)
+```
+
+:::warning
+An animation is considered fluid when it is able to reach `60fps` (frames per second). To achieve such fps, one needs to make sure the browser has enough resources to paint the animation at such rate. Loading too many data or doing too much browser work may result in janky animations so use at your own risk.
+:::
+
+Default animation is a simple `fade in` animation (opacity 0 => 1) lasting for `0.5s`. if you are not happy with these defaults, it's possible to override these values via [custom CSS](/docs/custom-css/).
+
+```css
+:root {
+  /* Custom CSS properties to configure duration and animation. */
+  --wave-animation-duration: 0.5s;
+  --wave-card-animation: wave-fade-in
+}
+
+/* Override this class to get full control over animations. */
+.wave-animate-card {
+  animation: var(--wave-card-animation);
+  animation-duration: var(--wave-animation-duration);
+}
+
+@keyframes wave-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+```
