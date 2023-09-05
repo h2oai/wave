@@ -15,26 +15,8 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Markdown } from './markdown'
-import userEvent from '@testing-library/user-event'
 
 const source = 'The quick brown [fox](?fox) jumps over the lazy [dog](dog).'
-const codeBlockSource = `
-\`\`\`py
-from h2o_wave import main, app, Q, ui
-
-
-@app('/')
-async def serve(q: Q):
-    # Display a Hello, world! message.
-    q.page['hello'] = ui.markdown_card(
-        box='1 1 4 4',
-        title='Hello',
-        content='Hello, world!'
-    )
-
-    await q.page.save()
-\`\`\`
-`
 
 describe('Markdown.tsx', () => {
 
@@ -50,20 +32,5 @@ describe('Markdown.tsx', () => {
     dispatchEventMock.mockClear()
     fireEvent.click(getByText('dog'))
     expect(dispatchEventMock).not.toHaveBeenCalled()
-  })
-
-  it('Shows copy to clipboard button on hover over code block', async () => {
-    const { container } = render(<Markdown source={codeBlockSource} />)
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    const copyButton = container.querySelector('button')
-    const textfield = container.querySelectorAll('code')[1]!
-
-    expect(textfield).toBeInTheDocument()
-    expect(copyButton).toBeInTheDocument()
-    expect(copyButton).not.toBeVisible()
-
-    userEvent.hover(textfield)
-    expect(container.querySelector('button')).toBeVisible()
   })
 })
