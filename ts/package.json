@@ -1,6 +1,6 @@
 {
   "name": "h2o-wave",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "H2O Wave browser module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
