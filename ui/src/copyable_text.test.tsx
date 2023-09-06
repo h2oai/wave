@@ -33,5 +33,4 @@ describe('CopyableText.tsx', () => {
     rerender(<XCopyableText model={{ ...copyableTextProps, value: 'B' }} />)
     expect(getByTestId(name)).toHaveValue('B')
   })
-
 })

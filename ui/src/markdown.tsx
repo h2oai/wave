@@ -16,7 +16,9 @@ import { Model, Rec, S, unpack } from 'h2o-wave'
 import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
+import { ClipboardCopyButton } from './copyable_text'
 import { cards, grid, substitute } from './layout'
 import { border, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
@@ -67,6 +69,24 @@ const
         },
       },
     },
+    codeblock: {
+      position: 'relative',
+      $nest: {
+        '&:hover button': {
+          opacity: 1,
+        },
+      }
+    },
+    copyBtnWrapper: {
+      position: 'absolute',
+      right: 4,
+      top: 4,
+      $nest: {
+        button: {
+          opacity: 0,
+        },
+      }
+    },
   })
 const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   const codeBlock = document.getElementById(codeBlockId)
@@ -91,6 +111,10 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
     : hljs.highlightAuto(str).value
 
   codeBlock.innerHTML = highlightedCode
+  const btnContainer = document.createElement('div')
+  btnContainer.classList.add(css.copyBtnWrapper)
+  ReactDOM.render(<ClipboardCopyButton value={str} />, codeBlock.appendChild(btnContainer))
+
   return highlightedCode
 }
 
@@ -108,7 +132,7 @@ export const Markdown = ({ source }: { source: S }) => {
         setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId), 0)
 
         // TODO: Sanitize the HTML.
-        const ret = `<code id='${codeBlockId}' class="hljs">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+        const ret = `<code id='${codeBlockId}' class="hljs ${css.codeblock}">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
         codeBlockIdx.current++
         return ret
       }

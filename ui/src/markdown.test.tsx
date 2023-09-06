@@ -16,13 +16,15 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Markdown } from './markdown'
 
+const source = 'The quick brown [fox](?fox) jumps over the lazy [dog](dog).'
+
 describe('Markdown.tsx', () => {
 
   // Jest JSDOM does not support event system, so we can only check if the event was dispatched.
   it('Dispatches a custom event when link prefixed with "?"', () => {
     const dispatchEventMock = jest.fn()
     window.dispatchEvent = dispatchEventMock
-    const { getByText } = render(<Markdown source='The quick brown [fox](?fox) jumps over the lazy [dog](dog).' />)
+    const { getByText } = render(<Markdown source={source} />)
 
     fireEvent.click(getByText('fox'))
     expect(dispatchEventMock).toHaveBeenCalled()

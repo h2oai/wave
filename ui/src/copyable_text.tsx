@@ -6,17 +6,16 @@ import { clas, cssVar, pc } from './theme'
 
 const
   css = stylesheet({
-    btnMultiline: {
-      opacity: 0,
-      transition: 'opacity .5s'
-    },
     btn: {
-      minWidth: 'initial',
       position: 'absolute',
+      minWidth: 'initial',
       width: 24,
       height: 24,
       right: 0,
       transform: 'translate(-4px, 4px)',
+      outlineWidth: 1,
+      outlineStyle: 'solid',
+      outlineColor: cssVar('$text'),
       zIndex: 1,
     },
     copiedBtn: {
@@ -54,21 +53,19 @@ export interface CopyableText {
   height?: S
 }
 
-export const XCopyableText = ({ model }: { model: CopyableText }) => {
+export const ClipboardCopyButton = ({ value }: { value: S }) => {
   const
-    { name, multiline, label, value, height } = model,
-    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined,
-    ref = React.useRef<Fluent.ITextField>(null),
     timeoutRef = React.useRef<U>(),
     [copied, setCopied] = React.useState(false),
-    onClick = async () => {
-      const el = ref.current
-      if (!el) return
+    onClick = React.useCallback(async () => {
       try {
         if (document.queryCommandSupported('copy')) {
+          const el = document.createElement('textarea')
+          el.value = value
+          document.body.appendChild(el)
           el.select()
           document.execCommand('copy')
-          window.getSelection()?.removeAllRanges()
+          document.body.removeChild(el)
         }
       } catch (error) {
         await window.navigator.clipboard.writeText(value)
@@ -76,32 +73,44 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
 
       setCopied(true)
       timeoutRef.current = window.setTimeout(() => setCopied(false), 2000)
-    }
+    }, [value])
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
   return (
+    <Fluent.PrimaryButton
+      title='Copy to clipboard'
+      onClick={onClick}
+      iconProps={{
+        iconName: copied ? 'CheckMark' : 'Copy',
+        styles: { root: { marginTop: -1.35 } } // Nudge up the icon a bit to account for incorrect Fluent crop.
+      }}
+      className={clas(css.btn, copied ? css.copiedBtn : '')}
+    />
+  )
+}
+
+export const XCopyableText = ({ model }: { model: CopyableText }) => {
+  const
+    { name, multiline, label, value, height } = model,
+    heightStyle = multiline && height === '1' ? fullHeightStyle : undefined
+
+  return (
     <Fluent.TextField
       data-test={name}
-      componentRef={ref}
       value={value}
       multiline={multiline}
       onRenderLabel={() =>
         <div className={css.labelContainer}>
           <Fluent.Label>{label}</Fluent.Label>
-          <Fluent.PrimaryButton
-            title='Copy to clipboard'
-            onClick={onClick}
-            iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-            className={clas(css.btn, copied ? css.copiedBtn : '', multiline ? css.btnMultiline : '')}
-          />
+          <ClipboardCopyButton value={value} />
         </div>
       }
       styles={{
         root: {
           ...heightStyle,
           textFieldRoot: { position: 'relative', width: pc(100) },
-          textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined
+          textFieldMultiline: multiline ? { '& button': { opacity: 0 }, '&:hover button': { opacity: 1 } } : undefined
         },
         wrapper: heightStyle,
         fieldGroup: heightStyle || { minHeight: height },
