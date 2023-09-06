@@ -4,19 +4,18 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, pc } from './theme'
 
-
 const
   css = stylesheet({
     btn: {
       position: 'absolute',
       minWidth: 'initial',
-      width: 34,
+      width: 24,
       height: 24,
       right: 0,
       transform: 'translate(-4px, 4px)',
       outlineWidth: 1,
       outlineStyle: 'solid',
-      outlineColor: cssVar('$white'),
+      outlineColor: cssVar('$text'),
       zIndex: 1,
     },
     copiedBtn: {
@@ -24,14 +23,6 @@ const
       $nest: {
         '&:hover': {
           background: cssVar('$green'),
-        }
-      }
-    },
-    animate: {
-      $nest: {
-        'button': {
-          opacity: 0,
-          transition: 'opacity .5s',
         }
       }
     },
@@ -86,12 +77,17 @@ export const ClipboardCopyButton = ({ value }: { value: S }) => {
 
   React.useEffect(() => () => window.clearTimeout(timeoutRef.current), [])
 
-  return <Fluent.PrimaryButton
-    title='Copy to clipboard'
-    onClick={onClick}
-    iconProps={{ iconName: copied ? 'CheckMark' : 'Copy' }}
-    className={clas(css.btn, copied ? css.copiedBtn : '')}
-  />
+  return (
+    <Fluent.PrimaryButton
+      title='Copy to clipboard'
+      onClick={onClick}
+      iconProps={{
+        iconName: copied ? 'CheckMark' : 'Copy',
+        styles: { root: { marginTop: -1.35 } } // Nudge up the icon a bit to account for incorrect Fluent crop.
+      }}
+      className={clas(css.btn, copied ? css.copiedBtn : '')}
+    />
+  )
 }
 
 export const XCopyableText = ({ model }: { model: CopyableText }) => {
@@ -107,16 +103,14 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
       onRenderLabel={() =>
         <div className={css.labelContainer}>
           <Fluent.Label>{label}</Fluent.Label>
-          <span className={multiline ? clas(css.animate) : ''}>
-            <ClipboardCopyButton value={value} />
-          </span>
+          <ClipboardCopyButton value={value} />
         </div>
       }
       styles={{
         root: {
           ...heightStyle,
           textFieldRoot: { position: 'relative', width: pc(100) },
-          textFieldMultiline: multiline ? { '&:hover button': { opacity: 1 } } : undefined
+          textFieldMultiline: multiline ? { '& button': { opacity: 0 }, '&:hover button': { opacity: 1 } } : undefined
         },
         wrapper: heightStyle,
         fieldGroup: heightStyle || { minHeight: height },
