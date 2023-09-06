@@ -747,7 +747,6 @@ export const
         } else {
           let prevSum = 0
           groupedBy = groupByF(items, filteredItems, groupByKey)
-          console.log(groupedBy)
           const
             groupedByKeys = Object.keys(groupedBy),
             groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
