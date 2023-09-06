@@ -966,7 +966,7 @@ const
 
     return [geometries, annotations]
   },
-  makeChart = (el: HTMLElement, space: SpaceT, marks: Mark[], interactions: S[]): ChartCfg => {
+  makeChart = (el: HTMLElement, space: SpaceT, marks: Mark[], interactions: S[], animate = false): ChartCfg => {
     // WARNING: makeCoord() must be called before other functions.
     const
       coordinate = makeCoord(space, marks), // WARNING: this call may transpose x/y in-place.
@@ -979,7 +979,7 @@ const
       renderer: 'canvas',
       theme: getPlotTheme(),
       options: {
-        animate: false,
+        animate,
         coordinate,
         scales,
         axes,
@@ -1035,6 +1035,8 @@ export interface Visualization {
   events?: S[]
   /** The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
+  /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
+  animate?: B
 }
 
 const tooltipContainer = document.createElement('div')
@@ -1052,12 +1054,9 @@ const PlotTooltip = ({ items, originalItems }: { items: TooltipItem[], originalI
             <span>{(item instanceof Date ? item.toISOString().split('T')[0] : item)}</span>
           </span>
         </li>
-      }
-      )
-    )}
+      }))
+    }
   </>
-
-
 
 export const
   XVisualization = ({ model }: { model: Visualization }) => {
@@ -1082,7 +1081,7 @@ export const
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
           { Chart } = await import('@antv/g2'),
-          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [])) : null
+          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks, model.interactions || [], model.animate)) : null
         originalDataRef.current = unpack<any[]>(model.data)
         currentPlot.current = plot
         if (chart) {
@@ -1173,23 +1172,23 @@ interface State {
   events?: S[]
   /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
+  /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
+  animate?: B
 }
 
-export const
-  View = bond(({ name, state, changed }: Model<State>) => {
-    const
-      render = () => {
-        const { title = 'Untitled', plot, data, events, interactions } = state
-        return (
-          <div className={css.card}>
-            <div className='wave-s12 wave-w6'>{title}</div>
-            <div className={css.body}>
-              <XVisualization model={{ name, plot, data, events, interactions }} />
-            </div>
-          </div>
-        )
-      }
-    return { render, changed }
-  })
+export const View = bond(({ name, state, changed }: Model<State>) => {
+  const render = () => {
+    const { title = 'Untitled', plot, data, events, interactions, animate } = state
+    return (
+      <div className={css.card}>
+        <div className='wave-s12 wave-w6'>{title}</div>
+        <div className={css.body}>
+          <XVisualization model={{ name, plot, data, events, interactions, animate }} />
+        </div>
+      </div>
+    )
+  }
+  return { render, changed }
+})
 
 cards.register('plot', View)

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, disconnect, Id, Model, on, S, U } from 'h2o-wave'
+import { B, box, disconnect, Id, Model, on, S, U } from 'h2o-wave'
 import React from 'react'
 import { NotificationBar, notificationBarB } from './notification_bar'
 import { Dialog, dialogB } from './dialog'
@@ -162,6 +162,8 @@ interface State {
   stylesheet?: InlineStylesheet
   /** External CSS files to load into the page. */
   stylesheets?: Stylesheet[]
+  /** EXPERIMENTAL: True to turn on the card animations. Defaults to False. */
+  animate?: B
 }
 
 const
@@ -197,7 +199,8 @@ export const
       scripts,
       script,
       stylesheet,
-      stylesheets
+      stylesheets,
+      animate
     } = state
 
     if (redirect) {
@@ -221,7 +224,7 @@ export const
     // HACK: Since meta cards are processed within render, wait for React to finish the original render before proceeding.
     setTimeout(() => notificationBarB(notification_bar ? { ...notification_bar } : null), 0)
 
-
+    if (animate) document.body.style.setProperty('--wave-animation-duration', '0.5s')
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)
     if (typeof refresh === 'number' && refresh === 0) disconnect()

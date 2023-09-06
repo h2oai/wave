@@ -2453,6 +2453,7 @@ ui_plot <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param events The events to capture on this visualization. One of 'select_marks'.
 #' @param interactions The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
+#' @param animate EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
 #' @return A Visualization instance.
 #' @export
 ui_visualization <- function(
@@ -2463,7 +2464,8 @@ ui_visualization <- function(
   name = NULL,
   visible = NULL,
   events = NULL,
-  interactions = NULL) {
+  interactions = NULL,
+  animate = NULL) {
   .guard_scalar("plot", "WavePlot", plot)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
@@ -2472,6 +2474,7 @@ ui_visualization <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_vector("events", "character", events)
   .guard_vector("interactions", "character", interactions)
+  .guard_scalar("animate", "logical", animate)
   .o <- list(visualization=list(
     plot=plot,
     data=data,
@@ -2480,7 +2483,8 @@ ui_visualization <- function(
     name=name,
     visible=visible,
     events=events,
-    interactions=interactions))
+    interactions=interactions,
+    animate=animate))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -4388,6 +4392,7 @@ ui_stylesheet <- function(
 #' @param script Javascript code to execute on this page.
 #' @param stylesheet CSS stylesheet to be applied to this page.
 #' @param stylesheets External CSS files to load into the page.
+#' @param animate EXPERIMENTAL: True to turn on the card animations. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -4409,6 +4414,7 @@ ui_meta_card <- function(
   script = NULL,
   stylesheet = NULL,
   stylesheets = NULL,
+  animate = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -4427,6 +4433,7 @@ ui_meta_card <- function(
   .guard_scalar("script", "WaveInlineScript", script)
   .guard_scalar("stylesheet", "WaveInlineStylesheet", stylesheet)
   .guard_vector("stylesheets", "WaveStylesheet", stylesheets)
+  .guard_scalar("animate", "logical", animate)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4446,6 +4453,7 @@ ui_meta_card <- function(
     script=script,
     stylesheet=stylesheet,
     stylesheets=stylesheets,
+    animate=animate,
     commands=commands,
     view='meta')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
@@ -4550,6 +4558,7 @@ ui_pixel_art_card <- function(
 #' @param plot The plot to be displayed in this card.
 #' @param events The events to capture on this card. One of 'select_marks'.
 #' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
+#' @param animate EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
 #' @export
@@ -4560,6 +4569,7 @@ ui_plot_card <- function(
   plot,
   events = NULL,
   interactions = NULL,
+  animate = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -4567,6 +4577,7 @@ ui_plot_card <- function(
   .guard_scalar("plot", "WavePlot", plot)
   .guard_vector("events", "character", events)
   .guard_vector("interactions", "character", interactions)
+  .guard_scalar("animate", "logical", animate)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4575,6 +4586,7 @@ ui_plot_card <- function(
     plot=plot,
     events=events,
     interactions=interactions,
+    animate=animate,
     commands=commands,
     view='plot')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePlotCard"))

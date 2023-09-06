@@ -39,6 +39,7 @@ export type CardStyle = {
   effect: CardEffect
   overflow?: B
   marginless?: B
+  animate?: B
 }
 
 const
@@ -351,8 +352,8 @@ const css = stylesheet({
 
 export const
   getCardEffectClass = (c: Card) => {
-    const { effect, marginless } = getCardStyle(c)
-    return clas(css.slot, getEffectClass(effect), marginless ? css.marginless : '')
+    const { effect, marginless, animate = true } = getCardStyle(c)
+    return clas(css.slot, getEffectClass(effect), marginless ? css.marginless : '', animate ? 'wave-animate-card' : '')
   },
   toCardEffect = (color?: 'card' | 'transparent' | 'primary') => {
     switch (color) {

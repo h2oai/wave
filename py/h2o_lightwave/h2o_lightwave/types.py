@@ -5626,6 +5626,7 @@ class Visualization:
             visible: Optional[bool] = None,
             events: Optional[List[str]] = None,
             interactions: Optional[List[str]] = None,
+            animate: Optional[bool] = None,
     ):
         _guard_scalar('Visualization.plot', plot, (Plot,), False, False, False)
         _guard_scalar('Visualization.width', width, (str,), False, True, False)
@@ -5634,6 +5635,7 @@ class Visualization:
         _guard_scalar('Visualization.visible', visible, (bool,), False, True, False)
         _guard_vector('Visualization.events', events, (str,), False, True, False)
         _guard_vector('Visualization.interactions', interactions, (str,), False, True, False)
+        _guard_scalar('Visualization.animate', animate, (bool,), False, True, False)
         self.plot = plot
         """The plot to be rendered in this visualization."""
         self.data = data
@@ -5650,6 +5652,8 @@ class Visualization:
         """The events to capture on this visualization. One of 'select_marks'."""
         self.interactions = interactions
         """The interactions to be allowed for this plot. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event."""
+        self.animate = animate
+        """EXPERIMENTAL: True to turn on the chart animations. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5660,6 +5664,7 @@ class Visualization:
         _guard_scalar('Visualization.visible', self.visible, (bool,), False, True, False)
         _guard_vector('Visualization.events', self.events, (str,), False, True, False)
         _guard_vector('Visualization.interactions', self.interactions, (str,), False, True, False)
+        _guard_scalar('Visualization.animate', self.animate, (bool,), False, True, False)
         return _dump(
             plot=self.plot.dump(),
             data=self.data,
@@ -5669,6 +5674,7 @@ class Visualization:
             visible=self.visible,
             events=self.events,
             interactions=self.interactions,
+            animate=self.animate,
         )
 
     @staticmethod
@@ -5689,6 +5695,8 @@ class Visualization:
         _guard_vector('Visualization.events', __d_events, (str,), False, True, False)
         __d_interactions: Any = __d.get('interactions')
         _guard_vector('Visualization.interactions', __d_interactions, (str,), False, True, False)
+        __d_animate: Any = __d.get('animate')
+        _guard_scalar('Visualization.animate', __d_animate, (bool,), False, True, False)
         plot: Plot = Plot.load(__d_plot)
         data: PackedRecord = __d_data
         width: Optional[str] = __d_width
@@ -5697,6 +5705,7 @@ class Visualization:
         visible: Optional[bool] = __d_visible
         events: Optional[List[str]] = __d_events
         interactions: Optional[List[str]] = __d_interactions
+        animate: Optional[bool] = __d_animate
         return Visualization(
             plot,
             data,
@@ -5706,6 +5715,7 @@ class Visualization:
             visible,
             events,
             interactions,
+            animate,
         )
 
 
@@ -10620,6 +10630,7 @@ class MetaCard:
             script: Optional[InlineScript] = None,
             stylesheet: Optional[InlineStylesheet] = None,
             stylesheets: Optional[List[Stylesheet]] = None,
+            animate: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -10639,6 +10650,7 @@ class MetaCard:
         _guard_scalar('MetaCard.script', script, (InlineScript,), False, True, False)
         _guard_scalar('MetaCard.stylesheet', stylesheet, (InlineStylesheet,), False, True, False)
         _guard_vector('MetaCard.stylesheets', stylesheets, (Stylesheet,), False, True, False)
+        _guard_scalar('MetaCard.animate', animate, (bool,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -10674,6 +10686,8 @@ class MetaCard:
         """CSS stylesheet to be applied to this page."""
         self.stylesheets = stylesheets
         """External CSS files to load into the page."""
+        self.animate = animate
+        """EXPERIMENTAL: True to turn on the card animations. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -10696,6 +10710,7 @@ class MetaCard:
         _guard_scalar('MetaCard.script', self.script, (InlineScript,), False, True, False)
         _guard_scalar('MetaCard.stylesheet', self.stylesheet, (InlineStylesheet,), False, True, False)
         _guard_vector('MetaCard.stylesheets', self.stylesheets, (Stylesheet,), False, True, False)
+        _guard_scalar('MetaCard.animate', self.animate, (bool,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -10716,6 +10731,7 @@ class MetaCard:
             script=None if self.script is None else self.script.dump(),
             stylesheet=None if self.stylesheet is None else self.stylesheet.dump(),
             stylesheets=None if self.stylesheets is None else [__e.dump() for __e in self.stylesheets],
+            animate=self.animate,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -10756,6 +10772,8 @@ class MetaCard:
         _guard_scalar('MetaCard.stylesheet', __d_stylesheet, (dict,), False, True, False)
         __d_stylesheets: Any = __d.get('stylesheets')
         _guard_vector('MetaCard.stylesheets', __d_stylesheets, (dict,), False, True, False)
+        __d_animate: Any = __d.get('animate')
+        _guard_scalar('MetaCard.animate', __d_animate, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -10775,6 +10793,7 @@ class MetaCard:
         script: Optional[InlineScript] = None if __d_script is None else InlineScript.load(__d_script)
         stylesheet: Optional[InlineStylesheet] = None if __d_stylesheet is None else InlineStylesheet.load(__d_stylesheet)
         stylesheets: Optional[List[Stylesheet]] = None if __d_stylesheets is None else [Stylesheet.load(__e) for __e in __d_stylesheets]
+        animate: Optional[bool] = __d_animate
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -10794,6 +10813,7 @@ class MetaCard:
             script,
             stylesheet,
             stylesheets,
+            animate,
             commands,
         )
 
@@ -11017,6 +11037,7 @@ class PlotCard:
             plot: Plot,
             events: Optional[List[str]] = None,
             interactions: Optional[List[str]] = None,
+            animate: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('PlotCard.box', box, (str,), False, False, False)
@@ -11024,6 +11045,7 @@ class PlotCard:
         _guard_scalar('PlotCard.plot', plot, (Plot,), False, False, False)
         _guard_vector('PlotCard.events', events, (str,), False, True, False)
         _guard_vector('PlotCard.interactions', interactions, (str,), False, True, False)
+        _guard_scalar('PlotCard.animate', animate, (bool,), False, True, False)
         _guard_vector('PlotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -11037,6 +11059,8 @@ class PlotCard:
         """The events to capture on this card. One of 'select_marks'."""
         self.interactions = interactions
         """The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event."""
+        self.animate = animate
+        """EXPERIMENTAL: True to turn on the chart animations. Defaults to False."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -11047,6 +11071,7 @@ class PlotCard:
         _guard_scalar('PlotCard.plot', self.plot, (Plot,), False, False, False)
         _guard_vector('PlotCard.events', self.events, (str,), False, True, False)
         _guard_vector('PlotCard.interactions', self.interactions, (str,), False, True, False)
+        _guard_scalar('PlotCard.animate', self.animate, (bool,), False, True, False)
         _guard_vector('PlotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='plot',
@@ -11056,6 +11081,7 @@ class PlotCard:
             plot=self.plot.dump(),
             events=self.events,
             interactions=self.interactions,
+            animate=self.animate,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -11073,6 +11099,8 @@ class PlotCard:
         _guard_vector('PlotCard.events', __d_events, (str,), False, True, False)
         __d_interactions: Any = __d.get('interactions')
         _guard_vector('PlotCard.interactions', __d_interactions, (str,), False, True, False)
+        __d_animate: Any = __d.get('animate')
+        _guard_scalar('PlotCard.animate', __d_animate, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('PlotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -11081,6 +11109,7 @@ class PlotCard:
         plot: Plot = Plot.load(__d_plot)
         events: Optional[List[str]] = __d_events
         interactions: Optional[List[str]] = __d_interactions
+        animate: Optional[bool] = __d_animate
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PlotCard(
             box,
@@ -11089,6 +11118,7 @@ class PlotCard:
             plot,
             events,
             interactions,
+            animate,
             commands,
         )
 

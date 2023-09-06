@@ -1444,7 +1444,7 @@
   "Wave Full MetaCard": {
     "prefix": "w_full_meta_card",
     "body": [
-      "ui.meta_card(box='$1', title='$2', refresh=${3:None}, notification='$4', notification_bar=${5:None}, redirect='$6', icon='$7', dialog=${8:None}, side_panel=${9:None}, theme='$10', tracker=${11:None}, script=${12:None}, stylesheet=${13:None}, layouts=[\n\t\t$14\t\t\n], themes=[\n\t\t$15\t\t\n], scripts=[\n\t\t$16\t\t\n], stylesheets=[\n\t\t$17\t\t\n], commands=[\n\t\t$18\t\t\n])$0"
+      "ui.meta_card(box='$1', title='$2', refresh=${3:None}, notification='$4', notification_bar=${5:None}, redirect='$6', icon='$7', dialog=${8:None}, side_panel=${9:None}, theme='$10', tracker=${11:None}, script=${12:None}, stylesheet=${13:None}, animate=${14:False}, layouts=[\n\t\t$15\t\t\n], themes=[\n\t\t$16\t\t\n], scripts=[\n\t\t$17\t\t\n], stylesheets=[\n\t\t$18\t\t\n], commands=[\n\t\t$19\t\t\n])$0"
     ],
     "description": "Create a full Wave MetaCard."
   },
@@ -1528,14 +1528,14 @@
   "Wave Full Visualization": {
     "prefix": "w_full_visualization",
     "body": [
-      "ui.visualization(plot=$1, data=$2, width='${3:100%}', height='${4:300px}', name='$5', visible=${6:True}, events=[\n\t\t$7\t\t\n], interactions=[\n\t\t$8\t\t\n]),$0"
+      "ui.visualization(plot=$1, data=$2, width='${3:100%}', height='${4:300px}', name='$5', visible=${6:True}, animate=${7:False}, events=[\n\t\t$8\t\t\n], interactions=[\n\t\t$9\t\t\n]),$0"
     ],
     "description": "Create a full Wave Visualization."
   },
   "Wave Full PlotCard": {
     "prefix": "w_full_plot_card",
     "body": [
-      "ui.plot_card(box='$1', title='$2', data=$3, plot=$4, events=[\n\t\t$5\t\t\n], interactions=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
+      "ui.plot_card(box='$1', title='$2', data=$3, plot=$4, animate=${5:False}, events=[\n\t\t$6\t\t\n], interactions=[\n\t\t$7\t\t\n], commands=[\n\t\t$8\t\t\n])$0"
     ],
     "description": "Create a full Wave PlotCard."
   },

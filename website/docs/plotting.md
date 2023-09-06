@@ -223,6 +223,38 @@ q.page['example'] = ui.wide_plot_card(
 )
 ```
 
+## Animations (experimental)
+
+Plots support basic animations when `animate=True`.
+
+:::warning
+An animation is considered fluid when it is able to reach `60fps` (frames per second). To achieve such fps, one needs to make sure the browser has enough resources to paint the animation at such rate. Loading too many data or doing too much browser work may result in janky animations so use at your own risk.
+:::
+
+![plot-animation](assets/plot-animation.gif)
+
+```py {6}
+from h2o_wave import data
+
+q.page['example'] = ui.plot_card(
+    box='1 1 4 5',
+    title='Line',
+    animate=True,
+    data=data('year value', 8, rows=[
+        ('1991', 3),
+        ('1992', 4),
+        ('1993', 3.5),
+        ('1994', 5),
+        ('1995', 4.9),
+        ('1996', 6),
+        ('1997', 7),
+        ('1998', 9),
+        ('1999', 13),
+    ]),
+    plot=ui.plot([ui.mark(type='line', x_scale='time', x='=year', y='=value', y_min=0)])
+)
+```
+
 ## Point
 
 - [Basic](/docs/examples/plot-point): Make a scatterplot.
