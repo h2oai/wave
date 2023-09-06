@@ -110,7 +110,7 @@ export const XCopyableText = ({ model }: { model: CopyableText }) => {
         root: {
           ...heightStyle,
           textFieldRoot: { position: 'relative', width: pc(100) },
-          textFieldMultiline: multiline ? { '& button': { opacity: 0 }, '&:hover button': { opacity: 1 } } : undefined
+          textFieldMultiline: multiline ? { '& button': { visibility: 'hidden' }, '&:hover button': { visibility: 'visible' } } : undefined
         },
         wrapper: heightStyle,
         fieldGroup: heightStyle || { minHeight: height },
