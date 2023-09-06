@@ -184,11 +184,6 @@ def run(app: str, no_reload: bool, no_autostart: bool):
 
 
 @main.command()
-def ide():
-    uvicorn.run('h2o_wave.ide:ide', host=_localhost, port=10100)
-
-
-@main.command()
 @option('--platform', help='Operating system type.', type=Choice(['linux', 'windows', 'darwin']))
 @option('--arch', default=__arch__, help='Processor architecture type.', type=Choice(['amd64', 'arm64']))
 def fetch(platform: str, arch: str):
