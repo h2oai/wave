@@ -115,7 +115,7 @@ For daily development, you'll only need to pull `main` from git and run `make ru
 
 ``` bash
 # Generates Python and R APIs.
-# Run only if you add new cards/components or fix docstrings).
+# Run only if you add new cards/components, attributes or fix docstrings.
 $ make generate
 
 # Displays all the available make targets.
