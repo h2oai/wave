@@ -771,7 +771,7 @@ export const
         }
 
         return { groupedBy, groups }
-      }, [m.columns, m.groups]),
+      }, [items, m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
