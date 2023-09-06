@@ -15,7 +15,7 @@ async def listen_on_socket(local_host: str, local_port: int, remote_host: str, r
     remote_reader, remote_writer = None, None
     retries = 0
     while True:
-        if retries > 10:
+        if retries > 5:
             break
         try:
             local_reader, local_writer = await asyncio.open_connection(local_host, local_port)
@@ -28,7 +28,6 @@ async def listen_on_socket(local_host: str, local_port: int, remote_host: str, r
         # Swallow exceptions and reconnect.
         except Exception:
             retries += 1
-            pass
         finally:
             if local_writer:
                 local_writer.close()
