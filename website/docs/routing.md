@@ -59,6 +59,19 @@ The components that support setting a location hash are:
 - `ui.tab()`
 - `ui.breadcrumb()`
 
+### Setting the location hash from python
+
+To set the hash route explicitly without command invocation as described above, `ui.meta_card` is the way to go.
+
+```py
+# If meta_card does not yet exist, create one. If it does, skip this line.
+q.page['meta'] = ui.meta_card(box='')
+# Redirect to a hash.
+q.page['meta'].redirect = '#widgets'
+# Apply the change in browser.
+await q.page.save()
+```
+
 ### Getting the location hash
 
 To get the location hash, read `q.args['#']` (a string). If the route in the browser's address bar is `/foo/bar#baz/qux`, `q.args['#']` is set to `baz/qux`.
