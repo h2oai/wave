@@ -242,12 +242,9 @@ const
     'hidden': Fluent.CheckboxVisibility.hidden,
   },
   groupByF = function <T extends Dict<any>>(items: T[], filteredItems: T[], key: S): Dict<any> {
-    const values = items.reduce((arr, item) => {
-      if (!arr[item.status]) arr[item.status] = []
-      return arr
-    }, [] as any)
-    filteredItems.forEach(item => values[item[key]].push(item))
-    return values
+    const groupedItems = [...new Set(items.map(item => item[key]))].reduce((arr, val) => { arr[val] = []; return arr }, [] as Dict<any>)
+    filteredItems.forEach(item => groupedItems[item[key]].push(item))
+    return groupedItems
   },
   sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
     let a = rowA[column.key], b = rowB[column.key]
