@@ -241,11 +241,13 @@ const
     'on-hover': Fluent.CheckboxVisibility.onHover,
     'hidden': Fluent.CheckboxVisibility.hidden,
   },
-  groupByF = function <T extends Dict<any>>(arr: T[], key: S): Dict<any> {
-    return arr.reduce((rv, x: T) => {
-      (rv[x[key]] = rv[x[key]] || []).push(x)
-      return rv
-    }, {} as Dict<any>)
+  groupByF = function <T extends Dict<any>>(items: T[], filteredItems: T[], key: S): Dict<any> {
+    const values = items.reduce((arr, item) => {
+      if (!arr[item.status]) arr[item.status] = []
+      return arr
+    }, [] as any)
+    filteredItems.forEach(item => values[item[key]].push(item))
+    return values
   },
   sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
     let a = rowA[column.key], b = rowB[column.key]
@@ -744,7 +746,8 @@ export const
           }, [] as Fluent.IGroup[])
         } else {
           let prevSum = 0
-          groupedBy = groupByF(filteredItems, groupByKey)
+          groupedBy = groupByF(items, filteredItems, groupByKey)
+          console.log(groupedBy)
           const
             groupedByKeys = Object.keys(groupedBy),
             groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
