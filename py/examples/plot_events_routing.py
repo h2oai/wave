@@ -1,7 +1,7 @@
 # Plot / Events / Routing
 # Handle #events on a #plot card using routing.
 # ---
-from h2o_wave import main, app, on, handle_on, Q, ui, data
+from h2o_wave import main, app, on, run_on, Q, ui, data
 
 
 @on('pricing.select_marks')
@@ -32,4 +32,4 @@ async def serve(q: Q):
         )
         await q.page.save()
     else:
-        await handle_on(q)
+        await run_on(q)

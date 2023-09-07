@@ -26,7 +26,7 @@ from string import Template
 from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
-from h2o_wave import Q, app, handle_on, main, on, ui
+from h2o_wave import Q, app, run_on, main, on, ui
 
 from .utils import natural_keys, read_file, scan_free_port, strip_comment
 
@@ -334,4 +334,4 @@ async def serve(q: Q):
         q.page['meta'] = ui.meta_card(box='', redirect=f'#{search}')
 
     await show_lesson(q, q.app.catalog[q.args['#'] or default_lesson])
-    await handle_on(q)
+    await run_on(q)

@@ -1,4 +1,4 @@
-from h2o_wave import main, app, Q, ui, on, handle_on
+from h2o_wave import main, app, Q, ui, on, run_on
 
 
 @app('/')
@@ -9,7 +9,7 @@ async def serve(q: Q):
         q.client.initialized = True
 
     # Other browser interactions
-    await handle_on(q)
+    await run_on(q)
     await q.page.save()
 
 

@@ -14,7 +14,7 @@ from string import Template
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
-from h2o_wave import Q, app, handle_on, main, on, ui
+from h2o_wave import Q, app, run_on, main, on, ui
 
 example_dir = os.path.dirname(os.path.realpath(__file__))
 tour_tmp_dir = os.path.join(example_dir, '_tour_apps_tmp')
@@ -416,7 +416,7 @@ async def serve(q: Q):
         q.client.path = uuid.uuid4()
         await setup_page(q)
 
-    await handle_on(q)
+    await run_on(q)
 
     search = q.args[q.args['#'] or default_example_name]
     if search and not q.events.editor:

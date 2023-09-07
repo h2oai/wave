@@ -1,1 +1,1 @@
-h2o-wave<1.0
+h2o-wave

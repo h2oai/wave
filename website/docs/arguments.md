@@ -97,10 +97,10 @@ async def serve(q: Q):
 
 ```
 
-If this feels too repetitive, you can use `on` and `handle_on` to remove some of the boilerplate:
+If this feels too repetitive, you can use `on` and `run_on` to remove some of the boilerplate:
 
 ```py {3,7,11,15,21}
-from h2o_wave import Q, main, app, on, handle_on
+from h2o_wave import Q, main, app, on, run_on
 
 @on('add_to_cart')
 async def add_to_cart(q: Q):
@@ -120,7 +120,7 @@ async def display_products(q: Q):
 
 @app('/hole_foods')
 async def serve(q: Q):
-    await handle_on(q)
+    await run_on(q)
 
 ```
 
@@ -129,7 +129,7 @@ In the above example, the `@on('add_to_cart')` is read as "when `q.arg['add_to_c
 If the name of the function is the same as the name of the query argument, then the name can be elided. This simplifies the above example to:
 
 ```py {3,7,11,15}
-from h2o_wave import Q, main, app, on, handle_on
+from h2o_wave import Q, main, app, on, run_on
 
 @on()
 async def add_to_cart(q: Q):
@@ -149,7 +149,7 @@ async def display_products(q: Q):
 
 @app('/hole_foods')
 async def serve(q: Q):
-    await handle_on(q)
+    await run_on(q)
 
 ```
 
