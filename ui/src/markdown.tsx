@@ -73,7 +73,7 @@ const
       position: 'relative',
       $nest: {
         '&:hover button': {
-          opacity: 1,
+          visibility: 'visible',
         },
       }
     },
@@ -83,7 +83,7 @@ const
       top: 4,
       $nest: {
         button: {
-          opacity: 0,
+          visibility: 'hidden',
         },
       }
     },
