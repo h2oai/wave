@@ -65,38 +65,41 @@ const
       opacity: 0.5
     }
   }),
-  iconStyles: Fluent.IIconStyles = { root: { fontSize: 24 } }
+  iconStyles: Fluent.IIconStyles = {
+    root: {
+      width: 24,
+      height: 24,
+      '& > span': {
+        display: 'block',
+        width: 24,
+        height: 24,
+      }
+    }
+  }
 
 export const
-  XStepper = ({ model: m }: { model: Stepper }) => {
-    const
-      steps = m.items,
-      disabledStyles = (stepIdx: U) => stepIdx > 0 && !steps[stepIdx - 1].done ? css.disabled : '',
-      createStep = (step: Step, i: U) => (
+  XStepper = ({ model: m }: { model: Stepper }) => (
+    <Fluent.Stack data-test={m.name} horizontal horizontalAlign='space-between' verticalAlign='center'>
+      {m.items.map((item: Step, i: U) => (
         <React.Fragment key={i}>
           <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center' grow={1}>
             <Fluent.Stack
-              className={!step.done ? disabledStyles(i) : ''}
+              className={(i === 0 && !item.done) || !item.done && m.items[i - 1]?.done && !m.items[i + 1]?.done ? '' : css.disabled}
               horizontalAlign='center'
               styles={{ root: { paddingRight: 10, paddingLeft: 10 } }}
             >
               {
-                step.done
+                item.done
                   ? <Fluent.Icon styles={iconStyles} iconName='CompletedSolid' />
-                  : step.icon
-                    ? <Fluent.Icon styles={iconStyles} iconName={step.icon} />
+                  : item.icon
+                    ? <Fluent.Icon styles={iconStyles} iconName={item.icon} />
                     : <span className={css.stepNumber}>{i + 1}</span>
               }
-              <Fluent.Text block nowrap styles={{ root: { padding: 10 } }}>{step.label}</Fluent.Text>
+              <Fluent.Text block nowrap styles={{ root: { padding: 10 } }}>{item.label}</Fluent.Text>
             </Fluent.Stack>
           </Fluent.Stack>
-          {(steps.length - 1) !== i && <Fluent.Separator styles={{ root: { width: '100%' } }} />}
+          {(m.items.length - 1) !== i && <Fluent.Separator styles={{ root: { width: '100%' } }} />}
         </React.Fragment>
-      )
-
-    return (
-      <Fluent.Stack data-test={m.name} horizontal horizontalAlign='space-between' verticalAlign='center'>
-        {steps.map(createStep)}
-      </Fluent.Stack>
-    )
-  }
+      ))}
+    </Fluent.Stack>
+  )
