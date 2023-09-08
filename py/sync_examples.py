@@ -224,6 +224,11 @@ def main():
 
     example_md_dir = os.path.join(website_dir, 'docs', 'examples')
     thumbnail_dir = os.path.join(example_md_dir, 'assets')
+
+    for f in os.listdir(example_md_dir):
+        if f.endswith('.md'):
+            os.remove(os.path.join(example_md_dir, f))
+
     for e in examples:
         md = e.to_md()
         write_file(os.path.join(example_md_dir, f'{e.slug}.md'), md)

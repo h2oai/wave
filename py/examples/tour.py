@@ -318,7 +318,6 @@ async def show_example(q: Q, example: Example):
 
     filename = os.path.join(tour_tmp_dir, f'{q.client.path}.py')
     code = q.events.editor.change if q.events.editor else example.source
-    code = code.replace("`", "\\`")
     is_app = '@app(' in code
     with open(filename, 'w') as f:
         fixed_path = code
@@ -355,6 +354,7 @@ async def show_example(q: Q, example: Example):
     # Update code display
     if not q.events.editor:
         code = code.replace('$', '\\$')
+        code = code.replace("`", "\\`")
         q.page['meta'].script = ui.inline_script(f'editor.setValue(`{code}`)', requires=['editor'])
         await q.page.save()
         if q.args['#']:
@@ -374,6 +374,7 @@ async def on_startup():
     os.mkdir(tour_tmp_dir)
     shutil.copyfile(os.path.join(example_dir, 'synth.py'), os.path.join(tour_tmp_dir, 'synth.py'))
     shutil.copyfile(os.path.join(example_dir, 'plot_d3.js'), os.path.join(tour_tmp_dir, 'plot_d3.js'))
+    shutil.copyfile(os.path.join(example_dir, 'audio.mp3'), os.path.join(tour_tmp_dir, 'audio.mp3'))
 
 
 async def on_shutdown():

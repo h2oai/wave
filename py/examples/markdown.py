@@ -51,7 +51,6 @@ page['example1'] = ui.markdown_card(
 from h2o_wave import main, app, Q, ui
 
 
-@app('/')
 async def serve(q: Q):
     # Display a Hello, world! message.
     q.page['hello'] = ui.markdown_card(

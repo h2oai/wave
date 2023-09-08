@@ -6,11 +6,11 @@
 
 import json
 from random import random
-from h2o_wave import main, app, Q, ui, data
+from h2o_wave import main, app, Q, ui
 from bokeh.resources import CDN
 from bokeh.layouts import row
 from bokeh.models import ColumnDataSource, CustomJS
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure
 from bokeh.embed import json_item
 
 
@@ -24,11 +24,11 @@ async def serve(q: Q):
         y = [random() for y in range(500)]
 
         s1 = ColumnDataSource(data=dict(x=x, y=y))
-        p1 = figure(plot_width=250, plot_height=300, tools="lasso_select", title="Select Here")
+        p1 = figure(width=250, height=300, tools="lasso_select", title="Select Here")
         p1.circle('x', 'y', source=s1, alpha=0.6)
 
         s2 = ColumnDataSource(data=dict(x=[], y=[]))
-        p2 = figure(plot_width=250, plot_height=300, x_range=(0, 1), y_range=(0, 1), tools="", title="Watch Here")
+        p2 = figure(width=250, height=300, x_range=(0, 1), y_range=(0, 1), tools="", title="Watch Here")
         p2.circle('x', 'y', source=s2, alpha=0.6)
 
         s1.selected.js_on_change(
@@ -103,7 +103,7 @@ async def serve(q: Q):
             content='Nothing selected.',
         )
     else:
-        if q.events.the_plot.selected:
+        if q.events.the_plot and q.events.the_plot.selected:
             q.page['details'].content = f'You selected {q.events.the_plot.selected}'
 
     await q.page.save()

@@ -10,8 +10,7 @@ import os
 async def serve(q: Q):
     # Upload the audio file to Wave server first.
     if not q.app.initialized:
-        example_dir = os.path.dirname(os.path.realpath(__file__))
-        q.app.uploaded_mp3, = await q.site.upload([os.path.join(example_dir, 'audio_annotator_sample.mp3')])
+        q.app.uploaded_mp3, = await q.site.upload([os.path.join(os.path.dirname(__file__), 'audio.mp3')])
         q.app.initialized = True
 
     if q.args.annotator is not None:
@@ -20,7 +19,7 @@ async def serve(q: Q):
             ui.button(name='back', label='Back', primary=True),
         ]
     else:
-        q.page['example'] = ui.form_card(box='1 1 7 -1', items=[
+        q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.audio_annotator(
                 name='annotator',
                 title='Drag to annotate',
