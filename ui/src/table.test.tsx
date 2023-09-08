@@ -1078,6 +1078,75 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(headerRow + tableProps.rows!.length)
     })
 
+    it("Checks if empty groups are shown - filter", () => {
+      const
+        { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />),
+        expectAllGroupsToBeVisible = () => {
+          expect(getAllByText('Group1')[0]).toBeVisible()
+          expect(getAllByText('Group2')[0]).toBeVisible()
+        },
+        expectAllItemsToBePresent = () => {
+          const [firstGroupHeader, secondGroupHeader] = container.querySelectorAll('.ms-GroupHeader-title')
+          expect(firstGroupHeader).toHaveTextContent('Group1(2)')
+          expect(secondGroupHeader).toHaveTextContent('Group2(1)')
+          expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length)
+        }
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expectAllGroupsToBeVisible()
+      expectAllItemsToBePresent()
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('Group1')[3].parentElement!)
+
+      expectAllGroupsToBeVisible()
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[0]).toHaveTextContent('Group1(2)')
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent('Group2(0)')
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length - 1)
+
+      fireEvent.click(getAllByText('Group1')[3].parentElement!)
+
+      expectAllGroupsToBeVisible()
+      expectAllItemsToBePresent()
+    })
+
+    it("Checks if empty groups are shown - search", () => {
+      const
+        { container, getAllByText, getAllByRole, getByTestId } = render(<XTable model={tableProps} />),
+        expectAllGroupsToBeVisible = () => {
+          expect(getAllByText('Group1')[0]).toBeVisible()
+          expect(getAllByText('Group2')[0]).toBeVisible()
+        },
+        expectAllItemsToBePresent = () => {
+          const [firstGroupHeader, secondGroupHeader] = container.querySelectorAll('.ms-GroupHeader-title')
+          expect(firstGroupHeader).toHaveTextContent('Group1(2)')
+          expect(secondGroupHeader).toHaveTextContent('Group2(1)')
+          expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length)
+        }
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expectAllGroupsToBeVisible()
+      expectAllItemsToBePresent()
+
+      fireEvent.change(getByTestId('search'), { target: { value: cell31 } })
+
+      expectAllGroupsToBeVisible()
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[0]).toHaveTextContent('Group1(0)')
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent('Group2(1)')
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + filteredItem)
+
+      fireEvent.change(getByTestId('search'), { target: { value: '' } })
+
+      expectAllGroupsToBeVisible()
+      expectAllItemsToBePresent()
+    })
+
     it('Does not render group by dropdown when groups are set but pagination is not', () => {
       const { queryByTestId } = render(<XTable model={{ ...tableProps, groups: [] }} />)
       expect(queryByTestId('groupby')).not.toBeInTheDocument()
@@ -1406,7 +1475,7 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + filteredItem)
     })
 
-    it("Checks if empty groups are shown - filter", () => {
+    it("Checks if empty custom groups are shown - filter", () => {
       const
         { container, getByText, getAllByText, getAllByRole } = render(<XTable model={tableProps} />),
         groupHeaders = container.querySelectorAll('.ms-GroupHeader-title'),
@@ -1437,7 +1506,7 @@ describe('Table.tsx', () => {
       expectAllItemsToBePresent()
     })
 
-    it("Checks if empty groups are shown - search", () => {
+    it("Checks if empty custom groups are shown - search", () => {
       const
         { container, getByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />),
         groupHeaders = container.querySelectorAll('.ms-GroupHeader-title'),
