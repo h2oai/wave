@@ -959,6 +959,7 @@ export const
           // TODO handle refreshRate > 0 case
 
           _socket = null
+          _page = null
           _backoff *= 2
           if (_backoff > 16) _backoff = 16
           handle({ t: WaveEventType.Disconnect, retry: _backoff })
@@ -975,7 +976,9 @@ export const
                 const page = exec(_page || newPage(), msg.d)
                 if (_page !== page) {
                   _page = page
-                  if (page) handle({ t: WaveEventType.Page, page })
+                  if (page) {
+                    handle({ t: WaveEventType.Page, page })
+                  }
                 }
               } else if (msg.p) {
                 const page = _page = load(msg.p)
