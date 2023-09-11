@@ -1,7 +1,7 @@
 # Wizard
 # Create a multi-step #wizard using #form cards.
 # ---
-from h2o_wave import Q, ui, main, app, cypress, Cypress
+from h2o_wave import Q, ui, main, app
 
 
 @app('/demo')
@@ -43,18 +43,3 @@ async def serve(q: Q):
         ]
 
     await q.page.save()
-
-
-@cypress('Walk through the wizard')
-def try_walk_through(cy: Cypress):
-    cy.visit('/demo')
-    cy.locate('step1').click()
-    cy.locate('text').should('contain.text', 'What is your name?')
-    cy.locate('nickname').clear().type('Fred')
-    cy.locate('step2').click()
-    cy.locate('text').should('contain.text', 'Hi Fred! How do you feel right now?')
-    cy.locate('feeling').clear().type('quirky')
-    cy.locate('step3').click()
-    cy.locate('text').should(
-        'contain.text', 'What a coincidence, Fred! I feel quirky too!'
-    )
