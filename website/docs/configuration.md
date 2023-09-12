@@ -88,7 +88,29 @@ Those that do not start `waved` manually (but use `wave run` instead) and would 
 
 ### Public/Private dirs
 
-Wave server serves whole directories as they are. This means that these directories are listable by default. If you wish to turn off this behavior, simply put an empty file called `index.html` into the folder you wish to not list.
+When the wave server (waved) is started as part of the `wave run` command, the waved binary is located in the root of the currently active python virtual environment. Local paths need to be relative to this location. Another quick trick to find the waved location is to check `web-dir` during app startup which is located in the same directory as waved itself.
+
+```sh {10}
+wave run app --no-reload
+2023/09/12 14:24:35 #
+2023/09/12 14:24:35 # ┌────────────────┐ H2O Wave
+2023/09/12 14:24:35 # │  ┐┌┐┐┌─┐┌ ┌┌─┐ │ 0.26.2 20230803101411
+2023/09/12 14:24:35 # │  └┘└┘└─└└─┘└── │ © 2021 H2O.ai, Inc.
+2023/09/12 14:24:35 # └────────────────┘
+2023/09/12 14:24:35 # ┌──────────────────────────────────────┐
+2023/09/12 14:24:35 # │  Running at http://localhost:10101/  │
+2023/09/12 14:24:35 # └──────────────────────────────────────┘
+2023/09/12 14:24:35 # {"address":":10101","base-url":"/","t":"listen","web-dir":"/path/to/venv/www"}
+INFO:     Started server process [10429]
+INFO:     Waiting for application startup.
+2023/09/12 14:24:36 # {"host":"http://127.0.0.1:8000","route":"/","t":"app_add"}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+```
+
+From the above, the root of the active virtual python environment is `/path/to/venv`. Another, more straightforward, option is to use absolute paths.
+
+Wave serves whole directories as they are. This means that these directories are listable by default. If you wish to turn off this behavior, simply put an empty file called `index.html` into the folder you wish to not list.
 
 ### TLS verification
 
