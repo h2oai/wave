@@ -28,12 +28,6 @@ const (
 	// Time allowed to write a message to the peer.
 	writeWait = 10 * time.Second
 
-	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
-
-	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
-
 	// Maximum message size allowed from peer.
 	maxMessageSize = 1 * 1024 * 1024 // bytes
 )
@@ -59,22 +53,23 @@ type BootMsg struct {
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	id       string          // unique id
-	auth     *Auth           // auth provider, might be nil
-	addr     string          // remote IP:port, used for logging only
-	session  *Session        // end-user session
-	broker   *Broker         // broker
-	conn     *websocket.Conn // connection
-	routes   []string        // watched routes
-	data     chan []byte     // send data
-	editable bool            // allow editing? // TODO move to user; tie to role
-	baseURL  string          // URL prefix of the Wave server
-	header   *http.Header    // forwarded headers from the WS connection
-	appPath  string          // path of the app this client is connected to, doesn't change throughout WS lifetime
+	id           string          // unique id
+	auth         *Auth           // auth provider, might be nil
+	addr         string          // remote IP:port, used for logging only
+	session      *Session        // end-user session
+	broker       *Broker         // broker
+	conn         *websocket.Conn // connection
+	routes       []string        // watched routes
+	data         chan []byte     // send data
+	editable     bool            // allow editing? // TODO move to user; tie to role
+	baseURL      string          // URL prefix of the Wave server
+	header       *http.Header    // forwarded headers from the WS connection
+	appPath      string          // path of the app this client is connected to, doesn't change throughout WS lifetime
+	pingInterval time.Duration
 }
 
-func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header) *Client {
-	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, ""}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header, pingInterval time.Duration) *Client {
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval}
 }
 
 func (c *Client) refreshToken() error {
@@ -105,6 +100,8 @@ func (c *Client) listen() {
 		c.broker.unsubscribe <- c
 		c.conn.Close()
 	}()
+	// Time allowed to read the next pong message from the peer. Must be greater than ping interval.
+	pongWait := 10 * c.pingInterval / 9
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error {
@@ -217,7 +214,7 @@ func (c *Client) send(data []byte) bool {
 }
 
 func (c *Client) flush() {
-	ticker := time.NewTicker(pingPeriod)
+	ticker := time.NewTicker(c.pingInterval)
 	defer func() {
 		ticker.Stop()
 		c.conn.Close()

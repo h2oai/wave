@@ -51,6 +51,7 @@ type ServerConf struct {
 	Auth                 *AuthConf
 	ForwardedHeaders     map[string]bool
 	KeepAppLive          bool
+	PingInterval         time.Duration
 }
 
 type AuthConf struct {
@@ -96,6 +97,7 @@ type Conf struct {
 	MaxProxyResponseSize  string `cfg:"max-proxy-response-size" env:"H2O_WAVE_MAX_PROXY_RESPONSE_SIZE" cfgDefault:"5M" cfgHelper:"maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)"`
 	SessionExpiry         string `cfg:"session-expiry" env:"H2O_WAVE_SESSION_EXPIRY" cfgDefault:"720h" cfgHelper:"session cookie lifetime duration (e.g. 1800s or 30m or 0.5h)"`
 	InactivityTimeout     string `cfg:"session-inactivity-timeout" env:"H2O_WAVE_SESSION_INACTIVITY_TIMEOUT" cfgDefault:"30m" cfgHelper:"session inactivity timeout duration (e.g. 1800s or 30m or 0.5h)"`
+	PingInterval          string `cfg:"ping-interval" env:"H2O_WAVE_PING_INTERVAL" cfgDefault:"50s" cfgHelper:"how often should ping messages be sent (e.g. 60s or 1m or 0.1h) to keep the websocket connection alive (default 50s)"`
 	NoStore               bool   `cfg:"no-store" env:"H2O_WAVE_NO_STORE" cfgDefault:"false" cfgHelper:"disable storage (scripts and multicast/broadcast apps will not work)"`
 	NoLog                 bool   `cfg:"no-log" env:"H2O_WAVE_NO_LOG" cfgDefault:"false" cfgHelper:"disable AOF logging (connect/disconnect and diagnostic logging messages are not disabled)"`
 	Debug                 bool   `cfg:"debug" env:"H2O_WAVE_DEBUG" cfgDefault:"false" cfgHelper:"enable debug mode (profiling, inspection, etc.)"`
