@@ -107,7 +107,7 @@ func Run(conf ServerConf) {
 		handle("_auth/refresh", newRefreshHandler(auth, conf.Keychain))
 	}
 
-	handle("_s/", newSocketServer(broker, auth, conf.Editable, conf.BaseURL, conf.ForwardedHeaders)) // XXX terminate sockets when logged out
+	handle("_s/", newSocketServer(broker, auth, conf.Editable, conf.BaseURL, conf.ForwardedHeaders, conf.PingInterval)) // XXX terminate sockets when logged out
 
 	fileDir := filepath.Join(conf.DataDir, "f")
 	handle("_f/", newFileServer(fileDir, conf.Keychain, auth, conf.BaseURL+"_f"))

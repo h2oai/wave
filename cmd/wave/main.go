@@ -233,6 +233,9 @@ func main() {
 	if authConf.InactivityTimeout, err = time.ParseDuration(conf.InactivityTimeout); err != nil {
 		panic(err)
 	}
+	if serverConf.PingInterval, err = time.ParseDuration(conf.PingInterval); err != nil {
+		panic(err)
+	}
 
 	requiredEnvOIDC := map[string]string{
 		"oidc-client-id":     conf.ClientID,
