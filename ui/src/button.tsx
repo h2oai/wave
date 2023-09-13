@@ -115,6 +115,11 @@ const
     center: 'center',
     between: 'space-between',
     around: 'space-around',
+  },
+  iconButtonPrimaryStyles = {
+    root: { color: cssVar('$white'), background: cssVar('$themePrimary') },
+    rootHovered: { color: cssVar('$white'), background: cssVar('$themeDarkAlt') },
+    rootPressed: { color: cssVar('$white'), background: cssVar('$themePrimary') }
   }
 
 const
@@ -171,8 +176,22 @@ const
       } : undefined,
       split: !!commands,
     }
-    if (isIconOnly) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
-
+    if (isIconOnly) {
+      return <Fluent.IconButton
+        {...btnProps}
+        data-test={name}
+        title={caption}
+        // Fluent does not support primary icon buttons so we need to override the styles.
+        styles={primary
+          ? {
+            ...styles,
+            ...iconButtonPrimaryStyles,
+            root: { ...(styles.root as any), ...iconButtonPrimaryStyles.root }
+          }
+          : undefined
+        }
+      />
+    }
     return caption?.length
       ? primary
         ? <Fluent.CompoundButton {...btnProps} data-test={name} primary secondaryText={caption} />
