@@ -750,10 +750,9 @@ export const
 
         if (m.groups) {
           filteredItems.forEach(({ group }, idx) => {
-            const prevGroup = allGroups[group]
-            prevGroup.count === 0
+            allGroups[group].count === 0
               ? allGroups[group] = ({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group, expandedRefs.current) })
-              : prevGroup.count++
+              : allGroups[group].count++
           })
           groups = Object.values(allGroups)
         } else {
