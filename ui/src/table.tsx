@@ -241,10 +241,11 @@ const
     'on-hover': Fluent.CheckboxVisibility.onHover,
     'hidden': Fluent.CheckboxVisibility.hidden,
   },
-  groupByF = function <T extends Dict<any>>(items: T[], filteredItems: T[], key: S): Dict<any> {
-    const groupedItems = [...new Set(items.map(item => item[key]))].reduce((arr, val) => { arr[val] = []; return arr }, [] as Dict<any>)
-    filteredItems.forEach(item => groupedItems[item[key]].push(item))
-    return groupedItems
+  groupByF = function <T extends Dict<any>>(arr: T[], key: S): Dict<any> {
+    return arr.reduce((rv, x: T) => {
+      (rv[x[key]] = rv[x[key]] || []).push(x)
+      return rv
+    }, {} as Dict<any>)
   },
   sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
     let a = rowA[column.key], b = rowB[column.key]
@@ -727,36 +728,51 @@ export const
         const expandedRef = expandedRefs[key]
         return expandedRef === undefined || expandedRef
       },
+      groupList = React.useMemo(() => {
+        return m.groups
+          ? m.groups.reduce((acc, { label }) => {
+            acc[label] = ({ key: label, name: label, startIndex: 0, count: 0 })
+            return acc
+          }, {} as Dict<Fluent.IGroup>)
+          : groupByKey !== '*'
+            ? items.reduce((acc, item) => {
+              const group = (item as Fluent.IObjectWithKey & Dict<any>)[groupByKey]
+              if (!acc[group]) acc[group] = ({ key: group, name: group, startIndex: 0, count: 0 })
+              return acc
+            }, {} as Dict<Fluent.IGroup>)
+            : {}
+      }, [m.groups, groupByKey, items]),
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
+        const allGroups: Dict<Fluent.IGroup> = { ...groupList }
         let
           groups: Fluent.IGroup[],
           groupedBy: Dict<any> = []
 
         if (m.groups) {
-          groups = m.groups.reduce((acc, { label }) => {
-            const
-              prevGroup = acc[acc.length - 1],
-              startIndex = prevGroup ? prevGroup.startIndex + prevGroup.count : 0,
-              count = filteredItems.filter(({ group }) => group === label).length
-            acc.push({ key: label, name: label, startIndex, count, isCollapsed: getIsCollapsed(label, expandedRefs.current) })
-            return acc
-          }, [] as Fluent.IGroup[])
+          filteredItems.forEach(({ group }, idx) => {
+            const prevGroup = allGroups[group]
+            prevGroup.count === 0
+              ? allGroups[group] = ({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group, expandedRefs.current) })
+              : prevGroup.count++
+          })
+          groups = Object.values(allGroups)
         } else {
           let prevSum = 0
-          groupedBy = groupByF(items, filteredItems, groupByKey)
+          groupedBy = groupByF(filteredItems, groupByKey)
           const
             groupedByKeys = Object.keys(groupedBy),
             groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
 
-          groups = groupedByKeys.map((key, i) => {
+          groupedByKeys.forEach((key, i) => {
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
-
             const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
-            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
-          }).sort(({ name: name1 }, { name: name2 }) => {
+            allGroups[key] = { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
+          })
+
+          groups = Object.values(allGroups).sort(({ name: name1 }, { name: name2 }) => {
             const numName1 = Number(name1), numName2 = Number(name2)
             if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
 
@@ -766,9 +782,8 @@ export const
             return name2 < name1 ? 1 : -1
           })
         }
-
         return { groupedBy, groups }
-      }, [items, m.columns, m.groups]),
+      }, [groupList, m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
