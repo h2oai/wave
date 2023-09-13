@@ -728,7 +728,7 @@ export const
         const expandedRef = expandedRefs[key]
         return expandedRef === undefined || expandedRef
       },
-      groupsDict = React.useMemo(() => {
+      initialGroups = React.useMemo(() => {
         return m.groups
           ? m.groups.reduce((acc, { label }) => {
             acc[label] = ({ key: label, name: label, startIndex: 0, count: 0 })
@@ -743,7 +743,7 @@ export const
             : {}
       }, [m.groups, groupByKey, items]),
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
-        const allGroups: Dict<Fluent.IGroup> = { ...groupsDict }
+        const allGroups: Dict<Fluent.IGroup> = { ...initialGroups }
         let
           groups: Fluent.IGroup[],
           groupedBy: Dict<any> = []
@@ -782,7 +782,7 @@ export const
           })
         }
         return { groupedBy, groups }
-      }, [groupsDict, m.columns, m.groups]),
+      }, [initialGroups, m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
