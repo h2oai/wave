@@ -321,7 +321,7 @@ const
           menuFilters.map(({ key, data, checked }) => (
             <Fluent.Checkbox
               key={key}
-              label={key}
+              label={col.dataType === 'time' ? valueToDateString(key) : key}
               checked={checked}
               onChange={getOnFilterChangeHandler(data, key)}
               styles={{ root: { marginBottom: 5 }, checkmark: { display: 'flex' } }}
@@ -764,7 +764,7 @@ export const
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
-            const name = groupByColType === 'time' ? valueToDateString(key) : key
+            const name = groupByColType === 'time' ? valueToDateString(key) : key // TODO: Use valueToDateString for empty groups as well.
             allGroups[key] = { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
           })
 

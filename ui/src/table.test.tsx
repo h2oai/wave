@@ -1323,6 +1323,35 @@ describe('Table.tsx', () => {
       expect(container.querySelectorAll('.ms-GroupHeader-title')[0]).toHaveTextContent('1/20/1970, 4:58:47 AM(1)')
       expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent('6/22/2022, 8:47:51 PM(1)')
     })
+
+    it.only('Checks if name of empty group is correct when grouped by column width time data', () => {
+      tableProps = {
+        ...tableProps,
+        groupable: true,
+        columns: [
+          { name: 'colname1', label: 'Col1' },
+          { name: 'colname2', label: 'Col2', data_type: 'time', filterable: true },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, '1655927271'] },
+          { name: 'rowname2', cells: [cell21, '2655927271000'] }, // TODO: Fix case if values are similar: '1655927271000'
+        ]
+      }
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('2/28/2054, 9:34:31 PM')[2].parentElement!)
+
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + filteredItem)
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[0]).toHaveTextContent('1/20/1970, 4:58:47 AM(0)')
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent('2/28/2054, 9:34:31 PM(1)')
+    })
   })
 
   describe('Groups', () => {
