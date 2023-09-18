@@ -171,7 +171,11 @@ const
       } : undefined,
       split: !!commands,
     }
-    if (isIconOnly) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
+    if (isIconOnly) {
+      return primary
+        ? <Fluent.PrimaryButton {...btnProps} data-test={name} title={caption} />
+        : <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
+    }
 
     return caption?.length
       ? primary
