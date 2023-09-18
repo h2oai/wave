@@ -63,6 +63,14 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 ])
 ```
 
+You can also use the icon only button as a [primary button](#primary-button).
+
+```py
+q.page['form'] = ui.form_card(box='1 1 1 1', items=[
+    ui.button(name='button', icon='ChevronRight', caption='Tooltip on hover', primary=True)
+])
+```
+
 ## Button layout
 
 Buttons on their own can only be placed in a [form_card](/docs/api/ui#form_card), either vertically or horizontally.
