@@ -728,22 +728,18 @@ export const
         const expandedRef = expandedRefs[key]
         return expandedRef === undefined || expandedRef
       },
-      initialGroups = React.useMemo(() => {
+      groupNames = React.useMemo(() => {
         return m.groups
-          ? m.groups.reduce((acc, { label }) => {
-            acc[label] = ({ key: label, name: label, startIndex: 0, count: 0 })
-            return acc
-          }, {} as Dict<Fluent.IGroup>)
+          ? m.groups.reduce((acc, { label }) => acc.add(label), new Set<S>())
           : groupByKey !== '*'
-            ? items.reduce((acc, item) => {
-              const group = (item as Fluent.IObjectWithKey & Dict<any>)[groupByKey]
-              if (!acc[group]) acc[group] = ({ key: group, name: group, startIndex: 0, count: 0 })
-              return acc
-            }, {} as Dict<Fluent.IGroup>)
-            : {}
+            ? (items as Dict<S>[]).reduce((acc, item) => acc.add(item[groupByKey]), new Set<S>())
+            : new Set<S>()
       }, [m.groups, groupByKey, items]),
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
-        const allGroups: Dict<Fluent.IGroup> = { ...initialGroups }
+        const allGroups = [...groupNames].reduce((acc, groupName) => {
+          acc[groupName] = { key: groupName, name: groupName, startIndex: 0, count: 0, isCollapsed: getIsCollapsed(groupName, expandedRefs.current) }
+          return acc
+        }, {} as Dict<Fluent.IGroup>)
         let
           groups: Fluent.IGroup[],
           groupedBy: Dict<any> = []
@@ -751,7 +747,7 @@ export const
         if (m.groups) {
           filteredItems.forEach(({ group }, idx) => {
             allGroups[group].count === 0
-              ? allGroups[group] = ({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group, expandedRefs.current) })
+              ? allGroups[group] = { ...allGroups[group], startIndex: idx, count: 1 }
               : allGroups[group].count++
           })
           groups = Object.values(allGroups)
@@ -767,6 +763,7 @@ export const
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
+            if (groupByColType === 'time') console.log(new Date(key).toLocaleString(), key)
             const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
             allGroups[key] = { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
           })
@@ -782,7 +779,7 @@ export const
           })
         }
         return { groupedBy, groups }
-      }, [initialGroups, m.columns, m.groups]),
+      }, [groupNames, m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
