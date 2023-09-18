@@ -1299,6 +1299,30 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Group2')[0].parentElement!)
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length)
     })
+
+    it('Checks if group name is correct when grouped by column width time data', () => {
+      tableProps = {
+        ...tableProps,
+        groupable: true,
+        columns: [
+          { name: 'colname1', label: 'Col1' },
+          { name: 'colname2', label: 'Col2', data_type: 'time' },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, '1655927271'] },
+          { name: 'rowname2', cells: [cell21, '1655927271000'] },
+        ]
+      }
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length)
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[0]).toHaveTextContent('1/20/1970, 4:58:47 AM(1)')
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent('6/22/2022, 8:47:51 PM(1)')
+    })
   })
 
   describe('Groups', () => {

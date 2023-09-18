@@ -270,6 +270,10 @@ const
       : b > a ? 1 : -1
   },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+  valueToDateString = (value: S) => {
+    const epoch = Number(value)
+    return new Date(isNaN(epoch) ? value : epoch).toLocaleString()
+  },
   toCSV = (data: unknown[][]): S => data.map(row => {
     const line = JSON.stringify(row)
     return line.substr(1, line.length - 2)
@@ -509,10 +513,7 @@ const
           </TooltipWrapper>
         )
 
-        if (col.dataType === 'time') {
-          const epoch = Number(v)
-          v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
-        }
+        if (col.dataType === 'time') v = valueToDateString(v)
 
         if (col.key === primaryColumnKey) {
           const onClick = () => {
@@ -763,8 +764,7 @@ export const
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
-            if (groupByColType === 'time') console.log(new Date(key).toLocaleString(), key)
-            const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
+            const name = groupByColType === 'time' ? valueToDateString(key) : key
             allGroups[key] = { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
           })
 
