@@ -23,7 +23,7 @@ In other words, H2O Lightwave works without the Wave server.
 
 from .core import Ref, data, pack, Expando, expando_to_dict, clone_expando, copy_expando
 from .server import Q, wave_serve
-from .routing import on, handle_on
+from .routing import on, run_on, handle_on
 from .types import *
 from .version import __version__
 

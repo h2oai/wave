@@ -2,7 +2,7 @@
 # Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
 # for #routing using URLs, with parameters.
 # ---
-from h2o_wave import main, app, Q, ui, on, handle_on
+from h2o_wave import main, app, Q, ui, on, run_on
 
 air_passengers_fields = ['Year', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
 air_passengers_rows = [
@@ -62,6 +62,6 @@ async def serve(q: Q):
             content='Click on a cell in the table above!',
         )
 
-    await handle_on(q)
+    await run_on(q)
 
     await q.page.save()

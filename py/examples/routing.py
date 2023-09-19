@@ -1,7 +1,7 @@
 # Routing
-# Use `on` and `handle_on` to simplify query handling by #routing queries to designated functions.
+# Use `on` and `run_on` to simplify query handling by #routing queries to designated functions.
 # ---
-from h2o_wave import main, app, Q, ui, on, handle_on
+from h2o_wave import main, app, Q, ui, on, run_on
 
 
 # This function is called when q.args['empty_cart'] is True.
@@ -60,4 +60,4 @@ async def serve(q: Q):
             ],
         )
         await q.page.save()
-    await handle_on(q)
+    await run_on(q)

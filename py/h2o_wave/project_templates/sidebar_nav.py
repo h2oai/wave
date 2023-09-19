@@ -1,4 +1,4 @@
-from h2o_wave import main, app, Q, ui, on, handle_on, data
+from h2o_wave import main, app, Q, ui, on, run_on, data
 from typing import Optional, List
 
 
@@ -116,66 +116,58 @@ async def page3(q: Q):
 
 
 @on('#page4')
-async def handle_page4(q: Q):
+@on('page4_reset')
+async def page4(q: Q):
     q.page['sidebar'].value = '#page4'
     # When routing, drop all the cards except of the main ones (header, sidebar, meta).
-    # Since this page is interactive, we want to update its card instead of recreating it every time, so ignore 'form' card on drop.
+    # Since this page is interactive, we want to update its card
+    # instead of recreating it every time, so ignore 'form' card on drop.
     clear_cards(q, ['form'])
 
-    if q.args.step1:
-        # Just update the existing card, do not recreate.
-        q.page['form'].items = [
-            ui.stepper(name='stepper', items=[
-                ui.step(label='Step 1'),
-                ui.step(label='Step 2'),
-                ui.step(label='Step 3'),
-            ]),
-            ui.textbox(name='textbox2', label='Textbox 1'),
-            ui.buttons(justify='end', items=[
-                ui.button(name='step2', label='Next', primary=True),
-            ])
-        ]
-    elif q.args.step2:
-        # Just update the existing card, do not recreate.
-        q.page['form'].items = [
-            ui.stepper(name='stepper', items=[
-                ui.step(label='Step 1', done=True),
-                ui.step(label='Step 2'),
-                ui.step(label='Step 3'),
-            ]),
-            ui.textbox(name='textbox2', label='Textbox 2'),
-            ui.buttons(justify='end', items=[
-                ui.button(name='step1', label='Cancel'),
-                ui.button(name='step3', label='Next', primary=True),
-            ])
-        ]
-    elif q.args.step3:
-        # Just update the existing card, do not recreate.
-        q.page['form'].items = [
-            ui.stepper(name='stepper', items=[
-                ui.step(label='Step 1', done=True),
-                ui.step(label='Step 2', done=True),
-                ui.step(label='Step 3'),
-            ]),
-            ui.textbox(name='textbox3', label='Textbox 3'),
-            ui.buttons(justify='end', items=[
-                ui.button(name='step2', label='Cancel'),
-                ui.button(name='submit', label='Next', primary=True),
-            ])
-        ]
-    else:
-        # If first time on this page, create the card.
-        add_card(q, 'form', ui.form_card(box='vertical', items=[
-            ui.stepper(name='stepper', items=[
-                ui.step(label='Step 1'),
-                ui.step(label='Step 2'),
-                ui.step(label='Step 3'),
-            ]),
-            ui.textbox(name='textbox1', label='Textbox 1'),
-            ui.buttons(justify='end', items=[
-                ui.button(name='step2', label='Next', primary=True),
-            ]),
-        ]))
+    # If first time on this page, create the card.
+    add_card(q, 'form', ui.form_card(box='vertical', items=[
+        ui.stepper(name='stepper', items=[
+            ui.step(label='Step 1'),
+            ui.step(label='Step 2'),
+            ui.step(label='Step 3'),
+        ]),
+        ui.textbox(name='textbox1', label='Textbox 1'),
+        ui.buttons(justify='end', items=[
+            ui.button(name='page4_step2', label='Next', primary=True),
+        ]),
+    ]))
+
+
+@on()
+async def page4_step2(q: Q):
+    # Just update the existing card, do not recreate.
+    q.page['form'].items = [
+        ui.stepper(name='stepper', items=[
+            ui.step(label='Step 1', done=True),
+            ui.step(label='Step 2'),
+            ui.step(label='Step 3'),
+        ]),
+        ui.textbox(name='textbox2', label='Textbox 2'),
+        ui.buttons(justify='end', items=[
+            ui.button(name='page4_step3', label='Next', primary=True),
+        ])
+    ]
+
+
+@on()
+async def page4_step3(q: Q):
+    # Just update the existing card, do not recreate.
+    q.page['form'].items = [
+        ui.stepper(name='stepper', items=[
+            ui.step(label='Step 1', done=True),
+            ui.step(label='Step 2', done=True),
+            ui.step(label='Step 3'),
+        ]),
+        ui.textbox(name='textbox3', label='Textbox 3'),
+        ui.buttons(justify='end', items=[
+            ui.button(name='page4_reset', label='Finish', primary=True),
+        ])
+    ]
 
 
 async def init(q: Q) -> None:
@@ -223,5 +215,5 @@ async def serve(q: Q):
         q.client.initialized = True
 
     # Handle routing.
-    await handle_on(q)
+    await run_on(q)
     await q.page.save()

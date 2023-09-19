@@ -1,7 +1,7 @@
 # Routing / Predicates
-# Use `on` and `handle_on` with predicates to handle routing with custom conditions.
+# Use `on` and `run_on` with predicates to handle routing with custom conditions.
 # ---
-from h2o_wave import main, app, Q, ui, on, handle_on
+from h2o_wave import main, app, Q, ui, on, run_on
 
 
 # This function is called when q.args['temperature'] < 15.
@@ -29,7 +29,7 @@ async def serve(q: Q):
         q.args.temperature = 20
         await show_slider(q, "")
     else:
-        await handle_on(q)
+        await run_on(q)
 
 
 async def show_slider(q: Q, message: str):

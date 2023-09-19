@@ -9,6 +9,7 @@ import platform
 from .test_expando import *
 from .test_python_server import *
 from .test_python_server_async import *
+from .test_routing import *
 
 if __name__ == '__main__':
     waved_p = None
