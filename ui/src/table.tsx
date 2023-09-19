@@ -764,9 +764,10 @@ export const
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
-            const name = groupByColType === 'time' ? valueToDateString(key) : key // TODO: Use valueToDateString for empty groups as well.
-            allGroups[key] = { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
+            allGroups[key] = { key, name: key, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
           })
+
+          if (groupByColType === 'time') Object.keys(allGroups).forEach(key => { allGroups[key].name = valueToDateString(key) })
 
           groups = Object.values(allGroups).sort(({ name: name1 }, { name: name2 }) => {
             const numName1 = Number(name1), numName2 = Number(name2)

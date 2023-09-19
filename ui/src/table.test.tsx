@@ -1324,7 +1324,7 @@ describe('Table.tsx', () => {
       expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent('6/22/2022, 8:47:51 PM(1)')
     })
 
-    it.only('Checks if name of empty group is correct when grouped by column width time data', () => {
+    it('Checks if name of empty group is correct when grouped by column width time data', () => {
       tableProps = {
         ...tableProps,
         groupable: true,
