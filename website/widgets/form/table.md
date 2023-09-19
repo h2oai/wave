@@ -393,7 +393,8 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
                 ui.table_row(name='row3', cells=['Task3', 'High']),
                 ui.table_row(name='row4', cells=['Task4', 'Low']),
                 ui.table_row(name='row5', cells=['Task5', 'Very High'])
-            ])
+            ]),
+            ui.table_group("Assigned to Mary", []),
         ])
 ])
 ```

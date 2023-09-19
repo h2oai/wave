@@ -21,7 +21,8 @@ async def serve(q: Q):
                     ui.table_row(name='row3', cells=['Issue3']),
                     ui.table_row(name='row4', cells=['Issue4']),
                     ui.table_row(name='row5', cells=['Issue5']),
-                ], collapsed=False)],
+                ], collapsed=False),
+                ui.table_group("Jane", [])],
             height='500px'
         )
     ])

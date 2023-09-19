@@ -270,6 +270,10 @@ const
       : b > a ? 1 : -1
   },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+  valueToDateString = (value: S) => {
+    const epoch = Number(value)
+    return new Date(isNaN(epoch) ? value : epoch).toLocaleString()
+  },
   toCSV = (data: unknown[][]): S => data.map(row => {
     const line = JSON.stringify(row)
     return line.substr(1, line.length - 2)
@@ -317,7 +321,7 @@ const
           menuFilters.map(({ key, data, checked }) => (
             <Fluent.Checkbox
               key={key}
-              label={key}
+              label={col.dataType === 'time' ? valueToDateString(key) : key}
               checked={checked}
               onChange={getOnFilterChangeHandler(data, key)}
               styles={{ root: { marginBottom: 5 }, checkmark: { display: 'flex' } }}
@@ -509,10 +513,7 @@ const
           </TooltipWrapper>
         )
 
-        if (col.dataType === 'time') {
-          const epoch = Number(v)
-          v = new Date(isNaN(epoch) ? v : epoch).toLocaleString()
-        }
+        if (col.dataType === 'time') v = valueToDateString(v)
 
         if (col.key === primaryColumnKey) {
           const onClick = () => {
@@ -565,7 +566,8 @@ const
             onToggleCollapseAll,
             onRenderHeader: onRenderGroupHeader,
             headerProps: { onToggleCollapse },
-            isAllGroupsCollapsed: m.groups?.every(({ collapsed = true }) => collapsed)
+            isAllGroupsCollapsed: m.groups?.every(({ collapsed = true }) => collapsed),
+            showEmptyGroups: true
           }}
           getGroupHeight={getGroupHeight}
           selection={selection}
@@ -727,19 +729,29 @@ export const
         const expandedRef = expandedRefs[key]
         return expandedRef === undefined || expandedRef
       },
+      groupNames = React.useMemo(() => {
+        return m.groups
+          ? m.groups.reduce((acc, { label }) => acc.add(label), new Set<S>())
+          : groupByKey !== '*'
+            ? (items as Dict<S>[]).reduce((acc, item) => acc.add(item[groupByKey]), new Set<S>())
+            : new Set<S>()
+      }, [m.groups, groupByKey, items]),
       makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
+        const allGroups = [...groupNames].reduce((acc, groupName) => {
+          acc[groupName] = { key: groupName, name: groupName, startIndex: 0, count: 0, isCollapsed: getIsCollapsed(groupName, expandedRefs.current) }
+          return acc
+        }, {} as Dict<Fluent.IGroup>)
         let
           groups: Fluent.IGroup[],
           groupedBy: Dict<any> = []
 
         if (m.groups) {
-          groups = filteredItems.reduce((acc, { group }, idx) => {
-            const prevGroup = acc[acc.length - 1]
-            prevGroup?.key === group
-              ? prevGroup.count++
-              : acc.push({ key: group, name: group, startIndex: idx, count: 1, isCollapsed: getIsCollapsed(group, expandedRefs.current) })
-            return acc
-          }, [] as Fluent.IGroup[])
+          filteredItems.forEach(({ group }, idx) => {
+            allGroups[group].count === 0
+              ? allGroups[group] = { ...allGroups[group], startIndex: idx, count: 1 }
+              : allGroups[group].count++
+          })
+          groups = Object.values(allGroups)
         } else {
           let prevSum = 0
           groupedBy = groupByF(filteredItems, groupByKey)
@@ -747,15 +759,17 @@ export const
             groupedByKeys = Object.keys(groupedBy),
             groupByColType = m.columns.find(c => c.name === groupByKey)?.data_type
 
-          groups = groupedByKeys.map((key, i) => {
+          groupedByKeys.forEach((key, i) => {
             if (i !== 0) {
               const prevKey = groupedByKeys[i - 1]
               prevSum += groupedBy[prevKey].length
             }
+            allGroups[key] = { key, name: key, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
+          })
 
-            const name = groupByColType === 'time' ? new Date(key).toLocaleString() : key
-            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: getIsCollapsed(key, expandedRefs.current) }
-          }).sort(({ name: name1 }, { name: name2 }) => {
+          if (groupByColType === 'time') Object.keys(allGroups).forEach(key => { allGroups[key].name = valueToDateString(key) })
+
+          groups = Object.values(allGroups).sort(({ name: name1 }, { name: name2 }) => {
             const numName1 = Number(name1), numName2 = Number(name2)
             if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
 
@@ -765,9 +779,8 @@ export const
             return name2 < name1 ? 1 : -1
           })
         }
-
         return { groupedBy, groups }
-      }, [m.columns, m.groups]),
+      }, [groupNames, m.columns, m.groups]),
       initGroups = React.useCallback(() => {
         setGroupByKey(groupByKey => {
           setFilteredItems(filteredItems => {
@@ -974,6 +987,8 @@ export const
       setFilteredItems(items)
       if (!m.pagination) reset()
     }, [items])
+
+    useUpdateOnlyEffect(() => { initGroups() }, [groupNames, initGroups])
 
     React.useEffect(() => {
       if (m.groups) {
