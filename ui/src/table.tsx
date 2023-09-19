@@ -988,6 +988,8 @@ export const
       if (!m.pagination) reset()
     }, [items])
 
+    useUpdateOnlyEffect(() => { initGroups() }, [groupNames, initGroups])
+
     React.useEffect(() => {
       if (m.groups) {
         expandedRefs.current = m.groups?.reduce((acc, { label, collapsed = true }) => {

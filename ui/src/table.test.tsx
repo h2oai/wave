@@ -1162,6 +1162,30 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
+    it('Checks if groups are correct when grouping by multiple times', () => {
+      const
+        { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />),
+        groupBy = (col: string) => {
+          fireEvent.click(getByTestId('groupby'))
+          fireEvent.click(getAllByText(col)[1]!)
+          fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
+        }
+
+      groupBy('Col1')
+
+      expect(getAllByRole('row')).toHaveLength(headerRow + 2 * tableProps.rows!.length)
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent(`${cell21}(1)`)
+      expect(groupHeaders[1]).toHaveTextContent(`${cell11}(1)`)
+      expect(groupHeaders[2]).toHaveTextContent(`${cell31}(1)`)
+
+      groupBy('Col2')
+
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + tableProps.rows!.length)
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[0]).toHaveTextContent(`${'Group1'}(2)`)
+      expect(container.querySelectorAll('.ms-GroupHeader-title')[1]).toHaveTextContent(`${'Group2'}(1)`)
+    })
+
     it('Renders alphabetically sorted group by list - strings', () => {
       const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
 
