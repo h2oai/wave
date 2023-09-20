@@ -32,11 +32,11 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install --editable h2o_lightwave
 	./venv/bin/python -m pip install --editable h2o_lightwave_web
 	rm -f h2o_wave/h2o_wave/metadata.py
-	echo -e "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
+	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 
 setup-tests: ## Install dependencies for tests only
 	python3 -m venv venv
-	echo -e "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
+	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 	./venv/bin/python -m pip install --editable h2o_wave
 	./venv/bin/pip install httpx typing_extensions
 

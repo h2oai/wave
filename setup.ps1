@@ -12,7 +12,7 @@ python -m venv venv
 .\venv\Scripts\python -m pip install --upgrade pip
 .\venv\Scripts\python -m pip install --editable h2o_wave
 .\venv\Scripts\pip install httpx typing_extensions
-echo -e "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
+echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 Set-Location ..
