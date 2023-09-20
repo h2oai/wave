@@ -60,6 +60,10 @@ event_handlers = {
     'source.event': AsyncMock(),
 }
 
+# HACK: Monkey-patch routing arity checks - throws err on Python 3.10
+# https://github.com/python/cpython/issues/96127.
+h2o_wave.routing._get_arity = lambda x: 0
+
 for k, h in arg_handlers.items():
     h2o_wave.routing._add_handler(k, h, None)
 for k, h in path_handlers.items():
