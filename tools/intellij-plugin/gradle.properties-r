@@ -1,0 +1,21 @@
+# IntelliJ Platform Artifacts Repositories
+# -> https://plugins.jetbrains.com/docs/intellij/intellij-artifacts.html
+
+pluginGroup = ai.h2o.wave
+pluginName = H2O Wave
+pluginVersion = 0.26.2
+pluginSinceBuild = 212
+pluginUntilBuild = 232.*
+# Plugin Verifier integration -> https://github.com/JetBrains/gradle-intellij-plugin#plugin-verifier-dsl
+# See https://jb.gg/intellij-platform-builds-list for available build versions
+
+platformType = PC
+platformVersion = 2021.2
+platformDownloadSources = false
+# Plugin Dependencies -> https://plugins.jetbrains.com/docs/intellij/plugin-dependencies.html
+# Example: platformPlugins = com.intellij.java, com.jetbrains.php:203.4449.22
+platformPlugins = PythonCore
+
+# Opt-out flag for bundling Kotlin standard library.
+# See https://kotlinlang.org/docs/reference/using-gradle.html#dependency-on-the-standard-library for details.
+kotlin.stdlib.default.dependency = false

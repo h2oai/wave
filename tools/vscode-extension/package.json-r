@@ -1,0 +1,61 @@
+{
+  "name": "h2o-wave",
+  "displayName": "H2O Wave",
+  "description": "VSCode extension that aims to improve H2O Wave development experience.",
+  "author": "Martin Turoci",
+  "repository": "https://github.com/h2oai/wave",
+  "license": "Apache-2.0",
+  "version": "0.26.2",
+  "publisher": "h2oai",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "python",
+        "path": "./snippets.json"
+      }
+    ]
+  },
+  "engines": {
+    "vscode": "^1.55.0"
+  },
+  "categories": [
+    "Data Science",
+    "Machine Learning",
+    "Visualization",
+    "Programming Languages",
+    "Snippets"
+  ],
+  "tags": [
+    "python",
+    "data science",
+    "h2o.ai",
+    "wave"
+  ],
+  "icon": "icon.png",
+  "activationEvents": [
+    "onLanguage:python"
+  ],
+  "main": "./client/out/extension",
+  "scripts": {
+    "compile": "tsc -b",
+    "bundle": "npm run compile && esbuild client/src/extension.ts --bundle --outfile=client/out/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "package": "npx vsce package",
+    "build": "node build.js && npm run bundle && npm run package",
+    "watch": "tsc -b -w",
+    "publish": "npx vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41",
+    "@types/vscode": "^1.55.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "esbuild": "^0.12.9",
+    "eslint": "^7.23.0",
+    "json-to-markdown-table": "^1.0.0",
+    "typescript": "^4.2.4",
+    "vsce": "^2.6.5"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^7.0.0"
+  }
+}
