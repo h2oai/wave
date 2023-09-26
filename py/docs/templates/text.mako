@@ -55,9 +55,10 @@ ${docstring | to_html}
 <div className='api'>
 
     % if is_method:
-${"####"} ${f.name} <a name="${f.refname}"/>
+${"####"} <span id="${f.refname}">${f.name}</span>
+
     % else:
-${"###"} ${f.name} <a name="${f.refname}"/>
+${"###"} <span id="${f.refname}">${f.name}</span>
     % endif
 
         <%
