@@ -38,11 +38,12 @@ const
     icon: {
       userSelect: 'none',
       marginRight: -6,
+      color: cssVar('$text'),
     },
     target: {
       boxSizing: 'border-box',
       cursor: 'pointer',
-      opacity: 0.5,
+      opacity: 0.8,
       $nest: {
         '&:hover': {
           opacity: 1,
