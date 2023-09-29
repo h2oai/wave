@@ -147,10 +147,15 @@ export const
         const { specification, data, title, grammar = 'vega-lite' } = state
         return (
           <div data-test={name} className={css.card}>
-            <div className='wave-s12 wave-w6'>{title}</div>
+            {title && <div className='wave-s12 wave-w6'>{title}</div>}
+            {title && 
             <div className={css.body}>
               <XVegaVisualization model={{ specification, data, grammar }} />
-            </div>
+            </div>}
+            {!title && 
+            <div className={css.body} style={{marginTop: 0}}>
+              <XVegaVisualization model={{ specification, data, grammar }} />
+            </div>}
           </div>
         )
       }
