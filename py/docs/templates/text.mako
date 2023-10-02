@@ -55,6 +55,8 @@ ${docstring | to_html}
 <div className='api'>
 
     % if is_method:
+    ## Using <a> with name prop as an anchor adds additional dash to the URL - https://github.com/facebook/docusaurus/issues/8901.
+    ## Using <span> with id instead.
 ${"####"} <span id="${f.refname}">${f.name}</span>
 
     % else:
