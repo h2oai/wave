@@ -259,33 +259,26 @@ def init():
     """
     try:
         theme = inquirer.themes.load_theme_from_dict({"List": {"selection_color": "yellow"}})
-        project = inquirer.prompt([inquirer.List('project', message="Choose a starter template",
-              choices=[
-                  'Hello World app (for beginners)',
-                  'App with header',
-                  'App with header + navigation',
-                  'App with sidebar + navigation',
-                  'App with header & sidebar + navigation'
-              ]),
+        project = inquirer.prompt([
+            inquirer.List(
+                name='project',
+                message="Choose a starter template",
+                choices=[
+                    ('Hello World app (for beginners)', 'hello_world.py'),
+                    ('Chat app', 'chat.py'),
+                    ('App with header', 'header.py'),
+                    ('App with header + navigation', 'header_nav.py'),
+                    ('App with sidebar + navigation', 'sidebar_nav.py'),
+                    ('App with header & sidebar + navigation', 'header_sidebar_nav.py'),
+                ]
+            ),
         ], theme=theme)['project']
     # Ctrl-C causes TypeError within inquirer, resulting in ugly stacktrace. Catch the error and return early on CTRL-C.
     except (KeyboardInterrupt, TypeError):
         return
 
-    app_content = ''
     base_path = os.path.join(sys.exec_prefix, 'project_templates')
-    if 'Hello World' in project:
-        app_content = read_file(os.path.join(base_path, 'hello_world.py'))
-    elif 'header & sidebar' in project:
-        app_content = read_file(os.path.join(base_path, 'header_sidebar_nav.py'))
-    elif 'header +' in project:
-        app_content = read_file(os.path.join(base_path, 'header_nav.py'))
-    elif 'header' in project:
-        app_content = read_file(os.path.join(base_path, 'header.py'))
-    elif 'sidebar +' in project:
-        app_content = read_file(os.path.join(base_path, 'sidebar_nav.py'))
-
-    write_file('app.py', app_content)
+    write_file('app.py', read_file(os.path.join(base_path, project)))
     write_file('requirements.txt', f'h2o-wave=={__version__}')
     write_file('README.md', read_file(os.path.join(base_path, 'README.md')))
 
