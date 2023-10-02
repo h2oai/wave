@@ -39,16 +39,15 @@ const
       userSelect: 'none',
       marginRight: -6,
       color: cssVar('$text'),
+      $nest: {
+        '&:hover': {
+          color: cssVar('$themePrimary'),
+        },
+      },
     },
     target: {
       boxSizing: 'border-box',
       cursor: 'pointer',
-      opacity: 0.8,
-      $nest: {
-        '&:hover': {
-          opacity: 1,
-        },
-      },
     }
   })
 
