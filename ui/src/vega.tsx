@@ -28,7 +28,6 @@ const
       padding: 24
     },
     body: {
-      marginTop: 16,
       flexGrow: 1,
       display: 'flex',
     },
@@ -148,14 +147,9 @@ export const
         return (
           <div data-test={name} className={css.card}>
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
-            {title && 
             <div className={css.body}>
               <XVegaVisualization model={{ specification, data, grammar }} />
-            </div>}
-            {!title && 
-            <div className={css.body} style={{marginTop: 0}}>
-              <XVegaVisualization model={{ specification, data, grammar }} />
-            </div>}
+            </div>
           </div>
         )
       }
