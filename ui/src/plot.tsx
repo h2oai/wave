@@ -492,9 +492,9 @@ export const
   }
 
 const
-  isF = (x: any): x is number => typeof x === 'number',
-  isB = (x: any): x is boolean => typeof x === 'boolean',
-  isS = (x: any): x is string => typeof x === 'string',
+  isF = (x: unknown): x is number => typeof x === 'number',
+  isB = (x: unknown): x is boolean => typeof x === 'boolean',
+  isS = (x: unknown): x is string => typeof x === 'string',
   split = (s: S) => s.trim().split(/\s+/g),
   parseInts = (s: S) => split(s).map(s => parseInt(s, 10)),
   convertToDates = (ds: any[], f: S) => {
@@ -939,7 +939,7 @@ const
 
     const
       type = getCoordType(marks) as any,
-      transpose = space === SpaceT.CD,
+      transpose = space === SpaceT.CD || space === SpaceT.TD,
       actions: CoordinateActions[] | undefined = transpose ? [['transpose']] : undefined
 
     if (transpose) for (const mark of marks) transposeMark(mark)

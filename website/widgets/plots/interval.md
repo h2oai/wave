@@ -139,7 +139,7 @@ q.page['example'] = ui.plot_card(
 
 ## Range
 
-Make a column plot with each bar representing high/low (or start/end) values. Transposing this produces a Gantt plot.
+Make a column plot with each bar representing high/low (or start/end) values.
 
 ```py
 from h2o_wave import data
@@ -155,6 +155,27 @@ q.page['example'] = ui.plot_card(
         ('computer science', 151000, 36000),
     ]),
     plot=ui.plot([ui.mark(type='interval', x='=profession', y0='=min', y='=max')])
+)
+```
+
+## Gantt
+
+Make a Gantt plot with each bar representing high/low (or start/end) values.
+
+```py
+from h2o_wave import data
+
+q.page['example'] = ui.plot_card(
+    box='1 1 4 5',
+    title='Interval, range',
+    data=data('profession max min', 5, rows=[
+        ('medicine', '2022-01-01', '2020-01-01'),
+        ('fire fighting', '2021-06-01', '2021-01-01'),
+        ('pedagogy', '2020-06-01', '2022-01-01'),
+        ('psychology', '2021-01-01', '2022-01-01'),
+        ('computer science', '2020-01-01', '2022-01-01'),
+    ]),
+    plot=ui.plot([ui.mark(type='interval', y='=profession', x_scale='time', x0='=min', x='=max')])
 )
 ```
 
