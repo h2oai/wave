@@ -31,7 +31,9 @@ const css = stylesheet({
     width: pc(35)
   },
   rhs: {
-    width: pc(65)
+    width: pc(65),
+    flexGrow: 1,
+    display: 'flex',
   },
   title: {
     color: cssVar('$neutralPrimary'),
