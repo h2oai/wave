@@ -214,7 +214,14 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
               setActiveTag={setActiveTag}
               onRenderToolbar={() => (
                 <Fluent.Stack horizontal>
-                  <Fluent.Icon iconName={volumeIcon} styles={{ root: { fontSize: 18 } }} />
+                  <Fluent.Icon
+                    iconName={volumeIcon}
+                    styles={{
+                      root: {
+                        fontSize: 20,
+                        marginRight: volumeIcon === 'VolumeDisabled' ? 5 : 0 // HACK: Volume icons are not cropped properly. Add space manually.
+                      }
+                    }} />
                   <Fluent.Slider
                     styles={{ root: { minWidth: 180 } }}
                     defaultValue={1}
