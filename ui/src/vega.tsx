@@ -28,7 +28,6 @@ const
       padding: 24
     },
     body: {
-      marginTop: 16,
       flexGrow: 1,
       display: 'flex',
     },
@@ -147,7 +146,7 @@ export const
         const { specification, data, title, grammar = 'vega-lite' } = state
         return (
           <div data-test={name} className={css.card}>
-            <div className='wave-s12 wave-w6'>{title}</div>
+            {title && <div className='wave-s12 wave-w6' style={{marginBottom: 16}}>{title}</div>}
             <div className={css.body}>
               <XVegaVisualization model={{ specification, data, grammar }} />
             </div>
