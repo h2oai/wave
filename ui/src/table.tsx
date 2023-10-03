@@ -988,7 +988,7 @@ export const
       if (!m.pagination) reset()
     }, [items])
 
-    useUpdateOnlyEffect(() => { initGroups() }, [groupNames, initGroups])
+    useUpdateOnlyEffect(() => { if (groupNames.size) initGroups() }, [groupNames, initGroups])
 
     React.useEffect(() => {
       if (m.groups) {
