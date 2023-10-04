@@ -19,6 +19,8 @@ import { Result } from 'vega-embed'
 import { cards } from './layout'
 import { formItemWidth } from './theme'
 import { bond, debounce } from './ui'
+import { TITLE_HEIGHT, TITLE_PADDING_TOP } from './plot'
+import { Command } from './toolbar'
 
 const
   css = stylesheet({
@@ -142,14 +144,17 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Model<State>) => {
+  View = bond(({ name, state, changed }: Model<State & { commands?: Command[] }>) => {
     const
       render = () => {
-        const { specification, data, title, grammar = 'vega-lite' } = state
+        const { specification, data, title, grammar = 'vega-lite', commands } = state
         return (
           <div data-test={name} className={css.card}>
-            {title && <div className='wave-s12 wave-w6' style={{ marginBottom: 16 }}>{title}</div>}
-            <div className={css.body}>
+            {title && <div className='wave-s12 wave-w6'>{title}</div>}
+            <div
+              className={css.body}
+              style={{ paddingTop: title ? TITLE_PADDING_TOP : commands?.length ? TITLE_PADDING_TOP + TITLE_HEIGHT : 0 }}
+            >
               <XVegaVisualization model={{ specification, data, grammar }} />
             </div>
           </div>
