@@ -67,13 +67,14 @@ export const
     const
       ref = React.useRef<HTMLDivElement>(null),
       vegaRef = React.useRef<Result>(),
+      dataRef = React.useRef<unknown[]>(unpack<unknown[]>(model.data)),
       updateData = React.useCallback(async () => {
-        if (vegaRef.current && model.data) {
-          const changeset = (await import('vega')).changeset().remove(() => true).insert(unpack<any[]>(model.data))
-          // source_0 is default dataset for some reason in Vega.
-          vegaRef.current.view.change('source_0', changeset).run()
-        }
-      }, [model.data]),
+        if (!vegaRef.current || !dataRef.current) return
+
+        const changeset = (await import('vega')).changeset().remove(() => true).insert(dataRef.current)
+        // source_0 is default dataset for some reason in Vega.
+        vegaRef.current.view.change('source_0', changeset).run()
+      }, []),
       init = React.useCallback(async () => {
         const el = ref.current
         if (!el) return
@@ -85,11 +86,10 @@ export const
         else if (el.clientHeight < 30) el.style.height = '300px'
 
         const
-          data = unpack<any[]>(model.data),
           width = el.clientWidth - 10, // HACK: Vega calculates dimensions with extra 10px for some reason.
           height = el.clientHeight - 10 // HACK: Vega calculates dimensions with extra 10px for some reason.
 
-        if (data) spec.data = { values: data }
+        if (dataRef.current) spec.data = { values: dataRef.current }
         const { default: vegaEmbed } = await import('vega-embed')
         vegaRef.current = await vegaEmbed(el, spec, {
           mode: model.grammar || 'vega-lite',
@@ -109,20 +109,22 @@ export const
             }
           }
         })
-      }, [model.data, model.grammar, model.specification]),
-      onResize = debounce(1000, init),
+      }, [model.grammar, model.specification]),
       { name, width = 'auto', height = 'auto' } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
         ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
 
-    React.useEffect(() => { updateData() }, [updateData, model])
+    React.useEffect(() => {
+      dataRef.current = unpack<unknown[]>(model.data)
+      updateData()
+    }, [updateData, model.data, model])
     React.useEffect(() => {
       init()
+      const onResize = debounce(1000, init)
       window.addEventListener('resize', onResize)
       return () => window.removeEventListener('resize', onResize)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [init])
 
     return <div data-test={name} className={css.plot} style={{ ...style, position: 'relative' }} ref={ref} />
   }
@@ -146,7 +148,7 @@ export const
         const { specification, data, title, grammar = 'vega-lite' } = state
         return (
           <div data-test={name} className={css.card}>
-            {title && <div className='wave-s12 wave-w6' style={{marginBottom: 16}}>{title}</div>}
+            {title && <div className='wave-s12 wave-w6' style={{ marginBottom: 16 }}>{title}</div>}
             <div className={css.body}>
               <XVegaVisualization model={{ specification, data, grammar }} />
             </div>
