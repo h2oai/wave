@@ -1126,8 +1126,11 @@ export const
                   chart.interaction('element-single-selected')
                   chart.on('element:statechange', (ev: any) => {
                     const e = ev.gEvent.originalEvent
-                    if (e.stateStatus && e.state === 'selected') {
-                      if (model.name && e.element.geometry.customOption.interactive) wave.emit(model.name, event, [e.element?.data])
+                    if (e.stateStatus && e.state === 'selected' && model.name && e.element.geometry.customOption.interactive) {
+                      const ret = Array.isArray(e.element?.data)
+                        ? e.element.data.map(({ idx }: any) => ({ ...originalDataRef.current[idx], idx }))
+                        : [{ ...originalDataRef.current[e.element.data.idx], idx: e.element.data.idx }]
+                      wave.emit(model.name, event, ret)
                     }
                   })
                 }
