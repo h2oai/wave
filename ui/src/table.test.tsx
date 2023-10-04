@@ -1069,6 +1069,20 @@ describe('Table.tsx', () => {
       expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(tableProps.rows!.length)
     })
 
+    it('Renders grouped list after selection, removes grouping when "No Grouping" chosen', () => {
+      const { container, getAllByText, getByTestId, getByText } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(tableProps.rows!.length)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getByText('(No Grouping)')!)
+
+      expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(0)
+    })
+
     it('Checks if grouped list is collapsed after selection', () => {
       const { getAllByRole, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
 
@@ -1648,6 +1662,18 @@ describe('Table.tsx', () => {
       expect(getAllByRole('gridcell')[2].textContent).toBe('Jumps over a dog.')
       expect(getAllByRole('gridcell')[4].textContent).toBe('Wooo hooo.')
     })
+
+    it('Does not keep groups rendered after reset', () => {
+      const { container, getAllByText, getByTestId, getByText } = render(<XTable model={{ ...tableProps, groupable: true, resettable: true }} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(3)
+      fireEvent.click(getByText('Reset table'))
+      expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(0)
+    })
+
   })
 
   describe('Download', () => {
