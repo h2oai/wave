@@ -366,20 +366,18 @@ export const
   getEffectClass = (effect: CardEffect) => css[effect],
   getCardStyle = (c: Card): CardStyle => cards.lookup(c.state.view).style,
   GridLayout = ({ name, cards: cs }: { name: S, cards: Card[] }) => {
-    const
-      hasEditor = cs.find(c => c.state.view === 'editor') ? true : false,
-      children = cs.map(c => {
-        const
-          placement = grid.place(c.state.box),
-          { left, top, right, bottom, width, height } = placement,
-          display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
-          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
-        return (
-          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex, margin: 0 }}>
-            <CardView card={c} />
-            <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
-          </div>
-        )
-      })
+    const children = cs.map(c => {
+      const
+        placement = grid.place(c.state.box),
+        { left, top, right, bottom, width, height } = placement,
+        display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
+        zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
+      return (
+        <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex, margin: 0 }}>
+          <CardView card={c} />
+          <CardMenu card={c} canEdit={cs.some(c => c.state.view === 'editor')} />
+        </div>
+      )
+    })
     return <div data-test={name} className={css.grid}>{children}</div>
   }
