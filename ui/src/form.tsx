@@ -238,26 +238,22 @@ type XComponentsProps = {
   inset?: B
   height?: S
   direction?: 'row' | 'column'
+  isInline?: B
 }
 
-const
-  needsDefaultWidth = new Set(['date_picker', 'dropdown', 'slider', 'range_slider', 'table', 'visualization', 'vega_visualization']),
-  getComponentWidth = (componentKey: S, isInline: B) => isInline && needsDefaultWidth.has(componentKey) ? '400px' : 'auto'
-
 export const
-  XComponents = ({ items, justify, align, inset, height, direction = 'column' }: XComponentsProps) => {
+  XComponents = ({ items, justify, align, inset, height, direction = 'column', isInline = false }: XComponentsProps) => {
     const
       components = items.map((m: any, i) => {
         const
           // All form items are wrapped by their component name (first and only prop of "m").
           [componentKey] = Object.keys(m),
-          isInline = !!(justify || align),
-          { name, visible = true, width = getComponentWidth(componentKey, isInline), height } = m[componentKey],
+          { name, visible = true, width = 'auto', height } = m[componentKey],
           visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
           // TODO: Ugly, maybe use ui.inline's 'align' prop instead?
-          alignSelf = componentKey === 'links' ? 'flex-start' : undefined
-
-        if (m[componentKey].width !== width) m[componentKey].width = width
+          alignSelf = componentKey === 'links' ? 'flex-start' : undefined,
+          // Components within inline, with no explicit width, and no explicit alignment in main direction should grow to fill the available space.
+          shouldParentGrow = isInline && width === 'auto' && !justify
 
         return (
           <div
@@ -265,7 +261,7 @@ export const
             key={name || `${componentKey}-${i}`}
             data-visible={visible}
             className={height === '1' ? css.fullHeight : ''}
-            style={{ ...visibleStyles, width, alignSelf }}
+            style={{ ...visibleStyles, width, alignSelf, flexGrow: shouldParentGrow ? 1 : undefined }}
           >
             <XComponent model={m} />
           </div>
@@ -286,11 +282,12 @@ export const
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      justify={m.justify || 'start'}
-      align={m.align || 'center'}
+      justify={m.justify}
+      align={m.align || m.direction === 'row' ? 'center' : undefined}
       inset={m.inset}
       height={m.height}
       direction={m.direction || 'row'}
+      isInline
     />
   )
 

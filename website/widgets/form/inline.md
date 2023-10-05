@@ -21,6 +21,8 @@ q.page['form'] = ui.form_card(
 )
 ```
 
+All components will try to take all the available space by default. This behavior can be controlled by specifying `width` and `height` component properties explicitly.
+
 Check the full API at [ui.inline](/docs/api/ui#inline).
 
 ## Horizontal alignment (`justify`)
@@ -71,7 +73,7 @@ It's also possible to specify `1` to fill the remaining card space. Useful for d
 ```py
 q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
     ui.inline(
-        items=[ui.text('I am in the perfect center!')], 
+        items=[ui.text('I am in the perfect center!')],
         justify='center',
         align='center',
         height='1'
@@ -93,6 +95,7 @@ q.page['example'] = ui.form_card(box='1 1 -1 3', items=[
         items=[
             ui.inline(
                 direction='column',
+                align='center',
                 items=[
                     ui.text_l(content='Sub title 1'),
                     ui.text(content='Lorem ipsum dolor sit amet'),
@@ -100,6 +103,7 @@ q.page['example'] = ui.form_card(box='1 1 -1 3', items=[
             ),
             ui.inline(
                 direction='column',
+                align='center',
                 items=[
                     ui.text_l(content='Sub title 2'),
                     ui.text(content='Lorem ipsum dolor sit amet'),
@@ -107,6 +111,7 @@ q.page['example'] = ui.form_card(box='1 1 -1 3', items=[
             ),
             ui.inline(
                 direction='column',
+                align='center',
                 items=[
                     ui.text_l(content='Sub title 3'),
                     ui.text(content='Lorem ipsum dolor sit amet'),

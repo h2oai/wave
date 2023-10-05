@@ -16,13 +16,13 @@ import * as Fluent from '@fluentui/react'
 import { B, Box, box, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Component, XInline } from './form'
+import { Component, XComponents } from './form'
 import { CardEffect, cards, getEffectClass, toCardEffect } from './layout'
 import { NavGroup, XNav } from './nav'
+import { Z_INDEX } from './parts/styleConstants'
 import { centerMixin, clas, cssVar, important, padding, px } from './theme'
 import { Command } from './toolbar'
 import { bond } from './ui'
-import { Z_INDEX } from './parts/styleConstants'
 
 const css = stylesheet({
   card: {
@@ -141,8 +141,12 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
               {subtitle && <div className={clas(css.nudgeUp, 'wave-s12')}>{subtitle}</div>}
             </div>
           </div>
-          {secondary_items && <div className={css.center}><XInline model={{ items: secondary_items }} /></div>}
-          {items && <div style={{ zIndex: Z_INDEX.HEADER, marginRight: state.commands ? 30 : undefined }}><XInline model={{ items }} /></div>}
+          {secondary_items && <div className={css.center}><XComponents items={secondary_items} justify='start' align='center' direction='row' /></div>}
+          {items && (
+            <div style={{ zIndex: Z_INDEX.HEADER, marginRight: state.commands ? 30 : undefined }}>
+              <XComponents items={items} justify='start' align='center' direction='row' />
+            </div>
+          )}
           {nav && <Navigation items={nav} isOpenB={navB} />}
         </div>
       )
