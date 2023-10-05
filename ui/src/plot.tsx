@@ -591,7 +591,7 @@ const
     return mark
   },
   refactorData = (ds: any[], marks: MarkExt[]): any[] => {
-    ds.forEach((d, idx) => d.idx = idx)
+    ds.forEach((d, idx) => d.wave_idx = idx)
     for (const m of marks) {
       if (m.x_scale === 'time') {
         for (const { x_field, x0_field } of marks) {
@@ -1048,8 +1048,8 @@ tooltipContainer.className = 'g2-tooltip'
 const PlotTooltip = ({ items, originalItems, dateKeys }: { items: TooltipItem[], originalItems: any[], dateKeys: Set<S> }) =>
   <>
     {items.map(({ data, mappingData, color }: TooltipItem) =>
-      Object.keys(originalItems[data.idx]).map((itemKey, idx) => {
-        let item = originalItems[data.idx][itemKey]
+      Object.keys(originalItems[data.wave_idx]).map((itemKey, idx) => {
+        let item = originalItems[data.wave_idx][itemKey]
         if (!(item instanceof Date) && dateKeys.has(itemKey)) item = new Date(item)
 
         return (
@@ -1132,7 +1132,7 @@ export const
                     if (e.stateStatus && e.state === 'selected' && model.name && e.element.geometry.customOption.interactive) {
                       const ret = Array.isArray(e.element?.data)
                         ? e.element.data.map(({ idx }: any) => ({ idx, ...originalDataRef.current[idx] }))
-                        : [{ idx: e.element.data.idx, ...originalDataRef.current[e.element.data.idx] }]
+                        : [{ idx: e.element.data.wave_idx, ...originalDataRef.current[e.element.data.wave_idx] }]
                       wave.emit(model.name, event, ret)
                     }
                   })
