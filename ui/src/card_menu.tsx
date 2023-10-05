@@ -29,7 +29,7 @@ const
       top: 0, right: 0,
       $nest: {
         '>div:first-child': {
-          padding: 24,
+          padding: 12,
           fontSize: 16,
           color: cssVar('$text7')
         },
@@ -37,7 +37,6 @@ const
     },
     icon: {
       userSelect: 'none',
-      marginRight: -6,
       color: cssVar('$text'),
       $nest: {
         '&:hover': {
