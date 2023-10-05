@@ -283,7 +283,7 @@ export const
     <XComponents
       items={m.items}
       justify={m.justify}
-      align={m.align || m.direction === 'row' ? 'center' : undefined}
+      align={m.align || (m.direction === 'row' ? 'center' : undefined)}
       inset={m.inset}
       height={m.height}
       direction={m.direction || 'row'}
