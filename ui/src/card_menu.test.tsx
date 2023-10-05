@@ -12,33 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import { Card, box } from 'h2o-wave'
 import React from 'react'
 import { CardMenu } from './card_menu'
-import { box } from 'h2o-wave'
 
 const name = 'card'
+let card: Card
 describe('CardMenu.tsx', () => {
-  beforeAll(() => initializeIcons())
-
+  beforeEach(() => {
+    card = {
+      name,
+      changed: box(false),
+      state: { commands: [{ name }], },
+      id: 'id',
+      set: jest.fn(),
+    }
+  })
   it('Does not render data-test attr', () => {
-    const { container } = render(<CardMenu commands={[{ name }]} changedB={box(false)} />)
+    // @ts-ignore
+    card.name = undefined
+    const { container } = render(<CardMenu card={card} />)
     expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
   })
 
   it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<CardMenu name={name} commands={[{ name }]} changedB={box(false)} />)
+    const { queryByTestId } = render(<CardMenu card={card} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
   it('Renders menu when commands are specified', () => {
-    const { queryByTestId } = render(<CardMenu name={name} commands={[{ name }]} changedB={box(false)} />)
+    const { queryByTestId } = render(<CardMenu card={card} />)
     expect(queryByTestId(name)).toBeTruthy()
   })
 
   it('Does not change hash when command name does not start with #', () => {
-    const { getByTestId, getByText } = render(<CardMenu name={name} commands={[{ name }]} changedB={box(false)} />)
+    const { getByTestId, getByText } = render(<CardMenu card={card} />)
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('card'))
@@ -47,7 +56,8 @@ describe('CardMenu.tsx', () => {
   })
 
   it('Changes hash when command name starts with #', () => {
-    const { getByTestId, getByText } = render(<CardMenu name={name} commands={[{ name: '#card' }]} changedB={box(false)} />)
+    card.state.commands = [{ name: '#card' }]
+    const { getByTestId, getByText } = render(<CardMenu card={card} />)
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('#card'))

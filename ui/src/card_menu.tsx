@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
-import { B, box, Card } from 'h2o-wave'
+import { B, Card, S } from 'h2o-wave'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'
@@ -83,39 +83,38 @@ const
   }
 
 export const
-  CardMenu = bond(({ card, canEdit }: { card: Card, canEdit?: B }) => {
+  ContextMenu = ({ name, commands }: { commands: Command[], name?: S }) => {
     const
-      target = React.createRef<HTMLDivElement>(),
-      hiddenB = box(true),
-      show = () => hiddenB(false),
-      hide = () => hiddenB(true),
-      render = () => {
-        const cmds = card.state.commands ?? []
-        if (canEdit) {
-          cmds.push(
-            { name: editCommand, label: 'Edit this card', icon: 'Edit', value: card.name },
-            { name: deleteCommand, label: 'Delete this card', icon: 'Delete', value: card.name },
-          )
-        }
-        const
-          hidden = hiddenB(),
-          items = cmds.map(toContextMenuItem)
-        return items.length ? (
-          // `w-card-menu` is a marker class.
-          <div className={clas(css.menu, 'w-card-menu')} data-test={card.name}>
-            <div className={css.target} ref={target} onClick={show}>
-              <Icon className={css.icon} iconName='MoreVertical' />
-            </div>
-            <ContextualMenu
-              target={target}
-              items={items}
-              hidden={hidden}
-              onItemClick={hide}
-              onDismiss={hide}
-              styles={fixMenuOverflowStyles}
-            />
-          </div>
-        ) : <></>
+      target = React.useRef<HTMLDivElement>(null),
+      [isHidden, setIsHidden] = React.useState(true)
+
+    return commands.length ? (
+      // `w-card-menu` is a marker class.
+      <div className={clas(css.menu, 'w-card-menu')} data-test={name}>
+        <div className={css.target} ref={target} onClick={() => setIsHidden(false)}>
+          <Icon className={css.icon} iconName='MoreVertical' />
+        </div>
+        <ContextualMenu
+          target={target}
+          items={commands.map(toContextMenuItem)}
+          hidden={isHidden}
+          onItemClick={() => setIsHidden(true)}
+          onDismiss={() => setIsHidden(true)}
+          styles={fixMenuOverflowStyles}
+        />
+      </div>
+    ) : null
+  },
+  CardMenu = bond(({ card, canEdit }: { card: Card, canEdit?: B }) => {
+    const render = () => {
+      const cmds = card.state.commands ?? []
+      if (canEdit) {
+        cmds.push(
+          { name: editCommand, label: 'Edit this card', icon: 'Edit', value: card.name },
+          { name: deleteCommand, label: 'Delete this card', icon: 'Delete', value: card.name },
+        )
       }
-    return { render, changedB: card.changed, hiddenB }
+      return <ContextMenu name={card.name} commands={cmds} />
+    }
+    return { render, changed: card.changed }
   })

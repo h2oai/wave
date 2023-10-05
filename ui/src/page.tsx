@@ -206,7 +206,7 @@ const
             return (
               <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot)}>
                 <CardView card={c} />
-                <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
+                <CardMenu card={c} canEdit={hasEditor} />
               </div>
             )
           })

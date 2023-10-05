@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Dict, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { CardMenu } from './card_menu'
+import { ContextMenu } from './card_menu'
 import { Markdown } from './markdown'
 import { margin } from './theme'
 import { Command } from './toolbar'
@@ -132,15 +132,12 @@ const
   },
   toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
-export const XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => {
-  const menuName = name ? `${name}-menu` : name
-  return (
-    <div className={css.text}>
-      {/* `w-text` is a marker class. */}
-      <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block className='w-text'>
-        <Markdown source={content} />
-      </Fluent.Text>
-      {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
-    </div>
-  )
-}
+export const XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => (
+  <div className={css.text}>
+    {/* `w-text` is a marker class. */}
+    <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block className='w-text'>
+      <Markdown source={content} />
+    </Fluent.Text>
+    {!!commands?.length && <ContextMenu name={name ? `${name}-menu` : name} commands={commands} />}
+  </div>
+)

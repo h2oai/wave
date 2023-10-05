@@ -10,7 +10,7 @@ Useful for labelling audio data.
 
 Check the full API at [ui.audio_annotator](/docs/api/ui#audio_annotator).
 
-```py sleep 2
+```py sleep 4
 q.page['example'] = ui.form_card(box='1 1 7 7', items=[
     ui.audio_annotator(
         name='annotator',
