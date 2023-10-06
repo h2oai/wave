@@ -44,7 +44,7 @@ async def serve(q: Q):
     # Unimportant, draw initial UI.
     if not q.client.initialized:
         q.page['form'] = ui.form_card(box='1 1 3 2', items=[
-            ui.inline([
+            ui.buttons([
                 ui.button(name='start_job', label='Start job'),
                 ui.button(name='cancel', label='Cancel')
             ]),
