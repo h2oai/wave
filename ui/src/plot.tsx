@@ -22,6 +22,8 @@ import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
 import { cssVarValue, cssVar, formItemWidth, themeB, themesB } from './theme'
 import { bond, wave } from './ui'
+import { Command } from './toolbar'
+import { CARD_TITLE_HEIGHT, CARD_TITLE_PADDING_TOP } from './parts/styleConstants'
 
 let
   cat10 = [
@@ -36,6 +38,7 @@ let
     '$pink',
     '$brown',
   ]
+
 
 
 type AnnotationOption = ArcOption | LineOption | TextOption | RegionOption | DataMarkerOption | DataRegionOption
@@ -1192,13 +1195,16 @@ interface State {
   animate?: B
 }
 
-export const View = bond(({ name, state, changed }: Model<State>) => {
+export const View = bond(({ name, state, changed }: Model<State & { commands?: Command[] }>) => {
   const render = () => {
-    const { title = 'Untitled', plot, data, events, interactions, animate } = state
+    const { title = 'Untitled', plot, data, events, interactions, animate, commands } = state
     return (
       <div className={css.card}>
-        <div className='wave-s12 wave-w6'>{title}</div>
-        <div className={css.body}>
+        {title && <div className='wave-s12 wave-w6'>{title}</div>}
+        <div
+          className={css.body}
+          style={{ paddingTop: title ? CARD_TITLE_PADDING_TOP : commands?.length ? CARD_TITLE_PADDING_TOP + CARD_TITLE_HEIGHT : 0 }}
+        >
           <XVisualization model={{ name, plot, data, events, interactions, animate }} />
         </div>
       </div>

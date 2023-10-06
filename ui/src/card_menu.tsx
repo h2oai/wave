@@ -29,7 +29,8 @@ const
       top: 0, right: 0,
       $nest: {
         '>div:first-child': {
-          padding: 24,
+          padding: 12,
+          paddingTop: 10,
           fontSize: 16,
           color: cssVar('$text7')
         },
@@ -37,17 +38,17 @@ const
     },
     icon: {
       userSelect: 'none',
-      marginRight: -6,
+      color: cssVar('$text'),
+      marginRight: -4,
+      $nest: {
+        '&:hover': {
+          color: cssVar('$themePrimary'),
+        },
+      },
     },
     target: {
       boxSizing: 'border-box',
       cursor: 'pointer',
-      opacity: 0.5,
-      $nest: {
-        '&:hover': {
-          opacity: 1,
-        },
-      },
     }
   })
 
