@@ -23,6 +23,7 @@ import { cards, grid } from './layout'
 import { cssVarValue, cssVar, formItemWidth, themeB, themesB } from './theme'
 import { bond, wave } from './ui'
 import { Command } from './toolbar'
+import { CARD_TITLE_HEIGHT, CARD_TITLE_PADDING_TOP } from './parts/styleConstants'
 
 let
   cat10 = [
@@ -38,8 +39,6 @@ let
     '$brown',
   ]
 
-export const TITLE_PADDING_TOP = 16
-export const TITLE_HEIGHT = 17
 
 
 type AnnotationOption = ArcOption | LineOption | TextOption | RegionOption | DataMarkerOption | DataRegionOption
@@ -1204,7 +1203,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands?: C
         {title && <div className='wave-s12 wave-w6'>{title}</div>}
         <div
           className={css.body}
-          style={{ paddingTop: title ? TITLE_PADDING_TOP : commands?.length ? TITLE_PADDING_TOP + TITLE_HEIGHT : 0 }}
+          style={{ paddingTop: title ? CARD_TITLE_PADDING_TOP : commands?.length ? CARD_TITLE_PADDING_TOP + CARD_TITLE_HEIGHT : 0 }}
         >
           <XVisualization model={{ name, plot, data, events, interactions, animate }} />
         </div>

@@ -6,3 +6,6 @@ export const Z_INDEX = {
     TIME_PICKER: 4,
     NOTIFICATION_BAR: 5
 }
+
+export const CARD_TITLE_PADDING_TOP = 16
+export const CARD_TITLE_HEIGHT = 17

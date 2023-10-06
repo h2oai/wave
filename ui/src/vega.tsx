@@ -19,8 +19,8 @@ import { Result } from 'vega-embed'
 import { cards } from './layout'
 import { formItemWidth } from './theme'
 import { bond, debounce } from './ui'
-import { TITLE_HEIGHT, TITLE_PADDING_TOP } from './plot'
 import { Command } from './toolbar'
+import { CARD_TITLE_HEIGHT, CARD_TITLE_PADDING_TOP } from './parts/styleConstants'
 
 const
   css = stylesheet({
@@ -153,7 +153,7 @@ export const
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <div
               className={css.body}
-              style={{ paddingTop: title ? TITLE_PADDING_TOP : commands?.length ? TITLE_PADDING_TOP + TITLE_HEIGHT : 0 }}
+              style={{ paddingTop: title ? CARD_TITLE_PADDING_TOP : commands?.length ? CARD_TITLE_PADDING_TOP + CARD_TITLE_HEIGHT : 0 }}
             >
               <XVegaVisualization model={{ specification, data, grammar }} />
             </div>
