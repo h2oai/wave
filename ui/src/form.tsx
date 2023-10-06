@@ -261,7 +261,7 @@ export const
             key={name || `${componentKey}-${i}`}
             data-visible={visible}
             className={height === '1' ? css.fullHeight : ''}
-            style={{ ...visibleStyles, width, alignSelf, flexGrow: shouldParentGrow ? 1 : undefined }}
+            style={{ ...visibleStyles, width, minWidth: width, alignSelf, flexGrow: shouldParentGrow ? 1 : undefined }}
           >
             <XComponent model={m} />
           </div>
