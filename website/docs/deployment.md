@@ -4,10 +4,6 @@ title: Deployment
 
 At the end of the day, Wave produces web-apps with their own web server. This means any VM provider can be used for Wave deployment.
 
-It's highly recommended to run Wave server (waved) [separately](/docs/tutorial-hello/#step-1-start-the-wave-server) from Wave app for production deployment.
-
-More info about various configuration options can be found in the [configuration section](/docs/configuration).
-
 ## Deploying Wave scripts
 
 Wave scripts are regular Python scripts. Deploy them as you would any Python script.
@@ -37,6 +33,14 @@ To configure a different port, see [configuring ports](/docs/configuration/#how-
 :::tip
 `uvicorn` accepts `--env-file` flag to specify `.env` configuration file for the Wave app. Note that as of time of writing, `--env-file` does not support configuration of Uvicorn itself. Using this flag may require running `pip install python-dotenv` first.
 :::
+
+### Wave server
+
+Wave uses 2 separate servers under the hood - waved (Go server) and wave app (Python server). See [architecture](/docs/architecture/) to learn more.
+
+It's highly recommended to run Wave server (waved) [separately](/docs/tutorial-hello/#step-1-start-the-wave-server) from Wave app for production deployment.
+
+More info about various configuration options can be found in the [configuration section](/docs/configuration).
 
 ### Beyond defaults
 
