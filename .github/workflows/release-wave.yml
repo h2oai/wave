@@ -75,10 +75,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to Conda
-        uses: amauryval/publish_conda_package_action@2.0.3
+        uses: amauryval/publish_conda_package_action@1.1.0
         with:
           CondaDir: 'py/h2o_wave/conda'
-          Platforms: 'noarch'
           CondaUsername: ${{ secrets.CONDA_USERNAME }}
           CondaPassword: ${{ secrets.CONDA_PASSWORD }}
         env:
