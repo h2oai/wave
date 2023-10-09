@@ -15,9 +15,12 @@
 package wave
 
 import (
+	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 // SocketServer represents a websocket server.
@@ -35,19 +38,28 @@ func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, 
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	session := anonymous
-	if s.auth != nil {
-		session = s.auth.identify(r)
-		if session == nil {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-	}
-
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
+	}
+
+	session := anonymous
+	if s.auth != nil {
+		session = s.auth.identify(r)
+		if session == nil {
+			// As per websocket spec, clients are not required to follow HTTP redirects. So we send a redirect message.
+			if msg, err := json.Marshal(OpsD{U: s.baseURL + "_auth/logout"}); err == nil {
+				sw, err := conn.NextWriter(websocket.TextMessage)
+				if err != nil {
+					http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+					return
+				}
+				sw.Write(msg)
+				sw.Close()
+			}
+			return
+		}
 	}
 
 	header := make(http.Header)
