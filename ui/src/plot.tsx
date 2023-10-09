@@ -1131,7 +1131,7 @@ export const
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected' && model.name && e.element.geometry.customOption.interactive) {
                       const ret = Array.isArray(e.element?.data)
-                        ? e.element.data.map(({ idx }: any) => ({ idx, ...originalDataRef.current[idx] }))
+                        ? e.element.data.map(({ wave_idx }: any) => ({ idx: wave_idx, ...originalDataRef.current[wave_idx] }))
                         : [{ idx: e.element.data.wave_idx, ...originalDataRef.current[e.element.data.wave_idx] }]
                       wave.emit(model.name, event, ret)
                     }
