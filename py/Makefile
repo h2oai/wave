@@ -43,6 +43,7 @@ setup-tests: ## Install dependencies for tests only
 .PHONY: docs
 docs: ## Build API docs
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave
+	mkdir -p ../website/docs/api
 	mv build/docs/h2o_wave/* ../website/docs/api/
 	./venv/bin/python sync_examples.py
 
