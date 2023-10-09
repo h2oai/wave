@@ -10,9 +10,13 @@ Wave scripts are regular Python scripts. Deploy them as you would any Python scr
 
 ## Deploying Wave apps
 
+Wave uses 2 separate servers under the hood - `waved` (Go server) and `wave app` (Python server). See [architecture](/docs/architecture/) to learn more.
+
 Wave apps are [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible, based on [Uvicorn](https://www.uvicorn.org) / [Starlette](https://www.starlette.io/), a [high-performance](https://www.techempower.com/benchmarks/#section=data-r17&hw=ph&test=fortune&l=zijzen-1) Python server.
 
 You can run Wave apps behind any ASGI server, like [uvicorn](https://www.uvicorn.org), [gunicorn](https://gunicorn.org/), [daphne](https://github.com/django/daphne/), [hypercorn](https://pgjones.gitlab.io/hypercorn/), etc.
+
+It's highly recommended to run Wave server (waved) [separately](/docs/tutorial-hello/#step-1-start-the-wave-server) from Wave app for production deployment in order to achieve the highest flexibility (custom ASGI server configuration). However, if you don't need that, you are good to go with a simple `wave run --no-reload app`.
 
 To run your app using an ASGI server, append `:main` to the `app` argument. For example, if you were normally executing your app `foo.py` using `wave run foo`, and want to run your app using Uvicorn, use `uvicorn foo:main`.
 
@@ -33,12 +37,6 @@ To configure a different port, see [configuring ports](/docs/configuration/#how-
 :::tip
 `uvicorn` accepts `--env-file` flag to specify `.env` configuration file for the Wave app. Note that as of time of writing, `--env-file` does not support configuration of Uvicorn itself. Using this flag may require running `pip install python-dotenv` first.
 :::
-
-### Wave server
-
-Wave uses 2 separate servers under the hood - waved (Go server) and wave app (Python server). See [architecture](/docs/architecture/) to learn more.
-
-It's highly recommended to run Wave server (waved) [separately](/docs/tutorial-hello/#step-1-start-the-wave-server) from Wave app for production deployment.
 
 More info about various configuration options can be found in the [configuration section](/docs/configuration).
 
