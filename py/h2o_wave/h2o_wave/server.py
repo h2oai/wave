@@ -286,7 +286,7 @@ class _App:
                 elapsed_time = current_time - start_time
                 if elapsed_time.seconds > connection_timeout:
                     logger.debug(f'Register: giving up after retrying for {connection_timeout} seconds')
-                    raise exception
+                    raise ConnectionError('Could not connect to Wave server. Make sure it is running.') from exception
                 await asyncio.sleep(1)
                 logger.debug('Register: retrying...')
 
