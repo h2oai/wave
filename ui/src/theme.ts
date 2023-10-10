@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, Dict, F, I, on, S, U } from 'h2o-wave'
+import { box, Dict, F, I, on, S, U } from './core'
 import { Theme } from './meta'
 
 interface Palette {

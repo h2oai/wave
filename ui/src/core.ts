@@ -801,7 +801,7 @@ const
           default:
             {
               let x: any = data
-              if (!data.hasOwnProperty(ks[0]) && componentCache[ks[0]]) {
+              if (!Object.prototype.hasOwnProperty.call(data, ks[0]) && componentCache[ks[0]]) {
                 x = componentCache[ks.shift() as S]
               }
               const lastKey = ks.pop() as S

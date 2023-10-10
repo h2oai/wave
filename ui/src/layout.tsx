@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, box, Card, Dict, F, Model, parseI, Rec, S, U, unpack, xid } from 'h2o-wave'
+import { B, box, Card, Dict, F, Model, parseI, Rec, S, U, unpack, xid } from './core'
 import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'

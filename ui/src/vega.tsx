@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, Model, Rec, S, unpack } from 'h2o-wave'
+import { B, Model, Rec, S, unpack } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Result } from 'vega-embed'

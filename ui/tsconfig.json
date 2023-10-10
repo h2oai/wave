@@ -21,12 +21,13 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noUnusedParameters": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "jest.config.js"
+    "jest.config.js",
+    "node_modules",
   ]
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import { Card, box } from 'h2o-wave'
+import { Card, box } from './core'
 import React from 'react'
 import { CardMenu } from './card_menu'
 

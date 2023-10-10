@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
-import { B, box, ChangeSet, Dict, F, Model, on, Rec, S, to, U } from 'h2o-wave'
+import { B, box, ChangeSet, Dict, F, Model, on, Rec, S, to, U } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'

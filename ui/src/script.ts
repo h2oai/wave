@@ -1,4 +1,4 @@
-import { B, Dict, S } from 'h2o-wave'
+import { B, Dict, S } from './core'
 
 /**
  * Create a reference to an external Javascript file to be included on a page.

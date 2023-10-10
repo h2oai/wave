@@ -24,11 +24,6 @@ clean: ## Clean
 	cd tools/showcase && $(MAKE) clean
 	rm -f waved
 
-setup-ts: ## Set up NPM package and symlinks
-	cd ts && npm ci && npm run build-dev
-	cd ts && npm link
-	cd ui && npm link h2o-wave
-
 setup-ui:
 	cd ui && $(MAKE) setup
 

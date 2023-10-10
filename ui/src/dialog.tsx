@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, Id, S } from 'h2o-wave'
+import { B, Box, box, Id, S } from './core'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond, wave } from './ui'

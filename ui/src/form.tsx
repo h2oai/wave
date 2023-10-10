@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Model, Packed, S, unpack } from 'h2o-wave'
+import { B, Model, Packed, S, unpack } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AudioAnnotator, XAudioAnnotator } from './audio_annotator'

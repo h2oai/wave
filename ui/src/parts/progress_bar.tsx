@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { F, S, U } from 'h2o-wave'
+import { F, S, U } from '../core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 

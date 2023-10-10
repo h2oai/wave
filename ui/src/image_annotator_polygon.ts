@@ -1,4 +1,4 @@
-import { F, S, U } from "h2o-wave"
+import { F, S, U } from './core'
 import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect } from "./image_annotator"
 import { ARC_RADIUS } from "./image_annotator_rect"
 

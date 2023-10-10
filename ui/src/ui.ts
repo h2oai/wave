@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, box, boxed, ChangeSet, connect, Dict, Disposable, on, Rec, S, U, Wave, WaveEvent, WaveEventType } from 'h2o-wave'
+import { B, box, boxed, ChangeSet, connect, Dict, Disposable, on, Rec, S, U, Wave, WaveEvent, WaveEventType } from './core'
 import * as React from 'react'
 
 //

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Dict, S } from 'h2o-wave'
+import { B, Dict, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ContextMenu } from './card_menu'

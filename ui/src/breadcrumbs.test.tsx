@@ -14,7 +14,7 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import * as T from './core'
 import React from 'react'
 import { View } from './breadcrumbs'
 import { wave } from './ui'

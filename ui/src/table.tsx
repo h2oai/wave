@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Dict, Id, S, U } from 'h2o-wave'
+import { B, Dict, Id, S, U } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { MenuTableCellType as MenuTableCellType, XMenuTableCellType } from './menu_table_cell_type'

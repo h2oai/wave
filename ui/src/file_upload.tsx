@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, S, U, xid } from 'h2o-wave'
+import { B, F, Id, S, U, xid } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { centerMixin, clas, cssVar, dashed, padding } from './theme'

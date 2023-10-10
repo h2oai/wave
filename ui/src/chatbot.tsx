@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, Rec, S, isBuf, unpack, xid } from 'h2o-wave'
+import { B, Id, Model, Rec, S, isBuf, unpack, xid } from './core'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'

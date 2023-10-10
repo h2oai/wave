@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S, unpack } from 'h2o-wave'
+import { Model, Rec, S, unpack } from './core'
 import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'

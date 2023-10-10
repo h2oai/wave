@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { IComboBox, IComboBoxOption } from '@fluentui/react'
-import { B, Id, S, U } from 'h2o-wave'
+import { B, Id, S, U } from './core'
 import React from 'react'
 import { wave } from './ui'
 

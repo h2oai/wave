@@ -14,7 +14,7 @@
 
 import React from 'react'
 import * as Fluent from '@fluentui/react'
-import { B, D, Id, S, U } from 'h2o-wave'
+import { B, D, Id, S, U } from './core'
 import { cssVar } from './theme'
 import { wave } from './ui'
 import { stylesheet } from 'typestyle'

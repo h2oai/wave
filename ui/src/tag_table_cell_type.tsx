@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, S, U } from 'h2o-wave'
+import { B, S, U } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { clas, cssVar, getContrast, padding } from './theme'

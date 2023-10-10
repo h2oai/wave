@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, S, U } from 'h2o-wave'
+import { B, F, Id, S, U } from './core'
 import React from 'react'
 import { wave } from './ui'
 

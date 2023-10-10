@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { Id, S, U } from 'h2o-wave'
+import { Id, S, U } from './core'
 import React from 'react'
 import { Component } from './form'
 import { cssVar } from './theme'

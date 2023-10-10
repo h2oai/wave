@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, S } from 'h2o-wave'
+import { B, S } from './core'
 import Handlebars from 'handlebars'
 import { createIntl, createIntlCache } from 'react-intl'
 

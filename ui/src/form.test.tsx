@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import * as T from './core'
 import React from 'react'
 import { Button, Buttons } from './button'
 import { View } from './form'

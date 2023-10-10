@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S } from 'h2o-wave'
+import { Model, Rec, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'

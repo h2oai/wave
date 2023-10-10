@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, S } from 'h2o-wave'
+import { Model, S } from './core'
 import React from 'react'
 import { cards } from './layout'
 import { bond } from './ui'

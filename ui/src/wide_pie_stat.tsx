@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as d3 from 'd3'
-import { F, Model, S } from 'h2o-wave'
+import { F, Model, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'

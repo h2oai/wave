@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as T from 'h2o-wave'
+import * as T from './core'
 import { dialogB } from './dialog'
 import { preload } from "./meta"
 import * as N from './notification'

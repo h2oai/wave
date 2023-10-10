@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { createEvent, fireEvent, render, waitFor } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import * as T from './core'
 import React from 'react'
 import { FileUpload, XFileUpload } from './file_upload'
 import { wave } from './ui'

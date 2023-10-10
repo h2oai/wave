@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react'
-import { Model, S } from 'h2o-wave'
+import { Model, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
@@ -140,7 +140,7 @@ export const
           rows = items.map(({ name: rowName, label, values, caption, icon, icon_color, colors }, i) => {
             const
               onClick = rowName ? () => jump(tableName, rowName) : undefined,
-              cells = values.map((value, j) => (<td key={`${j}:${value}`} style={colors && colors[j] ? { color: cssVar(colors[j]) } : undefined }>{value}</td>))
+              cells = values.map((value, j) => (<td key={`${j}:${value}`} style={colors && colors[j] ? { color: cssVar(colors[j]) } : undefined}>{value}</td>))
 
             return (
               <tr key={rowName ?? `${i}:${label}`} className={onClick ? css.clickable : undefined} onClick={onClick}>

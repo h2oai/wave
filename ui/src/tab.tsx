@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Pivot, PivotItem } from '@fluentui/react'
-import { B, Model, S, box } from 'h2o-wave'
+import { B, Model, S, box } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'

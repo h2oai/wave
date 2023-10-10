@@ -1,4 +1,4 @@
-import { F } from "h2o-wave"
+import { F } from "../core"
 
 export const
   averageChannels = (channel1: Float32Array, channel2?: Float32Array) => {

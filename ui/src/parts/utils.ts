@@ -1,5 +1,5 @@
 import { IContextualMenuStyles } from "@fluentui/react"
-import { S } from "h2o-wave"
+import { S } from "../core"
 import { border, cssVar } from "../theme"
 
 // https://github.com/bevacqua/fuzzysearch/blob/master/index.js

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Data, F, Model, Rec, S, unpack } from 'h2o-wave'
+import { Data, F, Model, Rec, S, unpack } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid, substitute } from './layout'

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import { box, Model } from 'h2o-wave'
+import { box, Model } from './core'
 import React from 'react'
 import { wave } from './ui'
 import { View } from './wide_article_preview'

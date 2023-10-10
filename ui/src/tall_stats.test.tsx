@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import * as T from './core'
 import React from 'react'
 import { View } from './tall_stats'
 
@@ -24,9 +24,9 @@ const
     state: { items: [] },
     changed: T.box(false)
   }
-  
+
 describe('TallStats.tsx', () => {
-    
+
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...tallStatsProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()

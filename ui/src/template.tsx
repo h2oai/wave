@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, Model, Rec, S, unpack } from 'h2o-wave'
+import { B, Model, Rec, S, unpack } from './core'
 import Handlebars from 'handlebars'
 import React from 'react'
 import { cards, substitute } from './layout'

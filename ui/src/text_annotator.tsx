@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { B, Id, Rec, S, U } from 'h2o-wave'
+import { B, Id, Rec, S, U } from './core'
 import React from 'react'
 import { stylesheet, style } from 'typestyle'
 import { border, clas, cssVar, getContrast, margin, padding } from './theme'

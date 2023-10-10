@@ -14,7 +14,7 @@
 
 import { Chart } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, TooltipItem } from '@antv/g2/lib/interface'
-import { B, Dict, Disposable, F, isBuf, Model, on, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
+import { B, Dict, Disposable, F, isBuf, Model, on, parseI, parseU, Rec, S, unpack, V } from './core'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'

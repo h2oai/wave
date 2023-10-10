@@ -1,4 +1,4 @@
-import { F, S, U } from 'h2o-wave'
+import { F, S, U } from './core'
 import { DrawnShape, ImageAnnotatorRect, Position } from './image_annotator'
 
 const

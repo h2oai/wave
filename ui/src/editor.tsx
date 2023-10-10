@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { DialogType, IDropdownOption } from '@fluentui/react'
-import { B, Box, box, Card, Dict, Model, Page, parseU, S, U, WaveEventType, xid } from 'h2o-wave'
+import { B, Box, box, Card, Dict, Model, Page, parseU, S, U, WaveEventType, xid } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'

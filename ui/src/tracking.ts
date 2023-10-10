@@ -1,4 +1,4 @@
-import { on, Rec, S } from 'h2o-wave'
+import { on, Rec, S } from './core'
 import { argsB } from './ui'
 
 /**

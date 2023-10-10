@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { B, F, S, U, xid } from 'h2o-wave'
+import { B, F, S, U, xid } from '../core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { AudioAnnotatorItem, AudioAnnotatorTag } from '../audio_annotator'

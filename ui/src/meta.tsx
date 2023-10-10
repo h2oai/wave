@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, box, disconnect, Id, Model, on, S, U } from 'h2o-wave'
+import { B, box, disconnect, Id, Model, on, S, U } from './core'
 import React from 'react'
 import { NotificationBar, notificationBarB } from './notification_bar'
 import { Dialog, dialogB } from './dialog'

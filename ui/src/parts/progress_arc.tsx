@@ -14,7 +14,7 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
-import { F, S, U } from 'h2o-wave'
+import { F, S, U } from '../core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { debounce } from '../ui'

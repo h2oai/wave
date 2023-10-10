@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
-import { B, Card, S } from 'h2o-wave'
+import { B, Card, S } from './core'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'

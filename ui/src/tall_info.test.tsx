@@ -16,7 +16,7 @@ import { fireEvent, render } from '@testing-library/react'
 import { wave } from './ui'
 import React from 'react'
 import { View } from './tall_info'
-import { box, Model } from 'h2o-wave'
+import { box, Model } from './core'
 import { State } from './tall_info'
 
 const

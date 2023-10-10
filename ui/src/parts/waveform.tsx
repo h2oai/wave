@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cssVarValue } from '../theme'
-import { F, S } from 'h2o-wave'
+import { F, S } from '../core'
 import { debounce } from '../ui'
 
 interface Props {

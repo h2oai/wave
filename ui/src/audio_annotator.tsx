@@ -1,5 +1,5 @@
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, Rec, S, U } from 'h2o-wave'
+import { B, F, Id, Rec, S, U } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { averageChannels } from './parts/audioUtils'

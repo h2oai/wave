@@ -15,7 +15,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { View as Toolbar } from './toolbar'
-import { box, Model } from 'h2o-wave'
+import { box, Model } from './core'
 import { wave } from './ui'
 
 const
