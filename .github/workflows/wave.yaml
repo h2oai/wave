@@ -2,7 +2,8 @@ name: Wave Bundle
 
 on:
   push:
-
+    branches:
+      - "feat/air-gapping*"
 jobs:
   bundle:
     name: Create Wave Bundle
