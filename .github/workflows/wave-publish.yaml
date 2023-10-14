@@ -1,0 +1,29 @@
+name: Publish Wave Bundle
+
+on:
+  workflow_call:
+
+jobs:
+  retrieve-metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      build-version: ${{ steps.get-build-version.outputs.VERSION }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get App Version
+        id: get-build-version
+        run: |
+          echo "VERSION=$(make version)" >> "$GITHUB_OUTPUT"
+
+  build-and-publish:
+    needs: retrieve-metadata
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    uses: h2oai/workflows-library/.github/workflows/wave-bundle-docker-build-publish.yaml@main
+    with:
+      build-version: ${{ needs.retrieve-metadata.outputs.build-version }}
+      bundle-artifact: wave-bundle

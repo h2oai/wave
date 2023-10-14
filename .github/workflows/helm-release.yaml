@@ -1,0 +1,29 @@
+name: Release Generated Helm Chart
+
+on:
+  workflow_call:
+
+jobs:
+  retrieve-metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      build-version: ${{ steps.get-build-version.outputs.VERSION }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get App Version
+        id: get-build-version
+        run: |
+          echo "VERSION=$(make version)" >> "$GITHUB_OUTPUT"
+
+  release-helm-chart:
+    needs: retrieve-metadata
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    uses: h2oai/workflows-library/.github/workflows/wave-bundle-helm-release.yaml@main
+    with:
+      build-version: ${{ needs.retrieve-metadata.outputs.build-version }}
+      helm-chart-artifact: wave-bundle-helm

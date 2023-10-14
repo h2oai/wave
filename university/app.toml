@@ -1,6 +1,6 @@
 [App]
 Name = "ai.h2o.wave.university"
-Version = "{{VERSION}}"
+Version = "1.0.0"
 Title = "Wave University"
 Description = "Interactive Wave learning experience."
 LongDescription = "README-cloud.md"
