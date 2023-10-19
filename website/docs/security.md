@@ -148,6 +148,13 @@ Synchronous version `ensure_fresh_token_sync` is also supported if your token pr
 ### FAQ
 
 - **I'm not sure what my oidc provider url is:** The openid connect configuration for any provider is made accessible through the `.well-known/openid-configuration` endpoint. The value of `-oidc-provider-url` must be the base url of your provider. For example, if the configuraton address is at `http://localhost:8080/realms/master/.well-known/openid-configuration`, then the provider url that you have to pass to wave is `http://localhost:8080/realms/master`. Do not use a trailing slash at the end of the provider url!
+- **Azure OpenId configuration notes:** Azure by default provide you with url like:  https://login.microsoftonline.com/$UUID/oauth2/v2.0/authorize
+This URL will give you error:
+```panic: failed connecting to OIDC provider: 404 Not Found: ```
+Change url to: https://login.microsoftonline.com/$UUID/
+Sadly this still could lead to error, but different one:
+```panic: failed connecting to OIDC provider: oidc: issuer did not match the issuer returned by provider, expected "https://login.microsoftonline.com/$UUID/" got "https://sts.windows.net/$UUID/"```
+Change the used url to https://sts.windows.net/$UUID/" and finally get working openID connection.
 - **Do I have to implement the authenticaton callback myself?** No, the callback is handled by the wave server. As mentioned in the description for `-oidc-redirect-url` in the list above, the host part or the base-url suffix is what usually changes between deployment environments, so that's what you need to check for correctness.
 - **The callback is working in my development environment but not in production, or vice versa:** Providers usually allow to register multiple callback URI's. Ensure that the correct and necessary callback URI's for all your deployments are registered in your provider's configuration (ergo, the value you use for `-oidc-redirect-url` is in the list of registered URI's). Otherwise, the redirect will fail with an error `The redirect URI included is not valid`.
 - **My identity provider uses `http` but the authentication link points to `https` which makes the login fail:** This can happen for using a private deployment of an authentication provider where the custom setup might not match the expected setup of the authentication service (check the endpoints in your `.well-known/openid-configuration`). In general, when transferring private data, it should be encrypted by using methods like ssl or tsl. To solve this issue, you will need to check if the openid configuration of your provider can be customized, or [change the protocol](/docs/security#https) (HTTP/HTTPS) of your Wave server to match the one used by your provider.
