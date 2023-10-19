@@ -130,6 +130,16 @@ async def serve(q: Q):
     print(q.auth.access_token)
 ```
 
+### Azure
+
+By default, Azure provides you with URL like <https://login.microsoftonline.com/$UUID/oauth2/v2.0/authorize>, resulting in an error:
+
+```sh
+panic: failed connecting to OIDC provider: 404 Not Found:
+```
+
+Change the URL to `https://sts.windows.net/$UUID/` instead to make OpenID work.
+
 ### Explicit token refresh
 
 Note that access token is not refreshed automatically and it's not suited for long running jobs. The lifespan of a token depends on a provider settings but usually it's short. Access token is refreshed each time user performs an action i.e. the query handler `serve()` is called. However, if your UI is blocked (no user interacitons that could automatically refresh the token) and you are performing a long-running job, and still need fresh access token, you can call `ensure_fresh_token` function that refreshes and sets the token explicitly. Additionally, it also returns the access token if needed for async token providers.
