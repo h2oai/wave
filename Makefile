@@ -199,7 +199,6 @@ release-os:
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
 	GOOS=$(OS) GOARCH=$(ARCH) go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
-	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 .PHONY: website
