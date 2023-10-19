@@ -132,6 +132,10 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     # uvicorn.main() does this before calling uvicorn.run().
     sys.path.insert(0, '.')
 
+    # Allow relative paths from bash autocomplete. E.g. wave run ./foo.py
+    if app.startswith(f'.{os.path.sep}'):
+        app = app[2:]
+
     # DevX: treat foo/bar/baz.py as foo.bar.baz
     app_path, ext = os.path.splitext(app)
     if ext.lower() == '.py':
