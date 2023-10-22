@@ -65,8 +65,8 @@ async def show_todos(q: Q):
 
     # Fetch latest todos for our user
     rows, err = await db.exec('select id, label, done from todo where user=?', q.auth.subject)
-    if err:
-        raise RuntimeError(f'Failed fetching todos: {err}')
+    if err or rows is None:
+        raise RuntimeError(f'Failed fetching todos: {err or "No rows returned"}')
     todos = [TodoItem(id, label, done) for id, label, done in rows]
 
     # Create done/not-done checkboxes.
