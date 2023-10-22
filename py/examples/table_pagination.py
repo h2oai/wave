@@ -4,7 +4,7 @@
 # ---
 
 import os
-from typing import Dict, List
+from typing import Optional, Dict, List
 from h2o_wave import main, app, Q, ui
 from copy import deepcopy
 import csv
@@ -22,7 +22,7 @@ rows_per_page = 10
 total_rows = len(all_rows)
 
 
-def get_rows(base: List, sort: Dict[str, bool] = None, search: Dict = None, filters: Dict[str, List[str]] = None) -> List:
+def get_rows(base: List, sort: Optional[Dict[str, bool]] = None, search: Optional[Dict] = None, filters: Optional[Dict[str, List[str]]] = None) -> List:
     # Make a deep copy in order to not mutate the original `all_issues` which serves as our baseline.
     rows = deepcopy(base)
 

@@ -4,7 +4,7 @@
 # ---
 
 import os
-from typing import Dict, List
+from typing import Optional, Dict, List
 from h2o_wave import main, app, Q, ui
 import pandas as pd
 
@@ -21,7 +21,7 @@ def df_to_table_rows(df: pd.DataFrame) -> List[ui.TableRow]:
     return [ui.table_row(name=str(r[0]), cells=[str(r[0]), r[1]]) for r in df.itertuples(index=False)]
 
 
-def get_df(base: pd.DataFrame, sort: Dict[str, bool] = None, search: Dict = None, filters: Dict[str, List[str]] = None) -> pd.DataFrame:
+def get_df(base: pd.DataFrame, sort: Optional[Dict[str, bool]] = None, search: Optional[Dict] = None, filters: Optional[Dict[str, List[str]]] = None) -> pd.DataFrame:
     # Make a deep copy in order to not mutate the original df which serves as our baseline.
     df = base.copy()
 
