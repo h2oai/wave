@@ -28,8 +28,9 @@ def df_to_rows(df: pd.DataFrame):
 
 
 def search_df(df: pd.DataFrame, term: str):
-    str_cols = df.select_dtypes(include=[object])
-    return df[str_cols.apply(lambda column: column.str.contains(term, case=False, na=False)).any(axis=1)]
+    str_cols = df.select_dtypes(include=['object']).columns
+    return df[df[str_cols].apply(lambda column: column.str.contains(term, case=False, na=False)).any(axis=1)]
+
 
 
 @app('/demo')
