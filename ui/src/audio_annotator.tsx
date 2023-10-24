@@ -77,6 +77,14 @@ const
     { key: 1.5, text: '1.5x' },
     { key: 2, text: '2x' },
   ],
+  audioMimeTypes = {
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    ogg: 'audio/ogg',
+    flac: 'audio/flac',
+    aac: 'audio/aac',
+    m4a: 'audio/mp4',
+  },
   // Love ya Safari.
   promisifyDecodeAudioData = (audioContext: AudioContext, audioData: ArrayBuffer) => new Promise<AudioBuffer>((resolve, reject) => {
     audioContext.decodeAudioData(audioData, resolve, reject)
@@ -125,9 +133,11 @@ export const XAudioAnnotator = ({ model }: { model: AudioAnnotator }) => {
         setErrMsg('Could not download audio file.')
         return
       }
+      const ext = model.path.split('.').pop()?.toLowerCase() as keyof typeof audioMimeTypes
+      const type = audioMimeTypes[ext] || 'audio/mpeg'
       // Store the URL into the ref so that it can be revoked on destroy and mem leak prevented.
       // Safari needs Blob type to be specified, doesn't need to match the real sound format.
-      fetchedAudioUrlRef.current = URL.createObjectURL(new Blob([arrBuffer], { type: 'audio/mpeg' }))
+      fetchedAudioUrlRef.current = URL.createObjectURL(new Blob([arrBuffer], { type }))
       // Do not set src directly within HTML to prevent double fetching.
       audioRef.current.src = fetchedAudioUrlRef.current
 
