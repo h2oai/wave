@@ -37,8 +37,8 @@ def get_rows(base: List, sort: Optional[Dict[str, bool]] = None, search: Optiona
         rows = [row for row in rows if any(search_val in str(getattr(row, col)).lower() for col in cols)]
     # Filter out rows that do not contain filtered column value.
     if filters:
-        for col, filter_values in filters.items():
-            rows = [row for row in rows if not filter_values or any(f in getattr(row, col) for f in filter_values)]
+         for col, filters in filters.items(): # type: ignore
+            rows = [row for row in rows if not filters or any(f in getattr(row, col) for f in filters)]
 
     return rows
 
