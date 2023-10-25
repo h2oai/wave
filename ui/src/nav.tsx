@@ -118,40 +118,38 @@ const css = stylesheet({
 
 export const
   XNav = ({ items, hideNav, linksOnly = false, valueB }: State & { hideNav?: () => void, linksOnly?: B, valueB: Box<S | undefined> }) => {
-    const getUrl = (name: S) => {
-      const { origin, pathname } = window.location
-      const hash = name.startsWith('#') ? name : ''
-      return origin + pathname + hash
-    }
-    const groups = items.map((g): Fluent.INavLinkGroup => ({
-      name: g.label,
-      collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled, tooltip, path }, idx): Fluent.INavLink => ({
-        key: name,
-        name: label,
-        icon,
-        disabled,
-        title: tooltip,
-        style: {
-          opacity: disabled ? 0.7 : undefined,
-          marginTop: !linksOnly && idx === 0 && !g.label ? 30 : undefined
-        },
-        url: path || getUrl(name),
-        target: path ? '_blank' : undefined,
-        onClick: (ev) => {
-          // TODO: Find out why ctrlKey is always false.
-          if (ev?.ctrlKey) return
-          valueB(name)
-          if (hideNav) hideNav()
-          if (path) return
-          else if (name.startsWith('#')) return
-          else {
-            wave.args[name] = true
-            wave.push()
+    const
+      getUrl = (name: S) => {
+        const { origin, pathname } = window.location
+        const hash = name.startsWith('#') ? name : ''
+        return origin + pathname + hash
+      },
+      groups = items.map((g): Fluent.INavLinkGroup => ({
+        name: g.label,
+        collapseByDefault: g.collapsed,
+        links: g.items.map(({ name, label, icon, disabled, tooltip, path }, idx): Fluent.INavLink => ({
+          key: name,
+          name: label,
+          icon,
+          disabled,
+          title: tooltip,
+          style: {
+            opacity: disabled ? 0.7 : undefined,
+            marginTop: !linksOnly && idx === 0 && !g.label ? 30 : undefined
+          },
+          url: path || getUrl(name),
+          target: path ? '_blank' : undefined,
+          onClick: (ev) => {
+            if (ev?.ctrlKey || ev?.metaKey) return
+            valueB(name)
+            if (hideNav) hideNav()
+            if (!path && !name.startsWith('#')) {
+              wave.args[name] = true
+              wave.push()
+            }
           }
-        }
+        }))
       }))
-    }))
     return <Fluent.Nav groups={groups} selectedKey={valueB() || ''} styles={{ groupContent: { marginBottom: 0, animation: 'none' } }} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
