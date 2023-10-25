@@ -3,7 +3,6 @@
 # ---
 
 import random
-import random
 from h2o_wave import site, ui, graphics as g
 
 x = [i * 20.0 for i in range(50)]  # Convert x to a list of floats
