@@ -397,7 +397,7 @@ async def client_disconnect(q: Q):
 async def serve(q: Q):
     if not q.app.initialized:
         q.app.app_port = 10102
-        q.app.tour_assets = await q.site.upload_dir(os.path.join(example_dir, 'tour-assets'))
+        q.app.tour_assets, = await q.site.upload_dir(os.path.join(example_dir, 'tour-assets')) #type: ignore
         base_snippets_path = os.path.join(example_dir, 'base-snippets.json')
         component_snippets_path = os.path.join(example_dir, 'component-snippets.json')
         # Prod.
