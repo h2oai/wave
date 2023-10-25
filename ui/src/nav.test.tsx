@@ -107,6 +107,18 @@ describe('Nav.tsx', () => {
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
+  it('Does not set args and calls sync when link is opened in a new window', () => {
+    const pushMock = jest.fn()
+    const { getByTitle } = render(<View {...navProps} />)
+
+    wave.push = pushMock
+
+    fireEvent.click(getByTitle('Nav 1'), { ctrlKey: true, metaKey: true })
+
+    expect(wave.args['nav1']).toBeUndefined()
+    expect(pushMock).not.toHaveBeenCalled()
+  })
+
   it('Sets window location hash when name starts with hash', () => {
     const { getByTitle } = render(<View {...navPropsHash} />)
     fireEvent.click(getByTitle('Nav 1'))
@@ -143,18 +155,6 @@ describe('Nav.tsx', () => {
     window.open = windowOpenMock
     fireEvent.click(getByTitle(label))
     expect(windowOpenMock).toHaveBeenCalled()
-  })
-
-  it('Does not set args when link is opened in a new window', () => {
-    const pushMock = jest.fn()
-    const { getByTitle } = render(<View {...navProps} />)
-
-    wave.push = pushMock
-
-    fireEvent.click(getByTitle('Nav 1'), { ctrlKey: true, metaKey: true })
-
-    expect(wave.args['nav1']).not.toBe(true)
-    expect(pushMock).not.toHaveBeenCalled()
   })
 
   describe('Value update', () => {
