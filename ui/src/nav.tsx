@@ -72,49 +72,54 @@ export interface State {
   color?: 'card' | 'primary'
 }
 
-const css = stylesheet({
-  card: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  title: {
-    color: cssVar('$themePrimary')
-  },
-  icon: {
-    fontSize: 56,
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  header: {
-    padding: padding(24, 24, 0),
-    textAlign: 'center'
-  },
-  img: {
-    maxHeight: 100
-  },
-  brand: {
-    marginBottom: 10
-  },
-  secondaryItems: {
-    padding: 24,
-  },
-  persona: {
-    $nest: {
-      '.ms-Persona': {
-        flexDirection: 'column',
-        height: 'auto',
-      },
-      '.ms-Persona-details': {
-        alignItems: 'center',
-        padding: 0
-      },
-      '.ms-Persona-primaryText': {
-        fontWeight: 500,
-        marginTop: 12,
-      }
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column'
     },
-  },
-})
+    title: {
+      color: cssVar('$themePrimary')
+    },
+    icon: {
+      fontSize: 56,
+      display: 'flex',
+      justifyContent: 'center'
+    },
+    header: {
+      padding: padding(24, 24, 0),
+      textAlign: 'center'
+    },
+    img: {
+      maxHeight: 100
+    },
+    brand: {
+      marginBottom: 10
+    },
+    secondaryItems: {
+      padding: 24,
+    },
+    persona: {
+      $nest: {
+        '.ms-Persona': {
+          flexDirection: 'column',
+          height: 'auto',
+        },
+        '.ms-Persona-details': {
+          alignItems: 'center',
+          padding: 0
+        },
+        '.ms-Persona-primaryText': {
+          fontWeight: 500,
+          marginTop: 12,
+        }
+      },
+    },
+  }),
+  getUrl = (name: S) => {
+    const { origin, pathname } = window.location
+    return name.startsWith('#') ? origin + pathname + name : ''
+  }
 
 export const
   XNav = ({ items, hideNav, linksOnly = false, valueB }: State & { hideNav?: () => void, linksOnly?: B, valueB: Box<S | undefined> }) => {
@@ -131,8 +136,10 @@ export const
           opacity: disabled ? 0.7 : undefined,
           marginTop: !linksOnly && idx === 0 && !g.label ? 30 : undefined
         },
-        url: '',
-        onClick: () => {
+        url: path || getUrl(name),
+        onClick: (ev) => {
+          ev?.preventDefault()
+          if (ev?.ctrlKey || ev?.metaKey) return
           valueB(name)
           if (hideNav) hideNav()
           if (path) window.open(path, "_blank")
