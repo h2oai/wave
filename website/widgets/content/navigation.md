@@ -9,10 +9,6 @@ If the app content is taller than wider, it might be a good idea to save a bit o
 
 Check the full API at [ui.nav_card](/docs/api/ui#nav_card).
 
-:::caution
-Keep in mind that opening the navigation link in a new tab or window creates [a new client](/docs/state) so any client state info is lost.
-:::
-
 ## Basic nav
 
 ```py

@@ -121,8 +121,7 @@ export const
     const
       getUrl = (name: S) => {
         const { origin, pathname } = window.location
-        const hash = name.startsWith('#') ? name : ''
-        return origin + pathname + hash
+        return name.startsWith('#') ? origin + pathname + name : ''
       },
       groups = items.map((g): Fluent.INavLinkGroup => ({
         name: g.label,
@@ -138,12 +137,14 @@ export const
             marginTop: !linksOnly && idx === 0 && !g.label ? 30 : undefined
           },
           url: path || getUrl(name),
-          target: path ? '_blank' : undefined,
           onClick: (ev) => {
+            ev?.preventDefault()
             if (ev?.ctrlKey || ev?.metaKey) return
             valueB(name)
             if (hideNav) hideNav()
-            if (!path && !name.startsWith('#')) {
+            if (path) window.open(path, "_blank")
+            else if (name.startsWith('#')) window.location.hash = name.substring(1)
+            else {
               wave.args[name] = true
               wave.push()
             }

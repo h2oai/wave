@@ -145,6 +145,18 @@ describe('Nav.tsx', () => {
     expect(windowOpenMock).toHaveBeenCalled()
   })
 
+  it('Does not set args when link is opened in a new window', () => {
+    const pushMock = jest.fn()
+    const { getByTitle } = render(<View {...navProps} />)
+
+    wave.push = pushMock
+
+    fireEvent.click(getByTitle('Nav 1'), { ctrlKey: true, metaKey: true })
+
+    expect(wave.args['nav1']).not.toBe(true)
+    expect(pushMock).not.toHaveBeenCalled()
+  })
+
   describe('Value update', () => {
     it('Sets args on value update', () => {
       const props: T.Model<State> = { ...navProps, state: { items } }
