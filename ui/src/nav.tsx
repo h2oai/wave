@@ -118,6 +118,11 @@ const css = stylesheet({
 
 export const
   XNav = ({ items, hideNav, linksOnly = false, valueB }: State & { hideNav?: () => void, linksOnly?: B, valueB: Box<S | undefined> }) => {
+    const getUrl = (name: S) => {
+      const { origin, pathname } = window.location
+      const hash = name.startsWith('#') ? name : ''
+      return origin + pathname + hash
+    }
     const groups = items.map((g): Fluent.INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
@@ -131,12 +136,15 @@ export const
           opacity: disabled ? 0.7 : undefined,
           marginTop: !linksOnly && idx === 0 && !g.label ? 30 : undefined
         },
-        url: '',
-        onClick: () => {
+        url: path || getUrl(name),
+        target: path ? '_blank' : undefined,
+        onClick: (ev) => {
+          // TODO: Find out why ctrlKey is always false.
+          if (ev?.ctrlKey) return
           valueB(name)
           if (hideNav) hideNav()
-          if (path) window.open(path, "_blank")
-          else if (name.startsWith('#')) window.location.hash = name.substring(1)
+          if (path) return
+          else if (name.startsWith('#')) return
           else {
             wave.args[name] = true
             wave.push()
