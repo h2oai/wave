@@ -45,6 +45,7 @@ const
       justifyContent: 'center',
     },
     msg: {
+      position: 'relative',
       maxWidth: '65ch',
       flexGrow: 1,
       overflowWrap: 'break-word',
@@ -70,6 +71,11 @@ const
       marginBottom: 7.5,
       transform: 'translateX(-50%)',
       width: 180
+    },
+    feedback: {
+      position: 'absolute',
+      bottom: 0,
+      right: 12
     }
   })
 
@@ -138,16 +144,16 @@ export const XChatbot = (props: Chatbot) => {
       }
     }, [props.events, props.name]),
     onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data]),
-    handleFeedback = (isPositive: B, id: I) => {
+    handleFeedback = (positive: B, id: I) => {
       if (props.events?.includes('feedback')) {
         setRated(rated => {
-          if (rated.has(id) && rated.get(id) === isPositive) {
+          if (rated.has(id) && rated.get(id) === positive) {
             rated.delete(id)
-            wave.emit(props.name, 'feedback', { id, isPositive: null })
+            wave.emit(props.name, 'feedback', { message: msgs[id].content, positive: null })
           }
           else {
-            rated.set(id, isPositive)
-            wave.emit(props.name, 'feedback', { id, isPositive })
+            rated.set(id, positive)
+            wave.emit(props.name, 'feedback', { message: msgs[id].content, positive })
           }
           return new Map(rated)
         })
@@ -198,21 +204,21 @@ export const XChatbot = (props: Chatbot) => {
               paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
               color: from_user ? '$text' : botTextColor
             }} >
-            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 12, paddingBottom: props.feedback && !from_user ? 30 : 0 }}>
               <Markdown source={content || ''} />
+              {props.feedback && !from_user &&
+                <div className={css.feedback}>
+                  <Fluent.IconButton
+                    iconProps={{ iconName: (rated.has(idx) && rated.get(idx)) ? 'LikeSolid' : 'Like' }}
+                    onClick={() => handleFeedback(true, idx)}
+                  />
+                  <Fluent.IconButton
+                    iconProps={{ iconName: (rated.has(idx) && !rated.get(idx)) ? 'DislikeSolid' : 'Dislike' }}
+                    onClick={() => handleFeedback(false, idx)}
+                  />
+                </div>
+              }
             </span>
-            {props.feedback && !from_user &&
-              <div>
-                <Fluent.IconButton
-                  iconProps={{ iconName: (rated.has(idx) && rated.get(idx)) ? 'LikeSolid' : 'Like' }}
-                  onClick={() => handleFeedback(true, idx)}
-                />
-                <Fluent.IconButton
-                  iconProps={{ iconName: (rated.has(idx) && !rated.get(idx)) ? 'DislikeSolid' : 'Dislike' }}
-                  onClick={() => handleFeedback(false, idx)}
-                />
-              </div>
-            }
           </div>
         ))}
       </InfiniteScrollList>

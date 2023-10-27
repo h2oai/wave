@@ -18,21 +18,19 @@ async def serve(q: Q):
             box='1 6 5 2', 
             items=[
                 ui.text_xl('Feedback'),
-                ui.text(name='text', content='Did you find the answer helpful?'),
+                ui.text(name='text', content='No feedback yet.'),
             ]
         )
         q.client.initialized = True
 
-    # Handle feedback event.
-    if q.events.chatbot and q.events.chatbot.feedback:
-        # Process the feedback.
-        q.page['feedback'].text.content = f'{q.events.chatbot.feedback}'
-    # A new message arrived.
-    elif q.args.chatbot:
+    if q.args.chatbot:
         # Append user message.
         q.page['example'].data += [q.args.chatbot, True]
         # Append bot response.
         q.page['example'].data += ['I am a fake chatbot. Sorry, I cannot help you.', False]
-    q.page['non-existent'].items = []
+    # Handle feedback event.
+    elif q.events.chatbot and q.events.chatbot.feedback:
+        # Process the feedback.
+        q.page['feedback'].text.content = f'{q.events.chatbot.feedback}'
     
     await q.page.save()
