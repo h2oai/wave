@@ -2876,6 +2876,7 @@ def chatbot_card(
         placeholder: Optional[str] = None,
         events: Optional[List[str]] = None,
         generating: Optional[bool] = None,
+        feedback: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
     """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
@@ -2885,8 +2886,9 @@ def chatbot_card(
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
         placeholder: Chat input box placeholder. Use for prompt examples.
-        events: The events to capture on this chatbot. One of 'stop'.
+        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
         generating: True to show a button to stop the text generation. Defaults to False.
+        feedback: True to show thumbs up/down buttons to capture the feedback event on chatbot response. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatbotCard` instance.
@@ -2898,6 +2900,7 @@ def chatbot_card(
         placeholder,
         events,
         generating,
+        feedback,
         commands,
     )
 

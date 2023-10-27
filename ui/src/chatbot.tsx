@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, Rec, S, isBuf, unpack, xid } from './core'
+import { B, I, Id, Model, Rec, S, isBuf, unpack, xid } from './core'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
@@ -91,12 +91,14 @@ export interface Chatbot {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
   /** The previous messages to show as the user scrolls up. */
   prev_items?: ChatbotMessage[]
+  /** True to show thumbs up/down buttons to capture the feedback event on chatbot response. Defaults to False. */
+  feedback?: B
 }
 
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
@@ -106,6 +108,7 @@ export const XChatbot = (props: Chatbot) => {
     [msgs, setMsgs] = React.useState<Message[]>(props.data ? processData(props.data) : []),
     [userInput, setUserInput] = React.useState(''),
     [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
+    [rated, setRated] = React.useState(() => new Map()),
     theme = Fluent.useTheme(),
     botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
@@ -134,7 +137,22 @@ export const XChatbot = (props: Chatbot) => {
         setIsInfiniteLoading(true)
       }
     }, [props.events, props.name]),
-    onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data])
+    onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data]),
+    handleFeedback = (isPositive: B, id: I) => {
+      if (props.events?.includes('feedback')) {
+        setRated(rated => {
+          if (rated.has(id) && rated.get(id) === isPositive) {
+            rated.delete(id)
+            wave.emit(props.name, 'feedback', { id, isPositive: null })
+          }
+          else {
+            rated.set(id, isPositive)
+            wave.emit(props.name, 'feedback', { id, isPositive })
+          }
+          return new Map(rated)
+        })
+      }
+    }
 
   React.useEffect(() => {
     if (isBuf(props.data)) props.data.registerOnChange(onDataChange)
@@ -183,6 +201,18 @@ export const XChatbot = (props: Chatbot) => {
             <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
               <Markdown source={content || ''} />
             </span>
+            {props.feedback && !from_user &&
+              <div>
+                <Fluent.IconButton
+                  iconProps={{ iconName: (rated.has(idx) && rated.get(idx)) ? 'LikeSolid' : 'Like' }}
+                  onClick={() => handleFeedback(true, idx)}
+                />
+                <Fluent.IconButton
+                  iconProps={{ iconName: (rated.has(idx) && !rated.get(idx)) ? 'DislikeSolid' : 'Dislike' }}
+                  onClick={() => handleFeedback(false, idx)}
+                />
+              </div>
+            }
           </div>
         ))}
       </InfiniteScrollList>
@@ -237,10 +267,12 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
+  /** True to show thumbs up/down buttons to capture the feedback event on chatbot response. Defaults to False. */
+  feedback?: B
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
