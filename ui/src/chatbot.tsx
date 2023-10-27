@@ -73,9 +73,8 @@ const
       width: 180
     },
     feedback: {
-      position: 'absolute',
-      bottom: 0,
-      right: 12
+      display: 'flex',
+      justifyContent: 'flex-end',
     }
   })
 
@@ -211,7 +210,7 @@ export const XChatbot = (props: Chatbot) => {
               paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
               color: from_user ? '$text' : botTextColor
             }} >
-            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 12, paddingBottom: showFeedback && !from_user ? 30 : 0 }}>
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
               <Markdown source={content || ''} />
               {showFeedback && !from_user &&
                 <div className={css.feedback}>
