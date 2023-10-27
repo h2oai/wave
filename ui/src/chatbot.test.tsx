@@ -159,4 +159,55 @@ describe('XChatbot', () => {
     expect(emitMock).toHaveBeenCalledTimes(1)
     expect(emitMock).toHaveBeenCalledWith(model.name, 'scroll_up', true)
   })
+
+  it('Renders thumbs up/down buttons', () => {
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
+    const dislikeButton = container.querySelector("i[data-icon-name='Dislike']") as HTMLLIElement
+    expect(likeButton).toBeInTheDocument()
+    expect(dislikeButton).toBeInTheDocument()
+  })
+
+  it('Fires a like feedback event when clicked on the thumbs up/down buttons', () => {
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
+
+    fireEvent.click(likeButton)
+    expect(emitMock).toHaveBeenCalled()
+    expect(emitMock).toHaveBeenCalledTimes(1)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: true })
+
+    const likeSolidButton = container.querySelector("i[data-icon-name='LikeSolid']") as HTMLLIElement
+    expect(likeSolidButton).toBeInTheDocument()
+  })
+
+  it('Fires a dislike feedback event when clicked on the thumbs up/down buttons', () => {
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const dislikeButton = container.querySelector("i[data-icon-name='Dislike']") as HTMLLIElement
+
+    fireEvent.click(dislikeButton)
+    expect(emitMock).toHaveBeenCalled()
+    expect(emitMock).toHaveBeenCalledTimes(1)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: false })
+
+    const dislikeSolidButton = container.querySelector("i[data-icon-name='DislikeSolid']") as HTMLLIElement
+    expect(dislikeSolidButton).toBeInTheDocument()
+  })
+
+  it('Fires a no feedback event when clicked on the thumbs up/down buttons twice', () => {
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
+
+    fireEvent.click(likeButton)
+    expect(emitMock).toHaveBeenCalled()
+    expect(emitMock).toHaveBeenCalledTimes(1)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: true })
+
+    fireEvent.click(likeButton)
+    expect(emitMock).toHaveBeenCalledTimes(2)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: null })
+
+    const likeSolidButton = container.querySelector("i[data-icon-name='LikeSolid']") as HTMLLIElement
+    expect(likeSolidButton).not.toBeInTheDocument()
+  })
 })
