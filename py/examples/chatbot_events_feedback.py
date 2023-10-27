@@ -1,5 +1,5 @@
 # Chatbot / Events/ Feedback
-# Use thumbs up/down to provide feedback on the chatbot's response.
+# Use thumbs up/down to provide feedback on the chatbot response.
 # #chatbot #events #feedback
 # ---
 from h2o_wave import main, app, Q, ui, data
