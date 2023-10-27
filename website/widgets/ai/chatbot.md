@@ -63,3 +63,22 @@ q.page['example'] = ui.chatbot_card(
     events=['scroll']
 )
 ```
+
+## With a feedback
+
+Add the thumbs up and thumbs down buttons below the chatbot response by configuring the `feedback=True` attribute. Be sure to define a matching `feedback` event to capture user feedback through these buttons. See [full example](/docs/examples/chatbot-events-feedback) to learn more.
+
+```py {10,11}
+from h2o_wave import data
+
+q.page['example'] = ui.chatbot_card(
+    box='1 1 5 5',
+    name='chatbot', 
+    data=data(fields='content from_user', t='list', rows=[
+        ['Hello, buddy. Can you help me?', True],
+        ['Sure, what you need?', False],
+    ]),
+    events=['feedback'],
+    feedback=True
+)
+```
