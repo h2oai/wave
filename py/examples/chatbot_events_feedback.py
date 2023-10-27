@@ -11,8 +11,7 @@ async def serve(q: Q):
             box='1 1 5 5',
             data=data(fields='content from_user', t='list'),
             name='chatbot',
-            events=['feedback'],
-            feedback=True
+            events=['feedback']
         )
         q.page['feedback'] = ui.form_card(
             box='1 6 5 2', 

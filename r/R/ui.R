@@ -3334,7 +3334,6 @@ ui_chat_card <- function(
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
 #' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
 #' @param generating True to show a button to stop the text generation. Defaults to False.
-#' @param feedback True to show thumbs up/down buttons to capture the feedback event on chatbot response. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
 #' @export
@@ -3345,7 +3344,6 @@ ui_chatbot_card <- function(
   placeholder = NULL,
   events = NULL,
   generating = NULL,
-  feedback = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
@@ -3353,7 +3351,6 @@ ui_chatbot_card <- function(
   .guard_scalar("placeholder", "character", placeholder)
   .guard_vector("events", "character", events)
   .guard_scalar("generating", "logical", generating)
-  .guard_scalar("feedback", "logical", feedback)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3362,7 +3359,6 @@ ui_chatbot_card <- function(
     placeholder=placeholder,
     events=events,
     generating=generating,
-    feedback=feedback,
     commands=commands,
     view='chatbot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatbotCard"))

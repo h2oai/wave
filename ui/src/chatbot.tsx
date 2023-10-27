@@ -79,7 +79,7 @@ const
     }
   })
 
-type Message = ChatbotMessage & { id?: S }
+type Message = ChatbotMessage & { id?: S, positive?: B }
 
 /* Chatbot message entity. */
 interface ChatbotMessage {
@@ -103,8 +103,6 @@ export interface Chatbot {
   generating?: B
   /** The previous messages to show as the user scrolls up. */
   prev_items?: ChatbotMessage[]
-  /** True to show thumbs up/down buttons to capture the feedback event on chatbot response. Defaults to False. */
-  feedback?: B
 }
 
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
@@ -114,11 +112,11 @@ export const XChatbot = (props: Chatbot) => {
     [msgs, setMsgs] = React.useState<Message[]>(props.data ? processData(props.data) : []),
     [userInput, setUserInput] = React.useState(''),
     [isInfiniteLoading, setIsInfiniteLoading] = React.useState(false),
-    [rated, setRated] = React.useState(() => new Map()),
     theme = Fluent.useTheme(),
     botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     skipNextBottomScroll = React.useRef(false),
+    showFeedback = props.events?.includes('feedback'),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[props.name] = newVal
@@ -144,20 +142,29 @@ export const XChatbot = (props: Chatbot) => {
       }
     }, [props.events, props.name]),
     onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data]),
-    handleFeedback = (positive: B, id: I) => {
-      if (props.events?.includes('feedback')) {
-        setRated(rated => {
-          if (rated.has(id) && rated.get(id) === positive) {
-            rated.delete(id)
-            wave.emit(props.name, 'feedback', { message: msgs[id].content, positive: null })
-          }
-          else {
-            rated.set(id, positive)
-            wave.emit(props.name, 'feedback', { message: msgs[id].content, positive })
-          }
-          return new Map(rated)
-        })
-      }
+    handlePositive = (id: I) => {
+      setMsgs(messages => {
+        if (messages[id]?.positive) {
+          messages[id].positive = undefined
+          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: null })
+        } else {
+          messages[id].positive = true
+          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: true })
+        }
+        return messages
+      })
+    },
+    handleNegative = (id: I) => {
+      setMsgs(messages => {
+        if (messages[id] !== undefined && !messages[id].positive) {
+          messages[id].positive = undefined
+          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: null })
+        } else {
+          messages[id].positive = false
+          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: false })
+        }
+        return messages
+      })
     }
 
   React.useEffect(() => {
@@ -195,7 +202,7 @@ export const XChatbot = (props: Chatbot) => {
         onInfiniteLoad={onLoad}
         isInfiniteLoading={isInfiniteLoading}
       >
-        {msgs.map(({ from_user, content, id }, idx) => (
+        {msgs.map(({ from_user, content, id, positive }, idx) => (
           <div
             key={id ?? idx}
             className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
@@ -204,17 +211,17 @@ export const XChatbot = (props: Chatbot) => {
               paddingBottom: msgs?.[idx + 1]?.from_user !== from_user ? rem(0.8) : 0,
               color: from_user ? '$text' : botTextColor
             }} >
-            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 12, paddingBottom: props.feedback && !from_user ? 30 : 0 }}>
+            <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 12, paddingBottom: showFeedback && !from_user ? 30 : 0 }}>
               <Markdown source={content || ''} />
-              {props.feedback && !from_user &&
+              {showFeedback && !from_user &&
                 <div className={css.feedback}>
                   <Fluent.IconButton
-                    iconProps={{ iconName: (rated.has(idx) && rated.get(idx)) ? 'LikeSolid' : 'Like' }}
-                    onClick={() => handleFeedback(true, idx)}
+                    iconProps={{ iconName: positive ? 'LikeSolid' : 'Like' }}
+                    onClick={() => handlePositive(idx)}
                   />
                   <Fluent.IconButton
-                    iconProps={{ iconName: (rated.has(idx) && !rated.get(idx)) ? 'DislikeSolid' : 'Dislike' }}
-                    onClick={() => handleFeedback(false, idx)}
+                    iconProps={{ iconName: (positive !== undefined && !positive) ? 'DislikeSolid' : 'Dislike' }}
+                    onClick={() => handleNegative(idx)}
                   />
                 </div>
               }
@@ -277,8 +284,6 @@ interface State {
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
-  /** True to show thumbs up/down buttons to capture the feedback event on chatbot response. Defaults to False. */
-  feedback?: B
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {

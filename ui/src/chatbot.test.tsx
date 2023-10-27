@@ -161,7 +161,7 @@ describe('XChatbot', () => {
   })
 
   it('Renders thumbs up/down buttons', () => {
-    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
     const dislikeButton = container.querySelector("i[data-icon-name='Dislike']") as HTMLLIElement
     expect(likeButton).toBeInTheDocument()
@@ -169,7 +169,7 @@ describe('XChatbot', () => {
   })
 
   it('Fires a like feedback event when clicked on the thumbs up/down buttons', () => {
-    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
 
     fireEvent.click(likeButton)
@@ -182,7 +182,7 @@ describe('XChatbot', () => {
   })
 
   it('Fires a dislike feedback event when clicked on the thumbs up/down buttons', () => {
-    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const dislikeButton = container.querySelector("i[data-icon-name='Dislike']") as HTMLLIElement
 
     fireEvent.click(dislikeButton)
@@ -195,7 +195,7 @@ describe('XChatbot', () => {
   })
 
   it('Fires a no feedback event when clicked on the thumbs up/down buttons twice', () => {
-    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'], feedback: true }} />)
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
 
     fireEvent.click(likeButton)
