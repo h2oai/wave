@@ -1,0 +1,9 @@
+{{- if .Values.caCertificates }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "university.fullname" . }}-ca-certificates
+data:
+  root-ca-bundle.crt:  |
+    {{ .Values.caCertificates | nindent 4 | trim }}
+{{- end }}

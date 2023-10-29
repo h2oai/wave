@@ -1,0 +1,31 @@
+name: Wave Bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'
+        required: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: "${{ github.event.inputs.version }}"
+  TAG: "v${{ github.event.inputs.version }}"
+
+jobs:
+  bundle:
+    name: Create Wave Bundle
+    working-directory: ./university
+    uses: ./.github/workflows/wave-bundle-university.yaml
+
+  publish:
+    needs: bundle
+    name: Build and Publish
+    working-directory: ./university
+    uses: ./.github/workflows/wave-publish-university.yaml
+
+  helm-publish:
+    needs: bundle
+    name: Build and Publish Helm Chart
+    working-directory: ./university
+    uses: ./.github/workflows/helm-release-university.yaml

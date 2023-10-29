@@ -1,0 +1,48 @@
+name: Wave Bundle
+
+on:
+  workflow_call:
+
+jobs:
+  airgapped:
+    name: Create Wave Bundle
+    runs-on: ubuntu-latest
+    outputs:
+      build-version: ${{ steps.get-build-version.outputs.VERSION }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download H2O CLI
+        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/v0.28.2/cli/linux-amd64/h2o
+
+      - name: Change permissions
+        run: chmod +x .bin/h2o
+
+      - name: Get App Version
+        id: get-build-version
+        run: |
+          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
+
+      - name: Make air-gapped bundle
+        run: |
+          .bin/h2o bundle \
+            --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
+            --docker-include static \
+            --docker-use-buildkit \
+            --generate-helm-charts \
+            --helm-chart-version ${{ steps.get-build-version.outputs.VERSION }} \
+            --helm-chart-name ${{ github.event.repository.name }} \
+            --generate-dockerfile
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle
+          path: |
+            ./*.Dockerfile
+            ./*.wave
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle-helm
+          path: helm/

@@ -1,0 +1,86 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "university.fullname" . }}-import
+  labels:
+    {{- include "university.labels" . | nindent 4 }}
+  annotations:
+    # marks this as a hook - https://helm.sh/docs/topics/charts_hooks/
+    # this resource will be automatically removed after the install/upgrade is complete, given
+    # the job completes successfully
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 10
+  template:
+    metadata:
+      name: {{ include "university.fullname" . }}-import
+      labels:
+        {{- include "university.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      {{- with coalesce .Values.import.image.pullSecrets .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: cp-bundle
+          imagePullPolicy: {{ .Values.import.image.pullPolicy | default .Values.image.pullPolicy | quote }}
+          image: "{{ required "'university.bundleImage.repository' is required!" .Values.university.bundleImage.repository }}:{{ required "'university.bundleImage.tag' is required!" .Values.university.bundleImage.tag }}"
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command: ["/bin/sh"]
+          args: ["-c", "cp ${WAVE_BUNDLE_FILE} /workspace/app-bundle.wave"]
+          volumeMounts:
+          - mountPath: /workspace
+            name: "wave-bundle-volume"
+      containers:
+        - name: import-app
+          imagePullPolicy: {{ .Values.import.image.pullPolicy | default .Values.image.pullPolicy | quote }}
+          image: "{{ required "'import.image.repository' is required!" .Values.import.image.repository }}:{{ required "'import.image.tag' is required!" .Values.import.image.tag }}"
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.import.auth.oidc.usernamePassword.enabled }}
+          env:
+          - name: H2O_IMPORT_APP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: "{{ include "university.import.auth.oidc.usernamePassword.secretName" . }}"
+                key: "{{ .Values.import.auth.oidc.usernamePassword.usernameKey }}"
+          - name: H2O_IMPORT_APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ include "university.import.auth.oidc.usernamePassword.secretName" . }}"
+                key: "{{ .Values.import.auth.oidc.usernamePassword.passwordKey }}"
+          {{- end }}
+          command: ["/app/bin/hac-import-app"]
+          args: [
+            "import",
+            "--app-store-endpoint", "{{ .Values.import.appStore.endpoint }}",
+            "--oidc-provider", "{{ .Values.import.auth.oidc.provider }}",
+            "--oidc-client-id", "{{ .Values.import.auth.oidc.clientID }}",
+            "--image", "{{ required "'university.runtimeImage.repository' is required!" .Values.university.runtimeImage.repository }}:{{ required "'university.runtimeImage.tag' is required!" .Values.university.runtimeImage.tag }}",
+            "--bundle-path", "/workspace/app-bundle.wave",
+          ]
+          volumeMounts:
+          - mountPath: /workspace
+            name: "wave-bundle-volume"
+            readOnly: true
+          {{- if .Values.caCertificates }}
+          - name: ca-certificates
+            mountPath: /etc/ssl/certs/root-ca-bundle.crt
+            subPath: root-ca-bundle.crt
+          {{- end }}
+      volumes:
+      - name: "wave-bundle-volume"
+        emptyDir: {}
+      {{- if .Values.caCertificates }}
+      - name: ca-certificates
+        configMap:
+          name: {{ include "university.fullname" . }}-ca-certificates
+      {{- end }}
