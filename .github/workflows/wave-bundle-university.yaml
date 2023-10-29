@@ -22,7 +22,7 @@ jobs:
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=$(make version)" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
       - name: Make air-gapped bundle
         run: |

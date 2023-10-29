@@ -15,7 +15,7 @@ jobs:
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=$(make version)" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
   release-helm-chart:
     needs: retrieve-metadata
