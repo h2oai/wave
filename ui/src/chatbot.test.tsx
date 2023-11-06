@@ -168,7 +168,7 @@ describe('XChatbot', () => {
     expect(dislikeButton).toBeInTheDocument()
   })
 
-  it('Fires a like feedback event when clicked on the thumbs up/down buttons', () => {
+  it('Fires a like feedback event when clicked on the thumbs up button', () => {
     const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
 
@@ -181,7 +181,7 @@ describe('XChatbot', () => {
     expect(likeSolidButton).toBeInTheDocument()
   })
 
-  it('Fires a dislike feedback event when clicked on the thumbs up/down buttons', () => {
+  it('Fires a dislike feedback event when clicked on the thumbs down button', () => {
     const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const dislikeButton = container.querySelector("i[data-icon-name='Dislike']") as HTMLLIElement
 
@@ -194,7 +194,7 @@ describe('XChatbot', () => {
     expect(dislikeSolidButton).toBeInTheDocument()
   })
 
-  it('Fires a no feedback event when clicked on the thumbs up/down buttons twice', () => {
+  it('Fires a no feedback event when clicked on the thumbs up button twice', () => {
     const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
 
@@ -209,5 +209,22 @@ describe('XChatbot', () => {
 
     const likeSolidButton = container.querySelector("i[data-icon-name='LikeSolid']") as HTMLLIElement
     expect(likeSolidButton).not.toBeInTheDocument()
+  })
+
+  it('Fires a no feedback event when clicked on the thumbs down button twice', () => {
+    const { container } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
+    const dislikeButton = container.querySelector("i[data-icon-name='Dislike']") as HTMLLIElement
+
+    fireEvent.click(dislikeButton)
+    expect(emitMock).toHaveBeenCalled()
+    expect(emitMock).toHaveBeenCalledTimes(1)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: false })
+
+    fireEvent.click(dislikeButton)
+    expect(emitMock).toHaveBeenCalledTimes(2)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: null })
+
+    const dislikeSolidButton = container.querySelector("i[data-icon-name='DislikeSolid']") as HTMLLIElement
+    expect(dislikeSolidButton).not.toBeInTheDocument()
   })
 })
