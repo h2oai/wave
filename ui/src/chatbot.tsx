@@ -150,19 +150,19 @@ export const XChatbot = (props: Chatbot) => {
           messages[id].positive = true
           wave.emit(props.name, 'feedback', { message: messages[id].content, positive: true })
         }
-        return messages
+        return [...messages]
       })
     },
     handleNegative = (id: I) => {
       setMsgs(messages => {
-        if (messages[id] !== undefined && !messages[id].positive) {
-          messages[id].positive = undefined
-          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: null })
-        } else {
+        if (messages[id]?.positive === undefined || messages[id].positive) {
           messages[id].positive = false
           wave.emit(props.name, 'feedback', { message: messages[id].content, positive: false })
+        } else {
+          messages[id].positive = undefined
+          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: null })
         }
-        return messages
+        return [...messages]
       })
     }
 
