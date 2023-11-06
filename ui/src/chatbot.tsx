@@ -115,7 +115,6 @@ export const XChatbot = (props: Chatbot) => {
     botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     skipNextBottomScroll = React.useRef(false),
-    showFeedback = props.events?.includes('feedback'),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[props.name] = newVal
@@ -143,25 +142,17 @@ export const XChatbot = (props: Chatbot) => {
     onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data]),
     handlePositive = (id: I) => {
       setMsgs(messages => {
-        if (messages[id]?.positive) {
-          messages[id].positive = undefined
-          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: null })
-        } else {
-          messages[id].positive = true
-          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: true })
-        }
+        const isPositive = messages[id]?.positive
+        messages[id].positive = isPositive ? undefined : true
+        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: isPositive ? null : true })
         return [...messages]
       })
     },
     handleNegative = (id: I) => {
       setMsgs(messages => {
-        if (messages[id]?.positive === undefined || messages[id].positive) {
-          messages[id].positive = false
-          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: false })
-        } else {
-          messages[id].positive = undefined
-          wave.emit(props.name, 'feedback', { message: messages[id].content, positive: null })
-        }
+        const isNegative = messages[id]?.positive !== undefined && !messages[id].positive
+        messages[id].positive = isNegative ? undefined : false
+        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: isNegative ? null : false })
         return [...messages]
       })
     }
@@ -212,16 +203,10 @@ export const XChatbot = (props: Chatbot) => {
             }} >
             <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
               <Markdown source={content || ''} />
-              {showFeedback && !from_user &&
+              {props.events?.includes('feedback') && !from_user &&
                 <div className={css.feedback}>
-                  <Fluent.IconButton
-                    iconProps={{ iconName: positive ? 'LikeSolid' : 'Like' }}
-                    onClick={() => handlePositive(idx)}
-                  />
-                  <Fluent.IconButton
-                    iconProps={{ iconName: (positive !== undefined && !positive) ? 'DislikeSolid' : 'Dislike' }}
-                    onClick={() => handleNegative(idx)}
-                  />
+                  <Fluent.IconButton onClick={() => handlePositive(idx)} iconProps={{ iconName: positive ? 'LikeSolid' : 'Like' }} />
+                  <Fluent.IconButton onClick={() => handleNegative(idx)} iconProps={{ iconName: (positive !== undefined && !positive) ? 'DislikeSolid' : 'Dislike' }} />
                 </div>
               }
             </span>
