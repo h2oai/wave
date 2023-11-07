@@ -50,6 +50,9 @@ func newWebServer(
 	baseURL string,
 	webDir string,
 	header http.Header,
+	previewImage string,
+	previewTitle string,
+	previewDescription string,
 ) (*WebServer, error) {
 
 	// read default index.html page from the web root
@@ -58,15 +61,21 @@ func newWebServer(
 		return nil, fmt.Errorf("failed reading default index.html page: %v", err)
 	}
 
-	fs := handleStatic([]byte(mungeIndexPage(baseURL, string(indexPage))), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header)
+	fs := handleStatic([]byte(mungeIndexPage(baseURL, string(indexPage), previewImage, previewTitle, previewDescription)), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header)
 	if auth != nil {
 		fs = auth.wrap(fs)
 	}
 	return &WebServer{site, broker, fs, keychain, maxRequestSize, baseURL}, nil
 }
 
-func mungeIndexPage(baseURL, html string) string {
+func mungeIndexPage(baseURL, html string, previewImage string, previewTitle string, previewDescription string) string {
 	// HACK
+	// add meta tags for preview image, title, description to the html string
+	metaTags := fmt.Sprintf(`<meta property="og:image" content="%s">
+		<meta property="og:title" content="%s">
+		<meta property="og:description" content="%s">`, previewImage, previewTitle, previewDescription)
+	html = strings.Replace(html, "<head>", "<head>"+metaTags, 1)
+
 	// set base URL as a body tag attribute, to be used by the front-end for deducing hash-routing and websocket addresses.
 	html = strings.Replace(html, "<body", `<body data-base-url="`+baseURL+`"`, 1)
 	// ./wave-static/a/b/c.d -> /base-url/wave-static/a/b/c.d

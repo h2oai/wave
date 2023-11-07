@@ -140,7 +140,7 @@ func Run(conf ServerConf) {
 		}))
 	}
 
-	webServer, err := newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.BaseURL, conf.WebDir, conf.Header)
+	webServer, err := newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.BaseURL, conf.WebDir, conf.Header, conf.PreviewImage, conf.PreviewTitle, conf.PreviewDescription)
 	if err != nil {
 		panic(err)
 	}
