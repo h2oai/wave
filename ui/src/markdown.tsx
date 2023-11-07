@@ -20,7 +20,7 @@ import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { ClipboardCopyButton } from './copyable_text'
 import { cards, grid, substitute } from './layout'
-import { border, clas, cssVar, padding, pc } from './theme'
+import { clas, cssVar } from './theme'
 import { bond } from './ui'
 
 const
@@ -48,20 +48,6 @@ const
               textDecoration: 'none',
             },
           },
-        },
-        table: {
-          width: pc(100),
-          borderCollapse: 'collapse',
-        },
-        tr: {
-          borderBottom: border(1, cssVar('$text5')),
-        },
-        th: {
-          padding: padding(11, 6),
-          textAlign: 'left',
-        },
-        td: {
-          padding: padding(11, 6),
         },
         img: {
           maxWidth: '100%',
@@ -153,7 +139,7 @@ export const Markdown = ({ source }: { source: S }) => {
         return false
       }
     }
-  return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown', 'prose')} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /**
