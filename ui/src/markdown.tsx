@@ -22,6 +22,7 @@ import { ClipboardCopyButton } from './copyable_text'
 import { cards, grid, substitute } from './layout'
 import { clas, cssVar } from './theme'
 import { bond } from './ui'
+import './markdown.css'
 
 const
   css = stylesheet({
