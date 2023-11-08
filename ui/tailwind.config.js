@@ -6,9 +6,10 @@ module.exports = {
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
+            // Markdown styles
             '--tw-prose-body': 'var(--wave-text)', // Text
             '--tw-prose-headings': 'var(--wave-text)', // Headings
-            '--tw-prose-lead': 'var(--wave-text)', //
+            '--tw-prose-lead': 'var(--wave-text)', // TODO: Not sure what this is.
             '--tw-prose-links': 'var(--wave-text)', // Links
             '--tw-prose-bold': 'var(--wave-text)', // Bold text
             '--tw-prose-counters': 'var(--wave-text8)', // Numbered list
@@ -17,7 +18,7 @@ module.exports = {
             '--tw-prose-quotes': 'var(--wave-text)', // Quote text
             '--tw-prose-quote-borders': 'var(--wave-text2)', // Quote border
             '--tw-prose-captions': 'var(--wave-text7)', // Image caption
-            '--tw-prose-pre-bg': '#282b2e', // Code pre block background
+            '--tw-prose-pre-bg': '#282b2e', // Code pre block background - TODO: Use single source of truth for this.
             '--tw-prose-th-borders': 'var(--wave-text4)', // Table header bottom border
             '--tw-prose-td-borders': 'var(--wave-text2)', // Table cell bottom border
           },
