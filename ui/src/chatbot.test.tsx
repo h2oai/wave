@@ -206,7 +206,6 @@ describe('XChatbot', () => {
     expect(likeSolidButton).toBeInTheDocument()
 
     fireEvent.click(dislikeButton)
-
     expect(emitMock).toHaveBeenCalledTimes(2)
     expect(emitMock).toHaveBeenCalledWith(model.name, 'feedback', { message: data[1].content, positive: false })
     expect(container.querySelector("i[data-icon-name='DislikeSolid']") as HTMLLIElement).toBeInTheDocument()
