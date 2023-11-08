@@ -142,17 +142,17 @@ export const XChatbot = (props: Chatbot) => {
     onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data]),
     handlePositive = (id: I) => {
       setMsgs(messages => {
-        const isPositive = messages[id]?.positive
-        messages[id].positive = isPositive ? undefined : true
-        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: isPositive ? null : true })
+        if (messages[id]?.positive) return messages
+        messages[id].positive = true
+        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: true })
         return [...messages]
       })
     },
     handleNegative = (id: I) => {
       setMsgs(messages => {
-        const isNegative = messages[id]?.positive !== undefined && !messages[id].positive
-        messages[id].positive = isNegative ? undefined : false
-        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: isNegative ? null : false })
+        if (messages[id]?.positive !== undefined && !messages[id].positive) return messages
+        messages[id].positive = false
+        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: false })
         return [...messages]
       })
     }
