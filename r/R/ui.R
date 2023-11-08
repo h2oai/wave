@@ -3332,7 +3332,7 @@ ui_chat_card <- function(
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
-#' @param events The events to capture on this chatbot. One of 'stop'.
+#' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
 #' @param generating True to show a button to stop the text generation. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.

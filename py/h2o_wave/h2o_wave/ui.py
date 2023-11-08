@@ -2885,7 +2885,7 @@ def chatbot_card(
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
         placeholder: Chat input box placeholder. Use for prompt examples.
-        events: The events to capture on this chatbot. One of 'stop'.
+        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
         generating: True to show a button to stop the text generation. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:

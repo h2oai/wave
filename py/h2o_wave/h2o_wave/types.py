@@ -8234,7 +8234,7 @@ class ChatbotCard:
         self.placeholder = placeholder
         """Chat input box placeholder. Use for prompt examples."""
         self.events = events
-        """The events to capture on this chatbot. One of 'stop'."""
+        """The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'."""
         self.generating = generating
         """True to show a button to stop the text generation. Defaults to False."""
         self.commands = commands
