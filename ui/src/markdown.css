@@ -9,13 +9,9 @@
 ::before,
 ::after {
     box-sizing: border-box;
-    /* 1 */
     border-width: 0;
-    /* 2 */
     border-style: solid;
-    /* 2 */
     border-color: #e5e7eb;
-    /* 2 */
 }
 
 /*
@@ -28,14 +24,10 @@
 */
 html {
     line-height: 1.5;
-    /* 1 */
     -webkit-text-size-adjust: 100%;
-    /* 2 */
     -moz-tab-size: 4;
-    /* 3 */
     -o-tab-size: 4;
     tab-size: 4;
-    /* 3 */
     font-family:
         ui-sans-serif,
         system-ui,
@@ -51,11 +43,8 @@ html {
         "Segoe UI Emoji",
         "Segoe UI Symbol",
         "Noto Color Emoji";
-    /* 4 */
     font-feature-settings: normal;
-    /* 5 */
     font-variation-settings: normal;
-    /* 6 */
 }
 
 /*
@@ -64,9 +53,7 @@ html {
 */
 body {
     margin: 0;
-    /* 1 */
     line-height: inherit;
-    /* 2 */
 }
 
 /*
@@ -76,11 +63,8 @@ body {
 */
 hr {
     height: 0;
-    /* 1 */
     color: inherit;
-    /* 2 */
     border-top-width: 1px;
-    /* 3 */
 }
 
 /*
@@ -129,9 +113,7 @@ kbd,
 samp,
 pre {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    /* 1 */
     font-size: 1em;
-    /* 2 */
 }
 
 /*
@@ -160,11 +142,8 @@ sup {
 */
 table {
     text-indent: 0;
-    /* 1 */
     border-color: inherit;
-    /* 2 */
     border-collapse: collapse;
-    /* 3 */
 }
 
 /*
@@ -210,17 +189,13 @@ menu {
 input::-moz-placeholder,
 textarea::-moz-placeholder {
     opacity: 1;
-    /* 1 */
     color: #9ca3af;
-    /* 2 */
 }
 
 input::placeholder,
 textarea::placeholder {
     opacity: 1;
-    /* 1 */
     color: #9ca3af;
-    /* 2 */
 }
 
 /*
@@ -237,9 +212,7 @@ iframe,
 embed,
 object {
     display: block;
-    /* 1 */
     vertical-align: middle;
-    /* 2 */
 }
 
 /*
@@ -248,7 +221,7 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 img,
 video {
     max-width: 100%;
-    height: auto;
+    max-height: 100%;
 }
 
 .prose {
@@ -270,9 +243,13 @@ video {
 }
 
 .prose a {
-    color: var(--wave-text);
+    color: var(--wave-themePrimary);
     text-decoration: underline;
     font-weight: 500;
+}
+
+.prose a:hover {
+    text-decoration: none;
 }
 
 .prose strong {
@@ -299,39 +276,39 @@ video {
     padding-left: 1.625em;
 }
 
-.prose :where(ol[type="A"]) {
+.prose ol[type="A"] {
     list-style-type: upper-alpha;
 }
 
-.prose :where(ol[type="a"]) {
+.prose ol[type="a"] {
     list-style-type: lower-alpha;
 }
 
-.prose :where(ol[type="A" s]) {
+.prose ol[type="A" s] {
     list-style-type: upper-alpha;
 }
 
-.prose :where(ol[type="a" s]) {
+.prose ol[type="a" s] {
     list-style-type: lower-alpha;
 }
 
-.prose :where(ol[type="I"]) {
+.prose ol[type="I"] {
     list-style-type: upper-roman;
 }
 
-.prose :where(ol[type="i"]) {
+.prose ol[type="i"] {
     list-style-type: lower-roman;
 }
 
-.prose :where(ol[type="I" s]) {
+.prose ol[type="I" s] {
     list-style-type: upper-roman;
 }
 
-.prose :where(ol[type="i" s]) {
+.prose ol[type="i" s] {
     list-style-type: lower-roman;
 }
 
-.prose :where(ol[type="1"]) {
+.prose ol[type="1"] {
     list-style-type: decimal;
 }
 
