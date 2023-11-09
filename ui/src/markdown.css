@@ -235,7 +235,7 @@ video {
 }
 
 .prose .lead {
-    color: var(--tw-prose-lead);
+    color: var(--wave-text6);
     font-size: 1.25em;
     line-height: 1.6;
     margin-top: 1.2em;
@@ -430,97 +430,16 @@ video {
 .prose kbd {
     font-weight: 500;
     font-family: inherit;
-    color: var(--tw-prose-kbd);
+    color: var(--wave-text);
     box-shadow:
-        0 0 0 1px rgb(var(--tw-prose-kbd-shadows) / 10%),
-        0 3px 0 rgb(var(--tw-prose-kbd-shadows) / 10%);
+        0 0 0 1px rgb(var(--wave-text) / 10%),
+        0 3px 0 rgb(var(--wave-text) / 10%);
     font-size: 0.875em;
     border-radius: 0.3125rem;
     padding-top: 0.1875em;
     padding-right: 0.375em;
     padding-bottom: 0.1875em;
     padding-left: 0.375em;
-}
-
-.prose code {
-    color: var(--tw-prose-code);
-    font-weight: 600;
-    font-size: 0.875em;
-}
-
-.prose code::before {
-    content: "`";
-}
-
-.prose code::after {
-    content: "`";
-}
-
-.prose a code {
-    color: inherit;
-}
-
-.prose h1 code {
-    color: inherit;
-}
-
-.prose h2 code {
-    color: inherit;
-    font-size: 0.875em;
-}
-
-.prose h3 code {
-    color: inherit;
-    font-size: 0.9em;
-}
-
-.prose h4 code {
-    color: inherit;
-}
-
-.prose blockquote code {
-    color: inherit;
-}
-
-.prose thead th code {
-    color: inherit;
-}
-
-.prose pre {
-    /* TODO: Use single source of truth for these colors. Already defined in .hljs class of index.scss */
-    color: #a9b7c6;
-    background-color: #282b2e;
-    overflow-x: auto;
-    font-weight: 400;
-    font-size: 0.875em;
-    line-height: 1.7142857;
-    margin-top: 1.7142857em;
-    margin-bottom: 1.7142857em;
-    border-radius: 0.375rem;
-    padding-top: 0.8571429em;
-    padding-right: 1.1428571em;
-    padding-bottom: 0.8571429em;
-    padding-left: 1.1428571em;
-}
-
-.prose pre code {
-    background-color: transparent;
-    border-width: 0;
-    border-radius: 0;
-    padding: 0;
-    font-weight: inherit;
-    color: inherit;
-    font-size: inherit;
-    font-family: inherit;
-    line-height: inherit;
-}
-
-.prose pre code::before {
-    content: none;
-}
-
-.prose pre code::after {
-    content: none;
 }
 
 .prose table {
@@ -701,4 +620,101 @@ tfoot td:last-child {
 
 .prose> :last-child {
     margin-bottom: 0;
+}
+
+.prose pre {
+    background-color: #282b2e;
+    overflow-x: auto;
+    font-size: 0.875em;
+    line-height: 1.7142857;
+    margin-top: 1.7142857em 0;
+    border-radius: 0.375rem;
+    padding: 0.8571429em 1.1428571em;
+}
+
+.prose pre code::before,
+pre code::after {
+    content: none;
+}
+
+.prose code::before,
+code::after {
+    content: "`";
+}
+
+.prose h2 code {
+    font-size: 0.875em;
+}
+
+.prose h3 code {
+    font-size: 0.9em;
+}
+
+/* Default markdown syntax highlighting theme - androidstudio. */
+pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+}
+
+code.hljs {
+    padding: 3px 5px;
+}
+
+.hljs {
+    color: #a9b7c6;
+}
+
+.hljs-bullet,
+.hljs-literal,
+.hljs-number,
+.hljs-symbol {
+    color: #6897bb
+}
+
+.hljs-deletion,
+.hljs-keyword,
+.hljs-selector-tag {
+    color: #cc7832
+}
+
+.hljs-link,
+.hljs-template-variable,
+.hljs-variable {
+    color: #629755
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: grey
+}
+
+.hljs-meta {
+    color: #bbb529
+}
+
+.hljs-addition,
+.hljs-attribute,
+.hljs-string {
+    color: #6a8759
+}
+
+.hljs-section,
+.hljs-title,
+.hljs-type {
+    color: #ffc66d
+}
+
+.hljs-name,
+.hljs-selector-class,
+.hljs-selector-id {
+    color: #e8bf6a
+}
+
+.hljs-emphasis {
+    font-style: italic
+}
+
+.hljs-strong {
+    font-weight: 700
 }

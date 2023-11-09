@@ -20,7 +20,6 @@ import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { ClipboardCopyButton } from './copyable_text'
 import { cards, grid, substitute } from './layout'
-import { clas, cssVar } from './theme'
 import { bond } from './ui'
 import './markdown.css'
 
@@ -33,28 +32,6 @@ const
     },
     body: {
       flexGrow: 1,
-    },
-    markdown: {
-      $nest: {
-        '&>*:first-child': {
-          marginTop: 0
-        },
-        '&>*:last-child': {
-          marginBottom: 0
-        },
-        a: {
-          color: cssVar('$themePrimary'),
-          $nest: {
-            '&:hover': {
-              textDecoration: 'none',
-            },
-          },
-        },
-        img: {
-          maxWidth: '100%',
-          maxHeight: '100%',
-        },
-      },
     },
     codeblock: {
       position: 'relative',
@@ -140,7 +117,7 @@ export const Markdown = ({ source }: { source: S }) => {
         return false
       }
     }
-  return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown prose')} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div onClick={onClick} className={'wave-markdown prose'} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /**
