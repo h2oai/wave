@@ -1,5 +1,258 @@
+/*
+  ! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
+*/
+/*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    /* 1 */
+    border-width: 0;
+    /* 2 */
+    border-style: solid;
+    /* 2 */
+    border-color: #e5e7eb;
+    /* 2 */
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+*/
+html {
+    line-height: 1.5;
+    /* 1 */
+    -webkit-text-size-adjust: 100%;
+    /* 2 */
+    -moz-tab-size: 4;
+    /* 3 */
+    -o-tab-size: 4;
+    tab-size: 4;
+    /* 3 */
+    font-family:
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        "Helvetica Neue",
+        Arial,
+        "Noto Sans",
+        sans-serif,
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
+        "Noto Color Emoji";
+    /* 4 */
+    font-feature-settings: normal;
+    /* 5 */
+    font-variation-settings: normal;
+    /* 6 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+body {
+    margin: 0;
+    /* 1 */
+    line-height: inherit;
+    /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+hr {
+    height: 0;
+    /* 1 */
+    color: inherit;
+    /* 2 */
+    border-top-width: 1px;
+    /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+b,
+strong {
+    font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
+*/
+code,
+kbd,
+samp,
+pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    /* 1 */
+    font-size: 1em;
+    /* 2 */
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+table {
+    text-indent: 0;
+    /* 1 */
+    border-color: inherit;
+    /* 2 */
+    border-collapse: collapse;
+    /* 3 */
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+    margin: 0;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+}
+
+legend {
+    padding: 0;
+}
+
+ol,
+ul,
+menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+    opacity: 1;
+    /* 1 */
+    color: #9ca3af;
+    /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+    opacity: 1;
+    /* 1 */
+    color: #9ca3af;
+    /* 2 */
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+    display: block;
+    /* 1 */
+    vertical-align: middle;
+    /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
 .prose {
-    color: var(--tw-prose-body);
+    color: var(--wave-text);
     max-width: 65ch;
 }
 
@@ -17,13 +270,13 @@
 }
 
 .prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-links);
+    color: var(--wave-text);
     text-decoration: underline;
     font-weight: 500;
 }
 
 .prose :where(strong):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-bold);
+    color: var(--wave-text);
     font-weight: 600;
 }
 
@@ -91,21 +344,21 @@
 
 .prose :where(ol > li):not(:where([class~="not-prose"], [class~="not-prose"] *))::marker {
     font-weight: 400;
-    color: var(--tw-prose-counters);
+    color: var(--wave-text8);
 }
 
 .prose :where(ul > li):not(:where([class~="not-prose"], [class~="not-prose"] *))::marker {
-    color: var(--tw-prose-bullets);
+    color: var(--wave-text2);
 }
 
 .prose :where(dt):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-headings);
+    color: var(--wave-text);
     font-weight: 600;
     margin-top: 1.25em;
 }
 
 .prose :where(hr):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    border-color: var(--tw-prose-hr);
+    border-color: var(--wave-text1);
     border-top-width: 1px;
     margin-top: 3em;
     margin-bottom: 3em;
@@ -114,9 +367,9 @@
 .prose :where(blockquote):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     font-weight: 500;
     font-style: italic;
-    color: var(--tw-prose-quotes);
+    color: var(--wave-text);
     border-left-width: 0.25rem;
-    border-left-color: var(--tw-prose-quote-borders);
+    border-left-color: var(--wave-text2);
     quotes: "\201C" "\201D" "\2018" "\2019";
     margin-top: 1.6em;
     margin-bottom: 1.6em;
@@ -132,7 +385,7 @@
 }
 
 .prose :where(h1):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-headings);
+    color: var(--wave-text);
     font-weight: 800;
     font-size: 2.25em;
     margin-top: 0;
@@ -146,7 +399,7 @@
 }
 
 .prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-headings);
+    color: var(--wave-text);
     font-weight: 700;
     font-size: 1.5em;
     margin-top: 2em;
@@ -160,7 +413,7 @@
 }
 
 .prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-headings);
+    color: var(--wave-text);
     font-weight: 600;
     font-size: 1.25em;
     margin-top: 1.6em;
@@ -174,7 +427,7 @@
 }
 
 .prose :where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-headings);
+    color: var(--wave-text);
     font-weight: 600;
     margin-top: 1.5em;
     margin-bottom: 0.5em;
@@ -201,7 +454,9 @@
     font-weight: 500;
     font-family: inherit;
     color: var(--tw-prose-kbd);
-    box-shadow: 0 0 0 1px rgb(var(--tw-prose-kbd-shadows) / 10%), 0 3px 0 rgb(var(--tw-prose-kbd-shadows) / 10%);
+    box-shadow:
+        0 0 0 1px rgb(var(--tw-prose-kbd-shadows) / 10%),
+        0 3px 0 rgb(var(--tw-prose-kbd-shadows) / 10%);
     font-size: 0.875em;
     border-radius: 0.3125rem;
     padding-top: 0.1875em;
@@ -256,7 +511,8 @@
 
 .prose :where(pre):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     color: var(--tw-prose-pre-code);
-    background-color: var(--tw-prose-pre-bg);
+    /* TODO: Use single source of truth for this. */
+    background-color: #282b2e;
     overflow-x: auto;
     font-weight: 400;
     font-size: 0.875em;
@@ -302,11 +558,11 @@
 
 .prose :where(thead):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     border-bottom-width: 1px;
-    border-bottom-color: var(--tw-prose-th-borders);
+    border-bottom-color: var(--wave-text4);
 }
 
 .prose :where(thead th):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-headings);
+    color: var(--wave-text);
     font-weight: 600;
     vertical-align: bottom;
     padding-right: 0.5714286em;
@@ -316,7 +572,7 @@
 
 .prose :where(tbody tr):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     border-bottom-width: 1px;
-    border-bottom-color: var(--tw-prose-td-borders);
+    border-bottom-color: var(--wave-text2);
 }
 
 .prose :where(tbody tr:last-child):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
@@ -329,7 +585,7 @@
 
 .prose :where(tfoot):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     border-top-width: 1px;
-    border-top-color: var(--tw-prose-th-borders);
+    border-top-color: var(--wave-text4);
 }
 
 .prose :where(tfoot td):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
@@ -342,28 +598,13 @@
 }
 
 .prose :where(figcaption):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    color: var(--tw-prose-captions);
+    color: var(--wave-text7);
     font-size: 0.875em;
     line-height: 1.4285714;
     margin-top: 0.8571429em;
 }
 
 .prose {
-    /* Markdown styles */
-    --tw-prose-body: 'var(--wave-text)', /* Text */
-    --tw-prose-headings: 'var(--wave-text)', /* Headings */
-    --tw-prose-lead: 'var(--wave-text)', /* TODO: Not sure what this is. */
-    --tw-prose-links: 'var(--wave-text)', /* Links */
-    --tw-prose-bold: 'var(--wave-text)', /* Bold text */
-    --tw-prose-counters: 'var(--wave-text8)', /* Numbered list */
-    --tw-prose-bullets: 'var(--wave-text2)', /* Bullet list */
-    --tw-prose-hr: 'var(--wave-text1)', /* Horizontal line */
-    --tw-prose-quotes: 'var(--wave-text)', /* Quote text */
-    --tw-prose-quote-borders: 'var(--wave-text2)', /* Quote border */
-    --tw-prose-captions: 'var(--wave-text7)', /* Image caption */
-    --tw-prose-pre-bg: '#282b2e', /* Code pre block background - TODO: Use single source of truth for this. */
-    --tw-prose-th-borders: 'var(--wave-text4)', /* Table header bottom border */
-    --tw-prose-td-borders: 'var(--wave-text2)', /* Table cell bottom border */
     font-size: 1rem;
     line-height: 1.75;
 }
