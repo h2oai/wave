@@ -117,7 +117,7 @@ export const Markdown = ({ source }: { source: S }) => {
         return false
       }
     }
-  return <div onClick={onClick} className={'wave-markdown prose'} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div onClick={onClick} className={'wave-markdown wave-prose'} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /**
