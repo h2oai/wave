@@ -98,7 +98,7 @@ Prevent `sub` and `sup` elements from affecting the line height in all browsers.
 2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
 3. Remove gaps between table borders by default.
 */
-.wave-prose table {
+.wave-markdown table {
     text-indent: 0;
     border-color: inherit;
     border-collapse: collapse;
@@ -184,13 +184,13 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     margin-bottom: 1.2em;
 }
 
-.wave-prose a {
+.wave-markdown a {
     color: var(--wave-themePrimary);
     text-decoration: underline;
     font-weight: 500;
 }
 
-.wave-prose a:hover {
+.wave-markdown a:hover {
     text-decoration: none;
 }
 
@@ -384,22 +384,26 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     padding-left: 0.375em;
 }
 
-.wave-prose table {
+.wave-markdown table {
     width: 100%;
     table-layout: auto;
     text-align: left;
     margin-top: 2em;
     margin-bottom: 2em;
-    font-size: 0.875em;
     line-height: 1.7142857;
 }
 
-.wave-prose thead {
+.wave-prose table {
+    font-size: 0.875em;
+}
+
+.wave-markdown thead {
     border-bottom-width: 1px;
+    border-bottom-style: solid;
     border-bottom-color: var(--wave-text4);
 }
 
-.wave-prose thead th {
+.wave-markdown thead th {
     color: var(--wave-text);
     font-weight: 600;
     vertical-align: bottom;
@@ -408,25 +412,53 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     padding-left: 0.5714286em;
 }
 
-.wave-prose tbody tr {
+.wave-markdown tbody tr {
     border-bottom-width: 1px;
+    border-bottom-style: solid;
     border-bottom-color: var(--wave-text2);
 }
 
-.wave-prose tbody tr:last-child {
+.wave-markdown tbody tr:last-child {
     border-bottom-width: 0;
 }
 
-.wave-prose tbody td {
+.wave-markdown tbody td {
     vertical-align: baseline;
+    /* padding: 11px 6px; */
 }
 
-.wave-prose tfoot {
+.wave-markdown thead th:first-child {
+    padding-left: 0;
+}
+
+.wave-markdown thead th:last-child {
+    padding-right: 0;
+}
+
+.wave-markdown tbody td,
+tfoot td {
+    padding-top: 0.5714286em;
+    padding-right: 0.5714286em;
+    padding-bottom: 0.5714286em;
+    padding-left: 0.5714286em;
+}
+
+.wave-markdown tbody td:first-child,
+tfoot td:first-child {
+    padding-left: 0;
+}
+
+.wave-markdown tbody td:last-child,
+tfoot td:last-child {
+    padding-right: 0;
+}
+
+.wave-markdown tfoot {
     border-top-width: 1px;
     border-top-color: var(--wave-text4);
 }
 
-.wave-prose tfoot td {
+.wave-markdown tfoot td {
     vertical-align: top;
 }
 
@@ -525,42 +557,16 @@ ol ol {
     margin-top: 0;
 }
 
-.wave-prose thead th:first-child {
-    padding-left: 0;
-}
-
-.wave-prose thead th:last-child {
-    padding-right: 0;
-}
-
-.wave-prose tbody td,
-tfoot td {
-    padding-top: 0.5714286em;
-    padding-right: 0.5714286em;
-    padding-bottom: 0.5714286em;
-    padding-left: 0.5714286em;
-}
-
-.wave-prose tbody td:first-child,
-tfoot td:first-child {
-    padding-left: 0;
-}
-
-.wave-prose tbody td:last-child,
-tfoot td:last-child {
-    padding-right: 0;
-}
-
 .wave-prose figure {
     margin-top: 2em;
     margin-bottom: 2em;
 }
 
-.wave-prose> :first-child {
+.wave-markdown> :first-child {
     margin-top: 0;
 }
 
-.wave-prose> :last-child {
+.wave-markdown> :last-child {
     margin-bottom: 0;
 }
 

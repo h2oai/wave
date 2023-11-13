@@ -3388,6 +3388,7 @@ def markdown_card(
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
+        compact: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> MarkdownCard:
     """Create a card that renders Markdown content.
@@ -3402,6 +3403,7 @@ def markdown_card(
         title: The title for this card.
         content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
         data: Additional data for the card.
+        compact: In compact mode markdown content takes less screen space. Defaults to True.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkdownCard` instance.
@@ -3411,6 +3413,7 @@ def markdown_card(
         title,
         content,
         data,
+        compact,
         commands,
     )
 

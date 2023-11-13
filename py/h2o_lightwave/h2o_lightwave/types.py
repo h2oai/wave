@@ -9608,11 +9608,13 @@ class MarkdownCard:
             title: str,
             content: str,
             data: Optional[PackedRecord] = None,
+            compact: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MarkdownCard.box', box, (str,), False, False, False)
         _guard_scalar('MarkdownCard.title', title, (str,), False, False, False)
         _guard_scalar('MarkdownCard.content', content, (str,), False, False, False)
+        _guard_scalar('MarkdownCard.compact', compact, (bool,), False, True, False)
         _guard_vector('MarkdownCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9622,6 +9624,8 @@ class MarkdownCard:
         """The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/"""
         self.data = data
         """Additional data for the card."""
+        self.compact = compact
+        """In compact mode markdown content takes less screen space. Defaults to True."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9630,6 +9634,7 @@ class MarkdownCard:
         _guard_scalar('MarkdownCard.box', self.box, (str,), False, False, False)
         _guard_scalar('MarkdownCard.title', self.title, (str,), False, False, False)
         _guard_scalar('MarkdownCard.content', self.content, (str,), False, False, False)
+        _guard_scalar('MarkdownCard.compact', self.compact, (bool,), False, True, False)
         _guard_vector('MarkdownCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='markdown',
@@ -9637,6 +9642,7 @@ class MarkdownCard:
             title=self.title,
             content=self.content,
             data=self.data,
+            compact=self.compact,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9650,18 +9656,22 @@ class MarkdownCard:
         __d_content: Any = __d.get('content')
         _guard_scalar('MarkdownCard.content', __d_content, (str,), False, False, False)
         __d_data: Any = __d.get('data')
+        __d_compact: Any = __d.get('compact')
+        _guard_scalar('MarkdownCard.compact', __d_compact, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MarkdownCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
+        compact: Optional[bool] = __d_compact
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MarkdownCard(
             box,
             title,
             content,
             data,
+            compact,
             commands,
         )
 

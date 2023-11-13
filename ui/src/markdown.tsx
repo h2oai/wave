@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S, unpack } from './core'
+import { B, Model, Rec, S, unpack } from './core'
 import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'
@@ -82,7 +82,7 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   return highlightedCode
 }
 
-export const Markdown = ({ source }: { source: S }) => {
+export const Markdown = ({ source, compact = true }: { source: S, compact?: B }) => {
   const
     prevHighlights = React.useRef<S[]>([]), // Prevent flicker during streaming.
     codeBlockIdx = React.useRef(0), // MarkdownIt parses code blocks sequentially, which is a problem for streaming.
@@ -117,7 +117,7 @@ export const Markdown = ({ source }: { source: S }) => {
         return false
       }
     }
-  return <div onClick={onClick} className={'wave-markdown wave-prose'} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div onClick={onClick} className={`wave-markdown ${compact ? '' : 'wave-prose'}`} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /**
@@ -146,6 +146,10 @@ interface State {
    * Additional data for the card.
    **/
   data?: Rec
+  /**
+ * In compact mode markdown content takes less screen space. Defaults to True.
+ **/
+  compact?: B
 }
 
 export const
@@ -159,7 +163,7 @@ export const
           <div data-test={name} className={css.card}>
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <div className={css.body}>
-              <Markdown source={substitute(state.content, data)} />
+              <Markdown source={substitute(state.content, data)} compact={state.compact} />
             </div>
           </div>
         )
