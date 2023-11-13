@@ -176,14 +176,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     margin-bottom: 1.25em;
 }
 
-.wave-prose .lead {
-    color: var(--wave-text6);
-    font-size: 1.25em;
-    line-height: 1.6;
-    margin-top: 1.2em;
-    margin-bottom: 1.2em;
-}
-
 .wave-markdown a {
     color: var(--wave-themePrimary);
     text-decoration: underline;
@@ -583,11 +575,6 @@ ol ol {
 .wave-prose pre code::before,
 pre code::after {
     content: none;
-}
-
-.wave-prose code::before,
-code::after {
-    content: "`";
 }
 
 .wave-prose h2 code {
