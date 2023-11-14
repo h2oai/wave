@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, Model, Rec, S, unpack } from './core'
+import { B, Model, Rec, S, unpack, xid } from './core'
 import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'
@@ -81,7 +81,7 @@ const highlightSyntax = async (str: S, language: S, codeElementId: S) => {
   return highlightedCode
 }
 
-export const Markdown = ({ source, name, compact = true }: { source: S, name: S, compact?: B }) => {
+export const Markdown = ({ source, compact = true }: { source: S, compact?: B }) => {
   const
     prevHighlights = React.useRef<S[]>([]), // Prevent flicker during streaming.
     codeBlockIdx = React.useRef(0), // MarkdownIt parses code blocks sequentially, which is a problem for streaming.
@@ -89,7 +89,7 @@ export const Markdown = ({ source, name, compact = true }: { source: S, name: S,
       html: true, linkify: true, typographer: true, highlight: (str, lang) => {
         const codeBlockId = codeBlockIdx.current.toString()
         // Use the unique html element id to avoid conflicts when multiple markdown cards are rendered on the same page.
-        const codeElementId = `${name}-${codeBlockId}`
+        const codeElementId = `${xid()}-${codeBlockId}`
         if (prevHighlights.current.length === codeBlockIdx.current) prevHighlights.current.push('')
 
         // HACK: MarkdownIt does not support async rules.
@@ -165,7 +165,7 @@ export const
           <div data-test={name} className={css.card}>
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <div className={css.body}>
-              <Markdown source={substitute(state.content, data)} name={name} compact={state.compact} />
+              <Markdown source={substitute(state.content, data)} compact={state.compact} />
             </div>
           </div>
         )
