@@ -51,8 +51,8 @@ const
       }
     },
   })
-const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
-  const codeBlock = document.getElementById(codeBlockId)
+const highlightSyntax = async (str: S, language: S, codeElementId: S) => {
+  const codeBlock = document.getElementById(codeElementId)
   if (!codeBlock) return ''
   if (language) {
     try {
@@ -81,21 +81,23 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   return highlightedCode
 }
 
-export const Markdown = ({ source, compact = true }: { source: S, compact?: B }) => {
+export const Markdown = ({ source, name, compact = true }: { source: S, name: S, compact?: B }) => {
   const
     prevHighlights = React.useRef<S[]>([]), // Prevent flicker during streaming.
     codeBlockIdx = React.useRef(0), // MarkdownIt parses code blocks sequentially, which is a problem for streaming.
     markdown = React.useMemo(() => MarkdownIt({
       html: true, linkify: true, typographer: true, highlight: (str, lang) => {
         const codeBlockId = codeBlockIdx.current.toString()
+        // Use the unique html element id to avoid conflicts when multiple markdown cards are rendered on the same page.
+        const codeElementId = `${name}-${codeBlockId}`
         if (prevHighlights.current.length === codeBlockIdx.current) prevHighlights.current.push('')
 
         // HACK: MarkdownIt does not support async rules.
         // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
-        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId), 0)
+        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeElementId), 0)
 
         // TODO: Sanitize the HTML.
-        const ret = `<code id='${codeBlockId}' class="hljs ${css.codeblock}">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+        const ret = `<code id='${codeElementId}' class="hljs ${css.codeblock}">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
         codeBlockIdx.current++
         return ret
       }
@@ -163,7 +165,7 @@ export const
           <div data-test={name} className={css.card}>
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <div className={css.body}>
-              <Markdown source={substitute(state.content, data)} compact={state.compact} />
+              <Markdown source={substitute(state.content, data)} name={name} compact={state.compact} />
             </div>
           </div>
         )

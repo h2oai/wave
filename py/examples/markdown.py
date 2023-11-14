@@ -14,6 +14,8 @@ sample_markdown='''
 ___
 The **quick** __brown__ *fox* **_jumped_ over** the ~~lazy~~ _dog_.
 
+This is <sup>superscript</sup> and this is <sub>subscript</sub>!
+
 Block quote:
 
 > The quick brown fox jumped over the lazy dog.
@@ -37,12 +39,6 @@ Nested list:
    - First nested list item
      - Second nested list item  
 
-<!-- This content will not appear in the rendered Markdown -->
-
-Ignore \*markdown\* formatting.
-
-This framework is made by [h2o.ai](https://h2o.ai)
-
 Image:
 
 ![Monty Python](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg)
@@ -61,8 +57,7 @@ Table:
 
 Inline code:
 
-Use `git status` to list all new or modified files that haven't yet been committed.
-
+Use `ui.markdown_card` to start creating your own markdown content!
 
 Code block:
 
@@ -81,17 +76,13 @@ async def serve(q: Q):
     await q.page.save()
 ```
 
-This is <sup>superscript</sup> and this is <sub>subscript</sub>!
+<!-- This content will not appear in the rendered Markdown -->
 
-Linking
---------------------
+Ignore \*markdown\* formatting.
 
-Search with [Google][1],
-[Yahoo][2] or [MSN][3].
+Linking:
 
-  [1]: http://google.com/        "Google"
-  [2]: http://search.yahoo.com/  "Yahoo Search"
-  [3]: http://search.msn.com/    "MSN Search"
+This framework is made by [h2o.ai](https://h2o.ai)
 '''
 
 @app('/demo')
