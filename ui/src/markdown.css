@@ -85,7 +85,7 @@ Prevent `sub` and `sup` elements from affecting the line height in all browsers.
     vertical-align: baseline;
 }
 
-.porse sub {
+.wave-prose sub {
     bottom: -0.25em;
 }
 
@@ -110,7 +110,7 @@ Removes the default spacing and border for appropriate elements.
 .wave-prose blockquote,
 .wave-prose dl,
 .wave-prose dd,
-.porse h1,
+.wave-prose h1,
 .wave-prose h2,
 .wave-prose h3,
 .wave-prose h4,

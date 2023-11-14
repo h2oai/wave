@@ -81,9 +81,7 @@ async def serve(q: Q):
     await q.page.save()
 ```
 
-2<sub><sup>2</sup></sub> = 4
-
-1<sup>2</sup> = 1
+This is <sup>superscript</sup> and this is <sub>subscript</sub>!
 
 Linking
 --------------------
@@ -100,7 +98,7 @@ Search with [Google][1],
 async def serve(q: Q):
     q.page['example'] = ui.markdown_card(
         box='1 1 3 9',
-        title='Markdown - compact',
+        title='Markdown - compact (default)',
         content=sample_markdown,
     )
     q.page['example1'] = ui.markdown_card(
