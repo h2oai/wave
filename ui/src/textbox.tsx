@@ -65,6 +65,8 @@ export interface Textbox {
   tooltip?: S
   /** True if the text may be checked for spelling errors. Defaults to True. */
   spellcheck?: B
+  /** Input type. Defaults to 'text'. */
+  type?: 'text' | 'number' | 'tel'
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -96,7 +98,10 @@ export const
         suffix: m.suffix,
         multiline: m.multiline,
         spellCheck: m.spellcheck,
-        type: m.password ? 'password' : undefined,
+        type: m.password ? 'password' : (m.type || 'text'),
+        className: m.type === 'number' ? 'textfield-number' : undefined,
+        // Disable setting number with scroll for number fields.
+        onWheel: m.type === 'number' ? e => e.currentTarget.blur() : undefined,
       }
 
     React.useEffect(() => {

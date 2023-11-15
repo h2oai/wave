@@ -485,6 +485,8 @@ ui_message_bar <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param spellcheck True if the text may be checked for spelling errors. Defaults to True.
+#' @param type Input type. Defaults to 'text'.
+#'   One of 'text', 'number', 'tel'. See enum h2o_wave.ui.TextboxType.
 #' @return A Textbox instance.
 #' @export
 ui_textbox <- function(
@@ -507,7 +509,8 @@ ui_textbox <- function(
   width = NULL,
   visible = NULL,
   tooltip = NULL,
-  spellcheck = NULL) {
+  spellcheck = NULL,
+  type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -528,6 +531,7 @@ ui_textbox <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("spellcheck", "logical", spellcheck)
+  # TODO Validate type
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -548,7 +552,8 @@ ui_textbox <- function(
     width=width,
     visible=visible,
     tooltip=tooltip,
-    spellcheck=spellcheck))
+    spellcheck=spellcheck,
+    type=type))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
