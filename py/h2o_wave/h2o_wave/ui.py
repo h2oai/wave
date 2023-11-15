@@ -398,7 +398,7 @@ def textbox(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         spellcheck: Optional[bool] = None,
-        type: Optional[str] = None,
+        keyboard: Optional[str] = None,
 ) -> Component:
     """Create a text box.
 
@@ -427,7 +427,7 @@ def textbox(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         spellcheck: True if the text may be checked for spelling errors. Defaults to True.
-        type: Input type. Defaults to 'text'. One of 'text', 'number', 'tel'. See enum h2o_wave.ui.TextboxType.
+        keyboard: Keyboard to be shown on mobile devices. Defaults to 'text'. One of 'text', 'number', 'tel'. See enum h2o_wave.ui.TextboxKeyboard.
     Returns:
         A `h2o_wave.types.Textbox` instance.
     """
@@ -452,7 +452,7 @@ def textbox(
         visible,
         tooltip,
         spellcheck,
-        type,
+        keyboard,
     ))
 
 
