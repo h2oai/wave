@@ -149,12 +149,14 @@ q.page['example'] = ui.form_card(
     items=[
         ui.textbox(
             name='textbox_keyboard_numeric', 
-            label='With numeric keyboard (iOS, Android)', 
+            label='With numeric keyboard (iOS, Android)',
+            # Show numeric keyboard
             keyboard='number'
             ),
         ui.textbox(
             name='textbox_keyboard_telephone', 
-            label='With numeric keyboard (iOS, Android)', 
+            label='With numeric keyboard (iOS, Android)',
+            # Show telephone keyboard
             keyboard='tel'
             )
         ]
