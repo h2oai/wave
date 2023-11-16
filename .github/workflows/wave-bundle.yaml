@@ -14,12 +14,15 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Download H2O CLI
+        working-directory: ./university
         run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/v0.28.2/cli/linux-amd64/h2o
 
       - name: Change permissions
+        working-directory: ./university
         run: chmod +x .bin/h2o
 
       - name: Set version
+        working-directory: ./university
         run: sed -i -r -e "s/\{\{VERSION\}\}/$(env.VERSION)/g" app.toml
 
       - name: Get App Version
@@ -28,6 +31,7 @@ jobs:
           echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
       - name: Make air-gapped bundle
+        working-directory: ./university
         run: |
           .bin/h2o bundle \
             --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
@@ -39,6 +43,7 @@ jobs:
             --generate-dockerfile
 
       - uses: actions/upload-artifact@v3
+        working-directory: ./university
         with:
           name: wave-bundle
           path: |
@@ -46,6 +51,7 @@ jobs:
             ./*.wave
 
       - uses: actions/upload-artifact@v3
+        working-directory: ./university
         with:
           name: wave-bundle-helm
           path: helm/
