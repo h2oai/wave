@@ -137,3 +137,28 @@ q.page['example'] = ui.form_card(
                       value="I have spellcheck disabld", spellcheck=False)]
 )
 ```
+
+## Mobile keyboard layout
+
+Show proper keyboard layout on mobile devices with `type` attribute. Defaults to `text`.
+This does not prevent user from typing any character.
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[
+        ui.textbox(
+            name='textbox_keyboard_numeric', 
+            label='With numeric keyboard (iOS, Android)',
+            # Show numeric keyboard
+            type='number'
+            ),
+        ui.textbox(
+            name='textbox_keyboard_telephone', 
+            label='With numeric keyboard  (iOS, Android)',
+            # Show telephone keyboard
+            type='tel'
+            )
+        ]
+)
+```

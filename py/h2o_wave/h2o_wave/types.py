@@ -969,6 +969,15 @@ class MessageBar:
         )
 
 
+_TextboxType = ['text', 'number', 'tel']
+
+
+class TextboxType:
+    TEXT = 'text'
+    NUMBER = 'number'
+    TEL = 'tel'
+
+
 class Textbox:
     """Create a text box.
 
@@ -998,6 +1007,7 @@ class Textbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             spellcheck: Optional[bool] = None,
+            type: Optional[str] = None,
     ):
         _guard_scalar('Textbox.name', name, (str,), True, False, False)
         _guard_scalar('Textbox.label', label, (str,), False, True, False)
@@ -1019,6 +1029,7 @@ class Textbox:
         _guard_scalar('Textbox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Textbox.spellcheck', spellcheck, (bool,), False, True, False)
+        _guard_enum('Textbox.type', type, _TextboxType, True)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1059,6 +1070,8 @@ class Textbox:
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.spellcheck = spellcheck
         """True if the text may be checked for spelling errors. Defaults to True."""
+        self.type = type
+        """Keyboard to be shown on mobile devices. Defaults to 'text'. One of 'text', 'number', 'tel'. See enum h2o_wave.ui.TextboxType."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1082,6 +1095,7 @@ class Textbox:
         _guard_scalar('Textbox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Textbox.spellcheck', self.spellcheck, (bool,), False, True, False)
+        _guard_enum('Textbox.type', self.type, _TextboxType, True)
         return _dump(
             name=self.name,
             label=self.label,
@@ -1103,6 +1117,7 @@ class Textbox:
             visible=self.visible,
             tooltip=self.tooltip,
             spellcheck=self.spellcheck,
+            type=self.type,
         )
 
     @staticmethod
@@ -1148,6 +1163,8 @@ class Textbox:
         _guard_scalar('Textbox.tooltip', __d_tooltip, (str,), False, True, False)
         __d_spellcheck: Any = __d.get('spellcheck')
         _guard_scalar('Textbox.spellcheck', __d_spellcheck, (bool,), False, True, False)
+        __d_type: Any = __d.get('type')
+        _guard_enum('Textbox.type', __d_type, _TextboxType, True)
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -1168,6 +1185,7 @@ class Textbox:
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         spellcheck: Optional[bool] = __d_spellcheck
+        type: Optional[str] = __d_type
         return Textbox(
             name,
             label,
@@ -1189,6 +1207,7 @@ class Textbox:
             visible,
             tooltip,
             spellcheck,
+            type,
         )
 
 
