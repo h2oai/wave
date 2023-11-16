@@ -67,7 +67,7 @@ export const XPicker = ({ model: m }: { model: Picker }) => {
       wave.args[m.name] = items ? items.map(({ key }) => key) : null
       if (m.trigger) wave.push()
     },
-    onEmptyResolveSuggestions = () => tags
+    onEmptyResolveSuggestions = () => tags.filter(tag => !selectedTags.includes(tag))
 
   React.useEffect(() => {
     wave.args[m.name] = m.values || null
