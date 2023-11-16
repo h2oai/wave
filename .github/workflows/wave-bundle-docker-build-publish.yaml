@@ -1,0 +1,110 @@
+name: Build and Publish Docker image from generated Dockerfile
+
+on:
+  workflow_call:
+    inputs:
+      build-version:
+        type: string
+        description: The version of the application/image to be pushed
+        required: true
+      bundle-artifact:
+        type: string
+        description: The name of the artifact containing the generated Dockerfiles and the wave bundle
+        required: true
+      working-directory:
+        type: string
+        description: Path to the working directory, where docker build will be executed
+        default: .
+
+jobs:
+  docker:
+    name: Build and Publish App Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Download Wave bundle and Dockerfiles
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.bundle-artifact }}
+          path: ./
+
+      - name: Rename Dockerfiles
+        run: |
+          mv ./*bundle.Dockerfile ./generated.bundle.Dockerfile
+          mv ./*runtime.Dockerfile ./generated.runtime.Dockerfile
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::524466471676:role/workflows-library-wave-bundling-github-actions
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: us-east-1
+
+      - name: "Login to Amazon ECR"
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: "Ensure ECR Repository for the bundle"
+        # Tries to describe the repository and if it fails, creates it
+        run: |
+          aws ecr describe-repositories \
+            --repository-names h2oai/${{ github.event.repository.name }}-bundle 2>/dev/null ||
+          aws ecr create-repository \
+            --repository-name h2oai/${{ github.event.repository.name }}-bundle \
+            --image-tag-mutability IMMUTABLE \
+            --tag \
+              Key=GithubRepo,Value=github.com/h2oai/${{ github.event.repository.name }} \
+              Key=ManagedBy,Value=GitHubActions \
+              Key=CreatedByWorkflow,Value=${{ github.workflow_ref }}
+
+      - name: "Ensure ECR Repository for the runtime"
+        # Tries to describe the repository and if it fails, creates it
+        run: |
+          aws ecr describe-repositories \
+            --repository-names h2oai/${{ github.event.repository.name }} 2>/dev/null ||
+          aws ecr create-repository \
+            --repository-name h2oai/${{ github.event.repository.name }} \
+            --image-tag-mutability IMMUTABLE \
+            --tag \
+              Key=GithubRepo,Value=github.com/h2oai/${{ github.event.repository.name }} \
+              Key=ManagedBy,Value=GitHubActions \
+              Key=CreatedByWorkflow,Value=${{ github.workflow_ref }}
+
+      - name: Build and Export Bundle Image
+        uses: docker/build-push-action@v4
+        id: bundle-build
+        with:
+          push: true
+          context: ${{ inputs.working-directory }}
+          file: ./generated.bundle.Dockerfile
+          platforms: linux/amd64
+          provenance: false
+          tags: |
+            524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}-bundle:${{ inputs.build-version }}
+
+      - name: Build and Export Runtime Image
+        uses: docker/build-push-action@v4
+        id: runtime-build
+        with:
+          push: true
+          context: ${{ inputs.working-directory }}
+          file: ./generated.runtime.Dockerfile
+          platforms: linux/amd64
+          provenance: false
+          tags: |
+            524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}:${{ inputs.build-version }}
+
+      - name: Published Images Summary
+        run: |
+          echo "#### Image Tags" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "docker image push 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}-bundle:${{ inputs.build-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker image push 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}:${{ inputs.build-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
