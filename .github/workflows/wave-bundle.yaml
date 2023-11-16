@@ -40,18 +40,18 @@ jobs:
             --generate-helm-charts \
             --helm-chart-version ${{ steps.get-build-version.outputs.VERSION }} \
             --helm-chart-name ${{ github.event.repository.name }} \
+            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}-bundle \
+            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }} \
             --generate-dockerfile
 
       - uses: actions/upload-artifact@v3
-        working-directory: ./university
         with:
           name: wave-bundle
           path: |
-            ./*.Dockerfile
-            ./*.wave
+            ./university/*.Dockerfile
+            ./university/*.wave
 
       - uses: actions/upload-artifact@v3
-        working-directory: ./university
         with:
           name: wave-bundle-helm
-          path: helm/
+          path: university/helm/
