@@ -140,8 +140,8 @@ q.page['example'] = ui.form_card(
 
 ## Mobile keyboard layout
 
-Show proper keyboard layout on mobile devices with `keyboard` attribute. Defaults to `text`.
-This does not prevent user from typing any character. If you want to allow typing e.g. numeric characters only, use in combination with [mask](#with-mask).
+Show proper keyboard layout on mobile devices with `type` attribute. Defaults to `text`.
+This does not prevent user from typing any character.
 
 ```py
 q.page['example'] = ui.form_card(
@@ -155,7 +155,7 @@ q.page['example'] = ui.form_card(
             ),
         ui.textbox(
             name='textbox_keyboard_telephone', 
-            label='With numeric keyboard (iOS, Android)',
+            label='With numeric keyboard  (iOS, Android)',
             # Show telephone keyboard
             type='tel'
             )

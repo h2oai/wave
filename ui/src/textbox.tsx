@@ -99,7 +99,7 @@ export const
         suffix: m.suffix,
         multiline: m.multiline,
         spellCheck: m.spellcheck,
-        type: m.password ? 'password' : (m.keyboard || 'text'),
+        type: m.password ? 'password' : (m.type || 'text'),
       }
 
     React.useEffect(() => {
