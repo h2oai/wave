@@ -17,7 +17,6 @@ import { B, Id, S } from './core'
 import React from 'react'
 import { debounce, wave } from './ui'
 
-
 /**
  * Create a text box.
  *
