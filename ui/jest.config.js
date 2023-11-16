@@ -19,13 +19,11 @@ module.exports = {
   testEnvironment: "jsdom",
   transformIgnorePatterns: [
     "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-    // "^.+\\.module\\.(css|sass|scss)$"
   ],
   modulePaths: [],
   moduleNameMapper: {
     "^react-native$": "react-native-web",
     '^d3$': '<rootDir>/node_modules/d3/dist/d3.min.js',
-    '\\.(css)$': '<rootDir>/src/styleMock.js'
   },
   moduleFileExtensions: [
     "web.js",

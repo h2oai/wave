@@ -29,6 +29,8 @@ jest.mock('d3', () => ({
   pie: () => ({ value: () => () => [] }),
 }))
 jest.mock('d3-interpolate', () => ({ extent: () => '' }))
+jest.mock('./markdown.css', () => '')
+
 
 const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
   if ('displayName' in iconComponent) acc[iconName.slice(0, -4)] = React.createElement(iconComponent as React.FC)
