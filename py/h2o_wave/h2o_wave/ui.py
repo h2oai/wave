@@ -3403,7 +3403,7 @@ def markdown_card(
         title: The title for this card.
         content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
         data: Additional data for the card.
-        compact: In compact mode markdown content takes less screen space. Defaults to True.
+        compact: Make spacing tighter. Defaults to True.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkdownCard` instance.

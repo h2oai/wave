@@ -9625,7 +9625,7 @@ class MarkdownCard:
         self.data = data
         """Additional data for the card."""
         self.compact = compact
-        """In compact mode markdown content takes less screen space. Defaults to True."""
+        """Make spacing tighter. Defaults to True."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

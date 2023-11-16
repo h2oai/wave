@@ -3948,7 +3948,7 @@ ui_list_item1_card <- function(
 #' @param title The title for this card.
 #' @param content The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
 #' @param data Additional data for the card.
-#' @param compact In compact mode markdown content takes less screen space. Defaults to True.
+#' @param compact Make spacing tighter. Defaults to True.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkdownCard instance.
 #' @export

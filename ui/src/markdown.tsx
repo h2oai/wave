@@ -149,7 +149,7 @@ interface State {
    **/
   data?: Rec
   /**
- * In compact mode markdown content takes less screen space. Defaults to True.
+ * Make spacing tighter. Defaults to True.
  **/
   compact?: B
 }
