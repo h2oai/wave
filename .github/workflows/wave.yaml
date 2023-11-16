@@ -1,16 +1,12 @@
 name: Wave Bundle
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version'
-        required: true
+  push:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: "${{ github.event.inputs.version }}"
-  TAG: "v${{ github.event.inputs.version }}"
+  VERSION: "0.0.1"
+  TAG: "v0.0.1"
 
 jobs:
   bundle:
