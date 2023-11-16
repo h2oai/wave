@@ -1,34 +1,53 @@
 # Markdown
 # Use a markdown card to display formatted content using #markdown.
 # ---
-from h2o_wave import site, ui
+from h2o_wave import site, ui, app, main, Q
 
-page = site['/demo']
 
-sample_markdown = '''=
-The **quick** _brown_ fox jumped over the lazy dog.
+sample_markdown='''
+# Heading level 1
+## Heading level 2
+### Heading level 3
+#### Heading level 4
+##### Heading level 5
+###### Heading level 6
+___
+The **quick** __brown__ *fox* **_jumped_ over** the ~~lazy~~ _dog_.
+
+This is <sup>superscript</sup> and this is <sub>subscript</sub>!
 
 Block quote:
 
 > The quick brown fox jumped over the lazy dog.
 
-Unordered list:
-
-- The quick brown fox jumped over the lazy dog.
-- The quick brown fox jumped over the lazy dog.
-- The quick brown fox jumped over the lazy dog.
-
 Ordered list:
 
-1. The quick brown fox jumped over the lazy dog.
-1. The quick brown fox jumped over the lazy dog.
-1. The quick brown fox jumped over the lazy dog.
+1. James Madison
+1. James Monroe
+1. John Quincy Adams
+
+Unordered list:
+
+- George Washington
+* John Adams
++ Thomas Jefferson
++ John Doe
+
+Nested list:
+
+1. First list item
+   - First nested list item
+     - Second nested list item  
 
 Image:
 
 ![Monty Python](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg)
 
-Table:
+Image caption:
+
+<figcaption>A single track trail outside of Albuquerque, New Mexico.</figcaption>
+
+Table: 
 
 | Column 1 | Column 2 | Column 3 |
 | -------- | -------- | -------- |
@@ -36,17 +55,12 @@ Table:
 | Item 1   | Item 2   | Item 3   |
 | Item 1   | Item 2   | Item 3   |
 
-'''
+Inline code:
 
-page['example'] = ui.markdown_card(
-    box='1 1 3 10',
-    title='I was made using markdown!',
-    content=sample_markdown,
-)
-page['example1'] = ui.markdown_card(
-    box='4 1 3 10',
-    title='I was made using markdown!',
-    content='''
+Use `ui.markdown_card` to start creating your own markdown content!
+
+Code block:
+
 ```py
 from h2o_wave import main, app, Q, ui
 
@@ -59,8 +73,29 @@ async def serve(q: Q):
         content='Hello, world!'
     )
 
-    await q.page`.save()
-''',
-)
+    await q.page.save()
+```
 
-page.save()
+<!-- This content will not appear in the rendered Markdown -->
+
+Ignore \*markdown\* formatting.
+
+Linking:
+
+This framework is made by [h2o.ai](https://h2o.ai)
+'''
+
+@app('/demo')
+async def serve(q: Q):
+    q.page['example'] = ui.markdown_card(
+        box='1 1 3 9',
+        title='Markdown - compact (default)',
+        content=sample_markdown,
+    )
+    q.page['example1'] = ui.markdown_card(
+            box='4 1 3 9',
+            title='Markdown - regular',
+            content=sample_markdown,
+            compact=False
+    )
+    await q.page.save()

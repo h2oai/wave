@@ -1360,7 +1360,7 @@
   "Wave Full MarkdownCard": {
     "prefix": "w_full_markdown_card",
     "body": [
-      "ui.markdown_card(box='$1', title='$2', content='$3', data=${4:None}, commands=[\n\t\t$5\t\t\n])$0"
+      "ui.markdown_card(box='$1', title='$2', content='$3', data=${4:None}, compact=${5:True}, commands=[\n\t\t$6\t\t\n])$0"
     ],
     "description": "Create a full Wave MarkdownCard."
   },

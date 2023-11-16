@@ -1667,11 +1667,12 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_markdown_card" value="ui.markdown_card(box='$box$',title='$title$',content='$content$',data=$data$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MarkdownCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_markdown_card" value="ui.markdown_card(box='$box$',title='$title$',content='$content$',data=$data$,compact=$compact$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MarkdownCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
+    <variable name="compact" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

@@ -92,3 +92,33 @@ q.page['example'] = ui.markdown_card(
 Displaying code with proper syntax highlighting is supported out of the box. The list of supported languages can be found [here](https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md).
 
 Wave uses [AndroidStudio](https://developer.android.com/studio) theme as default, but can be changed by picking one of the plenty [other themes](https://highlightjs.org/static/demo/), downloading its [CSS](https://github.com/highlightjs/highlight.js/tree/main/src/styles) and loading it within the Wave app. See [this example](/docs/examples/markdown-code-theme) to learn how to change the code highlighting theme into a popular `Atom One Dark`.
+
+## Compact
+
+By default, markdown is rendered compactly to fit more content.
+Use `compact=False` for a modern, well-structured and reader-friendly look.
+
+```py
+sample_markdown = '''=
+# Heading
+
+The **quick** _brown_ fox jumped over the lazy dog.
+
+Blockquote:
+
+> The quick brown fox jumped over the lazy dog.
+
+Ordered list:
+
+1. The quick brown fox jumped over the lazy dog.
+1. The quick brown fox jumped over the lazy dog.
+1. The quick brown fox jumped over the lazy dog.
+'''
+
+q.page['example'] = ui.markdown_card(
+    box='1 1 3 10',
+    title='I was made using markdown!',
+    content=sample_markdown,
+    compact=False
+)
+```

@@ -3948,6 +3948,7 @@ ui_list_item1_card <- function(
 #' @param title The title for this card.
 #' @param content The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
 #' @param data Additional data for the card.
+#' @param compact Make spacing tighter. Defaults to True.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkdownCard instance.
 #' @export
@@ -3956,17 +3957,20 @@ ui_markdown_card <- function(
   title,
   content,
   data = NULL,
+  compact = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
+  .guard_scalar("compact", "logical", compact)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
+    compact=compact,
     commands=commands,
     view='markdown')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkdownCard"))

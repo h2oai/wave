@@ -19,13 +19,11 @@ module.exports = {
   testEnvironment: "jsdom",
   transformIgnorePatterns: [
     "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-    "^.+\\.module\\.(css|sass|scss)$"
   ],
   modulePaths: [],
   moduleNameMapper: {
     "^react-native$": "react-native-web",
     '^d3$': '<rootDir>/node_modules/d3/dist/d3.min.js',
-    "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
   },
   moduleFileExtensions: [
     "web.js",
