@@ -1906,7 +1906,7 @@
   "Wave Full Textbox": {
     "prefix": "w_full_textbox",
     "body": [
-      "ui.textbox(name='$1', label='$2', placeholder='$3', value='$4', mask='$5', icon='$6', prefix='$7', suffix='$8', error='$9', required=${10:False}, disabled=${11:False}, readonly=${12:False}, multiline=${13:False}, password=${14:False}, trigger=${15:False}, height='$16', width='${17:100%}', visible=${18:True}, tooltip='$19', spellcheck=${20:True}, keyboard='${21:text}'),$0"
+      "ui.textbox(name='$1', label='$2', placeholder='$3', value='$4', mask='$5', icon='$6', prefix='$7', suffix='$8', error='$9', required=${10:False}, disabled=${11:False}, readonly=${12:False}, multiline=${13:False}, password=${14:False}, trigger=${15:False}, height='$16', width='${17:100%}', visible=${18:True}, tooltip='$19', spellcheck=${20:True}, type='${21:text}'),$0"
     ],
     "description": "Create a full Wave Textbox."
   },

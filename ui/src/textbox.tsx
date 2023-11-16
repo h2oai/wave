@@ -17,13 +17,6 @@ import { B, Id, S } from './core'
 import React from 'react'
 import { debounce, wave } from './ui'
 
-const hideFieldArrowsStyle = {
-  '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
-    '-webkit-appearance': 'none',
-    margin: 0,
-  },
-  '-moz-appearance': 'textfield',
-}
 
 /**
  * Create a text box.
@@ -74,7 +67,7 @@ export interface Textbox {
   /** True if the text may be checked for spelling errors. Defaults to True. */
   spellcheck?: B
   /** Keyboard to be shown on mobile devices. Defaults to 'text'. */
-  keyboard?: 'text' | 'number' | 'tel'
+  type?: 'text' | 'number' | 'tel'
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -90,11 +83,6 @@ export const
         if (m.trigger) debounceRef.current()
         setValue(v)
         m.value = v
-      },
-      customHeight = !m.mask && m.multiline && m.height && !m.height.endsWith('%') ? m.height : undefined,
-      styles = {
-        field: { height: customHeight, ...(m.keyboard === 'number' ? hideFieldArrowsStyle : {}) },
-        fieldGroup: { minHeight: customHeight },
       },
       textFieldProps: Fluent.ITextFieldProps & { 'data-test': S } = {
         'data-test': m.name,
@@ -112,9 +100,6 @@ export const
         multiline: m.multiline,
         spellCheck: m.spellcheck,
         type: m.password ? 'password' : (m.keyboard || 'text'),
-        styles,
-        onWheel: m.keyboard === 'number' ? e => e.currentTarget.blur() : undefined, // Disable setting number with scroll.
-        onKeyDown: m.keyboard === 'number' ? e => e.preventDefault() : undefined, // Disable setting number with keyboard arrows.
       }
 
     React.useEffect(() => {
@@ -124,5 +109,14 @@ export const
 
     return m.mask
       ? <Fluent.MaskedTextField mask={m.mask} {...textFieldProps} />
-      : <Fluent.TextField {...textFieldProps} />
+      : (
+        <Fluent.TextField
+          styles={
+            m.multiline && m.height && !m.height.endsWith('%')
+              ? { field: { height: m.height }, fieldGroup: { minHeight: m.height } }
+              : undefined
+          }
+          {...textFieldProps}
+        />
+      )
   }

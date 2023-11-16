@@ -42,8 +42,8 @@ async def serve(q: Q):
                        placeholder='I am disabled'),
             ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True),
             ui.textbox(name='textbox_spellcheck_disabled', label='Spellcheck disabled', spellcheck=False),
-            ui.textbox(name='textbox_numeric', label='With numeric keyboard (iOS, Android)', keyboard='number'),
-            ui.textbox(name='textbox_tel', label='With telephone keyboard (iOS, Android)', keyboard='tel'),
+            ui.textbox(name='textbox_numeric', label='With numeric keyboard (iOS, Android)', type='number'),
+            ui.textbox(name='textbox_tel', label='With telephone keyboard (iOS, Android)', type='tel'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
