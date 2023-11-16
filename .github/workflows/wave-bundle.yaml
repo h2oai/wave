@@ -2,6 +2,11 @@ name: Wave Bundle
 
 on:
   workflow_call:
+    inputs:
+      build-version:
+        type: string
+        description: The version of the application/image to be pushed
+        required: true
 
 jobs:
   airgapped:
@@ -28,7 +33,7 @@ jobs:
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${{ build-version }}" >> "$GITHUB_OUTPUT"
 
       - name: Make air-gapped bundle
         working-directory: ./university

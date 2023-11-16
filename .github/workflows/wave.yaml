@@ -12,6 +12,8 @@ jobs:
   bundle:
     name: Create Wave Bundle
     uses: ./.github/workflows/wave-bundle.yaml
+    with:
+      build-version: ${{ VERSION }}
 
   publish:
     needs: bundle
