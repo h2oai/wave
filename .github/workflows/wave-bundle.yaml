@@ -19,6 +19,9 @@ jobs:
       - name: Change permissions
         run: chmod +x .bin/h2o
 
+      - name: Set version
+        run: sed -i -r -e "s/\{\{VERSION\}\}/$(env.VERSION)/g" app.toml
+
       - name: Get App Version
         id: get-build-version
         run: |
