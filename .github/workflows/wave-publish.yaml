@@ -15,7 +15,7 @@ jobs:
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=$(make version)" >> "$GITHUB_OUTPUT"
+          echo "VERSION=0.0.1" >> "$GITHUB_OUTPUT"
 
   build-and-publish:
     needs: retrieve-metadata
