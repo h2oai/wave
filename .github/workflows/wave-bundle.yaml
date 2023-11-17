@@ -28,12 +28,12 @@ jobs:
 
       - name: Set version
         working-directory: ./university
-        run: sed -i -r -e "s/\{\{VERSION\}\}/$(env.VERSION)/g" app.toml
+        run: sed -i -r -e "s/\{\{VERSION\}\}/0.0.1/g" app.toml
 
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=${{ build-version }}" >> "$GITHUB_OUTPUT"
+          echo "VERSION=0.0.1" >> "$GITHUB_OUTPUT"
 
       - name: Make air-gapped bundle
         working-directory: ./university
@@ -43,8 +43,8 @@ jobs:
             --docker-include static \
             --docker-use-buildkit \
             --generate-helm-charts \
-            --helm-chart-version ${{ steps.get-build-version.outputs.VERSION }} \
-            --helm-chart-name ${{ github.event.repository.name }} \
+            --helm-chart-version 0.0.1 \
+            --helm-chart-name university \
             --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}-bundle \
             --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }} \
             --generate-dockerfile
