@@ -27,3 +27,4 @@ jobs:
     with:
       build-version: ${{ needs.retrieve-metadata.outputs.build-version }}
       bundle-artifact: wave-bundle
+      wave-app-name: university

@@ -20,7 +20,7 @@ jobs:
 
       - name: Download H2O CLI
         working-directory: ./university
-        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/v0.28.2/cli/linux-amd64/h2o
+        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
 
       - name: Change permissions
         working-directory: ./university
@@ -40,13 +40,12 @@ jobs:
         run: |
           .bin/h2o bundle \
             --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
-            --docker-include static \
             --docker-use-buildkit \
             --generate-helm-charts \
             --helm-chart-version 0.0.1 \
             --helm-chart-name university \
-            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }}-bundle \
-            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ github.event.repository.name }} \
+            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university-bundle \
+            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university \
             --generate-dockerfile
 
       - uses: actions/upload-artifact@v3

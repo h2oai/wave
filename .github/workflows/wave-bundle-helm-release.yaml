@@ -15,6 +15,10 @@ on:
         type: string
         description: The name of the artifact containing the generated Helm chart
         required: true
+      wave-app-name:
+        type: string
+        description: The name of the wave app
+        required: true
 
 jobs:
   helm:
@@ -45,12 +49,12 @@ jobs:
         # Tires to describe the repository and if it fails, creates it
         run: |
           aws ecr describe-repositories \
-            --repository-names charts/${{ github.event.repository.name }} 2>/dev/null ||
+            --repository-names charts/${{ inputs.wave-app-name }} 2>/dev/null ||
           aws ecr create-repository \
-            --repository-name charts/${{ github.event.repository.name }} \
+            --repository-name charts/${{ inputs.wave-app-name }} \
             --image-tag-mutability IMMUTABLE \
             --tag \
-              Key=GithubRepo,Value=github.com/h2oai/${{ github.event.repository.name }} \
+              Key=GithubRepo,Value=github.com/h2oai/${{ inputs.wave-app-name }} \
               Key=ManagedBy,Value=GitHubActions \
               Key=CreatedByWorkflow,Value=${{ github.workflow_ref }}
 

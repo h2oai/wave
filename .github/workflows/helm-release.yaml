@@ -27,3 +27,4 @@ jobs:
     with:
       build-version: ${{ needs.retrieve-metadata.outputs.build-version }}
       helm-chart-artifact: wave-bundle-helm
+      wave-app-name: university
