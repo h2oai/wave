@@ -1,30 +1,15 @@
 name: Publish Wave University
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version'
-        required: true
+  push:
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: "${{ github.event.inputs.version }}"
+
 
 jobs:
-  publish:
-    name: Publish Wave University
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Build university
-        run:  make publish-university
-      
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          packages_dir: university/dist
-          password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
+  bundle_generator:
+    name: Bundle and Publish
+    runs-on: ubuntu-20.04
+    uses: ./.github/workflows/wave-university.yaml
+    with:
+      build-version: 1.0.0

@@ -2,12 +2,15 @@ name: Publish Wave Bundle
 
 on:
   workflow_call:
+    inputs:
+      build-version:
+        type: string
+        description: The version of the application/image to be pushed
+        required: true
 
 jobs:
   retrieve-metadata:
     runs-on: ubuntu-latest
-    outputs:
-      build-version: ${{ steps.get-build-version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v3
@@ -15,7 +18,7 @@ jobs:
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=0.0.1" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${{ inputs.build-version }}" >> "$GITHUB_OUTPUT"
 
   build-and-publish:
     needs: retrieve-metadata
@@ -25,6 +28,6 @@ jobs:
 
     uses: ./.github/workflows/wave-bundle-docker-build-publish.yaml
     with:
-      build-version: ${{ needs.retrieve-metadata.outputs.build-version }}
+      build-version: ${{ inputs.build-version }}
       bundle-artifact: wave-bundle
       wave-app-name: university

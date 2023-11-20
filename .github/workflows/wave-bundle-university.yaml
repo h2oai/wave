@@ -12,8 +12,6 @@ jobs:
   airgapped:
     name: Create Wave Bundle
     runs-on: ubuntu-latest
-    outputs:
-      build-version: ${{ steps.get-build-version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v3
@@ -28,12 +26,12 @@ jobs:
 
       - name: Set version
         working-directory: ./university
-        run: sed -i -r -e "s/\{\{VERSION\}\}/0.0.1/g" app.toml
+        run: sed -i -r -e "s/\{\{VERSION\}\}/${{ inputs.build-version }}/g" app.toml
 
       - name: Get App Version
         id: get-build-version
         run: |
-          echo "VERSION=0.0.1" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${{ inputs.build-version }}" >> "$GITHUB_OUTPUT"
 
       - name: Make air-gapped bundle
         working-directory: ./university
@@ -42,7 +40,7 @@ jobs:
             --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
             --docker-use-buildkit \
             --generate-helm-charts \
-            --helm-chart-version 0.0.1 \
+            --helm-chart-version ${{ inputs.build-version }} \
             --helm-chart-name university \
             --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university-bundle \
             --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university \
