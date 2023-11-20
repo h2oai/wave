@@ -45,7 +45,6 @@ jobs:
         run: |
           .bin/h2o bundle \
             --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
-            --docker-include static \
             --docker-use-buildkit \
             --generate-helm-charts \
             --helm-chart-version ${{ inputs.build-version }} \
