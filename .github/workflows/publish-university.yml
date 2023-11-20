@@ -9,7 +9,6 @@ jobs:
 
   bundle_generator:
     name: Bundle and Publish
-    runs-on: ubuntu-20.04
     uses: ./.github/workflows/wave-university.yaml
     with:
       build-version: 1.0.0
