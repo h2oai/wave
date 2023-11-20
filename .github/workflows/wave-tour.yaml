@@ -8,18 +8,18 @@ jobs:
     name: Create Wave Bundle
     uses: ./.github/workflows/wave-bundle-tour.yaml
     with:
-      build-version: 0.22.0
+      build-version: 0.26.2
 
   publish:
     needs: bundle
     name: Build and Publish
     uses: ./.github/workflows/wave-publish-tour.yaml
     with:
-      build-version: 0.22.0
+      build-version: 0.26.2
 
   helm-publish:
     needs: bundle
     name: Build and Publish Helm Chart
     uses: ./.github/workflows/helm-release-tour.yaml
     with:
-      build-version: 0.22.0
+      build-version: 0.26.2
