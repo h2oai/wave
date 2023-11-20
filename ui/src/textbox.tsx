@@ -51,7 +51,7 @@ export interface Textbox {
   readonly?: B
   /** True if the text box should allow multi-line text entry. */
   multiline?: B
-  /** True if the text box should hide text content. */
+  /** True if the text box should hide text content unless it is toggled by eye icon. */
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
@@ -99,6 +99,7 @@ export const
         multiline: m.multiline,
         spellCheck: m.spellcheck,
         type: m.password ? 'password' : (m.type || 'text'),
+        canRevealPassword: true,
       }
 
     React.useEffect(() => {
