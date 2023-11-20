@@ -1,0 +1,656 @@
+/*
+  ! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
+*/
+/*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+.wave-prose *,
+.wave-prose ::before,
+.wave-prose ::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+.wave-prose hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+.wave-prose abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+.wave-prose h1,
+.wave-prose h2,
+.wave-prose h3,
+.wave-prose h4,
+.wave-prose h5,
+.wave-prose h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+.wave-prose a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+.wave-prose b,
+.wave-prose strong {
+    font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
+*/
+.wave-prose code,
+.wave-prose kbd,
+.wave-prose samp,
+.wave-prose pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 1em;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+.wave-prose sub,
+.wave-prose sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+.wave-prose sub {
+    bottom: -0.25em;
+}
+
+.wave-prose sup {
+    top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+.wave-markdown table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+.wave-prose blockquote,
+.wave-prose dl,
+.wave-prose dd,
+.wave-prose h1,
+.wave-prose h2,
+.wave-prose h3,
+.wave-prose h4,
+.wave-prose h5,
+.wave-prose h6,
+.wave-prose hr,
+.wave-prose figure,
+.wave-prose p,
+.wave-prose pre {
+    margin: 0;
+}
+
+.wave-prose fieldset {
+    margin: 0;
+    padding: 0;
+}
+
+.wave-prose legend {
+    padding: 0;
+}
+
+.wave-prose ol,
+.wave-prose ul,
+.wave-prose menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+.wave-prose img,
+.wave-prose svg,
+.wave-prose video,
+.wave-prose canvas,
+.wave-prose audio,
+.wave-prose iframe,
+.wave-prose embed,
+.wave-prose object {
+    display: block;
+    vertical-align: middle;
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+.wave-prose img,
+.wave-prose video {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.wave-prose {
+    color: var(--wave-text);
+    max-width: 65ch;
+}
+
+.wave-prose p {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+}
+
+.wave-markdown a {
+    color: var(--wave-themePrimary);
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.wave-markdown a:hover {
+    text-decoration: none;
+}
+
+.wave-prose strong {
+    color: var(--wave-text);
+    font-weight: 600;
+}
+
+.wave-prose a strong {
+    color: inherit;
+}
+
+.wave-prose blockquote strong {
+    color: inherit;
+}
+
+.wave-prose thead th strong {
+    color: inherit;
+}
+
+.wave-prose ol {
+    list-style-type: decimal;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+}
+
+.wave-prose ol[type="A"] {
+    list-style-type: upper-alpha;
+}
+
+.wave-prose ol[type="a"] {
+    list-style-type: lower-alpha;
+}
+
+.wave-prose ol[type="A" s] {
+    list-style-type: upper-alpha;
+}
+
+.wave-prose ol[type="a" s] {
+    list-style-type: lower-alpha;
+}
+
+.wave-prose ol[type="I"] {
+    list-style-type: upper-roman;
+}
+
+.wave-prose ol[type="i"] {
+    list-style-type: lower-roman;
+}
+
+.wave-prose ol[type="I" s] {
+    list-style-type: upper-roman;
+}
+
+.wave-prose ol[type="i" s] {
+    list-style-type: lower-roman;
+}
+
+.wave-prose ol[type="1"] {
+    list-style-type: decimal;
+}
+
+.wave-prose ul {
+    list-style-type: disc;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+}
+
+.wave-prose ol>li::marker {
+    font-weight: 400;
+    color: var(--wave-text8);
+}
+
+.wave-prose ul>li::marker {
+    color: var(--wave-text2);
+}
+
+.wave-prose dt {
+    color: var(--wave-text);
+    font-weight: 600;
+    margin-top: 1.25em;
+}
+
+.wave-prose hr {
+    border-color: var(--wave-text1);
+    border-top-width: 1px;
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.wave-prose blockquote {
+    font-weight: 500;
+    font-style: italic;
+    color: var(--wave-text);
+    border-left-width: 0.25rem;
+    border-left-color: var(--wave-text2);
+    quotes: "\201C" "\201D" "\2018" "\2019";
+    margin-top: 1.6em;
+    margin-bottom: 1.6em;
+    padding-left: 1em;
+}
+
+.wave-prose blockquote p:first-of-type::before {
+    content: open-quote;
+}
+
+.wave-prose blockquote p:last-of-type::after {
+    content: close-quote;
+}
+
+.wave-prose h1 {
+    color: var(--wave-text);
+    font-weight: 800;
+    font-size: 2.25em;
+    margin-top: 0;
+    margin-bottom: 0.8888889em;
+    line-height: 1.1111111;
+}
+
+.wave-prose h1 strong {
+    font-weight: 900;
+    color: inherit;
+}
+
+.wave-prose h2 {
+    color: var(--wave-text);
+    font-weight: 700;
+    font-size: 1.5em;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    line-height: 1.3333333;
+}
+
+.wave-prose h2 strong {
+    font-weight: 800;
+    color: inherit;
+}
+
+.wave-prose h3 {
+    color: var(--wave-text);
+    font-weight: 600;
+    font-size: 1.25em;
+    margin-top: 1.6em;
+    margin-bottom: 0.6em;
+    line-height: 1.6;
+}
+
+.wave-prose h3 strong {
+    font-weight: 700;
+    color: inherit;
+}
+
+.wave-prose h4 {
+    color: var(--wave-text);
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.5;
+}
+
+.wave-prose h4 strong {
+    font-weight: 700;
+    color: inherit;
+}
+
+.wave-prose img {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.wave-prose picture {
+    display: block;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.wave-prose kbd {
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--wave-text);
+    box-shadow:
+        0 0 0 1px rgb(var(--wave-text) / 10%),
+        0 3px 0 rgb(var(--wave-text) / 10%);
+    font-size: 0.875em;
+    border-radius: 0.3125rem;
+    padding-top: 0.1875em;
+    padding-right: 0.375em;
+    padding-bottom: 0.1875em;
+    padding-left: 0.375em;
+}
+
+.wave-markdown table {
+    width: 100%;
+    table-layout: auto;
+    text-align: left;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    line-height: 1.7142857;
+}
+
+.wave-prose table {
+    font-size: 0.875em;
+}
+
+.wave-markdown thead {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--wave-text4);
+}
+
+.wave-markdown thead th {
+    color: var(--wave-text);
+    font-weight: 600;
+    vertical-align: bottom;
+    padding-right: 0.5714286em;
+    padding-bottom: 0.5714286em;
+    padding-left: 0.5714286em;
+}
+
+.wave-markdown tbody tr {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--wave-text2);
+}
+
+.wave-markdown tbody tr:last-child {
+    border-bottom-width: 0;
+}
+
+.wave-markdown tbody td {
+    vertical-align: baseline;
+    /* padding: 11px 6px; */
+}
+
+.wave-markdown thead th:first-child {
+    padding-left: 0;
+}
+
+.wave-markdown thead th:last-child {
+    padding-right: 0;
+}
+
+.wave-markdown tbody td,
+tfoot td {
+    padding-top: 0.5714286em;
+    padding-right: 0.5714286em;
+    padding-bottom: 0.5714286em;
+    padding-left: 0.5714286em;
+}
+
+.wave-markdown tbody td:first-child,
+tfoot td:first-child {
+    padding-left: 0;
+}
+
+.wave-markdown tbody td:last-child,
+tfoot td:last-child {
+    padding-right: 0;
+}
+
+.wave-markdown tfoot {
+    border-top-width: 1px;
+    border-top-color: var(--wave-text4);
+}
+
+.wave-markdown tfoot td {
+    vertical-align: top;
+}
+
+.wave-prose figure>* {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.wave-prose figcaption {
+    color: var(--wave-text7);
+    font-size: 0.875em;
+    line-height: 1.4285714;
+    margin-top: 0.8571429em;
+}
+
+.wave-prose {
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.wave-prose picture>img {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.wave-prose video {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.wave-prose li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.wave-prose ol>li {
+    padding-left: 0.375em;
+}
+
+.wave-prose ul>li {
+    padding-left: 0.375em;
+}
+
+.wave-prose>ul>li p {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+}
+
+.wave-prose>ul>li>*:first-child {
+    margin-top: 1.25em;
+}
+
+.wave-prose>ul>li>*:last-child {
+    margin-bottom: 1.25em;
+}
+
+.wave-prose>ol>li>*:first-child {
+    margin-top: 1.25em;
+}
+
+.wave-prose>ol>li>*:last-child {
+    margin-bottom: 1.25em;
+}
+
+.wave-prose ul ul,
+ul ol,
+ol ul,
+ol ol {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+}
+
+.wave-prose dl {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+}
+
+.wave-prose dd {
+    margin-top: 0.5em;
+    padding-left: 1.625em;
+}
+
+.wave-prose hr+* {
+    margin-top: 0;
+}
+
+.wave-prose h2+* {
+    margin-top: 0;
+}
+
+.wave-prose h3+* {
+    margin-top: 0;
+}
+
+.wave-prose h4+* {
+    margin-top: 0;
+}
+
+.wave-prose figure {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.wave-markdown> :first-child {
+    margin-top: 0;
+}
+
+.wave-markdown> :last-child {
+    margin-bottom: 0;
+}
+
+.wave-prose pre {
+    background-color: #282b2e;
+    overflow-x: auto;
+    font-size: 0.875em;
+    line-height: 1.7142857;
+    margin-top: 1.7142857em 0;
+    border-radius: 0.375rem;
+    padding: 0.8571429em 1.1428571em;
+}
+
+.wave-prose pre code::before,
+pre code::after {
+    content: none;
+}
+
+.wave-prose h2 code {
+    font-size: 0.875em;
+}
+
+.wave-prose h3 code {
+    font-size: 0.9em;
+}
+
+/* Default markdown syntax highlighting theme - androidstudio. */
+pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+}
+
+code.hljs {
+    padding: 3px 5px;
+}
+
+.hljs {
+    background-color: #282b2e;
+    color: #a9b7c6;
+}
+
+.hljs-bullet,
+.hljs-literal,
+.hljs-number,
+.hljs-symbol {
+    color: #6897bb
+}
+
+.hljs-deletion,
+.hljs-keyword,
+.hljs-selector-tag {
+    color: #cc7832
+}
+
+.hljs-link,
+.hljs-template-variable,
+.hljs-variable {
+    color: #629755
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: grey
+}
+
+.hljs-meta {
+    color: #bbb529
+}
+
+.hljs-addition,
+.hljs-attribute,
+.hljs-string {
+    color: #6a8759
+}
+
+.hljs-section,
+.hljs-title,
+.hljs-type {
+    color: #ffc66d
+}
+
+.hljs-name,
+.hljs-selector-class,
+.hljs-selector-id {
+    color: #e8bf6a
+}
+
+.hljs-emphasis {
+    font-style: italic
+}
+
+.hljs-strong {
+    font-weight: 700
+}

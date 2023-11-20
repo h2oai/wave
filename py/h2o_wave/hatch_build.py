@@ -42,7 +42,7 @@ class CustomBuildHook(BuildHookInterface):
         with open(os.path.join('h2o_wave', 'metadata.py'), 'w') as f:
             f.write(f'''
 # Generated in hatch_build.py.
-__platform__ = "{platform}"
+__platform__ = "{operating_system}"
 __arch__ = "{arch}"
         ''')
 

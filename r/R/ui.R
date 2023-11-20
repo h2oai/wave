@@ -485,6 +485,8 @@ ui_message_bar <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param spellcheck True if the text may be checked for spelling errors. Defaults to True.
+#' @param type Keyboard to be shown on mobile devices. Defaults to 'text'.
+#'   One of 'text', 'number', 'tel'. See enum h2o_wave.ui.TextboxType.
 #' @return A Textbox instance.
 #' @export
 ui_textbox <- function(
@@ -507,7 +509,8 @@ ui_textbox <- function(
   width = NULL,
   visible = NULL,
   tooltip = NULL,
-  spellcheck = NULL) {
+  spellcheck = NULL,
+  type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -528,6 +531,7 @@ ui_textbox <- function(
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("spellcheck", "logical", spellcheck)
+  # TODO Validate type
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -548,7 +552,8 @@ ui_textbox <- function(
     width=width,
     visible=visible,
     tooltip=tooltip,
-    spellcheck=spellcheck))
+    spellcheck=spellcheck,
+    type=type))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -3332,7 +3337,7 @@ ui_chat_card <- function(
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
-#' @param events The events to capture on this chatbot. One of 'stop'.
+#' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
 #' @param generating True to show a button to stop the text generation. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
@@ -3948,6 +3953,7 @@ ui_list_item1_card <- function(
 #' @param title The title for this card.
 #' @param content The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
 #' @param data Additional data for the card.
+#' @param compact Make spacing tighter. Defaults to True.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkdownCard instance.
 #' @export
@@ -3956,17 +3962,20 @@ ui_markdown_card <- function(
   title,
   content,
   data = NULL,
+  compact = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
+  .guard_scalar("compact", "logical", compact)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
+    compact=compact,
     commands=commands,
     view='markdown')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkdownCard"))

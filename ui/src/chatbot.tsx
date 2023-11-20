@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, Model, Rec, S, isBuf, unpack, xid } from './core'
+import { B, I, Id, Model, Rec, S, isBuf, unpack, xid } from './core'
 import React from 'react'
 import { cards } from './layout'
 import { Markdown } from './markdown'
@@ -45,6 +45,7 @@ const
       justifyContent: 'center',
     },
     msg: {
+      position: 'relative',
       maxWidth: '65ch',
       flexGrow: 1,
       overflowWrap: 'break-word',
@@ -70,10 +71,14 @@ const
       marginBottom: 7.5,
       transform: 'translateX(-50%)',
       width: 180
+    },
+    feedback: {
+      display: 'flex',
+      justifyContent: 'flex-end',
     }
   })
 
-type Message = ChatbotMessage & { id?: S }
+type Message = ChatbotMessage & { id?: S, positive?: B }
 
 /* Chatbot message entity. */
 interface ChatbotMessage {
@@ -91,7 +96,7 @@ export interface Chatbot {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
@@ -134,7 +139,23 @@ export const XChatbot = (props: Chatbot) => {
         setIsInfiniteLoading(true)
       }
     }, [props.events, props.name]),
-    onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data])
+    onDataChange = React.useCallback(() => { if (props.data) setMsgs(processData(props.data)) }, [props.data]),
+    handlePositive = (id: I) => {
+      setMsgs(messages => {
+        if (messages[id]?.positive) return messages
+        messages[id].positive = true
+        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: true })
+        return [...messages]
+      })
+    },
+    handleNegative = (id: I) => {
+      setMsgs(messages => {
+        if (messages[id]?.positive !== undefined && !messages[id].positive) return messages
+        messages[id].positive = false
+        wave.emit(props.name, 'feedback', { message: messages[id].content, positive: false })
+        return [...messages]
+      })
+    }
 
   React.useEffect(() => {
     if (isBuf(props.data)) props.data.registerOnChange(onDataChange)
@@ -171,7 +192,7 @@ export const XChatbot = (props: Chatbot) => {
         onInfiniteLoad={onLoad}
         isInfiniteLoading={isInfiniteLoading}
       >
-        {msgs.map(({ from_user, content, id }, idx) => (
+        {msgs.map(({ from_user, content, id, positive }, idx) => (
           <div
             key={id ?? idx}
             className={clas(css.msgWrapper, from_user ? '' : css.botMsg)}
@@ -182,6 +203,12 @@ export const XChatbot = (props: Chatbot) => {
             }} >
             <span className={clas(css.msg, 'wave-s14')} style={{ padding: content?.includes('\n') ? 12 : 6 }}>
               <Markdown source={content || ''} />
+              {props.events?.includes('feedback') && !from_user &&
+                <div className={css.feedback}>
+                  <Fluent.IconButton onClick={() => handlePositive(idx)} iconProps={{ iconName: positive ? 'LikeSolid' : 'Like' }} />
+                  <Fluent.IconButton onClick={() => handleNegative(idx)} iconProps={{ iconName: (positive !== undefined && !positive) ? 'DislikeSolid' : 'Dislike' }} />
+                </div>
+              }
             </span>
           </div>
         ))}
@@ -237,7 +264,7 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B

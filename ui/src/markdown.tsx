@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S, unpack } from './core'
+import { B, Model, Rec, S, unpack, xid } from './core'
 import hljs from 'highlight.js/lib/core'
 import MarkdownIt from 'markdown-it'
 import React from 'react'
@@ -20,7 +20,6 @@ import ReactDOM from 'react-dom'
 import { stylesheet } from 'typestyle'
 import { ClipboardCopyButton } from './copyable_text'
 import { cards, grid, substitute } from './layout'
-import { border, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
 
 const
@@ -32,42 +31,6 @@ const
     },
     body: {
       flexGrow: 1,
-    },
-    markdown: {
-      $nest: {
-        '&>*:first-child': {
-          marginTop: 0
-        },
-        '&>*:last-child': {
-          marginBottom: 0
-        },
-        a: {
-          color: cssVar('$themePrimary'),
-          $nest: {
-            '&:hover': {
-              textDecoration: 'none',
-            },
-          },
-        },
-        table: {
-          width: pc(100),
-          borderCollapse: 'collapse',
-        },
-        tr: {
-          borderBottom: border(1, cssVar('$text5')),
-        },
-        th: {
-          padding: padding(11, 6),
-          textAlign: 'left',
-        },
-        td: {
-          padding: padding(11, 6),
-        },
-        img: {
-          maxWidth: '100%',
-          maxHeight: '100%',
-        },
-      },
     },
     codeblock: {
       position: 'relative',
@@ -88,8 +51,8 @@ const
       }
     },
   })
-const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
-  const codeBlock = document.getElementById(codeBlockId)
+const highlightSyntax = async (str: S, language: S, codeElementId: S) => {
+  const codeBlock = document.getElementById(codeElementId)
   if (!codeBlock) return ''
   if (language) {
     try {
@@ -118,21 +81,23 @@ const highlightSyntax = async (str: S, language: S, codeBlockId: S) => {
   return highlightedCode
 }
 
-export const Markdown = ({ source }: { source: S }) => {
+export const Markdown = ({ source, compact = true }: { source: S, compact?: B }) => {
   const
     prevHighlights = React.useRef<S[]>([]), // Prevent flicker during streaming.
     codeBlockIdx = React.useRef(0), // MarkdownIt parses code blocks sequentially, which is a problem for streaming.
     markdown = React.useMemo(() => MarkdownIt({
       html: true, linkify: true, typographer: true, highlight: (str, lang) => {
         const codeBlockId = codeBlockIdx.current.toString()
+        // Use the unique html element id to avoid conflicts when multiple markdown cards are rendered on the same page.
+        const codeElementId = `${xid()}-${codeBlockId}`
         if (prevHighlights.current.length === codeBlockIdx.current) prevHighlights.current.push('')
 
         // HACK: MarkdownIt does not support async rules.
         // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
-        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeBlockId), 0)
+        setTimeout(async () => prevHighlights.current[+codeBlockId] = await highlightSyntax(str, lang, codeElementId), 0)
 
         // TODO: Sanitize the HTML.
-        const ret = `<code id='${codeBlockId}' class="hljs ${css.codeblock}">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
+        const ret = `<code id='${codeElementId}' class="hljs ${css.codeblock}">${prevHighlights.current[codeBlockIdx.current] || str}</code>`
         codeBlockIdx.current++
         return ret
       }
@@ -153,7 +118,8 @@ export const Markdown = ({ source }: { source: S }) => {
         return false
       }
     }
-  return <div onClick={onClick} className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: html }} />
+  React.useEffect(() => { import('./markdown.css') }, [])
+  return <div onClick={onClick} className={`wave-markdown ${compact ? '' : 'wave-prose'}`} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /**
@@ -182,6 +148,10 @@ interface State {
    * Additional data for the card.
    **/
   data?: Rec
+  /**
+ * Make spacing tighter. Defaults to True.
+ **/
+  compact?: B
 }
 
 export const
@@ -195,7 +165,7 @@ export const
           <div data-test={name} className={css.card}>
             {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <div className={css.body}>
-              <Markdown source={substitute(state.content, data)} />
+              <Markdown source={substitute(state.content, data)} compact={state.compact} />
             </div>
           </div>
         )

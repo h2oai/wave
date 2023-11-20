@@ -398,6 +398,7 @@ def textbox(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
         spellcheck: Optional[bool] = None,
+        type: Optional[str] = None,
 ) -> Component:
     """Create a text box.
 
@@ -426,6 +427,7 @@ def textbox(
         visible: True if the component should be visible. Defaults to True.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         spellcheck: True if the text may be checked for spelling errors. Defaults to True.
+        type: Keyboard to be shown on mobile devices. Defaults to 'text'. One of 'text', 'number', 'tel'. See enum h2o_wave.ui.TextboxType.
     Returns:
         A `h2o_wave.types.Textbox` instance.
     """
@@ -450,6 +452,7 @@ def textbox(
         visible,
         tooltip,
         spellcheck,
+        type,
     ))
 
 
@@ -2885,7 +2888,7 @@ def chatbot_card(
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
         placeholder: Chat input box placeholder. Use for prompt examples.
-        events: The events to capture on this chatbot. One of 'stop'.
+        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
         generating: True to show a button to stop the text generation. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
@@ -3388,6 +3391,7 @@ def markdown_card(
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
+        compact: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> MarkdownCard:
     """Create a card that renders Markdown content.
@@ -3402,6 +3406,7 @@ def markdown_card(
         title: The title for this card.
         content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
         data: Additional data for the card.
+        compact: Make spacing tighter. Defaults to True.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkdownCard` instance.
@@ -3411,6 +3416,7 @@ def markdown_card(
         title,
         content,
         data,
+        compact,
         commands,
     )
 
