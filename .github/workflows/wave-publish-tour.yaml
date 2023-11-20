@@ -1,0 +1,33 @@
+name: Publish Wave Bundle
+
+on:
+  workflow_call:
+    inputs:
+      build-version:
+        type: string
+        description: The version of the application/image to be pushed
+        required: true
+
+jobs:
+  retrieve-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get App Version
+        id: get-build-version
+        run: |
+          echo "VERSION=${{ inputs.build-version }}" >> "$GITHUB_OUTPUT"
+
+  build-and-publish:
+    needs: retrieve-metadata
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    uses: ./.github/workflows/wave-bundle-docker-build-publish.yaml
+    with:
+      build-version: ${{ inputs.build-version }}
+      bundle-artifact: wave-bundle
+      wave-app-name: tour

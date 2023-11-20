@@ -1,0 +1,67 @@
+name: Wave Bundle
+
+on:
+  workflow_call:
+    inputs:
+      build-version:
+        type: string
+        description: The version of the application/image to be pushed
+        required: true
+
+jobs:
+  airgapped:
+    name: Create Wave Bundle
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download H2O CLI
+        working-directory: ./py/apps/tour
+        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
+
+      - name: Change permissions
+        working-directory: ./py/apps/tour
+        run: chmod +x .bin/h2o
+
+      - name: Get App Version
+        id: get-build-version
+        run: |
+          echo "VERSION=${{ inputs.build-version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Make the folder structure
+        run: |
+          find py/apps/tour -type f -name '*.toml' -exec sed -i -e "s/{{VERSION}}/${{ inputs.build-version }}/g" {} \;
+          find py/apps/tour -type f -name 'requirements.txt' -exec sed -i -e "s/{{VERSION}}/${{ inputs.build-version }}/g" {} \;
+          rsync -a py/examples py/apps/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*" --exclude "dist" --exclude "build"
+          cp tools/vscode-extension/base-snippets.json py/apps/tour/examples
+          cp tools/vscode-extension/component-snippets.json py/apps/tour/examples
+          cp tools/vscode-extension/server/utils.py py/apps/tour/examples/tour_autocomplete_utils.py
+          cp tools/vscode-extension/server/parser.py py/apps/tour/examples/tour_autocomplete_parser.py
+          sed -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/apps/tour/examples/tour.py 
+
+      - name: Make air-gapped bundle
+        working-directory: ./py/apps/tour
+        run: |
+          .bin/h2o bundle \
+            --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
+            --docker-include static \
+            --docker-use-buildkit \
+            --generate-helm-charts \
+            --helm-chart-version ${{ inputs.build-version }} \
+            --helm-chart-name tour \
+            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour-bundle \
+            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
+            --generate-dockerfile
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle
+          path: |
+            ./py/apps/tour/*.Dockerfile
+            ./py/apps/tour/*.wave
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle-helm
+          path: py/apps/tour/helm/
