@@ -160,15 +160,20 @@ describe('Picker.tsx', () => {
   })
 
   it('Filters correctly - does not offer already selected - without input provided', () => {
-    const { getByRole, queryByRole } = render(<XPicker model={pickerProps} />)
+    const { getByRole, queryByRole, getAllByRole } = render(<XPicker model={pickerProps} />)
     const input = (getByRole('combobox') as HTMLInputElement)
 
+    fireEvent.click(input)
+    expect(getAllByRole('option')).toHaveLength(2)
     typeToInput(input, name)
     fireEvent.click(getByRole('option'))
+
+    fireEvent.click(input)
+    expect(getAllByRole('option')).toHaveLength(1)
     typeToInput(input, altName)
     fireEvent.click(getByRole('option'))
-    fireEvent.click(input)
 
+    fireEvent.click(input)
     expect(queryByRole('option')?.querySelector('.ms-Suggestions-none')).toBeInTheDocument()
   })
 
