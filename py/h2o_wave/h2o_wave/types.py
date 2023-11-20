@@ -1057,7 +1057,7 @@ class Textbox:
         self.multiline = multiline
         """True if the text box should allow multi-line text entry."""
         self.password = password
-        """True if the text box should hide text content."""
+        """True if the text box should hide text content unless it is revealed by the eye icon."""
         self.trigger = trigger
         """True if the form should be submitted when the text value changes."""
         self.height = height

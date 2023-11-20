@@ -420,7 +420,7 @@ def textbox(
         disabled: True if the text box is disabled.
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
-        password: True if the text box should hide text content.
+        password: True if the text box should hide text content unless it is revealed by the eye icon.
         trigger: True if the form should be submitted when the text value changes.
         height: The height of the text box, e.g. '100px'. Percentage values not supported. Applicable only if `multiline` is true.
         width: The width of the text box, e.g. '100px'. Defaults to '100%'.
