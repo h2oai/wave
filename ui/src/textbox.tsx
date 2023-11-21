@@ -99,6 +99,7 @@ export const
         multiline: m.multiline,
         spellCheck: m.spellcheck,
         type: m.password ? 'password' : (m.type || 'text'),
+        canRevealPassword: true,
       }
 
     React.useEffect(() => {
