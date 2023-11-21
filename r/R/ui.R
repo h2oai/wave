@@ -478,7 +478,7 @@ ui_message_bar <- function(
 #' @param disabled True if the text box is disabled.
 #' @param readonly True if the text box is a read-only field.
 #' @param multiline True if the text box should allow multi-line text entry.
-#' @param password True if the text box should hide text content unless it is revealed by the eye icon.
+#' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
 #' @param height The height of the text box, e.g. '100px'. Percentage values not supported. Applicable only if `multiline` is true.
 #' @param width The width of the text box, e.g. '100px'. Defaults to '100%'.

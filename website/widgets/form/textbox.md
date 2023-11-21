@@ -163,9 +163,9 @@ q.page['example'] = ui.form_card(
 )
 ```
 
-## Password textbox
+## Password
 
-Used for cases when the input should be hidden. It can be revealed by clicking on the eye icon.
+Prompt for passwords without revealing.
 
 ```py
 q.page['example'] = ui.form_card(

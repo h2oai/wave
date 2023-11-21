@@ -51,7 +51,7 @@ export interface Textbox {
   readonly?: B
   /** True if the text box should allow multi-line text entry. */
   multiline?: B
-  /** True if the text box should hide text content unless it is revealed by the eye icon. */
+  /** True if the text box should hide text content. */
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
