@@ -578,6 +578,8 @@ const
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
           checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
+          // Prevent selection from being cleared when reference to 'items' changes.
+          setKey='wave-table-items'
         />
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
       </>
@@ -968,18 +970,22 @@ export const
 
     React.useEffect(() => {
       wave.args[m.name] = []
+      skipNextEventEmit.current = true
+      // HACK: Fluent.DetailsList fires 'onSelectionChanged' event when its internal 'isAllSelected' state changes.
+      // When we set 'filteredItems' to []  (e.g. by searching for a string that doesn't exist in the table), 
+      // the 'isAllSelected' changes from 'undefined' to 'false'. This fires 'onSelectionChanged' event which emits wave 'select' event.
+      // We don't want 'select' event to be fired in this case, so we manually set 'isAllSelected' to 'false' on the first render  
+      // while skipping the wave 'select' event emit by setting 'skipNextEventEmit.current' to true.
+      selection.setAllSelected(false)
       if (isSingle && m.value) {
-        skipNextEventEmit.current = true
         selection.setKeySelected(m.value, true, false)
-        skipNextEventEmit.current = false
         wave.args[m.name] = [m.value]
       }
       else if (isMultiple && m.values) {
-        skipNextEventEmit.current = true
         m.values.forEach(v => selection.setKeySelected(v, true, false))
-        skipNextEventEmit.current = false
         wave.args[m.name] = m.values
       }
+      skipNextEventEmit.current = false
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
