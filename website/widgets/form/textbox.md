@@ -165,7 +165,7 @@ q.page['example'] = ui.form_card(
 
 ## Password
 
-Prompt for passwords without revealing.
+Prompt for passwords.
 
 ```py
 q.page['example'] = ui.form_card(
