@@ -360,6 +360,76 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
+    it('Does not fire select event - single selection - search not matching text', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, single: true, events: ['select'] }} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+
+      expect(emitMock).toHaveBeenCalledTimes(0)
+    })
+
+    it('Does not fire select event - multiple selection - search not matching text', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+      expect(emitMock).toHaveBeenCalledTimes(0)
+    })
+
+    it('Fires event - multiple selection - filter out one of two selected rows', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      fireEvent.click(checkboxes[1])
+      fireEvent.click(checkboxes[2])
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1', 'rowname2'])
+      expect(emitMock).toHaveBeenCalledTimes(2)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'brown' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow + filteredItem)
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1'])
+      expect(emitMock).toHaveBeenCalledTimes(3)
+    })
+
+    it('Fires event - multiple selection - filter out none of selected rows', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      fireEvent.click(checkboxes[1])
+      fireEvent.click(checkboxes[2])
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1', 'rowname2'])
+      expect(emitMock).toHaveBeenCalledTimes(2)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', [])
+      expect(emitMock).toHaveBeenCalledTimes(3)
+    })
+
+    it('Does not remove selection when searching for text matching selected row', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      fireEvent.click(checkboxes[1])
+
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'select', ['rowname1'])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.change(getByTestId('search'), { target: { value: 'fox' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow + filteredItem)
+      expect(getAllByRole('checkbox')[1]).toBeChecked()
+    })
+
     it('Clicks a column - link set on second col', () => {
       tableProps = {
         ...tableProps,
