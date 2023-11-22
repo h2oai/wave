@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model } from './core'
+import { Model, S } from './core'
 import React from 'react'
 import { Stat } from './stats'
 import { cards } from './layout'
@@ -24,6 +24,8 @@ import { clas, cssVar } from './theme'
 export interface State {
   /** The individual stats to be displayed. */
   items: Stat[]
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const
