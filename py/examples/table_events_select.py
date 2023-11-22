@@ -7,7 +7,7 @@ from h2o_wave import main, app, Q, ui
 
 @app('/demo')
 async def serve(q: Q):
-    if q.events.table and q.events.table.select:
+    if q.events.table and q.events.table.select is not None:
         q.page['description'].content = f'{q.events.table.select}'
     else:
         q.page['table'] = ui.form_card(box='1 1 3 4', items=[
