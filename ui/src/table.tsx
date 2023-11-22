@@ -578,7 +578,8 @@ const
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
           checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
-          // Prevent selection from being cleared when reference to 'items' changes.
+          // Prevent selection from being cleared when 'items' are updated.
+          // https://github.com/microsoft/fluentui/blob/4c1cd4bbba73bbca4411db9d01ffb486b1a90303/packages/react/src/components/DetailsList/DetailsList.base.tsx#L1032. 
           setKey='wave-table-items'
         />
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
@@ -969,14 +970,13 @@ export const
       }, [m.pagination, m.events, m.name, filter, search, currentSort, initGroups])
 
     React.useEffect(() => {
-      wave.args[m.name] = []
       skipNextEventEmit.current = true
-      // HACK: Fluent.DetailsList fires 'onSelectionChanged' event when its internal 'isAllSelected' state changes.
-      // When we set 'filteredItems' to []  (e.g. by searching for a string that doesn't exist in the table), 
-      // the 'isAllSelected' changes from 'undefined' to 'false'. This fires 'onSelectionChanged' event which emits wave 'select' event.
-      // We don't want 'select' event to be fired in this case, so we manually set 'isAllSelected' to 'false' on the first render  
-      // while skipping the wave 'select' event emit by setting 'skipNextEventEmit.current' to true.
+      // HACK: Fluent.DetailsList fires 'onSelectionChanged' event when its internal 'isAllSelected' state changes. 
+      // Its initial 'undefined' value can be changed whether by using Select All checkbox or by setting 'items' to [] (which changes it to 'false').
+      // The event emitting is undesired e.g. when we have no items selected and user searches for non-existent rows. Therefore we manually trigger it
+      // on the first render by setting 'isAllSelected' to 'false' while skipping the wave 'select' event emit.
       selection.setAllSelected(false)
+      wave.args[m.name] = []
       if (isSingle && m.value) {
         selection.setKeySelected(m.value, true, false)
         wave.args[m.name] = [m.value]
