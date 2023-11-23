@@ -1682,14 +1682,14 @@
   "Wave Full Stats": {
     "prefix": "w_full_stats",
     "body": [
-      "ui.stats(justify='${1:start}', inset=${2:False}, width='$3', visible=${4:True}, items=[\n\t\t$5\t\t\n]),$0"
+      "ui.stats(justify='${1:start}', inset=${2:False}, width='$3', visible=${4:True}, name='$5', items=[\n\t\t$6\t\t\n]),$0"
     ],
     "description": "Create a full Wave Stats."
   },
   "Wave Full Stat": {
     "prefix": "w_full_stat",
     "body": [
-      "ui.stat(label='$1', value='$2', caption='$3', icon='$4', icon_color='$5'),$0"
+      "ui.stat(label='$1', value='$2', caption='$3', icon='$4', icon_color='$5', name='$6'),$0"
     ],
     "description": "Create a full Wave Stat."
   },
@@ -1822,7 +1822,7 @@
   "Wave Full TallStatsCard": {
     "prefix": "w_full_tall_stats_card",
     "body": [
-      "ui.tall_stats_card(box='$1', items=[\n\t\t$2\t\t\n], commands=[\n\t\t$3\t\t\n])$0"
+      "ui.tall_stats_card(box='$1', name='$2', items=[\n\t\t$3\t\t\n], commands=[\n\t\t$4\t\t\n])$0"
     ],
     "description": "Create a full Wave TallStatsCard."
   },

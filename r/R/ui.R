@@ -2540,6 +2540,7 @@ ui_vega_visualization <- function(
 #' @param caption The caption displayed below the primary value.
 #' @param icon An optional icon, displayed next to the label.
 #' @param icon_color The color of the icon.
+#' @param name An identifying name for this item.
 #' @return A Stat instance.
 #' @export
 ui_stat <- function(
@@ -2547,18 +2548,21 @@ ui_stat <- function(
   value = NULL,
   caption = NULL,
   icon = NULL,
-  icon_color = NULL) {
+  icon_color = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
+  .guard_scalar("name", "character", name)
   .o <- list(
     label=label,
     value=value,
     caption=caption,
     icon=icon,
-    icon_color=icon_color)
+    icon_color=icon_color,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveStat"))
   return(.o)
 }
@@ -2571,6 +2575,7 @@ ui_stat <- function(
 #' @param inset Whether to display the stats with a contrasting background.
 #' @param width The width of the stats, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param name An identifying name for this component.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
@@ -2578,18 +2583,21 @@ ui_stats <- function(
   justify = NULL,
   inset = NULL,
   width = NULL,
-  visible = NULL) {
+  visible = NULL,
+  name = NULL) {
   .guard_vector("items", "WaveStat", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("name", "character", name)
   .o <- list(stats=list(
     items=items,
     justify=justify,
     inset=inset,
     width=width,
-    visible=visible))
+    visible=visible,
+    name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -5278,19 +5286,23 @@ ui_tall_series_stat_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The individual stats to be displayed.
+#' @param name An identifying name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A TallStatsCard instance.
 #' @export
 ui_tall_stats_card <- function(
   box,
   items,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveStat", items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
+    name=name,
     commands=commands,
     view='tall_stats')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallStatsCard"))
