@@ -17,6 +17,9 @@ from h2o_wave import Q, app, main, ui
 import file_utils
 import studio_editor as editor
 
+import asyncio
+import subprocess
+import sys
 
 # TODO update this app with by-name component access once the Wave version higher than 0.25.2 is available.
 
@@ -40,7 +43,6 @@ class Project:
 
 
 project = Project()
-
 
 def start(entry_point: str, is_app: bool):
     env = os.environ.copy()
@@ -128,6 +130,7 @@ async def setup_page(q: Q):
             ]),
             ui.button(name='import_project', label='Import', icon='Upload'),
             ui.button(name='export_project', label='Export', icon='Download'),
+            ui.button(name='show_packages_dialog', label='Add packages', icon='Add'),
         ]
     )
     editor_html = '''
@@ -236,6 +239,50 @@ async def export(q: Q):
     q.page["meta"].script = ui.inline_script(f'window.open("{q.app.zip_path}", "_blank");')
     os.remove("app.zip")
 
+def get_output(output: str) -> str:
+    return f'''
+```
+{output}
+```
+'''
+
+# https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
+async def install_package(q: Q, loop: asyncio.AbstractEventLoop, package: str) -> None:
+    p = None
+    while True:
+        if not q.client.process_started:
+            p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', package], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            q.client.process_started = True
+
+        if p.poll() is not None:
+            # Process finished.
+            await update_ui(q, f"Process finished with returncode {p.returncode}.")
+            break
+        else:
+            await update_ui(q, p.stdout.readline(), package)
+
+    q.client.process_started = False
+    await finish_installation(q)    
+
+async def show_cancel(q: Q):
+    q.page['meta'].progress.content = 'Cancelled'
+    q.page['meta'].dialog.blocking = False
+    q.page['meta'].close_package_dialog.disabled = False
+    q.page['meta'].cancel_package_installation.disabled = True
+    await q.page.save()
+
+async def update_ui(q: Q, value: int, package: str = None):
+    q.page['meta'].console_out.content = get_output(value)
+    if package:
+        q.page['meta'].progress.content = f'Installing {package}'
+    await q.page.save()
+
+async def finish_installation(q: Q):
+    q.page['meta'].progress.content = 'Process finished!'
+    q.page['meta'].dialog.blocking = False
+    q.page['meta'].close_package_dialog.disabled = False
+    q.page['meta'].cancel_package_installation.disabled = True
+    await q.page.save()
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
@@ -296,6 +343,32 @@ async def serve(q: Q):
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
                     ui.button(name='import_project', label='Import again', icon='Upload'),
                 ]
+    elif q.args.show_packages_dialog:
+        q.page['meta'].dialog = ui.dialog(title='Add packages', items=[
+            ui.inline(items=[
+                ui.textbox(name='package_name', label='Package name', placeholder='e.g. numpy'),
+                ui.textbox(name='package_version', label='Version', placeholder='e.g. 1.18.5'),
+                ui.button('add_package', label='Add', primary=True),
+            ], align='end'),
+            ui.text(name='progress', content='No progress.'),
+            ui.text_l('Add packages from file'),
+            ui.file_upload(name='packages_file', file_extensions=['txt'], compact=True),
+            ui.text(name='console_out', content=get_output('')),
+            ui.buttons([ui.button(name='close_package_dialog', label='Close'), ui.button(name='cancel_package_installation', label='Cancel installation', disabled=True)]),
+        ])
+    elif q.args.add_package:
+        #TODO: Handle button disabling in a separate function and reuse in cancel/finish task functions.
+        q.page['meta'].close_package_dialog.disabled = True
+        q.page['meta'].cancel_package_installation.disabled = False
+        q.page['meta'].dialog.blocking = True
+        loop = asyncio.get_event_loop()
+        package_version = f'=={q.args.package_version}' if q.args.package_version else ''
+        q.client.task = asyncio.create_task(install_package(q, loop, f'{q.args.package_name}{package_version}'))
+    elif q.args.cancel_package_installation:
+        q.client.task.cancel()
+        await show_cancel(q)
+    elif q.args.close_package_dialog:
+        q.page['meta'].dialog = None
     elif q.args.dropdown == 'code':
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
