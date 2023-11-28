@@ -13,6 +13,7 @@ from subprocess import PIPE, STDOUT, Popen
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
+import pkg_resources
 
 import file_utils
 import studio_editor as editor
@@ -130,7 +131,7 @@ async def setup_page(q: Q):
             ]),
             ui.button(name='import_project', label='Import', icon='Upload'),
             ui.button(name='export_project', label='Export', icon='Download'),
-            ui.button(name='show_packages_dialog', label='Add packages', icon='Add'),
+            ui.button(name='show_packages_dialog', label='Manage packages', icon='Packages'),
         ]
     )
     editor_html = '''
@@ -246,42 +247,79 @@ def get_output(output: str) -> str:
 ```
 '''
 
+def get_package_dialog_items(q: Q):
+    file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
+    return [
+        ui.text_l('Installed packages'),
+        ui.inline(
+            direction='column', align='start',
+            # List of installed packages.
+            items=[
+                ui.inline(align='end', items=[
+                    ui.textbox(name='package_name', value=package_name, readonly=True),
+                    ui.textbox(name='package_version', value=package_version, readonly=True),
+                    ui.button('remove_package', label='Remove', value=package_name),
+                ]) for package_name, package_version in [package.removesuffix('\n').split('==') for package in file.readlines()]
+            ], 
+        ) if file else ui.text(name='no_packages', content='No packages installed.'),
+        ui.inline(
+            align='end', 
+            justify='center',
+            items= [ui.buttons(items=[
+                ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'), 
+                ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList', width='200px')
+            ], justify='center')]
+        ),
+    ]
+
 # https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
-async def install_package(q: Q, loop: asyncio.AbstractEventLoop, package: str) -> None:
+async def install_package(q: Q, package_name: str, package_version: str) -> None:
+    if package_name is None:
+        # TODO: Show message to user.
+        return
     p = None
+    version = f'=={package_version}' if package_version else ''
     while True:
         if not q.client.process_started:
-            p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', package], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', f'{package_name}{version}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            q.page['meta'].dialog.items = [
+                ui.progress(label=f'Installing {package_name}{version}'),
+                ui.expander(name='console_expander', label='Details', items=[
+                    ui.text(name='console_out', content=get_output(''), width='100%'),
+                ]),
+                ui.button(name='cancel_package_installation', label='Cancel installation')
+            ]
             q.client.process_started = True
 
         if p.poll() is not None:
+            # TODO: Cancel properly - p.poll() does not exist when process is cancelled.
             # Process finished.
-            await update_ui(q, f"Process finished with returncode {p.returncode}.")
+            if p.returncode == 0:
+                file = open('project/requirements.txt', 'a+')
+                v = pkg_resources.get_distribution(package_name).version
+                # TODO: Do not write if already installed.
+                # TODO: Handle versioning.
+                # TODO: on_installed, on_uninstalled.
+                file.write(f'{package_name}=={v}\n')
+                file.close()
+                await update_ui(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
+            else:
+                await update_ui(q, f"Error! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
             break
         else:
-            await update_ui(q, p.stdout.readline(), package)
+            await update_ui(q, p.stdout.readline())
 
     q.client.process_started = False
     await finish_installation(q)    
 
-async def show_cancel(q: Q):
-    q.page['meta'].progress.content = 'Cancelled'
-    q.page['meta'].dialog.blocking = False
-    q.page['meta'].close_package_dialog.disabled = False
-    q.page['meta'].cancel_package_installation.disabled = True
-    await q.page.save()
-
-async def update_ui(q: Q, value: int, package: str = None):
-    q.page['meta'].console_out.content = get_output(value)
-    if package:
-        q.page['meta'].progress.content = f'Installing {package}'
+async def update_ui(q: Q, value: int):
+    q.page['meta'].dialog.items[1].expander.items[0].text.content = get_output(value)
     await q.page.save()
 
 async def finish_installation(q: Q):
-    q.page['meta'].progress.content = 'Process finished!'
     q.page['meta'].dialog.blocking = False
-    q.page['meta'].close_package_dialog.disabled = False
-    q.page['meta'].cancel_package_installation.disabled = True
+    q.page['meta'].dialog.closable = True
+    q.page['meta'].dialog.items = get_package_dialog_items(q)
     await q.page.save()
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
@@ -344,31 +382,28 @@ async def serve(q: Q):
                     ui.button(name='import_project', label='Import again', icon='Upload'),
                 ]
     elif q.args.show_packages_dialog:
-        q.page['meta'].dialog = ui.dialog(title='Add packages', items=[
-            ui.inline(items=[
-                ui.textbox(name='package_name', label='Package name', placeholder='e.g. numpy'),
-                ui.textbox(name='package_version', label='Version', placeholder='e.g. 1.18.5'),
+        q.page['meta'].dialog = ui.dialog(
+            name='package_dialog', 
+            title='Manage packages', 
+            items=get_package_dialog_items(q), 
+            closable=True, 
+        )
+    elif q.args.show_add_requirements:
+        q.page['meta'].dialog.items[2] = ui.file_upload(name='packages_file', file_extensions=['txt'], compact=True, label='Upload requirements.txt file')
+    elif q.args.show_add_package_fields:
+        q.page['meta'].dialog.items[2] = ui.inline(items=[
+                ui.textbox(name='package_name', label='Package name', required=True),
+                ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
                 ui.button('add_package', label='Add', primary=True),
-            ], align='end'),
-            ui.text(name='progress', content='No progress.'),
-            ui.text_l('Add packages from file'),
-            ui.file_upload(name='packages_file', file_extensions=['txt'], compact=True),
-            ui.text(name='console_out', content=get_output('')),
-            ui.buttons([ui.button(name='close_package_dialog', label='Close'), ui.button(name='cancel_package_installation', label='Cancel installation', disabled=True)]),
-        ])
+            ], align='end')
+        
     elif q.args.add_package:
-        #TODO: Handle button disabling in a separate function and reuse in cancel/finish task functions.
-        q.page['meta'].close_package_dialog.disabled = True
-        q.page['meta'].cancel_package_installation.disabled = False
+        q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        loop = asyncio.get_event_loop()
-        package_version = f'=={q.args.package_version}' if q.args.package_version else ''
-        q.client.task = asyncio.create_task(install_package(q, loop, f'{q.args.package_name}{package_version}'))
+        q.client.task = asyncio.create_task(install_package(q, q.args.package_name, q.args.package_version),)
     elif q.args.cancel_package_installation:
         q.client.task.cancel()
-        await show_cancel(q)
-    elif q.args.close_package_dialog:
-        q.page['meta'].dialog = None
+        await finish_installation(q)
     elif q.args.dropdown == 'code':
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
