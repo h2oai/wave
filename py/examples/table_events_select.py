@@ -20,7 +20,7 @@ async def serve(q: Q):
                     ui.table_row(name='row3', cells=['Row 3'])
                 ],
                 multiple=True,
-                events=['select'],
+                events=['select']
             )
         ])
         q.page['description'] = ui.markdown_card(box='4 1 3 4', title='Selected rows', content='Nothing selected yet.')
