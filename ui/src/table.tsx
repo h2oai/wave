@@ -931,6 +931,11 @@ export const
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
           wave.args[m.name] = selectedItemKeys
           if (!skipNextEventEmit.current && m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
+        },
+        onItemsChanged: () => {
+          // HACK: Skip emitting 'select' event on 'items' update.
+          skipNextEventEmit.current = true
+          setTimeout(() => skipNextEventEmit.current = false)
         }
       }), [m.name, m.events]),
       computeHeight = () => {
@@ -971,11 +976,6 @@ export const
 
     React.useEffect(() => {
       skipNextEventEmit.current = true
-      // HACK: Fluent.DetailsList fires 'onSelectionChanged' event when its internal 'isAllSelected' state changes. 
-      // Its initial 'undefined' value can be changed whether by using Select All checkbox or by setting 'items' to [] (which changes it to 'false').
-      // The event emitting is undesired e.g. when we have no items selected and user searches for non-existent rows. Therefore we manually trigger it
-      // on the first render by setting 'isAllSelected' to 'false' while skipping the wave 'select' event emit.
-      selection.setAllSelected(false)
       wave.args[m.name] = []
       if (isSingle && m.value) {
         selection.setKeySelected(m.value, true, false)
