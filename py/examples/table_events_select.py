@@ -13,7 +13,7 @@ async def serve(q: Q):
         q.page['table'] = ui.form_card(box='1 1 3 4', items=[
             ui.table(
                 name='table',
-                columns=[ui.table_column(name='text', label='Table select event', searchable=True, filterable=True)],
+                columns=[ui.table_column(name='text', label='Table select event')],
                 rows=[
                     ui.table_row(name='row1', cells=['Row 1']),
                     ui.table_row(name='row2', cells=['Row 2']),
@@ -21,7 +21,6 @@ async def serve(q: Q):
                 ],
                 multiple=True,
                 events=['select'],
-                groupable=True
             )
         ])
         q.page['description'] = ui.markdown_card(box='4 1 3 4', title='Selected rows', content='Nothing selected yet.')
