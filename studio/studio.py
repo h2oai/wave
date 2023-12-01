@@ -6,6 +6,7 @@ import re
 import shutil
 import sys
 import time
+from typing import Callable
 import zipfile
 from pathlib import Path
 from string import Template
@@ -247,7 +248,7 @@ def get_output(output: str) -> str:
 ```
 '''
 
-def get_package_dialog_items(q: Q):
+def get_package_dialog_items():
     file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
     return [
         ui.text_l('Installed packages'),
@@ -273,7 +274,7 @@ def get_package_dialog_items(q: Q):
     ]
 
 # https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
-async def install_package(q: Q, package_name: str, package_version: str) -> None:
+async def pip(q: Q, command: str, package_name: str, package_version: str, on_start: Callable, on_success: Callable, on_error: Callable, on_finish: Callable):
     if package_name is None:
         # TODO: Show message to user.
         return
@@ -281,45 +282,71 @@ async def install_package(q: Q, package_name: str, package_version: str) -> None
     version = f'=={package_version}' if package_version else ''
     while True:
         if not q.client.process_started:
-            p = subprocess.Popen([sys.executable, '-m', 'pip', 'install', f'{package_name}{version}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            q.page['meta'].dialog.items = [
-                ui.progress(label=f'Installing {package_name}{version}'),
-                ui.expander(name='console_expander', label='Details', items=[
-                    ui.text(name='console_out', content=get_output(''), width='100%'),
-                ]),
-                ui.button(name='cancel_package_installation', label='Cancel installation')
-            ]
+            p = subprocess.Popen([sys.executable, '-m', 'pip', command, f'{package_name}{version}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             q.client.process_started = True
+            await on_start(q, package_name, version)
 
         if p.poll() is not None:
-            # TODO: Cancel properly - p.poll() does not exist when process is cancelled.
             # Process finished.
+            # TODO: Cancel properly - p.poll() does not exist when process is cancelled.
             if p.returncode == 0:
-                file = open('project/requirements.txt', 'a+')
-                v = pkg_resources.get_distribution(package_name).version
-                # TODO: Do not write if already installed.
-                # TODO: Handle versioning.
-                # TODO: on_installed, on_uninstalled.
-                file.write(f'{package_name}=={v}\n')
-                file.close()
-                await update_ui(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
+                await on_success(q, package_name, p)
             else:
-                await update_ui(q, f"Error! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
+                await on_error(q, package_name, p)
             break
         else:
-            await update_ui(q, p.stdout.readline())
+            await update_progress(q, p.stdout.readline())
 
     q.client.process_started = False
-    await finish_installation(q)    
+    await on_finish(q)    
 
-async def update_ui(q: Q, value: int):
+async def update_progress(q: Q, value: int):
     q.page['meta'].dialog.items[1].expander.items[0].text.content = get_output(value)
     await q.page.save()
+
+async def on_install_start(q: Q, package_name: str, version: str):
+    q.page['meta'].dialog.items = [
+        ui.progress(label=f'Installing {package_name}{version}'),
+        ui.expander(name='console_expander', label='Details', items=[
+            ui.text(name='console_out', content=get_output(''), width='100%'),
+        ]),
+        ui.button(name='cancel_pip_task', label='Cancel installation')
+    ]
+    await q.page.save()
+
+async def on_install_success(q: Q, package_name: str, p: Popen):
+    file = open('project/requirements.txt', 'a+')
+    v = pkg_resources.get_distribution(package_name).version
+    # TODO: Do not write if already installed.
+    # TODO: Handle versioning.
+    # TODO: on_installed, on_uninstalled.
+    file.write(f'{package_name}=={v}\n')
+    file.close()
+    await update_progress(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
+
+async def on_install_error(q: Q, package_name: str, p: Popen):
+    await update_progress(q, f"Error installing {package_name}! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
+
+async def on_uninstall_start(q: Q, package_name: str, version: str):
+    q.page['meta'].dialog.items = [
+        ui.progress(label=f'Uninstalling {package_name}{version}'),
+        ui.expander(name='console_expander', label='Details', items=[
+            ui.text(name='console_out', content=get_output(''), width='100%'),
+        ]),
+        ui.button(name='cancel_pip_task', label='Cancel uninstallation')
+    ]
+    await q.page.save()
+
+async def on_uninstall_success(q: Q, package_name: str, p: Popen):
+    await update_progress(q, f"Package {package_name} succesfully uninstalled! Process finished with returncode {p.returncode}.")
+
+async def on_uninstall_error(q: Q, package_name: str, p: Popen):
+    await update_progress(q, f"Error uninstalling {package_name}! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
 
 async def finish_installation(q: Q):
     q.page['meta'].dialog.blocking = False
     q.page['meta'].dialog.closable = True
-    q.page['meta'].dialog.items = get_package_dialog_items(q)
+    q.page['meta'].dialog.items = get_package_dialog_items()
     await q.page.save()
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
@@ -385,9 +412,12 @@ async def serve(q: Q):
         q.page['meta'].dialog = ui.dialog(
             name='package_dialog', 
             title='Manage packages', 
-            items=get_package_dialog_items(q), 
+            items=get_package_dialog_items(), 
             closable=True, 
+            events=['dismissed'],
         )
+    elif q.events.package_dialog and q.events.package_dialog.dismissed:
+        q.page['meta'].dialog = None
     elif q.args.show_add_requirements:
         q.page['meta'].dialog.items[2] = ui.file_upload(name='packages_file', file_extensions=['txt'], compact=True, label='Upload requirements.txt file')
     elif q.args.show_add_package_fields:
@@ -400,8 +430,12 @@ async def serve(q: Q):
     elif q.args.add_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(install_package(q, q.args.package_name, q.args.package_version),)
-    elif q.args.cancel_package_installation:
+        q.client.task = asyncio.create_task(pip(q, 'install', q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
+    elif q.args.remove_package:
+        q.page['meta'].dialog.closable = False
+        q.page['meta'].dialog.blocking = True
+        q.client.task = asyncio.create_task(pip(q, 'uninstall', q.args.remove_package, None, on_uninstall_start, on_uninstall_success, on_uninstall_error, finish_installation))
+    elif q.args.cancel_pip_task:
         q.client.task.cancel()
         await finish_installation(q)
     elif q.args.dropdown == 'code':
