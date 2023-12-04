@@ -274,15 +274,17 @@ def get_package_dialog_items():
     ]
 
 # https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
-async def pip(q: Q, command: str, package_name: str, package_version: str, on_start: Callable, on_success: Callable, on_error: Callable, on_finish: Callable):
+async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, on_start: Callable, on_success: Callable, on_error: Callable, on_finish: Callable):
     if package_name is None:
         # TODO: Show message to user.
         return
     p = None
     version = f'=={package_version}' if package_version else ''
     while True:
+        # TODO: Prevent from installing h2o-wave package.
         if not q.client.process_started:
-            p = subprocess.Popen([sys.executable, '-m', 'pip', command, f'{package_name}{version}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}'] if flag else [sys.executable, '-m', 'pip', command, f'{package_name}{version}']
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             q.client.process_started = True
             await on_start(q, package_name, version)
 
@@ -319,13 +321,38 @@ async def on_install_success(q: Q, package_name: str, p: Popen):
     v = pkg_resources.get_distribution(package_name).version
     # TODO: Do not write if already installed.
     # TODO: Handle versioning.
-    # TODO: on_installed, on_uninstalled.
     file.write(f'{package_name}=={v}\n')
     file.close()
     await update_progress(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
 
+async def on_requirements_install_success(q: Q, package_name: str, p: Popen):
+    # Add versions to requirements.txt.
+    file = open('project/requirements.txt', 'a+')
+    file_tmp = open('project/requirements_tmp.txt', 'a+')
+    file_tmp.seek(0)
+    for package in file_tmp.readlines():
+        package_name, package_version = package.removesuffix('\n').split('==') if '==' in package else (package.removesuffix('\n'), None)
+        # TODO: 'line' must start with package_name.
+        if any(package_name in line for line in file.readlines()):
+            # TODO: Update version of already installed package.
+            continue
+        else:
+            v = pkg_resources.get_distribution(package_name).version
+            file.write(f'{package_name}=={v}\n')
+    file.close()
+    file_tmp.close()
+    os.remove('project/requirements_tmp.txt')
+    await update_progress(q, f"Packages succesfully installed! Process finished with returncode {p.returncode}.")
+
 async def on_install_error(q: Q, package_name: str, p: Popen):
     await update_progress(q, f"Error installing {package_name}! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
+
+async def on_requirements_install_error(q: Q, package_name: str, p: Popen):
+    file = open('project/requirements.txt', 'w')
+    # TODO: Update requirements.txt accordingly.
+    file.write('')
+    file.close() 
+    await update_progress(q, f"Error installing packages! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
 
 async def on_uninstall_start(q: Q, package_name: str, version: str):
     q.page['meta'].dialog.items = [
@@ -338,6 +365,7 @@ async def on_uninstall_start(q: Q, package_name: str, version: str):
     await q.page.save()
 
 async def on_uninstall_success(q: Q, package_name: str, p: Popen):
+    # TODO: Remove from requirements.txt.
     await update_progress(q, f"Package {package_name} succesfully uninstalled! Process finished with returncode {p.returncode}.")
 
 async def on_uninstall_error(q: Q, package_name: str, p: Popen):
@@ -419,7 +447,25 @@ async def serve(q: Q):
     elif q.events.package_dialog and q.events.package_dialog.dismissed:
         q.page['meta'].dialog = None
     elif q.args.show_add_requirements:
-        q.page['meta'].dialog.items[2] = ui.file_upload(name='packages_file', file_extensions=['txt'], compact=True, label='Upload requirements.txt file')
+        q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'], label='Upload requirements.txt file')
+    elif q.args.upload_requirements:
+        os.mkdir('project/tmp')
+        file = await q.site.download(q.args.upload_requirements[0], os.path.join(os.getcwd(), 'project/tmp'))
+        shutil.copy(file, 'project/requirements_tmp.txt')
+        shutil.rmtree('project/tmp')
+        # Install from requirements.txt
+        q.client.task = asyncio.create_task(pip(
+            q, 
+            'install', 
+            '-r', 
+            'project/requirements_tmp.txt', 
+            None, 
+            on_install_start, 
+            on_requirements_install_success, 
+            on_requirements_install_error, 
+            finish_installation
+        ))
+
     elif q.args.show_add_package_fields:
         q.page['meta'].dialog.items[2] = ui.inline(items=[
                 ui.textbox(name='package_name', label='Package name', required=True),
@@ -430,11 +476,11 @@ async def serve(q: Q):
     elif q.args.add_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(pip(q, 'install', q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
+        q.client.task = asyncio.create_task(pip(q, 'install', None, q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
     elif q.args.remove_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(pip(q, 'uninstall', q.args.remove_package, None, on_uninstall_start, on_uninstall_success, on_uninstall_error, finish_installation))
+        q.client.task = asyncio.create_task(pip(q, 'uninstall', None, q.args.remove_package, None, on_uninstall_start, on_uninstall_success, on_uninstall_error, finish_installation))
     elif q.args.cancel_pip_task:
         q.client.task.cancel()
         await finish_installation(q)
