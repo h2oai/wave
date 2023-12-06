@@ -1167,6 +1167,7 @@ def file_upload(
 def progress_table_cell_type(
         color: Optional[str] = None,
         name: Optional[str] = None,
+        type: Optional[str] = None,
 ) -> TableCellType:
     """Create a cell type that renders a column's cells as progress bars instead of plain text.
     If set on a column, the cell value must be between 0.0 and 1.0.
@@ -1180,6 +1181,7 @@ def progress_table_cell_type(
     return TableCellType(progress=ProgressTableCellType(
         color,
         name,
+        type,
     ))
 
 

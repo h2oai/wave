@@ -2091,9 +2091,10 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_progress_table_cell_type" value="ui.progress_table_cell_type(color='$color$',name='$name$'),$END$" description="Create Wave ProgressTableCellType with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_progress_table_cell_type" value="ui.progress_table_cell_type(color='$color$',name='$name$,type='$type$'),$END$" description="Create Wave ProgressTableCellType with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="spinner" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

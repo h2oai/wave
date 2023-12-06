@@ -17,6 +17,7 @@ import { F, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
+import { ProgressBar } from './parts/progress_bar'
 import { clas, cssVar } from './theme'
 
 const
@@ -44,11 +45,14 @@ export interface ProgressTableCellType {
   color?: S
   /** An identifying name for this component. */
   name?: S
+  /**  The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'. */
+  type?: 'bar' | 'spinner'
 }
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
   <div data-test={m.name} className={css.container}>
-    <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
+    {m.type === 'bar' ? <ProgressBar thickness={2} color={cssVar(m.color || '$red')} value={progress} /> :
+    <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} /> }
     <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={clas(css.percentContainer, 'wave-s12')}>
       <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
     </Fluent.Stack>

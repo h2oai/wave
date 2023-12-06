@@ -1388,9 +1388,11 @@ ui_file_upload <- function(
 #' @export
 ui_progress_table_cell_type <- function(
   color = NULL,
-  name = NULL) {
+  name = NULL, 
+  type = NULL) {
   .guard_scalar("color", "character", color)
   .guard_scalar("name", "character", name)
+  .guard_scalar("type", "character", type)
   .o <- list(progress=list(
     color=color,
     name=name))
