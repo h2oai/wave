@@ -3066,11 +3066,11 @@ class ProgressTableCellType:
         _guard_scalar('ProgressTableCellType.name', name, (str,), False, True, False)
         _guard_scalar('ProgressTableCellType.type', type, (str,), False, True, False)
         self.color = color
-        """Color of the progress arc."""
+        """Color of the progress arc/bar."""
         self.name = name
         """An identifying name for this component."""
         self.type = type
-        """The type of progress bar to show"""
+        """The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

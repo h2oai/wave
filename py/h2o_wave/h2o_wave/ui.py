@@ -1173,8 +1173,9 @@ def progress_table_cell_type(
     If set on a column, the cell value must be between 0.0 and 1.0.
 
     Args:
-        color: Color of the progress arc.
+        color: Color of the progress arc/bar.
         name: An identifying name for this component.
+        type: The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'.
     Returns:
         A `h2o_wave.types.ProgressTableCellType` instance.
     """
