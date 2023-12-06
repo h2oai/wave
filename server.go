@@ -112,12 +112,21 @@ func Run(conf ServerConf) {
 	fileDir := filepath.Join(conf.DataDir, "f")
 	handle("_f/", newFileServer(fileDir, conf.Keychain, auth, conf.BaseURL+"_f"))
 	for _, dir := range conf.PrivateDirs {
+
 		prefix, src := splitDirMapping(dir)
+		err := newDirServer(src, conf.Keychain, auth)
+		if err != nil {
+			log.Fatalf("Failed to start server due to directory issue: %v", err)
+		}
 		echo(Log{"t": "private_dir", "source": src, "address": prefix})
 		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, newDirServer(src, conf.Keychain, auth)))
 	}
 	for _, dir := range conf.PublicDirs {
 		prefix, src := splitDirMapping(dir)
+		err := newDirServer(src, conf.Keychain, auth)
+		if err != nil {
+			log.Fatalf("Failed to start server due to directory issue: %v", err)
+		}
 		echo(Log{"t": "public_dir", "source": src, "address": prefix})
 		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, http.FileServer(http.Dir(src))))
 	}
