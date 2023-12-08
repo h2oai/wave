@@ -186,6 +186,11 @@ func splitDirMapping(m string) (string, string) {
 		xs[0] = xs[0][2:]
 	}
 
+	// Check if the directory is accessible
+	if _, err := os.Stat(xs[1]); os.IsNotExist(err) {
+		panic(fmt.Sprintf("Directory does not exist: %s", xs[1]))
+	}
+
 	return strings.TrimLeft(xs[0], "/"), xs[1]
 }
 
