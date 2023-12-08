@@ -189,7 +189,7 @@ type ContextualMenuProps = {
   col: WaveColumn
   listProps: Fluent.IContextualMenuListProps
   selectedFilters: Dict<S[]> | null
-  setFiltersInBulk: (colKey: S, filters: S[]) => void
+  setFiltersInBulk: (colKey: S, filters: S[]) => void 
 }
 
 type FooterProps = {
@@ -291,6 +291,7 @@ const
   ContextualMenu = ({ onFilterChange, col, listProps, selectedFilters, setFiltersInBulk }: ContextualMenuProps) => {
     const
       isFilterChecked = (data: S, key: S) => !!selectedFilters && selectedFilters[data]?.includes(key),
+      [selectedFiltersCount, setSelectedFiltersCount] = React.useState(0), // Step 1
       [menuFilters, setMenuFilters] = React.useState(col.cellType?.tag
         ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
           key.split(',').forEach(key => _filters.set(key, { key, text, data, checked: isFilterChecked(data, key) }))
@@ -301,18 +302,28 @@ const
       selectAll = () => {
         setMenuFilters(menuFilters.map(i => ({ ...i, checked: true })))
         setFiltersInBulk(col.key, menuFilters.map(f => f.key))
+        setSelectedFiltersCount(menuFilters.length)
       },
       deselectAll = () => {
         setMenuFilters(menuFilters.map(i => ({ ...i, checked: false })))
         setFiltersInBulk(col.key, [])
+        setSelectedFiltersCount(0)
       },
       getOnFilterChangeHandler = (data: S, key: S) => (_ev?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
         setMenuFilters(filters => filters.map(f => f.key === key ? ({ ...f, checked }) : f))
         onFilterChange(data, key, checked)
+        setSelectedFiltersCount( // Step 2
+          checked
+            ? selectedFiltersCount + 1
+            : selectedFiltersCount - 1
+        )
       }
 
     return (
       <div style={{ padding: 10 }}>
+      <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>
+        {`(${selectedFiltersCount} selected)`}
+      </Fluent.Text>
         <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
         <Fluent.Text variant='small'>
           <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
@@ -334,7 +345,7 @@ const
   },
   DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSingle, groups, expandedRefs, onSortChange, setFiltersInBulk }: DataTable, ref) => {
     const
-      [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
+    [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         return listProps ?
           <ContextualMenu
@@ -373,7 +384,8 @@ const
             return col
           }))
         }
-      }, [onColumnContextMenu, onSortChange]),
+      }
+      , [onColumnContextMenu, onSortChange]),
       tableToWaveColumn = React.useCallback((c: TableColumn): WaveColumn => {
         const
           minWidth = c.min_width
@@ -578,9 +590,6 @@ const
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
           checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
-          // Prevent selection from being cleared when 'items' are updated.
-          // https://github.com/microsoft/fluentui/blob/4c1cd4bbba73bbca4411db9d01ffb486b1a90303/packages/react/src/components/DetailsList/DetailsList.base.tsx#L1032. 
-          setKey='wave-table-items'
         />
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
       </>
@@ -931,11 +940,6 @@ export const
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
           wave.args[m.name] = selectedItemKeys
           if (!skipNextEventEmit.current && m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
-        },
-        onItemsChanged: () => {
-          // HACK: Skip emitting 'select' event on 'items' update.
-          skipNextEventEmit.current = true
-          setTimeout(() => skipNextEventEmit.current = false)
         }
       }), [m.name, m.events]),
       computeHeight = () => {
@@ -975,17 +979,19 @@ export const
       }, [m.pagination, m.events, m.name, filter, search, currentSort, initGroups])
 
     React.useEffect(() => {
-      skipNextEventEmit.current = true
       wave.args[m.name] = []
       if (isSingle && m.value) {
+        skipNextEventEmit.current = true
         selection.setKeySelected(m.value, true, false)
+        skipNextEventEmit.current = false
         wave.args[m.name] = [m.value]
       }
       else if (isMultiple && m.values) {
+        skipNextEventEmit.current = true
         m.values.forEach(v => selection.setKeySelected(v, true, false))
+        skipNextEventEmit.current = false
         wave.args[m.name] = m.values
       }
-      skipNextEventEmit.current = false
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
