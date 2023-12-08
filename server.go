@@ -71,13 +71,6 @@ func printLaunchBar(addr, baseURL string, isTLS bool) {
 	log.Println("# └" + bar + "┘")
 }
 
-// check if the directory is accessible
-func checkDirectory(path string) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		log.Fatalf("Directory does not exist: %s", path)
-	}
-}
-
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
@@ -120,15 +113,11 @@ func Run(conf ServerConf) {
 	fileDir := filepath.Join(conf.DataDir, "f")
 	handle("_f/", newFileServer(fileDir, conf.Keychain, auth, conf.BaseURL+"_f"))
 	for _, dir := range conf.PrivateDirs {
-
-		checkDirectory(dir)
 		prefix, src := splitDirMapping(dir)
 		echo(Log{"t": "private_dir", "source": src, "address": prefix})
 		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, newDirServer(src, conf.Keychain, auth)))
 	}
 	for _, dir := range conf.PublicDirs {
-
-		checkDirectory(dir)
 		prefix, src := splitDirMapping(dir)
 		echo(Log{"t": "public_dir", "source": src, "address": prefix})
 		handle(prefix, http.StripPrefix(conf.BaseURL+prefix, http.FileServer(http.Dir(src))))
@@ -176,6 +165,11 @@ func Run(conf ServerConf) {
 }
 
 func splitDirMapping(m string) (string, string) {
+	// Check if the directory is accessible
+	if _, err := os.Stat(m); os.IsNotExist(err) {
+		panic(fmt.Sprintf("Directory does not exist: %s", m))
+	}
+
 	xs := strings.SplitN(m, "@", 2)
 	if len(xs) < 2 {
 		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
@@ -184,11 +178,6 @@ func splitDirMapping(m string) (string, string) {
 	// Windows prepends the drive letter to the path with a leading slash, e.g. "/foo/" => "C:/foo/".
 	if xs[0][1] == ':' {
 		xs[0] = xs[0][2:]
-	}
-
-	// Check if the directory is accessible
-	if _, err := os.Stat(xs[1]); os.IsNotExist(err) {
-		panic(fmt.Sprintf("Directory does not exist: %s", xs[1]))
 	}
 
 	return strings.TrimLeft(xs[0], "/"), xs[1]
