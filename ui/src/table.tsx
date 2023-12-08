@@ -398,9 +398,15 @@ const
               ? +c.max_width.substring(0, c.max_width.length - 2)
               : +c.max_width
             : undefined
+        let label = c.label
+            if (c.filterable) {
+              const dataKey = c.name // Assuming the column name represents the data key
+              const appliedFilters = selectedFilters?.[dataKey]?.length || 0
+              label += appliedFilters > 0 ? ` (${appliedFilters} filters)` : ''
+            }
         return {
           key: c.name,
-          name: c.label,
+          name: label,
           fieldName: c.name,
           minWidth,
           maxWidth,
@@ -418,37 +424,38 @@ const
           isMultiline: c.cell_overflow === 'wrap',
           filters: c.filterable ? c.filters : undefined,
         }
-      }, [onColumnClick]),
+      }, [onColumnClick, selectedFilters]),
       [columns, setColumns] = React.useState(m.columns.map(tableToWaveColumn)),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
-
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
-            <Fluent.DetailsHeader
-              {...props}
-              isAllCollapsed={groups?.every(group => group.isCollapsed)}
-              styles={{
-                ...props.styles,
-                root: {
-                  padding: 0,
-                  height: 48,
-                  lineHeight: '48px',
-                  background: cssVar('$neutralLight'),
-                  borderBottom: 'none',
-                },
-                cellSizerEnd: {
-                  marginLeft: -8,
-                },
-                cellIsGroupExpander: {
-                  // HACK: fixed size of expand/collapse button in column header
-                  height: 48
-                }
-              }}
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Fluent.DetailsHeader
+                {...props}
+                isAllCollapsed={groups?.every(group => group.isCollapsed)}
+                styles={{
+                  ...props.styles,
+                  root: {
+                    padding: 0,
+                    height: 48,
+                    lineHeight: '48px',
+                    background: cssVar('$neutralLight'),
+                    borderBottom: 'none',
+                  },
+                  cellSizerEnd: {
+                    marginLeft: -8,
+                  },
+                  cellIsGroupExpander: {
+                    // HACK: fixed size of expand/collapse button in column header
+                    height: 48,
+                  },
+                }}
+              />
+            </div>
           </Fluent.Sticky>
-        )
+        )        
       }, [groups]),
       onRenderGroupHeader = React.useCallback((props?: Fluent.IDetailsGroupDividerProps) => {
         if (!props) return <span />
