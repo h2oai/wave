@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { F, S } from './core'
+import { F, S, B } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
@@ -46,11 +46,17 @@ export interface ProgressTableCellType {
   name?: S
 }
 
-export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
+export const XProgressTableCellType = ({ model: m, progress, decimals }: { model: ProgressTableCellType, progress: F, decimals?: B }) => (
   <div data-test={m.name} className={css.container}>
     <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
     <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={clas(css.percentContainer, 'wave-s12')}>
-      <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
+    <div className={css.percent}>
+      {decimals ? (
+        `${Math.round(progress *10000)/ 100}%`
+      ) : (
+        `${Math.round(progress * 100)}%`
+      )}
+    </div>
     </Fluent.Stack>
   </div >
 )
