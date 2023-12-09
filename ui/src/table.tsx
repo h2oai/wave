@@ -402,7 +402,7 @@ const
             if (c.filterable) {
               const dataKey = c.name // Assuming the column name represents the data key
               const appliedFilters = selectedFilters?.[dataKey]?.length || 0
-              label += appliedFilters > 0 ? ` (${appliedFilters} filters)` : ''
+              label += (appliedFilters > 0 && appliedFilters <= 9) ? ` (${appliedFilters})` : appliedFilters > 9 ? '(9+)' : ''
             }
         return {
           key: c.name,
