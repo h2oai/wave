@@ -310,12 +310,12 @@ const
         setSelectedFiltersCount(0)
       },
       getOnFilterChangeHandler = (data: S, key: S) => (_ev?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
-        setMenuFilters(filters => filters.map(f => f.key === key ? ({ ...f, checked }) : f))
+        const onChangeFilterMap = menuFilters.map(f => (f.key === key ? { ...f, checked } : f))
+        setMenuFilters(onChangeFilterMap)    
         onFilterChange(data, key, checked)
-        setSelectedFiltersCount( // Step 2
-          checked
-            ? selectedFiltersCount + 1
-            : selectedFiltersCount - 1
+        setFiltersInBulk(col.key, onChangeFilterMap.filter(f => f.checked).map(f => f.key))    
+        setSelectedFiltersCount(
+          onChangeFilterMap.reduce((count, filter) => (filter.checked ? count + 1 : count), 0)
         )
       }
 
@@ -402,7 +402,7 @@ const
             if (c.filterable) {
               const dataKey = c.name // Assuming the column name represents the data key
               const appliedFilters = selectedFilters?.[dataKey]?.length || 0
-              label += (appliedFilters > 0 && appliedFilters <= 9) ? ` (${appliedFilters})` : appliedFilters > 9 ? '(9+)' : ''
+              label += (appliedFilters > 0 && appliedFilters <= 9) ? ` (${appliedFilters})` : appliedFilters > 9 ? '(9+)': ''
             }
         return {
           key: c.name,
