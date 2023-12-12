@@ -330,6 +330,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
         ],
         rows=[
             ui.table_row(name='row1', cells=['Process1', '.70']),
+            ui.table_row(name='row2', cells=['Process2', '.25']),
         ])
 ])
 ```
@@ -347,6 +348,7 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
         ],
         rows=[
             ui.table_row(name='row1', cells=['Process1', '.70']),
+            ui.table_row(name='row2', cells=['Process2', '.25']),
         ])
 ])
 ```
