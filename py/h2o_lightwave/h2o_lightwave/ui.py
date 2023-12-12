@@ -1167,7 +1167,7 @@ def file_upload(
 def progress_table_cell_type(
         color: Optional[str] = None,
         name: Optional[str] = None,
-        type: Optional[str] = None,
+        compact: Optional[bool] = None,
 ) -> TableCellType:
     """Create a cell type that renders a column's cells as progress bars instead of plain text.
     If set on a column, the cell value must be between 0.0 and 1.0.
@@ -1175,14 +1175,14 @@ def progress_table_cell_type(
     Args:
         color: Color of the progress arc/bar.
         name: An identifying name for this component.
-        type: The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'.
+        type: True if the component should be displayed compactly as a bar. Defaults to False.
     Returns:
         A `h2o_wave.types.ProgressTableCellType` instance.
     """
     return TableCellType(progress=ProgressTableCellType(
         color,
         name,
-        type,
+        compact,
     ))
 
 

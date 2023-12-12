@@ -1384,16 +1384,16 @@ ui_file_upload <- function(
 #'
 #' @param color Color of the progress arc/bar.
 #' @param name An identifying name for this component.
-#' @param type The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'.
+#' @param compact True if the component should be displayed compactly as a bar. Defaults to False.
 #' @return A ProgressTableCellType instance.
 #' @export
 ui_progress_table_cell_type <- function(
   color = NULL,
   name = NULL, 
-  type = NULL) {
+  compact = NULL) {
   .guard_scalar("color", "character", color)
   .guard_scalar("name", "character", name)
-  .guard_scalar("type", "character", type)
+  .guard_scalar("compact", "logical", compact)
   .o <- list(progress=list(
     color=color,
     name=name))

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { F, S } from './core'
+import { B, F, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
@@ -62,14 +62,13 @@ export interface ProgressTableCellType {
   /** An identifying name for this component. */
   name?: S
   
-  // TO DO: use compact (boolean) instead of type
-  /**  The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'. */
-  type?: 'bar' | 'spinner'
+  /** True if the component should be displayed compactly as a bar. Defaults to False (spinner). */
+  compact?: B
 }
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
   <div data-test={m.name}>
-    {m.type === 'bar' ? (
+    {m.compact ? (
       <div className={css.barContainer}>
         <div className={css.bar}>
           <ProgressBar thickness={2} color={cssVar(m.color || '$red')} value={progress}/>
