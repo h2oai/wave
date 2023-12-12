@@ -139,6 +139,11 @@ func (auth *Auth) get(key string) (*Session, bool) {
 func (auth *Auth) set(session *Session) {
 	auth.Lock()
 	defer auth.Unlock()
+	if session == nil {
+		// Should not happen.
+		echo(Log{"t": "TMP_DBG", "error": "trying to set nil session"})
+	}
+
 	auth.sessions[session.id] = session
 }
 
@@ -178,6 +183,11 @@ func (auth *Auth) identify(r *http.Request) *Session {
 		auth.set(session)
 	}
 
+	if session.token == nil {
+		// Should not happen.
+		echo(Log{"t": "TMP_DBG", "error": "trying to set session with nil token in auth.identify"})
+	}
+
 	return session
 }
 
@@ -211,7 +221,12 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 }
 
 func (auth *Auth) ensureValidOAuth2Token(ctx context.Context, token *oauth2.Token) (*oauth2.Token, error) {
-	return auth.oauth.TokenSource(ctx, token).Token()
+	token, err := auth.oauth.TokenSource(ctx, token).Token()
+	if token == nil && err == nil {
+		// Should not happen.
+		echo(Log{"t": "TMP_DBG", "error": "trying to set session with nil token in ensureValidOAuth2Token"})
+	}
+	return token, err
 }
 
 func (auth *Auth) redirectToLogin(w http.ResponseWriter, r *http.Request) {
@@ -390,6 +405,11 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.set(session)
 
+	if session.token == nil {
+		// Should not happen.
+		echo(Log{"t": "TMP_DBG", "error": "trying to set session with nil token in authHandler"})
+	}
+
 	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
 
@@ -423,6 +443,10 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Purge session
 	h.auth.remove(sessionID)
+
+	if !ok {
+		echo(Log{"t": "TMP_DBG", "error": "session not found during logout", "session_id": sessionID})
+	}
 
 	if ok {
 		// Reload all of this user's browser tabs
@@ -495,6 +519,11 @@ func (h *RefreshHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		echo(Log{"t": "refresh_session", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
+	}
+
+	if token == nil {
+		// Should not happen.
+		echo(Log{"t": "TMP_DBG", "error": "trying to set session with nil token in refreshHandler"})
 	}
 
 	session.token = token
