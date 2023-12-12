@@ -1382,8 +1382,9 @@ ui_file_upload <- function(
 #' Create a cell type that renders a column's cells as progress bars instead of plain text.
 #' If set on a column, the cell value must be between 0.0 and 1.0.
 #'
-#' @param color Color of the progress arc.
+#' @param color Color of the progress arc/bar.
 #' @param name An identifying name for this component.
+#' @param type The type of progress cell to be displayed. One of 'bar', 'spinner'. Defaults to 'spinner'.
 #' @return A ProgressTableCellType instance.
 #' @export
 ui_progress_table_cell_type <- function(

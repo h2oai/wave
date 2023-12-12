@@ -57,7 +57,7 @@ const
  * If set on a column, the cell value must be between 0.0 and 1.0.
 */
 export interface ProgressTableCellType {
-  /** Color of the progress arc. */
+  /** Color of the progress arc/bar. */
   color?: S
   /** An identifying name for this component. */
   name?: S
