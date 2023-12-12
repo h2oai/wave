@@ -315,6 +315,42 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
+## With progress arc/bar
+
+Use a progress arc/bar to display a percentage. Defaults as a progress arc.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+    ui.table(
+        name='table', 
+        columns=[
+            ui.table_column(name='text', label='Process'),
+            ui.table_column(name='tag', label='Progress', 
+                cell_type=ui.progress_table_cell_type())
+        ],
+        rows=[
+            ui.table_row(name='row1', cells=['Process1', '.70']),
+        ])
+])
+```
+
+For a progress bar, set the `compact` attribute to `True`.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 3 3', items=[
+    ui.table(
+        name='table', 
+        columns=[
+            ui.table_column(name='text', label='Process'),
+            ui.table_column(name='tag', label='Progress', 
+                cell_type=ui.progress_table_cell_type(compact=True))
+        ],
+        rows=[
+            ui.table_row(name='row1', cells=['Process1', '.70']),
+        ])
+])
+```
+
 ## With tags
 
 Use tags to emphasize a specific value, usually an enum value like a certain state for example. For multiple tags in a single row use `,` as a delimiter.
