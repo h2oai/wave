@@ -62,7 +62,7 @@ export interface ProgressTableCellType {
   /** An identifying name for this component. */
   name?: S
   
-  /** True if the component should be displayed compactly as a bar. Defaults to False (spinner). */
+  /** True if the component should be displayed compactly as a bar. Defaults to False. */
   compact?: B
 }
 

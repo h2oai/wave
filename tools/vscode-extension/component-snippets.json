@@ -1570,7 +1570,7 @@
   "Wave Full ProgressTableCellType": {
     "prefix": "w_full_progress_table_cell_type",
     "body": [
-      "ui.progress_table_cell_type(color='$1', name='$2'),$0"
+      "ui.progress_table_cell_type(color='$1', name='$2', compact=${3:False}),$0"
     ],
     "description": "Create a full Wave ProgressTableCellType."
   },

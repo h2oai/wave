@@ -1175,7 +1175,7 @@ def progress_table_cell_type(
     Args:
         color: Color of the progress arc/bar.
         name: An identifying name for this component.
-        type: True if the component should be displayed compactly as a bar. Defaults to False.
+        compact: True if the component should be displayed compactly as a bar. Defaults to False.
     Returns:
         A `h2o_wave.types.ProgressTableCellType` instance.
     """

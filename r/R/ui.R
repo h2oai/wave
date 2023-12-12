@@ -1389,14 +1389,15 @@ ui_file_upload <- function(
 #' @export
 ui_progress_table_cell_type <- function(
   color = NULL,
-  name = NULL, 
+  name = NULL,
   compact = NULL) {
   .guard_scalar("color", "character", color)
   .guard_scalar("name", "character", name)
   .guard_scalar("compact", "logical", compact)
   .o <- list(progress=list(
     color=color,
-    name=name))
+    name=name,
+    compact=compact))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
   return(.o)
 }

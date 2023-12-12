@@ -3094,7 +3094,7 @@ class ProgressTableCellType:
         _guard_scalar('ProgressTableCellType.compact', __d_compact, (bool,), False, True, False)
         color: Optional[str] = __d_color
         name: Optional[str] = __d_name
-        compact: Optional[str] = __d_compact
+        compact: Optional[bool] = __d_compact
         return ProgressTableCellType(
             color,
             name,
