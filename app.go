@@ -116,7 +116,14 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 			req.Header.Set("Wave-Refresh-Token", session.token.RefreshToken)
 		} else {
 			// Should never happen.
-			echo(Log{"t": "app", "error": "missing access token in send", "session": session.id})
+			echo(Log{
+				"t":          "app",
+				"error":      "missing access token in send",
+				"sessionID":  session.id,
+				"subject":    session.subject,
+				"username":   session.username,
+				"access_url": session.successURL,
+			})
 		}
 	}
 
