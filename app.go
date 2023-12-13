@@ -123,6 +123,7 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 				"subject":    session.subject,
 				"username":   session.username,
 				"access_url": session.successURL,
+				"expiry":     session.expiry.String(),
 			})
 		}
 	}
