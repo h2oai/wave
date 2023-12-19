@@ -20,6 +20,7 @@ import socket
 import subprocess
 import sys
 import tarfile
+import tempfile
 import time
 from contextlib import closing
 from pathlib import Path
@@ -151,7 +152,13 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     else:
         autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
 
-    waved_path = os.path.join(sys.exec_prefix, 'waved.exe' if IS_WINDOWS else 'waved')
+    # Get the path of waved dir from temporary file created by waved.
+    temp_dir = tempfile.gettempdir()
+    temp_file = os.path.join(temp_dir, 'waved_dir_path')
+    with open(temp_file, 'r') as file:
+        waved_dir_path = file.read().strip()
+
+    waved_path = os.path.join(waved_dir_path, 'waved.exe' if IS_WINDOWS else 'waved')
     # OS agnostic wheels do not include waved - needed for HAC.
     is_waved_present = os.path.isfile(waved_path)
 
@@ -176,7 +183,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
             return
 
         if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
-            os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
+            os.environ['H2O_WAVE_WAVED_DIR'] = waved_dir_path
         reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
         if reload_exclude:
             reload_exclude = reload_exclude.split(os.pathsep)

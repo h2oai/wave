@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -54,6 +55,15 @@ func resolveURL(path, baseURL string) string {
 	return "/" + strings.TrimPrefix(path, baseURL)
 }
 
+func saveCwdToTempFile() {
+	// Save the path to current working directory into a temporary file to be available for a python app.
+	dirgo, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	// TODO: The directory is neither guaranteed to exist nor have accessible permissions.
+	tempDir := os.TempDir()
+	tempFile := filepath.Join(tempDir, "go_app_dir")
+	ioutil.WriteFile(tempFile, []byte(dirgo), 0644)
+}
+
 func printLaunchBar(addr, baseURL string, isTLS bool) {
 	if strings.HasPrefix(addr, ":") {
 		addr = "localhost" + addr
@@ -84,6 +94,8 @@ func Run(conf ServerConf) {
 	if len(conf.Init) > 0 {
 		initSite(site, conf.Init)
 	}
+
+	saveCwdToTempFile() 
 
 	handle := handleWithBaseURL(conf.BaseURL)
 
