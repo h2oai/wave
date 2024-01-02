@@ -14,7 +14,7 @@ from subprocess import PIPE, STDOUT, Popen
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
-import pkg_resources
+from importlib.metadata import version
 
 import file_utils
 import studio_editor as editor
@@ -275,29 +275,35 @@ def get_package_dialog_items():
 
 # https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
 async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, on_start: Callable, on_success: Callable, on_error: Callable, on_finish: Callable):
-    if package_name is None:
-        # TODO: Show message to user.
-        return
-    p = None
-    version = f'=={package_version}' if package_version else ''
-    while True:
-        # TODO: Prevent from installing h2o-wave package.
-        if not q.client.process_started:
-            args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}'] if flag else [sys.executable, '-m', 'pip', command, f'{package_name}{version}']
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            q.client.process_started = True
-            await on_start(q, package_name, version)
+    if not package_name:
+        q.page['meta'].notification_bar = ui.notification_bar(
+                    name='notification',
+                    text='Package name cannot be empty.',
+                    type='warning',
+                    position='top-right',
+                    events=['dismissed'],
+                )
+    else:
+        p = None
+        version = f'=={package_version}' if package_version else ''
+        while True:
+            if not q.client.process_started:
+                args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}'] if flag else [sys.executable, '-m', 'pip', command, f'{package_name}{version}']
+                # TODO: Make uninstall work.
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                q.client.process_started = True
+                await on_start(q, package_name, version)
 
-        if p.poll() is not None:
-            # Process finished.
-            # TODO: Cancel properly - p.poll() does not exist when process is cancelled.
-            if p.returncode == 0:
-                await on_success(q, package_name, p)
+            if p.poll() is not None:
+                # Process finished.
+                # TODO: Cancel properly - p.poll() does not exist when process is cancelled.
+                if p.returncode == 0:
+                    await on_success(q, package_name, p)
+                else:
+                    await on_error(q, package_name, p)
+                break
             else:
-                await on_error(q, package_name, p)
-            break
-        else:
-            await update_progress(q, p.stdout.readline())
+                await update_progress(q, p.stdout.readline())
 
     q.client.process_started = False
     await on_finish(q)    
@@ -316,32 +322,40 @@ async def on_install_start(q: Q, package_name: str, version: str):
     ]
     await q.page.save()
 
+async def update_requirements(packages, remove=False):
+    # Read the current requirements
+    with open('project/requirements.txt', 'a+') as file:
+        file.seek(0)
+        lines = file.readlines()
+
+    # Parse the current requirements into a dictionary
+    current_packages = {}
+    for line in lines:
+        package_name, package_version = line.strip().split('==')
+        current_packages[package_name] = package_version
+
+    # Update the current requirements with the new packages
+    if not remove:
+        current_packages.update(packages)
+
+    # Write the updated requirements back to the file
+    with open('project/requirements.txt', 'w') as file:
+        for package_name, package_version in current_packages.items():
+            if not remove or (remove and package_name not in packages):
+                file.write(f'{package_name}=={package_version}\n')
+
 async def on_install_success(q: Q, package_name: str, p: Popen):
-    file = open('project/requirements.txt', 'a+')
-    v = pkg_resources.get_distribution(package_name).version
-    # TODO: Do not write if already installed.
-    # TODO: Handle versioning.
-    file.write(f'{package_name}=={v}\n')
-    file.close()
+    await update_requirements({f'{package_name}': version(package_name)})
     await update_progress(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
 
 async def on_requirements_install_success(q: Q, package_name: str, p: Popen):
-    # Add versions to requirements.txt.
-    file = open('project/requirements.txt', 'a+')
-    file_tmp = open('project/requirements_tmp.txt', 'a+')
-    file_tmp.seek(0)
-    for package in file_tmp.readlines():
-        package_name, package_version = package.removesuffix('\n').split('==') if '==' in package else (package.removesuffix('\n'), None)
-        # TODO: 'line' must start with package_name.
-        if any(package_name in line for line in file.readlines()):
-            # TODO: Update version of already installed package.
-            continue
-        else:
-            v = pkg_resources.get_distribution(package_name).version
-            file.write(f'{package_name}=={v}\n')
-    file.close()
-    file_tmp.close()
+    packages = {}
+    with open('project/requirements_tmp.txt', 'r') as file_tmp:
+        for line in file_tmp.readlines():
+            package_name = line.strip().removesuffix('\n').split('==')[0] if '==' in line else line.strip().removesuffix('\n')
+            packages[package_name] = version(package_name)
     os.remove('project/requirements_tmp.txt')
+    await update_requirements(packages)
     await update_progress(q, f"Packages succesfully installed! Process finished with returncode {p.returncode}.")
 
 async def on_install_error(q: Q, package_name: str, p: Popen):
@@ -351,7 +365,8 @@ async def on_requirements_install_error(q: Q, package_name: str, p: Popen):
     file = open('project/requirements.txt', 'w')
     # TODO: Update requirements.txt accordingly.
     file.write('')
-    file.close() 
+    file.close()
+    os.remove('project/requirements_tmp.txt') 
     await update_progress(q, f"Error installing packages! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
 
 async def on_uninstall_start(q: Q, package_name: str, version: str):
@@ -365,7 +380,7 @@ async def on_uninstall_start(q: Q, package_name: str, version: str):
     await q.page.save()
 
 async def on_uninstall_success(q: Q, package_name: str, p: Popen):
-    # TODO: Remove from requirements.txt.
+    await update_requirements({f'{package_name}': version(package_name)}, remove=True)
     await update_progress(q, f"Package {package_name} succesfully uninstalled! Process finished with returncode {p.returncode}.")
 
 async def on_uninstall_error(q: Q, package_name: str, p: Popen):
@@ -476,7 +491,7 @@ async def serve(q: Q):
     elif q.args.add_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(pip(q, 'install', None, q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
+        q.client.task = asyncio.create_task(pip(q, 'install', '-U', q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
     elif q.args.remove_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
