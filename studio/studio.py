@@ -275,15 +275,7 @@ def get_package_dialog_items():
 
 # https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
 async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, on_start: Callable, on_success: Callable, on_error: Callable, on_finish: Callable):
-    if not package_name:
-        q.page['meta'].notification_bar = ui.notification_bar(
-                    name='notification',
-                    text='Package name cannot be empty.',
-                    type='warning',
-                    position='top-right',
-                    events=['dismissed'],
-                )
-    else:
+    try:
         p = None
         version = f'=={package_version}' if package_version else ''
         while True:
@@ -296,7 +288,6 @@ async def pip(q: Q, command: str, flag: str or None, package_name: str, package_
 
             if p.poll() is not None:
                 # Process finished.
-                # TODO: Cancel properly - p.poll() does not exist when process is cancelled.
                 if p.returncode == 0:
                     await on_success(q, package_name, p)
                 else:
@@ -304,9 +295,14 @@ async def pip(q: Q, command: str, flag: str or None, package_name: str, package_
                 break
             else:
                 await update_progress(q, p.stdout.readline())
-
-    q.client.process_started = False
-    await on_finish(q)    
+    finally:
+        if p.poll() is None:
+            # Task canceled.
+            p.stdout.close()
+            p.stderr.close()
+            p.kill()
+        q.client.process_started = False
+        await on_finish(q)    
 
 async def update_progress(q: Q, value: int):
     q.page['meta'].dialog.items[1].expander.items[0].text.content = get_output(value)
@@ -491,7 +487,10 @@ async def serve(q: Q):
     elif q.args.add_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(pip(q, 'install', '-U', q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
+        if not q.args.package_name:
+            q.page['meta'].dialog.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
+        else:
+            q.client.task = asyncio.create_task(pip(q, 'install', '-U', q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
     elif q.args.remove_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
