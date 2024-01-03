@@ -249,7 +249,8 @@ def get_output(output: str) -> str:
 '''
 
 def get_package_dialog_items():
-    packages_installed =  os.path.isfile('project/requirements.txt') and os.path.getsize('project/requirements.txt') > 0
+    file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
+    packages_installed =  os.stat("project/requirements.txt").st_size > 0 if file else False
     return [
         ui.text_l('Installed packages'),
         ui.inline(
