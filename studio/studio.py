@@ -6,7 +6,7 @@ import re
 import shutil
 import sys
 import time
-from typing import Callable
+from typing import Callable, Literal
 import zipfile
 from pathlib import Path
 from string import Template
@@ -275,46 +275,49 @@ def get_package_dialog_items():
     ]
 
 # https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program
-async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, on_start: Callable, on_success: Callable, on_error: Callable, on_finish: Callable):
+async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, progress_message: str, success_message: str, error_message: str, on_success: Callable = None, on_error: Callable = None):
     try:
-        p = None
         version = f'=={package_version}' if package_version else ''
+        args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}']
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output= ''
+        await show_progress(q, progress_message)
         while True:
-            if not q.client.process_started:
-                args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}']
-                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                q.client.process_started = True
-                await on_start(q, package_name, version)
-
             if p.poll() is not None:
                 # Process finished.
                 if p.returncode == 0:
-                    await on_success(q, package_name, p)
+                    if on_success:
+                        await on_success(package_name)
+                    await show_install_message(q, 'success', success_message, output)
                 else:
-                    await on_error(q, package_name, p)
+                    if on_error:
+                        await on_error(package_name)
+                    output += f'\n{p.stderr.read().decode("utf-8")}'
+                    await show_install_message(q, 'error', error_message, output)
                 break
             else:
-                await update_progress(q, p.stdout.readline())
+                output += f'\n{p.stdout.readline().decode("utf-8")}'
+                await update_progress(q, output)
     finally:
         if p.poll() is None:
             # Task canceled.
             p.stdout.close()
             p.stderr.close()
             p.kill()
-        q.client.process_started = False
-        await on_finish(q)    
+            await on_install_finish(q)
+            
 
 async def update_progress(q: Q, value: int):
     q.page['meta'].dialog.items[1].expander.items[0].text.content = get_output(value)
     await q.page.save()
 
-async def on_install_start(q: Q, package_name: str, version: str):
+async def show_install_message(q: Q, type: Literal['error', 'success'], title: str, output: str):
     q.page['meta'].dialog.items = [
-        ui.progress(label=f'Installing {package_name}{version}'),
-        ui.expander(name='console_expander', label='Details', items=[
-            ui.text(name='console_out', content=get_output(''), width='100%'),
+        ui.message_bar(type=type, text=title),
+        ui.expander(name='console_expander', label='Detail', items=[
+            ui.text(name='console_out', content=get_output(output), width='100%'),
         ]),
-        ui.button(name='cancel_pip_task', label='Cancel installation')
+        ui.button(name='install_message_dismiss', label='Go back')
     ]
     await q.page.save()
 
@@ -340,11 +343,29 @@ def update_requirements(packages: dict, remove=False):
             if not remove or (remove and package_name not in packages):
                 file.write(f'{package_name}=={package_version}\n')
 
-async def on_install_success(q: Q, package_name: str, p: Popen):
-    update_requirements({f'{package_name}': version(package_name)})
-    await update_progress(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
+async def show_progress(q: Q, msg: str):
+    q.page['meta'].dialog.items = [
+        ui.progress(label=msg),
+        ui.expander(name='console_expander', label='Detail', items=[
+            ui.text(name='console_out', content=get_output(''), width='100%'),
+        ]),
+        ui.button(name='cancel_pip_task', label='Cancel')
+    ]
+    await q.page.save()
 
-async def on_requirements_install_success(q: Q, package_name: str, p: Popen):
+async def on_install_finish(q: Q):
+    q.page['meta'].dialog.blocking = False
+    q.page['meta'].dialog.closable = True
+    q.page['meta'].dialog.items = get_package_dialog_items()
+    await q.page.save()
+
+async def on_install_success(package_name: str):
+    update_requirements({f'{package_name}': version(package_name)})
+
+async def on_uninstall_success(package_name: str):
+    update_requirements({f'{package_name}': ''}, True)
+
+async def on_requirements_install_success(package_name: str):
     packages = {}
     with open('project/requirements_tmp.txt', 'r') as file_tmp:
         for line in file_tmp.readlines():
@@ -352,41 +373,13 @@ async def on_requirements_install_success(q: Q, package_name: str, p: Popen):
             packages[package_name] = version(package_name)
     os.remove('project/requirements_tmp.txt')
     update_requirements(packages)
-    await update_progress(q, f"Packages succesfully installed! Process finished with returncode {p.returncode}.")
 
-async def on_install_error(q: Q, package_name: str, p: Popen):
-    await update_progress(q, f"Error installing {package_name}! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
-
-async def on_requirements_install_error(q: Q, package_name: str, p: Popen):
+async def on_requirements_install_error(package_name: str):
     file = open('project/requirements.txt', 'w')
     # TODO: Update requirements.txt accordingly.
     file.write('')
     file.close()
     os.remove('project/requirements_tmp.txt') 
-    await update_progress(q, f"Error installing packages! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
-
-async def on_uninstall_start(q: Q, package_name: str, version: str):
-    q.page['meta'].dialog.items = [
-        ui.progress(label=f'Uninstalling {package_name}{version}'),
-        ui.expander(name='console_expander', label='Details', items=[
-            ui.text(name='console_out', content=get_output(''), width='100%'),
-        ]),
-        ui.button(name='cancel_pip_task', label='Cancel uninstallation')
-    ]
-    await q.page.save()
-
-async def on_uninstall_success(q: Q, package_name: str, p: Popen):
-    update_requirements({f'{package_name}': ''}, True)
-    await update_progress(q, f"Package {package_name} succesfully uninstalled! Process finished with returncode {p.returncode}.")
-
-async def on_uninstall_error(q: Q, package_name: str, p: Popen):
-    await update_progress(q, f"Error uninstalling {package_name}! Process finished with returncode {p.returncode}. Detail: {p.stderr.read().decode('utf-8')}")
-
-async def finish_installation(q: Q):
-    q.page['meta'].dialog.blocking = False
-    q.page['meta'].dialog.closable = True
-    q.page['meta'].dialog.items = get_package_dialog_items()
-    await q.page.save()
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
@@ -471,10 +464,11 @@ async def serve(q: Q):
             '-r', 
             'project/requirements_tmp.txt', 
             None, 
-            on_install_start, 
+            'Installing packages from requirements.txt', 
+            f'Packages from requirements.txt installed successfully.', 
+            f'Error installing requirements.txt.',
             on_requirements_install_success, 
-            on_requirements_install_error, 
-            finish_installation
+            on_requirements_install_error
         ))
 
     elif q.args.show_add_package_fields:
@@ -485,19 +479,43 @@ async def serve(q: Q):
             ], align='end')
         
     elif q.args.add_package:
-        q.page['meta'].dialog.closable = False
-        q.page['meta'].dialog.blocking = True
         if not q.args.package_name:
             q.page['meta'].dialog.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
         else:
-            q.client.task = asyncio.create_task(pip(q, 'install', '-U', q.args.package_name, q.args.package_version, on_install_start, on_install_success, on_install_error, finish_installation))
+            q.page['meta'].dialog.closable = False
+            q.page['meta'].dialog.blocking = True
+            package = f'{q.args.package_name}{q.args.package_version}'
+            q.client.task = asyncio.create_task(pip(
+                q, 
+                'install', 
+                '-U', 
+                q.args.package_name, 
+                q.args.package_version, 
+                f'Installing {package}', 
+                f'{package} installed successfully.', 
+                f'Error installing {package}', 
+                on_install_success
+            ))
     elif q.args.remove_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(pip(q, 'uninstall', '-y', q.args.remove_package, None, on_uninstall_start, on_uninstall_success, on_uninstall_error, finish_installation))
+        package = f'{q.args.package_name}{q.args.package_version}'
+        q.client.task = asyncio.create_task(pip(
+            q, 
+            'uninstall', 
+            '-y', 
+            q.args.remove_package, 
+            None, 
+            f'Uninstalling {package}', 
+            f'{package} uninstalled successfully.', 
+            f'Error installing {package}', 
+            on_uninstall_success
+        ))
     elif q.args.cancel_pip_task:
         q.client.task.cancel()
-        await finish_installation(q)
+        await on_install_finish(q)
+    elif q.args.install_message_dismiss:
+        await on_install_finish(q)
     elif q.args.dropdown == 'code':
         q.page['preview'].box = ui.box('main', width='0px')
         q.page['code'].box = ui.box('main', width='100%')
