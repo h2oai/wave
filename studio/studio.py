@@ -267,6 +267,7 @@ def get_package_dialog_items():
         ui.inline(
             align='end', 
             justify='center',
+            height='60px',
             items= [ui.buttons(items=[
                 ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'), 
                 ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList', width='200px')
@@ -306,6 +307,15 @@ async def pip(q: Q, command: str, flag: str or None, package_name: str, package_
             p.kill()
             await on_install_finish(q)
             
+async def show_progress(q: Q, msg: str):
+    q.page['meta'].dialog.items = [
+        ui.progress(label=msg),
+        ui.expander(name='console_expander', label='Detail', items=[
+            ui.text(name='console_out', content=get_output(''), width='100%'),
+        ]),
+        ui.button(name='cancel_pip_task', label='Cancel')
+    ]
+    await q.page.save()
 
 async def update_progress(q: Q, value: int):
     q.page['meta'].dialog.items[1].expander.items[0].text.content = get_output(value)
@@ -343,16 +353,6 @@ def update_requirements(packages: dict, remove=False):
             if not remove or (remove and package_name not in packages):
                 file.write(f'{package_name}=={package_version}\n')
 
-async def show_progress(q: Q, msg: str):
-    q.page['meta'].dialog.items = [
-        ui.progress(label=msg),
-        ui.expander(name='console_expander', label='Detail', items=[
-            ui.text(name='console_out', content=get_output(''), width='100%'),
-        ]),
-        ui.button(name='cancel_pip_task', label='Cancel')
-    ]
-    await q.page.save()
-
 async def on_install_finish(q: Q):
     q.page['meta'].dialog.blocking = False
     q.page['meta'].dialog.closable = True
@@ -375,10 +375,6 @@ async def on_requirements_install_success(package_name: str):
     update_requirements(packages)
 
 async def on_requirements_install_error(package_name: str):
-    file = open('project/requirements.txt', 'w')
-    # TODO: Update requirements.txt accordingly.
-    file.write('')
-    file.close()
     os.remove('project/requirements_tmp.txt') 
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
@@ -421,6 +417,7 @@ async def serve(q: Q):
                 zip_ref.extractall()
                 file_utils.remove_file(zip_path)
                 q.page['meta'].dialog = None
+                # TODO: Install packages from imported requirements.txt
                 q.page['meta'].notification_bar = ui.notification_bar(
                     name='notification',
                     text='Project imported successfully!',
@@ -451,7 +448,7 @@ async def serve(q: Q):
     elif q.events.package_dialog and q.events.package_dialog.dismissed:
         q.page['meta'].dialog = None
     elif q.args.show_add_requirements:
-        q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'], label='Upload requirements.txt file')
+        q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'], label='Install packages')
     elif q.args.upload_requirements:
         os.mkdir('project/tmp')
         file = await q.site.download(q.args.upload_requirements[0], os.path.join(os.getcwd(), 'project/tmp'))
