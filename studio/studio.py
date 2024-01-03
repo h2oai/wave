@@ -249,7 +249,7 @@ def get_output(output: str) -> str:
 '''
 
 def get_package_dialog_items():
-    file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
+    packages_installed =  os.path.isfile('project/requirements.txt') and os.path.getsize('project/requirements.txt') > 0
     return [
         ui.text_l('Installed packages'),
         ui.inline(
@@ -262,7 +262,7 @@ def get_package_dialog_items():
                     ui.button('remove_package', label='Remove', value=package_name),
                 ]) for package_name, package_version in [package.removesuffix('\n').split('==') for package in file.readlines()]
             ], 
-        ) if file else ui.text(name='no_packages', content='No packages installed.'),
+        ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
         ui.inline(
             align='end', 
             justify='center',
@@ -280,8 +280,7 @@ async def pip(q: Q, command: str, flag: str or None, package_name: str, package_
         version = f'=={package_version}' if package_version else ''
         while True:
             if not q.client.process_started:
-                args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}'] if flag else [sys.executable, '-m', 'pip', command, f'{package_name}{version}']
-                # TODO: Make uninstall work.
+                args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}']
                 p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 q.client.process_started = True
                 await on_start(q, package_name, version)
@@ -318,7 +317,7 @@ async def on_install_start(q: Q, package_name: str, version: str):
     ]
     await q.page.save()
 
-async def update_requirements(packages, remove=False):
+def update_requirements(packages: dict, remove=False):
     # Read the current requirements
     with open('project/requirements.txt', 'a+') as file:
         file.seek(0)
@@ -341,7 +340,7 @@ async def update_requirements(packages, remove=False):
                 file.write(f'{package_name}=={package_version}\n')
 
 async def on_install_success(q: Q, package_name: str, p: Popen):
-    await update_requirements({f'{package_name}': version(package_name)})
+    update_requirements({f'{package_name}': version(package_name)})
     await update_progress(q, f"Package succesfully installed! Process finished with returncode {p.returncode}.")
 
 async def on_requirements_install_success(q: Q, package_name: str, p: Popen):
@@ -351,7 +350,7 @@ async def on_requirements_install_success(q: Q, package_name: str, p: Popen):
             package_name = line.strip().removesuffix('\n').split('==')[0] if '==' in line else line.strip().removesuffix('\n')
             packages[package_name] = version(package_name)
     os.remove('project/requirements_tmp.txt')
-    await update_requirements(packages)
+    update_requirements(packages)
     await update_progress(q, f"Packages succesfully installed! Process finished with returncode {p.returncode}.")
 
 async def on_install_error(q: Q, package_name: str, p: Popen):
@@ -376,7 +375,7 @@ async def on_uninstall_start(q: Q, package_name: str, version: str):
     await q.page.save()
 
 async def on_uninstall_success(q: Q, package_name: str, p: Popen):
-    await update_requirements({f'{package_name}': version(package_name)}, remove=True)
+    update_requirements({f'{package_name}': ''}, True)
     await update_progress(q, f"Package {package_name} succesfully uninstalled! Process finished with returncode {p.returncode}.")
 
 async def on_uninstall_error(q: Q, package_name: str, p: Popen):
@@ -494,7 +493,7 @@ async def serve(q: Q):
     elif q.args.remove_package:
         q.page['meta'].dialog.closable = False
         q.page['meta'].dialog.blocking = True
-        q.client.task = asyncio.create_task(pip(q, 'uninstall', None, q.args.remove_package, None, on_uninstall_start, on_uninstall_success, on_uninstall_error, finish_installation))
+        q.client.task = asyncio.create_task(pip(q, 'uninstall', '-y', q.args.remove_package, None, on_uninstall_start, on_uninstall_success, on_uninstall_error, finish_installation))
     elif q.args.cancel_pip_task:
         q.client.task.cancel()
         await finish_installation(q)
