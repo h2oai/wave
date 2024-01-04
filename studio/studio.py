@@ -432,6 +432,29 @@ async def serve(q: Q):
                 editor.update_file_tree(q, project.dir)
                 await q.page.save()
                 editor.open_file(q, project.entry_point)
+                requirements_file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
+                if requirements_file:
+                    q.page['meta'].dialog = ui.dialog(
+                        name='package_dialog', 
+                        title='Manage packages', 
+                        items=get_package_dialog_items(), 
+                        closable=True, 
+                        events=['dismissed'],
+                    )
+                    q.page.save()
+                    # Install from requirements.txt
+                    q.client.task = asyncio.create_task(pip(
+                        q, 
+                        'install', 
+                        '-r', 
+                        'project/requirements.txt', 
+                        None, 
+                        'Installing packages from requirements.txt', 
+                        f'Packages from requirements.txt installed successfully.', 
+                        f'Error installing requirements.txt.',
+                        None, 
+                        on_requirements_install_error
+                    ))
             else:
                 q.page['meta'].dialog.items = [
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
