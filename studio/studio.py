@@ -310,6 +310,12 @@ async def show_finish_message(q: Q, type: Literal['error', 'success'], title: st
     await q.page.save()
 
 
+async def block_dialog(q: Q):
+    q.page['meta'].dialog.closable = False
+    q.page['meta'].dialog.blocking = True
+    await q.page.save()
+
+
 async def on_pip_finish(q: Q):
     q.page['meta'].dialog.blocking = False
     q.page['meta'].dialog.closable = True
@@ -324,6 +330,7 @@ async def pip(q: Q, command: str, flag: str or None, package_name: str, package_
         args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}']
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = ''
+        await block_dialog(q)
         await show_progress(q, progress_message)
         while True:
             if p.poll() is not None:
@@ -514,8 +521,6 @@ async def serve(q: Q):
         if not q.args.package_name:
             q.page['meta'].dialog.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
         else:
-            q.page['meta'].dialog.closable = False
-            q.page['meta'].dialog.blocking = True
             package = f'{q.args.package_name}{q.args.package_version}'
             q.client.task = asyncio.create_task(pip(
                 q,
@@ -529,8 +534,6 @@ async def serve(q: Q):
                 on_install_success
             ))
     elif q.args.remove_package:
-        q.page['meta'].dialog.closable = False
-        q.page['meta'].dialog.blocking = True
         package = f'{q.args.package_name}{q.args.package_version}'
         q.client.task = asyncio.create_task(pip(
             q,
