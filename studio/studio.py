@@ -23,6 +23,7 @@ import asyncio
 import subprocess
 import sys
 
+
 # TODO update this app with by-name component access once the Wave version higher than 0.25.2 is available.
 
 class Project:
@@ -38,13 +39,15 @@ class Project:
 
     def get_server_address(self) -> str:
         cloud_env = os.environ.get('H2O_CLOUD_ENVIRONMENT', None)
-        return f'{cloud_env}{self.server_base_url}' if cloud_env else os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
+        return f'{cloud_env}{self.server_base_url}' if cloud_env else os.environ.get('H2O_WAVE_ADDRESS',
+                                                                                     'http://127.0.0.1:10101')
 
     def get_assets_url_for(self, url: str) -> str:
         return f'{self.server_base_url}assets/{url}'
 
 
 project = Project()
+
 
 def start(entry_point: str, is_app: bool):
     env = os.environ.copy()
@@ -244,7 +247,7 @@ async def export(q: Q):
 
 def get_package_dialog_items():
     file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
-    packages_installed =  os.stat("project/requirements.txt").st_size > 0 if file else False
+    packages_installed = os.stat("project/requirements.txt").st_size > 0 if file else False
     return [
         ui.text_l('Installed packages'),
         ui.inline(
@@ -255,16 +258,18 @@ def get_package_dialog_items():
                     ui.textbox(name='package_name', value=package_name, readonly=True),
                     ui.textbox(name='package_version', value=package_version, readonly=True),
                     ui.button('remove_package', label='Remove', value=package_name),
-                ]) for package_name, package_version in [package.removesuffix('\n').split('==') for package in file.readlines()]
-            ], 
+                ]) for package_name, package_version in
+                [package.removesuffix('\n').split('==') for package in file.readlines()]
+            ],
         ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
         ui.inline(
-            align='end', 
+            align='end',
             justify='center',
             height='60px',
-            items= [ui.buttons(items=[
-                ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'), 
-                ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList', width='200px')
+            items=[ui.buttons(items=[
+                ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'),
+                ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList',
+                          width='200px')
             ], justify='center')]
         ),
     ]
@@ -276,7 +281,7 @@ def get_output(output: str) -> str:
 {output}
 ```
 '''
-            
+
 
 async def show_progress(q: Q, msg: str):
     q.page['meta'].dialog.items = [
@@ -312,12 +317,13 @@ async def on_pip_finish(q: Q):
     await q.page.save()
 
 
-async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, progress_message: str, success_message: str, error_message: str, on_success: Callable = None, on_error: Callable = None):
+async def pip(q: Q, command: str, flag: str or None, package_name: str, package_version: str, progress_message: str,
+              success_message: str, error_message: str, on_success: Callable = None, on_error: Callable = None):
     try:
         version = f'=={package_version}' if package_version else ''
         args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}']
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output= ''
+        output = ''
         await show_progress(q, progress_message)
         while True:
             if p.poll() is not None:
@@ -375,7 +381,8 @@ async def on_requirements_install_success(package_name: str):
     packages = {}
     with open('project/requirements_tmp.txt', 'r') as file_tmp:
         for line in file_tmp.readlines():
-            package_name = line.strip().removesuffix('\n').split('==')[0] if '==' in line else line.strip().removesuffix('\n')
+            package_name = line.strip().removesuffix('\n').split('==')[
+                0] if '==' in line else line.strip().removesuffix('\n')
             packages[package_name] = version(package_name)
     os.remove('project/requirements_tmp.txt')
     update_requirements(packages)
@@ -387,10 +394,10 @@ async def on_requirements_install_error():
 
 async def show_packages_dialog(q: Q):
     q.page['meta'].dialog = ui.dialog(
-        name='package_dialog', 
-        title='Manage packages', 
-        items=get_package_dialog_items(), 
-        closable=True, 
+        name='package_dialog',
+        title='Manage packages',
+        items=get_package_dialog_items(),
+        closable=True,
         events=['dismissed'],
     )
     q.page.save()
@@ -424,9 +431,10 @@ async def serve(q: Q):
     elif q.args.import_project:
         q.page['meta'].dialog = ui.dialog(name='dialog', title='Import Project', events=['dismissed'], closable=True,
                                           items=[
-            ui.message_bar(type='warning', text='Current project files will be replaced with uploaded content.'),
-            ui.file_upload(name='imported_project', file_extensions=['zip']),
-        ])
+                                              ui.message_bar(type='warning',
+                                                             text='Current project files will be replaced with uploaded content.'),
+                                              ui.file_upload(name='imported_project', file_extensions=['zip']),
+                                          ])
     elif q.args.imported_project:
         zip_path = await q.site.download(q.args.imported_project[0], os.getcwd())
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -450,19 +458,20 @@ async def serve(q: Q):
                 editor.update_file_tree(q, project.dir)
                 await q.page.save()
                 editor.open_file(q, project.entry_point)
-                requirements_file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
+                requirements_file = open('project/requirements.txt', 'r') if os.path.exists(
+                    'project/requirements.txt') else None
                 if requirements_file:
                     await show_packages_dialog(q)
                     q.client.task = asyncio.create_task(pip(
-                        q, 
-                        'install', 
-                        '-r', 
-                        'project/requirements.txt', 
-                        None, 
-                        'Installing packages from requirements.txt', 
-                        f'Packages from requirements.txt installed successfully.', 
+                        q,
+                        'install',
+                        '-r',
+                        'project/requirements.txt',
+                        None,
+                        'Installing packages from requirements.txt',
+                        f'Packages from requirements.txt installed successfully.',
                         f'Error installing requirements.txt.',
-                        None, 
+                        None,
                         on_requirements_install_error
                     ))
             else:
@@ -475,30 +484,32 @@ async def serve(q: Q):
     elif q.events.package_dialog and q.events.package_dialog.dismissed:
         q.page['meta'].dialog = None
     elif q.args.show_add_requirements:
-        q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'], label='Install packages', tooltip='Packages from requirements.txt will be added to already installed packages.')
+        q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'],
+                                                        label='Install packages',
+                                                        tooltip='Packages from requirements.txt will be added to already installed packages.')
     elif q.args.upload_requirements:
         os.mkdir('project/tmp')
         file = await q.site.download(q.args.upload_requirements[0], os.path.join(os.getcwd(), 'project/tmp'))
         shutil.copy(file, 'project/requirements_tmp.txt')
         shutil.rmtree('project/tmp')
         q.client.task = asyncio.create_task(pip(
-            q, 
-            'install', 
-            '-r', 
-            'project/requirements_tmp.txt', 
-            None, 
-            'Installing packages from requirements.txt', 
-            f'Packages from requirements.txt installed successfully.', 
+            q,
+            'install',
+            '-r',
+            'project/requirements_tmp.txt',
+            None,
+            'Installing packages from requirements.txt',
+            f'Packages from requirements.txt installed successfully.',
             f'Error installing requirements.txt.',
-            on_requirements_install_success, 
+            on_requirements_install_success,
             on_requirements_install_error
         ))
     elif q.args.show_add_package_fields:
         q.page['meta'].dialog.items[2] = ui.inline(items=[
-                ui.textbox(name='package_name', label='Package name', required=True),
-                ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
-                ui.button('add_package', label='Add', primary=True),
-            ], align='end')
+            ui.textbox(name='package_name', label='Package name', required=True),
+            ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
+            ui.button('add_package', label='Add', primary=True),
+        ], align='end')
     elif q.args.add_package:
         if not q.args.package_name:
             q.page['meta'].dialog.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
@@ -507,14 +518,14 @@ async def serve(q: Q):
             q.page['meta'].dialog.blocking = True
             package = f'{q.args.package_name}{q.args.package_version}'
             q.client.task = asyncio.create_task(pip(
-                q, 
-                'install', 
-                '-U', 
-                q.args.package_name, 
-                q.args.package_version, 
-                f'Installing {package}', 
-                f'{package} installed successfully.', 
-                f'Error installing {package}', 
+                q,
+                'install',
+                '-U',
+                q.args.package_name,
+                q.args.package_version,
+                f'Installing {package}',
+                f'{package} installed successfully.',
+                f'Error installing {package}',
                 on_install_success
             ))
     elif q.args.remove_package:
@@ -522,14 +533,14 @@ async def serve(q: Q):
         q.page['meta'].dialog.blocking = True
         package = f'{q.args.package_name}{q.args.package_version}'
         q.client.task = asyncio.create_task(pip(
-            q, 
-            'uninstall', 
-            '-y', 
-            q.args.remove_package, 
-            None, 
-            f'Uninstalling {package}', 
-            f'{package} uninstalled successfully.', 
-            f'Error installing {package}', 
+            q,
+            'uninstall',
+            '-y',
+            q.args.remove_package,
+            None,
+            f'Uninstalling {package}',
+            f'{package} uninstalled successfully.',
+            f'Error installing {package}',
             on_uninstall_success
         ))
     elif q.args.cancel_pip_task:
