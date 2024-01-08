@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling==1.21.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -21,6 +21,7 @@ dependencies = [
     "Click",
     "inquirer",
     "httpx>=0.16.1",
+    "psutil>=5.9.7",
     "starlette>=0.13.8",
     "uvicorn>=0.17.6",
 ]
