@@ -404,7 +404,7 @@ async def on_requirements_install_error():
 
 async def show_packages_dialog(q: Q):
     q.page['meta'].dialog = ui.dialog(
-        name='package_dialog',
+        name='dialog',
         title='Manage packages',
         items=get_package_dialog_items(),
         closable=True,
@@ -489,8 +489,6 @@ async def serve(q: Q):
                 ]
     elif q.args.show_packages_dialog:
         await show_packages_dialog(q)
-    elif q.events.package_dialog and q.events.package_dialog.dismissed:
-        q.page['meta'].dialog = None
     elif q.args.show_add_requirements:
         q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'],
                                                         label='Install packages',
