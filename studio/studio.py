@@ -133,7 +133,7 @@ async def setup_page(q: Q):
                 ui.choice(name='code', label='Full code view'),
                 ui.choice(name='preview', label='Full preview view'),
             ]),
-            ui.button(name='show_packages_dialog', label='Manage packages', icon='Packages'),
+            ui.button(name='show_side_panel', label='Manage packages', icon='Packages'),
             ui.button(name='import_project', label='Import', icon='Upload'),
             ui.button(name='export_project', label='Export', icon='Download'),
         ]
@@ -245,7 +245,7 @@ async def export(q: Q):
     os.remove("app.zip")
 
 
-def get_package_dialog_items():
+def get_side_panel_items():
     packages_installed = []
     if os.path.exists('project/requirements.txt'):
         with open('project/requirements.txt', 'r') as file:
@@ -287,7 +287,7 @@ def get_output(output: str) -> str:
 
 
 async def show_progress(q: Q, msg: str):
-    q.page['meta'].dialog.items = [
+    q.page['meta'].side_panel.items = [
         ui.text(name='console_out', content=get_output(''), width='100%'),
         ui.button(name='cancel_pip_task', label='Cancel')
     ]
@@ -295,12 +295,12 @@ async def show_progress(q: Q, msg: str):
 
 
 async def update_progress(q: Q, value: int):
-    q.page['meta'].dialog.items[0].text.content = get_output(value)
+    q.page['meta'].side_panel.items[0].text.content = get_output(value)
     await q.page.save()
 
 
 async def show_finish_message(q: Q, type: Literal['error', 'success'], title: str, output: str):
-    q.page['meta'].dialog.items = [
+    q.page['meta'].side_panel.items = [
         ui.message_bar(type=type, text=title),
         ui.text(name='console_out', content=get_output(output), width='100%'),
         ui.button(name='finish_message_dismiss', label='Go to package manager')
@@ -308,16 +308,16 @@ async def show_finish_message(q: Q, type: Literal['error', 'success'], title: st
     await q.page.save()
 
 
-async def block_dialog(q: Q):
-    q.page['meta'].dialog.closable = False
-    q.page['meta'].dialog.blocking = True
+async def block_side_panel(q: Q):
+    q.page['meta'].side_panel.closable = False
+    q.page['meta'].side_panel.blocking = True
     await q.page.save()
 
 
 async def on_pip_finish(q: Q):
-    q.page['meta'].dialog.blocking = False
-    q.page['meta'].dialog.closable = True
-    q.page['meta'].dialog.items = get_package_dialog_items()
+    q.page['meta'].side_panel.blocking = False
+    q.page['meta'].side_panel.closable = True
+    q.page['meta'].side_panel.items = get_side_panel_items()
     await q.page.save()
 
 
@@ -328,7 +328,7 @@ async def pip(q: Q, command: str, flag: str or None, package_name: str, package_
         args = [sys.executable, '-m', 'pip', command, flag, f'{package_name}{version}']
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = ''
-        await block_dialog(q)
+        await block_side_panel(q)
         await show_progress(q, progress_message)
         while True:
             if p.poll() is not None:
@@ -398,11 +398,11 @@ async def on_requirements_install_error():
     os.remove('project/requirements.txt')
 
 
-async def show_packages_dialog(q: Q):
-    q.page['meta'].dialog = ui.dialog(
-        name='dialog',
+async def show_side_panel(q: Q):
+    q.page['meta'].side_panel = ui.side_panel(
+        name='side_panel',
         title='Manage packages',
-        items=get_package_dialog_items(),
+        items=get_side_panel_items(),
         closable=True,
         events=['dismissed'],
     )
@@ -465,7 +465,7 @@ async def serve(q: Q):
                 await q.page.save()
                 editor.open_file(q, project.entry_point)
                 if os.path.exists('project/requirements.txt'):
-                    await show_packages_dialog(q)
+                    await show_side_panel(q)
                     q.client.task = asyncio.create_task(pip(
                         q,
                         'install',
@@ -483,10 +483,10 @@ async def serve(q: Q):
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
                     ui.button(name='import_project', label='Import again', icon='Upload'),
                 ]
-    elif q.args.show_packages_dialog:
-        await show_packages_dialog(q)
+    elif q.args.show_side_panel:
+        await show_side_panel(q)
     elif q.args.show_add_requirements:
-        q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'],
+        q.page['meta'].side_panel.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'],
                                                         label='Install packages',
                                                         tooltip='Packages from requirements.txt will replace currently installed packages.')
     elif q.args.upload_requirements:
@@ -504,14 +504,14 @@ async def serve(q: Q):
             on_requirements_install_error
         ))
     elif q.args.show_add_package_fields:
-        q.page['meta'].dialog.items[2] = ui.inline(items=[
+        q.page['meta'].side_panel.items[2] = ui.inline(items=[
             ui.textbox(name='package_name', label='Package name', required=True),
             ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
             ui.button('add_package', label='Add', primary=True),
         ], align='end')
     elif q.args.add_package:
         if not q.args.package_name:
-            q.page['meta'].dialog.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
+            q.page['meta'].side_panel.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
         else:
             package = f'{q.args.package_name}{q.args.package_version}'
             q.client.task = asyncio.create_task(pip(
@@ -570,6 +570,8 @@ async def serve(q: Q):
         await render_code(q)
     elif q.events.dialog and q.events.dialog.dismissed:
         q.page['meta'].dialog = None
+    elif q.events.side_panel and q.events.side_panel.dismissed:
+        q.page['meta'].side_panel = None
     elif q.events.notification and q.events.notification.dismissed:
         q.page['meta'].notification_bar = None
     elif q.events.file_viewer:
