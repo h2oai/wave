@@ -288,26 +288,21 @@ def get_output(output: str) -> str:
 
 async def show_progress(q: Q, msg: str):
     q.page['meta'].dialog.items = [
-        ui.progress(label=msg),
-        ui.expander(name='console_expander', label='Detail', items=[
-            ui.text(name='console_out', content=get_output(''), width='100%'),
-        ]),
+        ui.text(name='console_out', content=get_output(''), width='100%'),
         ui.button(name='cancel_pip_task', label='Cancel')
     ]
     await q.page.save()
 
 
 async def update_progress(q: Q, value: int):
-    q.page['meta'].dialog.items[1].expander.items[0].text.content = get_output(value)
+    q.page['meta'].dialog.items[0].text.content = get_output(value)
     await q.page.save()
 
 
 async def show_finish_message(q: Q, type: Literal['error', 'success'], title: str, output: str):
     q.page['meta'].dialog.items = [
         ui.message_bar(type=type, text=title),
-        ui.expander(name='console_expander', label='Detail', items=[
-            ui.text(name='console_out', content=get_output(output), width='100%'),
-        ]),
+        ui.text(name='console_out', content=get_output(output), width='100%'),
         ui.button(name='finish_message_dismiss', label='Go to package manager')
     ]
     await q.page.save()
@@ -388,18 +383,19 @@ async def on_uninstall_success(package_name: str):
 
 
 async def on_requirements_install_success(package_name: str):
-    packages = {}
-    with open('project/requirements_tmp.txt', 'r') as file_tmp:
-        for line in file_tmp.readlines():
-            package_name = line.strip().removesuffix('\n').split('==')[
-                0] if '==' in line else line.strip().removesuffix('\n')
-            packages[package_name] = version(package_name)
-    os.remove('project/requirements_tmp.txt')
-    update_requirements(packages)
+    packages = []
+    with open('project/requirements.txt', 'r') as file:
+        for line in file.readlines():
+            package_name = line.strip().split('==')[
+                0] if '==' in line else line.strip()
+            packages.append((package_name, version(package_name)))
+    with open('project/requirements.txt', 'w') as file:
+        for package_name, package_version in packages:
+            file.write(f'{package_name}=={package_version}\n')
 
 
 async def on_requirements_install_error():
-    os.remove('project/requirements_tmp.txt')
+    os.remove('project/requirements.txt')
 
 
 async def show_packages_dialog(q: Q):
@@ -492,17 +488,14 @@ async def serve(q: Q):
     elif q.args.show_add_requirements:
         q.page['meta'].dialog.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'],
                                                         label='Install packages',
-                                                        tooltip='Packages from requirements.txt will be added to already installed packages.')
+                                                        tooltip='Packages from requirements.txt will replace currently installed packages.')
     elif q.args.upload_requirements:
-        os.mkdir('project/tmp')
-        file = await q.site.download(q.args.upload_requirements[0], os.path.join(os.getcwd(), 'project/tmp'))
-        shutil.copy(file, 'project/requirements_tmp.txt')
-        shutil.rmtree('project/tmp')
+        await q.site.download(q.args.upload_requirements[0], os.path.join(os.getcwd(), 'project'))
         q.client.task = asyncio.create_task(pip(
             q,
             'install',
             '-r',
-            'project/requirements_tmp.txt',
+            'project/requirements.txt',
             None,
             'Installing packages from requirements.txt',
             f'Packages from requirements.txt installed successfully.',
