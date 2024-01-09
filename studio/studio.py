@@ -246,8 +246,12 @@ async def export(q: Q):
 
 
 def get_package_dialog_items():
-    file = open('project/requirements.txt', 'r') if os.path.exists('project/requirements.txt') else None
-    packages_installed = os.stat("project/requirements.txt").st_size > 0 if file else False
+    packages_installed = []
+    if os.path.exists('project/requirements.txt'):
+        with open('project/requirements.txt', 'r') as file:
+            for line in file.readlines():
+                package_name, package_version = line.strip().split('==')
+                packages_installed.append((package_name, package_version))
     return [
         ui.text_l('Installed packages'),
         ui.inline(
@@ -258,8 +262,7 @@ def get_package_dialog_items():
                     ui.textbox(name='package_name', value=package_name, readonly=True),
                     ui.textbox(name='package_version', value=package_version, readonly=True),
                     ui.button('remove_package', label='Remove', value=package_name),
-                ]) for package_name, package_version in
-                [package.removesuffix('\n').split('==') for package in file.readlines()]
+                ]) for package_name, package_version in packages_installed
             ],
         ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
         ui.inline(
@@ -269,7 +272,7 @@ def get_package_dialog_items():
             items=[ui.buttons(items=[
                 ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'),
                 ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList',
-                          width='200px')
+                        width='200px')
             ], justify='center')]
         ),
     ]
@@ -465,9 +468,7 @@ async def serve(q: Q):
                 editor.update_file_tree(q, project.dir)
                 await q.page.save()
                 editor.open_file(q, project.entry_point)
-                requirements_file = open('project/requirements.txt', 'r') if os.path.exists(
-                    'project/requirements.txt') else None
-                if requirements_file:
+                if os.path.exists('project/requirements.txt'):
                     await show_packages_dialog(q)
                     q.client.task = asyncio.create_task(pip(
                         q,
