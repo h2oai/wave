@@ -161,8 +161,8 @@ def run(app: str, no_reload: bool, no_autostart: bool):
                 try:
                     waved_cwd = psutil.Process(proc.pid).cwd()
                 except psutil.NoSuchProcess:
-                    waved_cwd = ""
-    waved_path = os.path.join(waved_cwd, proc_name) if waved_cwd else ""
+                    pass
+    waved_path = os.path.join(waved_cwd, proc_name)
     # OS agnostic wheels do not include waved - needed for HAC.
     is_waved_present = os.path.isfile(waved_path)
 
