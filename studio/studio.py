@@ -250,30 +250,31 @@ def get_side_panel_items():
     if os.path.exists('project/requirements.txt'):
         with open('project/requirements.txt', 'r') as file:
             for line in file.readlines():
-                package_name, package_version = line.strip().split('==')
-                packages_installed.append((package_name, package_version))
+                package_name, package_version = line.strip().split('==') if "==" in line else [line,'']
+                packages_installed.append((package_name, package_version)) 
     return [
-        ui.table(
-            name='table',
-            multiple=True,
-            columns=[ui.table_column(name='package_name', label='Package name'),
-                     ui.table_column(name='package_version', label='Version'),
-                     ],
-            rows=[ui.table_row(name=package_name, cells=[package_name, package_version]) for package_name, package_version in packages_installed],
-            events=['select']
-        ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
-        ui.button(name='remove_selected', label='Remove selected', icon='Delete', width='200px', disabled=True, visible=bool(packages_installed)),
-        ui.inline(
-            align='end',
-            justify='center',
-            height='60px',
-            items=[ui.buttons(items=[
-                ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'),
-                ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList',
-                        width='200px')
-            ], justify='center')]
-        ),
-    ]
+            ui.table(
+                name='table', 
+                multiple=True,
+                columns=[
+                    ui.table_column(name='package_name', label='Package name'),
+                    ui.table_column(name='package_version', label='Version'),
+                ],
+                rows=[ui.table_row(name=package_name, cells=[package_name, package_version]) for package_name, package_version in packages_installed],
+                events=['select']
+            ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
+            ui.button(name='remove_selected', label='Remove selected', icon='Delete', width='200px', disabled=True, visible=bool(packages_installed)),
+            ui.inline(
+                align='end',
+                justify='center',
+                height='60px',
+                items=[ui.buttons(items=[
+                    ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'),
+                    ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList',
+                            width='200px')
+                ], justify='center')]
+            ),
+        ]
 
 
 def get_output(output: str) -> str:
@@ -285,6 +286,8 @@ def get_output(output: str) -> str:
 
 
 async def show_progress(q: Q, msg: str = ''):
+    q.page['meta'].side_panel.closable = False
+    q.page['meta'].side_panel.blocking = True
     q.page['meta'].side_panel.items = [
         ui.text(name='console_out', content=get_output(msg), width='100%'),
         ui.button(name='cancel_pip_task', label='Cancel')
@@ -303,12 +306,6 @@ async def show_finish_message(q: Q, type: Literal['error', 'success'], title: st
         ui.text(name='console_out', content=get_output(output), width='100%'),
         ui.button(name='finish_message_dismiss', label='Go to package manager')
     ]
-    await q.page.save()
-
-
-async def block_side_panel(q: Q):
-    q.page['meta'].side_panel.closable = False
-    q.page['meta'].side_panel.blocking = True
     await q.page.save()
 
 
@@ -340,93 +337,77 @@ def update_requirements(packages: dict, remove=False):
     
 async def uninstall(q: Q, packages: [str]):
     try:
-        args = [sys.executable, '-m', 'pip', 'uninstall', '-y'] + packages
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = ''
         package_str = ' '.join(packages)
-        progress_message = f'Uninstalling {package_str}'
-        success_message = f'{package_str} uninstalled successfully.'
-        error_message = f'Error uninstalling {package_str}.'
-        await block_side_panel(q)
-        await show_progress(q, progress_message)
-        while True:
-            if p.poll() is not None:
-                # Process finished.
-                if p.returncode == 0:
-                    packages_obj = {}
-                    for package_name in packages:
-                        packages_obj[package_name] = ''
-                    update_requirements(packages_obj, True)
-                    await show_finish_message(q, 'success', success_message, output)
+        args = [sys.executable, '-m', 'pip', 'uninstall', '-y'] + packages
+        output = f'Uninstalling {package_str}\n'
+        await show_progress(q, output)
+        with subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as p:
+            while True:
+                if p.poll() is not None:
+                    # Process finished.
+                    if p.returncode == 0:
+                        packages_obj = {}
+                        for package_name in packages:
+                            packages_obj[package_name] = ''
+                        update_requirements(packages_obj, True)
+                        await show_finish_message(q, 'success', f'{package_str} uninstalled successfully.', output)
+                    else:
+                        output += p.stderr.read()
+                        await show_finish_message(q, 'error', f'Error uninstalling {package_str}.', output)
+                    break
                 else:
-                    output += f'\n{p.stderr.read().decode("utf-8")}'
-                    await show_finish_message(q, 'error', error_message, output)
-                break
-            else:
-                output += f'\n{p.stdout.readline().decode("utf-8")}'
-                await update_progress(q, output)
-    finally:
-        if p.poll() is None:
-            # Task canceled.
-            p.stdout.close()
-            p.stderr.close()
-            p.kill()
-            await on_pip_finish(q)
+                    output += p.stdout.readline()
+                    await update_progress(q, output)
+    except asyncio.CancelledError:
+        await on_pip_finish(q)
 
     
 async def install(q: Q, package_name: str, package_version: str = ""):
+    requirements = package_name.endswith('.txt')
     try:
         v = f'=={package_version}' if package_version else ''
-        requirements = package_name.endswith('.txt')
         args = [sys.executable, '-m', 'pip', 'install', '-r' if requirements else '-U', f'{package_name}{v}']
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = ''
-        progress_message = f'Installing package{"s from requirements.txt" if requirements else {f" {package_name}"}}'
-        success_message = f'Package{"s from requirements.txt" if requirements else " " + package_name} installed successfully.'
-        error_message = f'Error installing {"requirements.txt" if requirements else package_name}.'
-        await block_side_panel(q)
-        await show_progress(q, progress_message)
-        while True:
-            if p.poll() is not None:
-                # Process finished.
-                if p.returncode == 0:
-                    if not requirements:
-                        update_requirements({f'{package_name}': version(package_name)})
+        output = f'Installing {"packages from requirements.txt" if requirements else package_name}\n'
+        await show_progress(q, output)
+        with subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as p:
+            while True:
+                if p.poll() is not None:
+                    # Process finished.
+                    if p.returncode == 0:
+                        if not requirements:
+                            update_requirements({f'{package_name}': version(package_name)})
+                        else:
+                            packages = []
+                            with open('project/requirements.txt', 'r') as file:
+                                for line in file.readlines():
+                                    package_name = line.strip().split('==')[
+                                        0] if '==' in line else line.strip()
+                                    packages.append((package_name, version(package_name)))
+                            with open('project/requirements.txt', 'w') as file:
+                                for package_name, package_version in packages:
+                                    file.write(f'{package_name}=={package_version}\n')
+                        await show_finish_message(q, 'success', f'Package{"s from requirements.txt" if requirements else " " + package_name} installed successfully.', output)
                     else:
-                        packages = []
-                        with open('project/requirements.txt', 'r') as file:
-                            for line in file.readlines():
-                                package_name = line.strip().split('==')[
-                                    0] if '==' in line else line.strip()
-                                packages.append((package_name, version(package_name)))
-                        with open('project/requirements.txt', 'w') as file:
-                            for package_name, package_version in packages:
-                                file.write(f'{package_name}=={package_version}\n')
-                    await show_finish_message(q, 'success', success_message, output)
+                        if requirements:
+                            # TODO: Keep old version of requirements.txt in case install of uploaded one fails.
+                            os.remove('project/requirements.txt')
+                        output += p.stderr.read()
+                        await show_finish_message(q, 'error', f'Error installing {"requirements.txt" if requirements else package_name}.', output)
+                    break
                 else:
-                    if requirements:
-                        # TODO: Keep old version of requirements.txt in case install of uploaded one fails.
-                        os.remove('project/requirements.txt')
-                    output += f'\n{p.stderr.read().decode("utf-8")}'
-                    await show_finish_message(q, 'error', error_message, output)
-                break
-            else:
-                output += f'\n{p.stdout.readline().decode("utf-8")}'
-                await update_progress(q, output)
-    finally:
-        if p.poll() is None:
-            # Task canceled.
-            p.stdout.close()
-            p.stderr.close()
-            p.kill()
-            await on_pip_finish(q)
+                    output += p.stdout.readline()
+                    await update_progress(q, output)
+    except asyncio.CancelledError:
+        if requirements:
+           os.remove('project/requirements.txt') 
+        await on_pip_finish(q)
 
 
 async def show_side_panel(q: Q):
     q.page['meta'].side_panel = ui.side_panel(
         name='side_panel',
         title='Manage packages',
-        items=get_side_panel_items(),
+        items= get_side_panel_items(),
         closable=True,
         events=['dismissed'],
     )
@@ -505,7 +486,6 @@ async def serve(q: Q):
     elif q.args.upload_requirements:
         file_path = os.path.join(os.getcwd(), 'project')
         file = await q.site.download(q.args.upload_requirements[0], file_path)
-        # Rename to requirements.txt if the file has other name.
         os.rename(file, os.path.join(file_path, 'requirements.txt'))
         q.client.task = asyncio.create_task(install(q,'project/requirements.txt'))
     elif q.args.show_add_package_fields:
@@ -521,9 +501,10 @@ async def serve(q: Q):
             q.client.task = asyncio.create_task(install(q,q.args.package_name,q.args.package_version))
     elif q.events.table and q.events.table.select:
         q.client.selected_packages = q.events.table.select
+        # TODO:
         q.page['meta'].side_panel.items[1].button.disabled = not bool(q.events.table.select)
     elif q.args.remove_selected:
-        q.client.task = asyncio.create_task(uninstall(q,q.client.selected_packages))
+        q.client.task = asyncio.create_task(uninstall(q, q.client.selected_packages))
     elif q.args.cancel_pip_task:
         q.client.task.cancel()
     elif q.args.finish_message_dismiss:
