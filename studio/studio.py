@@ -492,9 +492,8 @@ async def serve(q: Q):
             q.page['meta'].side_panel.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
         else:
             q.client.task = asyncio.create_task(install(q,q.args.package_name,q.args.package_version))
-    elif q.events.table and q.events.table.select:
+    elif q.events.table and q.events.table.select is not None:
         q.client.selected_packages = q.events.table.select
-        # TODO:
         q.page['meta'].side_panel.items[1].button.disabled = not bool(q.events.table.select)
     elif q.args.remove_selected:
         q.client.task = asyncio.create_task(uninstall(q, q.client.selected_packages))
