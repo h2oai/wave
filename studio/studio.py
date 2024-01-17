@@ -245,38 +245,48 @@ async def export(q: Q):
     os.remove("app.zip")
 
 
-def get_side_panel_items():
-    packages_installed = []
-    if os.path.exists('project/requirements.txt'):
-        with open('project/requirements.txt', 'r') as file:
-            for line in file.readlines():
-                package_name, package_version = line.strip().split('==') if "==" in line else [line, '']
-                packages_installed.append((package_name, package_version))
-    return [
-        ui.table(
-            name='table',
-            multiple=True,
-            columns=[
-                ui.table_column(name='package_name', label='Package name'),
-                ui.table_column(name='package_version', label='Version'),
-            ],
-            rows=[ui.table_row(name=package_name, cells=[package_name, package_version]) for
-                  package_name, package_version in packages_installed],
-            events=['select']
-        ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
-        ui.button(name='remove_selected', label='Remove selected', icon='Delete', width='200px', disabled=True,
-                  visible=bool(packages_installed)),
-        ui.inline(
-            align='end',
-            justify='center',
-            height='60px',
-            items=[ui.buttons(items=[
-                ui.button(name='show_add_package_fields', label='Add package', icon='Add', primary=True, width='200px'),
-                ui.button(name='show_add_requirements', label='Add from requirements', icon='AddToShoppingList',
-                          width='200px')
-            ], justify='center')]
-        ),
+def get_tab_items(tab_name: str):
+    if tab_name == 'installed':
+        packages_installed = []
+        if os.path.exists('project/requirements.txt'):
+            with open('project/requirements.txt', 'r') as file:
+                for line in file.readlines():
+                    package_name, package_version = line.strip().split('==') if "==" in line else [line, '']
+                    packages_installed.append((package_name, package_version))
+        return [
+            ui.button(name='remove_selected', label='Remove selected', icon='Delete', width='200px', disabled=True, visible=bool(packages_installed)),
+            ui.table(
+                name='table',
+                multiple=True,
+                events=['select'],
+                columns=[
+                    ui.table_column(name='package_name', label='Package name'),
+                    ui.table_column(name='package_version', label='Version'),
+                ],
+                rows=[ui.table_row(name=package_name, cells=[package_name, package_version]) for
+                    package_name, package_version in packages_installed],
+            ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
+        ]
+    elif tab_name == 'add_single':
+        return [
+            ui.textbox(name='package_name', label='Package name', required=True, trigger=True),
+            ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
+            ui.button('add_package', label='Add', primary=True, disabled=True),
+        ]
+    elif tab_name == 'add_requirements':
+        return [
+            ui.file_upload(name='upload_requirements', file_extensions=['txt'], label='Install packages',
+                           tooltip='Packages from requirements.txt will replace currently installed packages.')
+        ]
+
+
+def get_side_panel_content(tab_name: str = 'installed'):
+    tabs = [
+        ui.tab(name='installed', label='Installed', icon='ViewList'),
+        ui.tab(name='add_single', label='New package', icon='Add'),
+        ui.tab(name='add_requirements', label='Import requirements.txt', icon='PageAdd'),
     ]
+    return [ ui.tabs(name='tab_menu', value=tab_name, items=tabs) ] + get_tab_items(tab_name)
 
 
 def get_output(output: str) -> str:
@@ -314,7 +324,7 @@ async def show_finish_message(q: Q, type: Literal['error', 'success'], title: st
 async def on_pip_finish(q: Q):
     q.page['meta'].side_panel.blocking = False
     q.page['meta'].side_panel.closable = True
-    q.page['meta'].side_panel.items = get_side_panel_items()
+    q.page['meta'].side_panel.items = get_side_panel_content()
     await q.page.save()
 
 
@@ -401,7 +411,7 @@ async def show_side_panel(q: Q):
     q.page['meta'].side_panel = ui.side_panel(
         name='side_panel',
         title='Manage packages',
-        items=get_side_panel_items(),
+        items=get_side_panel_content(),
         closable=True,
         events=['dismissed'],
     )
@@ -473,26 +483,18 @@ async def serve(q: Q):
                 ]
     elif q.args.show_side_panel:
         await show_side_panel(q)
-    elif q.args.show_add_requirements:
-        q.page['meta'].side_panel.items[2] = ui.file_upload(name='upload_requirements', file_extensions=['txt'],
-                                                            label='Install packages',
-                                                            tooltip='Packages from requirements.txt will replace currently installed packages.')
+    elif q.args.tab_menu:
+        q.page['meta'].side_panel.items = get_side_panel_content(q.args.tab_menu)
     elif q.args.upload_requirements:
         file_path = os.path.join(os.getcwd(), 'project')
         file = await q.site.download(q.args.upload_requirements[0], file_path)
         os.rename(file, os.path.join(file_path, 'requirements.txt'))
         q.client.task = asyncio.create_task(install(q, 'project/requirements.txt'))
-    elif q.args.show_add_package_fields:
-        q.page['meta'].side_panel.items[2] = ui.inline(items=[
-            ui.textbox(name='package_name', label='Package name', required=True),
-            ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
-            ui.button('add_package', label='Add', primary=True),
-        ], align='end')
     elif q.args.add_package:
-        if not q.args.package_name:
-            q.page['meta'].side_panel.items[2].inline.items[0].textbox.error = 'Package name cannot be empty.'
-        else:
-            q.client.task = asyncio.create_task(install(q, q.args.package_name, q.args.package_version))
+        q.client.task = asyncio.create_task(install(q, q.client.package_name, q.args.package_version))
+    elif q.args.package_name is not None:
+        q.client.package_name = q.args.package_name
+        q.page['meta'].side_panel.items[3].button.disabled = not q.args.package_name
     elif q.events.table and q.events.table.select is not None:
         q.client.selected_packages = q.events.table.select
         q.page['meta'].side_panel.items[1].button.disabled = not bool(q.events.table.select)
