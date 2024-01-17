@@ -438,10 +438,7 @@ async def serve(q: Q):
         q.client.initialized = True
         await render_code(q)
 
-    if q.args.dropdown:
-        q.user.view = q.args.dropdown
-        q.page['header'].items[2].dropdown.value = q.args.dropdown
-    elif q.args.export_project:
+    if q.args.export_project:
         await export(q)
     elif q.args.import_project:
         q.page['meta'].dialog = ui.dialog(name='dialog', title='Import Project', events=['dismissed'], closable=True,
@@ -504,15 +501,17 @@ async def serve(q: Q):
         q.client.task.cancel()
     elif q.args.finish_message_dismiss:
         await on_pip_finish(q)
-    elif q.args.dropdown == 'code':
-        q.page['preview'].box = ui.box('main', width='0px')
-        q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.dropdown == 'split':
-        q.page['preview'].box = ui.box('main', width='100%')
-        q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.dropdown == 'preview':
-        q.page['preview'].box = ui.box('main', width='100%')
-        q.page['code'].box = ui.box('main', width='0px')
+    elif q.args.dropdown:
+        q.user.view = q.args.dropdown
+        if q.args.dropdown == 'code':
+            q.page['preview'].box = ui.box('main', width='0px')
+            q.page['code'].box = ui.box('main', width='100%')
+        if q.args.dropdown == 'split':
+            q.page['preview'].box = ui.box('main', width='100%')
+            q.page['code'].box = ui.box('main', width='100%')
+        if q.args.dropdown == 'preview':
+            q.page['preview'].box = ui.box('main', width='100%')
+            q.page['code'].box = ui.box('main', width='0px')
     elif q.args.console:
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
