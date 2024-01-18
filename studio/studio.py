@@ -177,7 +177,7 @@ async def display_logs(q: Q) -> None:
             lines.append(line.decode('utf8'))
             code = ''.join(lines)
             q.page['logs'].content = f'```\n{code}\n```'
-            q.page['meta'].script = ui.inline_script('scrollLogsToBottom()')
+            q.page['meta'].script = ui.inline_script('scrollLogsToBottom(\'div[data-test="logs"]\')')
             await q.page.save()
         else:
             await q.sleep(0.5)
@@ -297,12 +297,12 @@ async def show_progress(q: Q, msg: str = ''):
         ui.text(name='pip_logs', content=f'```\n{msg}\n```', width='100%'),
         ui.button(name='cancel_pip_task', label='Cancel')
     ]
-    q.page['meta'].script = ui.inline_script('setPipLogsHeight()')
+    q.page['meta'].script = ui.inline_script('setLogsHeight()')
     await q.page.save()
 
 
 async def update_progress(q: Q, value: int):
-    q.page['meta'].script = ui.inline_script('scrollPipLogsToBottom()')
+    q.page['meta'].script = ui.inline_script('scrollLogsToBottom(\'span[data-test="pip_logs"]\')')
     q.page['meta'].side_panel.items[0].text.content = f'```\n{value}\n```'
     await q.page.save()
 
