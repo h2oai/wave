@@ -153,7 +153,8 @@ def run(app: str, no_reload: bool, no_autostart: bool):
 
     waved_path = os.path.join(sys.exec_prefix, 'waved.exe' if IS_WINDOWS else 'waved')
     # OS agnostic wheels do not include waved - needed for HAC.
-    is_waved_present = os.path.isfile(waved_path) if server_not_running else False
+    is_waved_present = os.path.isfile(waved_path)
+    is_auto_started = server_not_running
 
     try:
         if autostart and is_waved_present and server_not_running:
@@ -175,7 +176,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
             print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
             return
 
-        if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
+        if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_auto_started:
             os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
         reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
         if reload_exclude:
