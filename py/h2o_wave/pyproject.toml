@@ -21,7 +21,6 @@ dependencies = [
     "Click",
     "inquirer",
     "httpx>=0.16.1",
-    "psutil>=5.9.7",
     "starlette>=0.13.8",
     "uvicorn>=0.17.6",
 ]

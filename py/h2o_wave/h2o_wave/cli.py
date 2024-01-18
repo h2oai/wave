@@ -30,7 +30,6 @@ import webbrowser
 import click
 import httpx
 import inquirer
-import psutil
 import uvicorn
 from click import Choice, option
 from h2o_wave.share import listen_on_socket
@@ -144,7 +143,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
 
     # Try to start Wave daemon if not running or turned off.
     server_port = int(os.environ.get('H2O_WAVE_LISTEN', ':10101').split(':')[-1])
-    server_running = _scan_free_port(server_port) != server_port
+    server_not_running = _scan_free_port(server_port) == server_port
 
     waved_process = None
     if no_autostart:
@@ -152,41 +151,32 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     else:
         autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
 
-    waved_cwd = sys.exec_prefix
-    proc_name = 'waved.exe' if IS_WINDOWS else 'waved'
-    # If waved is running, find its cwd.
-    if server_running:
-        for proc in psutil.process_iter():
-            if proc.name() == proc_name:
-                try:
-                    waved_cwd = psutil.Process(proc.pid).cwd()
-                except psutil.NoSuchProcess:
-                    pass
-    waved_path = os.path.join(waved_cwd, proc_name)
+    waved_cwd = sys.exec_prefix if server_not_running else None
+    waved_path = os.path.join(waved_cwd, 'waved.exe' if IS_WINDOWS else 'waved') if waved_cwd else None
     # OS agnostic wheels do not include waved - needed for HAC.
-    is_waved_present = os.path.isfile(waved_path)
+    is_waved_present = os.path.isfile(waved_path) if waved_path else False
 
     try:
-        if autostart and is_waved_present and not server_running:
+        if autostart and is_waved_present and not server_not_running:
             kwargs = {}
             if IS_WINDOWS:
                 kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP
 
             waved_process = subprocess.Popen([waved_path], cwd=sys.exec_prefix, env=os.environ.copy(), **kwargs)
             time.sleep(1)
-            server_running = _scan_free_port(server_port) != server_port
+            server_not_running = _scan_free_port(server_port) == server_port
             retries = 3
-            while retries > 0 and not server_running:
+            while retries > 0 and not server_not_running:
                 print('Cannot connect to Wave server, retrying...')
                 time.sleep(2)
-                server_running = _scan_free_port(server_port) != server_port
+                server_not_running = _scan_free_port(server_port) == server_port
                 retries = retries - 1
 
-        if autostart and not server_running:
+        if autostart and not server_not_running:
             print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
             return
 
-        if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
+        if not os.environ.get('H2O_WAVE_WAVED_DIR') and waved_cwd:
             os.environ['H2O_WAVE_WAVED_DIR'] = waved_cwd
         reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
         if reload_exclude:
