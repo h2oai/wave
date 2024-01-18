@@ -157,7 +157,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     is_waved_present = os.path.isfile(waved_path) if waved_path else False
 
     try:
-        if autostart and is_waved_present and not server_not_running:
+        if autostart and is_waved_present and server_not_running:
             kwargs = {}
             if IS_WINDOWS:
                 kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP
@@ -166,17 +166,17 @@ def run(app: str, no_reload: bool, no_autostart: bool):
             time.sleep(1)
             server_not_running = _scan_free_port(server_port) == server_port
             retries = 3
-            while retries > 0 and not server_not_running:
+            while retries > 0 and server_not_running:
                 print('Cannot connect to Wave server, retrying...')
                 time.sleep(2)
                 server_not_running = _scan_free_port(server_port) == server_port
                 retries = retries - 1
 
-        if autostart and not server_not_running:
+        if autostart and server_not_running:
             print('Could not connect to Wave server. Please start the Wave server (waved or waved.exe) prior to running any app.')
             return
 
-        if not os.environ.get('H2O_WAVE_WAVED_DIR') and waved_cwd:
+        if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
             os.environ['H2O_WAVE_WAVED_DIR'] = waved_cwd
         reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
         if reload_exclude:
