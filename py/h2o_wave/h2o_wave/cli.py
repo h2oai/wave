@@ -151,10 +151,9 @@ def run(app: str, no_reload: bool, no_autostart: bool):
     else:
         autostart = os.environ.get('H2O_WAVE_NO_AUTOSTART', 'false').lower() in ['false', '0', 'f']
 
-    waved_cwd = sys.exec_prefix if server_not_running else None
-    waved_path = os.path.join(waved_cwd, 'waved.exe' if IS_WINDOWS else 'waved') if waved_cwd else None
+    waved_path = os.path.join(sys.exec_prefix, 'waved.exe' if IS_WINDOWS else 'waved')
     # OS agnostic wheels do not include waved - needed for HAC.
-    is_waved_present = os.path.isfile(waved_path) if waved_path else False
+    is_waved_present = os.path.isfile(waved_path) if server_not_running else False
 
     try:
         if autostart and is_waved_present and server_not_running:
@@ -177,7 +176,7 @@ def run(app: str, no_reload: bool, no_autostart: bool):
             return
 
         if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_waved_present:
-            os.environ['H2O_WAVE_WAVED_DIR'] = waved_cwd
+            os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
         reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
         if reload_exclude:
             reload_exclude = reload_exclude.split(os.pathsep)
