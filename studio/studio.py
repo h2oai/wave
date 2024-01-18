@@ -259,6 +259,7 @@ def get_tab_items(tab_name: str):
                 name='table',
                 multiple=True,
                 events=['select'],
+                height='calc(100vh - 200px)',
                 columns=[
                     ui.table_column(name='package_name', label='Package name'),
                     ui.table_column(name='package_version', label='Version'),
@@ -289,33 +290,27 @@ def get_side_panel_content(tab_name: str = 'installed'):
     return [ ui.tabs(name='tab_menu', value=tab_name, items=tabs) ] + get_tab_items(tab_name)
 
 
-def get_output(output: str) -> str:
-    return f'''
-```
-{output}
-```
-'''
-
-
 async def show_progress(q: Q, msg: str = ''):
     q.page['meta'].side_panel.closable = False
     q.page['meta'].side_panel.blocking = True
     q.page['meta'].side_panel.items = [
-        ui.text(name='console_out', content=get_output(msg), width='100%'),
+        ui.text(name='pip_logs', content=f'```\n{msg}\n```', width='100%'),
         ui.button(name='cancel_pip_task', label='Cancel')
     ]
+    q.page['meta'].script = ui.inline_script('setPipLogsHeight()')
     await q.page.save()
 
 
 async def update_progress(q: Q, value: int):
-    q.page['meta'].side_panel.items[0].text.content = get_output(value)
+    q.page['meta'].script = ui.inline_script('scrollPipLogsToBottom()')
+    q.page['meta'].side_panel.items[0].text.content = f'```\n{value}\n```'
     await q.page.save()
 
 
 async def show_finish_message(q: Q, type: Literal['error', 'success'], title: str, output: str):
     q.page['meta'].side_panel.items = [
         ui.message_bar(type=type, text=title),
-        ui.text(name='console_out', content=get_output(output), width='100%'),
+        ui.text(name='pip_logs', content=f'```\n{output}\n```', width='100%'),
         ui.button(name='finish_message_dismiss', label='Go to package manager')
     ]
     await q.page.save()
