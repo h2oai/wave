@@ -177,7 +177,7 @@ async def display_logs(q: Q) -> None:
             lines.append(line.decode('utf8'))
             code = ''.join(lines)
             q.page['logs'].content = f'```\n{code}\n```'
-            q.page['meta'].script = ui.inline_script('scrollLogsToBottom(\'div[data-test="logs"]\')')
+            q.page['meta'].script = ui.inline_script('scrollLogsToBottom()')
             await q.page.save()
         else:
             await q.sleep(0.5)
@@ -297,20 +297,18 @@ async def show_progress(q: Q, msg: str = ''):
         ui.text(name='pip_logs', content=f'```\n{msg}\n```', width='100%'),
         ui.button(name='cancel_pip_task', label='Cancel')
     ]
-    q.page['meta'].script = ui.inline_script('setLogsHeight()')
     await q.page.save()
 
 
 async def update_progress(q: Q, value: int | str):
-    q.page['meta'].script = ui.inline_script('scrollLogsToBottom(\'span[data-test="pip_logs"]\')')
     q.page['meta'].side_panel.items[0].text.content = f'```\n{value}\n```'
     await q.page.save()
 
 
 async def show_finish_message(q: Q, type: Literal['error', 'success'], title: str, output: str):
     q.page['meta'].side_panel.items = [
-        ui.message_bar(type=type, text=title),
         ui.text(name='pip_logs', content=f'```\n{output}\n```', width='100%'),
+        ui.message_bar(type=type, text=title),
         ui.button(name='finish_message_dismiss', label='Go to package manager')
     ]
     await q.page.save()

@@ -28,13 +28,8 @@ const snippetToCompletionItem = item => ({
   insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
 })
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
-const setLogsHeight = () => {
-  const logs = document.querySelector('span[data-test="pip_logs"]').parentElement
-  logs.style.maxHeight = '80vh'
-  logs.style.overflowY = 'scroll'
-}
-const scrollLogsToBottom = (elementSelector) => {
-  const logs = document.querySelector(elementSelector).parentElement
+const scrollLogsToBottom = () => {
+  const logs = document.querySelector('div[data-test="logs"]').parentElement
   logs.scrollTop = logs.scrollHeight
 }
 require(['vs/editor/editor.main', 'pyodide'], async () => {
