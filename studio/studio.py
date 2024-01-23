@@ -301,7 +301,7 @@ async def show_progress(q: Q, msg: str = ''):
     await q.page.save()
 
 
-async def update_progress(q: Q, value: int):
+async def update_progress(q: Q, value: int | str):
     q.page['meta'].script = ui.inline_script('scrollLogsToBottom(\'span[data-test="pip_logs"]\')')
     q.page['meta'].side_panel.items[0].text.content = f'```\n{value}\n```'
     await q.page.save()
@@ -323,30 +323,37 @@ async def on_pip_finish(q: Q):
     await q.page.save()
 
 
-async def pip(q: Q, command: str, args: [str], on_success: Callable = None, on_error: Callable = None,
-              on_cancel: Callable = None):
+async def pip(q: Q, command: str, args: [str], on_success: Callable | None = None, on_error: Callable | None = None,
+              on_cancel: Callable | None = None):
+    p: asyncio.subprocess.Process | None = None
     try:
         args = [sys.executable, '-m', 'pip', command] + args
         output = f'Running {" ".join(args[1:])}\n'
         await show_progress(q, output)
-        with subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as p:
-            while True:
-                if p.poll() is not None:
-                    # Process finished.
-                    if p.returncode == 0:
-                        if on_success:
-                            on_success()
-                        await show_finish_message(q, 'success', f'Pip {command} finished successfully.', output)
-                    else:
-                        if on_error:
-                            on_error()
-                        output += p.stderr.read()
-                        await show_finish_message(q, 'error', f'Error running pip {command}.', output)
-                    break
-                else:
-                    output += p.stdout.readline()
-                    await update_progress(q, output)
+        p = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+
+        if p.stdout:
+            async for line in p.stdout:
+                output += line.decode().strip() + '\n'
+                await update_progress(q, output)
+
+        await p.wait()
+
+        # TODO: Use proper exception handling instead of callbacks.
+        if p.returncode == 0:
+            if on_success:
+                on_success()
+            await show_finish_message(q, 'success', f'Pip {command} finished successfully.', output)
+        else:
+            if on_error:
+                on_error()
+            if p.stderr:
+                stderr = await p.stderr.read()
+                output += str(stderr, 'utf-8')
+            await show_finish_message(q, 'error', f'Error running pip {command}.', output)
     except asyncio.CancelledError:
+        if p:
+            p.terminate()
         if on_cancel:
             on_cancel()
         await on_pip_finish(q)
