@@ -8,9 +8,12 @@ env:
   VERSION: "1.0.1"
 
 jobs:
-  airgapped:
+  create-bundle:
     name: Create Wave Bundle
     runs-on: ubuntu-latest
+
+    outputs:
+      build-version: ${{ env.VERSION }}
 
     steps:
       - uses: actions/checkout@v3
@@ -57,13 +60,14 @@ jobs:
           name: wave-bundle-helm
           path: university/helm/
 
-  retrieve-metadata:
-    runs-on: ubuntu-latest
+  build-and-publish:
+    needs: create-bundle
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
 
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Get App Version
-        id: get-build-version
-        run: |
-          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
+    uses: ./.github/workflows/wave-bundle-docker-build-publish.yaml
+    with:
+      build-version: ${{ needs.create-bundle.outputs.build-version }}
+      bundle-artifact: wave-bundle
+      wave-app-name: university
