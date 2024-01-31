@@ -55,4 +55,14 @@ path = "hatch_build.py"
 [tool.hatch.metadata.hooks.custom]
 path = "hatch_build.py"
 [tool.hatch.build.targets.wheel.shared-data]
-"tmp" = "."
+"tmp" = "./site-packages/h2o_wave-1.0.0.data"
+# "tmp" = "."
+
+# [tool.hatch.build.hooks.custom]
+# path = "hatch_build.py"
+# [tool.hatch.build.shared-data]
+# "tmp" = "."
+# [tool.hatch.build.targets.sdist.hooks.custom]
+# path = "hatch_build.py"
+# [tool.hatch.build.targets.sdist.shared-data]
+# "tmp" = "."

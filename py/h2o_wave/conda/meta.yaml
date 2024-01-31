@@ -26,6 +26,9 @@ source:
   path: ..
 
 build:
+  script_env:
+    - VERSION
+    - H2O_WAVE_PLATFORM
   noarch: python
   script: python -m pip install . -vv
   entry_points:
