@@ -105,7 +105,7 @@ describe('Textbox.tsx', () => {
   })
 
   it('Debounces wave push', () => {
-    const { getByTestId } = render(<XTextbox model={{...textboxProps, trigger: true}} />)
+    const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger: true }} />)
 
     userEvent.type(getByTestId(name), 'a')
     userEvent.type(getByTestId(name), 'a')
@@ -125,10 +125,10 @@ describe('Textbox.tsx', () => {
   })
 
   it('Display new value when "value" prop changes', () => {
-    const { getByTestId, rerender } = render(<XTextbox model={{...textboxProps, value: 'A'}} />)
+    const { getByTestId, rerender } = render(<XTextbox model={{ ...textboxProps, value: 'A' }} />)
     expect(getByTestId(name)).toHaveValue('A')
 
-    rerender(<XTextbox model={{...textboxProps, value: 'B'}} />)
+    rerender(<XTextbox model={{ ...textboxProps, value: 'B' }} />)
     expect(getByTestId(name)).toHaveValue('B')
   })
 
@@ -137,24 +137,35 @@ describe('Textbox.tsx', () => {
     userEvent.type(getByTestId(name), '{backspace}A{Enter}')
     expect(getByTestId(name)).toHaveValue('A')
 
-    rerender(<XTextbox model={{...textboxProps, value: 'B'}} />)
+    rerender(<XTextbox model={{ ...textboxProps, value: 'B' }} />)
     expect(getByTestId(name)).toHaveValue('B')
   })
 
   it('Display new value when "value" prop changes (masked)', () => {
-    const { getByTestId, rerender } = render(<XTextbox model={{...textboxProps, value: '123', mask: '(999)'}} />)
+    const { getByTestId, rerender } = render(<XTextbox model={{ ...textboxProps, value: '123', mask: '(999)' }} />)
     expect(getByTestId(name)).toHaveValue('(123)')
 
-    rerender(<XTextbox model={{...textboxProps, value: '456', mask: '(999)'}} />)
+    rerender(<XTextbox model={{ ...textboxProps, value: '456', mask: '(999)' }} />)
     expect(getByTestId(name)).toHaveValue('(456)')
   })
 
   it('Types value and then display new value when "value" prop changes (masked)', () => {
-    const { getByTestId, rerender } = render(<XTextbox model={{...textboxProps, mask: '(999)'}} />)
+    const { getByTestId, rerender } = render(<XTextbox model={{ ...textboxProps, mask: '(999)' }} />)
     userEvent.type(getByTestId(name), '{backspace}123{Enter}')
     expect(getByTestId(name)).toHaveValue('(123)')
 
-    rerender(<XTextbox model={{...textboxProps, value: '456', mask: '(999)'}} />)
+    rerender(<XTextbox model={{ ...textboxProps, value: '456', mask: '(999)' }} />)
     expect(getByTestId(name)).toHaveValue('(456)')
+  })
+
+  it('Can reveal password', () => {
+    const { container, getByTestId } = render(<XTextbox model={{ ...textboxProps, password: true }} />)
+    const revealButton = container.querySelector('button')
+
+    expect(revealButton).toBeInTheDocument()
+    expect(getByTestId(name)).toHaveAttribute('type', 'password')
+
+    fireEvent.click(revealButton!)
+    expect(getByTestId(name)).toHaveAttribute('type', 'text')
   })
 })

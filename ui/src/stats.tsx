@@ -30,6 +30,8 @@ export interface Stats {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create a stat (a label-value pair) for displaying a metric. */
@@ -44,6 +46,8 @@ export interface Stat {
   icon?: S
   /** The color of the icon. */
   icon_color?: S
+  /** An identifying name for this item. */
+  name?: S
 }
 
 const

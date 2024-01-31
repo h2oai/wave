@@ -162,3 +162,14 @@ q.page['example'] = ui.form_card(
         ]
 )
 ```
+
+## Password
+
+Prompt for passwords.
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.textbox(name='textbox_password', label='Password', value='123456', password=True)]
+)
+```

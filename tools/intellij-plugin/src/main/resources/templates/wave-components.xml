@@ -2281,22 +2281,24 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_stats" value="ui.stats(justify='$justify$',inset=$inset$,width='$width$',visible=$visible$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Stats with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_stats" value="ui.stats(justify='$justify$',inset=$inset$,width='$width$',visible=$visible$,name='$name$',items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Stats with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="justify" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="inset" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_stat" value="ui.stat(label='$label$',value='$value$',caption='$caption$',icon='$icon$',icon_color='$icon_color$'),$END$" description="Create Wave Stat with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_stat" value="ui.stat(label='$label$',value='$value$',caption='$caption$',icon='$icon$',icon_color='$icon_color$',name='$name$'),$END$" description="Create Wave Stat with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon_color" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -2503,8 +2505,9 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_tall_stats_card" value="ui.tall_stats_card(box='$box$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave TallStatsCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_tall_stats_card" value="ui.tall_stats_card(box='$box$',name='$name$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave TallStatsCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>

@@ -6,6 +6,7 @@ import re
 import shutil
 import sys
 import time
+from typing import Callable, Literal
 import zipfile
 from pathlib import Path
 from string import Template
@@ -13,9 +14,14 @@ from subprocess import PIPE, STDOUT, Popen
 from urllib.parse import urlparse
 
 from h2o_wave import Q, app, main, ui
+from importlib.metadata import version
 
 import file_utils
 import studio_editor as editor
+
+import asyncio
+import subprocess
+import sys
 
 
 # TODO update this app with by-name component access once the Wave version higher than 0.25.2 is available.
@@ -33,7 +39,8 @@ class Project:
 
     def get_server_address(self) -> str:
         cloud_env = os.environ.get('H2O_CLOUD_ENVIRONMENT', None)
-        return f'{cloud_env}{self.server_base_url}' if cloud_env else os.environ.get('H2O_WAVE_ADDRESS', 'http://127.0.0.1:10101')
+        return f'{cloud_env}{self.server_base_url}' if cloud_env else os.environ.get('H2O_WAVE_ADDRESS',
+                                                                                     'http://127.0.0.1:10101')
 
     def get_assets_url_for(self, url: str) -> str:
         return f'{self.server_base_url}assets/{url}'
@@ -126,6 +133,7 @@ async def setup_page(q: Q):
                 ui.choice(name='code', label='Full code view'),
                 ui.choice(name='preview', label='Full preview view'),
             ]),
+            ui.button(name='show_side_panel', label='Manage packages', icon='Packages'),
             ui.button(name='import_project', label='Import', icon='Upload'),
             ui.button(name='export_project', label='Export', icon='Download'),
         ]
@@ -237,6 +245,179 @@ async def export(q: Q):
     os.remove("app.zip")
 
 
+def get_tab_items(tab_name: str):
+    if tab_name == 'installed':
+        packages_installed = []
+        if os.path.exists('project/requirements.txt'):
+            with open('project/requirements.txt', 'r') as file:
+                for line in file.readlines():
+                    package_name, package_version = line.strip().split('==') if "==" in line else [line, '']
+                    packages_installed.append((package_name, package_version))
+        return [
+            ui.button(name='remove_selected', label='Remove selected', icon='Delete', width='200px', disabled=True, visible=bool(packages_installed)),
+            ui.table(
+                name='table',
+                multiple=True,
+                events=['select'],
+                height='calc(100vh - 200px)',
+                columns=[
+                    ui.table_column(name='package_name', label='Package name'),
+                    ui.table_column(name='package_version', label='Version'),
+                ],
+                rows=[ui.table_row(name=package_name, cells=[package_name, package_version]) for
+                    package_name, package_version in packages_installed],
+            ) if packages_installed else ui.text(name='no_packages', content='No packages installed.'),
+        ]
+    elif tab_name == 'add_single':
+        return [
+            ui.textbox(name='package_name', label='Package name', required=True, trigger=True),
+            ui.textbox(name='package_version', label='Version', placeholder='(latest)'),
+            ui.button('add_package', label='Add', primary=True, disabled=True),
+        ]
+    elif tab_name == 'add_requirements':
+        return [
+            ui.file_upload(name='upload_requirements', file_extensions=['txt'], label='Install packages',
+                           tooltip='Packages from requirements.txt will replace currently installed packages.')
+        ]
+
+
+def get_side_panel_content(tab_name: str = 'installed'):
+    tabs = [
+        ui.tab(name='installed', label='Installed', icon='ViewList'),
+        ui.tab(name='add_single', label='New package', icon='Add'),
+        ui.tab(name='add_requirements', label='Import requirements.txt', icon='PageAdd'),
+    ]
+    return [ ui.tabs(name='tab_menu', value=tab_name, items=tabs) ] + get_tab_items(tab_name)
+
+
+async def show_progress(q: Q, msg: str = ''):
+    q.page['meta'].side_panel.closable = False
+    q.page['meta'].side_panel.blocking = True
+    q.page['meta'].side_panel.items = [
+        ui.text(name='pip_logs', content=f'```\n{msg}\n```', width='100%'),
+        ui.button(name='cancel_pip_task', label='Cancel')
+    ]
+    await q.page.save()
+
+
+async def update_progress(q: Q, value: int | str):
+    q.page['meta'].side_panel.items[0].text.content = f'```\n{value}\n```'
+    await q.page.save()
+
+
+async def show_finish_message(q: Q, type: Literal['error', 'success'], title: str, output: str):
+    q.page['meta'].side_panel.items = [
+        ui.text(name='pip_logs', content=f'```\n{output}\n```', width='100%'),
+        ui.message_bar(type=type, text=title),
+        ui.button(name='finish_message_dismiss', label='Go to package manager')
+    ]
+    await q.page.save()
+
+
+async def on_pip_finish(q: Q):
+    q.page['meta'].side_panel.blocking = False
+    q.page['meta'].side_panel.closable = True
+    q.page['meta'].side_panel.items = get_side_panel_content()
+    await q.page.save()
+
+
+async def pip(q: Q, command: str, args: [str], on_success: Callable | None = None, on_error: Callable | None = None,
+              on_cancel: Callable | None = None):
+    p: asyncio.subprocess.Process | None = None
+    try:
+        args = [sys.executable, '-m', 'pip', command] + args
+        output = f'Running {" ".join(args[1:])}\n'
+        await show_progress(q, output)
+        p = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+
+        if p.stdout:
+            async for line in p.stdout:
+                output += line.decode().strip() + '\n'
+                await update_progress(q, output)
+
+        await p.wait()
+
+        # TODO: Use proper exception handling instead of callbacks.
+        if p.returncode == 0:
+            if on_success:
+                on_success()
+            await show_finish_message(q, 'success', f'Pip {command} finished successfully.', output)
+        else:
+            if on_error:
+                on_error()
+            if p.stderr:
+                stderr = await p.stderr.read()
+                output += str(stderr, 'utf-8')
+            await show_finish_message(q, 'error', f'Error running pip {command}.', output)
+    except asyncio.CancelledError:
+        if p:
+            p.terminate()
+        if on_cancel:
+            on_cancel()
+        await on_pip_finish(q)
+
+
+def update_requirements(packages: dict = {}, remove=False):
+    with open('project/requirements.txt', 'a+') as file:
+        file.seek(0)
+        lines = file.readlines()
+
+    current_packages = {}
+    for line in lines:
+        package_name, package_version = line.strip().split('==') if '==' in line else [line.strip(),
+                                                                                       version(line.strip())]
+        current_packages[package_name] = package_version
+
+    if not remove:
+        current_packages.update(packages)
+
+    with open('project/requirements.txt', 'w') as file:
+        for package_name, package_version in current_packages.items():
+            if not remove or (remove and package_name not in packages):
+                file.write(f'{package_name}=={package_version}\n')
+
+
+async def install(q: Q, package_name: str, package_version: str = ""):
+    requirements = package_name.endswith('.txt')
+
+    def on_install_success():
+        if requirements:
+            # Update requirements.txt with installed versions.
+            update_requirements()
+        else:
+            # Add new or update version of existing package.
+            update_requirements({f'{package_name}': version(package_name)})
+
+    def on_install_failed():
+        if requirements:
+            os.remove('project/requirements.txt')
+
+    args = ['-r' if package_name.endswith('.txt') else '-U',
+            f'{package_name}{"==" + package_version if package_version else ""}']
+    await pip(q, 'install', args, on_install_success, on_install_failed, on_install_failed)
+
+
+async def uninstall(q: Q, packages: [str]):
+    def on_uninstall_success():
+        packages_obj = {}
+        for package_name in packages:
+            packages_obj[package_name] = ''
+        update_requirements(packages_obj, True)
+
+    await pip(q, 'uninstall', ['-y'] + packages, on_uninstall_success)
+
+
+async def show_side_panel(q: Q):
+    q.page['meta'].side_panel = ui.side_panel(
+        name='side_panel',
+        title='Manage packages',
+        items=get_side_panel_content(),
+        closable=True,
+        events=['dismissed'],
+    )
+    await q.page.save()
+
+
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
     if not q.app.initialized:
@@ -257,17 +438,15 @@ async def serve(q: Q):
         q.client.initialized = True
         await render_code(q)
 
-    if q.args.dropdown:
-        q.user.view = q.args.dropdown
-        q.page['header'].items[2].dropdown.value = q.args.dropdown
-    elif q.args.export_project:
+    if q.args.export_project:
         await export(q)
     elif q.args.import_project:
         q.page['meta'].dialog = ui.dialog(name='dialog', title='Import Project', events=['dismissed'], closable=True,
                                           items=[
-            ui.message_bar(type='warning', text='Current project files will be replaced with uploaded content.'),
-            ui.file_upload(name='imported_project', file_extensions=['zip']),
-        ])
+                                              ui.message_bar(type='warning',
+                                                             text='Current project files will be replaced with uploaded content.'),
+                                              ui.file_upload(name='imported_project', file_extensions=['zip']),
+                                          ])
     elif q.args.imported_project:
         zip_path = await q.site.download(q.args.imported_project[0], os.getcwd())
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -291,20 +470,48 @@ async def serve(q: Q):
                 editor.update_file_tree(q, project.dir)
                 await q.page.save()
                 editor.open_file(q, project.entry_point)
+                if os.path.exists('project/requirements.txt'):
+                    await show_side_panel(q)
+                    q.client.task = asyncio.create_task(install(q, 'project/requirements.txt'))
             else:
                 q.page['meta'].dialog.items = [
                     ui.message_bar(type='error', text='There must be exactly 1 root folder.'),
                     ui.button(name='import_project', label='Import again', icon='Upload'),
                 ]
-    elif q.args.dropdown == 'code':
-        q.page['preview'].box = ui.box('main', width='0px')
-        q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.dropdown == 'split':
-        q.page['preview'].box = ui.box('main', width='100%')
-        q.page['code'].box = ui.box('main', width='100%')
-    elif q.args.dropdown == 'preview':
-        q.page['preview'].box = ui.box('main', width='100%')
-        q.page['code'].box = ui.box('main', width='0px')
+    elif q.args.show_side_panel:
+        await show_side_panel(q)
+    elif q.args.tab_menu:
+        q.page['meta'].side_panel.items = get_side_panel_content(q.args.tab_menu)
+    elif q.args.upload_requirements:
+        file_path = os.path.join(os.getcwd(), 'project')
+        file = await q.site.download(q.args.upload_requirements[0], file_path)
+        os.rename(file, os.path.join(file_path, 'requirements.txt'))
+        q.client.task = asyncio.create_task(install(q, 'project/requirements.txt'))
+    elif q.args.add_package:
+        q.client.task = asyncio.create_task(install(q, q.client.package_name, q.args.package_version))
+    elif q.args.package_name is not None:
+        q.client.package_name = q.args.package_name
+        q.page['meta'].side_panel.items[3].button.disabled = not q.args.package_name
+    elif q.events.table and q.events.table.select is not None:
+        q.client.selected_packages = q.events.table.select
+        q.page['meta'].side_panel.items[1].button.disabled = not bool(q.events.table.select)
+    elif q.args.remove_selected:
+        q.client.task = asyncio.create_task(uninstall(q, q.client.selected_packages))
+    elif q.args.cancel_pip_task:
+        q.client.task.cancel()
+    elif q.args.finish_message_dismiss:
+        await on_pip_finish(q)
+    elif q.args.dropdown:
+        q.user.view = q.args.dropdown
+        if q.args.dropdown == 'code':
+            q.page['preview'].box = ui.box('main', width='0px')
+            q.page['code'].box = ui.box('main', width='100%')
+        if q.args.dropdown == 'split':
+            q.page['preview'].box = ui.box('main', width='100%')
+            q.page['code'].box = ui.box('main', width='100%')
+        if q.args.dropdown == 'preview':
+            q.page['preview'].box = ui.box('main', width='100%')
+            q.page['code'].box = ui.box('main', width='0px')
     elif q.args.console:
         q.page['preview'].box = ui.box('main', width='100%')
         q.page['code'].box = ui.box('main', width='0px')
@@ -324,6 +531,8 @@ async def serve(q: Q):
         await render_code(q)
     elif q.events.dialog and q.events.dialog.dismissed:
         q.page['meta'].dialog = None
+    elif q.events.side_panel and q.events.side_panel.dismissed:
+        q.page['meta'].side_panel = None
     elif q.events.notification and q.events.notification.dismissed:
         q.page['meta'].notification_bar = None
     elif q.events.file_viewer:

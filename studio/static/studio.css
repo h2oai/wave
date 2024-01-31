@@ -15,6 +15,22 @@
   background-color: #ffffff;
 }
 
+span[data-test="pip_logs"] pre {
+  height: 80vh;
+  background-color: #282b2e;
+}
+
+span[data-test="pip_logs"] pre>code {
+  display: flex;
+  max-height: 80vh;
+}
+
+span[data-test="pip_logs"] code>code {
+  white-space: pre-wrap;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 #files {
   position: relative;
   font-family: 'Inter', sans-serif;

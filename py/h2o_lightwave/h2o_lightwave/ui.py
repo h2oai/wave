@@ -2159,6 +2159,7 @@ def stat(
         caption: Optional[str] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Stat:
     """Create a stat (a label-value pair) for displaying a metric.
 
@@ -2168,6 +2169,7 @@ def stat(
         caption: The caption displayed below the primary value.
         icon: An optional icon, displayed next to the label.
         icon_color: The color of the icon.
+        name: An identifying name for this item.
     Returns:
         A `h2o_wave.types.Stat` instance.
     """
@@ -2177,6 +2179,7 @@ def stat(
         caption,
         icon,
         icon_color,
+        name,
     )
 
 
@@ -2186,6 +2189,7 @@ def stats(
         inset: Optional[bool] = None,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a set of stats laid out horizontally.
 
@@ -2195,6 +2199,7 @@ def stats(
         inset: Whether to display the stats with a contrasting background.
         width: The width of the stats, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Stats` instance.
     """
@@ -2204,6 +2209,7 @@ def stats(
         inset,
         width,
         visible,
+        name,
     ))
 
 
@@ -4507,6 +4513,7 @@ def tall_series_stat_card(
 def tall_stats_card(
         box: str,
         items: List[Stat],
+        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TallStatsCard:
     """Create a vertical label-value pairs collection. Icon in `ui.stat` is not yet supported in this card.
@@ -4514,6 +4521,7 @@ def tall_stats_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The individual stats to be displayed.
+        name: An identifying name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.TallStatsCard` instance.
@@ -4521,6 +4529,7 @@ def tall_stats_card(
     return TallStatsCard(
         box,
         items,
+        name,
         commands,
     )
 
