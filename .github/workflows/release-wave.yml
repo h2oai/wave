@@ -1,154 +1,87 @@
 name: Release Wave
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version'
-        required: true
+  push:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: "${{ github.event.inputs.version }}"
-  TAG: "v${{ github.event.inputs.version }}"
+  VERSION: "1.0.0"
+  TAG: "v1.0.0"
 
 jobs:
-  release:
-    name: Release Wave
-    runs-on: ubuntu-20.04
+
+
+  create-bundle:
+    name: Create Wave Bundle
+    runs-on: ubuntu-latest
+
+    outputs:
+      build-version: ${{ env.VERSION }}
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-go@v1
-        with:
-          go-version: '1.19.4'
+      - name: Download H2O CLI
+        working-directory: ./py/apps/tour
+        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
+      - name: Change permissions
+        working-directory: ./py/apps/tour
+        run: chmod +x .bin/h2o
 
-      - name: Setup
-        run: make setup
+      - name: Set version
+        working-directory: ./py/apps/tour
+        run: sed -i -r -e "s/\{\{VERSION\}\}/${{ env.VERSION }}/g" app.toml
 
-      - uses: r-lib/actions/setup-r@v2
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          working-directory: ./r
-
-      - name: Build Release
-        run: make release
-        env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
-
-      - name: Unit Test
+      - name: Get App Version
+        id: get-build-version
         run: |
-          make test-ui-ci
-          make test-py-ci
+          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-          draft: false
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
-            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
-            r/build/h2owave_${{ env.VERSION }}_R.tar.gz
-          tag_name: ${{ env.TAG }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to Conda
-        uses: amauryval/publish_conda_package_action@1.1.0
-        with:
-          CondaDir: 'py/h2o_wave/conda'
-          CondaUsername: ${{ secrets.CONDA_USERNAME }}
-          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
-        env:
-          # VERSION clashes with conda build. Use PKG_VERSION instead.
-          PKG_VERSION: ${{ env.VERSION }}
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          packages_dir: py/h2o_wave/dist
-          password: ${{ secrets.PYPI_API_TOKEN }}
-
-      - name: Publish Docs
+      - name: Make the folder structure
         run: |
-          make publish-website
-          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
-        env:
-          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
+          find py/apps/tour -type f -name '*.toml' -exec sed -i -e "s/{{VERSION}}/${{ env.VERSION }}/g" {} \;
+          find py/apps/tour -type f -name 'requirements.txt' -exec sed -i -e "s/{{VERSION}}/${{ env.VERSION }}/g" {} \;
+          rsync -a py/examples py/apps/tour --exclude "*.idea*" --exclude "*__pycache__*" --exclude "*.mypy_cache*" --exclude "dist" --exclude "build"
+          cp tools/vscode-extension/base-snippets.json py/apps/tour/examples
+          cp tools/vscode-extension/component-snippets.json py/apps/tour/examples
+          cp tools/vscode-extension/server/utils.py py/apps/tour/examples/tour_autocomplete_utils.py
+          cp tools/vscode-extension/server/parser.py py/apps/tour/examples/tour_autocomplete_parser.py
+          sed -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/apps/tour/examples/tour.py 
 
-      - name: Publish to S3
-        run: make publish-release-s3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
-
-      - name: Publish apps for Cloud
-        run: make build-apps publish-apps-s3-hac
-        env:
-          HAC_S3_BUCKET : ${{ secrets.HAC_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
-
-      - name: Publish apps for Managed Cloud
-        run: make publish-apps-s3-mc
-        env:
-          MC_S3_BUCKET : ${{ secrets.MC_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY : ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
-          AWS_REGION: ${{ secrets.MC_AWS_REGION }}
-
-      # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
-      - name: Reindex Algolia search
+      - name: Make air-gapped bundle
+        working-directory: ./py/apps/tour
         run: |
-          curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
-        env:
-          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
-          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
-          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
+          .bin/h2o bundle \
+            --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.31.0-310 \
+            --docker-use-buildkit \
+            --generate-helm-charts \
+            --helm-chart-version ${{ env.VERSION }} \
+            --helm-chart-name tour \
+            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour-bundle \
+            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
+            --generate-dockerfile
 
-      - name: Build university
-        run:  make publish-university
-      
-      - name: Publish to PyPI - wave_university
-        uses: pypa/gh-action-pypi-publish@master
+      - uses: actions/upload-artifact@v3
         with:
-          packages_dir: university/dist
-          password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
+          name: wave-bundle
+          path: |
+            ./py/apps/tour/*.Dockerfile
+            ./py/apps/tour/*.wave
 
-      - name: Publish to PyPI - lightwave
-        uses: pypa/gh-action-pypi-publish@master
+      - uses: actions/upload-artifact@v3
         with:
-          packages_dir: py/h2o_lightwave/dist
-          password: ${{ secrets.PYPI_LIGTHWAVE_TOKEN }}
+          name: wave-bundle-helm
+          path: py/apps/tour/helm/
 
-      - name: Publish to PyPI - lightwave_web
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          packages_dir: py/h2o_lightwave_web/dist
-          password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
+  build-and-publish:
+    needs: create-bundle
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    uses: ./.github/workflows/wave-bundle-docker-build-publish.yaml
+    with:
+      build-version: ${{ needs.create-bundle.outputs.build-version }}
+      bundle-artifact: wave-bundle
+      wave-app-name: tour
