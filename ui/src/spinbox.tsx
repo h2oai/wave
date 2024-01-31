@@ -52,6 +52,14 @@ const
     const exp = Math.pow(10, precision)
     return Math.round(value * exp) / exp
   },
+  isScientificNotation = /\d+\.?\d*e[+-]*\d+/i,
+  scientificToDecimal = (value: F) => {
+    // Check if value is in scientific notation.
+    return isScientificNotation.test(String(value))
+      // Supports up to 20 digits after the decimal point.
+      ? value.toFixed(20).replace(/\.?0+$/, '')
+      : String(value)
+  },
   // Source: https://github.com/microsoft/fluentui/blob/ecb0e9b12665a05353f64f1b69981584c3addbc0/packages/utilities/src/math.ts#L91.
   calculatePrecision = (value: F) => {
     /**
@@ -60,7 +68,7 @@ const
      * Group 2:
      * \.([0-9]*) matches all digits after a decimal point.
      */
-    const groups = /[1-9]([0]+$)|\.([0-9]*)/.exec(String(value))
+    const groups = /[1-9]([0]+$)|\.([0-9]*)/.exec(scientificToDecimal(value))
     if (!groups) return 0
     return -groups[1]?.length || groups[2]?.length || 0
   }
@@ -101,7 +109,7 @@ export const
               : value
         if (val === '-') setVal('-')
         else if (!precision) setVal(String(newValue).split('.')[0])
-        else if (isLastCharDotOrTraillingZero.test(val)) {
+        else if (isLastCharDotOrTraillingZero.test(val) && !isScientificNotation.test(val)) {
           // We can't use parseValue because it requires casting to number which will remove the trailling zeros.
           const [head, tail = ''] = val.split('.')
           setVal(`${head}.${tail.slice(0, precision)}`)
