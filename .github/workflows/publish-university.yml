@@ -8,56 +8,54 @@ env:
   VERSION: "1.0.1"
 
 jobs:
-
-
   airgapped:
-      name: Create Wave Bundle
-      runs-on: ubuntu-latest
+    name: Create Wave Bundle
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - name: Download H2O CLI
-          working-directory: ./university
-          run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
+      - name: Download H2O CLI
+        working-directory: ./university
+        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
 
-        - name: Change permissions
-          working-directory: ./university
-          run: chmod +x .bin/h2o
+      - name: Change permissions
+        working-directory: ./university
+        run: chmod +x .bin/h2o
 
-        - name: Set version
-          working-directory: ./university
-          run: sed -i -r -e "s/\{\{VERSION\}\}/${{ env.VERSION }}/g" app.toml
+      - name: Set version
+        working-directory: ./university
+        run: sed -i -r -e "s/\{\{VERSION\}\}/${{ env.VERSION }}/g" app.toml
 
-        - name: Get App Version
-          id: get-build-version
-          run: |
-            echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
+      - name: Get App Version
+        id: get-build-version
+        run: |
+          echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
-        - name: Make air-gapped bundle
-          working-directory: ./university
-          run: |
-            .bin/h2o bundle \
-              --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
-              --docker-use-buildkit \
-              --generate-helm-charts \
-              --helm-chart-version ${{ env.VERSION }} \
-              --helm-chart-name university \
-              --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university-bundle \
-              --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university \
-              --generate-dockerfile
+      - name: Make air-gapped bundle
+        working-directory: ./university
+        run: |
+          .bin/h2o bundle \
+            --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.23.0-38 \
+            --docker-use-buildkit \
+            --generate-helm-charts \
+            --helm-chart-version ${{ env.VERSION }} \
+            --helm-chart-name university \
+            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university-bundle \
+            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/university \
+            --generate-dockerfile
 
-        - uses: actions/upload-artifact@v3
-          with:
-            name: wave-bundle
-            path: |
-              ./university/*.Dockerfile
-              ./university/*.wave
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle
+          path: |
+            ./university/*.Dockerfile
+            ./university/*.wave
 
-        - uses: actions/upload-artifact@v3
-          with:
-            name: wave-bundle-helm
-            path: university/helm/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle-helm
+          path: university/helm/
 
   retrieve-metadata:
     runs-on: ubuntu-latest
@@ -69,15 +67,3 @@ jobs:
         id: get-build-version
         run: |
           echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
-
-  build-and-publish:
-    needs: retrieve-metadata
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read # This is required for actions/checkout
-
-    uses: ./.github/workflows/wave-bundle-docker-build-publish.yaml
-    with:
-      build-version: ${{ env.VERSION }}
-      bundle-artifact: wave-bundle
-      wave-app-name: university
