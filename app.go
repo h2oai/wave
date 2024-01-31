@@ -109,9 +109,12 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 	req.Header.Set("Wave-Subject-ID", session.subject)
 	req.Header.Set("Wave-Username", session.username)
 	if session.subject != anon {
-		req.Header.Set("Wave-Access-Token", session.token.AccessToken)
-		req.Header.Set("Wave-Refresh-Token", session.token.RefreshToken)
 		req.Header.Set("Wave-Session-ID", session.id)
+		// TODO: Figure out how can the token be nil.
+		if session.token != nil {
+			req.Header.Set("Wave-Access-Token", session.token.AccessToken)
+			req.Header.Set("Wave-Refresh-Token", session.token.RefreshToken)
+		}
 	}
 
 	resp, err := app.client.Do(req)
