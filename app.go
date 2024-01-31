@@ -114,6 +114,10 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 		if session.token != nil {
 			req.Header.Set("Wave-Access-Token", session.token.AccessToken)
 			req.Header.Set("Wave-Refresh-Token", session.token.RefreshToken)
+		} else {
+			if app.broker.debug {
+				echo(Log{"t": "app_send", "error": "session token is nil"})
+			}
 		}
 	}
 

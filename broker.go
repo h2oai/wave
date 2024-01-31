@@ -66,6 +66,7 @@ type Broker struct {
 	editable    bool
 	noStore     bool
 	noLog       bool
+	debug       bool
 	clients     map[string]map[*Client]interface{} // route => client-set
 	publish     chan Pub
 	subscribe   chan Sub
@@ -78,12 +79,13 @@ type Broker struct {
 	keepAppLive bool
 }
 
-func newBroker(site *Site, editable, noStore, noLog, keepAppLive bool) *Broker {
+func newBroker(site *Site, editable, noStore, noLog, keepAppLive, debug bool) *Broker {
 	return &Broker{
 		site,
 		editable,
 		noStore,
 		noLog,
+		debug,
 		make(map[string]map[*Client]interface{}),
 		make(chan Pub, 1024),     // TODO tune
 		make(chan Sub, 1024),     // TODO tune
