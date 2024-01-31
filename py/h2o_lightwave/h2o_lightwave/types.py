@@ -5842,12 +5842,14 @@ class Stat:
             caption: Optional[str] = None,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         _guard_scalar('Stat.label', label, (str,), False, False, False)
         _guard_scalar('Stat.value', value, (str,), False, True, False)
         _guard_scalar('Stat.caption', caption, (str,), False, True, False)
         _guard_scalar('Stat.icon', icon, (str,), False, True, False)
         _guard_scalar('Stat.icon_color', icon_color, (str,), False, True, False)
+        _guard_scalar('Stat.name', name, (str,), False, True, False)
         self.label = label
         """The label for the metric."""
         self.value = value
@@ -5858,6 +5860,8 @@ class Stat:
         """An optional icon, displayed next to the label."""
         self.icon_color = icon_color
         """The color of the icon."""
+        self.name = name
+        """An identifying name for this item."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5866,12 +5870,14 @@ class Stat:
         _guard_scalar('Stat.caption', self.caption, (str,), False, True, False)
         _guard_scalar('Stat.icon', self.icon, (str,), False, True, False)
         _guard_scalar('Stat.icon_color', self.icon_color, (str,), False, True, False)
+        _guard_scalar('Stat.name', self.name, (str,), False, True, False)
         return _dump(
             label=self.label,
             value=self.value,
             caption=self.caption,
             icon=self.icon,
             icon_color=self.icon_color,
+            name=self.name,
         )
 
     @staticmethod
@@ -5887,17 +5893,21 @@ class Stat:
         _guard_scalar('Stat.icon', __d_icon, (str,), False, True, False)
         __d_icon_color: Any = __d.get('icon_color')
         _guard_scalar('Stat.icon_color', __d_icon_color, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Stat.name', __d_name, (str,), False, True, False)
         label: str = __d_label
         value: Optional[str] = __d_value
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
+        name: Optional[str] = __d_name
         return Stat(
             label,
             value,
             caption,
             icon,
             icon_color,
+            name,
         )
 
 
@@ -5922,12 +5932,14 @@ class Stats:
             inset: Optional[bool] = None,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            name: Optional[str] = None,
     ):
         _guard_vector('Stats.items', items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', inset, (bool,), False, True, False)
         _guard_scalar('Stats.width', width, (str,), False, True, False)
         _guard_scalar('Stats.visible', visible, (bool,), False, True, False)
+        _guard_scalar('Stats.name', name, (str,), False, True, False)
         self.items = items
         """The individual stats to be displayed."""
         self.justify = justify
@@ -5938,6 +5950,8 @@ class Stats:
         """The width of the stats, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5946,12 +5960,14 @@ class Stats:
         _guard_scalar('Stats.inset', self.inset, (bool,), False, True, False)
         _guard_scalar('Stats.width', self.width, (str,), False, True, False)
         _guard_scalar('Stats.visible', self.visible, (bool,), False, True, False)
+        _guard_scalar('Stats.name', self.name, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             inset=self.inset,
             width=self.width,
             visible=self.visible,
+            name=self.name,
         )
 
     @staticmethod
@@ -5967,17 +5983,21 @@ class Stats:
         _guard_scalar('Stats.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Stats.visible', __d_visible, (bool,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Stats.name', __d_name, (str,), False, True, False)
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         inset: Optional[bool] = __d_inset
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        name: Optional[str] = __d_name
         return Stats(
             items,
             justify,
             inset,
             width,
             visible,
+            name,
         )
 
 
@@ -12713,15 +12733,19 @@ class TallStatsCard:
             self,
             box: str,
             items: List[Stat],
+            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('TallStatsCard.box', box, (str,), False, False, False)
         _guard_vector('TallStatsCard.items', items, (Stat,), False, False, False)
+        _guard_scalar('TallStatsCard.name', name, (str,), False, True, False)
         _guard_vector('TallStatsCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
         """The individual stats to be displayed."""
+        self.name = name
+        """An identifying name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -12729,11 +12753,13 @@ class TallStatsCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TallStatsCard.box', self.box, (str,), False, False, False)
         _guard_vector('TallStatsCard.items', self.items, (Stat,), False, False, False)
+        _guard_scalar('TallStatsCard.name', self.name, (str,), False, True, False)
         _guard_vector('TallStatsCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='tall_stats',
             box=self.box,
             items=[__e.dump() for __e in self.items],
+            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -12744,14 +12770,18 @@ class TallStatsCard:
         _guard_scalar('TallStatsCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('TallStatsCard.items', __d_items, (dict,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TallStatsCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('TallStatsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TallStatsCard(
             box,
             items,
+            name,
             commands,
         )
 

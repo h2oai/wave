@@ -360,6 +360,49 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
+    it('Does not fire select event when using search', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+
+      // Select item.
+      fireEvent.click(getAllByRole('checkbox')[1])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+
+      // Exclude selected item by using search.
+      fireEvent.change(getByTestId('search'), { target: { value: 'No match!' } })
+
+      expect(getAllByRole('row')).toHaveLength(headerRow)
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Does not fire select event when using filter', () => {
+      const { container, getAllByRole, getAllByText } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+
+      // Select item.
+      fireEvent.click(getAllByRole('checkbox')[0])
+      expect(emitMock).toHaveBeenCalledTimes(1)
+
+      // Exclude selected item by using filter.
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron') as HTMLElement)
+      fireEvent.click(getAllByText('2')[1].parentElement as HTMLDivElement)
+
+      expect(getAllByRole('gridcell')[1].textContent).toBe('Quick brown fox.')
+      expect(emitMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Does not remove selection when searching for text matching selected row', () => {
+      const { getAllByRole, getByTestId } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      fireEvent.click(checkboxes[1])
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+
+      fireEvent.change(getByTestId('search'), { target: { value: 'fox' } })
+      expect(getAllByRole('row')).toHaveLength(headerRow + filteredItem)
+      expect(getAllByRole('checkbox')[1]).toBeChecked()
+    })
+
     it('Clicks a column - link set on second col', () => {
       tableProps = {
         ...tableProps,

@@ -578,6 +578,9 @@ const
           onRenderItemColumn={onRenderItemColumn}
           onRenderDetailsHeader={onRenderDetailsHeader}
           checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
+          // Prevent selection from being cleared when 'items' are updated.
+          // https://github.com/microsoft/fluentui/blob/4c1cd4bbba73bbca4411db9d01ffb486b1a90303/packages/react/src/components/DetailsList/DetailsList.base.tsx#L1032. 
+          setKey='wave-table-items'
         />
         {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
       </>
@@ -928,6 +931,11 @@ export const
           const selectedItemKeys = selection.getSelection().map(item => item.key as S)
           wave.args[m.name] = selectedItemKeys
           if (!skipNextEventEmit.current && m.events?.includes('select')) wave.emit(m.name, 'select', selectedItemKeys)
+        },
+        onItemsChanged: () => {
+          // HACK: Skip emitting 'select' event on 'items' update.
+          skipNextEventEmit.current = true
+          setTimeout(() => skipNextEventEmit.current = false)
         }
       }), [m.name, m.events]),
       computeHeight = () => {
@@ -967,19 +975,17 @@ export const
       }, [m.pagination, m.events, m.name, filter, search, currentSort, initGroups])
 
     React.useEffect(() => {
+      skipNextEventEmit.current = true
       wave.args[m.name] = []
       if (isSingle && m.value) {
-        skipNextEventEmit.current = true
         selection.setKeySelected(m.value, true, false)
-        skipNextEventEmit.current = false
         wave.args[m.name] = [m.value]
       }
       else if (isMultiple && m.values) {
-        skipNextEventEmit.current = true
         m.values.forEach(v => selection.setKeySelected(v, true, false))
-        skipNextEventEmit.current = false
         wave.args[m.name] = m.values
       }
+      skipNextEventEmit.current = false
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

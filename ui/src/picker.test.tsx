@@ -148,7 +148,7 @@ describe('Picker.tsx', () => {
     expect(getAllByRole('option')).toHaveLength(1)
   })
 
-  it('Filters correctly - does not offer already selected', () => {
+  it('Filters correctly - does not offer already selected - with input provided', () => {
     const { getByRole, queryByRole } = render(<XPicker model={pickerProps} />)
     const input = (getByRole('combobox') as HTMLInputElement)
 
@@ -156,6 +156,24 @@ describe('Picker.tsx', () => {
     fireEvent.click(getByRole('option'))
     typeToInput(input, name)
 
+    expect(queryByRole('option')?.querySelector('.ms-Suggestions-none')).toBeInTheDocument()
+  })
+
+  it('Filters correctly - does not offer already selected - without input provided', () => {
+    const { getByRole, queryByRole, getAllByRole } = render(<XPicker model={pickerProps} />)
+    const input = (getByRole('combobox') as HTMLInputElement)
+
+    fireEvent.click(input)
+    expect(getAllByRole('option')).toHaveLength(2)
+    typeToInput(input, name)
+    fireEvent.click(getByRole('option'))
+
+    fireEvent.click(input)
+    expect(getAllByRole('option')).toHaveLength(1)
+    typeToInput(input, altName)
+    fireEvent.click(getByRole('option'))
+
+    fireEvent.click(input)
     expect(queryByRole('option')?.querySelector('.ms-Suggestions-none')).toBeInTheDocument()
   })
 
