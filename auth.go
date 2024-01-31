@@ -211,7 +211,12 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 }
 
 func (auth *Auth) ensureValidOAuth2Token(ctx context.Context, token *oauth2.Token) (*oauth2.Token, error) {
-	return auth.oauth.TokenSource(ctx, token).Token()
+	token, err := auth.oauth.TokenSource(ctx, token).Token()
+	if token == nil {
+		echo(Log{"t": "ensure_token_refresh", "error": "refresh token is nil"})
+		echo(Log{"t": "ensure_token_refresh", "error": err.Error()})
+	}
+	return token, err
 }
 
 func (auth *Auth) redirectToLogin(w http.ResponseWriter, r *http.Request) {
