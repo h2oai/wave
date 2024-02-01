@@ -26,6 +26,7 @@ source:
   path: ..
 
 build:
+  noarch: python
   script: python -m pip install . -vv
   entry_points:
     {% for module, entrypoints in project['scripts'].items() %}
