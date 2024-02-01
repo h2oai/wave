@@ -129,7 +129,7 @@ export const
                 iconContainer: { margin: 0, marginRight: 16, display: 'flex', alignItems: 'center' },
                 text: { margin: 0 },
                 innerText: { whiteSpace: important('initial') },
-                dismissal: { fontSize: 16, height: 'auto', marginLeft: 16, padding: 0, '.ms-Button-flexContainer': { display: 'block' } },
+                dismissal: { fontSize: 16, height: 'auto', marginLeft: 16, padding: 0, '.ms-Button-flexContainer': { display: 'block', '$nest': { '& svg': { fill: color } } } },
                 dismissSingleLine: { display: 'flex' },
                 actions: { margin: 0, marginTop: isMultiline ? 12 : undefined }
               }}
