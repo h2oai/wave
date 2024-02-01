@@ -261,4 +261,69 @@ describe('Spinbox.tsx', () => {
     fireEvent.input(spinboxInput, { target: { value: '0.00011' } })
     expect(spinboxInput).toHaveValue('0.0001')
   })
+
+  it('Accept 1e-7 numbers and smaller', () => {
+    render(<XSpinbox model={{ ...spinboxProps, value: 0.00000001 }} />)
+    expect(wave.args[name]).toBe(0.00000001)
+  })
+
+  it('Increment 1e-7 numbers and smaller', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, min: 0.00000001, step: 0.00000001, value: 0.00000001 }} />)
+    expect(wave.args[name]).toBe(0.00000001)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
+    expect(wave.args[name]).toBe(0.00000002)
+  })
+
+  it('Accept 1e-7 numbers and smaller - scientific notation', () => {
+    render(<XSpinbox model={{ ...spinboxProps, value: 1e-15 }} />)
+    expect(wave.args[name]).toBe(0.000000000000001)
+  })
+
+  it('Accept 1e-7 numbers and smaller - scientific notation', () => {
+    render(<XSpinbox model={{ ...spinboxProps, value: 1e-15 }} />)
+    expect(wave.args[name]).toBe(0.000000000000001)
+  })
+
+  it('Increment 1e-7 numbers and smaller - scientific notation', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, min: 1e-15, step: 1e-15, value: 1e-15 }} />)
+    expect(wave.args[name]).toBe(0.000000000000001)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
+    expect(wave.args[name]).toBe(0.000000000000002)
+  })
+
+  it('Accept 1e7 numbers and greater', () => {
+    render(<XSpinbox model={{ ...spinboxProps, max: 100000000, value: 100000000, }} />)
+    expect(wave.args[name]).toBe(100000000)
+  })
+
+  it('Increment 1e7 numbers and greater', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, min: 100000000, max: 300000000, step: 100000000, value: 100000000 }} />)
+    expect(wave.args[name]).toBe(100000000)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
+    expect(wave.args[name]).toBe(200000000)
+  })
+
+  it('Accept 1e7 numbers and greater - scientific notation', () => {
+    render(<XSpinbox model={{ ...spinboxProps, max: 1e8, value: 1e8 }} />)
+    expect(wave.args[name]).toBe(100000000)
+  })
+
+  it('Increment 1e7 numbers and greater - scientific notation', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, min: 1e8, max: 3e8, step: 1e8, value: 1e8 }} />)
+    expect(wave.args[name]).toBe(100000000)
+    simulateClick(container.querySelector('.ms-UpButton') as HTMLButtonElement)
+    expect(wave.args[name]).toBe(200000000)
+  })
+
+  it('Do not allow entering decimal point after scientific notation', () => {
+    const { container, getByRole } = render(<XSpinbox model={{ ...spinboxProps, min: 1e-7, step: 1e-7, value: 1e-7 }} />)
+
+    expect(wave.args[name]).toBe(0.0000001)
+    expect(getByRole('spinbutton')).toHaveValue('1e-7')
+
+    fireEvent.input(container.querySelector('.ms-spinButton-input') as HTMLInputElement, { target: { value: '1e-7.' } })
+
+    expect(wave.args[name]).toBe(0.0000001)
+    expect(getByRole('spinbutton')).toHaveValue('1e-7')
+  })
 })
