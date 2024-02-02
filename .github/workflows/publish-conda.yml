@@ -20,6 +20,12 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
+      # Use older python version when running publish_conda_package_action until https://github.com/amauryval/publish_conda_package_action/issues/4 is resolved.
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
       - name: Publish to Conda
         uses: amauryval/publish_conda_package_action@2.0.3
         with:
