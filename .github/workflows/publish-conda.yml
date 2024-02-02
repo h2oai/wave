@@ -26,15 +26,12 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Create and activate conda venv
-        run: |
-          python -m pip install --upgrade pip
-          pip install conda
-          conda create -n conda-env python=3.8
-          conda activate conda-env
+      - name: Activate conda venv
+        run: conda activate conda-env
 
       - name: Publish to Conda
-        uses: amauryval/publish_conda_package_action@2.0.3
+        uses: marek-mihok/publish_conda_package_action@v1.0.0
+        # Override dockerfile to use python 3.8
         with:
           CondaDir: 'py/h2o_wave/conda'
           Platforms: 'noarch'
