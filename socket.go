@@ -70,8 +70,28 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	clientID := r.URL.Query().Get("client-id")
+	client, ok := s.broker.clientsByID[clientID]
+	if ok {
+		client.conn = conn
+		client.isReconnect = true
+		if client.cancel != nil {
+			client.cancel()
+		}
+	} else {
+		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false)
+	}
 
-	client := newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval)
+	if msg, err := json.Marshal(OpsD{I: client.id}); err == nil {
+		sw, err := conn.NextWriter(websocket.TextMessage)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		sw.Write(msg)
+		sw.Close()
+	}
+
 	go client.flush()
 	go client.listen()
 }

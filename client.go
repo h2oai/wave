@@ -67,10 +67,13 @@ type Client struct {
 	header       *http.Header    // forwarded headers from the WS connection
 	appPath      string          // path of the app this client is connected to, doesn't change throughout WS lifetime
 	pingInterval time.Duration
+	isReconnect  bool
+	cancel       context.CancelFunc
 }
 
-func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header, pingInterval time.Duration) *Client {
-	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header, pingInterval time.Duration, isReconnect bool) *Client {
+	id := uuid.New().String()
+	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval, isReconnect, nil}
 }
 
 func (c *Client) refreshToken() error {
@@ -90,15 +93,26 @@ func (c *Client) refreshToken() error {
 
 func (c *Client) listen() {
 	defer func() {
-		app := c.broker.getApp(c.appPath)
-		if app != nil {
-			app.forward(c.id, c.session, disconnectMsg)
-			if err := app.disconnect(c.id); err != nil {
-				echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
-			}
-		}
+		ctx, cancel := context.WithCancel(context.Background())
+		c.cancel = cancel
+		go func(ctx context.Context) {
+			select {
+			// Send disconnect message only if client doesn't reconnect within 2s.
+			case <-time.After(2 * time.Second):
+				app := c.broker.getApp(c.appPath)
+				if app != nil {
+					app.forward(c.id, c.session, disconnectMsg)
+					if err := app.disconnect(c.id); err != nil {
+						echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
+					}
+				}
 
-		c.broker.unsubscribe <- c
+				c.broker.unsubscribe <- c
+			case <-ctx.Done():
+				return
+			}
+		}(ctx)
+
 		c.conn.Close()
 	}()
 	// Time allowed to read the next pong message from the peer. Must be greater than ping interval.
@@ -157,8 +171,10 @@ func (c *Client) listen() {
 				c.broker.sendAll(c.broker.clients[app.route], clearStateMsg)
 			}
 		case watchMsgT:
-			c.subscribe(m.addr) // subscribe even if page is currently NA
-
+			if c.isReconnect {
+				continue
+			}
+			c.subscribe(m.addr)                             // subscribe even if page is currently NA
 			if app := c.broker.getApp(m.addr); app != nil { // do we have an app handling this route?
 				c.appPath = m.addr
 				switch app.mode {
