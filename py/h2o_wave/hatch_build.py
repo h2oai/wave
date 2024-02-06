@@ -6,6 +6,15 @@ from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 from hatchling.metadata.plugin.interface import MetadataHookInterface
 
 
+# Creates a metadata file to get easy access to platform/OS arch when needed.
+def create_metadata_file(platform: str, arch: str):
+    with open(os.path.join('h2o_wave', 'metadata.py'), 'w') as f:
+        f.write(f'''
+# Generated in hatch_build.py.
+__platform__ = "{platform}"
+__arch__ = "{arch}"
+        ''')
+
 class CustomMetadataHook(MetadataHookInterface):
     def update(self, metadata: dict) -> None:
         metadata['version'] = os.environ.get('VERSION', metadata['version'])
@@ -15,6 +24,8 @@ class CustomBuildHook(BuildHookInterface):
     def initialize(self, _version, build_data):
         platform = os.environ.get('H2O_WAVE_PLATFORM')
         if not platform:
+            # Create a default metadata file in case of noarch builds.
+            create_metadata_file('linux', 'amd64')
             return
 
         build_data['tag'] = f'py3-none-{platform}'
@@ -38,13 +49,7 @@ class CustomBuildHook(BuildHookInterface):
         self.copy_files(binaries_path, 'tmp', ['demo', 'examples', 'test'])
         self.copy_files('project_templates', 'tmp', [], True)
 
-        # Create a metadata file to get easy access to platform/OS arch when needed.
-        with open(os.path.join('h2o_wave', 'metadata.py'), 'w') as f:
-            f.write(f'''
-# Generated in hatch_build.py.
-__platform__ = "{operating_system}"
-__arch__ = "{arch}"
-        ''')
+        create_metadata_file(operating_system, arch)
 
     def copy_files(self, src, dst, ignore, keep_dir=False) -> None:
         for file_name in os.listdir(src):
