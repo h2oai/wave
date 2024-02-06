@@ -16,8 +16,10 @@ import { fireEvent, render } from '@testing-library/react'
 import { Card, box } from './core'
 import React from 'react'
 import { CardMenu } from './card_menu'
+import { wave } from './ui'
 
 const name = 'card'
+const path = 'https://wave.h2o.ai/img/logo.svg'
 let card: Card
 describe('CardMenu.tsx', () => {
   beforeEach(() => {
@@ -28,6 +30,7 @@ describe('CardMenu.tsx', () => {
       id: 'id',
       set: jest.fn(),
     }
+    wave.args[name] = null
   })
   it('Does not render data-test attr', () => {
     // @ts-ignore
@@ -63,5 +66,46 @@ describe('CardMenu.tsx', () => {
     fireEvent.click(getByText('#card'))
 
     expect(window.location.hash).toBe('#card')
+  })
+
+  it('Does not set args and calls sync on click when download link is specified', () => {
+    const pushMock = jest.fn()
+    wave.push = pushMock
+    card.state.commands = [{ name: 'card', download: true, path, value: 'value' }]
+    const { getByTestId, getByText } = render(<CardMenu card={card} />)
+    fireEvent.click(getByTestId(name))
+    fireEvent.click(getByText('card'))
+
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toBeNull()
+  })
+
+  it('Ignores items when download link is specified', () => {
+    card.state.commands = [{
+      name: 'card',
+      download: true, path,
+      items: [{ name: 'subcommand' }]
+    }]
+    const { getByTestId, getByText, queryByText } = render(<CardMenu card={card} />)
+    expect(queryByText('subcommand')).not.toBeInTheDocument()
+
+    fireEvent.click(getByTestId(name))
+    fireEvent.mouseOver(getByText('card'))
+
+    // TODO: Works when "download: true" and "path" are not specified as well.
+    expect(queryByText('subcommand')).not.toBeInTheDocument()
+  })
+
+  it('Opens link in a new tab when path is specified', () => {
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    card.state.commands = [{ name: 'card', path }]
+    const { getByTestId, getByText } = render(<CardMenu card={card} />)
+
+    fireEvent.click(getByTestId(name))
+    fireEvent.click(getByText('card'))
+
+    expect(windowOpenMock).toHaveBeenCalled()
+    expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
   })
 })
