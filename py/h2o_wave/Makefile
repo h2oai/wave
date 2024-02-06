@@ -8,4 +8,5 @@ build: purge
 	../venv/bin/python3 -m build --wheel
 
 purge: ## Purge previous build
+	rm -f h2o_wave/metadata.py
 	rm -rf build dist h2o_wave.egg-info
