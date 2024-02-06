@@ -52,6 +52,9 @@ type ServerConf struct {
 	ForwardedHeaders     map[string]bool
 	KeepAppLive          bool
 	PingInterval         time.Duration
+	PreviewImage         string
+	PreviewTitle         string
+	PreviewDescription   string
 }
 
 type AuthConf struct {
