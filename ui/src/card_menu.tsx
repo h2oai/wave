@@ -21,6 +21,7 @@ import { fixMenuOverflowStyles } from './parts/utils'
 import { clas, cssVar } from './theme'
 import { Command } from './toolbar'
 import { bond, wave } from './ui'
+import { forceFileDownload } from './link'
 
 const
   css = stylesheet({
@@ -57,7 +58,16 @@ const
   deleteCommand = '__delete__',
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
-      onClick = () => {
+      onClick = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>) => {
+        if (ev && c.download && c.path) {
+          ev.preventDefault()
+          forceFileDownload(c.path)
+          return
+        }
+        if (c.path) {
+          window.open(c.path, '_blank')
+          return
+        }
         if (c.name === editCommand) {
           if (c.value) editCard(c.value)
           return
@@ -78,7 +88,7 @@ const
       text: c.label || c.name || 'Untitled',
       iconProps: c.icon ? { iconName: c.icon } : undefined,
       title: c.caption || undefined,
-      subMenuProps: c.items ? { items: c.items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
+      subMenuProps: c.items && !c.path ? { items: c.items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
       onClick,
     }
   }

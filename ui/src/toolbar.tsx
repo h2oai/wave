@@ -14,12 +14,13 @@
 
 import * as Fluent from '@fluentui/react'
 import { ICommandBarItemProps } from '@fluentui/react'
-import { Id, Model, S } from './core'
+import { B, Id, Model, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { fixMenuOverflowStyles } from './parts/utils'
 import { bond, wave } from './ui'
+import { forceFileDownload } from './link'
 
 /**
  * Create a command.
@@ -39,6 +40,10 @@ export interface Command {
   items?: Command[]
   /** Data associated with this command, if any. */
   value?: S
+  /** The path or URL to link to. The 'items' and 'value' props are ignored when specified. */
+  path?: S
+  /** True if the link should prompt the user to save the linked URL instead of navigating to it. */
+  download?: B
 }
 
 /** Create a card containing a toolbar. */
@@ -59,9 +64,18 @@ const
       justifyContent: 'center',
     },
   }),
-  toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
+  toCommand = ({ name, path, label = path, caption, icon, items, value, download }: Command): ICommandBarItemProps => {
     wave.args[name] = false
-    const onClick = () => {
+    const onClick = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>) => {
+      if (ev && download && path) {
+        ev.preventDefault()
+        forceFileDownload(path)
+        return
+      }
+      if (path) {
+        window.open(path, '_blank')
+        return
+      }
       if (name.startsWith('#')) {
         window.location.hash = name.substring(1)
         return
@@ -76,7 +90,7 @@ const
       title: caption,
       iconOnly: !label,
       iconProps: icon ? { iconName: icon } : undefined,
-      subMenuProps: items ? { items: toCommands(items), styles: fixMenuOverflowStyles } : undefined,
+      subMenuProps: items && !path ? { items: toCommands(items), styles: fixMenuOverflowStyles } : undefined,
       onClick,
     }
   }

@@ -160,6 +160,8 @@ class Command:
             icon: Optional[str] = None,
             items: Optional[List['Command']] = None,
             value: Optional[str] = None,
+            path: Optional[str] = None,
+            download: Optional[bool] = None,
     ):
         _guard_scalar('Command.name', name, (str,), True, False, False)
         _guard_scalar('Command.label', label, (str,), False, True, False)
@@ -167,6 +169,8 @@ class Command:
         _guard_scalar('Command.icon', icon, (str,), False, True, False)
         _guard_vector('Command.items', items, (Command,), False, True, False)
         _guard_scalar('Command.value', value, (str,), False, True, False)
+        _guard_scalar('Command.path', path, (str,), False, True, False)
+        _guard_scalar('Command.download', download, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed."""
         self.label = label
@@ -179,6 +183,10 @@ class Command:
         """Sub-commands, if any"""
         self.value = value
         """Data associated with this command, if any."""
+        self.path = path
+        """The path or URL to link to. The 'items' and 'value' props are ignored when specified."""
+        self.download = download
+        """True if the link should prompt the user to save the linked URL instead of navigating to it."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -188,6 +196,8 @@ class Command:
         _guard_scalar('Command.icon', self.icon, (str,), False, True, False)
         _guard_vector('Command.items', self.items, (Command,), False, True, False)
         _guard_scalar('Command.value', self.value, (str,), False, True, False)
+        _guard_scalar('Command.path', self.path, (str,), False, True, False)
+        _guard_scalar('Command.download', self.download, (bool,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -195,6 +205,8 @@ class Command:
             icon=self.icon,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             value=self.value,
+            path=self.path,
+            download=self.download,
         )
 
     @staticmethod
@@ -212,12 +224,18 @@ class Command:
         _guard_vector('Command.items', __d_items, (dict,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Command.value', __d_value, (str,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Command.path', __d_path, (str,), False, True, False)
+        __d_download: Any = __d.get('download')
+        _guard_scalar('Command.download', __d_download, (bool,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
+        path: Optional[str] = __d_path
+        download: Optional[bool] = __d_download
         return Command(
             name,
             label,
@@ -225,6 +243,8 @@ class Command:
             icon,
             items,
             value,
+            path,
+            download,
         )
 
 
