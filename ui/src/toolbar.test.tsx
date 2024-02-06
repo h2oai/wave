@@ -21,6 +21,7 @@ import { wave } from './ui'
 const
   name = 'toolbar',
   label = name,
+  path = 'https://wave.h2o.ai/img/logo.svg',
   toolbarProps: Model<any> = {
     name,
     state: { items: [{ name, label }] },
@@ -69,4 +70,43 @@ describe('Toolbar.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
+  it('Does not set args and calls sync on click when download link is specified', () => {
+    const value = 'value'
+    const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name, value, label, path, download: true }] } }} />)
+    fireEvent.click(getByText(label))
+
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toBe(false)
+  })
+
+  it('Ignores items when download link is specified', () => {
+    const props = {
+      ...toolbarProps, state: {
+        items: [{
+          name,
+          label,
+          path,
+          download: true,
+          items: [{ name: 'item', label: 'item' }]
+        }]
+      }
+    }
+    const { queryByText, getByText } = render(<Toolbar {...props} />)
+
+    expect(queryByText('item')).not.toBeInTheDocument()
+    fireEvent.click(getByText(label))
+
+    expect(queryByText('item')).not.toBeInTheDocument()
+  })
+
+  it('Opens link in a new tab when path is specified', () => {
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name, label, path }] } }} />)
+
+    fireEvent.click(getByText(label))
+
+    expect(windowOpenMock).toHaveBeenCalled()
+    expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
+  })
 })
