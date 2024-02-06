@@ -52,6 +52,7 @@ type ServerConf struct {
 	ForwardedHeaders     map[string]bool
 	KeepAppLive          bool
 	PingInterval         time.Duration
+	ReconnectTimeout     time.Duration
 }
 
 type AuthConf struct {
@@ -112,4 +113,5 @@ type Conf struct {
 	SkipLogin             bool   `cfg:"oidc-skip-login" env:"H2O_WAVE_OIDC_SKIP_LOGIN" cfgDefault:"false" cfgHelper:"do not display the login form during OIDC authorization"`
 	KeepAppLive           bool   `cfg:"keep-app-live" env:"H2O_WAVE_KEEP_APP_LIVE" cfgDefault:"false" cfgHelper:"do not unregister unresponsive apps"`
 	Conf                  string `cfg:"conf" env:"H2O_WAVE_CONF" cfgDefault:".env" cfgHelper:"path to configuration file"`
+	ReconnectTimeout      string `cfg:"reconnect-timeout" env:"H2O_WAVE_RECONNECT_TIMEOUT" cfgDefault:"2s" cfgHelper:"Time to wait for reconnect before dropping the client"`
 }

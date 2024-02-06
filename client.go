@@ -54,26 +54,29 @@ type BootMsg struct {
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	id           string          // unique id
-	auth         *Auth           // auth provider, might be nil
-	addr         string          // remote IP:port, used for logging only
-	session      *Session        // end-user session
-	broker       *Broker         // broker
-	conn         *websocket.Conn // connection
-	routes       []string        // watched routes
-	data         chan []byte     // send data
-	editable     bool            // allow editing? // TODO move to user; tie to role
-	baseURL      string          // URL prefix of the Wave server
-	header       *http.Header    // forwarded headers from the WS connection
-	appPath      string          // path of the app this client is connected to, doesn't change throughout WS lifetime
-	pingInterval time.Duration
-	isReconnect  bool
-	cancel       context.CancelFunc
+	id               string          // unique id
+	auth             *Auth           // auth provider, might be nil
+	addr             string          // remote IP:port, used for logging only
+	session          *Session        // end-user session
+	broker           *Broker         // broker
+	conn             *websocket.Conn // connection
+	routes           []string        // watched routes
+	data             chan []byte     // send data
+	editable         bool            // allow editing? // TODO move to user; tie to role
+	baseURL          string          // URL prefix of the Wave server
+	header           *http.Header    // forwarded headers from the WS connection
+	appPath          string          // path of the app this client is connected to, doesn't change throughout WS lifetime
+	pingInterval     time.Duration
+	isReconnect      bool
+	cancel           context.CancelFunc
+	reconnectTimeout time.Duration
 }
 
-func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool, baseURL string, header *http.Header, pingInterval time.Duration, isReconnect bool) *Client {
+// TODO: Refactor some of the params into a Config struct.
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool,
+	baseURL string, header *http.Header, pingInterval time.Duration, isReconnect bool, reconnectTimeout time.Duration) *Client {
 	id := uuid.New().String()
-	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval, isReconnect, nil}
+	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval, isReconnect, nil, reconnectTimeout}
 }
 
 func (c *Client) refreshToken() error {
@@ -97,8 +100,8 @@ func (c *Client) listen() {
 		c.cancel = cancel
 		go func(ctx context.Context) {
 			select {
-			// Send disconnect message only if client doesn't reconnect within 2s.
-			case <-time.After(2 * time.Second):
+			// Send disconnect message only if client doesn't reconnect within the specified timeframe.
+			case <-time.After(c.reconnectTimeout):
 				app := c.broker.getApp(c.appPath)
 				if app != nil {
 					app.forward(c.id, c.session, disconnectMsg)

@@ -31,10 +31,11 @@ type SocketServer struct {
 	baseURL          string
 	forwardedHeaders map[string]bool
 	pingInterval     time.Duration
+	reconnectTimeout time.Duration
 }
 
-func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval time.Duration) *SocketServer {
-	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval}
+func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval, reconnectTimeout time.Duration) *SocketServer {
+	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval, reconnectTimeout}
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -78,8 +79,11 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if client.cancel != nil {
 			client.cancel()
 		}
+		if s.broker.debug {
+			echo(Log{"t": "socket_reconnect", "client_id": clientID, "addr": getRemoteAddr(r)})
+		}
 	} else {
-		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false)
+		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false, s.reconnectTimeout)
 	}
 
 	if msg, err := json.Marshal(OpsD{I: client.id}); err == nil {
