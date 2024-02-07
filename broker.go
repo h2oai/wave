@@ -77,6 +77,7 @@ type Broker struct {
 	unicasts    map[string]bool // "/client_id" => true
 	unicastsMux sync.RWMutex    // mutex for tracking unicast routes
 	keepAppLive bool
+	clientsByID map[string]*Client
 }
 
 func newBroker(site *Site, editable, noStore, noLog, keepAppLive, debug bool) *Broker {
@@ -96,6 +97,7 @@ func newBroker(site *Site, editable, noStore, noLog, keepAppLive, debug bool) *B
 		make(map[string]bool),
 		sync.RWMutex{},
 		keepAppLive,
+		make(map[string]*Client),
 	}
 }
 
@@ -263,6 +265,7 @@ func (b *Broker) addClient(route string, client *Client) {
 
 	b.unicastsMux.Lock()
 	b.unicasts["/"+client.id] = true
+	b.clientsByID[client.id] = client
 	b.unicastsMux.Unlock()
 
 	echo(Log{"t": "ui_add", "addr": client.addr, "route": route})
@@ -291,6 +294,7 @@ func (b *Broker) dropClient(client *Client) {
 
 	b.unicastsMux.Lock()
 	delete(b.unicasts, "/"+client.id)
+	delete(b.clientsByID, client.id)
 	b.unicastsMux.Unlock()
 
 	echo(Log{"t": "ui_drop", "addr": client.addr})

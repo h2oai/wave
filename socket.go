@@ -31,10 +31,11 @@ type SocketServer struct {
 	baseURL          string
 	forwardedHeaders map[string]bool
 	pingInterval     time.Duration
+	reconnectTimeout time.Duration
 }
 
-func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval time.Duration) *SocketServer {
-	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval}
+func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval, reconnectTimeout time.Duration) *SocketServer {
+	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval, reconnectTimeout}
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -70,8 +71,31 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	clientID := r.URL.Query().Get("client-id")
+	client, ok := s.broker.clientsByID[clientID]
+	if ok {
+		client.conn = conn
+		client.isReconnect = true
+		if client.cancel != nil {
+			client.cancel()
+		}
+		if s.broker.debug {
+			echo(Log{"t": "socket_reconnect", "client_id": clientID, "addr": getRemoteAddr(r)})
+		}
+	} else {
+		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false, s.reconnectTimeout)
+	}
 
-	client := newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval)
+	if msg, err := json.Marshal(OpsD{I: client.id}); err == nil {
+		sw, err := conn.NextWriter(websocket.TextMessage)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		sw.Write(msg)
+		sw.Close()
+	}
+
 	go client.flush()
 	go client.listen()
 }
