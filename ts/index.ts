@@ -195,6 +195,7 @@ interface OpsD {
     e: B // can the user edit pages?
   }
   c?: U // clear UI state
+  i?: S // client id
 }
 interface OpD {
   k?: S
@@ -938,14 +939,21 @@ export const
     let
       _socket: WebSocket | null = null,
       _page: XPage | null = null,
-      _backoff = 1
+      _backoff = 1,
+      _reconnectFailures = 0,
+      _clientID = ''
 
     const
       slug = window.location.pathname,
       reconnect = (address: S) => {
+        if (_clientID && !address.includes('?client-id')) {
+          address = `${address}?${new URLSearchParams({ 'client-id': _clientID })}`
+        }
+
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
         socket.onopen = () => {
+          _reconnectFailures = 0
           _socket = socket
           handle(connectEvent)
           _backoff = 1
@@ -954,11 +962,17 @@ export const
         }
         socket.onclose = () => {
           const refreshRate = refreshRateB()
+          // TODO handle refreshRate > 0 case
           if (refreshRate === 0) return
 
-          // TODO handle refreshRate > 0 case
-
           _socket = null
+
+          // If on unstable network, retry immediately if we haven't failed before.
+          if (!_reconnectFailures) {
+            retry()
+            return
+          }
+
           _page = null
           _backoff *= 2
           if (_backoff > 16) _backoff = 16
@@ -994,6 +1008,8 @@ export const
               } else if (msg.m) {
                 const { u: username, e: editable } = msg.m
                 handle({ t: WaveEventType.Config, username, editable })
+              } else if (msg.i) {
+                _clientID = msg.i
               }
             } catch (error) {
               console.error(error)
@@ -1003,10 +1019,15 @@ export const
         }
         socket.onerror = () => {
           handle(dataEvent)
+          _reconnectFailures++
         }
       },
-      push = (data: any) => {
-        if (!_socket) return
+      push = (data: unknown) => {
+        if (!_socket) {
+          // Maybe currently reconnecting. Try again in 500ms.
+          if (!_reconnectFailures) setTimeout(() => push(data), 500)
+          return
+        }
         _socket.send(`@ ${slug} ${JSON.stringify(data || {})}`)
       },
       fork = (): ChangeSet => {

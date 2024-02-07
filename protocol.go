@@ -23,6 +23,7 @@ type OpsD struct {
 	E string `json:"e,omitempty"` // error
 	M *Meta  `json:"m,omitempty"` // metadata
 	C int    `json:"c,omitempty"` // clear UI state
+	I string `json:"i,omitempty"` // client id
 }
 
 // Meta represents metadata unrelated to commands
