@@ -13,11 +13,11 @@ export class RectAnnotator {
 
   constructor(private canvas: HTMLCanvasElement, private ctx: CanvasRenderingContext2D | null) { }
 
-  drawCircle = (x: U, y: U) => {
+  drawCircle = (x: U, y: U, strokeColor: S) => {
     if (!this.ctx) return
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
-    this.ctx.strokeStyle = '#000'
+    this.ctx.strokeStyle = strokeColor
     this.ctx.fillStyle = '#FFF'
     this.ctx.fill(path)
     this.ctx.stroke(path)
@@ -27,13 +27,13 @@ export class RectAnnotator {
     if (!this.ctx) return
     this.ctx.strokeStyle = strokeColor
     this.ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
+    this.ctx.fillStyle = strokeColor.substring(0, strokeColor.length - 2) + '0.2)'
+    this.ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
     if (isFocused) {
-      this.ctx.fillStyle = strokeColor.substring(0, strokeColor.length - 2) + '0.2)'
-      this.ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
-      this.drawCircle(x1, y1)
-      this.drawCircle(x2, y1)
-      this.drawCircle(x2, y2)
-      this.drawCircle(x1, y2)
+      this.drawCircle(x1, y1, strokeColor)
+      this.drawCircle(x2, y1, strokeColor)
+      this.drawCircle(x2, y2, strokeColor)
+      this.drawCircle(x1, y2, strokeColor)
     }
   }
 

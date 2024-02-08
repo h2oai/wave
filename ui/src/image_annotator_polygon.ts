@@ -187,10 +187,10 @@ export class PolygonAnnotator {
 
     _points.forEach(({ x, y }) => this.drawLine(x, y))
     if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
+    this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
+    this.ctx.fill()
     if (isFocused) {
-      this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
-      this.ctx.fill()
-      _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, isAux))
+      _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, color, isAux))
     }
   }
 
@@ -207,12 +207,12 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawPoint = (x: F, y: F, isAux = false) => {
+  drawPoint = (x: F, y: F, color: S, isAux = false,) => {
     if (!this.ctx) return
 
     const path = new Path2D()
     path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
-    this.ctx.strokeStyle = isAux ? '#5e5c5c' : '#000'
+    this.ctx.strokeStyle = isAux ? color.substring(0, color.length - 2) + '0.5)' : color
     this.ctx.fillStyle = isAux ? '#b8b8b8' : '#FFF'
     this.ctx.fill(path)
     this.ctx.stroke(path)
