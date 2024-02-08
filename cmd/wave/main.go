@@ -181,11 +181,16 @@ func main() {
 		panic(err)
 	}
 
+	// TODO: Handle this at the config parser level.
 	if authConf.SessionExpiry, err = time.ParseDuration(conf.SessionExpiry); err != nil {
 		panic(err)
 	}
 
 	if authConf.InactivityTimeout, err = time.ParseDuration(conf.InactivityTimeout); err != nil {
+		panic(err)
+	}
+
+	if serverConf.ReconnectTimeout, err = time.ParseDuration(conf.ReconnectTimeout); err != nil {
 		panic(err)
 	}
 
@@ -227,6 +232,8 @@ func main() {
 			authConf.URLParameters = append(authConf.URLParameters, kv)
 		}
 	}
+
+	// TODO: Handle this at the config parser level.
 	if authConf.SessionExpiry, err = time.ParseDuration(conf.SessionExpiry); err != nil {
 		panic(err)
 	}
