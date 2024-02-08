@@ -287,7 +287,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       setDrawnShapes(shapes => {
         shapes.forEach(({ shape, isFocused, tag }) => {
-          if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(tag), isFocused)
+          if (shape.rect) rectRef.current?.drawRect(shape.rect, getCurrentTagColor(tag), isFocused, zoom)
           else if (shape.polygon) polygonRef.current?.drawPolygon(shape.polygon.vertices, getCurrentTagColor(tag), true, isFocused)
         })
         return shapes
@@ -335,6 +335,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgPositionRef.current = { x, y }
       canvasCtx.setTransform(zoom, 0, 0, zoom, imgPositionRef.current.x, imgPositionRef.current.y)
       imgRef.current.style.transform = `translate(${imgPositionRef.current.x}px, ${imgPositionRef.current.y}px) scale(${zoom})`
+      if (canvasCtxRef?.current) canvasCtxRef.current.lineWidth = Math.min(2, 4 / zoom)
       redrawExistingShapes()
     },
     resetShapeCreation = () => {
