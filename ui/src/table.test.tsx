@@ -160,15 +160,14 @@ describe('Table.tsx', () => {
     }
     const { container, queryByText } = render(<XTable model={tableProps} />)
     const contextMenuButton = container.querySelectorAll('i[data-icon-name="MoreVertical"]')[0] as HTMLLIElement
+    fireEvent.click(contextMenuButton)
 
     expect(queryByText('Command item 1')).not.toBeInTheDocument()
-    fireEvent.click(contextMenuButton)
     const menuItem1 = document.querySelectorAll('button.ms-ContextualMenu-link')[0] as HTMLButtonElement
     fireEvent.click(menuItem1)
     expect(queryByText('Command item 1')).toBeInTheDocument()
 
     expect(queryByText('Command item 2')).not.toBeInTheDocument()
-    fireEvent.click(contextMenuButton)
     const menuItem2 = document.querySelectorAll('button.ms-ContextualMenu-link')[1] as HTMLButtonElement
     fireEvent.click(menuItem2)
     expect(queryByText('Command item 2')).not.toBeInTheDocument()

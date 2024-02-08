@@ -81,19 +81,24 @@ describe('CardMenu.tsx', () => {
   })
 
   it('Ignores items when command has download link specified', () => {
-    card.state.commands = [{
-      name: 'card',
-      download: true, path,
-      items: [{ name: 'subcommand' }]
-    }]
-    const { getByTestId, getByText, queryByText } = render(<CardMenu card={card} />)
-    expect(queryByText('subcommand')).not.toBeInTheDocument()
+    card.state.commands = [
+      { name: 'command1', items: [{ name: 'subcommand1', label: "Subcommand 1" }] },
+      { name: 'command2', path, download: true, items: [{ name: 'subcommand2', label: "Subcommand 2" }] }
+    ]
+    const { container, queryByText } = render(<CardMenu card={card} />)
 
-    fireEvent.click(getByTestId(name))
-    fireEvent.mouseOver(getByText('card'))
+    const contextMenuButton = container.querySelectorAll('i[data-icon-name="MoreVertical"]')[0] as HTMLLIElement
+    fireEvent.click(contextMenuButton)
 
-    // TODO: Works when "download: true" and "path" are not specified as well.
-    expect(queryByText('subcommand')).not.toBeInTheDocument()
+    expect(queryByText('Subcommand 1')).not.toBeInTheDocument()
+    const menuItem1 = document.querySelectorAll('button.ms-ContextualMenu-link')[0] as HTMLButtonElement
+    fireEvent.click(menuItem1)
+    expect(queryByText('Subcommand 1')).toBeInTheDocument()
+
+    expect(queryByText('Subcommand 2')).not.toBeInTheDocument()
+    const menuItem2 = document.querySelectorAll('button.ms-ContextualMenu-link')[1] as HTMLButtonElement
+    fireEvent.click(menuItem2)
+    expect(queryByText('Subcommand 2')).not.toBeInTheDocument()
   })
 
   it('Opens link in a new tab when command has path specified', () => {
