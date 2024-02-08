@@ -56,39 +56,32 @@ const
 const
   editCommand = '__edit__',
   deleteCommand = '__delete__',
-  toContextMenuItem = (c: Command): IContextualMenuItem => {
+  toContextMenuItem = ({ name, label, value, items, caption, icon, download, path }: Command): IContextualMenuItem => {
     const
       onClick = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>) => {
-        if (ev && c.download && c.path) {
+        if (ev && download && path) {
           ev.preventDefault()
-          forceFileDownload(c.path)
-          return
+          forceFileDownload(path)
         }
-        if (c.path) {
-          window.open(c.path, '_blank')
-          return
+        else if (path) window.open(path, '_blank')
+        else if (name === editCommand) {
+          if (value) editCard(value)
         }
-        if (c.name === editCommand) {
-          if (c.value) editCard(c.value)
-          return
+        else if (name === deleteCommand) {
+          if (value) deleteCard(value)
         }
-        if (c.name === deleteCommand) {
-          if (c.value) deleteCard(c.value)
-          return
+        else if (name.startsWith('#')) window.location.hash = name.substring(1)
+        else {
+          wave.args[name] = value ?? true
+          wave.push()
         }
-        if (c.name.startsWith('#')) {
-          window.location.hash = c.name.substring(1)
-          return
-        }
-        wave.args[c.name] = c.value ?? true
-        wave.push()
       }
     return {
-      key: c.name,
-      text: c.label || c.name || 'Untitled',
-      iconProps: c.icon ? { iconName: c.icon } : undefined,
-      title: c.caption || undefined,
-      subMenuProps: c.items && !c.path ? { items: c.items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
+      key: name,
+      text: label || name || 'Untitled',
+      iconProps: icon ? { iconName: icon } : undefined,
+      title: caption || undefined,
+      subMenuProps: items && !path ? { items: items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
       onClick,
     }
   }

@@ -64,24 +64,19 @@ const
       justifyContent: 'center',
     },
   }),
-  toCommand = ({ name, path, label = path, caption, icon, items, value, download }: Command): ICommandBarItemProps => {
+  toCommand = ({ name, path, label, caption, icon, items, value, download }: Command): ICommandBarItemProps => {
     wave.args[name] = false
     const onClick = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>) => {
       if (ev && download && path) {
         ev.preventDefault()
         forceFileDownload(path)
-        return
       }
-      if (path) {
-        window.open(path, '_blank')
-        return
+      else if (path) window.open(path, '_blank')
+      else if (name.startsWith('#')) window.location.hash = name.substring(1)
+      else {
+        wave.args[name] = value === undefined || value
+        wave.push()
       }
-      if (name.startsWith('#')) {
-        window.location.hash = name.substring(1)
-        return
-      }
-      wave.args[name] = value === undefined || value
-      wave.push()
     }
     return {
       key: name,
