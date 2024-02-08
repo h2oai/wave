@@ -257,17 +257,15 @@ describe('Button.tsx', () => {
     })
 
     it('Does not set args and calls sync on click when command has download link specified', () => {
-      // TODO: Use "true" only instead of value
       const
-        value = 'value',
         btnCommandDownloadProps: Buttons = {
           items: [{
             button: {
               name,
               label: name,
               commands: [
-                { name: 'command1', label: 'Command 1', value },
-                { name: 'command2', label: 'Command 2', path, download: true, value },
+                { name: 'command1', label: 'Command 1' },
+                { name: 'command2', label: 'Command 2', path, download: true },
               ]
             }
           }]
@@ -278,7 +276,7 @@ describe('Button.tsx', () => {
       expect(wave.args['command1']).toBe(false)
       fireEvent.click(contextMenuButton)
       fireEvent.click(getByText('Command 1'))
-      expect(wave.args['command1']).toBe(value)
+      expect(wave.args['command1']).toBe(true)
 
       expect(pushMock).toHaveBeenCalled()
       expect(pushMock).toHaveBeenCalledTimes(1)
@@ -286,7 +284,7 @@ describe('Button.tsx', () => {
       expect(wave.args['command2']).toBe(false)
       fireEvent.click(contextMenuButton)
       fireEvent.click(getByText('Command 2'))
-      expect(wave.args['command2']).not.toBe(value)
+      expect(wave.args['command2']).toBe(false)
 
       expect(pushMock).toHaveBeenCalledTimes(1)
     })
