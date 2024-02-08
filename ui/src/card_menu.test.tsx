@@ -68,7 +68,7 @@ describe('CardMenu.tsx', () => {
     expect(window.location.hash).toBe('#card')
   })
 
-  it('Does not set args and calls sync on click when download link is specified', () => {
+  it('Does not set args and calls sync on click when command has download link specified', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
     card.state.commands = [{ name: 'card', download: true, path, value: 'value' }]
@@ -80,7 +80,7 @@ describe('CardMenu.tsx', () => {
     expect(wave.args[name]).toBeNull()
   })
 
-  it('Ignores items when download link is specified', () => {
+  it('Ignores items when command has download link specified', () => {
     card.state.commands = [{
       name: 'card',
       download: true, path,
@@ -96,7 +96,7 @@ describe('CardMenu.tsx', () => {
     expect(queryByText('subcommand')).not.toBeInTheDocument()
   })
 
-  it('Opens link in a new tab when path is specified', () => {
+  it('Opens link in a new tab when command has path specified', () => {
     const windowOpenMock = jest.fn()
     window.open = windowOpenMock
     card.state.commands = [{ name: 'card', path }]

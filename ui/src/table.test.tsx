@@ -22,6 +22,7 @@ const
   cell11 = 'Quick brown fox.',
   cell21 = 'Jumps over a dog.',
   cell31 = 'Wooo hooo.',
+  path = 'https://wave.h2o.ai/img/logo.svg',
   headerRow = 1,
   groupHeaderRowsCount = 2,
   filteredItem = 1,
@@ -138,6 +139,68 @@ describe('Table.tsx', () => {
     expect(tags1.childElementCount).toBe(1)
     expect(tags2.childElementCount).toBe(2)
     expect(tags3.childElementCount).toBe(0)
+  })
+
+  it('Ignores items when menu command has download link specified', () => {
+    tableProps = {
+      ...tableProps,
+      columns: [
+        { name: 'colname1', label: 'Col1' },
+        {
+          name: 'colname2', label: 'Col2', cell_type: {
+            menu: {
+              name: 'commands', commands: [
+                { name: 'command1', label: 'Command 1', items: [{ name: 'commandItem1', label: 'Command item 1' }] },
+                { name: 'command2', label: 'Command 2', path, download: true, items: [{ name: 'commandItem2', label: 'Command item 2' }] },
+              ]
+            }
+          }
+        },
+      ],
+    }
+    const { container, queryByText } = render(<XTable model={tableProps} />)
+    const contextMenuButton = container.querySelectorAll('i[data-icon-name="MoreVertical"]')[0] as HTMLLIElement
+
+    expect(queryByText('Command item 1')).not.toBeInTheDocument()
+    fireEvent.click(contextMenuButton)
+    const menuItem1 = document.querySelectorAll('button.ms-ContextualMenu-link')[0] as HTMLButtonElement
+    fireEvent.click(menuItem1)
+    expect(queryByText('Command item 1')).toBeInTheDocument()
+
+    expect(queryByText('Command item 2')).not.toBeInTheDocument()
+    fireEvent.click(contextMenuButton)
+    const menuItem2 = document.querySelectorAll('button.ms-ContextualMenu-link')[1] as HTMLButtonElement
+    fireEvent.click(menuItem2)
+    expect(queryByText('Command item 2')).not.toBeInTheDocument()
+  })
+
+  it('Opens link in a new tab when menu command has path specified', () => {
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    tableProps = {
+      ...tableProps,
+      columns: [
+        { name: 'colname1', label: 'Col1' },
+        {
+          name: 'colname2', label: 'Col2', cell_type: {
+            menu: {
+              name: 'commands', commands: [
+                { name: 'command1', label: 'Command 1', path },
+              ]
+            }
+          }
+        },
+      ],
+    }
+    const { container } = render(<XTable model={tableProps} />)
+    const contextMenuButton = container.querySelectorAll('i[data-icon-name="MoreVertical"]')[0] as HTMLLIElement
+
+    fireEvent.click(contextMenuButton)
+    const menuItem = document.querySelectorAll('button.ms-ContextualMenu-link')[0] as HTMLButtonElement
+    fireEvent.click(menuItem)
+
+    expect(windowOpenMock).toHaveBeenCalled()
+    expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
   })
 
   // TODO: Add a test to check that no event is emitted on rows update. Would result in infinite loop.
@@ -422,25 +485,59 @@ describe('Table.tsx', () => {
       expect(wave.args[name]).toMatchObject(['rowname2'])
       expect(pushMock).toHaveBeenCalled()
     })
+
+    it('Does not click a column - link exlpicitly turned off', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', link: false },
+          { name: 'colname2', label: 'Col2' },
+        ]
+      }
+      const pushMock = jest.fn()
+      wave.push = pushMock
+
+      const { getByText } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByText(cell21))
+      expect(pushMock).not.toHaveBeenCalled()
+      expect(wave.args[name]).toMatchObject([])
+    })
+
+    it('Does not set args and calls sync on click when menu command has download link specified', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1' },
+          {
+            name: 'colname2', label: 'Col2', cell_type: {
+              menu: {
+                name: 'commands', commands: [
+                  { name: 'command1', label: 'Command 1' },
+                  { name: 'command2', label: 'Command 2', path, download: true },
+                ]
+              }
+            }
+          },
+        ],
+      }
+      const { container, queryAllByText } = render(<XTable model={tableProps} />)
+      const contextMenuButton = container.querySelectorAll('i[data-icon-name="MoreVertical"]')[0] as HTMLLIElement
+
+      expect(wave.args['command1']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(queryAllByText('Command 1')[1])
+
+      expect(wave.args['command1']).toBe('rowname2')
+
+      expect(wave.args['command2']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(queryAllByText('Command 2')[1])
+
+      expect(wave.args['command2']).toBe(false)
+    })
   })
 
-  it('Does not click a column - link exlpicitly turned off', () => {
-    tableProps = {
-      ...tableProps,
-      columns: [
-        { name: 'colname1', label: 'Col1', link: false },
-        { name: 'colname2', label: 'Col2' },
-      ]
-    }
-    const pushMock = jest.fn()
-    wave.push = pushMock
-
-    const { getByText } = render(<XTable model={tableProps} />)
-
-    fireEvent.click(getByText(cell21))
-    expect(pushMock).not.toHaveBeenCalled()
-    expect(wave.args[name]).toMatchObject([])
-  })
 
   describe('sort', () => {
     beforeEach(() => {

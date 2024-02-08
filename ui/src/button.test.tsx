@@ -16,7 +16,6 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Buttons, MiniButtons, XButtons, XMiniButtons } from './button'
 import { wave } from './ui'
-import userEvent from '@testing-library/user-event'
 
 const
   name = 'test-btn',
@@ -257,7 +256,7 @@ describe('Button.tsx', () => {
       expect(container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement).not.toBeInTheDocument()
     })
 
-    it('Does not set args and calls sync on click when download link is specified', () => {
+    it('Does not set args and calls sync on click when command has download link specified', () => {
       // TODO: Use "true" only instead of value
       const
         value = 'value',
@@ -292,7 +291,7 @@ describe('Button.tsx', () => {
       expect(pushMock).toHaveBeenCalledTimes(1)
     })
 
-    it('Ignores items when download link is specified', () => {
+    it('Ignores items when command has download link specified', () => {
       const
         btnCommandDownloadProps: Buttons = {
           items: [{
@@ -322,7 +321,7 @@ describe('Button.tsx', () => {
       expect(queryByText('Command item 2')).not.toBeInTheDocument()
     })
 
-    it('Opens link in a new tab when path is specified', () => {
+    it('Opens link in a new tab when command has path specified', () => {
       const windowOpenMock = jest.fn()
       window.open = windowOpenMock
       const

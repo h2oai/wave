@@ -70,7 +70,7 @@ describe('Toolbar.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
-  it('Does not set args and calls sync on click when download link is specified', () => {
+  it('Does not set args and calls sync on click when command has download link specified', () => {
     const value = 'value'
     const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name, value, label, path, download: true }] } }} />)
     fireEvent.click(getByText(label))
@@ -79,7 +79,7 @@ describe('Toolbar.tsx', () => {
     expect(wave.args[name]).toBe(false)
   })
 
-  it('Ignores items when download link is specified', () => {
+  it('Ignores items when command has download link specified', () => {
     const props = {
       ...toolbarProps, state: {
         items: [{
@@ -99,7 +99,7 @@ describe('Toolbar.tsx', () => {
     expect(queryByText('item')).not.toBeInTheDocument()
   })
 
-  it('Opens link in a new tab when path is specified', () => {
+  it('Opens link in a new tab when command has path specified', () => {
     const windowOpenMock = jest.fn()
     window.open = windowOpenMock
     const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name, label, path }] } }} />)
