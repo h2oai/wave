@@ -1927,7 +1927,7 @@
   "Wave Full Command": {
     "prefix": "w_full_command",
     "body": [
-      "ui.command(name='$1', label='$2', caption='$3', icon='$4', value='$5', items=[\n\t\t$6\t\t\n]),$0"
+      "ui.command(name='$1', label='$2', caption='$3', icon='$4', value='$5', path='$6', download=${7:False}, items=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave Command."
   },

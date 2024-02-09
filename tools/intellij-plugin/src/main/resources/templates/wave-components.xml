@@ -2680,12 +2680,14 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_command" value="ui.command(name='$name$',label='$label$',caption='$caption$',icon='$icon$',value='$value$',items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Command with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_command" value="ui.command(name='$name$',label='$label$',caption='$caption$',icon='$icon$',value='$value$',path='$path$',download=$download$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Command with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="download" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

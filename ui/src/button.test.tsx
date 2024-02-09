@@ -124,6 +124,7 @@ describe('Button.tsx', () => {
   })
 
   describe('Commands button', () => {
+    const path = 'https://wave.h2o.ai/img/logo.svg'
     const buttonProps = {
       items: [{
         button: {
@@ -253,6 +254,94 @@ describe('Button.tsx', () => {
 
       expect(getByTestId(name)).toHaveClass('ms-Link')
       expect(container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement).not.toBeInTheDocument()
+    })
+
+    it('Does not set args or calls sync on click when command has download link specified', () => {
+      const
+        btnCommandDownloadProps: Buttons = {
+          items: [{
+            button: {
+              name,
+              label: name,
+              commands: [
+                { name: 'command1', label: 'Command 1' },
+                { name: 'command2', label: 'Command 2', path, download: true },
+              ]
+            }
+          }]
+        },
+        { container, getByText } = render(<XButtons model={btnCommandDownloadProps} />),
+        contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      expect(wave.args['command1']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 1'))
+      expect(wave.args['command1']).toBe(true)
+
+      expect(pushMock).toHaveBeenCalled()
+      expect(pushMock).toHaveBeenCalledTimes(1)
+
+      expect(wave.args['command2']).toBe(false)
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command 2'))
+      expect(wave.args['command2']).toBe(false)
+
+      expect(pushMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('Ignores items when command has download link specified', () => {
+      const
+        btnCommandDownloadProps: Buttons = {
+          items: [{
+            button: {
+              name,
+              label: name,
+              commands: [
+                { name: 'command1', label: 'Command 1', items: [{ name: 'commandItem1', label: 'Command item 1' }] },
+                { name: 'command2', label: 'Command 2', path, download: true, items: [{ name: 'commandItem2', label: 'Command item 2' }] },
+              ]
+            }
+          }]
+        },
+        { container, queryByText } = render(<XButtons model={btnCommandDownloadProps} />),
+        contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      fireEvent.click(contextMenuButton)
+
+      expect(queryByText('Command item 1')).not.toBeInTheDocument()
+      const menuItem1 = document.querySelectorAll('button.ms-ContextualMenu-link')[0] as HTMLButtonElement
+      fireEvent.click(menuItem1)
+      expect(queryByText('Command item 1')).toBeInTheDocument()
+
+      expect(queryByText('Command item 2')).not.toBeInTheDocument()
+      const menuItem2 = document.querySelectorAll('button.ms-ContextualMenu-link')[1] as HTMLButtonElement
+      fireEvent.click(menuItem2)
+      expect(queryByText('Command item 2')).not.toBeInTheDocument()
+    })
+
+    it('Opens link in a new tab when command has path specified', () => {
+      const windowOpenMock = jest.fn()
+      window.open = windowOpenMock
+      const
+        btnCommandDownloadProps: Buttons = {
+          items: [{
+            button: {
+              name,
+              label: name,
+              commands: [
+                { name: 'command', label: 'Command', path },
+              ]
+            }
+          }]
+        },
+        { container, getByText } = render(<XButtons model={btnCommandDownloadProps} />),
+        contextMenuButton = container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement
+
+      fireEvent.click(contextMenuButton)
+      fireEvent.click(getByText('Command'))
+
+      expect(windowOpenMock).toHaveBeenCalled()
+      expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
     })
   })
 })

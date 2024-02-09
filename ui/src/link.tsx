@@ -89,7 +89,7 @@ export interface Links {
   /** The width of the links, e.g. '100px'. */
   width?: S
 }
-const forceFileDownload = (path: S) => {
+export const forceFileDownload = (path: S) => {
   const anchor = document.createElement('a')
   anchor.href = path
   anchor.download = path.split('/').pop()!

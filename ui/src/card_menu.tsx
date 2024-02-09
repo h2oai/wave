@@ -21,6 +21,7 @@ import { fixMenuOverflowStyles } from './parts/utils'
 import { clas, cssVar } from './theme'
 import { Command } from './toolbar'
 import { bond, wave } from './ui'
+import { forceFileDownload } from './link'
 
 const
   css = stylesheet({
@@ -55,30 +56,32 @@ const
 const
   editCommand = '__edit__',
   deleteCommand = '__delete__',
-  toContextMenuItem = (c: Command): IContextualMenuItem => {
+  toContextMenuItem = ({ name, label, value, items, caption, icon, download, path }: Command): IContextualMenuItem => {
     const
-      onClick = () => {
-        if (c.name === editCommand) {
-          if (c.value) editCard(c.value)
-          return
+      onClick = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>) => {
+        if (ev && download && path) {
+          ev.preventDefault()
+          forceFileDownload(path)
         }
-        if (c.name === deleteCommand) {
-          if (c.value) deleteCard(c.value)
-          return
+        else if (path) window.open(path, '_blank')
+        else if (name === editCommand) {
+          if (value) editCard(value)
         }
-        if (c.name.startsWith('#')) {
-          window.location.hash = c.name.substring(1)
-          return
+        else if (name === deleteCommand) {
+          if (value) deleteCard(value)
         }
-        wave.args[c.name] = c.value ?? true
-        wave.push()
+        else if (name.startsWith('#')) window.location.hash = name.substring(1)
+        else {
+          wave.args[name] = value ?? true
+          wave.push()
+        }
       }
     return {
-      key: c.name,
-      text: c.label || c.name || 'Untitled',
-      iconProps: c.icon ? { iconName: c.icon } : undefined,
-      title: c.caption || undefined,
-      subMenuProps: c.items ? { items: c.items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
+      key: name,
+      text: label || name || 'Untitled',
+      iconProps: icon ? { iconName: icon } : undefined,
+      title: caption || undefined,
+      subMenuProps: items && !path ? { items: items.map(toContextMenuItem), styles: fixMenuOverflowStyles } : undefined,
       onClick,
     }
   }
