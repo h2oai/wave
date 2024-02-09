@@ -58,6 +58,8 @@ def command(
         icon: Optional[str] = None,
         items: Optional[List[Command]] = None,
         value: Optional[str] = None,
+        path: Optional[str] = None,
+        download: Optional[bool] = None,
 ) -> Command:
     """Create a command.
 
@@ -70,6 +72,8 @@ def command(
         icon: The icon to be displayed for this command.
         items: Sub-commands, if any
         value: Data associated with this command, if any.
+        path: The path or URL to link to. The 'items' and 'value' props are ignored when specified.
+        download: True if the link should prompt the user to save the linked URL instead of navigating to it.
     Returns:
         A `h2o_wave.types.Command` instance.
     """
@@ -80,6 +84,8 @@ def command(
         icon,
         items,
         value,
+        path,
+        download,
     )
 
 

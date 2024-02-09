@@ -16,8 +16,10 @@ import { fireEvent, render } from '@testing-library/react'
 import { Card, box } from './core'
 import React from 'react'
 import { CardMenu } from './card_menu'
+import { wave } from './ui'
 
 const name = 'card'
+const path = 'https://wave.h2o.ai/img/logo.svg'
 let card: Card
 describe('CardMenu.tsx', () => {
   beforeEach(() => {
@@ -28,6 +30,7 @@ describe('CardMenu.tsx', () => {
       id: 'id',
       set: jest.fn(),
     }
+    wave.args[name] = null
   })
   it('Does not render data-test attr', () => {
     // @ts-ignore
@@ -63,5 +66,51 @@ describe('CardMenu.tsx', () => {
     fireEvent.click(getByText('#card'))
 
     expect(window.location.hash).toBe('#card')
+  })
+
+  it('Does not set args or calls sync on click when command has download link specified', () => {
+    const pushMock = jest.fn()
+    wave.push = pushMock
+    card.state.commands = [{ name: 'card', download: true, path, value: 'value' }]
+    const { getByTestId, getByText } = render(<CardMenu card={card} />)
+    fireEvent.click(getByTestId(name))
+    fireEvent.click(getByText('card'))
+
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toBeNull()
+  })
+
+  it('Ignores items when command has download link specified', () => {
+    card.state.commands = [
+      { name: 'command1', items: [{ name: 'subcommand1', label: "Subcommand 1" }] },
+      { name: 'command2', path, download: true, items: [{ name: 'subcommand2', label: "Subcommand 2" }] }
+    ]
+    const { container, queryByText } = render(<CardMenu card={card} />)
+
+    const contextMenuButton = container.querySelectorAll('i[data-icon-name="MoreVertical"]')[0] as HTMLLIElement
+    fireEvent.click(contextMenuButton)
+
+    expect(queryByText('Subcommand 1')).not.toBeInTheDocument()
+    const menuItem1 = document.querySelectorAll('button.ms-ContextualMenu-link')[0] as HTMLButtonElement
+    fireEvent.click(menuItem1)
+    expect(queryByText('Subcommand 1')).toBeInTheDocument()
+
+    expect(queryByText('Subcommand 2')).not.toBeInTheDocument()
+    const menuItem2 = document.querySelectorAll('button.ms-ContextualMenu-link')[1] as HTMLButtonElement
+    fireEvent.click(menuItem2)
+    expect(queryByText('Subcommand 2')).not.toBeInTheDocument()
+  })
+
+  it('Opens link in a new tab when command has path specified', () => {
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    card.state.commands = [{ name: 'card', path }]
+    const { getByTestId, getByText } = render(<CardMenu card={card} />)
+
+    fireEvent.click(getByTestId(name))
+    fireEvent.click(getByText('card'))
+
+    expect(windowOpenMock).toHaveBeenCalled()
+    expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
   })
 })

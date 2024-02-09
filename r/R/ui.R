@@ -103,6 +103,8 @@ ui_text <- function(
 #' @param icon The icon to be displayed for this command.
 #' @param items Sub-commands, if any
 #' @param value Data associated with this command, if any.
+#' @param path The path or URL to link to. The 'items' and 'value' props are ignored when specified.
+#' @param download True if the link should prompt the user to save the linked URL instead of navigating to it.
 #' @return A Command instance.
 #' @export
 ui_command <- function(
@@ -111,20 +113,26 @@ ui_command <- function(
   caption = NULL,
   icon = NULL,
   items = NULL,
-  value = NULL) {
+  value = NULL,
+  path = NULL,
+  download = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_vector("items", "WaveCommand", items)
   .guard_scalar("value", "character", value)
+  .guard_scalar("path", "character", path)
+  .guard_scalar("download", "logical", download)
   .o <- list(
     name=name,
     label=label,
     caption=caption,
     icon=icon,
     items=items,
-    value=value)
+    value=value,
+    path=path,
+    download=download)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveCommand"))
   return(.o)
 }

@@ -19,11 +19,11 @@ q.page['example'] = ui.toolbar_card(
         ),
         ui.command(name='upload', label='Upload', icon='Upload'),
         ui.command(name='share', label='Share', icon='Share'),
-        ui.command(name='download', label='Download', icon='Download'),
+        ui.command(name='download', label='Download', icon='Download', path='https://wave.h2o.ai/img/logo.svg', download=True),
     ],
     secondary_items=[
         ui.command(name='tile', caption='Grid View', icon='Tiles'),
-        ui.command(name='info', caption='Info', icon='Info'),
+        ui.command(name='info', caption='Info', icon='Info', path='https://wave.h2o.ai'),
     ],
     overflow_items=[
         ui.command(name='move', label='Move to...', icon='MoveToFolder'),
