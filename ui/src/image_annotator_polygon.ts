@@ -214,7 +214,7 @@ export class PolygonAnnotator {
     if (!this.ctx) return
 
     const path = new Path2D()
-    path.arc(x, y, this.ctx.lineWidth * 2, 0, 2 * Math.PI)
+    path.arc(x, y, (ARC_RADIUS_DEFAULT * this.ctx.lineWidth) / 2, 0, 2 * Math.PI)
     this.ctx.strokeStyle = isAux ? color.substring(0, color.length - 2) + '0.5)' : color
     this.ctx.fillStyle = isAux ? '#b8b8b8' : '#FFF'
     this.ctx.fill(path)

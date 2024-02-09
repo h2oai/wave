@@ -16,7 +16,7 @@ export class RectAnnotator {
   drawCircle = (x: U, y: U, strokeColor: S) => {
     if (!this.ctx) return
     const path = new Path2D()
-    path.arc(x, y, this.ctx.lineWidth * 2, 0, 2 * Math.PI)
+    path.arc(x, y, (ARC_RADIUS_DEFAULT * this.ctx.lineWidth) / 2, 0, 2 * Math.PI)
     this.ctx.strokeStyle = strokeColor
     this.ctx.fillStyle = '#FFF'
     this.ctx.fill(path)

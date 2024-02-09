@@ -335,10 +335,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgPositionRef.current = { x, y }
       canvasCtx.setTransform(zoom, 0, 0, zoom, imgPositionRef.current.x, imgPositionRef.current.y)
       imgRef.current.style.transform = `translate(${imgPositionRef.current.x}px, ${imgPositionRef.current.y}px) scale(${zoom})`
-      if (canvasCtxRef?.current) {
-        canvasCtxRef.current.lineWidth = 2 / zoom
-        canvasCtxRef.current.canvas.dataset.arcRadius = `${2 * (2 / zoom)}`
-      }
+      if (canvasCtxRef?.current) canvasCtxRef.current.lineWidth = 2 / zoom
       redrawExistingShapes()
     },
     resetShapeCreation = () => {
