@@ -70,7 +70,7 @@ describe('Toolbar.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
-  it('Does not set args and calls sync on click when command has download link specified', () => {
+  it('Does not set args or calls sync on click when command has download link specified', () => {
     const value = 'value'
     const { getByText } = render(<Toolbar {...{ ...toolbarProps, state: { items: [{ name, value, label, path, download: true }] } }} />)
     fireEvent.click(getByText(label))

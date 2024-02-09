@@ -68,7 +68,7 @@ describe('CardMenu.tsx', () => {
     expect(window.location.hash).toBe('#card')
   })
 
-  it('Does not set args and calls sync on click when command has download link specified', () => {
+  it('Does not set args or calls sync on click when command has download link specified', () => {
     const pushMock = jest.fn()
     wave.push = pushMock
     card.state.commands = [{ name: 'card', download: true, path, value: 'value' }]

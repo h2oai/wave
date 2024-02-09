@@ -256,7 +256,7 @@ describe('Button.tsx', () => {
       expect(container.querySelector('i[data-icon-name="ChevronDown"]') as HTMLLIElement).not.toBeInTheDocument()
     })
 
-    it('Does not set args and calls sync on click when command has download link specified', () => {
+    it('Does not set args or calls sync on click when command has download link specified', () => {
       const
         btnCommandDownloadProps: Buttons = {
           items: [{
