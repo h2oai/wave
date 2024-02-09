@@ -176,7 +176,7 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawPolygon = (points: DrawnPoint[], color: S, joinLastPoint = true, isFocused = false) => {
+  drawPolygon = (points: DrawnPoint[], color: S, joinLastPoint = true, isFocused = false, preview = false) => {
     if (!points.length || !this.ctx) return
 
     this.ctx.fillStyle = color
@@ -189,16 +189,14 @@ export class PolygonAnnotator {
     _points.forEach(({ x, y }) => this.drawLine(x, y))
     if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
     this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
-    this.ctx.fill()
-    if (isFocused) {
-      _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, color, isAux))
-    }
+    if (!preview) this.ctx.fill()
+    if (isFocused) _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, color, isAux))
   }
 
   drawPreviewLine = (cursor_x: F, cursor_y: F, color: S) => {
     if (!this.ctx || !this.currPolygonPoints.length) return
 
-    this.drawPolygon(this.currPolygonPoints, color, false)
+    this.drawPolygon(this.currPolygonPoints, color, false, false, true)
     const { x, y } = this.currPolygonPoints[this.currPolygonPoints.length - 1]
 
     this.ctx.beginPath()
