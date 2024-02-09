@@ -4,7 +4,7 @@ import { DrawnShape, ImageAnnotatorRect, Position } from './image_annotator'
 const
   MIN_RECT_WIDTH = 5,
   MIN_RECT_HEIGHT = 5
-export const ARC_RADIUS = 4
+export const ARC_RADIUS_DEFAULT = 4
 
 // Needs some canvas-related refactoring love.
 export class RectAnnotator {
@@ -16,7 +16,7 @@ export class RectAnnotator {
   drawCircle = (x: U, y: U, strokeColor: S) => {
     if (!this.ctx) return
     const path = new Path2D()
-    path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
+    path.arc(x, y, this.ctx.lineWidth * 2, 0, 2 * Math.PI)
     this.ctx.strokeStyle = strokeColor
     this.ctx.fillStyle = '#FFF'
     this.ctx.fill(path)
@@ -71,8 +71,9 @@ export class RectAnnotator {
 
   onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
     if (!shape.shape.rect) return
+    const arcRadius = this.ctx ? this.ctx.lineWidth * 2 : ARC_RADIUS_DEFAULT
     this.movedRect = shape
-    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect)
+    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect, arcRadius)
   }
 
   isMovedOrResized = () => !!this.movedRect || !!this.resizedCorner
@@ -149,23 +150,23 @@ export const
     if (x1 > x2) [rect.x1, rect.x2] = [x2, x1]
     if (y1 > y2) [rect.y1, rect.y2] = [y2, y1]
   },
-  isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect, isFocused = false) => {
+  isIntersectingRect = (cursor_x: U, cursor_y: U, rect?: ImageAnnotatorRect, isFocused = false, zoom: F = 1) => {
     if (!rect) return false
-    if (isFocused && getCorner(cursor_x, cursor_y, rect)) return true
+    if (isFocused && getCorner(cursor_x, cursor_y, rect, ARC_RADIUS_DEFAULT / zoom)) return true
 
     const { x2, x1, y2, y1 } = rect
     return cursor_x >= x1 && cursor_x <= x2 && cursor_y >= y1 && cursor_y <= y2
   },
-  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect) => {
-    if (x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS) return 'topLeft'
-    else if (x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y1 - ARC_RADIUS && y < y1 + ARC_RADIUS) return 'topRight'
-    else if (x > x1 - ARC_RADIUS && x < x1 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS) return 'bottomLeft'
-    else if (x > x2 - ARC_RADIUS && x < x2 + ARC_RADIUS && y > y2 - ARC_RADIUS && y < y2 + ARC_RADIUS) return 'bottomRight'
+  getCorner = (x: U, y: U, { x1, y1, x2, y2 }: ImageAnnotatorRect, arcRadius: F = ARC_RADIUS_DEFAULT) => {
+    if (x > x1 - arcRadius && x < x1 + arcRadius && y > y1 - arcRadius && y < y1 + arcRadius) return 'topLeft'
+    else if (x > x2 - arcRadius && x < x2 + arcRadius && y > y1 - arcRadius && y < y1 + arcRadius) return 'topRight'
+    else if (x > x1 - arcRadius && x < x1 + arcRadius && y > y2 - arcRadius && y < y2 + arcRadius) return 'bottomLeft'
+    else if (x > x2 - arcRadius && x < x2 + arcRadius && y > y2 - arcRadius && y < y2 + arcRadius) return 'bottomRight'
   },
   getRectCursorByCorner = (corner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight') => {
     if (corner === 'topLeft' || corner === 'bottomRight') return 'nwse-resize'
     if (corner === 'bottomLeft' || corner === 'topRight') return 'nesw-resize'
   },
-  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U) => {
-    return getRectCursorByCorner(getCorner(cursor_x, cursor_y, shape))
+  getRectCornerCursor = (shape: ImageAnnotatorRect, cursor_x: U, cursor_y: U, zoom: F = 1) => {
+    return getRectCursorByCorner(getCorner(cursor_x, cursor_y, shape, ARC_RADIUS_DEFAULT / zoom))
   }
