@@ -10,13 +10,15 @@ export const ARC_RADIUS_DEFAULT = 4
 export class RectAnnotator {
   private resizedCorner?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   private movedRect?: DrawnShape
+  private getArcRadius = () => this.ctx ? ARC_RADIUS_DEFAULT / this.ctx.getTransform().a : ARC_RADIUS_DEFAULT
 
   constructor(private canvas: HTMLCanvasElement, private ctx: CanvasRenderingContext2D | null) { }
 
   drawCircle = (x: U, y: U, strokeColor: S) => {
     if (!this.ctx) return
+
     const path = new Path2D()
-    path.arc(x, y, (ARC_RADIUS_DEFAULT * this.ctx.lineWidth) / 2, 0, 2 * Math.PI)
+    path.arc(x, y, this.getArcRadius(), 0, 2 * Math.PI)
     this.ctx.strokeStyle = strokeColor
     this.ctx.fillStyle = '#FFF'
     this.ctx.fill(path)
@@ -71,9 +73,8 @@ export class RectAnnotator {
 
   onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
     if (!shape.shape.rect) return
-    const arcRadius = this.ctx ? this.ctx.lineWidth * 2 : ARC_RADIUS_DEFAULT
     this.movedRect = shape
-    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect, arcRadius)
+    this.resizedCorner = getCorner(cursor_x, cursor_y, shape.shape.rect, this.getArcRadius())
   }
 
   isMovedOrResized = () => !!this.movedRect || !!this.resizedCorner
