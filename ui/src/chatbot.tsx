@@ -123,6 +123,8 @@ export interface Chatbot {
   prev_items?: ChatbotMessage[]
   /** Clickable prompt suggestions shown below the last response. */
   prompt_suggestions?: ChatPromptSuggestion[]
+  /** True if the user input should be disabled. */
+  disabled?: B
 }
 
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
@@ -260,6 +262,7 @@ export const XChatbot = (props: Chatbot) => {
           multiline
           autoAdjustHeight
           placeholder={props.placeholder || 'Type your message'}
+          disabled={props.disabled}
           styles={{
             root: { flexGrow: 1 },
             fieldGroup: { minHeight: INPUT_HEIGHT },
@@ -302,6 +305,8 @@ interface State {
   generating?: B
   /** Clickable prompt suggestions shown below the last response. */
   prompt_suggestions?: ChatPromptSuggestion[]
+  /** True if the user input should be disabled. */
+  disabled?: B
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {

@@ -8296,6 +8296,7 @@ class ChatbotCard:
             events: Optional[List[str]] = None,
             generating: Optional[bool] = None,
             prompt_suggestions: Optional[List[ChatPromptSuggestion]] = None,
+            disabled: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ChatbotCard.box', box, (str,), False, False, False)
@@ -8304,6 +8305,7 @@ class ChatbotCard:
         _guard_vector('ChatbotCard.events', events, (str,), False, True, False)
         _guard_scalar('ChatbotCard.generating', generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.prompt_suggestions', prompt_suggestions, (ChatPromptSuggestion,), False, True, False)
+        _guard_scalar('ChatbotCard.disabled', disabled, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8319,6 +8321,8 @@ class ChatbotCard:
         """True to show a button to stop the text generation. Defaults to False."""
         self.prompt_suggestions = prompt_suggestions
         """Clickable prompt suggestions shown below the last response."""
+        self.disabled = disabled
+        """True if the user input should be disabled."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8330,6 +8334,7 @@ class ChatbotCard:
         _guard_vector('ChatbotCard.events', self.events, (str,), False, True, False)
         _guard_scalar('ChatbotCard.generating', self.generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.prompt_suggestions', self.prompt_suggestions, (ChatPromptSuggestion,), False, True, False)
+        _guard_scalar('ChatbotCard.disabled', self.disabled, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='chatbot',
@@ -8340,6 +8345,7 @@ class ChatbotCard:
             events=self.events,
             generating=self.generating,
             prompt_suggestions=None if self.prompt_suggestions is None else [__e.dump() for __e in self.prompt_suggestions],
+            disabled=self.disabled,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8359,6 +8365,8 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.generating', __d_generating, (bool,), False, True, False)
         __d_prompt_suggestions: Any = __d.get('prompt_suggestions')
         _guard_vector('ChatbotCard.prompt_suggestions', __d_prompt_suggestions, (dict,), False, True, False)
+        __d_disabled: Any = __d.get('disabled')
+        _guard_scalar('ChatbotCard.disabled', __d_disabled, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ChatbotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -8368,6 +8376,7 @@ class ChatbotCard:
         events: Optional[List[str]] = __d_events
         generating: Optional[bool] = __d_generating
         prompt_suggestions: Optional[List[ChatPromptSuggestion]] = None if __d_prompt_suggestions is None else [ChatPromptSuggestion.load(__e) for __e in __d_prompt_suggestions]
+        disabled: Optional[bool] = __d_disabled
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ChatbotCard(
             box,
@@ -8377,6 +8386,7 @@ class ChatbotCard:
             events,
             generating,
             prompt_suggestions,
+            disabled,
             commands,
         )
 
