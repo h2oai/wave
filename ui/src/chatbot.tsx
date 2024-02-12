@@ -88,6 +88,18 @@ interface ChatbotMessage {
   from_user: B
 }
 
+/**
+ * Create a chat prompt suggestion.
+ *
+ * Chat prompt suggestions are displayed as buttons below the last response in chatbot component.
+ */
+export interface ChatPromptSuggestion {
+  /** An identifying name for this component. */
+  name: Id
+  /** The text displayed for this suggestion. */
+  label?: S
+}
+
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
 export interface Chatbot {
   /** An identifying name for this component. */
@@ -96,12 +108,14 @@ export interface Chatbot {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'prompt_suggestion'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
   /** The previous messages to show as the user scrolls up. */
   prev_items?: ChatbotMessage[]
+  /** Clickable prompt suggestions shown below the last response. */
+  prompt_suggestions?: ChatPromptSuggestion[]
 }
 
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
@@ -212,6 +226,15 @@ export const XChatbot = (props: Chatbot) => {
             </span>
           </div>
         ))}
+        {props.prompt_suggestions ? <>
+          {
+            props.prompt_suggestions.map(({ name, label }) => {
+              return <Fluent.DefaultButton key={name}>
+                {label}
+              </Fluent.DefaultButton>
+            })
+          }
+        </> : null}
       </InfiniteScrollList>
       <div className={css.textInput}>
         {props.generating &&
