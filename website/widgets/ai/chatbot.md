@@ -81,3 +81,44 @@ q.page['example'] = ui.chatbot_card(
     events=['feedback']
 )
 ```
+
+## With prompt suggestions
+
+Use `prompt_suggestions` to provide user with pre-defined prompt options. Use in combination with `prompt_suggestion` event. See [full example](/docs/examples/chatbot-events-suggestions) to learn more.
+
+```py {10,11,12,13,14,15}
+from h2o_wave import data
+
+q.page['example'] = ui.chatbot_card(
+    box='1 1 5 5',
+    name='chatbot', 
+    data=data(fields='content from_user', t='list', rows=[
+        ['Hello, buddy. Can you help me?', True],
+        ['Sure, what you need?', False],
+    ]),
+    events=['prompt_suggestion'],
+    prompt_suggestions=[
+        ui.chat_prompt_suggestion('sug1', label="I can't login."),
+        ui.chat_prompt_suggestion('sug2', label="I need help with my investments."),
+        ui.chat_prompt_suggestion('sug2', label="I need something else."),
+    ],
+)
+```
+
+## Disable input
+
+Disable user input with `disabled` property. This can be handy e.g. to limit user input to [suggestions](#with-prompt-suggestions) only.
+
+```py {10}
+from h2o_wave import data
+
+q.page['example'] = ui.chatbot_card(
+    box='1 1 5 5',
+    name='chatbot', 
+    data=data(fields='content from_user', t='list', rows=[
+        ['Hello, buddy. Can you help me?', True],
+        ['Sure, what you need?', False],
+    ]),
+    disabled=True
+)
+```
