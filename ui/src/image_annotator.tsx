@@ -93,8 +93,9 @@ export type Position = {
 export type DrawnShape = ImageAnnotatorItem & { isFocused?: B, boundaryRect?: ImageAnnotatorRect | null }
 export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
+export const ZOOM_STEP = 0.15
+
 const
-  ZOOM_STEP = 0.15,
   tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
     title: {
