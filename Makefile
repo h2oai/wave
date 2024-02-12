@@ -54,6 +54,7 @@ build-r-nightly: ## Build nightly R client.
 	cd r && $(MAKE) build-nightly
 
 build-apps: ## Prepare apps for HAC upload.
+	rm -rf py/tmp
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
 	cp -r py/apps/* py/tmp/
