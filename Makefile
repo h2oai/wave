@@ -72,6 +72,9 @@ build-apps: ## Prepare apps for HAC upload.
 	cd studio && $(MAKE) build
 	cd university && $(MAKE) build
 
+remove-build-apps-directory: ## Remove the wave apps files copied to tmp
+	rm -rf py/tmp
+
 generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
 

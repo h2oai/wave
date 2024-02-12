@@ -1,12 +1,16 @@
 name: Release Wave
 
 on:
-  push:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'
+        required: true
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: "1.0.0"
-  TAG: "v1.0.0"
+  VERSION: "${{ github.event.inputs.version }}"
+  TAG: "v${{ github.event.inputs.version }}"
 
 jobs:
   release:
@@ -21,20 +25,138 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.19.4'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup
+        run: make setup
+
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: ./r
+
+      - name: Build Release
+        run: make release
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Unit Test
+        run: |
+          make test-ui-ci
+          make test-py-ci
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.TAG }}
+          release_name: ${{ env.TAG }}
+          draft: false
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
+            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+            r/build/h2owave_${{ env.VERSION }}_R.tar.gz
+          tag_name: ${{ env.TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Conda
+        uses: marek-mihok/publish_conda_package_action@v1.0.1
+        with:
+          CondaDir: 'py/h2o_wave/conda'
+          Platforms: 'noarch'
+          CondaUsername: ${{ secrets.CONDA_USERNAME }}
+          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+        env:
+          # VERSION clashes with conda build. Use PKG_VERSION instead.
+          PKG_VERSION: ${{ env.VERSION }}
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wave/dist
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Publish Docs
+        run: |
+          make publish-website
+          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+        env:
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
+
+      - name: Publish to S3
+        run: make publish-release-s3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
+
       - name: Publish apps for Cloud
-        run: make build-apps
+        run: make build-apps publish-apps-s3-hac
         env:
           HAC_S3_BUCKET : ${{ secrets.HAC_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
 
-      - name: LS
+      - name: Publish apps for Managed Cloud
+        run: make publish-apps-s3-mc
+        env:
+          MC_S3_BUCKET : ${{ secrets.MC_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY : ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
+          AWS_REGION: ${{ secrets.MC_AWS_REGION }}
+
+      # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
+      - name: Reindex Algolia search
         run: |
-          ls 
-          pwd
-          ls py/
-          ls py/tmp/
+          curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
+        env:
+          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
+
+      - name: Build university
+        run:  make publish-university
+
+      - name: Publish to PyPI - wave_university
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: university/dist
+          password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
+
+      - name: Publish to PyPI - lightwave
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_lightwave/dist
+          password: ${{ secrets.PYPI_LIGTHWAVE_TOKEN }}
+
+      - name: Publish to PyPI - lightwave_web
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_lightwave_web/dist
+          password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
 
       - name: Download H2O CLI
         working-directory: ./py/tmp/tour/
