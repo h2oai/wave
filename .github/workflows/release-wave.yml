@@ -191,6 +191,9 @@ jobs:
           name: wave-bundle-helm
           path: py/tmp/tour/helm/
 
+      - name: Remove files in tmp folder
+        run: make remove-build-apps-directory
+
   build-and-publish:
     needs: release
     permissions:
