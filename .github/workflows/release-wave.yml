@@ -16,6 +16,10 @@ jobs:
   release:
     name: Release Wave
     runs-on: ubuntu-20.04
+
+    outputs:
+      build-version: ${{ env.VERSION }}
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -135,7 +139,7 @@ jobs:
 
       - name: Build university
         run:  make publish-university
-      
+
       - name: Publish to PyPI - wave_university
         uses: pypa/gh-action-pypi-publish@master
         with:
@@ -153,3 +157,51 @@ jobs:
         with:
           packages_dir: py/h2o_lightwave_web/dist
           password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
+
+      - name: Download H2O CLI
+        working-directory: ./py/tmp/tour/
+        run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
+
+      - name: Change permissions
+        working-directory: ./py/tmp/tour/
+        run: chmod +x .bin/h2o
+
+      - name: Make air-gapped bundle
+        working-directory: ./py/tmp/tour/
+        run: |
+          .bin/h2o bundle \
+            --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.31.0-310 \
+            --docker-use-buildkit \
+            --generate-helm-charts \
+            --helm-chart-version ${{ env.VERSION }} \
+            --helm-chart-name tour \
+            --helm-app-bundle-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour-bundle \
+            --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
+            --generate-dockerfile
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle
+          path: |
+            ./py/tmp/tour/*.Dockerfile
+            ./py/tmp/tour/*.wave
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wave-bundle-helm
+          path: py/tmp/tour/helm/
+
+      - name: Remove files in tmp folder
+        run: make remove-build-apps-directory
+
+  build-and-publish:
+    needs: release
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    uses: ./.github/workflows/wave-bundle-docker-build-publish.yaml
+    with:
+      build-version: ${{ needs.release.outputs.build-version }}
+      bundle-artifact: wave-bundle
+      wave-app-name: tour

@@ -54,6 +54,7 @@ build-r-nightly: ## Build nightly R client.
 	cd r && $(MAKE) build-nightly
 
 build-apps: ## Prepare apps for HAC upload.
+	rm -rf py/tmp
 	mkdir -p py/tmp
 	for app in py/apps/*; do mkdir -p build/apps/wave-`basename $$app`; done
 	cp -r py/apps/* py/tmp/
@@ -69,9 +70,11 @@ build-apps: ## Prepare apps for HAC upload.
 	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/tour/examples/tour.py 
 	$(SED) -i -r -e "s#^@app\(('|\")(.*)('|\")(.*)#@app\('/'\4#" py/tmp/theme-generator/theme_generator.py 
 	for app in py/tmp/*; do cd $$app && zip -r ../../../build/apps/wave-`basename $$app`/`basename $$app`-$(VERSION).wave * && cd -; done
-	rm -rf py/tmp
 	cd studio && $(MAKE) build
 	cd university && $(MAKE) build
+
+remove-build-apps-directory: ## Remove the wave apps files copied to tmp
+	rm -rf py/tmp
 
 generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
