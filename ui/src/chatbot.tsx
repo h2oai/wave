@@ -75,6 +75,17 @@ const
     feedback: {
       display: 'flex',
       justifyContent: 'flex-end',
+    },
+    suggestionsWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'column',
+      paddingTop: 12,
+      paddingBottom: 12,
+    },
+    suggestion: {
+      maxWidth: '65ch',
+      margin: 5,
     }
   })
 
@@ -88,16 +99,12 @@ interface ChatbotMessage {
   from_user: B
 }
 
-/**
- * Create a chat prompt suggestion.
- *
- * Chat prompt suggestions are displayed as buttons below the last response in chatbot component.
- */
+/** Create a chat prompt suggestion displayed as button below the last response in chatbot component. */
 export interface ChatPromptSuggestion {
   /** An identifying name for this component. */
   name: Id
   /** The text displayed for this suggestion. */
-  label?: S
+  label: S
 }
 
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
@@ -169,6 +176,9 @@ export const XChatbot = (props: Chatbot) => {
         wave.emit(props.name, 'feedback', { message: messages[id].content, positive: false })
         return [...messages]
       })
+    },
+    handleSuggestion = (name: Id) => {
+      if (props.events?.includes('prompt_suggestion')) wave.emit(props.name, 'prompt_suggestion', name)
     }
 
   React.useEffect(() => {
@@ -226,15 +236,14 @@ export const XChatbot = (props: Chatbot) => {
             </span>
           </div>
         ))}
-        {props.prompt_suggestions ? <>
-          {
-            props.prompt_suggestions.map(({ name, label }) => {
-              return <Fluent.DefaultButton key={name}>
+        {props.prompt_suggestions &&
+          <div className={css.suggestionsWrapper}>
+            {props.prompt_suggestions.map(({ name, label }) => (
+              <Fluent.DefaultButton key={name} onClick={() => handleSuggestion(name)} className={css.suggestion}>
                 {label}
               </Fluent.DefaultButton>
-            })
-          }
-        </> : null}
+            ))}
+          </div>}
       </InfiniteScrollList>
       <div className={css.textInput}>
         {props.generating &&
@@ -287,10 +296,12 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'prompt_suggestion'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
+  /** Clickable prompt suggestions shown below the last response. */
+  prompt_suggestions?: ChatPromptSuggestion[]
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
