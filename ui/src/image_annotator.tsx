@@ -93,8 +93,9 @@ export type Position = {
 export type DrawnShape = ImageAnnotatorItem & { isFocused?: B, boundaryRect?: ImageAnnotatorRect | null }
 export type DrawnPoint = ImageAnnotatorPoint & { isAux?: B }
 
+export const ZOOM_STEP = 0.15
+
 const
-  ZOOM_STEP = 0.15,
   tableBorderStyle = `0.5px solid ${cssVar('$neutralTertiaryAlt')}`,
   css = stylesheet({
     title: {
@@ -202,17 +203,17 @@ const
   },
   eventToCursor = (e: React.MouseEvent, rect: DOMRect, zoom: F, position: ImageAnnotatorPoint) =>
     ({ cursor_x: (e.clientX - rect.left - position.x) / zoom, cursor_y: (e.clientY - rect.top - position.y) / zoom }),
-  getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F) => shapes.find(({ shape, isFocused }) => {
-    if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused)
-    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused)
+  getIntersectedShape = (shapes: DrawnShape[], cursor_x: F, cursor_y: F, zoom: F) => shapes.find(({ shape, isFocused }) => {
+    if (shape.rect) return isIntersectingRect(cursor_x, cursor_y, shape.rect, isFocused, zoom)
+    if (shape.polygon) return isIntersectingPolygon({ x: cursor_x, y: cursor_y }, shape.polygon.vertices, isFocused, zoom)
   }),
-  getCorrectCursorNonDragging = (cursorX: F, cursorY: F, shapes: DrawnShape[], isSelect = true) => {
+  getCorrectCursorNonDragging = (cursorX: F, cursorY: F, shapes: DrawnShape[], zoom: F, isSelect = true) => {
     if (!isSelect) return 'crosshair'
     // This is an expensive operation, so we only do it if we're not dragging to prevent rendering jank.
-    const intersected = getIntersectedShape(shapes, cursorX, cursorY)
+    const intersected = getIntersectedShape(shapes, cursorX, cursorY, zoom)
 
-    if (intersected?.isFocused && intersected.shape.rect) return getRectCornerCursor(intersected.shape.rect, cursorX, cursorY) || 'move'
-    else if (intersected?.isFocused && intersected.shape.polygon) return getPolygonPointCursor(intersected.shape.polygon.vertices, cursorX, cursorY) || 'move'
+    if (intersected?.isFocused && intersected.shape.rect) return getRectCornerCursor(intersected.shape.rect, cursorX, cursorY, zoom) || 'move'
+    else if (intersected?.isFocused && intersected.shape.polygon) return getPolygonPointCursor(intersected.shape.polygon.vertices, cursorX, cursorY, zoom) || 'move'
     return intersected ? 'pointer' : 'auto'
   },
   getCorrectCursorDragging = (rectRef: RectAnnotator | null, polygonRef: PolygonAnnotator | null, isSelect = false) => {
@@ -309,7 +310,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
     changeActiveShape = (shape: keyof ImageAnnotatorShape | 'select') => {
       if (canvasRef.current) {
         const { x, y } = mousePositionRef.current
-        canvasRef.current.style.cursor = getCorrectCursorNonDragging(x, y, drawnShapes, shape === 'select')
+        canvasRef.current.style.cursor = getCorrectCursorNonDragging(x, y, drawnShapes, zoom, shape === 'select')
       }
       setActiveShape(shape)
       if (model.events?.includes('tool_change')) wave.emit(model.name, 'tool_change', shape)
@@ -335,6 +336,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       imgPositionRef.current = { x, y }
       canvasCtx.setTransform(zoom, 0, 0, zoom, imgPositionRef.current.x, imgPositionRef.current.y)
       imgRef.current.style.transform = `translate(${imgPositionRef.current.x}px, ${imgPositionRef.current.y}px) scale(${zoom})`
+      if (canvasCtxRef?.current) canvasCtxRef.current.lineWidth = 2 / zoom
       redrawExistingShapes()
     },
     resetShapeCreation = () => {
@@ -367,7 +369,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
 
       const
         { cursor_x, cursor_y } = eventToCursor(e, canvas.getBoundingClientRect(), zoom, imgPositionRef.current),
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y, zoom)
 
       if (e.buttons !== 1 && !intersected?.shape.polygon) return // Ignore right-click.
 
@@ -416,7 +418,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       } else {
         canvas.style.cursor = clickStartPosition?.dragging
           ? getCorrectCursorDragging(rectRef.current, polygonRef.current, isSelect)
-          : getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes, isSelect)
+          : getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes, zoom, isSelect)
       }
 
       switch (activeShape) {
@@ -472,7 +474,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
         start = clickStartPositionRef.current,
         rect = canvas.getBoundingClientRect(),
         { cursor_x, cursor_y } = eventToCursor(e, rect, zoom, imgPositionRef.current),
-        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y)
+        intersected = getIntersectedShape(drawnShapes, cursor_x, cursor_y, zoom)
 
       if (model.events?.includes('click') && activeShape !== 'select' && start) {
         wave.emit(model.name, 'click', {
@@ -537,7 +539,7 @@ export const XImageAnnotator = ({ model }: { model: ImageAnnotator }) => {
       }
 
       clickStartPositionRef.current = undefined
-      canvas.style.cursor = getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes)
+      canvas.style.cursor = getCorrectCursorNonDragging(cursor_x, cursor_y, drawnShapes, zoom)
     },
     moveAllSelectedShapes = (dx: U, dy: U) => {
       drawnShapes.forEach(s => {

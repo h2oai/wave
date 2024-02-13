@@ -1,12 +1,13 @@
 import { F, S, U } from './core'
 import { DrawnPoint, DrawnShape, ImageAnnotatorPoint, ImageAnnotatorRect } from "./image_annotator"
-import { ARC_RADIUS } from "./image_annotator_rect"
+import { ARC_RADIUS_DEFAULT } from "./image_annotator_rect"
 
 export class PolygonAnnotator {
   private currPolygonPoints: ImageAnnotatorPoint[] = []
   private boundaryRect: ImageAnnotatorRect | null = null
   private draggedPoint: DrawnPoint | null = null
   private draggedShape: DrawnShape | null = null
+  private getArcRadius = () => this.ctx ? ARC_RADIUS_DEFAULT / this.ctx.getTransform().a : ARC_RADIUS_DEFAULT
 
 
   constructor(private canvas: HTMLCanvasElement, private ctx: CanvasRenderingContext2D | null) { }
@@ -102,7 +103,7 @@ export class PolygonAnnotator {
 
   onMouseDown(cursor_x: U, cursor_y: U, shape: DrawnShape) {
     if (!shape.shape.polygon) return
-    this.draggedPoint = shape.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y)) || null
+    this.draggedPoint = shape.shape.polygon.vertices.find(p => isIntersectingPoint(p, cursor_x, cursor_y, this.getArcRadius())) || null
     this.draggedShape = shape
   }
 
@@ -126,7 +127,7 @@ export class PolygonAnnotator {
   }
 
   tryToAddAuxPoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
-    const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
+    const clickedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y, this.getArcRadius()))
     if (clickedPoint?.isAux) {
       clickedPoint.isAux = false
       return true
@@ -134,7 +135,7 @@ export class PolygonAnnotator {
   }
 
   tryToRemovePoint = (cursor_x: F, cursor_y: F, items: DrawnPoint[]) => {
-    return items.filter(p => !isIntersectingPoint(p, cursor_x, cursor_y))
+    return items.filter(p => !isIntersectingPoint(p, cursor_x, cursor_y, this.getArcRadius()))
   }
 
   getPolygonPointsWithAux = (points: DrawnPoint[]) => {
@@ -175,7 +176,7 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawPolygon = (points: DrawnPoint[], color: S, joinLastPoint = true, isFocused = false) => {
+  drawPolygon = (points: DrawnPoint[], color: S, joinLastPoint = true, isFocused = false, preview = false) => {
     if (!points.length || !this.ctx) return
 
     this.ctx.fillStyle = color
@@ -187,17 +188,15 @@ export class PolygonAnnotator {
 
     _points.forEach(({ x, y }) => this.drawLine(x, y))
     if (joinLastPoint) this.drawLine(points[0].x, points[0].y)
-    if (isFocused) {
-      this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
-      this.ctx.fill()
-      _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, isAux))
-    }
+    this.ctx.fillStyle = color.substring(0, color.length - 2) + '0.2)'
+    if (!preview) this.ctx.fill()
+    if (isFocused) _points.forEach(({ x, y, isAux }) => this.drawPoint(x, y, color, isAux))
   }
 
   drawPreviewLine = (cursor_x: F, cursor_y: F, color: S) => {
     if (!this.ctx || !this.currPolygonPoints.length) return
 
-    this.drawPolygon(this.currPolygonPoints, color, false)
+    this.drawPolygon(this.currPolygonPoints, color, false, false, true)
     const { x, y } = this.currPolygonPoints[this.currPolygonPoints.length - 1]
 
     this.ctx.beginPath()
@@ -207,12 +206,12 @@ export class PolygonAnnotator {
     this.ctx.stroke()
   }
 
-  drawPoint = (x: F, y: F, isAux = false) => {
+  drawPoint = (x: F, y: F, color: S, isAux = false,) => {
     if (!this.ctx) return
 
     const path = new Path2D()
-    path.arc(x, y, ARC_RADIUS, 0, 2 * Math.PI)
-    this.ctx.strokeStyle = isAux ? '#5e5c5c' : '#000'
+    path.arc(x, y, this.getArcRadius(), 0, 2 * Math.PI)
+    this.ctx.strokeStyle = isAux ? color.substring(0, color.length - 2) + '0.5)' : color
     this.ctx.fillStyle = isAux ? '#b8b8b8' : '#FFF'
     this.ctx.fill(path)
     this.ctx.stroke(path)
@@ -220,15 +219,15 @@ export class PolygonAnnotator {
 
   isIntersectingFirstPoint = (cursor_x: F, cursor_y: F) => {
     if (!this.currPolygonPoints.length) return false
-    return isIntersectingPoint(this.currPolygonPoints[0], cursor_x, cursor_y)
+    return isIntersectingPoint(this.currPolygonPoints[0], cursor_x, cursor_y, this.getArcRadius())
   }
 }
 
 // Credit: https://gist.github.com/vlasky/d0d1d97af30af3191fc214beaf379acc?permalink_comment_id=3658988#gistcomment-3658988
 const cross = (x: ImageAnnotatorPoint, y: ImageAnnotatorPoint, z: ImageAnnotatorPoint) => (y.x - x.x) * (z.y - x.y) - (z.x - x.x) * (y.y - x.y)
 export
-  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[], isFocused = false) => {
-    if (isFocused && points.some(point => isIntersectingPoint(point, p.x, p.y))) return true
+  const isIntersectingPolygon = (p: ImageAnnotatorPoint, points: ImageAnnotatorPoint[], isFocused = false, zoom: F = 1) => {
+    if (isFocused && points.some(point => isIntersectingPoint(point, p.x, p.y, ARC_RADIUS_DEFAULT / zoom))) return true
     let windingNumber = 0
 
     points.forEach((point, idx) => {
@@ -244,13 +243,12 @@ export
 
     return windingNumber !== 0
   },
-  isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F) => {
-    // TODO: Divide ARC_RADIUS by "scale" to make the offset lower when the image is zoomed in.
-    const offset = 2 * ARC_RADIUS
+  isIntersectingPoint = ({ x, y }: ImageAnnotatorPoint, cursor_x: F, cursor_y: F, arcRadius: F = ARC_RADIUS_DEFAULT) => {
+    const offset = 2 * arcRadius
     return cursor_x >= x - offset && cursor_x <= x + offset && cursor_y >= y - offset && cursor_y < y + offset
   },
-  getPolygonPointCursor = (items: DrawnPoint[], cursor_x: F, cursor_y: F) => {
-    const intersectedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y))
+  getPolygonPointCursor = (items: DrawnPoint[], cursor_x: F, cursor_y: F, zoom: F = 1) => {
+    const intersectedPoint = items.find(p => isIntersectingPoint(p, cursor_x, cursor_y, ARC_RADIUS_DEFAULT / zoom))
     return intersectedPoint?.isAux
       ? 'pointer'
       : intersectedPoint

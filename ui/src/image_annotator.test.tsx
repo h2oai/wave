@@ -15,7 +15,7 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { ImageAnnotator, XImageAnnotator } from './image_annotator'
+import { ImageAnnotator, XImageAnnotator, ZOOM_STEP } from './image_annotator'
 import { wave } from './ui'
 
 const
@@ -1121,6 +1121,52 @@ describe('ImageAnnotator.tsx', () => {
         // Final move distance is calculated in the way that each of the cursor coordinates is divided by the zoom. 
         // E.g. moveDistanceX = endClientX/zoom - startClientX/zoom; 60/1.15 - 50/1.15 = 8.69 ≈ 9.
         expect(wave.args[name]).toMatchObject([{ tag: 'person', shape: { rect: { x1: 19, x2: 109, y1: 19, y2: 109 } } }, polygon])
+      })
+
+      it('Shows correct cursor when hovering over rect corner while the image is zoomed', async () => {
+        const { container } = render(<XImageAnnotator model={model} />)
+        await waitForLoad(container)
+        const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+
+        fireEvent.click(canvasEl, { clientX: 50, clientY: 50 })
+        fireEvent.mouseMove(canvasEl, { clientX: 10, clientY: 10 })
+        expect(canvasEl.style.cursor).toBe('nwse-resize')
+
+        // Zoom-in 3 steps.
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+
+        // HACK: Move to the same position to reset grab cursor which appears after zoom-in.
+        fireEvent.mouseMove(canvasEl, { clientX: 10, clientY: 10 })
+        expect(canvasEl.style.cursor).not.toBe('nwse-resize')
+
+        const zoomFactor = 1 + ZOOM_STEP * 3
+        fireEvent.mouseMove(canvasEl, { clientX: 10 * zoomFactor, clientY: 10 * zoomFactor })
+        expect(canvasEl.style.cursor).toBe('nwse-resize')
+      })
+
+      it('Shows correct cursor when hovering over polygon corner while the image is zoomed', async () => {
+        const { container } = render(<XImageAnnotator model={model} />)
+        await waitForLoad(container)
+        const canvasEl = container.querySelector('canvas') as HTMLCanvasElement
+
+        fireEvent.click(canvasEl, { clientX: 180, clientY: 120 })
+        fireEvent.mouseMove(canvasEl, { clientX: 105, clientY: 100 })
+        expect(canvasEl.style.cursor).toBe('move')
+
+        // Zoom-in 3 steps.
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+        fireEvent.wheel(canvasEl, { deltaY: -1 })
+
+        // HACK: Move to the same position to reset grab cursor which appears after zoom-in.
+        fireEvent.mouseMove(canvasEl, { clientX: 105, clientY: 100 })
+        expect(canvasEl.style.cursor).not.toBe('move')
+
+        const zoomFactor = 1 + ZOOM_STEP * 3
+        fireEvent.mouseMove(canvasEl, { clientX: 105 * zoomFactor, clientY: 100 * zoomFactor })
+        expect(canvasEl.style.cursor).toBe('move')
       })
 
       // TODO: Add polygon version of this test.
