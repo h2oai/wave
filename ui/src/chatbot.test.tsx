@@ -11,6 +11,10 @@ const data: any = [
   { content: 'Hi there!', from_user: true },
   { content: 'Hello!', from_user: false },
 ]
+const suggestions = [
+  { name: 'sug1', label: 'Suggestion 1' },
+  { name: 'sug2', label: 'Suggestion 2' }
+]
 
 describe('XChatbot', () => {
   beforeAll(() => {
@@ -126,6 +130,13 @@ describe('XChatbot', () => {
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' })
     expect(wave.args[name]).toBe(' ')
     expect(pushMock).toHaveBeenCalledTimes(0)
+  })
+
+  it('Renders disabled user input', () => {
+    const { getByRole } = render(<XChatbot {...{ ...model, disabled: true }} />)
+
+    const input = getByRole('textbox') as HTMLInputElement
+    expect(input.disabled).toEqual(true)
   })
 
   it('Renders disabled send button when input is empty', () => {
@@ -254,5 +265,25 @@ describe('XChatbot', () => {
 
     fireEvent.click(dislikeButton)
     expect(emitMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('Renders prompt suggestions when specified', () => {
+    const { getByText } = render(<XChatbot {...{ ...model, prompt_suggestions: suggestions }} />)
+
+    expect(getByText('Suggestion 1')).toBeInTheDocument()
+    expect(getByText('Suggestion 2')).toBeInTheDocument()
+  })
+
+  it('Fires event when prompt suggestion is clicked', () => {
+    const { getByText } = render(<XChatbot {...{ ...model, events: ['prompt_suggestion'], prompt_suggestions: suggestions }} />)
+
+    fireEvent.click(getByText('Suggestion 1'))
+    expect(emitMock).toHaveBeenCalled()
+    expect(emitMock).toHaveBeenCalledTimes(1)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'prompt_suggestion', suggestions[0].name)
+
+    fireEvent.click(getByText('Suggestion 2'))
+    expect(emitMock).toHaveBeenCalledTimes(2)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'prompt_suggestion', suggestions[1].name)
   })
 })

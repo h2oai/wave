@@ -279,7 +279,7 @@ export const XChatbot = (props: Chatbot) => {
           data-test={`${props.name}-submit`}
           iconProps={{ iconName: 'Send' }}
           onClick={submit}
-          disabled={!userInput.trim() || props.generating}
+          disabled={props.disabled || !userInput.trim() || props.generating}
           styles={{
             root: { position: 'absolute', bottom: 16, right: 20, height: INPUT_HEIGHT },
             rootHovered: { backgroundColor: 'transparent' },
