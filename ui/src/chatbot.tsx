@@ -238,7 +238,7 @@ export const XChatbot = (props: Chatbot) => {
             </span>
           </div>
         ))}
-        {props.prompt_suggestions &&
+        {props.prompt_suggestions && props.prompt_suggestions.length > 0 &&
           <div className={css.suggestionsWrapper}>
             {props.prompt_suggestions.map(({ name, label }) => (
               <Fluent.DefaultButton key={name} onClick={() => handleSuggestion(name)} className={css.suggestion}>
