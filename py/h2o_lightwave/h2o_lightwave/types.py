@@ -8246,7 +8246,7 @@ class ChatCard:
 
 
 class ChatPromptSuggestion:
-    """Create a chat prompt suggestion displayed as button below the last response in chatbot component.
+    """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
     """
     def __init__(
             self,

@@ -99,7 +99,7 @@ interface ChatbotMessage {
   from_user: B
 }
 
-/** Create a chat prompt suggestion displayed as button below the last response in chatbot component. */
+/** Create a chat prompt suggestion displayed as button below the last response in the chatbot component. */
 export interface ChatPromptSuggestion {
   /** An identifying name for this component. */
   name: Id

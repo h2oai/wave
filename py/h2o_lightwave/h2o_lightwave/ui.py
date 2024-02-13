@@ -2882,7 +2882,7 @@ def chat_prompt_suggestion(
         name: str,
         label: str,
 ) -> ChatPromptSuggestion:
-    """Create a chat prompt suggestion displayed as button below the last response in chatbot component.
+    """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
 
     Args:
         name: An identifying name for this component.

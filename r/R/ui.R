@@ -3339,7 +3339,7 @@ ui_chat_card <- function(
   return(.o)
 }
 
-#' Create a chat prompt suggestion displayed as button below the last response in chatbot component.
+#' Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
 #'
 #' @param name An identifying name for this component.
 #' @param label The text displayed for this suggestion.
