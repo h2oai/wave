@@ -23,6 +23,7 @@ import { bond, wave } from './ui'
 
 const
   INPUT_HEIGHT = 30,
+  INPUT_WIDTH = 800,
   css = Fluent.mergeStyleSets({
     chatWindow: {
       height: '100%',
@@ -64,7 +65,7 @@ const
       bottom: 0,
       left: 0,
       right: 0,
-      maxWidth: 800,
+      maxWidth: INPUT_WIDTH,
       margin: '0 auto'
     },
     stopButton: {
@@ -84,22 +85,20 @@ const
       flexGrow: 1,
       alignContent: 'flex-end',
       justifyContent: 'center',
-      maxWidth: 800,
+      maxWidth: INPUT_WIDTH,
       alignSelf: 'center',
       paddingTop: 12,
       paddingBottom: 12,
     },
     suggestion: {
       flexGrow: 1,
-      flexBasis: 267,
-      maxWidth: 392,
+      // Make sure only 2 columns maximum are displayed.
+      flexBasis: (INPUT_WIDTH / 3) + 1,
+      maxWidth: INPUT_WIDTH / 2,
       margin: 4,
       borderRadius: 10,
-      boxSizing: 'border-box',
       boxShadow: '0 6.400000095px 14.399999619px 0 #00000021',
-      whiteSpace: 'nowrap',
       overflow: 'hidden',
-      textOverflow: 'ellipsis'
     },
     captionButton: {
       minHeight: 59,
@@ -273,7 +272,7 @@ export const XChatbot = (props: Chatbot) => {
                 onClick: () => handleSuggestion(name),
                 className: clas(css.suggestion, hasSomeCaption ? css.captionButton : ''),
                 secondaryText: caption,
-                styles: { ...suggestionButtonStyles, ...{ label: { textEllipsisStyle, ...{ margin: caption ? undefined : 0 } } } },
+                styles: { ...suggestionButtonStyles, ...{ label: { ...textEllipsisStyle, ...{ margin: caption ? undefined : 0 } } } },
                 iconProps: icon ? { iconName: icon, style: { fontSize: hasSomeCaption ? 20 : 16, alignSelf: 'center' } } : undefined
               }
               return hasSomeCaption
