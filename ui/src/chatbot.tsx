@@ -90,18 +90,27 @@ const
       paddingBottom: 12,
     },
     suggestion: {
-      width: '100%',
+      flexGrow: 1,
+      flexBasis: 267,
       maxWidth: 392,
       margin: 4,
       borderRadius: 10,
       boxSizing: 'border-box',
       boxShadow: '0 6.400000095px 14.399999619px 0 #00000021',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
     captionButton: {
       minHeight: 59,
       padding: 12,
     }
-  })
+  }),
+  textEllipsisStyle: Fluent.IStyle = { overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' },
+  suggestionButtonStyles: Fluent.IButtonStyles = {
+    textContainer: { alignSelf: 'center', overflow: 'hidden' },
+    description: textEllipsisStyle
+  }
 
 type Message = ChatbotMessage & { id?: S, positive?: B }
 
@@ -264,7 +273,7 @@ export const XChatbot = (props: Chatbot) => {
                 onClick: () => handleSuggestion(name),
                 className: clas(css.suggestion, hasSomeCaption ? css.captionButton : ''),
                 secondaryText: caption,
-                styles: { textContainer: { alignSelf: 'center' }, label: { margin: caption ? undefined : 0 } },
+                styles: { ...suggestionButtonStyles, ...{ label: { textEllipsisStyle, ...{ margin: caption ? undefined : 0 } } } },
                 iconProps: icon ? { iconName: icon, style: { fontSize: hasSomeCaption ? 20 : 16, alignSelf: 'center' } } : undefined
               }
               return hasSomeCaption
