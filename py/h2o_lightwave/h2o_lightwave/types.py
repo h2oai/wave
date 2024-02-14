@@ -8252,21 +8252,27 @@ class ChatPromptSuggestion:
             self,
             name: str,
             label: str,
+            caption: Optional[str] = None,
     ):
         _guard_scalar('ChatPromptSuggestion.name', name, (str,), True, False, False)
         _guard_scalar('ChatPromptSuggestion.label', label, (str,), False, False, False)
+        _guard_scalar('ChatPromptSuggestion.caption', caption, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
         """The text displayed for this suggestion."""
+        self.caption = caption
+        """The caption displayed below the label."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ChatPromptSuggestion.name', self.name, (str,), True, False, False)
         _guard_scalar('ChatPromptSuggestion.label', self.label, (str,), False, False, False)
+        _guard_scalar('ChatPromptSuggestion.caption', self.caption, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
+            caption=self.caption,
         )
 
     @staticmethod
@@ -8276,11 +8282,15 @@ class ChatPromptSuggestion:
         _guard_scalar('ChatPromptSuggestion.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('ChatPromptSuggestion.label', __d_label, (str,), False, False, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('ChatPromptSuggestion.caption', __d_caption, (str,), False, True, False)
         name: str = __d_name
         label: str = __d_label
+        caption: Optional[str] = __d_caption
         return ChatPromptSuggestion(
             name,
             label,
+            caption,
         )
 
 

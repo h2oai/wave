@@ -2881,18 +2881,21 @@ def chat_card(
 def chat_prompt_suggestion(
         name: str,
         label: str,
+        caption: Optional[str] = None,
 ) -> ChatPromptSuggestion:
     """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
 
     Args:
         name: An identifying name for this component.
         label: The text displayed for this suggestion.
+        caption: The caption displayed below the label.
     Returns:
         A `h2o_wave.types.ChatPromptSuggestion` instance.
     """
     return ChatPromptSuggestion(
         name,
         label,
+        caption,
     )
 
 

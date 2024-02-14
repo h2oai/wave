@@ -12,8 +12,16 @@ fourth_suggestion = "I got this, thank you!"
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
+        q.page['meta'] = ui.meta_card(box='', layouts=[
+            ui.layout(
+                breakpoint='xs',
+                zones=[
+                    ui.zone('content')
+                ]
+            ),
+        ])
         q.page['example'] = ui.chatbot_card(
-            box='1 1 5 5',
+            box='content',
             data=data(fields='content from_user', t='list', rows=[
                 ['Hi, my files are not loaded after plugging my USB in.', True],
                 ['Hi, I am glad I can assist you today! Have you tried turning your PC off and on again?', False]
@@ -21,7 +29,8 @@ async def serve(q: Q):
             name='chatbot',
             events=['prompt_suggestion'],
             prompt_suggestions=[
-                ui.chat_prompt_suggestion('sug1', label=first_suggestion),
+                ui.chat_prompt_suggestion('sug1', label=first_suggestion, caption='Click to get more information.'),
+                # ui.chat_prompt_suggestion('sug1', label=second_suggestion),
                 ui.chat_prompt_suggestion('sug2', label=second_suggestion),
                 ui.chat_prompt_suggestion('sug3', label=third_suggestion),
                 ui.chat_prompt_suggestion('sug4', label=fourth_suggestion),

@@ -38,6 +38,8 @@ const
       right: 0,
       overflowY: 'auto',
       padding: margin(0, 15),
+      display: 'flex',
+      flexDirection: 'column',
     },
     msgWrapper: {
       '&:first-child': { marginTop: important(px(0)) },
@@ -78,14 +80,26 @@ const
     },
     suggestionsWrapper: {
       display: 'flex',
-      alignItems: 'center',
-      flexDirection: 'column',
+      flexWrap: 'wrap',
+      flexGrow: 1,
+      alignContent: 'flex-end',
+      justifyContent: 'center',
+      maxWidth: 800,
+      alignSelf: 'center',
       paddingTop: 12,
       paddingBottom: 12,
     },
     suggestion: {
-      maxWidth: '65ch',
-      margin: 5,
+      width: '100%',
+      maxWidth: 392,
+      margin: 4,
+      borderRadius: 10,
+      boxSizing: 'border-box',
+      boxShadow: '0 6.400000095px 14.399999619px 0 #00000021',
+    },
+    captionButton: {
+      minHeight: 59,
+      padding: 12,
     }
   })
 
@@ -105,6 +119,8 @@ export interface ChatPromptSuggestion {
   name: Id
   /** The text displayed for this suggestion. */
   label: S
+  /** The caption displayed below the label. */
+  caption?: S
 }
 
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
@@ -138,6 +154,7 @@ export const XChatbot = (props: Chatbot) => {
     botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     skipNextBottomScroll = React.useRef(false),
+    hasSomeCaption = React.useMemo(() => props.prompt_suggestions?.some(({ caption }) => !!caption), [props.prompt_suggestions]),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[props.name] = newVal
@@ -240,11 +257,16 @@ export const XChatbot = (props: Chatbot) => {
         ))}
         {props.prompt_suggestions && props.prompt_suggestions.length > 0 &&
           <div className={css.suggestionsWrapper}>
-            {props.prompt_suggestions.map(({ name, label }) => (
-              <Fluent.DefaultButton key={name} onClick={() => handleSuggestion(name)} className={css.suggestion}>
-                {label}
-              </Fluent.DefaultButton>
-            ))}
+            {props.prompt_suggestions.map(({ name, label, caption }) => {
+              const buttonProps: Fluent.IButtonProps = {
+                onClick: () => handleSuggestion(name),
+                className: clas(css.suggestion, hasSomeCaption ? css.captionButton : ''),
+                secondaryText: caption,
+              }
+              return hasSomeCaption
+                ? <Fluent.CompoundButton key={name} {...buttonProps}>{label}</Fluent.CompoundButton>
+                : <Fluent.DefaultButton key={name} {...buttonProps}>{label}</Fluent.DefaultButton>
+            })}
           </div>}
       </InfiniteScrollList>
       <div className={css.textInput}>
