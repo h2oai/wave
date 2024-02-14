@@ -3344,19 +3344,23 @@ ui_chat_card <- function(
 #' @param name An identifying name for this component.
 #' @param label The text displayed for this suggestion.
 #' @param caption The caption displayed below the label.
+#' @param icon The icon to be displayed for this suggestion.
 #' @return A ChatPromptSuggestion instance.
 #' @export
 ui_chat_prompt_suggestion <- function(
   name,
   label,
-  caption = NULL) {
+  caption = NULL,
+  icon = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
   .o <- list(
     name=name,
     label=label,
-    caption=caption)
+    caption=caption,
+    icon=icon)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatPromptSuggestion"))
   return(.o)
 }

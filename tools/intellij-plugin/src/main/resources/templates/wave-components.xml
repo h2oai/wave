@@ -1129,10 +1129,11 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chat_prompt_suggestion" value="ui.chat_prompt_suggestion(name='$name$',label='$label$',caption='$caption$'),$END$" description="Create Wave ChatPromptSuggestion with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chat_prompt_suggestion" value="ui.chat_prompt_suggestion(name='$name$',label='$label$',caption='$caption$',icon='$icon$'),$END$" description="Create Wave ChatPromptSuggestion with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

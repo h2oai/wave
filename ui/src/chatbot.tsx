@@ -121,6 +121,8 @@ export interface ChatPromptSuggestion {
   label: S
   /** The caption displayed below the label. */
   caption?: S
+  /** The icon to be displayed for this suggestion. */
+  icon?: S
 }
 
 /** Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers. */
@@ -257,11 +259,13 @@ export const XChatbot = (props: Chatbot) => {
         ))}
         {props.prompt_suggestions && props.prompt_suggestions.length > 0 &&
           <div className={css.suggestionsWrapper}>
-            {props.prompt_suggestions.map(({ name, label, caption }) => {
+            {props.prompt_suggestions.map(({ name, label, caption, icon }) => {
               const buttonProps: Fluent.IButtonProps = {
                 onClick: () => handleSuggestion(name),
                 className: clas(css.suggestion, hasSomeCaption ? css.captionButton : ''),
                 secondaryText: caption,
+                styles: { textContainer: { alignSelf: 'center' }, label: { margin: caption ? undefined : 0 } },
+                iconProps: icon ? { iconName: icon, style: { fontSize: hasSomeCaption ? 20 : 16, alignSelf: 'center' } } : undefined
               }
               return hasSomeCaption
                 ? <Fluent.CompoundButton key={name} {...buttonProps}>{label}</Fluent.CompoundButton>

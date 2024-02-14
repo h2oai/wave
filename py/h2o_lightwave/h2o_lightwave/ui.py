@@ -2882,6 +2882,7 @@ def chat_prompt_suggestion(
         name: str,
         label: str,
         caption: Optional[str] = None,
+        icon: Optional[str] = None,
 ) -> ChatPromptSuggestion:
     """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
 
@@ -2889,6 +2890,7 @@ def chat_prompt_suggestion(
         name: An identifying name for this component.
         label: The text displayed for this suggestion.
         caption: The caption displayed below the label.
+        icon: The icon to be displayed for this suggestion.
     Returns:
         A `h2o_wave.types.ChatPromptSuggestion` instance.
     """
@@ -2896,6 +2898,7 @@ def chat_prompt_suggestion(
         name,
         label,
         caption,
+        icon,
     )
 
 

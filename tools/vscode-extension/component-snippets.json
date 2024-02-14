@@ -1066,7 +1066,7 @@
   "Wave Full ChatPromptSuggestion": {
     "prefix": "w_full_chat_prompt_suggestion",
     "body": [
-      "ui.chat_prompt_suggestion(name='$1', label='$2', caption='$3'),$0"
+      "ui.chat_prompt_suggestion(name='$1', label='$2', caption='$3', icon='$4'),$0"
     ],
     "description": "Create a full Wave ChatPromptSuggestion."
   },

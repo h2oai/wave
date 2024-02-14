@@ -8253,26 +8253,32 @@ class ChatPromptSuggestion:
             name: str,
             label: str,
             caption: Optional[str] = None,
+            icon: Optional[str] = None,
     ):
         _guard_scalar('ChatPromptSuggestion.name', name, (str,), True, False, False)
         _guard_scalar('ChatPromptSuggestion.label', label, (str,), False, False, False)
         _guard_scalar('ChatPromptSuggestion.caption', caption, (str,), False, True, False)
+        _guard_scalar('ChatPromptSuggestion.icon', icon, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
         """The text displayed for this suggestion."""
         self.caption = caption
         """The caption displayed below the label."""
+        self.icon = icon
+        """The icon to be displayed for this suggestion."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ChatPromptSuggestion.name', self.name, (str,), True, False, False)
         _guard_scalar('ChatPromptSuggestion.label', self.label, (str,), False, False, False)
         _guard_scalar('ChatPromptSuggestion.caption', self.caption, (str,), False, True, False)
+        _guard_scalar('ChatPromptSuggestion.icon', self.icon, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
             caption=self.caption,
+            icon=self.icon,
         )
 
     @staticmethod
@@ -8284,13 +8290,17 @@ class ChatPromptSuggestion:
         _guard_scalar('ChatPromptSuggestion.label', __d_label, (str,), False, False, False)
         __d_caption: Any = __d.get('caption')
         _guard_scalar('ChatPromptSuggestion.caption', __d_caption, (str,), False, True, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('ChatPromptSuggestion.icon', __d_icon, (str,), False, True, False)
         name: str = __d_name
         label: str = __d_label
         caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
         return ChatPromptSuggestion(
             name,
             label,
             caption,
+            icon,
         )
 
 
