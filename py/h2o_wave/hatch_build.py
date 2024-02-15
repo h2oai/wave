@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 from typing import Any, Dict
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
@@ -47,7 +48,7 @@ class CustomBuildHook(BuildHookInterface):
 
         print('==========>>> CWD:', os. getcwd())
         # binaries_path = os.path.join('..', '..', 'build', f'wave-{version}-{operating_system}-{arch}')
-        binaries_path = os.path.join('conda', 'bin')
+        binaries_path = os.path.join('conda', 'temp')
         if not os.path.exists(binaries_path):
             raise Exception(f'{binaries_path} does not exist. Run make release first to generate server binaries.')
 
@@ -69,5 +70,5 @@ class CustomBuildHook(BuildHookInterface):
 
     def finalize(self, version: str, build_data: Dict[str, Any], artifact_path: str) -> None:
         shutil.rmtree('tmp', ignore_errors=True)
-        shutil.rmtree('info/recipe/bin', ignore_errors=True) # Conda only!!
+        shutil.rmtree('info/recipe/temp', ignore_errors=True) # Conda only!!
 
