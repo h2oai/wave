@@ -96,7 +96,7 @@ const
       flexBasis: (INPUT_WIDTH / 3) + 1,
       maxWidth: INPUT_WIDTH / 2,
       margin: 4,
-      borderRadius: 10,
+      borderRadius: 4,
       boxShadow: '0 6.400000095px 14.399999619px 0 #00000021',
       overflow: 'hidden',
     },
@@ -272,7 +272,7 @@ export const XChatbot = (props: Chatbot) => {
                 onClick: () => handleSuggestion(name),
                 className: clas(css.suggestion, hasSomeCaption ? css.captionButton : ''),
                 secondaryText: caption,
-                styles: { ...suggestionButtonStyles, ...{ label: { ...textEllipsisStyle, ...{ margin: caption ? undefined : 0 } } } },
+                styles: { ...suggestionButtonStyles, ...{ label: { ...textEllipsisStyle, ...{ margin: caption ? undefined : 0, lineHeight: undefined } } } },
                 iconProps: icon ? { iconName: icon, style: { fontSize: hasSomeCaption ? 20 : 16, alignSelf: 'center' } } : undefined
               }
               return hasSomeCaption

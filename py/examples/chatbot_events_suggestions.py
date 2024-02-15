@@ -4,44 +4,59 @@
 # ---
 from h2o_wave import main, app, Q, ui, data
 
-first_suggestion = "I need more information about this."
-second_suggestion = "I have another problem."
-third_suggestion = "The information you provided is not correct."
-fourth_suggestion = "I got this, thank you!"
+# Dictionary containing label, caption and icon for each suggestion.
+suggestions = {
+    'sug1': ["Write a poem", "about H2O Wave", "Edit"],
+    'sug2': ["Plan a trip", "to Europe", "Airplane"],
+    'sug3': ["Give me ideas", "for a new project", "Lightbulb"],
+    'sug4': ["Explain me", "CSS preprocessors", "Code"]
+}
+
+
+async def stream_bot_response(q: Q, message: str):
+    stream = ''
+    # Fake bot "thinking" time.
+    await q.sleep(0.5)
+    # Stream bot response.
+    for w in 'I am a fake chatbot. Sorry, I cannot help you.'.split():
+        await q.sleep(0.1)
+        stream += w + ' '
+        q.page['example'].data[-1] = [stream, False]
+        await q.page.save()
+
 
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.page['example'] = ui.chatbot_card(
             box='1 1 5 5',
-            data=data(fields='content from_user', t='list', rows=[
-                ['Hi, my files are not loaded after plugging my USB in.', True],
-                ['Hi, I am glad I can assist you today! Have you tried turning your PC off and on again?', False]
-            ]),
+            data=data(fields='content from_user', t='list'),
             name='chatbot',
+            placeholder='Ask me anything...',
             events=['prompt_suggestion'],
-            prompt_suggestions=[
-                ui.chat_prompt_suggestion('sug1', label=first_suggestion),
-                ui.chat_prompt_suggestion('sug2', label=second_suggestion),
-                ui.chat_prompt_suggestion('sug3', label=third_suggestion),
-                ui.chat_prompt_suggestion('sug4', label=fourth_suggestion),
-            ],
-            disabled=True
+            prompt_suggestions=[ui.chat_prompt_suggestion(name, label=value[0], caption=value[1], icon=value[2]) for
+                                name, value in suggestions.items()]
         )
         q.client.initialized = True
 
-    # Handle prompt_suggestion event.
-    elif q.events.chatbot and q.events.chatbot.prompt_suggestion:
-        # Append user message based on the suggestion.
-        if q.events.chatbot.prompt_suggestion == 'sug1':
-            q.page['example'].data += [first_suggestion, True]
-        elif q.events.chatbot.prompt_suggestion == 'sug2':
-            q.page['example'].data += [second_suggestion, True]
-        elif q.events.chatbot.prompt_suggestion == 'sug3':
-            q.page['example'].data += [third_suggestion, True]
-        elif q.events.chatbot.prompt_suggestion == 'sug4':
-            q.page['example'].data += [fourth_suggestion, True]
+    elif q.events.chatbot or q.args.chatbot:
+        # Clear prompt suggestions.
+        q.page['example'].prompt_suggestions = []
+
+        # Handle user input.
+        if q.args.chatbot:
+            # Append user message typed manually.
+            q.page['example'].data += [q.args.chatbot, True]
+        else:
+            label, caption, icon = suggestions[q.events.chatbot.prompt_suggestion]
+            # Append user message based on the prompt_suggestion event.
+            q.page['example'].data += [label + ' ' + caption, True]
+
         # Append bot response.
-        q.page['example'].data += ['I am a fake chatbot. Sorry, I cannot help you.', False]
+        q.page['example'].data += ['', False]
+        # Update UI.
+        await q.page.save()
+        # Stream bot response.
+        await stream_bot_response(q, 'I am a fake chatbot. Sorry, I cannot help you.')
 
     await q.page.save()
