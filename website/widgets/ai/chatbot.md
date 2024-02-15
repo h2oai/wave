@@ -86,21 +86,21 @@ q.page['example'] = ui.chatbot_card(
 
 Use `prompt_suggestions` to provide user with pre-defined prompt options. Use in combination with `prompt_suggestion` event. See [full example](/docs/examples/chatbot-events-suggestions) to learn more.
 
-```py {10,11,12,13,14,15}
+![chatbot-prompt-suggestions](/img/widgets/chatbot-prompt-suggestions.gif)
+
+```py {6,7,8,9,10,11,12} ignore
 from h2o_wave import data
 
 q.page['example'] = ui.chatbot_card(
     box='1 1 5 5',
     name='chatbot', 
-    data=data(fields='content from_user', t='list', rows=[
-        ['Hello, buddy. Can you help me?', True],
-        ['Sure, what you need?', False],
-    ]),
+    data=data(fields='content from_user', t='list'),
     events=['prompt_suggestion'],
     prompt_suggestions=[
-        ui.chat_prompt_suggestion('sug1', label="I can't login."),
-        ui.chat_prompt_suggestion('sug2', label="I need help with my investments."),
-        ui.chat_prompt_suggestion('sug2', label="I need something else."),
+        ui.chat_prompt_suggestion('sug1', label="Write a poem", caption="about H2O Wave", icon="Edit"),
+        ui.chat_prompt_suggestion('sug2', label="Plan a trip", caption="to Europe", icon="Airplane"),
+        ui.chat_prompt_suggestion('sug3', label="Give me ideas", caption="for a new project", icon="Lightbulb"),
+        ui.chat_prompt_suggestion('sug4', label="Explain me", caption="CSS preprocessors", icon="Code")
     ],
 )
 ```
