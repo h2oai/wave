@@ -90,6 +90,13 @@
     ],
     "description": "Create a minimal Wave ChatbotMessage."
   },
+  "Wave ChatSuggestion": {
+    "prefix": "w_chat_suggestion",
+    "body": [
+      "ui.chat_suggestion(name='$1', label='$2'),$0"
+    ],
+    "description": "Create a minimal Wave ChatSuggestion."
+  },
   "Wave Chatbot": {
     "prefix": "w_chatbot",
     "body": [
@@ -1056,17 +1063,24 @@
     ],
     "description": "Create a full Wave ChatbotMessage."
   },
+  "Wave Full ChatSuggestion": {
+    "prefix": "w_full_chat_suggestion",
+    "body": [
+      "ui.chat_suggestion(name='$1', label='$2', caption='$3', icon='$4'),$0"
+    ],
+    "description": "Create a full Wave ChatSuggestion."
+  },
   "Wave Full Chatbot": {
     "prefix": "w_full_chatbot",
     "body": [
-      "ui.chatbot(name='$1', data=$2, placeholder='$3', generating=${4:False}, events=[\n\t\t$5\t\t\n], prev_items=[\n\t\t$6\t\t\n]),$0"
+      "ui.chatbot(name='$1', data=$2, placeholder='$3', generating=${4:False}, disabled=${5:False}, events=[\n\t\t$6\t\t\n], prev_items=[\n\t\t$7\t\t\n], suggestions=[\n\t\t$8\t\t\n]),$0"
     ],
     "description": "Create a full Wave Chatbot."
   },
   "Wave Full ChatbotCard": {
     "prefix": "w_full_chatbot_card",
     "body": [
-      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', generating=${5:False}, events=[\n\t\t$6\t\t\n], commands=[\n\t\t$7\t\t\n])$0"
+      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', generating=${5:False}, disabled=${6:False}, events=[\n\t\t$7\t\t\n], suggestions=[\n\t\t$8\t\t\n], commands=[\n\t\t$9\t\t\n])$0"
     ],
     "description": "Create a full Wave ChatbotCard."
   },

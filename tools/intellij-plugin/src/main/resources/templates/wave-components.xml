@@ -95,6 +95,13 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_chat_suggestion" value="ui.chat_suggestion(name='$name$',label='$label$'),$END$" description="Create a minimal Wave ChatSuggestion." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_chatbot" value="ui.chatbot(name='$name$',data=$data$),$END$" description="Create a minimal Wave Chatbot." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1122,24 +1129,37 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chatbot" value="ui.chatbot(name='$name$',data=$data$,placeholder='$placeholder$',generating=$generating$,events=[&#10;	$events$	&#10;],prev_items=[&#10;	$prev_items$	&#10;]),$END$" description="Create Wave Chatbot with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chat_suggestion" value="ui.chat_suggestion(name='$name$',label='$label$',caption='$caption$',icon='$icon$'),$END$" description="Create Wave ChatSuggestion with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="generating" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
-    <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="prev_items" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chatbot_card" value="ui.chatbot_card(box='$box$',name='$name$',data=$data$,placeholder='$placeholder$',generating=$generating$,events=[&#10;	$events$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatbotCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chatbot" value="ui.chatbot(name='$name$',data=$data$,placeholder='$placeholder$',generating=$generating$,disabled=$disabled$,events=[&#10;	$events$	&#10;],prev_items=[&#10;	$prev_items$	&#10;],suggestions=[&#10;	$suggestions$	&#10;]),$END$" description="Create Wave Chatbot with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="generating" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="prev_items" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="suggestions" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_chatbot_card" value="ui.chatbot_card(box='$box$',name='$name$',data=$data$,placeholder='$placeholder$',generating=$generating$,disabled=$disabled$,events=[&#10;	$events$	&#10;],suggestions=[&#10;	$suggestions$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatbotCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="placeholder" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="generating" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
+    <variable name="disabled" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="events" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="suggestions" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

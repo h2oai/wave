@@ -3347,14 +3347,42 @@ ui_chat_card <- function(
   return(.o)
 }
 
+#' Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
+#'
+#' @param name An identifying name for this component.
+#' @param label The text displayed for this suggestion.
+#' @param caption The caption displayed below the label.
+#' @param icon The icon to be displayed for this suggestion.
+#' @return A ChatSuggestion instance.
+#' @export
+ui_chat_suggestion <- function(
+  name,
+  label,
+  caption = NULL,
+  icon = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .o <- list(
+    name=name,
+    label=label,
+    caption=caption,
+    icon=icon)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatSuggestion"))
+  return(.o)
+}
+
 #' Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
-#' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
+#' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'suggestion'.
 #' @param generating True to show a button to stop the text generation. Defaults to False.
+#' @param suggestions Clickable prompt suggestions shown below the last response.
+#' @param disabled True if the user input should be disabled.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
 #' @export
@@ -3365,6 +3393,8 @@ ui_chatbot_card <- function(
   placeholder = NULL,
   events = NULL,
   generating = NULL,
+  suggestions = NULL,
+  disabled = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
@@ -3372,6 +3402,8 @@ ui_chatbot_card <- function(
   .guard_scalar("placeholder", "character", placeholder)
   .guard_vector("events", "character", events)
   .guard_scalar("generating", "logical", generating)
+  .guard_vector("suggestions", "WaveChatSuggestion", suggestions)
+  .guard_scalar("disabled", "logical", disabled)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3380,6 +3412,8 @@ ui_chatbot_card <- function(
     placeholder=placeholder,
     events=events,
     generating=generating,
+    suggestions=suggestions,
+    disabled=disabled,
     commands=commands,
     view='chatbot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatbotCard"))

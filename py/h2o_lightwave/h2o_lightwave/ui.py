@@ -2884,6 +2884,30 @@ def chat_card(
     )
 
 
+def chat_suggestion(
+        name: str,
+        label: str,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+) -> ChatSuggestion:
+    """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
+
+    Args:
+        name: An identifying name for this component.
+        label: The text displayed for this suggestion.
+        caption: The caption displayed below the label.
+        icon: The icon to be displayed for this suggestion.
+    Returns:
+        A `h2o_wave.types.ChatSuggestion` instance.
+    """
+    return ChatSuggestion(
+        name,
+        label,
+        caption,
+        icon,
+    )
+
+
 def chatbot_card(
         box: str,
         name: str,
@@ -2891,6 +2915,8 @@ def chatbot_card(
         placeholder: Optional[str] = None,
         events: Optional[List[str]] = None,
         generating: Optional[bool] = None,
+        suggestions: Optional[List[ChatSuggestion]] = None,
+        disabled: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
     """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
@@ -2900,8 +2926,10 @@ def chatbot_card(
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
         placeholder: Chat input box placeholder. Use for prompt examples.
-        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback'.
+        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'suggestion'.
         generating: True to show a button to stop the text generation. Defaults to False.
+        suggestions: Clickable prompt suggestions shown below the last response.
+        disabled: True if the user input should be disabled.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatbotCard` instance.
@@ -2913,6 +2941,8 @@ def chatbot_card(
         placeholder,
         events,
         generating,
+        suggestions,
+        disabled,
         commands,
     )
 
