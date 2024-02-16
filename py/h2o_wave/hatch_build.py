@@ -18,13 +18,11 @@ __arch__ = "{arch}"
 
 class CustomMetadataHook(MetadataHookInterface):
     def update(self, metadata: dict) -> None:
-        print('======> HATCH SETTING VERSION !!!! <======', os.environ.get('VERSION'))
         metadata['version'] = os.environ.get('VERSION', metadata['version'])
 
 
 class CustomBuildHook(BuildHookInterface):
     def initialize(self, _version, build_data):
-        print('======> HATCH !!!! <======')
         platform = os.environ.get('H2O_WAVE_PLATFORM')
         print(f'Building for platform: {platform}')
         if not platform:
@@ -35,7 +33,7 @@ class CustomBuildHook(BuildHookInterface):
         build_data['tag'] = f'py3-none-{platform}'
         build_data['pure_python'] = False
 
-        version = os.environ.get('VERSION', '1.0.0')
+        version = os.environ.get('VERSION')
         if not version:
             raise Exception('VERSION environment variable must be set.')
 
@@ -46,7 +44,6 @@ class CustomBuildHook(BuildHookInterface):
         elif platform == 'manylinux1_x86_64':
             operating_system = 'linux'
 
-        print('==========>>> CWD:', os. getcwd())
         # binaries_path = os.path.join('..', '..', 'build', f'wave-{version}-{operating_system}-{arch}')
         binaries_path = os.path.join('conda', 'temp')
         if not os.path.exists(binaries_path):
