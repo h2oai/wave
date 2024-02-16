@@ -2878,12 +2878,12 @@ def chat_card(
     )
 
 
-def chat_prompt_suggestion(
+def chat_suggestion(
         name: str,
         label: str,
         caption: Optional[str] = None,
         icon: Optional[str] = None,
-) -> ChatPromptSuggestion:
+) -> ChatSuggestion:
     """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
 
     Args:
@@ -2892,9 +2892,9 @@ def chat_prompt_suggestion(
         caption: The caption displayed below the label.
         icon: The icon to be displayed for this suggestion.
     Returns:
-        A `h2o_wave.types.ChatPromptSuggestion` instance.
+        A `h2o_wave.types.ChatSuggestion` instance.
     """
-    return ChatPromptSuggestion(
+    return ChatSuggestion(
         name,
         label,
         caption,
@@ -2909,7 +2909,7 @@ def chatbot_card(
         placeholder: Optional[str] = None,
         events: Optional[List[str]] = None,
         generating: Optional[bool] = None,
-        suggestions: Optional[List[ChatPromptSuggestion]] = None,
+        suggestions: Optional[List[ChatSuggestion]] = None,
         disabled: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:

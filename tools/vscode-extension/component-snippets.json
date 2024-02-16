@@ -90,12 +90,12 @@
     ],
     "description": "Create a minimal Wave ChatbotMessage."
   },
-  "Wave ChatPromptSuggestion": {
-    "prefix": "w_chat_prompt_suggestion",
+  "Wave ChatSuggestion": {
+    "prefix": "w_chat_suggestion",
     "body": [
-      "ui.chat_prompt_suggestion(name='$1', label='$2'),$0"
+      "ui.chat_suggestion(name='$1', label='$2'),$0"
     ],
-    "description": "Create a minimal Wave ChatPromptSuggestion."
+    "description": "Create a minimal Wave ChatSuggestion."
   },
   "Wave Chatbot": {
     "prefix": "w_chatbot",
@@ -1063,12 +1063,12 @@
     ],
     "description": "Create a full Wave ChatbotMessage."
   },
-  "Wave Full ChatPromptSuggestion": {
-    "prefix": "w_full_chat_prompt_suggestion",
+  "Wave Full ChatSuggestion": {
+    "prefix": "w_full_chat_suggestion",
     "body": [
-      "ui.chat_prompt_suggestion(name='$1', label='$2', caption='$3', icon='$4'),$0"
+      "ui.chat_suggestion(name='$1', label='$2', caption='$3', icon='$4'),$0"
     ],
-    "description": "Create a full Wave ChatPromptSuggestion."
+    "description": "Create a full Wave ChatSuggestion."
   },
   "Wave Full Chatbot": {
     "prefix": "w_full_chatbot",

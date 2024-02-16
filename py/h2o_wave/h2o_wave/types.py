@@ -8245,7 +8245,7 @@ class ChatCard:
         )
 
 
-class ChatPromptSuggestion:
+class ChatSuggestion:
     """Create a chat prompt suggestion displayed as button below the last response in the chatbot component.
     """
     def __init__(
@@ -8255,10 +8255,10 @@ class ChatPromptSuggestion:
             caption: Optional[str] = None,
             icon: Optional[str] = None,
     ):
-        _guard_scalar('ChatPromptSuggestion.name', name, (str,), True, False, False)
-        _guard_scalar('ChatPromptSuggestion.label', label, (str,), False, False, False)
-        _guard_scalar('ChatPromptSuggestion.caption', caption, (str,), False, True, False)
-        _guard_scalar('ChatPromptSuggestion.icon', icon, (str,), False, True, False)
+        _guard_scalar('ChatSuggestion.name', name, (str,), True, False, False)
+        _guard_scalar('ChatSuggestion.label', label, (str,), False, False, False)
+        _guard_scalar('ChatSuggestion.caption', caption, (str,), False, True, False)
+        _guard_scalar('ChatSuggestion.icon', icon, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -8270,10 +8270,10 @@ class ChatPromptSuggestion:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ChatPromptSuggestion.name', self.name, (str,), True, False, False)
-        _guard_scalar('ChatPromptSuggestion.label', self.label, (str,), False, False, False)
-        _guard_scalar('ChatPromptSuggestion.caption', self.caption, (str,), False, True, False)
-        _guard_scalar('ChatPromptSuggestion.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('ChatSuggestion.name', self.name, (str,), True, False, False)
+        _guard_scalar('ChatSuggestion.label', self.label, (str,), False, False, False)
+        _guard_scalar('ChatSuggestion.caption', self.caption, (str,), False, True, False)
+        _guard_scalar('ChatSuggestion.icon', self.icon, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -8282,21 +8282,21 @@ class ChatPromptSuggestion:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'ChatPromptSuggestion':
+    def load(__d: Dict) -> 'ChatSuggestion':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('ChatPromptSuggestion.name', __d_name, (str,), True, False, False)
+        _guard_scalar('ChatSuggestion.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
-        _guard_scalar('ChatPromptSuggestion.label', __d_label, (str,), False, False, False)
+        _guard_scalar('ChatSuggestion.label', __d_label, (str,), False, False, False)
         __d_caption: Any = __d.get('caption')
-        _guard_scalar('ChatPromptSuggestion.caption', __d_caption, (str,), False, True, False)
+        _guard_scalar('ChatSuggestion.caption', __d_caption, (str,), False, True, False)
         __d_icon: Any = __d.get('icon')
-        _guard_scalar('ChatPromptSuggestion.icon', __d_icon, (str,), False, True, False)
+        _guard_scalar('ChatSuggestion.icon', __d_icon, (str,), False, True, False)
         name: str = __d_name
         label: str = __d_label
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
-        return ChatPromptSuggestion(
+        return ChatSuggestion(
             name,
             label,
             caption,
@@ -8315,7 +8315,7 @@ class ChatbotCard:
             placeholder: Optional[str] = None,
             events: Optional[List[str]] = None,
             generating: Optional[bool] = None,
-            suggestions: Optional[List[ChatPromptSuggestion]] = None,
+            suggestions: Optional[List[ChatSuggestion]] = None,
             disabled: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -8324,7 +8324,7 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.placeholder', placeholder, (str,), False, True, False)
         _guard_vector('ChatbotCard.events', events, (str,), False, True, False)
         _guard_scalar('ChatbotCard.generating', generating, (bool,), False, True, False)
-        _guard_vector('ChatbotCard.suggestions', suggestions, (ChatPromptSuggestion,), False, True, False)
+        _guard_vector('ChatbotCard.suggestions', suggestions, (ChatSuggestion,), False, True, False)
         _guard_scalar('ChatbotCard.disabled', disabled, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', commands, (Command,), False, True, False)
         self.box = box
@@ -8353,7 +8353,7 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.placeholder', self.placeholder, (str,), False, True, False)
         _guard_vector('ChatbotCard.events', self.events, (str,), False, True, False)
         _guard_scalar('ChatbotCard.generating', self.generating, (bool,), False, True, False)
-        _guard_vector('ChatbotCard.suggestions', self.suggestions, (ChatPromptSuggestion,), False, True, False)
+        _guard_vector('ChatbotCard.suggestions', self.suggestions, (ChatSuggestion,), False, True, False)
         _guard_scalar('ChatbotCard.disabled', self.disabled, (bool,), False, True, False)
         _guard_vector('ChatbotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
@@ -8395,7 +8395,7 @@ class ChatbotCard:
         placeholder: Optional[str] = __d_placeholder
         events: Optional[List[str]] = __d_events
         generating: Optional[bool] = __d_generating
-        suggestions: Optional[List[ChatPromptSuggestion]] = None if __d_suggestions is None else [ChatPromptSuggestion.load(__e) for __e in __d_suggestions]
+        suggestions: Optional[List[ChatSuggestion]] = None if __d_suggestions is None else [ChatSuggestion.load(__e) for __e in __d_suggestions]
         disabled: Optional[bool] = __d_disabled
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ChatbotCard(

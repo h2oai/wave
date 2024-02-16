@@ -3345,9 +3345,9 @@ ui_chat_card <- function(
 #' @param label The text displayed for this suggestion.
 #' @param caption The caption displayed below the label.
 #' @param icon The icon to be displayed for this suggestion.
-#' @return A ChatPromptSuggestion instance.
+#' @return A ChatSuggestion instance.
 #' @export
-ui_chat_prompt_suggestion <- function(
+ui_chat_suggestion <- function(
   name,
   label,
   caption = NULL,
@@ -3361,7 +3361,7 @@ ui_chat_prompt_suggestion <- function(
     label=label,
     caption=caption,
     icon=icon)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatPromptSuggestion"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatSuggestion"))
   return(.o)
 }
 
@@ -3394,7 +3394,7 @@ ui_chatbot_card <- function(
   .guard_scalar("placeholder", "character", placeholder)
   .guard_vector("events", "character", events)
   .guard_scalar("generating", "logical", generating)
-  .guard_vector("suggestions", "WaveChatPromptSuggestion", suggestions)
+  .guard_vector("suggestions", "WaveChatSuggestion", suggestions)
   .guard_scalar("disabled", "logical", disabled)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(

@@ -1,5 +1,5 @@
 # Chatbot / Events/ Suggestions
-# Use prompt suggestions to simplify user interaction.
+# Use suggestions to simplify user interaction.
 # #chatbot #events #suggestions
 # ---
 from h2o_wave import main, app, Q, ui, data
@@ -34,13 +34,13 @@ async def serve(q: Q):
             name='chatbot',
             placeholder='Ask me anything...',
             events=['suggestion'],
-            suggestions=[ui.chat_prompt_suggestion(name, label=value[0], caption=value[1], icon=value[2]) for
+            suggestions=[ui.chat_suggestion(name, label=value[0], caption=value[1], icon=value[2]) for
                                 name, value in suggestions.items()]
         )
         q.client.initialized = True
 
     elif q.events.chatbot or q.args.chatbot:
-        # Clear prompt suggestions.
+        # Clear suggestions.
         q.page['example'].suggestions = []
 
         # Handle user input.
@@ -49,7 +49,7 @@ async def serve(q: Q):
             q.page['example'].data += [q.args.chatbot, True]
         else:
             label, caption, icon = suggestions[q.events.chatbot.suggestion]
-            # Append user message based on the prompt suggestion event.
+            # Append user message based on the suggestion event.
             q.page['example'].data += [label + ' ' + caption, True]
 
         # Append bot response.

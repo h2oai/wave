@@ -267,14 +267,14 @@ describe('XChatbot', () => {
     expect(emitMock).toHaveBeenCalledTimes(1)
   })
 
-  it('Renders prompt suggestions when specified', () => {
+  it('Renders suggestions when specified', () => {
     const { getByText } = render(<XChatbot {...{ ...model, suggestions }} />)
 
     expect(getByText('Suggestion 1')).toBeInTheDocument()
     expect(getByText('Suggestion 2')).toBeInTheDocument()
   })
 
-  it('Fires event when prompt suggestion is clicked', () => {
+  it('Fires event when suggestion is clicked', () => {
     const { getByText } = render(<XChatbot {...{ ...model, events: ['suggestion'], suggestions }} />)
 
     fireEvent.click(getByText('Suggestion 1'))

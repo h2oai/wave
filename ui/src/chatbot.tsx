@@ -122,7 +122,7 @@ interface ChatbotMessage {
 }
 
 /** Create a chat prompt suggestion displayed as button below the last response in the chatbot component. */
-export interface ChatPromptSuggestion {
+export interface ChatSuggestion {
   /** An identifying name for this component. */
   name: Id
   /** The text displayed for this suggestion. */
@@ -148,7 +148,7 @@ export interface Chatbot {
   /** The previous messages to show as the user scrolls up. */
   prev_items?: ChatbotMessage[]
   /** Clickable prompt suggestions shown below the last response. */
-  suggestions?: ChatPromptSuggestion[]
+  suggestions?: ChatSuggestion[]
   /** True if the user input should be disabled. */
   disabled?: B
 }
@@ -338,7 +338,7 @@ interface State {
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
   /** Clickable prompt suggestions shown below the last response. */
-  suggestions?: ChatPromptSuggestion[]
+  suggestions?: ChatSuggestion[]
   /** True if the user input should be disabled. */
   disabled?: B
 }
