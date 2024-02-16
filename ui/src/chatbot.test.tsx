@@ -268,22 +268,22 @@ describe('XChatbot', () => {
   })
 
   it('Renders prompt suggestions when specified', () => {
-    const { getByText } = render(<XChatbot {...{ ...model, prompt_suggestions: suggestions }} />)
+    const { getByText } = render(<XChatbot {...{ ...model, suggestions }} />)
 
     expect(getByText('Suggestion 1')).toBeInTheDocument()
     expect(getByText('Suggestion 2')).toBeInTheDocument()
   })
 
   it('Fires event when prompt suggestion is clicked', () => {
-    const { getByText } = render(<XChatbot {...{ ...model, events: ['prompt_suggestion'], prompt_suggestions: suggestions }} />)
+    const { getByText } = render(<XChatbot {...{ ...model, events: ['suggestion'], suggestions }} />)
 
     fireEvent.click(getByText('Suggestion 1'))
     expect(emitMock).toHaveBeenCalled()
     expect(emitMock).toHaveBeenCalledTimes(1)
-    expect(emitMock).toHaveBeenCalledWith(model.name, 'prompt_suggestion', suggestions[0].name)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'suggestion', suggestions[0].name)
 
     fireEvent.click(getByText('Suggestion 2'))
     expect(emitMock).toHaveBeenCalledTimes(2)
-    expect(emitMock).toHaveBeenCalledWith(model.name, 'prompt_suggestion', suggestions[1].name)
+    expect(emitMock).toHaveBeenCalledWith(model.name, 'suggestion', suggestions[1].name)
   })
 })

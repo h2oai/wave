@@ -2909,7 +2909,7 @@ def chatbot_card(
         placeholder: Optional[str] = None,
         events: Optional[List[str]] = None,
         generating: Optional[bool] = None,
-        prompt_suggestions: Optional[List[ChatPromptSuggestion]] = None,
+        suggestions: Optional[List[ChatPromptSuggestion]] = None,
         disabled: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
@@ -2920,9 +2920,9 @@ def chatbot_card(
         name: An identifying name for this component.
         data: Chat messages data. Requires cyclic buffer.
         placeholder: Chat input box placeholder. Use for prompt examples.
-        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'prompt_suggestion'.
+        events: The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'suggestion'.
         generating: True to show a button to stop the text generation. Defaults to False.
-        prompt_suggestions: Clickable prompt suggestions shown below the last response.
+        suggestions: Clickable prompt suggestions shown below the last response.
         disabled: True if the user input should be disabled.
         commands: Contextual menu commands for this component.
     Returns:
@@ -2935,7 +2935,7 @@ def chatbot_card(
         placeholder,
         events,
         generating,
-        prompt_suggestions,
+        suggestions,
         disabled,
         commands,
     )

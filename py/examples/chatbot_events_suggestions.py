@@ -33,23 +33,23 @@ async def serve(q: Q):
             data=data(fields='content from_user', t='list'),
             name='chatbot',
             placeholder='Ask me anything...',
-            events=['prompt_suggestion'],
-            prompt_suggestions=[ui.chat_prompt_suggestion(name, label=value[0], caption=value[1], icon=value[2]) for
+            events=['suggestion'],
+            suggestions=[ui.chat_prompt_suggestion(name, label=value[0], caption=value[1], icon=value[2]) for
                                 name, value in suggestions.items()]
         )
         q.client.initialized = True
 
     elif q.events.chatbot or q.args.chatbot:
         # Clear prompt suggestions.
-        q.page['example'].prompt_suggestions = []
+        q.page['example'].suggestions = []
 
         # Handle user input.
         if q.args.chatbot:
             # Append user message typed manually.
             q.page['example'].data += [q.args.chatbot, True]
         else:
-            label, caption, icon = suggestions[q.events.chatbot.prompt_suggestion]
-            # Append user message based on the prompt_suggestion event.
+            label, caption, icon = suggestions[q.events.chatbot.suggestion]
+            # Append user message based on the prompt suggestion event.
             q.page['example'].data += [label + ' ' + caption, True]
 
         # Append bot response.

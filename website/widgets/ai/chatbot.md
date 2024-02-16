@@ -82,9 +82,9 @@ q.page['example'] = ui.chatbot_card(
 )
 ```
 
-## With prompt suggestions
+## With suggestions
 
-Use `prompt_suggestions` to provide user with pre-defined prompt options. Use in combination with `prompt_suggestion` event. See [full example](/docs/examples/chatbot-events-suggestions) to learn more.
+Use `suggestions` to provide user with pre-defined prompt options. Use in combination with `suggestion` event. See [full example](/docs/examples/chatbot-events-suggestions) to learn more.
 
 ![chatbot-prompt-suggestions](/img/widgets/chatbot-prompt-suggestions.gif)
 
@@ -95,8 +95,8 @@ q.page['example'] = ui.chatbot_card(
     box='1 1 5 5',
     name='chatbot', 
     data=data(fields='content from_user', t='list'),
-    events=['prompt_suggestion'],
-    prompt_suggestions=[
+    events=['suggestion'],
+    suggestions=[
         ui.chat_prompt_suggestion('sug1', label="Write a poem", caption="about H2O Wave", icon="Edit"),
         ui.chat_prompt_suggestion('sug2', label="Plan a trip", caption="to Europe", icon="Airplane"),
         ui.chat_prompt_suggestion('sug3', label="Give me ideas", caption="for a new project", icon="Lightbulb"),

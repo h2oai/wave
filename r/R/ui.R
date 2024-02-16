@@ -3371,9 +3371,9 @@ ui_chat_prompt_suggestion <- function(
 #' @param name An identifying name for this component.
 #' @param data Chat messages data. Requires cyclic buffer.
 #' @param placeholder Chat input box placeholder. Use for prompt examples.
-#' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'prompt_suggestion'.
+#' @param events The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'suggestion'.
 #' @param generating True to show a button to stop the text generation. Defaults to False.
-#' @param prompt_suggestions Clickable prompt suggestions shown below the last response.
+#' @param suggestions Clickable prompt suggestions shown below the last response.
 #' @param disabled True if the user input should be disabled.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
@@ -3385,7 +3385,7 @@ ui_chatbot_card <- function(
   placeholder = NULL,
   events = NULL,
   generating = NULL,
-  prompt_suggestions = NULL,
+  suggestions = NULL,
   disabled = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
@@ -3394,7 +3394,7 @@ ui_chatbot_card <- function(
   .guard_scalar("placeholder", "character", placeholder)
   .guard_vector("events", "character", events)
   .guard_scalar("generating", "logical", generating)
-  .guard_vector("prompt_suggestions", "WaveChatPromptSuggestion", prompt_suggestions)
+  .guard_vector("suggestions", "WaveChatPromptSuggestion", suggestions)
   .guard_scalar("disabled", "logical", disabled)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
@@ -3404,7 +3404,7 @@ ui_chatbot_card <- function(
     placeholder=placeholder,
     events=events,
     generating=generating,
-    prompt_suggestions=prompt_suggestions,
+    suggestions=suggestions,
     disabled=disabled,
     commands=commands,
     view='chatbot')

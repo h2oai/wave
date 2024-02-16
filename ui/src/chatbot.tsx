@@ -141,14 +141,14 @@ export interface Chatbot {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'prompt_suggestion'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'suggestion'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
   /** The previous messages to show as the user scrolls up. */
   prev_items?: ChatbotMessage[]
   /** Clickable prompt suggestions shown below the last response. */
-  prompt_suggestions?: ChatPromptSuggestion[]
+  suggestions?: ChatPromptSuggestion[]
   /** True if the user input should be disabled. */
   disabled?: B
 }
@@ -164,7 +164,7 @@ export const XChatbot = (props: Chatbot) => {
     botTextColor = React.useMemo(() => getContrast(theme.palette.neutralLighter), [theme.palette.neutralLighter]),
     msgContainerRef = React.useRef<HTMLDivElement>(null),
     skipNextBottomScroll = React.useRef(false),
-    hasSomeCaption = React.useMemo(() => props.prompt_suggestions?.some(({ caption }) => !!caption), [props.prompt_suggestions]),
+    hasSomeCaption = props.suggestions?.some(({ caption }) => !!caption),
     onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
       e.preventDefault()
       wave.args[props.name] = newVal
@@ -207,7 +207,7 @@ export const XChatbot = (props: Chatbot) => {
       })
     },
     handleSuggestion = (name: Id) => {
-      if (props.events?.includes('prompt_suggestion')) wave.emit(props.name, 'prompt_suggestion', name)
+      if (props.events?.includes('suggestion')) wave.emit(props.name, 'suggestion', name)
     }
 
   React.useEffect(() => {
@@ -265,9 +265,9 @@ export const XChatbot = (props: Chatbot) => {
             </span>
           </div>
         ))}
-        {props.prompt_suggestions && props.prompt_suggestions.length > 0 &&
+        {!!props.suggestions?.length &&
           <div className={css.suggestionsWrapper}>
-            {props.prompt_suggestions.map(({ name, label, caption, icon }) => {
+            {props.suggestions.map(({ name, label, caption, icon }) => {
               const buttonProps: Fluent.IButtonProps = {
                 onClick: () => handleSuggestion(name),
                 className: clas(css.suggestion, hasSomeCaption ? css.captionButton : ''),
@@ -333,12 +333,12 @@ interface State {
   data: Rec
   /** Chat input box placeholder. Use for prompt examples. */
   placeholder?: S
-  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'prompt_suggestion'. */
+  /** The events to capture on this chatbot. One of 'stop' | 'scroll_up' | 'feedback' | 'suggestion'. */
   events?: S[]
   /** True to show a button to stop the text generation. Defaults to False. */
   generating?: B
   /** Clickable prompt suggestions shown below the last response. */
-  prompt_suggestions?: ChatPromptSuggestion[]
+  suggestions?: ChatPromptSuggestion[]
   /** True if the user input should be disabled. */
   disabled?: B
 }
