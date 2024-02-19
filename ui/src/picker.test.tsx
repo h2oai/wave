@@ -41,6 +41,25 @@ describe('Picker.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not render data-test attr when max choices reached', () => {
+    const { queryByTestId } = render(<XPicker model={{...pickerProps, values: [name], max_choices: 1}} />)
+    expect(queryByTestId(name)).toBe(null)
+  })
+
+  it('Remove selection so data-test attr for picker renders', () => {
+    const { queryByTestId } = render(<XPicker model={{...pickerProps, values: [name], max_choices: 1}} />)
+    expect(queryByTestId(name)).toBe(null)
+
+    //get the 'remove' button using its data-test attr 
+    const removeButton = (queryByTestId('remove_'+name) as HTMLElement)
+    expect(removeButton).toBeInTheDocument()
+    fireEvent.click(removeButton)
+
+    //now the picker data-test attr is in the DOM
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId('remove_'+name)).toBe(null)      
+  })
+
   it('Sets correct args - init', () => {
     render(<XPicker model={pickerProps} />)
     expect(wave.args[name]).toBeNull()
