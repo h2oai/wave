@@ -26,9 +26,10 @@ class CustomBuildHook(BuildHookInterface):
         if not platform:
             # Create a default metadata file in case of noarch builds.
             create_metadata_file('linux', 'amd64')
-            # If conda noarch build, copy binaries into package.
-            if os.environ.get('CONDA_BUILD'):
-                self.copy_binaries_into_package(os.path.join('conda', 'temp'))
+            # If conda build, copy binaries into package.
+            binaries_path = os.path.join('conda', 'temp')
+            if os.environ.get('CONDA_BUILD') and os.path.exists(binaries_path):
+                self.copy_binaries_into_package(binaries_path)
             return
 
         build_data['tag'] = f'py3-none-{platform}'
