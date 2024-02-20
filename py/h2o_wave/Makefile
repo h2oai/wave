@@ -17,29 +17,29 @@ build-conda: purge
 	mv temp_build/noarch/*.tar.bz2 ../sdist/osx-arm64
 	rm -rf temp_build conda/temp
 
-# # Mac x86_64
-# 	mkdir -p conda/temp
-# 	cp -a ../../build/wave-1.0.3-darwin-amd64/. conda/temp
-# 	VERSION=1.0.3 H2O_WAVE_PLATFORM=macosx_10_9_x86_64 conda build --output-folder temp_build/ conda
-# 	mkdir -p ../sdist/osx-64
-# 	mv temp_build/noarch/*.tar.bz2 ../sdist/osx-64
-# 	rm -rf temp_build conda/temp
+# Mac x86_64
+	mkdir -p conda/temp
+	cp -a ../../build/wave-1.0.3-darwin-amd64/. conda/temp
+	VERSION=1.0.3 conda build --output-folder temp_build/ conda
+	mkdir -p ../sdist/osx-64
+	mv temp_build/noarch/*.tar.bz2 ../sdist/osx-64
+	rm -rf temp_build conda/temp
 
-# # Linux 64 (the same as 32)
-# 	mkdir -p conda/temp
-# 	cp -a ../../build/wave-1.0.3-linux-amd64/. conda/temp
-# 	VERSION=1.0.3 H2O_WAVE_PLATFORM=manylinux1_x86_64 conda build --output-folder temp_build/ conda
-# 	mkdir -p ../sdist/linux-64
-# 	mv temp_build/noarch/*.tar.bz2 ../sdist/linux-64
-# 	rm -rf temp_build conda/temp
+# Linux 64 (the same as 32)
+	mkdir -p conda/temp
+	cp -a ../../build/wave-1.0.3-linux-amd64/. conda/temp
+	VERSION=1.0.3 conda build --output-folder temp_build/ conda
+	mkdir -p ../sdist/linux-64
+	mv temp_build/noarch/*.tar.bz2 ../sdist/linux-64
+	rm -rf temp_build conda/temp
 
-# # Windows 64 (TODO 32)
-# 	mkdir -p conda/temp
-# 	cp -a ../../build/wave-1.0.3-windows-amd64/. conda/temp
-# 	VERSION=1.0.3 H2O_WAVE_PLATFORM=win_amd64 conda build --output-folder temp_build/ conda
-# 	mkdir -p ../sdist/win-64
-# 	mv temp_build/noarch/*.tar.bz2 ../sdist/win-64
-# 	rm -rf temp_build conda/temp
+# Windows 64 (TODO 32)
+	mkdir -p conda/temp
+	cp -a ../../build/wave-1.0.3-windows-amd64/. conda/temp
+	VERSION=1.0.3 conda build --output-folder temp_build/ conda
+	mkdir -p ../sdist/win-64
+	mv temp_build/noarch/*.tar.bz2 ../sdist/win-64
+	rm -rf temp_build conda/temp
 
 
 purge: ## Purge previous build
