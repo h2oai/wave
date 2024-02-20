@@ -24,10 +24,12 @@ class CustomMetadataHook(MetadataHookInterface):
 class CustomBuildHook(BuildHookInterface):
     def initialize(self, _version, build_data):
         platform = os.environ.get('H2O_WAVE_PLATFORM')
-        print(f'Building for platform: {platform}')
         if not platform:
             # Create a default metadata file in case of noarch builds.
             create_metadata_file('linux', 'amd64')
+            # If conda noarch build, copy binaries into package.
+            if os.environ.get('CONDA_BUILD'):
+                self.copy_binaries_into_package(os.path.join('conda', 'temp'))
             return
 
         build_data['tag'] = f'py3-none-{platform}'
@@ -44,14 +46,7 @@ class CustomBuildHook(BuildHookInterface):
         elif platform == 'manylinux1_x86_64':
             operating_system = 'linux'
 
-        # binaries_path = os.path.join('..', '..', 'build', f'wave-{version}-{operating_system}-{arch}')
-        binaries_path = os.path.join('conda', 'temp')
-        if not os.path.exists(binaries_path):
-            raise Exception(f'{binaries_path} does not exist. Run make release first to generate server binaries.')
-
-        self.copy_files(binaries_path, 'tmp', ['demo', 'examples', 'test'])
-        self.copy_files('project_templates', 'tmp', [], True)
-        shutil.rmtree(binaries_path, ignore_errors=True) # Only if conda!!
+        self.copy_binaries_into_package(os.path.join('..', '..', 'build', f'wave-{version}-{operating_system}-{arch}'))
 
         create_metadata_file(operating_system, arch)
 
@@ -64,6 +59,13 @@ class CustomBuildHook(BuildHookInterface):
                 shutil.copy(src_file, dst_file)
             elif os.path.isdir(src_file) and file_name not in ignore:
                 self.copy_files(src_file, dst_file, ignore)
+
+    def copy_binaries_into_package(self, binaries_path):
+        if not os.path.exists(binaries_path):
+            raise Exception(f'{binaries_path} does not exist. Run make release first to generate server binaries.')
+
+        self.copy_files(binaries_path, 'tmp', ['demo', 'examples', 'test'])
+        self.copy_files('project_templates', 'tmp', [], True)
 
     def finalize(self, version: str, build_data: Dict[str, Any], artifact_path: str) -> None:
         shutil.rmtree('tmp', ignore_errors=True)
