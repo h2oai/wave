@@ -53,10 +53,6 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
   noResultsFoundText: 'No results found',
 }
 
-const removeButtonIconProps: Fluent.IIconProps = {
-  iconName: 'Cancel'
-}
-
 export const XPicker = ({ model: m }: { model: Picker }) => {
   const
     tags: Fluent.ITag[] = React.useMemo(() => m.choices.map(({ name, label }) => ({ key: name, name: label || name })), [m.choices]),
@@ -83,7 +79,7 @@ export const XPicker = ({ model: m }: { model: Picker }) => {
       {m.label && <Fluent.Label required={m.required}>{m.label}</Fluent.Label>}
       <Fluent.TagPicker
         inputProps={{ 'data-test': m.name } as Fluent.IInputProps}
-        removeButtonIconProps={{ ...removeButtonIconProps, 'data-test' : 'remove_'+m.name } as Fluent.IIconProps}
+        removeButtonIconProps={{ iconName: 'Cancel', 'data-test' : 'remove_' + m.name } as Fluent.IIconProps}
         removeButtonAriaLabel="Remove"
         onResolveSuggestions={filterSuggestedTags}
         onChange={onChange}
