@@ -282,7 +282,7 @@ export const
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      justify={m.justify}
+      justify={m.justify || 'start'}
       align={m.align || (m.direction === 'row' ? 'center' : undefined)}
       inset={m.inset}
       height={m.height}
