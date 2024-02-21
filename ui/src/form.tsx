@@ -215,7 +215,8 @@ const
       alignItems: 'center',
       $nest: {
         '> [data-visible="true"] ~ div': {
-          marginLeft: 8
+          paddingLeft: 8,
+          boxSizing: 'border-box'
         }
       }
     },
