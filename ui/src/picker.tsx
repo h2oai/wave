@@ -79,6 +79,7 @@ export const XPicker = ({ model: m }: { model: Picker }) => {
       {m.label && <Fluent.Label required={m.required}>{m.label}</Fluent.Label>}
       <Fluent.TagPicker
         inputProps={{ 'data-test': m.name } as Fluent.IInputProps}
+        removeButtonIconProps={{ iconName: 'Cancel', 'data-test' : 'remove_' + m.name } as Fluent.IIconProps}
         removeButtonAriaLabel="Remove"
         onResolveSuggestions={filterSuggestedTags}
         onChange={onChange}

@@ -41,6 +41,15 @@ describe('Picker.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Renders data-test attr on selection remove button', () => {
+    const { queryByTestId } = render(<XPicker model={{...pickerProps, values: [name]}} />)
+
+    const removeButton = (queryByTestId('remove_'+name) as HTMLElement)
+    expect(removeButton).toBeInTheDocument()
+    fireEvent.click(removeButton)
+    expect(queryByTestId('remove_'+name)).toBe(null)      
+  })
+
   it('Sets correct args - init', () => {
     render(<XPicker model={pickerProps} />)
     expect(wave.args[name]).toBeNull()
