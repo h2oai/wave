@@ -1535,7 +1535,22 @@ describe('Table.tsx', () => {
     const
       items = 3,
       firstGroupLabel = 'GroupA',
-      secondGroupLabel = 'GroupB'
+      secondGroupLabel = 'GroupB',
+      groupA = {
+        label: firstGroupLabel,
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'Group2'] },
+          { name: 'rowname2', cells: [cell21, 'Group1'] }
+        ],
+        collapsed: false
+      },
+      groupB = {
+        label: secondGroupLabel,
+        rows: [
+          { name: 'rowname3', cells: [cell31, 'Group2'] }
+        ],
+        collapsed: false
+      }
     beforeEach(() => {
       tableProps = {
         name,
@@ -1543,23 +1558,7 @@ describe('Table.tsx', () => {
           { name: 'colname1', label: 'Col1', sortable: true, searchable: true },
           { name: 'colname2', label: 'Col2', sortable: true, filterable: true },
         ],
-        groups: [
-          {
-            label: firstGroupLabel,
-            rows: [
-              { name: 'rowname1', cells: [cell11, 'Group2'] },
-              { name: 'rowname2', cells: [cell21, 'Group1'] },
-            ],
-            collapsed: false
-          },
-          {
-            label: secondGroupLabel,
-            rows: [
-              { name: 'rowname3', cells: [cell31, 'Group2'] }
-            ],
-            collapsed: false
-          }
-        ]
+        groups: [groupA, groupB]
       }
     })
 
@@ -1764,6 +1763,22 @@ describe('Table.tsx', () => {
 
       expectAllGroupsToBeVisible()
       expectAllItemsToBePresent()
+    })
+
+    it("Sort items correctly when empty custom group is present", () => {
+      const
+        props = { ...tableProps, groups: [groupA, groupB, { label: 'GroupC', rows: [], collapsed: false }] },
+        { container, getAllByRole } = render(<XTable model={props} />)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell11)
+      expect(getAllByRole('gridcell')[6].textContent).toBe(cell21)
+      expect(getAllByRole('gridcell')[11].textContent).toBe(cell31)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle')!)
+
+      expect(getAllByRole('gridcell')[3].textContent).toBe(cell21)
+      expect(getAllByRole('gridcell')[6].textContent).toBe(cell11)
+      expect(getAllByRole('gridcell')[11].textContent).toBe(cell31)
     })
   })
 
