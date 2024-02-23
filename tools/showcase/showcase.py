@@ -201,7 +201,9 @@ def main():
 
     try:
         os.makedirs(example_file_path)
-        wave_server = subprocess.Popen(['make', 'run'], cwd=os.path.join('..', '..'), stderr=subprocess.DEVNULL, preexec_fn=os.setsid) # noqa
+        env = os.environ.copy()
+        env['H2O_WAVE_RECONNECT_TIMEOUT'] = "0s"
+        wave_server = subprocess.Popen(['make', 'run'], cwd=os.path.join('..', '..'), stderr=subprocess.DEVNULL, preexec_fn=os.setsid, env=env) # noqa
         time.sleep(1)
 
         retries = 3
