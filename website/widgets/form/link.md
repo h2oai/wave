@@ -56,7 +56,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 
 If you want to allow your users to download a file, use the `download` attribute.
 
-The `download` attribute will only start the download if the path points to a location on the same origin (if your app is running on <http://localhost:10101>, the `path` either starts with `/` or `http://localhost:10101`) or has a `Content-disposition` response header set to `attachment`. See [the docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download).
+The `download` attribute will only start the download if the path points to a location on the same origin (wave server).
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
