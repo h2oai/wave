@@ -395,7 +395,7 @@ describe('AudioAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([items[0], { ...items[1], start: end - moveOffset, end: start }])
     })
 
-    it.only('Does not remove active tag when leaving and getting back into the zoom rectangle during dragging', async () => {
+    it('Does not remove active tag when leaving and getting back into the zoom rectangle during dragging', async () => {
       const { container } = render(<XAudioAnnotator model={model} />)
       await waitForComponentLoad()
       const canvasEl = container.querySelector('canvas')!
