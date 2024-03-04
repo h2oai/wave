@@ -366,7 +366,7 @@ const
           : 'pointer'
 
         if (!currDrawnAnnotation.current || !action) {
-          if (intersected && intersected.tag !== activeTag) setActiveTag(intersected.tag)
+          if (intersected && intersected.tag !== activeTag && intersected.tag !== '') setActiveTag(intersected.tag)
           if (intersected) focusAnnotation(intersected)
           return
         }
