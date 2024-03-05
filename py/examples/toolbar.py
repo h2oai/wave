@@ -18,7 +18,7 @@ async def serve(q: Q):
             ),
             ui.command(name='upload', label='Upload', icon='Upload'),
             ui.command(name='share', label='Share', icon='Share'),
-            ui.command(name='download', label='Download', icon='Download', path='https://wave.h2o.ai/img/logo.svg', download=True),
+            ui.command(name='download', label='Download', icon='Download', path='http://localhost:10101/assets/brand/h2o-wave-b&w.png', download=True),
         ],
         secondary_items=[
             ui.command(name='tile', caption='Grid View', icon='Tiles'),

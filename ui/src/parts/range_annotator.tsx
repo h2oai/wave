@@ -366,7 +366,7 @@ const
           : 'pointer'
 
         if (!currDrawnAnnotation.current || !action) {
-          if (intersected && intersected.tag !== activeTag) setActiveTag(intersected.tag)
+          if (intersected && intersected.tag !== activeTag && intersected.tag !== '') setActiveTag(intersected.tag)
           if (intersected) focusAnnotation(intersected)
           return
         }
@@ -408,7 +408,13 @@ const
 
     React.useEffect(() => {
       window.addEventListener('resize', init)
-      return () => window.removeEventListener('resize', init)
+      // HACK: Fix canvas having default dimensions of 300x150 if app is loaded when browser tab is not visible.
+      const onVisibilityChange = () => { if (canvasRef.current && canvasRef.current.width === 300) setTimeout(init, 60) }
+      window.addEventListener("visibilitychange", onVisibilityChange)
+      return () => {
+        window.removeEventListener('resize', init)
+        window.removeEventListener("visibilitychange", onVisibilityChange)
+      }
     }, [init])
 
     React.useEffect(() => redrawAnnotations(), [annotations, redrawAnnotations])

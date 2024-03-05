@@ -50,8 +50,13 @@ export const Waveform = React.memo(({ color, data }: Props) => {
   React.useLayoutEffect(() => {
     updateDimensions()
     const onResize = debounce(1000, updateDimensions)
+    const onVisibilityChange = () => setTimeout(updateDimensions, 60)
     window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
+    window.addEventListener('visibilitychange', onVisibilityChange)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('visibilitychange', onVisibilityChange)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

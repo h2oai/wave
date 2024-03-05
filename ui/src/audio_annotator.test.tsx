@@ -395,6 +395,19 @@ describe('AudioAnnotator.tsx', () => {
       expect(wave.args[name]).toMatchObject([items[0], { ...items[1], start: end - moveOffset, end: start }])
     })
 
+    it('Does not remove active tag when leaving and getting back into the zoom rectangle during dragging', async () => {
+      const { container } = render(<XAudioAnnotator model={model} />)
+      await waitForComponentLoad()
+      const canvasEl = container.querySelector('canvas')!
+
+      expect(container.querySelector('[class*=activeTag]')).toBeInTheDocument()
+
+      fireEvent.mouseDown(canvasEl, { clientX: 30, clientY: 10, buttons: 1 })
+      fireEvent.mouseLeave(canvasEl)
+      fireEvent.click(canvasEl, { clientX: 31, clientY: 20, buttons: 1 })
+
+      expect(container.querySelector('[class*=activeTag]')).toBeInTheDocument()
+    })
   })
 
   describe('Tooltip', () => {
