@@ -213,7 +213,7 @@ func main() {
 	serverConf.NoLog = conf.NoLog
 	serverConf.Keychain = kc
 	serverConf.KeepAppLive = conf.KeepAppLive
-
+	serverConf.AllowedOrigins = strings.Split(conf.AllowedOrigins, ",")
 	authConf.Scopes = strings.Split(conf.RawAuthScopes, ",")
 	if len(conf.RawAuthURLParams) > 0 {
 		rawAuthURLPairs := strings.Split(conf.RawAuthURLParams, ",")

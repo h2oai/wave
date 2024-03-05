@@ -40,17 +40,6 @@ var (
 	upgrader      = websocket.Upgrader{
 		ReadBufferSize:  1024, // TODO review
 		WriteBufferSize: 1024, // TODO review
-		CheckOrigin: func(r *http.Request) bool {
-			// TODO: Import conf.
-			allowedOrigins := conf.AllowedOrigins || []string{conf.listen || "127.0.0.1"}
-			origin := r.Header.Get("Origin")
-			for _, o := range allowedOrigins {
-				if o == origin {
-					return true
-				}
-			}
-			return false
-		},
 	}
 )
 
@@ -81,13 +70,14 @@ type Client struct {
 	isReconnect      bool
 	cancel           context.CancelFunc
 	reconnectTimeout time.Duration
+	allowedOrigins   []string
 }
 
 // TODO: Refactor some of the params into a Config struct.
 func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool,
-	baseURL string, header *http.Header, pingInterval time.Duration, isReconnect bool, reconnectTimeout time.Duration) *Client {
+	baseURL string, header *http.Header, pingInterval time.Duration, isReconnect bool, reconnectTimeout time.Duration, allowedOrigins []string) *Client {
 	id := uuid.New().String()
-	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval, isReconnect, nil, reconnectTimeout}
+	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval, isReconnect, nil, reconnectTimeout, allowedOrigins}
 }
 
 func (c *Client) refreshToken() error {

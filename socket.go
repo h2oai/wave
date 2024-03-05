@@ -32,13 +32,27 @@ type SocketServer struct {
 	forwardedHeaders map[string]bool
 	pingInterval     time.Duration
 	reconnectTimeout time.Duration
+	allowedOrigins   []string
 }
 
-func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval, reconnectTimeout time.Duration) *SocketServer {
-	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval, reconnectTimeout}
+func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval, reconnectTimeout time.Duration, allowedOrigins []string) *SocketServer {
+	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval, reconnectTimeout, allowedOrigins}
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool {
+			allowedOrigins := s.allowedOrigins
+			if len(allowedOrigins) == 0 {
+				allowedOrigins = []string{"127.0.0.1"}
+			}
+			origin := r.Header.Get("Origin")
+			for _, o := range allowedOrigins {
+				if o == origin {
+					return true
+				}
+			}
+			return false
+		}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
@@ -83,7 +97,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			echo(Log{"t": "socket_reconnect", "client_id": clientID, "addr": getRemoteAddr(r)})
 		}
 	} else {
-		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false, s.reconnectTimeout)
+		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false, s.reconnectTimeout, s.allowedOrigins)
 	}
 
 	if msg, err := json.Marshal(OpsD{I: client.id}); err == nil {
