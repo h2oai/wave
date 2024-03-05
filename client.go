@@ -131,6 +131,9 @@ func (c *Client) listen() {
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				echo(Log{"t": "socket_read", "client": c.addr, "err": err.Error()})
+			} else {
+				// Firefox follows spec closely and requires a close message to be sent before closing the connection.
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 			}
 			break
 		}
