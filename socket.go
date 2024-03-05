@@ -36,13 +36,16 @@ type SocketServer struct {
 }
 
 func newSocketServer(broker *Broker, auth *Auth, conf ServerConf) *SocketServer {
+	var checkOrigin func(*http.Request) bool
+	if conf.AllowedOrigins != nil {
+		checkOrigin = func(r *http.Request) bool {
+			return conf.AllowedOrigins[r.Header.Get("Origin")]
+		}
+	}
 	upgrader := websocket.Upgrader{
 		ReadBufferSize:  1024, // TODO review
 		WriteBufferSize: 1024, // TODO review
-		CheckOrigin: func(r *http.Request) bool {
-			allowedOrigins := conf.AllowedOrigins
-			return allowedOrigins == nil || allowedOrigins[r.Header.Get("Origin")]
-		},
+		CheckOrigin:     checkOrigin,
 	}
 	return &SocketServer{broker, auth, conf.Editable, conf.BaseURL, conf.ForwardedHeaders, conf.PingInterval, conf.ReconnectTimeout, upgrader}
 }
