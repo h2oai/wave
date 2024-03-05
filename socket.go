@@ -32,14 +32,26 @@ type SocketServer struct {
 	forwardedHeaders map[string]bool
 	pingInterval     time.Duration
 	reconnectTimeout time.Duration
+	upgrader         websocket.Upgrader
 }
 
-func newSocketServer(broker *Broker, auth *Auth, editable bool, baseURL string, forwardedHeaders map[string]bool, pingInterval, reconnectTimeout time.Duration) *SocketServer {
-	return &SocketServer{broker, auth, editable, baseURL, forwardedHeaders, pingInterval, reconnectTimeout}
+func newSocketServer(broker *Broker, auth *Auth, conf ServerConf) *SocketServer {
+	var checkOrigin func(*http.Request) bool
+	if conf.AllowedOrigins != nil {
+		checkOrigin = func(r *http.Request) bool {
+			return conf.AllowedOrigins[r.Header.Get("Origin")]
+		}
+	}
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  1024, // TODO review
+		WriteBufferSize: 1024, // TODO review
+		CheckOrigin:     checkOrigin,
+	}
+	return &SocketServer{broker, auth, conf.Editable, conf.BaseURL, conf.ForwardedHeaders, conf.PingInterval, conf.ReconnectTimeout, upgrader}
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	conn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return

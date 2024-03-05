@@ -6,15 +6,16 @@ title: Configuration
 
 Wave allows starting Wave server in 2 ways:
 
-* via `wave run` command - this automatically starts Wave server (waved) under the hood, useful for development.
-* via Wave server binary (waved) - useful during deployment or when you need to run your Wave server on a different machine than your app.
+- via `wave run` command - this automatically starts Wave server (waved) under the hood, useful for development.
+- via Wave server binary (waved) - useful during deployment or when you need to run your Wave server on a different machine than your app.
 
 Wave can be configured via configuration (`.env`) file, environment variables or command line arguments with the following priority: `cmd arg > env var > config > default`.
 
 <!-- CREDIT: https://www.tablesgenerator.com/markdown_tables. -->
 <!-- https://github.com/h2oai/wave/issues/2256 -->
+
 | ENV var or config (wave run or waved)  | CLI args (waved)                      | Description                                                                                                                                                                                                                                                                                                          |
-|----------------------------------------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | H2O_WAVE_ACCESS_KEY_ID                 | -access-key-id string                 | default API access key ID (default "access_key_id")                                                                                                                                                                                                                                                                  |
 | H2O_WAVE_ACCESS_KEY_SECRET             | -access-key-secret string             | default API access key secret (default "access_key_secret")                                                                                                                                                                                                                                                          |
 | H2O_WAVE_ACCESS_KEYCHAIN               | -access-keychain string               | path to file containing API access keys (default ".wave-keychain")                                                                                                                                                                                                                                                   |
@@ -23,7 +24,7 @@ Wave can be configured via configuration (`.env`) file, environment variables or
 | H2O_WAVE_DATA_DIR                      | -data-dir string                      | directory to store site data (default "./data").                                                                                                                                                                                                                                                                     |
 | H2O_WAVE_DEBUG [^1]                    | -debug                                | enable debug mode (profiling, inspection, etc.)                                                                                                                                                                                                                                                                      |
 | H2O_WAVE_EDITABLE [^1]                 | -editable                             | allow users to edit web pages                                                                                                                                                                                                                                                                                        |
-| H2O_WAVE_FORWARDED_HTTP_HEADERS        | -forwarded-http-headers string        | comma-separated list of case-insensitive HTTP header keys to forward to the Wave app from the browser WS connection. If not specified, defaults to '*' - all headers are allowed. If set to an empty string, no headers are forwarded.                                                                               |
+| H2O_WAVE_FORWARDED_HTTP_HEADERS        | -forwarded-http-headers string        | comma-separated list of case-insensitive HTTP header keys to forward to the Wave app from the browser WS connection. If not specified, defaults to '\*' - all headers are allowed. If set to an empty string, no headers are forwarded.                                                                              |
 | H2O_WAVE_HTTP_HEADERS_FILE             | -http-headers-file string             | path to a MIME-formatted file containing additional HTTP headers to add to responses from the server                                                                                                                                                                                                                 |
 | H2O_WAVE_INIT                          | -init string                          | initialize site content from AOF log                                                                                                                                                                                                                                                                                 |
 | H2O_WAVE_LISTEN                        | -listen string                        | listen on this address (default ":10101")                                                                                                                                                                                                                                                                            |
@@ -58,7 +59,9 @@ Wave can be configured via configuration (`.env`) file, environment variables or
 | H2O_WAVE_WEB_DIR                       | -web-dir string                       | directory to serve web assets from (default "./www")                                                                                                                                                                                                                                                                 |
 | H2O_WAVE_CONF                          | -conf string                          | path to a configuration file (default ".env")                                                                                                                                                                                                                                                                        |
 | H2O_WAVE_PING_INTERVAL                 | -ping-interval string                 | how often should ping messages be sent (e.g. 60s or 1m or 0.1h) to keep the websocket connection alive (default "50s")                                                                                                                                                                                               |
-| H2O_WAVE_RECONNECT_TIMEOUT             | -reconnect-timeout string             | Time to wait for reconnect before dropping the client (default "2s")                                                                                                                                                                                                |
+| H2O_WAVE_RECONNECT_TIMEOUT             | -reconnect-timeout string             | Time to wait for reconnect before dropping the client (default "2s")                                                                                                                                                                                                                                                 |
+| H2O_WAVE_ALLOWED_ORIGINS               | -allowed-origins string               | comma-separated list of allowed origins (e.g. http://foo.com) for websocket upgrades                                                                                                                                                                                                                                 |
+
 [^1]: `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
 [^2]: Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
 
@@ -70,22 +73,22 @@ Those that do not start `waved` manually (but use `wave run` instead) and would 
 
 ### Supported size units (case insensitive)
 
-* Exabyte: `E` / `EB` / `EIB`.
-* Petabyte: `P` / `PB` / `PIB`.
-* Terabyte: `T` / `TB` / `TIB`.
-* Gigabyte: `G` / `GB` / `GIB`.
-* Megabyte: `M` / `MB` / `MIB`.
-* Kilobyte: `K` / `KB` / `KIB`.
-* Byte: `B`
+- Exabyte: `E` / `EB` / `EIB`.
+- Petabyte: `P` / `PB` / `PIB`.
+- Terabyte: `T` / `TB` / `TIB`.
+- Gigabyte: `G` / `GB` / `GIB`.
+- Megabyte: `M` / `MB` / `MIB`.
+- Kilobyte: `K` / `KB` / `KIB`.
+- Byte: `B`
 
 ### Suported time units
 
-* Nanosecond: `ns`.
-* Microsecond: `us` (or `µs`).
-* Milisecond `ms`.
-* Second: `s`.
-* Minute: `m`.
-* Hour: `h`.
+- Nanosecond: `ns`.
+- Microsecond: `us` (or `µs`).
+- Milisecond `ms`.
+- Second: `s`.
+- Minute: `m`.
+- Hour: `h`.
 
 ### Public/Private dirs
 
@@ -115,7 +118,7 @@ Wave serves whole directories as they are. This means that these directories are
 
 ### TLS verification
 
-During development, you might want to test out TLS encryption, e.g. communication between Wave server and Keycloak. The easiest thing to do is to generate a self-signed certificate. However, Wave server verifies certificates for all communication by default, thus would throw an error for a self-signed one. ***FOR DEVELOPMENT PURPOSES ONLY***, it's possible to turn off the check using either `H2O_WAVE_NO_TLS_VERIFY` environment variable or `no-tls-verify` parameter.
+During development, you might want to test out TLS encryption, e.g. communication between Wave server and Keycloak. The easiest thing to do is to generate a self-signed certificate. However, Wave server verifies certificates for all communication by default, thus would throw an error for a self-signed one. **_FOR DEVELOPMENT PURPOSES ONLY_**, it's possible to turn off the check using either `H2O_WAVE_NO_TLS_VERIFY` environment variable or `no-tls-verify` parameter.
 
 :::warning
 **Disabling TLS verification is a security risk.** Make sure TLS is not disabled in production environments.
@@ -201,8 +204,8 @@ By default, Wave apps do not load any third-party trackers or capture usage data
 
 Once enabled, your app's UI will send events every time the user performs some kind of action that triggers a request from the browser to your app. Only two kinds of information are sent to the third-party trackers:
 
-* The names of the elements that were possibly interacted with (and not values). For example, if a button named `foo` was clicked on, the value `foo=true` is tracked.
-* The hash part of the URL, if any. For example if the page `/foo/bar` was navigated to, the value `#=/foo/bar` is tracked.
+- The names of the elements that were possibly interacted with (and not values). For example, if a button named `foo` was clicked on, the value `foo=true` is tracked.
+- The hash part of the URL, if any. For example if the page `/foo/bar` was navigated to, the value `#=/foo/bar` is tracked.
 
 ### Google Analytics
 

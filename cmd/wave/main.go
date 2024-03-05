@@ -194,6 +194,15 @@ func main() {
 		panic(err)
 	}
 
+	if conf.AllowedOrigins != "" {
+		origins := strings.Split(conf.AllowedOrigins, ",")
+		allowedOrigins := make(map[string]bool, len(origins))
+		for _, origin := range origins {
+			allowedOrigins[strings.TrimSpace(origin)] = true
+		}
+		serverConf.AllowedOrigins = allowedOrigins
+	}
+
 	serverConf.WebDir, _ = filepath.Abs(conf.WebDir)
 	serverConf.DataDir, _ = filepath.Abs(conf.DataDir)
 	serverConf.Version = Version
