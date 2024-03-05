@@ -37,10 +37,6 @@ var (
 	notFoundMsg   = []byte(`{"e":"not_found"}`)
 	disconnectMsg = []byte(`{"data": {"":{"@system":{"client_disconnect":true}}}}`)
 	clearStateMsg = []byte(`{"c":1}`)
-	upgrader      = websocket.Upgrader{
-		ReadBufferSize:  1024, // TODO review
-		WriteBufferSize: 1024, // TODO review
-	}
 )
 
 // BootMsg represents the initial message sent to an app when a client first connects to it.
