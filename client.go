@@ -40,6 +40,17 @@ var (
 	upgrader      = websocket.Upgrader{
 		ReadBufferSize:  1024, // TODO review
 		WriteBufferSize: 1024, // TODO review
+		CheckOrigin: func(r *http.Request) bool {
+			// TODO: Import conf.
+			allowedOrigins := conf.AllowedOrigins || []string{conf.listen || "127.0.0.1"}
+			origin := r.Header.Get("Origin")
+			for _, o := range allowedOrigins {
+				if o == origin {
+					return true
+				}
+			}
+			return false
+		},
 	}
 )
 
