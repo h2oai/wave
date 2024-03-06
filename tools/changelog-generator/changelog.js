@@ -13,7 +13,7 @@ const typesToChangelog = {
   '!': 'Breaking Changes',
 }
 
-const version = process.env.VERSION || require('../../ui/package.json')
+const version = process.env.VERSION || require('../../ui/package.json').version
 const categorizedCommits = require('child_process')
   .execSync(`git log v${version}..HEAD --oneline`)
   .toString()
