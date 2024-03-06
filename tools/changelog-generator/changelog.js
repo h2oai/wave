@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-const { version } = require('../../ui/package.json')
-
 // WARNING: Works only on Linux and MacOS.
 if (process.platform === 'win32') {
   console.error('Windows is not supported.')
@@ -15,6 +13,7 @@ const typesToChangelog = {
   '!': 'Breaking Changes',
 }
 
+const version = process.env.VERSION || require('../../ui/package.json')
 const categorizedCommits = require('child_process')
   .execSync(`git log v${version}..HEAD --oneline`)
   .toString()
