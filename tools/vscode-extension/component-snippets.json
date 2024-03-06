@@ -1129,7 +1129,7 @@
   "Wave Full CopyableText": {
     "prefix": "w_full_copyable_text",
     "body": [
-      "ui.copyable_text(value='$1', label='$2', name='$3', multiline=${4:False}, height='$5'),$0"
+      "ui.copyable_text(value='$1', label='$2', name='$3', multiline=${4:False}, height='$5', width='$6'),$0"
     ],
     "description": "Create a full Wave CopyableText."
   },

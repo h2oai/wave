@@ -7113,12 +7113,14 @@ class CopyableText:
             name: Optional[str] = None,
             multiline: Optional[bool] = None,
             height: Optional[str] = None,
+            width: Optional[str] = None,
     ):
         _guard_scalar('CopyableText.value', value, (str,), False, False, False)
         _guard_scalar('CopyableText.label', label, (str,), False, False, False)
         _guard_scalar('CopyableText.name', name, (str,), False, True, False)
         _guard_scalar('CopyableText.multiline', multiline, (bool,), False, True, False)
         _guard_scalar('CopyableText.height', height, (str,), False, True, False)
+        _guard_scalar('CopyableText.width', width, (str,), False, True, False)
         self.value = value
         """Text to be displayed inside the component."""
         self.label = label
@@ -7129,6 +7131,8 @@ class CopyableText:
         """True if the component should allow multi-line text entry."""
         self.height = height
         """Custom height in px (e.g. '200px') or '1' to fill the remaining card space. Requires `multiline` to be set."""
+        self.width = width
+        """The width of the copyable text , e.g. '100px'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7137,12 +7141,14 @@ class CopyableText:
         _guard_scalar('CopyableText.name', self.name, (str,), False, True, False)
         _guard_scalar('CopyableText.multiline', self.multiline, (bool,), False, True, False)
         _guard_scalar('CopyableText.height', self.height, (str,), False, True, False)
+        _guard_scalar('CopyableText.width', self.width, (str,), False, True, False)
         return _dump(
             value=self.value,
             label=self.label,
             name=self.name,
             multiline=self.multiline,
             height=self.height,
+            width=self.width,
         )
 
     @staticmethod
@@ -7158,17 +7164,21 @@ class CopyableText:
         _guard_scalar('CopyableText.multiline', __d_multiline, (bool,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('CopyableText.height', __d_height, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('CopyableText.width', __d_width, (str,), False, True, False)
         value: str = __d_value
         label: str = __d_label
         name: Optional[str] = __d_name
         multiline: Optional[bool] = __d_multiline
         height: Optional[str] = __d_height
+        width: Optional[str] = __d_width
         return CopyableText(
             value,
             label,
             name,
             multiline,
             height,
+            width,
         )
 
 
