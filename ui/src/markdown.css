@@ -177,7 +177,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 
 .wave-markdown a {
-    color: var(--wave-themePrimary);
     text-decoration: underline;
     font-weight: 500;
 }
