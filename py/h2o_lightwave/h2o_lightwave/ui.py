@@ -2632,6 +2632,7 @@ def copyable_text(
         name: Optional[str] = None,
         multiline: Optional[bool] = None,
         height: Optional[str] = None,
+        width: Optional[str] = None,
 ) -> Component:
     """Create a copyable text component.
     Use this component when you want to enable your users to quickly copy paste sections of text.
@@ -2642,6 +2643,7 @@ def copyable_text(
         name: An identifying name for this component.
         multiline: True if the component should allow multi-line text entry.
         height: Custom height in px (e.g. '200px') or '1' to fill the remaining card space. Requires `multiline` to be set.
+        width: The width of the copyable text , e.g. '100px'.
     Returns:
         A `h2o_wave.types.CopyableText` instance.
     """
@@ -2651,6 +2653,7 @@ def copyable_text(
         name,
         multiline,
         height,
+        width,
     ))
 
 

@@ -1249,12 +1249,13 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_copyable_text" value="ui.copyable_text(value='$value$',label='$label$',name='$name$',multiline=$multiline$,height='$height$'),$END$" description="Create Wave CopyableText with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_copyable_text" value="ui.copyable_text(value='$value$',label='$label$',name='$name$',multiline=$multiline$,height='$height$',width='$width$'),$END$" description="Create Wave CopyableText with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="value" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="multiline" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

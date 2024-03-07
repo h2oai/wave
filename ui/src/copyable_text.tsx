@@ -51,6 +51,8 @@ export interface CopyableText {
   multiline?: B
   /** Custom height in px (e.g. '200px') or '1' to fill the remaining card space. Requires `multiline` to be set. */
   height?: S
+  /** The width of the copyable text , e.g. '100px'. */
+  width?: S
 }
 
 export const ClipboardCopyButton = ({ value }: { value: S }) => {

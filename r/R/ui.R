@@ -3066,6 +3066,7 @@ ui_facepile <- function(
 #' @param name An identifying name for this component.
 #' @param multiline True if the component should allow multi-line text entry.
 #' @param height Custom height in px (e.g. '200px') or '1' to fill the remaining card space. Requires `multiline` to be set.
+#' @param width The width of the copyable text , e.g. '100px'.
 #' @return A CopyableText instance.
 #' @export
 ui_copyable_text <- function(
@@ -3073,18 +3074,21 @@ ui_copyable_text <- function(
   label,
   name = NULL,
   multiline = NULL,
-  height = NULL) {
+  height = NULL,
+  width = NULL) {
   .guard_scalar("value", "character", value)
   .guard_scalar("label", "character", label)
   .guard_scalar("name", "character", name)
   .guard_scalar("multiline", "logical", multiline)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
   .o <- list(copyable_text=list(
     value=value,
     label=label,
     name=name,
     multiline=multiline,
-    height=height))
+    height=height,
+    width=width))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
