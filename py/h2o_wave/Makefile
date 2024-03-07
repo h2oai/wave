@@ -24,3 +24,5 @@ build: purge
 
 purge: ## Purge previous build
 	rm -rf build dist sdist h2o_wave.egg-info temp_build conda/temp h2o_wave/metadata.py
+
+# TODO: Finish once this is resolved: https://github.com/conda/conda-build/issues/2611#issuecomment-1239338538 
