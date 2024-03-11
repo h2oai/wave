@@ -345,7 +345,7 @@ Note that when a user logs out of the Wave daemon, all the apps linked to the da
 
 ### Handling client (browser tab) disconnect
 
-To get notified when a user closes the tab, use the system-wide `@system.client_disconnect` event.
+To get notified when a user closes the tab, use the system-wide `@system.client_disconnect` event. The time if takes for this function to be called depends on the value of `H2O_WAVE_RECONNECT_TIMEOUT` (which defaults to `5s`).
 
 ```py
 @on('@system.client_disconnect')

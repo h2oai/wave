@@ -114,6 +114,6 @@ type Conf struct {
 	SkipLogin             bool   `cfg:"oidc-skip-login" env:"H2O_WAVE_OIDC_SKIP_LOGIN" cfgDefault:"false" cfgHelper:"do not display the login form during OIDC authorization"`
 	KeepAppLive           bool   `cfg:"keep-app-live" env:"H2O_WAVE_KEEP_APP_LIVE" cfgDefault:"false" cfgHelper:"do not unregister unresponsive apps"`
 	Conf                  string `cfg:"conf" env:"H2O_WAVE_CONF" cfgDefault:".env" cfgHelper:"path to configuration file"`
-	ReconnectTimeout      string `cfg:"reconnect-timeout" env:"H2O_WAVE_RECONNECT_TIMEOUT" cfgDefault:"2s" cfgHelper:"Time to wait for reconnect before dropping the client"`
+	ReconnectTimeout      string `cfg:"reconnect-timeout" env:"H2O_WAVE_RECONNECT_TIMEOUT" cfgDefault:"5s" cfgHelper:"Time to wait for reconnect before dropping the client"`
 	AllowedOrigins        string `cfg:"allowed-origins" env:"H2O_WAVE_ALLOWED_ORIGINS" cfgDefault:"" cfgHelper:"comma-separated list of allowed origins (e.g. http://foo.com) for websocket upgrades"`
 }

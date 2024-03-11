@@ -86,26 +86,27 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	clientID := r.URL.Query().Get("client-id")
 	client, ok := s.broker.clientsByID[clientID]
 	if ok {
+		client.lock.Lock()
+		// Close prev connection gracefully.
+		client.conn.WriteMessage(websocket.CloseMessage, []byte{})
+		client.conn.Close()
 		client.conn = conn
-		client.isReconnect = true
-		if client.cancel != nil {
-			client.cancel()
-		}
-		if s.broker.debug {
-			echo(Log{"t": "socket_reconnect", "client_id": clientID, "addr": getRemoteAddr(r)})
-		}
+		client.state = STATE_RECONNECT
+		client.addr = getRemoteAddr(r)
+		client.lock.Unlock()
+		echo(Log{"t": "client_reconnect", "client_id": client.id, "addr": getRemoteAddr(r)})
 	} else {
-		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, false, s.reconnectTimeout)
-	}
+		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, s.reconnectTimeout)
 
-	if msg, err := json.Marshal(OpsD{I: client.id}); err == nil {
-		sw, err := conn.NextWriter(websocket.TextMessage)
+		helloMsg, err := json.Marshal(OpsD{I: client.id})
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
-		sw.Write(msg)
-		sw.Close()
+		if !client.send(helloMsg) {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	go client.flush()
