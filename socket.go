@@ -84,8 +84,8 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	clientID := r.URL.Query().Get("client-id")
-	client, ok := s.broker.clientsByID[clientID]
-	if ok {
+	client := s.broker.getClient(clientID)
+	if client != nil {
 		client.lock.Lock()
 		// Close prev connection gracefully.
 		client.conn.WriteMessage(websocket.CloseMessage, []byte{})

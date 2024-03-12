@@ -111,14 +111,16 @@ func (c *Client) listen() {
 		if c.state != STATE_DISCONNECT {
 			return
 		}
-		c.state = STATE_TIMEOUT
+		// This defer runs to completion. If the client drops, reconnects and drops out again, ignore first drop timeout.
+		timeoutID := STATE_TIMEOUT + c.addr
+		c.state = timeoutID
 		c.lock.Unlock()
 
 		select {
 		// Send disconnect message only if client doesn't reconnect within the specified timeframe.
 		case <-time.After(c.reconnectTimeout):
 			c.lock.Lock()
-			if c.state != STATE_TIMEOUT {
+			if c.state != timeoutID {
 				return
 			}
 			app := c.broker.getApp(c.appPath)

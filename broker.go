@@ -101,6 +101,12 @@ func newBroker(site *Site, editable, noStore, noLog, keepAppLive, debug bool) *B
 	}
 }
 
+func (b *Broker) getClient(id string) *Client {
+	b.unicastsMux.RLock()
+	defer b.unicastsMux.RUnlock()
+	return b.clientsByID[id]
+}
+
 func (b *Broker) addApp(mode, route, addr, keyID, keySecret string) {
 	s := newApp(b, mode, route, addr, keyID, keySecret)
 
