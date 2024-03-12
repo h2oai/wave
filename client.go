@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -25,11 +26,15 @@ import (
 )
 
 const (
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
-
-	// Maximum message size allowed from peer.
-	maxMessageSize = 1 * 1024 * 1024 // bytes
+	writeWait      = 10 * time.Second // Time allowed to write a message to the peer.
+	maxMessageSize = 1 * 1024 * 1024  // bytes Maximum message size allowed from peer.
+	// TODO: Refactor into iota.
+	STATE_CREATED    = "CREATED"
+	STATE_TIMEOUT    = "TIMEOUT"
+	STATE_LISTEN     = "LISTEN"
+	STATE_RECONNECT  = "RECONNECT"
+	STATE_DISCONNECT = "DISCONNECT"
+	STATE_CLOSED     = "CLOSED"
 )
 
 var (
@@ -63,16 +68,17 @@ type Client struct {
 	header           *http.Header    // forwarded headers from the WS connection
 	appPath          string          // path of the app this client is connected to, doesn't change throughout WS lifetime
 	pingInterval     time.Duration
-	isReconnect      bool
-	cancel           context.CancelFunc
 	reconnectTimeout time.Duration
+	lock             *sync.Mutex
+	state            string
 }
 
 // TODO: Refactor some of the params into a Config struct.
 func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool,
-	baseURL string, header *http.Header, pingInterval time.Duration, isReconnect bool, reconnectTimeout time.Duration) *Client {
+	baseURL string, header *http.Header, pingInterval time.Duration, reconnectTimeout time.Duration) *Client {
 	id := uuid.New().String()
-	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable, baseURL, header, "", pingInterval, isReconnect, nil, reconnectTimeout}
+	return &Client{id, auth, addr, session, broker, conn, nil, make(chan []byte, 256),
+		editable, baseURL, header, "", pingInterval, reconnectTimeout, &sync.Mutex{}, STATE_CREATED}
 }
 
 func (c *Client) refreshToken() error {
@@ -90,29 +96,44 @@ func (c *Client) refreshToken() error {
 	return nil
 }
 
+func (c *Client) setState(newState string) {
+	c.lock.Lock()
+	c.state = newState
+	c.lock.Unlock()
+}
+
 func (c *Client) listen() {
 	defer func() {
-		ctx, cancel := context.WithCancel(context.Background())
-		c.cancel = cancel
-		go func(ctx context.Context) {
-			select {
-			// Send disconnect message only if client doesn't reconnect within the specified timeframe.
-			case <-time.After(c.reconnectTimeout):
-				app := c.broker.getApp(c.appPath)
-				if app != nil {
-					app.forward(c.id, c.session, disconnectMsg)
-					if err := app.disconnect(c.id); err != nil {
-						echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
-					}
-				}
+		c.lock.Lock()
+		defer c.lock.Unlock()
+		if c.state != STATE_DISCONNECT {
+			return
+		}
+		// This defer runs to completion. If the client drops, reconnects and drops out again, ignore first drop timeout.
+		timeoutID := STATE_TIMEOUT + c.addr
+		c.state = timeoutID
+		c.lock.Unlock()
 
-				c.broker.unsubscribe <- c
-			case <-ctx.Done():
+		select {
+		// Send disconnect message only if client doesn't reconnect within the specified timeframe.
+		case <-time.After(c.reconnectTimeout):
+			c.lock.Lock()
+			if c.state != timeoutID {
 				return
 			}
-		}(ctx)
+			app := c.broker.getApp(c.appPath)
+			if app != nil {
+				app.forward(c.id, c.session, disconnectMsg)
+				if err := app.disconnect(c.id); err != nil {
+					echo(Log{"t": "disconnect", "client": c.addr, "route": c.appPath, "err": err.Error()})
+				}
+			}
 
-		c.conn.Close()
+			echo(Log{"t": "client_unsubscribe", "client": c.id})
+			c.broker.unsubscribe <- c
+			c.state = STATE_CLOSED
+			return
+		}
 	}()
 	// Time allowed to read the next pong message from the peer. Must be greater than ping interval.
 	pongWait := 10 * c.pingInterval / 9
@@ -127,10 +148,8 @@ func (c *Client) listen() {
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				echo(Log{"t": "socket_read", "client": c.addr, "err": err.Error()})
-			} else {
-				// Firefox follows spec closely and requires a close message to be sent before closing the connection.
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 			}
+			c.setState(STATE_DISCONNECT)
 			break
 		}
 
@@ -173,7 +192,10 @@ func (c *Client) listen() {
 				c.broker.sendAll(c.broker.clients[app.route], clearStateMsg)
 			}
 		case watchMsgT:
-			if c.isReconnect {
+			c.lock.Lock()
+			state := c.state
+			c.lock.Unlock()
+			if state == STATE_RECONNECT {
 				continue
 			}
 			c.subscribe(m.addr)                             // subscribe even if page is currently NA
@@ -238,10 +260,13 @@ func (c *Client) flush() {
 	defer func() {
 		ticker.Stop()
 		c.conn.Close()
+		c.lock.Unlock()
 	}()
 	for {
 		select {
 		case data, ok := <-c.data:
+			// An alternative to the mutex here would be a new channel for closing the connection so it does not race with reconnect.
+			c.lock.Lock()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// broker closed the channel.
@@ -265,11 +290,14 @@ func (c *Client) flush() {
 			if err := w.Close(); err != nil {
 				return
 			}
+			c.lock.Unlock()
 		case <-ticker.C:
+			c.lock.Lock()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
+			c.lock.Unlock()
 		}
 	}
 }

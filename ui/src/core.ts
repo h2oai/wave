@@ -946,12 +946,11 @@ export const
     const
       slug = window.location.pathname,
       reconnect = (address: S) => {
-        if (_clientID && !address.includes('?client-id')) {
-          address = `${address}?${new URLSearchParams({ 'client-id': _clientID })}`
-        }
+        let wsAddr = address
+        if (_clientID) wsAddr = `${address}?${new URLSearchParams({ 'client-id': _clientID })}`
 
         const retry = () => reconnect(address)
-        const socket = new WebSocket(address)
+        const socket = new WebSocket(wsAddr)
         socket.onopen = () => {
           _reconnectFailures = 0
           _socket = socket
