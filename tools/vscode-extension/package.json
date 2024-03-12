@@ -5,7 +5,7 @@
   "author": "Martin Turoci",
   "repository": "https://github.com/h2oai/wave",
   "license": "Apache-2.0",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "h2oai",
   "contributes": {
     "snippets": [
