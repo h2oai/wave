@@ -26,24 +26,22 @@ import (
 )
 
 const (
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
-
-	// Maximum message size allowed from peer.
-	maxMessageSize = 1 * 1024 * 1024 // bytes
-)
-
-var (
-	newline          = []byte{'\n'}
-	notFoundMsg      = []byte(`{"e":"not_found"}`)
-	disconnectMsg    = []byte(`{"data": {"":{"@system":{"client_disconnect":true}}}}`)
-	clearStateMsg    = []byte(`{"c":1}`)
+	writeWait      = 10 * time.Second // Time allowed to write a message to the peer.
+	maxMessageSize = 1 * 1024 * 1024  // bytes Maximum message size allowed from peer.
+	// TODO: Refactor into iota.
 	STATE_CREATED    = "CREATED"
 	STATE_TIMEOUT    = "TIMEOUT"
 	STATE_LISTEN     = "LISTEN"
 	STATE_RECONNECT  = "RECONNECT"
 	STATE_DISCONNECT = "DISCONNECT"
 	STATE_CLOSED     = "CLOSED"
+)
+
+var (
+	newline       = []byte{'\n'}
+	notFoundMsg   = []byte(`{"e":"not_found"}`)
+	disconnectMsg = []byte(`{"data": {"":{"@system":{"client_disconnect":true}}}}`)
+	clearStateMsg = []byte(`{"c":1}`)
 )
 
 // BootMsg represents the initial message sent to an app when a client first connects to it.
@@ -131,7 +129,7 @@ func (c *Client) listen() {
 				}
 			}
 
-			echo(Log{"t": "client_unsubscribe", "client": c.id, "state": c.state})
+			echo(Log{"t": "client_unsubscribe", "client": c.id})
 			c.broker.unsubscribe <- c
 			c.state = STATE_CLOSED
 			return
