@@ -6,6 +6,9 @@ import httpx
 import os
 import platform
 
+# HACK: Use urllib3 import side-effect to resolve "ResourceWarning: unclosed transport" in python>=3.9 versions.
+import urllib3
+
 from .test_expando import *
 from .test_python_server import *
 from .test_python_server_async import *
