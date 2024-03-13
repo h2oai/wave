@@ -24,7 +24,7 @@ build-lightwave-web:
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install build httpx uvicorn starlette pdoc3 flake8 urllib3
+	./venv/bin/python -m pip install build httpx uvicorn starlette pdoc3 flake8
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable h2o_wave
@@ -38,7 +38,7 @@ setup-tests: ## Install dependencies for tests only
 	python3 -m venv venv
 	echo "# Generated in hatch_build.py\n__platform__ = 'linux'\n__arch__ = 'amd64'" > h2o_wave/h2o_wave/metadata.py
 	./venv/bin/python -m pip install --editable h2o_wave
-	./venv/bin/pip install httpx typing_extensions
+	./venv/bin/pip install httpx urllib3 typing_extensions
 
 .PHONY: docs
 docs: ## Build API docs
