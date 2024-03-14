@@ -66,6 +66,7 @@ jobs:
         working-directory: ./py/apps/tour/
         run: sed -i -r -e "s/h2o_wave==\{\{VERSION\}\}/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl/g" requirements.txt
 
+
       - name: Make air-gapped bundle
         working-directory: ./py/tmp/tour/
         run: |
