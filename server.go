@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -164,6 +165,11 @@ func Run(conf ServerConf) {
 }
 
 func splitDirMapping(m string) (string, string) {
+	// Check if the directory is accessible
+	if _, err := os.Stat(m); os.IsNotExist(err) {
+		panic(fmt.Sprintf("Directory does not exist: %s", m))
+	}
+
 	xs := strings.SplitN(m, "@", 2)
 	if len(xs) < 2 {
 		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
