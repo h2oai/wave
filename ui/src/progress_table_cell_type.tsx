@@ -13,26 +13,43 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { F, S } from './core'
+import { B, F, S } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
+import { ProgressBar } from './parts/progress_bar'
 import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
-    container: {
+    barContainer: {
+      position: 'relative',
+      display: 'inline-flex',
+    },
+
+    bar: {
+      width: 50,
+    },
+
+    barPercent: {
+      marginLeft: 50,
+    },
+
+    spinnerContainer: {
       position: 'relative',
       width: 50,
-      height: 50
+      height: 50,
     },
+
     percentContainer: {
       position: 'absolute',
-      top: 0, left: 0, bottom: 0, right: 0
+      top: 0, left: 0, bottom: 0, right: 0,
     },
+    
     percent: {
       color: cssVar('$text6')
     },
+
   })
 
 /**
@@ -40,17 +57,35 @@ const
  * If set on a column, the cell value must be between 0.0 and 1.0.
 */
 export interface ProgressTableCellType {
-  /** Color of the progress arc. */
+  /** Color of the progress arc/bar. */
   color?: S
   /** An identifying name for this component. */
   name?: S
+  
+  /** True if the component should be displayed compactly as a bar. Defaults to False. */
+  compact?: B
 }
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
-  <div data-test={m.name} className={css.container}>
-    <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
-    <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={clas(css.percentContainer, 'wave-s12')}>
-      <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
-    </Fluent.Stack>
-  </div >
+  <div data-test={m.name}>
+    {m.compact ? (
+      <div className={css.barContainer}>
+        <div className={css.bar}>
+          <ProgressBar thickness={2} color={cssVar(m.color || '$red')} value={progress}/>
+        </div>
+        <div className={css.barPercent}>
+          <Fluent.Stack horizontalAlign='end' verticalAlign='center' className={clas(css.percentContainer, 'wave-s12')}>
+            <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
+          </Fluent.Stack>
+        </div> 
+      </div>
+    ) : (
+      <div className={css.spinnerContainer}>
+        <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
+        <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={clas(css.percentContainer, 'wave-s12')}>
+          <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
+        </Fluent.Stack>
+      </div>
+    )}
+  </div>
 )

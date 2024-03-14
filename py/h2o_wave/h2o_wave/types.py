@@ -3080,21 +3080,27 @@ class ProgressTableCellType:
             self,
             color: Optional[str] = None,
             name: Optional[str] = None,
+            compact: Optional[bool] = None,
     ):
         _guard_scalar('ProgressTableCellType.color', color, (str,), False, True, False)
         _guard_scalar('ProgressTableCellType.name', name, (str,), False, True, False)
+        _guard_scalar('ProgressTableCellType.compact', compact, (bool,), False, True, False)
         self.color = color
-        """Color of the progress arc."""
+        """Color of the progress arc/bar."""
         self.name = name
         """An identifying name for this component."""
+        self.compact = compact
+        """True if the component should be displayed compactly as a bar. Defaults to False."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ProgressTableCellType.color', self.color, (str,), False, True, False)
         _guard_scalar('ProgressTableCellType.name', self.name, (str,), False, True, False)
+        _guard_scalar('ProgressTableCellType.compact', self.compact, (bool,), False, True, False)
         return _dump(
             color=self.color,
             name=self.name,
+            compact=self.compact,
         )
 
     @staticmethod
@@ -3104,11 +3110,15 @@ class ProgressTableCellType:
         _guard_scalar('ProgressTableCellType.color', __d_color, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('ProgressTableCellType.name', __d_name, (str,), False, True, False)
+        __d_compact: Any = __d.get('compact')
+        _guard_scalar('ProgressTableCellType.compact', __d_compact, (bool,), False, True, False)
         color: Optional[str] = __d_color
         name: Optional[str] = __d_name
+        compact: Optional[bool] = __d_compact
         return ProgressTableCellType(
             color,
             name,
+            compact,
         )
 
 
