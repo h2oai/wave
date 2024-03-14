@@ -6,7 +6,7 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VERSION: "1.1.1"
-  TAG: "v1.1.1"
+  TAG: "1.1.1"
 
 jobs:
   release:
@@ -46,6 +46,9 @@ jobs:
         run: |
           make test-ui-ci
           make test-py-ci
+
+      - name: Publish apps for Cloud
+        run: make build-apps
 
       - name: Download H2O CLI
         working-directory: ./py/tmp/tour/
