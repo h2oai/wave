@@ -47,8 +47,6 @@ jobs:
           make test-ui-ci
           make test-py-ci
 
-      
-
       - name: Download H2O CLI
         working-directory: ./py/tmp/tour/
         run: mkdir -p .bin && curl -o .bin/h2o https://h2oai-cloud-release.s3.amazonaws.com/releases/ai/h2o/h2o-cloud/latest/cli/linux-amd64/h2o
