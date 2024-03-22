@@ -63,7 +63,7 @@ jobs:
         working-directory: ./py/tmp/tour/
         run: |
           # Use the h2o_wave wheel file for building the runtime image 
-          cp py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl ./py/tmp/tour/
+          cp ../../py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl ./py/tmp/tour/
           sed -i -r -e "s/h2o_wave==\{\{VERSION\}\}/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl/g" requirements.txt
           .bin/h2o bundle \
             --docker-base-image 524466471676.dkr.ecr.us-east-1.amazonaws.com/q8s/launcher:v0.31.0-310 \
