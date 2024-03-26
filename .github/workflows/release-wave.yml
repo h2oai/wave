@@ -41,6 +41,13 @@ jobs:
         with:
           working-directory: ./r
 
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          activate-environment: ""
+          conda-build-version: '24.3.0'
+
       - name: Build Release
         run: make release
         env:

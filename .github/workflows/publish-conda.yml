@@ -19,6 +19,21 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
+      - name: Setup
+        run: make setup
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          activate-environment: ""
+          conda-build-version: '24.3.0'
+
+      - name: Build Release
+        run: make release
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
       - name: Publish to Conda
         uses: marek-mihok/upload_to_anaconda_cloud_action@v1.0.0
         with:
