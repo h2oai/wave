@@ -1,11 +1,17 @@
 build_conda_package = \
 	if [ "$(1)" != "noarch" ]; then \
-		mkdir -p conda/temp && \
+		mkdir -p conda/temp; \
 		cp -a ../../build/wave-$(VERSION)-$(1)/. conda/temp; \
+		NO_ARCH=0 conda build --output-folder temp_build/ conda; \
+		find temp_build/ -name *.tar.bz2 | while read -r file; do \
+			conda convert --force --platform $(2) "$$file" -o temp_build/; \
+		done \
 	fi && \
-	conda build --output-folder temp_build/ conda && \
+	if [ "$(1)" == "noarch" ]; then \
+		NO_ARCH=1 conda build --output-folder temp_build/ conda; \
+	fi && \
 	mkdir -p sdist/$(2) && \
-	mv temp_build/noarch/*.tar.bz2 sdist/$(2) && \
+	mv temp_build/$(2)/*.tar.bz2 sdist/$(2) && \
 	rm -rf temp_build conda/temp
 
 .PHONY: build
@@ -24,5 +30,3 @@ build: purge
 
 purge: ## Purge previous build
 	rm -rf build dist sdist h2o_wave.egg-info temp_build conda/temp h2o_wave/metadata.py
-
-# TODO: Finish once this is resolved: https://github.com/conda/conda-build/issues/2611#issuecomment-1239338538 
