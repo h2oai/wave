@@ -9,7 +9,6 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: "${{ github.event.inputs.version }}"
 
 jobs:
   release:
@@ -21,12 +20,8 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Publish to Conda
-        uses: marek-mihok/publish_conda_package_action@v1.0.1
+        uses: marek-mihok/upload_to_anaconda_cloud_action@v1.0.0
         with:
-          CondaDir: 'py/h2o_wave/conda'
-          Platforms: 'noarch'
+          PackagesDir: 'py/h2o_wave/sdist'
           CondaUsername: ${{ secrets.CONDA_USERNAME }}
           CondaPassword: ${{ secrets.CONDA_PASSWORD }}
-        env:
-          # VERSION clashes with conda build. Use PKG_VERSION instead.
-          PKG_VERSION: ${{ env.VERSION }}
