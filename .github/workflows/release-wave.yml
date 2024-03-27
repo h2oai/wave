@@ -51,6 +51,8 @@ jobs:
       - name: Build Release
         run: make release
         env:
+          # VERSION clashes with conda build. Use PKG_VERSION instead.
+          PKG_VERSION: ${{ env.VERSION }}
           NODE_OPTIONS: '--max-old-space-size=8192'
 
       - name: Unit Test

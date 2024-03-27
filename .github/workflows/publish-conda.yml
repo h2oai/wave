@@ -8,7 +8,7 @@ on:
         required: true
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: "${{ github.event.inputs.version }}"
 
 jobs:
   release:
@@ -45,6 +45,8 @@ jobs:
       - name: Build Release
         run: make release
         env:
+          # VERSION clashes with conda build. Use PKG_VERSION instead.
+          PKG_VERSION: ${{ env.VERSION }}
           NODE_OPTIONS: '--max-old-space-size=8192'
 
       - name: Publish to Conda
