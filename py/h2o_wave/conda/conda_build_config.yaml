@@ -1,0 +1,8 @@
+# TODO: Build a single package for all python versions once this is resolved: https://github.com/conda/conda-build/issues/2611#issuecomment-1239338538 
+python_version:
+  - 3.8
+  - 3.9
+  - 3.10
+  - 3.11
+  - 3.12
+  

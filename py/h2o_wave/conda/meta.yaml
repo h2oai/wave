@@ -15,10 +15,16 @@ about:
 
 requirements:
   build: 
+    {% if NO_ARCH == "0" %}
+    - python={{ python_version }}
+    {% endif %}
     {% for dep in pyproject['build-system']['requires'] %}
     - {{ dep.lower() }}
     {% endfor %}
   run:
+    {% if NO_ARCH == "0" %}
+    - python={{ python_version }}
+    {% endif %}
     {% for dep in project['dependencies'] %}
     - {{ dep.lower() }}
     {% endfor %}
@@ -26,9 +32,16 @@ source:
   path: ..
 
 build:
-  noarch: python
   script: python -m pip install . -vv
+  string: py{{ python_version | replace(".", "") }}
   entry_points:
     {% for module, entrypoints in project['scripts'].items() %}
       - {{ module }} = {{ entrypoints }}
     {% endfor %}
+  include_recipe: False
+  script_env:
+    - NO_ARCH
+  {% if NO_ARCH == "1" %}
+  noarch: python
+  string: "0"
+  {% endif %}

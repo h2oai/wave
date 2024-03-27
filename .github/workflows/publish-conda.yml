@@ -8,7 +8,6 @@ on:
         required: true
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VERSION: "${{ github.event.inputs.version }}"
 
 jobs:
@@ -20,13 +19,39 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Publish to Conda
-        uses: marek-mihok/publish_conda_package_action@v1.0.1
+      - uses: actions/setup-go@v1
         with:
-          CondaDir: 'py/h2o_wave/conda'
-          Platforms: 'noarch'
-          CondaUsername: ${{ secrets.CONDA_USERNAME }}
-          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+          go-version: '1.19.4'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup
+        run: make setup
+
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: ./r
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: false
+          activate-environment: ""
+          conda-build-version: '24.3.0'
+
+      - name: Build Release
+        run: make release
         env:
           # VERSION clashes with conda build. Use PKG_VERSION instead.
           PKG_VERSION: ${{ env.VERSION }}
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Publish to Conda
+        uses: marek-mihok/upload_to_anaconda_cloud_action@v1.0.0
+        with:
+          PackagesDir: 'py/h2o_wave/sdist'
+          CondaUsername: ${{ secrets.CONDA_USERNAME }}
+          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
