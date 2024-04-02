@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'WaveDB Release Version (0.0.0)'
+        description: "WaveDB Release Version (0.0.0)"
         required: true
       tag:
-        description: 'Wave Release Version (0.0.0)'
+        description: "Wave Release Version (0.0.0)"
         required: true
 
 env:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/setup-go@v1
         with:
-          go-version: '1.16'
+          go-version: "1.22.1"
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/setup-go@v1
         with:
-          go-version: '1.16'
+          go-version: "1.22.1"
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/setup-go@v1
         with:
-          go-version: '1.16'
+          go-version: "1.22.1"
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
@@ -73,4 +73,3 @@ jobs:
           tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
