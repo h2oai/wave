@@ -25,8 +25,8 @@ q.page['example'] = ui.form_card(box='1 1 7 7', items=[
 The frame is also a preffered way for displaying documents. Simply provide a path to the PDF file.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 4 7', items=[
-    ui.frame(path='https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')
+q.page['example'] = ui.form_card(box='1 1 7 7', items=[
+    ui.frame(path='/assets/examples/sample-document.pdf')
 ])
 ```
 
