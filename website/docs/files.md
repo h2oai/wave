@@ -108,6 +108,17 @@ async def serve(q: Q):
 
 See `examples/file_stream.py` for a complete example.
 
+## Rendering documents
+
+Use `q.site.upload()` to upload document from your app to the Wave server (or see the following section for other ways for serving files). Use the returned paths in `ui.frame()` component.
+
+```py
+q.app.document_path, = await q.site.upload(['path/to/my/document.pdf'])
+q.page['example'] = ui.form_card(box='1 1 7 7', items=[
+    ui.frame(path=document_path)
+])
+```
+
 ## Serving files directly from the Wave server
 
 As an alternative to using the above `upload()` or `download()` mechanisms, you can make the Wave server (`waved`) directly serve the contents of one or more existing directories. If the Wave server and your app both have access to the directories on the file system, your app can simply create or copy files to the directories to make them accessible from web browsers.
