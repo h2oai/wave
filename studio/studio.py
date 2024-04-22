@@ -183,7 +183,7 @@ async def display_logs(q: Q) -> None:
             await q.sleep(0.5)
 
 
-async def render_code(q: Q):
+async def render_code(q: Q) -> None:
     if q.events.editor:
         code = file_utils.pythonify_js_code(q.events.editor.change if q.events.editor else '')
         with open(q.client.opened_file, 'w', encoding='utf-8') as f:
@@ -193,16 +193,16 @@ async def render_code(q: Q):
     else:
         code = file_utils.read_file(q.client.opened_file)
 
-    path = ''
+    path: str = ''
     if q.client.opened_file == project.entry_point:
-        app_match = re.search('\n@app\(.*(\'|\")(.*)(\'|\")', code)
+        app_match = re.search(r'\n@app\((.*?)(\'|")(.*?)(\'|")', code)
         if app_match:
-            path = app_match.group(2)
+            path = app_match.group(3)
             q.user.is_app = True
         else:
-            script_match = re.search('site\[(\'|\")(.*)(\'|\")\]', code)
+            script_match = re.search(r'site\[(.*?)(\'|")(.*?)(\'|")\]', code)
             if script_match:
-                path = script_match.group(2)
+                path = script_match.group(3)
                 q.user.is_app = False
         if not path:
             show_empty_preview(q)
@@ -226,13 +226,13 @@ async def render_code(q: Q):
     q.page['header'].items[1].button.path = f'{project.server_adress}{path}'
 
 
-async def on_startup():
+async def on_startup() -> None:
     file_utils.create_folder(project.dir)
     app_path = Path(project.entry_point)
     if not app_path.exists():
         shutil.copy('starter.py', app_path)
-    start(os.path.join(Path(__file__).parent, 'landing.py'), False).communicate()
-
+    process = start(os.path.join(Path(__file__).parent, 'landing.py'), False)
+    process.communicate()
 
 async def on_shutdown():
     file_utils.remove_folder(project.dir)
@@ -420,24 +420,6 @@ async def show_side_panel(q: Q):
 
 @app('/studio', on_startup=on_startup, on_shutdown=on_shutdown)
 async def serve(q: Q):
-    if not q.app.initialized:
-        # TODO: Serve snippets directly from static dir.
-        # Prod.
-        if os.path.exists('base-snippets.json') and os.path.exists('component-snippets.json'):
-            q.app.snippets1, q.app.snippets2, = await q.site.upload(['base-snippets.json', 'component-snippets.json'])
-        # When run in development from Wave repo.
-        elif os.path.exists(project.vsc_extension_path):
-            q.app.snippets1, q.app.snippets2, = await q.site.upload([
-                os.path.join(project.vsc_extension_path, 'base-snippets.json'),
-                os.path.join(project.vsc_extension_path, 'component-snippets.json')
-            ])
-        q.app.initialized = True
-    if not q.client.initialized:
-        await setup_page(q)
-        q.client.opened_file = project.entry_point
-        q.client.initialized = True
-        await render_code(q)
-
     if q.args.export_project:
         await export(q)
     elif q.args.import_project:
@@ -452,9 +434,9 @@ async def serve(q: Q):
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             root_dirs = [f for f in zip_ref.filelist if f.is_dir() and f.filename.count(os.path.sep) == 1]
             if len(root_dirs) == 1:
-                file_utils.remove_folder(project.dir)
+                shutil.rmtree(project.dir, ignore_errors=True)
                 zip_ref.extractall()
-                file_utils.remove_file(zip_path)
+                shutil.rmtree(zip_path)
                 q.page['meta'].dialog = None
                 q.page['meta'].notification_bar = ui.notification_bar(
                     name='notification',
@@ -556,34 +538,5 @@ async def serve(q: Q):
         elif e.remove_folder:
             if file_utils.is_file_in_folder(project.entry_point, e.remove_folder):
                 project.entry_point = None
-                show_empty_preview(q)
-                await q.page.save()
-            if file_utils.is_file_in_folder(q.client.opened_file, e.remove_folder):
-                editor.clean_editor(q)
-                await q.page.save()
-            file_utils.remove_folder(e.remove_folder)
-        elif e.rename_file:
-            path = e.rename_file['path']
-            new_name = e.rename_file['name']
-            if path == project.entry_point:
-                project.entry_point = new_name
-            elif path == q.client.opened_file:
-                q.client.opened_file = new_name
-            file_utils.rename(path, new_name)
-        elif e.rename_folder:
-            path = e.rename_folder['path']
-            new_name = e.rename_folder['name']
-            if path == project.dir:
-                project.dir = new_name
-            if file_utils.is_file_in_folder(q.client.opened_file, path):
-                q.client.opened_file = os.path.join(new_name, *q.client.opened_file.split(os.path.sep)[1:])
-            if file_utils.is_file_in_folder(project.entry_point, path):
-                project.entry_point = os.path.join(new_name, *project.entry_point.split(os.path.sep)[1:])
-            file_utils.rename(path, new_name)
-        elif e.open:
-            q.client.opened_file = e.open
-            editor.open_file(q, e.open)
-            await q.page.save()
-        editor.update_file_tree(q, project.dir)
+                show_empty_preview
 
-    await q.page.save()
