@@ -96,7 +96,7 @@ To clear all cards in the active page from within a Wave app, use `q.page.drop()
 
 ```py
 async def serve(q: Q):
-    await q.page.drop()
+    q.page.drop()
 ```
 
 ## Replace
