@@ -105,12 +105,13 @@ func (c *Client) setState(newState string) {
 func (c *Client) listen() {
 	defer func() {
 		c.lock.Lock()
+		echo(Log{"t": "ws_disconnect", "client": c.id, "state": c.state})
 		defer c.lock.Unlock()
 		if c.state != STATE_DISCONNECT {
 			return
 		}
 		// This defer runs to completion. If the client drops, reconnects and drops out again, ignore first drop timeout.
-		timeoutID := STATE_TIMEOUT + c.addr
+		timeoutID := STATE_TIMEOUT + uuid.New().String()
 		c.state = timeoutID
 		c.lock.Unlock()
 
@@ -195,7 +196,10 @@ func (c *Client) listen() {
 			c.lock.Lock()
 			state := c.state
 			c.lock.Unlock()
-			if state == STATE_RECONNECT {
+			if state != STATE_CREATED {
+				c.lock.Lock()
+				c.state = STATE_LISTEN
+				c.lock.Unlock()
 				continue
 			}
 			c.subscribe(m.addr)                             // subscribe even if page is currently NA

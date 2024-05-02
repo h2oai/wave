@@ -94,7 +94,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		client.state = STATE_RECONNECT
 		client.addr = getRemoteAddr(r)
 		client.lock.Unlock()
-		echo(Log{"t": "client_reconnect", "client_id": client.id, "addr": getRemoteAddr(r)})
+		echo(Log{"t": "client_reconnect", "client_id": client.id, "addr": client.addr})
 	} else {
 		client = newClient(getRemoteAddr(r), s.auth, session, s.broker, conn, s.editable, s.baseURL, &header, s.pingInterval, s.reconnectTimeout)
 

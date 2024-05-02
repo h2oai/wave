@@ -303,7 +303,7 @@ func (b *Broker) dropClient(client *Client) {
 	delete(b.clientsByID, client.id)
 	b.unicastsMux.Unlock()
 
-	echo(Log{"t": "ui_drop", "addr": client.addr})
+	echo(Log{"t": "ui_drop", "client_id": client.id})
 }
 
 // routes returns a sorted slice of routes managed by this broker.
