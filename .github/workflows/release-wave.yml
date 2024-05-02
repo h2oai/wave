@@ -6,6 +6,11 @@ on:
       version:
         description: "Release Version"
         required: true
+      skipDocsPublish:
+        description: 'Skip publishing docs site'     
+        required: false
+        default: 'false'
+
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,6 +102,7 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Publish Docs
+        if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
         run: |
           make publish-website
           aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
