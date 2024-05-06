@@ -32,4 +32,17 @@ describe('ProgressTableCellType.tsx', () => {
     const { queryByTestId } = render(<XProgressTableCellType model={progressCellProps} progress={progress} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
+
+  it('Renders decimal values with correct precision ', () => {
+    const {getByText} = render(<XProgressTableCellType model={progressCellProps} progress={progress} decimals={true}/>)
+    const expectedTextDecimalTrue = `${Math.round(progress * 10000) / 100}%`
+    expect(getByText(expectedTextDecimalTrue)).toBeInTheDocument()
+  })
+  
+  it('Renders decimal values with correct precision ', () => {
+    const {getByText} = render(<XProgressTableCellType model={progressCellProps} progress={progress} decimals={false}/>)
+    const expectedTextDecimalFalse = `${Math.round(progress * 100)}%`
+    expect(getByText(expectedTextDecimalFalse)).toBeInTheDocument()
+  })
+  
 })
