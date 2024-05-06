@@ -1390,18 +1390,22 @@ ui_file_upload <- function(
 #' Create a cell type that renders a column's cells as progress bars instead of plain text.
 #' If set on a column, the cell value must be between 0.0 and 1.0.
 #'
-#' @param color Color of the progress arc.
+#' @param color Color of the progress arc/bar.
 #' @param name An identifying name for this component.
+#' @param compact True if the component should be displayed compactly as a bar. Defaults to False.
 #' @return A ProgressTableCellType instance.
 #' @export
 ui_progress_table_cell_type <- function(
   color = NULL,
-  name = NULL) {
+  name = NULL,
+  compact = NULL) {
   .guard_scalar("color", "character", color)
   .guard_scalar("name", "character", name)
+  .guard_scalar("compact", "logical", compact)
   .o <- list(progress=list(
     color=color,
-    name=name))
+    name=name,
+    compact=compact))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
   return(.o)
 }
