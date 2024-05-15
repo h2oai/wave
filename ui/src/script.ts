@@ -14,6 +14,8 @@ export interface Script {
   referrer_policy?: S
   /** The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity */
   integrity?: S
+  /** Type of the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type */
+  type?: S
 }
 
 /**
@@ -58,10 +60,10 @@ const
 
 export const
   installScripts = (scripts: Script[]) => {
-    scripts.forEach(({ path, asynchronous, cross_origin, referrer_policy, integrity }) => {
+    scripts.forEach(({ path, asynchronous, cross_origin, referrer_policy, integrity, type }) => {
       if (installedScripts[path]) return // load exactly once
       const e = document.createElement('script')
-      e.type = 'text/javascript'
+      e.type = type || 'text/javascript'
       e.src = path
       if (asynchronous) e.async = true
       if (cross_origin) e.crossOrigin = cross_origin

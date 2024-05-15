@@ -3725,6 +3725,7 @@ def script(
         cross_origin: Optional[str] = None,
         referrer_policy: Optional[str] = None,
         integrity: Optional[str] = None,
+        type: Optional[str] = None,
 ) -> Script:
     """Create a reference to an external Javascript file to be included on a page.
 
@@ -3734,6 +3735,7 @@ def script(
         cross_origin: The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
         referrer_policy: Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
         integrity: The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+        type: Type of the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type
     Returns:
         A `h2o_wave.types.Script` instance.
     """
@@ -3743,6 +3745,7 @@ def script(
         cross_origin,
         referrer_policy,
         integrity,
+        type,
     )
 
 

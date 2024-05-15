@@ -76,6 +76,16 @@ In the above example, we create an empty `div` HTML element on the page, load an
 - The `requires` argument ensures that the library we intend to use (in this case, `anime.js`) is downloaded, imported, and ready to use.
 - The `targets` argument ensures that the HTML element the scripts operates on (in this case, the `div` element named `animation`), is available on the page. [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) can also be used to identify target elements.
 
+Import ESM module:
+
+When using JavaScript module files (`.mjs`), the script `type="module"` attribute needs to be specified.
+
+```py
+q.page['meta'] = ui.meta_card(box='', scripts=[ui.script(type="module", path='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs')])
+```
+
+For other script types see the [official documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type).
+
 ## Handling Events
 
 In most cases, when employing custom Javascript libraries, you'll want to handle and transmit events from the library to your app. To do this, use the Javascript function `wave.emit()`:
