@@ -50,7 +50,7 @@ export const XProgressTableCellType = ({ model: m, progress }: { model: Progress
   <div data-test={m.name} className={css.container}>
     <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
     <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={clas(css.percentContainer, 'wave-s12')}>
-      <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
+      <div className={css.percent}>{`${Number.isInteger(progress * 1000) ? (progress * 100) : (progress * 100).toFixed(2)}%`}</div>
     </Fluent.Stack>
   </div >
 )

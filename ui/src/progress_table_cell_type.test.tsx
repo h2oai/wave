@@ -19,7 +19,14 @@ import { ProgressTableCellType, XProgressTableCellType } from './progress_table_
 const
   name = 'progress-cell',
   progress = 0.0,
-  progressCellProps: ProgressTableCellType = { name }
+  progressCellProps: ProgressTableCellType = { name },
+  progressValues = [
+    {input: 0.88, output: '88%'},
+    {input: 0.888, output: '88.8%'},
+    {input: 0.8888, output: '88.88%'},
+    {input: 0.88888, output: '88.89%'},
+    {input: 0.88899, output: '88.90%'},
+    {input: 0.88999, output: '89.00%'},]  
 
 describe('ProgressTableCellType.tsx', () => {
 
@@ -32,4 +39,13 @@ describe('ProgressTableCellType.tsx', () => {
     const { queryByTestId } = render(<XProgressTableCellType model={progressCellProps} progress={progress} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
+
+  it('Renders data-test attr with decimal values', () => {
+    const { queryByTestId, rerender } = render(<XProgressTableCellType model={progressCellProps} progress={progress} />)
+    progressValues.map(progressValue => {
+      rerender(<XProgressTableCellType model={progressCellProps} progress={progressValue.input} />)
+      expect(queryByTestId(name)).toBeInTheDocument()
+      expect(queryByTestId(name)).toHaveTextContent(progressValue.output)      
+    })
+  })  
 })
