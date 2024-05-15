@@ -32,13 +32,13 @@ q.page.save()
 
 Passing `scripts` to `ui.meta_card()` dynamically imports external Javascript libraries.
 
-Import a library:
+### Import a library
 
 ```py
 q.page['meta'] = ui.meta_card(box='', scripts=[ui.script('https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js')])
 ```
 
-Import multiple libraries:
+### Import multiple libraries
 
 ```py
 q.page['meta'] = ui.meta_card(box='', scripts=[
@@ -48,7 +48,7 @@ q.page['meta'] = ui.meta_card(box='', scripts=[
 ])
 ```
 
-Import and use a library:
+### Import and use a library
 
 ```py
 q.page['meta'] = ui.meta_card(
@@ -76,7 +76,7 @@ In the above example, we create an empty `div` HTML element on the page, load an
 - The `requires` argument ensures that the library we intend to use (in this case, `anime.js`) is downloaded, imported, and ready to use.
 - The `targets` argument ensures that the HTML element the scripts operates on (in this case, the `div` element named `animation`), is available on the page. [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) can also be used to identify target elements.
 
-Import ESM module:
+### Import ESM module
 
 When using JavaScript module files (`.mjs`), the script `type="module"` attribute needs to be specified.
 
