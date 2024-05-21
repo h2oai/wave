@@ -1605,7 +1605,7 @@
   "Wave Full Script": {
     "prefix": "w_full_script",
     "body": [
-      "ui.script(path='$1', asynchronous=${2:False}, cross_origin='$3', referrer_policy='$4', integrity='$5'),$0"
+      "ui.script(path='$1', asynchronous=${2:False}, cross_origin='$3', referrer_policy='$4', integrity='$5', type='$6'),$0"
     ],
     "description": "Create a full Wave Script."
   },

@@ -2146,12 +2146,13 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_script" value="ui.script(path='$path$',asynchronous=$asynchronous$,cross_origin='$cross_origin$',referrer_policy='$referrer_policy$',integrity='$integrity$'),$END$" description="Create Wave Script with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_script" value="ui.script(path='$path$',asynchronous=$asynchronous$,cross_origin='$cross_origin$',referrer_policy='$referrer_policy$',integrity='$integrity$',type='$type$'),$END$" description="Create Wave Script with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="asynchronous" expression="" defaultValue="&quot;False&quot;" alwaysStopAt="true"/>
     <variable name="cross_origin" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="referrer_policy" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="integrity" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>

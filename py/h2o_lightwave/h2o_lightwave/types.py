@@ -10567,12 +10567,14 @@ class Script:
             cross_origin: Optional[str] = None,
             referrer_policy: Optional[str] = None,
             integrity: Optional[str] = None,
+            type: Optional[str] = None,
     ):
         _guard_scalar('Script.path', path, (str,), False, False, False)
         _guard_scalar('Script.asynchronous', asynchronous, (bool,), False, True, False)
         _guard_scalar('Script.cross_origin', cross_origin, (str,), False, True, False)
         _guard_scalar('Script.referrer_policy', referrer_policy, (str,), False, True, False)
         _guard_scalar('Script.integrity', integrity, (str,), False, True, False)
+        _guard_scalar('Script.type', type, (str,), False, True, False)
         self.path = path
         """The URI of an external script."""
         self.asynchronous = asynchronous
@@ -10583,6 +10585,8 @@ class Script:
         """Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script"""
         self.integrity = integrity
         """The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity"""
+        self.type = type
+        """Type of the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -10591,12 +10595,14 @@ class Script:
         _guard_scalar('Script.cross_origin', self.cross_origin, (str,), False, True, False)
         _guard_scalar('Script.referrer_policy', self.referrer_policy, (str,), False, True, False)
         _guard_scalar('Script.integrity', self.integrity, (str,), False, True, False)
+        _guard_scalar('Script.type', self.type, (str,), False, True, False)
         return _dump(
             path=self.path,
             asynchronous=self.asynchronous,
             cross_origin=self.cross_origin,
             referrer_policy=self.referrer_policy,
             integrity=self.integrity,
+            type=self.type,
         )
 
     @staticmethod
@@ -10612,17 +10618,21 @@ class Script:
         _guard_scalar('Script.referrer_policy', __d_referrer_policy, (str,), False, True, False)
         __d_integrity: Any = __d.get('integrity')
         _guard_scalar('Script.integrity', __d_integrity, (str,), False, True, False)
+        __d_type: Any = __d.get('type')
+        _guard_scalar('Script.type', __d_type, (str,), False, True, False)
         path: str = __d_path
         asynchronous: Optional[bool] = __d_asynchronous
         cross_origin: Optional[str] = __d_cross_origin
         referrer_policy: Optional[str] = __d_referrer_policy
         integrity: Optional[str] = __d_integrity
+        type: Optional[str] = __d_type
         return Script(
             path,
             asynchronous,
             cross_origin,
             referrer_policy,
             integrity,
+            type,
         )
 
 

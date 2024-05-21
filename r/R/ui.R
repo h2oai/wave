@@ -4347,6 +4347,7 @@ ui_tracker <- function(
 #' @param cross_origin The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
 #' @param referrer_policy Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
 #' @param integrity The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+#' @param type Type of the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type
 #' @return A Script instance.
 #' @export
 ui_script <- function(
@@ -4354,18 +4355,21 @@ ui_script <- function(
   asynchronous = NULL,
   cross_origin = NULL,
   referrer_policy = NULL,
-  integrity = NULL) {
+  integrity = NULL,
+  type = NULL) {
   .guard_scalar("path", "character", path)
   .guard_scalar("asynchronous", "logical", asynchronous)
   .guard_scalar("cross_origin", "character", cross_origin)
   .guard_scalar("referrer_policy", "character", referrer_policy)
   .guard_scalar("integrity", "character", integrity)
+  .guard_scalar("type", "character", type)
   .o <- list(
     path=path,
     asynchronous=asynchronous,
     cross_origin=cross_origin,
     referrer_policy=referrer_policy,
-    integrity=integrity)
+    integrity=integrity,
+    type=type)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveScript"))
   return(.o)
 }
