@@ -18,6 +18,7 @@ import { Text, XText } from './text'
 
 const name = 'text'
 const textProps: Text = { name, content: name }
+const textAlignPropValues: Text['align'][] = ['start', 'end', 'center', 'justify']
 
 describe('Text.tsx', () => {
 
@@ -30,5 +31,16 @@ describe('Text.tsx', () => {
     const { queryByTestId } = render(<XText {...textProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
+
+  it('Renders Text with the align prop', () => {
+    const { queryByTestId, rerender } = render(<XText {...textProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).toHaveAttribute('style','text-align: start;')     
+    textAlignPropValues.forEach(textAlignPropValue => {
+      rerender(<XText {...textProps} align={textAlignPropValue} />)
+      expect(queryByTestId(name)).toBeInTheDocument()
+      expect(queryByTestId(name)).toHaveAttribute('style','text-align: '+textAlignPropValue+';')      
+    })
+  })  
 
 })

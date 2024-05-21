@@ -65,6 +65,8 @@ dump_object <- function(x) {
 #'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
 #' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param align The alignment of the text content. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextAlign.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A Text instance.
@@ -74,12 +76,14 @@ ui_text <- function(
   size = NULL,
   width = NULL,
   visible = NULL,
+  align = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   # TODO Validate size
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate align
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text=list(
@@ -87,6 +91,7 @@ ui_text <- function(
     size=size,
     width=width,
     visible=visible,
+    align=align,
     tooltip=tooltip,
     name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -142,6 +147,8 @@ ui_command <- function(
 #' @param content The text content.
 #' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param align The alignment of the text content. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextXlAlign.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -151,12 +158,14 @@ ui_text_xl <- function(
   content,
   width = NULL,
   visible = NULL,
+  align = NULL,
   tooltip = NULL,
   commands = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate align
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
@@ -164,6 +173,7 @@ ui_text_xl <- function(
     content=content,
     width=width,
     visible=visible,
+    align=align,
     tooltip=tooltip,
     commands=commands,
     name=name))
@@ -176,6 +186,8 @@ ui_text_xl <- function(
 #' @param content The text content.
 #' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param align The alignment of the text content. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextLAlign.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -185,12 +197,14 @@ ui_text_l <- function(
   content,
   width = NULL,
   visible = NULL,
+  align = NULL,
   tooltip = NULL,
   commands = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate align
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
@@ -198,6 +212,7 @@ ui_text_l <- function(
     content=content,
     width=width,
     visible=visible,
+    align=align,
     tooltip=tooltip,
     commands=commands,
     name=name))
@@ -210,6 +225,8 @@ ui_text_l <- function(
 #' @param content The text content.
 #' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param align The alignment of the text content. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextMAlign.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextM instance.
@@ -218,17 +235,20 @@ ui_text_m <- function(
   content,
   width = NULL,
   visible = NULL,
+  align = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate align
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_m=list(
     content=content,
     width=width,
     visible=visible,
+    align=align,
     tooltip=tooltip,
     name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -240,6 +260,8 @@ ui_text_m <- function(
 #' @param content The text content.
 #' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param align The alignment of the text content. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextSAlign.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextS instance.
@@ -248,17 +270,20 @@ ui_text_s <- function(
   content,
   width = NULL,
   visible = NULL,
+  align = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate align
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_s=list(
     content=content,
     width=width,
     visible=visible,
+    align=align,
     tooltip=tooltip,
     name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -270,6 +295,8 @@ ui_text_s <- function(
 #' @param content The text content.
 #' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param align The alignment of the text content. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextXsAlign.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextXs instance.
@@ -278,17 +305,20 @@ ui_text_xs <- function(
   content,
   width = NULL,
   visible = NULL,
+  align = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate align
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_xs=list(
     content=content,
     width=width,
     visible=visible,
+    align=align,
     tooltip=tooltip,
     name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))

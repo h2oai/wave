@@ -2556,32 +2556,23 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_text" value="ui.text(content='$content$',size='$size$',width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave Text with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_text" value="ui.text(content='$content$',size='$size$',width='$width$',visible=$visible$,align='$align$',tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave Text with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="size" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_text_xl" value="ui.text_xl(content='$content$',width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$',commands=[&#10;	$commands$	&#10;]),$END$" description="Create Wave TextXl with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_text_xl" value="ui.text_xl(content='$content$',width='$width$',visible=$visible$,align='$align$',tooltip='$tooltip$',name='$name$',commands=[&#10;	$commands$	&#10;]),$END$" description="Create Wave TextXl with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
-    <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
-  <template name="w_full_text_l" value="ui.text_l(content='$content$',width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$',commands=[&#10;	$commands$	&#10;]),$END$" description="Create Wave TextL with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2589,30 +2580,45 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_text_m" value="ui.text_m(content='$content$',width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave TextM with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_text_l" value="ui.text_l(content='$content$',width='$width$',visible=$visible$,align='$align$',tooltip='$tooltip$',name='$name$',commands=[&#10;	$commands$	&#10;]),$END$" description="Create Wave TextL with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
+    <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_text_m" value="ui.text_m(content='$content$',width='$width$',visible=$visible$,align='$align$',tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave TextM with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_text_s" value="ui.text_s(content='$content$',width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave TextS with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_text_s" value="ui.text_s(content='$content$',width='$width$',visible=$visible$,align='$align$',tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave TextS with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_text_xs" value="ui.text_xs(content='$content$',width='$width$',visible=$visible$,tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave TextXs with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_text_xs" value="ui.text_xs(content='$content$',width='$width$',visible=$visible$,align='$align$',tooltip='$tooltip$',name='$name$'),$END$" description="Create Wave TextXs with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="content" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="&quot;True&quot;" alwaysStopAt="true"/>
+    <variable name="align" expression="" defaultValue="&quot;start&quot;" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
