@@ -68,6 +68,16 @@ class TextSize:
     XS = 'xs'
 
 
+_TextAlign = ['start', 'end', 'center', 'justify']
+
+
+class TextAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    JUSTIFY = 'justify'
+
+
 class Text:
     """Create text content.
     """
@@ -77,6 +87,7 @@ class Text:
             size: Optional[str] = None,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            align: Optional[str] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
@@ -84,6 +95,7 @@ class Text:
         _guard_enum('Text.size', size, _TextSize, True)
         _guard_scalar('Text.width', width, (str,), False, True, False)
         _guard_scalar('Text.visible', visible, (bool,), False, True, False)
+        _guard_enum('Text.align', align, _TextAlign, True)
         _guard_scalar('Text.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Text.name', name, (str,), False, True, False)
         self.content = content
@@ -94,6 +106,8 @@ class Text:
         """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.align = align
+        """The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextAlign."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -105,6 +119,7 @@ class Text:
         _guard_enum('Text.size', self.size, _TextSize, True)
         _guard_scalar('Text.width', self.width, (str,), False, True, False)
         _guard_scalar('Text.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('Text.align', self.align, _TextAlign, True)
         _guard_scalar('Text.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Text.name', self.name, (str,), False, True, False)
         return _dump(
@@ -112,6 +127,7 @@ class Text:
             size=self.size,
             width=self.width,
             visible=self.visible,
+            align=self.align,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -127,6 +143,8 @@ class Text:
         _guard_scalar('Text.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Text.visible', __d_visible, (bool,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('Text.align', __d_align, _TextAlign, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Text.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
@@ -135,6 +153,7 @@ class Text:
         size: Optional[str] = __d_size
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        align: Optional[str] = __d_align
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Text(
@@ -142,6 +161,7 @@ class Text:
             size,
             width,
             visible,
+            align,
             tooltip,
             name,
         )
@@ -248,6 +268,16 @@ class Command:
         )
 
 
+_TextXlAlign = ['start', 'end', 'center', 'justify']
+
+
+class TextXlAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    JUSTIFY = 'justify'
+
+
 class TextXl:
     """Create extra-large sized text content.
     """
@@ -256,6 +286,7 @@ class TextXl:
             content: str,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            align: Optional[str] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
@@ -263,6 +294,7 @@ class TextXl:
         _guard_scalar('TextXl.content', content, (str,), False, False, False)
         _guard_scalar('TextXl.width', width, (str,), False, True, False)
         _guard_scalar('TextXl.visible', visible, (bool,), False, True, False)
+        _guard_enum('TextXl.align', align, _TextXlAlign, True)
         _guard_scalar('TextXl.tooltip', tooltip, (str,), False, True, False)
         _guard_vector('TextXl.commands', commands, (Command,), False, True, False)
         _guard_scalar('TextXl.name', name, (str,), False, True, False)
@@ -272,6 +304,8 @@ class TextXl:
         """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.align = align
+        """The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextXlAlign."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -284,6 +318,7 @@ class TextXl:
         _guard_scalar('TextXl.content', self.content, (str,), False, False, False)
         _guard_scalar('TextXl.width', self.width, (str,), False, True, False)
         _guard_scalar('TextXl.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('TextXl.align', self.align, _TextXlAlign, True)
         _guard_scalar('TextXl.tooltip', self.tooltip, (str,), False, True, False)
         _guard_vector('TextXl.commands', self.commands, (Command,), False, True, False)
         _guard_scalar('TextXl.name', self.name, (str,), False, True, False)
@@ -291,6 +326,7 @@ class TextXl:
             content=self.content,
             width=self.width,
             visible=self.visible,
+            align=self.align,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             name=self.name,
@@ -305,6 +341,8 @@ class TextXl:
         _guard_scalar('TextXl.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextXl.visible', __d_visible, (bool,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('TextXl.align', __d_align, _TextXlAlign, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextXl.tooltip', __d_tooltip, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
@@ -314,6 +352,7 @@ class TextXl:
         content: str = __d_content
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        align: Optional[str] = __d_align
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         name: Optional[str] = __d_name
@@ -321,10 +360,21 @@ class TextXl:
             content,
             width,
             visible,
+            align,
             tooltip,
             commands,
             name,
         )
+
+
+_TextLAlign = ['start', 'end', 'center', 'justify']
+
+
+class TextLAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    JUSTIFY = 'justify'
 
 
 class TextL:
@@ -335,6 +385,7 @@ class TextL:
             content: str,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            align: Optional[str] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
@@ -342,6 +393,7 @@ class TextL:
         _guard_scalar('TextL.content', content, (str,), False, False, False)
         _guard_scalar('TextL.width', width, (str,), False, True, False)
         _guard_scalar('TextL.visible', visible, (bool,), False, True, False)
+        _guard_enum('TextL.align', align, _TextLAlign, True)
         _guard_scalar('TextL.tooltip', tooltip, (str,), False, True, False)
         _guard_vector('TextL.commands', commands, (Command,), False, True, False)
         _guard_scalar('TextL.name', name, (str,), False, True, False)
@@ -351,6 +403,8 @@ class TextL:
         """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.align = align
+        """The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextLAlign."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -363,6 +417,7 @@ class TextL:
         _guard_scalar('TextL.content', self.content, (str,), False, False, False)
         _guard_scalar('TextL.width', self.width, (str,), False, True, False)
         _guard_scalar('TextL.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('TextL.align', self.align, _TextLAlign, True)
         _guard_scalar('TextL.tooltip', self.tooltip, (str,), False, True, False)
         _guard_vector('TextL.commands', self.commands, (Command,), False, True, False)
         _guard_scalar('TextL.name', self.name, (str,), False, True, False)
@@ -370,6 +425,7 @@ class TextL:
             content=self.content,
             width=self.width,
             visible=self.visible,
+            align=self.align,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             name=self.name,
@@ -384,6 +440,8 @@ class TextL:
         _guard_scalar('TextL.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextL.visible', __d_visible, (bool,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('TextL.align', __d_align, _TextLAlign, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextL.tooltip', __d_tooltip, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
@@ -393,6 +451,7 @@ class TextL:
         content: str = __d_content
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        align: Optional[str] = __d_align
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         name: Optional[str] = __d_name
@@ -400,10 +459,21 @@ class TextL:
             content,
             width,
             visible,
+            align,
             tooltip,
             commands,
             name,
         )
+
+
+_TextMAlign = ['start', 'end', 'center', 'justify']
+
+
+class TextMAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    JUSTIFY = 'justify'
 
 
 class TextM:
@@ -414,12 +484,14 @@ class TextM:
             content: str,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            align: Optional[str] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextM.content', content, (str,), False, False, False)
         _guard_scalar('TextM.width', width, (str,), False, True, False)
         _guard_scalar('TextM.visible', visible, (bool,), False, True, False)
+        _guard_enum('TextM.align', align, _TextMAlign, True)
         _guard_scalar('TextM.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('TextM.name', name, (str,), False, True, False)
         self.content = content
@@ -428,6 +500,8 @@ class TextM:
         """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.align = align
+        """The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextMAlign."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -438,12 +512,14 @@ class TextM:
         _guard_scalar('TextM.content', self.content, (str,), False, False, False)
         _guard_scalar('TextM.width', self.width, (str,), False, True, False)
         _guard_scalar('TextM.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('TextM.align', self.align, _TextMAlign, True)
         _guard_scalar('TextM.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('TextM.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
             width=self.width,
             visible=self.visible,
+            align=self.align,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -457,6 +533,8 @@ class TextM:
         _guard_scalar('TextM.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextM.visible', __d_visible, (bool,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('TextM.align', __d_align, _TextMAlign, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextM.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
@@ -464,15 +542,27 @@ class TextM:
         content: str = __d_content
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        align: Optional[str] = __d_align
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextM(
             content,
             width,
             visible,
+            align,
             tooltip,
             name,
         )
+
+
+_TextSAlign = ['start', 'end', 'center', 'justify']
+
+
+class TextSAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    JUSTIFY = 'justify'
 
 
 class TextS:
@@ -483,12 +573,14 @@ class TextS:
             content: str,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            align: Optional[str] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextS.content', content, (str,), False, False, False)
         _guard_scalar('TextS.width', width, (str,), False, True, False)
         _guard_scalar('TextS.visible', visible, (bool,), False, True, False)
+        _guard_enum('TextS.align', align, _TextSAlign, True)
         _guard_scalar('TextS.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('TextS.name', name, (str,), False, True, False)
         self.content = content
@@ -497,6 +589,8 @@ class TextS:
         """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.align = align
+        """The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextSAlign."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -507,12 +601,14 @@ class TextS:
         _guard_scalar('TextS.content', self.content, (str,), False, False, False)
         _guard_scalar('TextS.width', self.width, (str,), False, True, False)
         _guard_scalar('TextS.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('TextS.align', self.align, _TextSAlign, True)
         _guard_scalar('TextS.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('TextS.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
             width=self.width,
             visible=self.visible,
+            align=self.align,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -526,6 +622,8 @@ class TextS:
         _guard_scalar('TextS.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextS.visible', __d_visible, (bool,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('TextS.align', __d_align, _TextSAlign, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextS.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
@@ -533,15 +631,27 @@ class TextS:
         content: str = __d_content
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        align: Optional[str] = __d_align
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextS(
             content,
             width,
             visible,
+            align,
             tooltip,
             name,
         )
+
+
+_TextXsAlign = ['start', 'end', 'center', 'justify']
+
+
+class TextXsAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    JUSTIFY = 'justify'
 
 
 class TextXs:
@@ -552,12 +662,14 @@ class TextXs:
             content: str,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
+            align: Optional[str] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextXs.content', content, (str,), False, False, False)
         _guard_scalar('TextXs.width', width, (str,), False, True, False)
         _guard_scalar('TextXs.visible', visible, (bool,), False, True, False)
+        _guard_enum('TextXs.align', align, _TextXsAlign, True)
         _guard_scalar('TextXs.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('TextXs.name', name, (str,), False, True, False)
         self.content = content
@@ -566,6 +678,8 @@ class TextXs:
         """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
+        self.align = align
+        """The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextXsAlign."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -576,12 +690,14 @@ class TextXs:
         _guard_scalar('TextXs.content', self.content, (str,), False, False, False)
         _guard_scalar('TextXs.width', self.width, (str,), False, True, False)
         _guard_scalar('TextXs.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('TextXs.align', self.align, _TextXsAlign, True)
         _guard_scalar('TextXs.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('TextXs.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
             width=self.width,
             visible=self.visible,
+            align=self.align,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -595,6 +711,8 @@ class TextXs:
         _guard_scalar('TextXs.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextXs.visible', __d_visible, (bool,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('TextXs.align', __d_align, _TextXsAlign, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextXs.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
@@ -602,12 +720,14 @@ class TextXs:
         content: str = __d_content
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
+        align: Optional[str] = __d_align
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextXs(
             content,
             width,
             visible,
+            align,
             tooltip,
             name,
         )

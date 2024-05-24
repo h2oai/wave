@@ -1857,42 +1857,42 @@
   "Wave Full Text": {
     "prefix": "w_full_text",
     "body": [
-      "ui.text(content='$1', size='$2', width='$3', visible=${4:True}, tooltip='$5', name='$6'),$0"
+      "ui.text(content='$1', size='$2', width='$3', visible=${4:True}, align='${5:start}', tooltip='$6', name='$7'),$0"
     ],
     "description": "Create a full Wave Text."
   },
   "Wave Full TextXl": {
     "prefix": "w_full_text_xl",
     "body": [
-      "ui.text_xl(content='$1', width='$2', visible=${3:True}, tooltip='$4', name='$5', commands=[\n\t\t$6\t\t\n]),$0"
+      "ui.text_xl(content='$1', width='$2', visible=${3:True}, align='${4:start}', tooltip='$5', name='$6', commands=[\n\t\t$7\t\t\n]),$0"
     ],
     "description": "Create a full Wave TextXl."
   },
   "Wave Full TextL": {
     "prefix": "w_full_text_l",
     "body": [
-      "ui.text_l(content='$1', width='$2', visible=${3:True}, tooltip='$4', name='$5', commands=[\n\t\t$6\t\t\n]),$0"
+      "ui.text_l(content='$1', width='$2', visible=${3:True}, align='${4:start}', tooltip='$5', name='$6', commands=[\n\t\t$7\t\t\n]),$0"
     ],
     "description": "Create a full Wave TextL."
   },
   "Wave Full TextM": {
     "prefix": "w_full_text_m",
     "body": [
-      "ui.text_m(content='$1', width='$2', visible=${3:True}, tooltip='$4', name='$5'),$0"
+      "ui.text_m(content='$1', width='$2', visible=${3:True}, align='${4:start}', tooltip='$5', name='$6'),$0"
     ],
     "description": "Create a full Wave TextM."
   },
   "Wave Full TextS": {
     "prefix": "w_full_text_s",
     "body": [
-      "ui.text_s(content='$1', width='$2', visible=${3:True}, tooltip='$4', name='$5'),$0"
+      "ui.text_s(content='$1', width='$2', visible=${3:True}, align='${4:start}', tooltip='$5', name='$6'),$0"
     ],
     "description": "Create a full Wave TextS."
   },
   "Wave Full TextXs": {
     "prefix": "w_full_text_xs",
     "body": [
-      "ui.text_xs(content='$1', width='$2', visible=${3:True}, tooltip='$4', name='$5'),$0"
+      "ui.text_xs(content='$1', width='$2', visible=${3:True}, align='${4:start}', tooltip='$5', name='$6'),$0"
     ],
     "description": "Create a full Wave TextXs."
   },

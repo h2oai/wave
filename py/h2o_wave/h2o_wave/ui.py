@@ -26,6 +26,7 @@ def text(
         size: Optional[str] = None,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        align: Optional[str] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
 ) -> Component:
@@ -36,6 +37,7 @@ def text(
         size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
         width: The width of the text , e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        align: The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextAlign.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -46,6 +48,7 @@ def text(
         size,
         width,
         visible,
+        align,
         tooltip,
         name,
     ))
@@ -93,6 +96,7 @@ def text_xl(
         content: str,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        align: Optional[str] = None,
         tooltip: Optional[str] = None,
         commands: Optional[List[Command]] = None,
         name: Optional[str] = None,
@@ -103,6 +107,7 @@ def text_xl(
         content: The text content.
         width: The width of the text , e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        align: The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextXlAlign.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
         name: An identifying name for this component.
@@ -113,6 +118,7 @@ def text_xl(
         content,
         width,
         visible,
+        align,
         tooltip,
         commands,
         name,
@@ -123,6 +129,7 @@ def text_l(
         content: str,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        align: Optional[str] = None,
         tooltip: Optional[str] = None,
         commands: Optional[List[Command]] = None,
         name: Optional[str] = None,
@@ -133,6 +140,7 @@ def text_l(
         content: The text content.
         width: The width of the text , e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        align: The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextLAlign.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
         name: An identifying name for this component.
@@ -143,6 +151,7 @@ def text_l(
         content,
         width,
         visible,
+        align,
         tooltip,
         commands,
         name,
@@ -153,6 +162,7 @@ def text_m(
         content: str,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        align: Optional[str] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
 ) -> Component:
@@ -162,6 +172,7 @@ def text_m(
         content: The text content.
         width: The width of the text , e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        align: The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextMAlign.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -171,6 +182,7 @@ def text_m(
         content,
         width,
         visible,
+        align,
         tooltip,
         name,
     ))
@@ -180,6 +192,7 @@ def text_s(
         content: str,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        align: Optional[str] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
 ) -> Component:
@@ -189,6 +202,7 @@ def text_s(
         content: The text content.
         width: The width of the text , e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        align: The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextSAlign.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -198,6 +212,7 @@ def text_s(
         content,
         width,
         visible,
+        align,
         tooltip,
         name,
     ))
@@ -207,6 +222,7 @@ def text_xs(
         content: str,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
+        align: Optional[str] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
 ) -> Component:
@@ -216,6 +232,7 @@ def text_xs(
         content: The text content.
         width: The width of the text , e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
+        align: The alignment of the text content. Defaults to 'start'. One of 'start', 'end', 'center', 'justify'. See enum h2o_wave.ui.TextXsAlign.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -225,6 +242,7 @@ def text_xs(
         content,
         width,
         visible,
+        align,
         tooltip,
         name,
     ))

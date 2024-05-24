@@ -51,6 +51,26 @@ q.page['form'] = ui.form_card(
 )
 ```
 
+## Alignment
+
+Use the `align` attribute to control the alignment of the text being displayed. Possible values are `start`, `end`, `center` and `justify`, with the default being `start`.
+
+```py
+q.page['form'] = ui.form_card(
+    box='1 1 2 1',
+    items=[ui.text('Text alignment - end', align=ui.TextAlign.END)]
+)
+```
+
+The `align` attribute to is also available on all variations of text, for example [ui.text_s](/docs/api/ui#text_s).
+
+```py
+q.page['form'] = ui.form_card(
+    box='1 1 2 1',
+    items=[ui.text_s('Small text alignment - center', align=ui.TextSAlign.CENTER)]
+)
+```
+
 ## With markdown
 
 Interested in even more text flexibility? Wave supports `Markdown` in all these components!

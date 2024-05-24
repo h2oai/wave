@@ -31,6 +31,8 @@ export interface Text {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The alignment of the text content. Defaults to 'start'. */
+  align?: 'start' | 'end' | 'center' | 'justify'
   /** Tooltip message. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -45,6 +47,8 @@ export interface TextXl {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The alignment of the text content. Defaults to 'start'. */
+  align?: 'start' | 'end' | 'center' | 'justify'  
   /** Tooltip message. */
   tooltip?: S
   /** Contextual menu commands for this component. */
@@ -61,6 +65,8 @@ export interface TextL {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The alignment of the text content. Defaults to 'start'. */
+  align?: 'start' | 'end' | 'center' | 'justify'
   /** Tooltip message. */
   tooltip?: S
   /** Contextual menu commands for this component. */
@@ -77,6 +83,8 @@ export interface TextM {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The alignment of the text content. Defaults to 'start'. */
+  align?: 'start' | 'end' | 'center' | 'justify'
   /** Tooltip message. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -91,6 +99,8 @@ export interface TextS {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The alignment of the text content. Defaults to 'start'. */
+  align?: 'start' | 'end' | 'center' | 'justify'
   /** Tooltip message. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -105,6 +115,8 @@ export interface TextXs {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** The alignment of the text content. Defaults to 'start'. */
+  align?: 'start' | 'end' | 'center' | 'justify'
   /** Tooltip message. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -132,10 +144,11 @@ const
   },
   toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
-export const XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => (
+export const XText = ({ content, name, size, align, commands }: { content: S, name?: S, size?: S, align?: Text['align'], commands?: Command[] }) => (
+  
   <div className={css.text}>
     {/* `w-text` is a marker class. */}
-    <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block className='w-text'>
+    <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} style={{ textAlign: align || 'start'}} block className='w-text'>
       <Markdown source={content} />
     </Fluent.Text>
     {!!commands?.length && <ContextMenu name={name ? `${name}-menu` : name} commands={commands} />}
