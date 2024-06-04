@@ -80,6 +80,8 @@ const highlightSyntax = async (str: S, language: S, codeElementId: S) => {
 
   return highlightedCode
 }
+const importMd = async () => await import('./markdown.css')
+
 
 export const Markdown = ({ source, compact = true }: { source: S, compact?: B }) => {
   const
@@ -118,7 +120,7 @@ export const Markdown = ({ source, compact = true }: { source: S, compact?: B })
         return false
       }
     }
-  React.useEffect(() => { import('./markdown.css') }, [])
+  React.useEffect(() => void importMd(), [])
   return <div onClick={onClick} className={`wave-markdown ${compact ? '' : 'wave-prose'}`} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
