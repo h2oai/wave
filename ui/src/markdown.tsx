@@ -21,6 +21,7 @@ import { stylesheet } from 'typestyle'
 import { ClipboardCopyButton } from './copyable_text'
 import { cards, grid, substitute } from './layout'
 import { bond } from './ui'
+import styles from './markdown.module.css'
 
 const
   css = stylesheet({
@@ -118,8 +119,7 @@ export const Markdown = ({ source, compact = true }: { source: S, compact?: B })
         return false
       }
     }
-  React.useEffect(() => { import('./markdown.css') }, [])
-  return <div onClick={onClick} className={`wave-markdown ${compact ? '' : 'wave-prose'}`} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div onClick={onClick} className={`${styles["wave-markdown"]} ${compact ? '' : styles["wave-prose"]}`} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 /**
