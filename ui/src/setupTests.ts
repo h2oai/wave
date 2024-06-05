@@ -29,7 +29,7 @@ jest.mock('d3', () => ({
   pie: () => ({ value: () => () => [] }),
 }))
 jest.mock('d3-interpolate', () => ({ extent: () => '' }))
-jest.mock('./markdown.css', () => '')
+jest.mock('./markdown.module.css', () => '')
 
 
 const icons = Object.entries(Icons).reduce((acc, [iconName, iconComponent]) => {
