@@ -17,6 +17,7 @@ import { IComboBox, IComboBoxOption } from '@fluentui/react'
 import { B, Id, S, U } from './core'
 import React from 'react'
 import { wave } from './ui'
+import { flushSync } from 'react-dom'
 
 /**
  * Create a combobox.
@@ -110,22 +111,23 @@ const ComboboxMultiSelect = ({ model: m }: { model: Omit<Combobox, 'value'> }) =
     [options, setOptions] = useOptions(m.choices),
     [selected, setSelected] = React.useState<S[]>(m.values ?? []),
     selectOpt = (option: IComboBoxOption) => {
-      setSelected(keys => {
-        const result = option.selected ? [...keys, String(option.key)] : keys.filter(key => key !== option.key)
-        wave.args[m.name] = result
-        return result
+      flushSync(() => {
+        setSelected(keys => {
+          const result = option.selected ? [...keys, String(option.key)] : keys.filter(key => key !== option.key)
+          wave.args[m.name] = result
+          return result
+        })
       })
+
+      if (m.trigger) wave.push()
     },
     onChange = (_e: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: U, value?: S) => {
+      if (option) selectOpt(option)
       if (!option && value) {
         const opt: IComboBoxOption = { key: value, text: value }
         setOptions((prevOptions = []) => [...prevOptions, opt])
         selectOpt({ ...opt, selected: true })
       }
-      if (option) {
-        selectOpt(option)
-      }
-      if (m.trigger) wave.push()
     }
 
   React.useEffect(() => {
