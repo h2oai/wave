@@ -101,7 +101,7 @@ class _App:
 
 def _parse_msg(msg: str) -> Optional[dict]:
     # protocol: t addr data
-    parts = msg.split(' ', 3)
+    parts = msg.split(' ', 2)
 
     if len(parts) != 3:
         raise ValueError('Invalid message')
