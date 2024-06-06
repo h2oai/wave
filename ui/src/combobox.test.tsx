@@ -294,6 +294,40 @@ describe('Combobox.tsx', () => {
 
         expect(pushMock).toHaveBeenCalled()
       })
+
+      it('Sets wave args as string when a new valued is typed and enter is pressed - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, values: ['A'] }} />)
+        expect(wave.args[name]).toEqual(['A'])
+        userEvent.type(getByRole('combobox'), '{backspace}D{enter}')
+        expect(wave.args[name]).toEqual(['A', 'D'])
+      })
+
+      it('Sets wave args as string when a new valued is typed and user clicks away - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, values: ['A'] }} />)
+        const combobox = getByRole('combobox')
+
+        expect(wave.args[name]).toEqual(['A'])
+
+        userEvent.type(getByRole('combobox'), '{backspace}D')
+        // Need to update JSDOM to 16.3+ to use fireEvent.blur().
+        combobox.blur()
+        fireEvent.focusOut(combobox)
+
+        expect(getByRole('combobox')).not.toHaveFocus()
+        expect(wave.args[name]).toEqual(['A', 'D'])
+      })
+
+      it('Sets wave args as string when a new value is typed and tab is pressed - after init', () => {
+        const { getByRole } = render(<XCombobox model={{ ...comboboxProps, values: ['A'] }} />)
+
+        expect(wave.args[name]).toEqual(['A'])
+
+        userEvent.type(getByRole('combobox'), '{backspace}D')
+        userEvent.tab()
+
+        expect(getByRole('combobox')).not.toHaveFocus()
+        expect(wave.args[name]).toEqual(['A', 'D'])
+      })
     })
 
     describe('Prop changes - update values dynamically from Wave app', () => {
