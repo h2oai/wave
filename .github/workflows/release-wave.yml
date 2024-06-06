@@ -7,10 +7,9 @@ on:
         description: "Release Version"
         required: true
       skipDocsPublish:
-        description: 'Skip publishing docs site'     
+        description: "Skip publishing docs site"
         required: false
-        default: 'false'
-
+        default: "false"
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -127,12 +126,17 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
 
+      - name: Configure MC AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.MC_IAM_ROLE }}
+          role-session-name: wave-apps
+          aws-region: ${{ secrets.MC_AWS_REGION }}
+
       - name: Publish apps for Managed Cloud
         run: make publish-apps-s3-mc
         env:
           MC_S3_BUCKET: ${{ secrets.MC_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.MC_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.MC_AWS_SECRET_ACCESS_KEY  }}
           AWS_REGION: ${{ secrets.MC_AWS_REGION }}
 
       # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
