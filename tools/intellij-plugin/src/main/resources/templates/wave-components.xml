@@ -2371,7 +2371,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_table_column" value="ui.table_column(name='$name$',label='$label$',min_width='$min_width$',max_width='$max_width$',sortable=$sortable$,searchable=$searchable$,filterable=$filterable$,link=$link$,data_type='$data_type$',cell_type=$cell_type$,cell_overflow='$cell_overflow$',align='$align$',filters=[&#10;	$filters$	&#10;]),$END$" description="Create Wave TableColumn with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_table_column" value="ui.table_column(name='$name$',label='$label$',min_width='$min_width$',max_width='$max_width$',sortable=$sortable$,searchable=$searchable$,filterable=$filterable$,link=$link$,data_type='$data_type$',cell_type=$cell_type$,cell_overflow='$cell_overflow$',align='$align$',tooltip='$tooltip$',filters=[&#10;	$filters$	&#10;]),$END$" description="Create Wave TableColumn with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="min_width" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -2384,6 +2384,7 @@
     <variable name="cell_type" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="cell_overflow" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="align" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="filters" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
