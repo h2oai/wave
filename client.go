@@ -17,6 +17,8 @@ package wave
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -307,5 +309,11 @@ func (c *Client) flush() {
 }
 
 func (c *Client) quit() {
+	// FIXME: Gather more info about how can the same client be closed twice and fix this properly.
+	defer func() {
+		if r := recover(); r != nil {
+			echo(Log{"t": "client_quit", "client": c.id, "msg": "Report at https://github.com/h2oai/wave/issues together with full server log.", "err": fmt.Errorf("%v", r).Error()})
+		}
+	}()
 	close(c.data)
 }
