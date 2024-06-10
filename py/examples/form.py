@@ -85,7 +85,7 @@ async def serve(q: Q):
         ]),
         ui.file_upload(name='file_upload', label='File upload'),
         ui.table(name='table', columns=[
-            ui.table_column(name='col1', label='Column 1', tooltip="I am a tooltip"),
+            ui.table_column(name='col1', label='Column 1'),
             ui.table_column(name='col2', label='Column 2'),
         ], rows=[
             ui.table_row(name='row1', cells=['Text A', 'Text B']),
