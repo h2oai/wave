@@ -415,35 +415,28 @@ const
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
-        const renderColumnHeaderTooltip = (column: WaveColumn) => (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{column.name}</span>
-            {column.tooltip && (
-                <Fluent.TooltipHost content={column.tooltip}>
-                    <Fluent.IconButton
-                        iconProps={{ iconName: 'Info' }}
-                        styles={{
-                            root: {
-                                fontSize: 12,
-                                height: 24,
-                                width: 24,
-                                marginLeft: 4,
-                            },
-                        }}
-                    />
-                </Fluent.TooltipHost>
-            )}
-          </div>
-        )
+        const renderColumnHeaderTooltip = (tooltipHostProps: any) => {
+          const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
+          if (!column) return null
+          return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <>{tooltipHostProps?.children}</>
+              {
+                column.tooltip && (
+                  <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
+                    <Fluent.Icon iconName="info" />
+                  </Fluent.TooltipHost>
+                )
+              }
+            </div>
+          )
+        }
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
             <Fluent.DetailsHeader
               {...props}
               isAllCollapsed={groups?.every(group => group.isCollapsed)}
-              onRenderColumnHeaderTooltip={(tooltipHostProps) => {
-                const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
-                return column ? renderColumnHeaderTooltip(column) : null
-              }}
+              onRenderColumnHeaderTooltip={renderColumnHeaderTooltip}
               styles={{
                 ...props.styles,
                 root: {
@@ -457,9 +450,9 @@ const
                   marginLeft: -8,
                 },
                 cellIsGroupExpander: {
-                  // HACK: fixed size of expand/collapse button in column header
-                  height: 48
-                }
+                  // Fixed size of expand/collapse button in column header
+                  height: 48,
+                },
               }}
             />
           </Fluent.Sticky>
