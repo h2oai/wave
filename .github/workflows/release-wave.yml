@@ -16,6 +16,10 @@ env:
   VERSION: "${{ github.event.inputs.version }}"
   TAG: "v${{ github.event.inputs.version }}"
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   release:
     name: Release Wave
