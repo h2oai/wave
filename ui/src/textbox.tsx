@@ -67,6 +67,8 @@ export interface Textbox {
   spellcheck?: B
   /** Keyboard to be shown on mobile devices. Defaults to 'text'. */
   type?: 'text' | 'number' | 'tel'
+  /**T rue if the Enter button is being pressed */
+  onEnter?: B
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -83,6 +85,13 @@ export const
         setValue(v)
         m.value = v
       },
+      onKeyDown = (event: React.KeyboardEvent) => {
+        if(m.onEnter && event.key == 'Enter'){
+          event.preventDefault()
+          wave.args[m.name] = value
+          wave.push()
+        }
+      },
       textFieldProps: Fluent.ITextFieldProps & { 'data-test': S } = {
         'data-test': m.name,
         label: m.label,
@@ -92,6 +101,7 @@ export const
         disabled: m.disabled,
         readOnly: m.readonly,
         onChange,
+        onKeyDown,
         iconProps: m.icon ? { iconName: m.icon } : undefined,
         placeholder: m.placeholder,
         prefix: m.prefix,
