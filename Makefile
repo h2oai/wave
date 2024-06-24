@@ -104,10 +104,10 @@ test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
 
 build-server: ## Build server for current OS/Arch
-	go build $(LDFLAGS) -o waved cmd/wave/main.go
+	GOEXPERIMENT=boringcrypto go build $(LDFLAGS) -o waved cmd/wave/main.go
 
 build-db: ## Build database server for current OS/Arch
-	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
+	GOEXPERIMENT=boringcrypto go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
 
 build-db-micro:
 	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb cmd/wavedb/main.go
@@ -201,7 +201,7 @@ release-os:
 	rm -rf test/cypress/screenshots/*.*
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
-	GOOS=$(OS) GOARCH=$(ARCH) go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
+	GOOS=$(OS) GOARCH=$(ARCH) GOEXPERIMENT=boringcrypto go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 .PHONY: website
