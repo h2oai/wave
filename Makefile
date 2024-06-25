@@ -142,7 +142,7 @@ build-docker:
 		.
 
 run: ## Run server
-	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy -public-dir /assets/@./assets
+	GOEXPERIMENT=boringcrypto go run cmd/wave/main.go -web-dir ./ui/build -debug -editable -proxy -public-dir /assets/@./assets
 
 run-db: ## Run database server
 	go run cmd/wavedb/main.go
