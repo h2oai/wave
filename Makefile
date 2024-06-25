@@ -115,7 +115,7 @@ build-db-micro:
 
 release-db: # Build release package for database server
 	mkdir -p build
-	go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb$(EXE_EXT) cmd/wavedb/main.go
+	GOEXPERIMENT=boringcrypto go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb$(EXE_EXT) cmd/wavedb/main.go
 	tar -czf wavedb-$(VERSION)-$(OS)-amd64.tar.gz wavedb$(EXE_EXT)
 
 release-db-windows: # Build OSX release package for database server
