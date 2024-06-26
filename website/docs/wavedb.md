@@ -316,4 +316,4 @@ Usage of ./wavedb:
 
 WaveDB is based on [SQLite](https://www.sqlite.org) and [bvinc/go-sqlite-lite](https://github.com/bvinc/go-sqlite-lite), built with [Go](https://golang.org/). The Python client uses [HTTPX](https://www.python-httpx.org/) under the hood. Thank you to the authors and contributors.
 
-WaveDB can be used from any language or platform that has libraries for HTTP and JSON. The reference implementation of the client is [~75 lines of code](https://github.com/h2oai/wave/blob/main/py/h2o_wave/db.py) if you're interested in porting it to other languages.
+WaveDB can be used from any language or platform that has libraries for HTTP and JSON. The reference implementation of the client is [~75 lines of code](https://github.com/h2oai/wave/blob/main/py/h2o_wave/h2o_wave/db.py) if you're interested in porting it to other languages.
