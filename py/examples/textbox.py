@@ -25,6 +25,7 @@ async def serve(q: Q):
             ui.text(f'textbox_numeric={q.args.textbox_numeric}'),
             ui.text(f'textbox_tel={q.args.textbox_tel}'),
             ui.text(f'textbox_password={q.args.textbox_password}'),
+            ui.text(f'textbox_one_enter={q.args.textbox_on_enter}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
@@ -46,6 +47,7 @@ async def serve(q: Q):
             ui.textbox(name='textbox_numeric', label='With numeric keyboard (iOS, Android)', type='number'),
             ui.textbox(name='textbox_tel', label='With telephone keyboard (iOS, Android)', type='tel'),
             ui.textbox(name='textbox_password', label='Password', password=True),
+            ui.textbox(name='textbox_on_enter', label='Press Enter after typing', on_enter=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()

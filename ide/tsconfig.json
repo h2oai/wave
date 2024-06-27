@@ -12,8 +12,12 @@
 		],
 		"types": [],
 		"baseUrl": "./node_modules",
+		"paths": {
+			"@fluentui/react": ["node_modules/@fluentui/react"]
+		  },
 		"jsx": "preserve",
 		"esModuleInterop": true,
+		"include": ["src", "node_modules/@types"],
 		"typeRoots": [
 			"node_modules/@types"
 		]
