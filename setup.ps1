@@ -29,5 +29,6 @@ if ($LastExitCode -ne 0) { exit $LastExitCode }
 Set-Location ..\..
 
 # Build waved.
+$Env:GOEXPERIMENT = 'boringcrypto'
 go build -ldflags '-X main.Version=DEV -X main.BuildDate=20230317152454' -o waved cmd/wave/main.go
 if ($LastExitCode -ne 0) { exit $LastExitCode }
