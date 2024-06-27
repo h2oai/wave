@@ -1,6 +1,13 @@
 import datetime
 import random
 
+branch_coverage = {
+    "example_function_1": False,  # if branch
+    "example_function_2": False,  # else branch
+    "generate_sequence_branch_reset": False,  # if branch for resetting i
+    "generate_sequence_branch_increment": False  # else branch for incrementing i
+}
+
 lorem_ipsum = (
     'ab', 'accusamus', 'accusantium', 'ad', 'adipisci', 'alias', 'aliquam', 'aliquid', 'amet', 'animi', 'aperiam',
     'architecto', 'asperiores', 'aspernatur', 'assumenda', 'at', 'atque', 'aut', 'autem', 'beatae', 'blanditiis',
@@ -68,7 +75,12 @@ def generate_sequence(choices):
     i = 0
     while True:
         yield choices[i]
-        i = 0 if i == k else i + 1
+        if i == k:
+            branch_coverage["generate_sequence_branch_reset"] = True
+            i = 0
+        else:
+            branch_coverage["generate_sequence_branch_increment"] = True
+            i += 1
 
 
 def generate_time_series(days: int):
@@ -85,9 +97,60 @@ def generate_random_walk(min=0, max=100, variation=0.1):
     while True:
         x += int((random.random() - 0.5) * dx)
         if not min <= x <= max:
+            branch_coverage["example_function_1"] = True
             x = random.randint(min, max)
+        else:
+            branch_coverage["example_function_2"] = True
         yield x
 
+def print_coverage():
+    total_branches = len(branch_coverage)
+    hit_branches = sum(branch_coverage.values())
+    coverage_percentage = (hit_branches / total_branches) * 100
+    for branch, hit in branch_coverage.items():
+        print(f"{branch} was {'hit' if hit else 'not hit'}")
+    print(f"Branch coverage: {coverage_percentage:.2f}%")
+
+
+print_coverage()
+
+def test_generate_random_walk_partial():
+    sample_random_walk = generate_random_walk(min=0, max=100)
+    for _ in range(1):  # Smaller number to ensure partial coverage
+        next(sample_random_walk)
+    print("After partial coverage test:")
+    print_coverage()
+
+def test_generate_random_walk_full():
+    sample_random_walk = generate_random_walk(min=0, max=100)
+    for _ in range(50):  # Larger number to ensure full coverage
+        value = next(sample_random_walk)
+        # Force both branches to execute by adjusting min and max
+        if value < 50:
+            sample_random_walk = generate_random_walk(min=0, max=49)
+        else:
+            sample_random_walk = generate_random_walk(min=51, max=100)
+    print("After full coverage test:")
+    print_coverage()
+
+def test_generate_sequence_partial():
+    sample_sequence = generate_sequence(['ExerciseTracker', 'Glasses', 'Cafe', 'Bullseye', 'Guitar', 'Game', 'Headset'])
+    for _ in range(3):  # Smaller number to ensure partial coverage
+        next(sample_sequence)
+    print("After partial coverage test for generate_sequence:")
+    print_coverage()
+
+def test_generate_sequence_full():
+    sample_sequence = generate_sequence(['ExerciseTracker', 'Glasses', 'Cafe', 'Bullseye', 'Guitar', 'Game', 'Headset'])
+    for _ in range(10):  # Larger number to ensure full coverage
+        next(sample_sequence)
+    print("After full coverage test for generate_sequence:")
+    print_coverage()
+
+test_generate_random_walk_partial()
+test_generate_random_walk_full()
+test_generate_sequence_partial()
+test_generate_sequence_full()
 
 sample_title = generate_title()
 sample_term = generate_term()
