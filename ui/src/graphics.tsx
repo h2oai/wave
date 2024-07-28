@@ -43,6 +43,19 @@ interface State {
    * (Not the height of its coordinate system.)
    */
   height?: S
+  /** 
+   * The path or URL or data URL of the background image, 
+   * e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. 
+   */
+  path?: S  
+  /** Background image data, base64-encoded. */
+  image?: S
+  /** 
+   * The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. 
+   * Required only if `image` is set. 
+   */
+  type?: S  
+
 }
 
 const
@@ -169,18 +182,27 @@ export const
       },
       render = () => {
         const
-          { view_box, width, height, stage, scene } = state,
+          { view_box, width, height, stage, scene, type, image, path } = state,
           stageEls = stage ? unpack<Recs>(stage).map(renderEl) : [],
           sceneEls = scene ? unpack<El[]>(scene).map(({ d, o }, i) => renderEl({
             ...(d ? JSON.parse(d) : {}),
             ...(o ? JSON.parse(o) : {}),
-          }, i)) : []
+          }, i)) : [],
+          backgroundImageSrc = path 
+            ? 'url('+path+')' 
+            : image ? `url(data:image/${type};base64,${image})` 
+            : undefined 
+            
         return (
-          <div data-test={name} className={css.card}>
-            <svg viewBox={view_box} width={width} height={height}>
-              <g>{stageEls}</g>
-              <g>{sceneEls}</g>
-            </svg>
+          <div style={{ backgroundImage: `${backgroundImageSrc ? backgroundImageSrc : undefined}`, 
+                        backgroundSize: `${backgroundImageSrc ? 'cover' : undefined}`,
+                      }}>
+            <div data-test={name} className={css.card}>
+              <svg viewBox={view_box} width={width} height={height}>
+                <g>{stageEls}</g>
+                <g>{sceneEls}</g>
+              </svg>
+            </div>
           </div>
         )
 
