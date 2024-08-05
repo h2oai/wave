@@ -170,9 +170,9 @@ func splitDirMapping(m string) (string, string) {
 		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
 	}
 
-    if _, err := os.Stat(xs[1]); os.IsNotExist(err){
-        panic(fmt.Sprintf("directory does not exist: %s", xs[1]))
-    }
+	if _, err := os.Stat(xs[1]); os.IsNotExist(err) {
+		panic(fmt.Sprintf("directory does not exist: %s", xs[1]))
+	}
 
 	// Windows prepends the drive letter to the path with a leading slash, e.g. "/foo/" => "C:/foo/".
 	if xs[0][1] == ':' {
