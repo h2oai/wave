@@ -178,6 +178,8 @@ def run(app: str, no_reload: bool, no_autostart: bool):
 
         if not os.environ.get('H2O_WAVE_WAVED_DIR') and is_auto_started:
             os.environ['H2O_WAVE_WAVED_DIR'] = sys.exec_prefix
+        if not no_reload:
+            os.environ['__H2O_WAVE_DEV_MODE'] = '1'
         reload_exclude = os.environ.get('H2O_WAVE_RELOAD_EXCLUDE', None)
         if reload_exclude:
             reload_exclude = reload_exclude.split(os.pathsep)

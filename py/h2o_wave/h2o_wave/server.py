@@ -378,6 +378,9 @@ class _App:
 
 
 def _is_req_authorized(req: Request) -> bool:
+    if os.environ.get('__H2O_WAVE_DEV_MODE') == '1':
+        return True
+
     basic_auth = req.headers.get("Authorization")
     if basic_auth is None:
         return False
