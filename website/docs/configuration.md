@@ -85,7 +85,7 @@ Those that do not start `waved` manually (but use `wave run` instead) and would 
 
 - Nanosecond: `ns`.
 - Microsecond: `us` (or `µs`).
-- Milisecond `ms`.
+- Millisecond `ms`.
 - Second: `s`.
 - Minute: `m`.
 - Hour: `h`.
