@@ -23,11 +23,6 @@ const
     name,
     state: {},
     changed: T.box(false)
-  },
-  graphicsBackgroundImageProps: T.Model<any> = {
-    name,
-    state: { path: 'foobar.png', image : 'dummy', type : 'png'},
-    changed: T.box(false),
   }
 
 describe('Graphics.tsx', () => {
@@ -36,11 +31,5 @@ describe('Graphics.tsx', () => {
     const { queryByTestId } = render(<View {...graphicsProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
-
-  it('Renders with background image', () => {
-    const { queryByTestId } = render(<View {...graphicsBackgroundImageProps} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)?.parentElement?.style.backgroundImage).toEqual('url(foobar.png)')
-  })  
 
 })

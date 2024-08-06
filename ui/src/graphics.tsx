@@ -194,15 +194,13 @@ export const
             : undefined 
             
         return (
-          <div style={{ backgroundImage: `${backgroundImageSrc ? backgroundImageSrc : undefined}`, 
-                        backgroundSize: `${backgroundImageSrc ? 'cover' : undefined}`,
-                      }}>
-            <div data-test={name} className={css.card}>
-              <svg viewBox={view_box} width={width} height={height}>
-                <g>{stageEls}</g>
-                <g>{sceneEls}</g>
+          <div data-test={name} className={css.card} style={{ backgroundImage: `${backgroundImageSrc ? backgroundImageSrc : undefined}`, 
+                                                              backgroundSize: `${backgroundImageSrc ? 'cover' : undefined}`,
+                                                            }}>
+            <svg viewBox={view_box} width={width} height={height}>
+              <g>{stageEls}</g>
+              <g>{sceneEls}</g>
               </svg>
-            </div>
           </div>
         )
 
