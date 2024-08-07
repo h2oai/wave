@@ -6,7 +6,7 @@
 import os
 from time import time
 
-import h2o
+import h2o  # type: ignore
 from h2o_wave import Q, app, main, ui
 from loguru import logger
 
