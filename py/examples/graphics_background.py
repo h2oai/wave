@@ -13,7 +13,7 @@ page = site['/demo']
 page['example'] = ui.graphics_card(
     box='1 1 3 4', view_box='0 0 220 220', width='100%', height='100%',
     scene=g.scene(foo=spirograph), 
-    path='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
+    image_path='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
 )
 
 page.save()

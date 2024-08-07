@@ -1473,16 +1473,16 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_graphics_card" value="ui.graphics_card(box='$box$',view_box='$view_box$',stage=$stage$,scene=$scene$,width='$width$',height='$height$',path='$path$',image='$image$',type='$type$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave GraphicsCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_graphics_card" value="ui.graphics_card(box='$box$',view_box='$view_box$',stage=$stage$,scene=$scene$,width='$width$',height='$height$',image='$image$',image_path='$image_path$',image_type='$image_type$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave GraphicsCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="view_box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="stage" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="scene" expression="" defaultValue="&quot;None&quot;" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image_path" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image_type" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>

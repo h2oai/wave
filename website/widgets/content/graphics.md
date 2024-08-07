@@ -32,6 +32,6 @@ red_square = graphics.p().m(25, 25).h(50).v(50).h(-50).z().path(fill='red')
 q.page['example'] = ui.graphics_card(
     box='1 1 2 3', view_box='0 0 100 100', width='100%', height='100%',
     scene=graphics.scene(foo=red_square),
-    path='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
+    image_path='https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress',
 )
 ```
