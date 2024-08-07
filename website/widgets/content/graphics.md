@@ -18,7 +18,7 @@ q.page['example'] = ui.graphics_card(
 )
 ```
 
-See the [Graphics](https://wave.h2o.ai/docs/graphics) section of the Guide for a detailed explanation of graphics support in Wave and find the full API at [ui.graphics_card](http://wave.h2o.ai/docs/api/ui#graphics_card).
+See the [Graphics](https://wave.h2o.ai/docs/graphics) section for a detailed explanation of graphics support. Full API at [ui.graphics_card](http://wave.h2o.ai/docs/api/ui#graphics_card).
 
 ## Background image
 
