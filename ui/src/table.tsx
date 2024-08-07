@@ -76,6 +76,8 @@ interface TableColumn {
   filters?: S[]
   /** Defines how to align values in a column. */
   align?: 'left' | 'center' | 'right'
+  /** Tooltip text. */
+  tooltip?: S
 }
 
 /** Create a table row. */
@@ -167,6 +169,7 @@ type WaveColumn = Fluent.IColumn & {
   cellOverflow?: 'tooltip' | 'wrap'
   filters?: S[]
   align?: 'left' | 'center' | 'right'
+  tooltip?: S
 }
 
 type DataTable = {
@@ -405,18 +408,35 @@ const
           isResizable: true,
           isMultiline: c.cell_overflow === 'wrap',
           filters: c.filterable ? c.filters : undefined,
+          tooltip: c.tooltip ? c.tooltip : undefined,
         }
       }, [onColumnClick]),
       [columns, setColumns] = React.useState(m.columns.map(tableToWaveColumn)),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
-
+        const renderColumnHeaderTooltip = (tooltipHostProps: any) => {
+          const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
+          if (!column) return null
+          return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <>{tooltipHostProps?.children}</>
+              {
+                column.tooltip && (
+                  <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
+                    <Fluent.Icon iconName="info" />
+                  </Fluent.TooltipHost>
+                )
+              }
+            </div>
+          )
+        }
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
             <Fluent.DetailsHeader
               {...props}
               isAllCollapsed={groups?.every(group => group.isCollapsed)}
+              onRenderColumnHeaderTooltip={renderColumnHeaderTooltip}
               styles={{
                 ...props.styles,
                 root: {
@@ -430,9 +450,9 @@ const
                   marginLeft: -8,
                 },
                 cellIsGroupExpander: {
-                  // HACK: fixed size of expand/collapse button in column header
-                  height: 48
-                }
+                  // Fixed size of expand/collapse button in column header
+                  height: 48,
+                },
               }}
             />
           </Fluent.Sticky>
