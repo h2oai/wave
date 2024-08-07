@@ -3121,6 +3121,9 @@ def graphics_card(
         scene: Optional[PackedData] = None,
         width: Optional[str] = None,
         height: Optional[str] = None,
+        image: Optional[str] = None,
+        image_path: Optional[str] = None,
+        image_type: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> GraphicsCard:
     """Create a card for displaying vector graphics.
@@ -3132,6 +3135,9 @@ def graphics_card(
         scene: Foreground layer for rendering dynamic SVG elements.
         width: The displayed width of the rectangular viewport. (Not the width of its coordinate system.)
         height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
+        image: Background image data, base64-encoded.
+        image_path: The path or URL or data URL of the background image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+        image_type: The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.GraphicsCard` instance.
@@ -3143,6 +3149,9 @@ def graphics_card(
         scene,
         width,
         height,
+        image,
+        image_path,
+        image_type,
         commands,
     )
 

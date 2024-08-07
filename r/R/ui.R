@@ -3639,6 +3639,11 @@ ui_frame_card <- function(
 #'   (Not the width of its coordinate system.)
 #' @param height The displayed height of the rectangular viewport.
 #'   (Not the height of its coordinate system.)
+#' @param image Background image data, base64-encoded.
+#' @param image_path The path or URL or data URL of the background image,
+#'   e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @param image_type The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
+#'   Required only if `image` is set.
 #' @param commands Contextual menu commands for this component.
 #' @return A GraphicsCard instance.
 #' @export
@@ -3649,6 +3654,9 @@ ui_graphics_card <- function(
   scene = NULL,
   width = NULL,
   height = NULL,
+  image = NULL,
+  image_path = NULL,
+  image_type = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("view_box", "character", view_box)
@@ -3656,6 +3664,9 @@ ui_graphics_card <- function(
   # TODO Validate scene: Data
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("image_path", "character", image_path)
+  .guard_scalar("image_type", "character", image_type)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3664,6 +3675,9 @@ ui_graphics_card <- function(
     scene=scene,
     width=width,
     height=height,
+    image=image,
+    image_path=image_path,
+    image_type=image_type,
     commands=commands,
     view='graphics')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveGraphicsCard"))

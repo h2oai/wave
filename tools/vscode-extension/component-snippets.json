@@ -1234,7 +1234,7 @@
   "Wave Full GraphicsCard": {
     "prefix": "w_full_graphics_card",
     "body": [
-      "ui.graphics_card(box='$1', view_box='$2', stage=${3:None}, scene=${4:None}, width='$5', height='$6', commands=[\n\t\t$7\t\t\n])$0"
+      "ui.graphics_card(box='$1', view_box='$2', stage=${3:None}, scene=${4:None}, width='$5', height='$6', image='$7', image_path='$8', image_type='$9', commands=[\n\t\t$10\t\t\n])$0"
     ],
     "description": "Create a full Wave GraphicsCard."
   },

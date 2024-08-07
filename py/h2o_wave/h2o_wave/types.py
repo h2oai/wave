@@ -8984,12 +8984,18 @@ class GraphicsCard:
             scene: Optional[PackedData] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            image: Optional[str] = None,
+            image_path: Optional[str] = None,
+            image_type: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('GraphicsCard.box', box, (str,), False, False, False)
         _guard_scalar('GraphicsCard.view_box', view_box, (str,), False, False, False)
         _guard_scalar('GraphicsCard.width', width, (str,), False, True, False)
         _guard_scalar('GraphicsCard.height', height, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image', image, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_path', image_path, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_type', image_type, (str,), False, True, False)
         _guard_vector('GraphicsCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9003,6 +9009,12 @@ class GraphicsCard:
         """The displayed width of the rectangular viewport. (Not the width of its coordinate system.)"""
         self.height = height
         """The displayed height of the rectangular viewport. (Not the height of its coordinate system.)"""
+        self.image = image
+        """Background image data, base64-encoded."""
+        self.image_path = image_path
+        """The path or URL or data URL of the background image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+        self.image_type = image_type
+        """The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9012,6 +9024,9 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.view_box', self.view_box, (str,), False, False, False)
         _guard_scalar('GraphicsCard.width', self.width, (str,), False, True, False)
         _guard_scalar('GraphicsCard.height', self.height, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_path', self.image_path, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_type', self.image_type, (str,), False, True, False)
         _guard_vector('GraphicsCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='graphics',
@@ -9021,6 +9036,9 @@ class GraphicsCard:
             scene=self.scene,
             width=self.width,
             height=self.height,
+            image=self.image,
+            image_path=self.image_path,
+            image_type=self.image_type,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9037,6 +9055,12 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.width', __d_width, (str,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('GraphicsCard.height', __d_height, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('GraphicsCard.image', __d_image, (str,), False, True, False)
+        __d_image_path: Any = __d.get('image_path')
+        _guard_scalar('GraphicsCard.image_path', __d_image_path, (str,), False, True, False)
+        __d_image_type: Any = __d.get('image_type')
+        _guard_scalar('GraphicsCard.image_type', __d_image_type, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('GraphicsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9045,6 +9069,9 @@ class GraphicsCard:
         scene: Optional[PackedData] = __d_scene
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
+        image: Optional[str] = __d_image
+        image_path: Optional[str] = __d_image_path
+        image_type: Optional[str] = __d_image_type
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return GraphicsCard(
             box,
@@ -9053,6 +9080,9 @@ class GraphicsCard:
             scene,
             width,
             height,
+            image,
+            image_path,
+            image_type,
             commands,
         )
 
