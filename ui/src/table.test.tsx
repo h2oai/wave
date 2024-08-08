@@ -1042,7 +1042,21 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
 
-    it('Filter counts - manual select, deselect', () => {
+    it('Filter counts - manual select', () => {
+      const { container, getAllByRole, getByLabelText, queryByTestId } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.click(container.querySelector(filterSelectorName)!)
+      //select 2 options
+      fireEvent.click(getByLabelText('1'))
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(queryByTestId('filter-count')).toHaveTextContent('1')
+      fireEvent.click(getByLabelText('2'))
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(queryByTestId('filter-count')).toHaveTextContent('2')
+    })    
+
+    it('Filter counts - manual deselect', () => {
       const { container, getAllByRole, getByLabelText, queryByTestId } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
@@ -1064,7 +1078,18 @@ describe('Table.tsx', () => {
       expect(queryByTestId('filter-count')).toBeNull
     })    
 
-    it('Filter counts - select all, deselect all', () => {
+    it('Filter counts - select all', () => {
+      const { container, getAllByRole, queryByTestId, getByText } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.click(container.querySelector(filterSelectorName)!)
+      
+      fireEvent.click(getByText('Select All'))
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(queryByTestId('filter-count')).toHaveTextContent(tableProps.rows!.length.toString())
+    })  
+
+    it('Filter counts - deselect all', () => {
       const { container, getAllByRole, queryByTestId, getByText } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
@@ -1077,7 +1102,7 @@ describe('Table.tsx', () => {
       fireEvent.click(getByText('Deselect All'))
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toBeNull
-    })  
+    })
 
     it('Filter counts - more than 9 selections', () => {
 
@@ -1110,6 +1135,25 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toBeNull
     })     
+
+    it('Filter counts - clear selection with reset', () => {
+      const { container, getAllByRole, getByLabelText, queryByTestId, getByText } = render(<XTable model={{ ...tableProps, resettable: true }} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      fireEvent.click(container.querySelector(filterSelectorName)!)
+      //select 2 options
+      fireEvent.click(getByLabelText('1'))
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(queryByTestId('filter-count')).toHaveTextContent('1')
+      fireEvent.click(getByLabelText('2'))
+      expect(getAllByRole('row')).toHaveLength(2 + headerRow)
+      expect(queryByTestId('filter-count')).toHaveTextContent('2')
+
+      //hit reset to clear the 2 options
+      fireEvent.click(getByText('Reset table'))
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+      expect(queryByTestId('filter-count')).toBeNull
+    })
   })
 
 

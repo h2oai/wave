@@ -223,14 +223,13 @@ const
       verticalAlign: 'middle',
     },
   filterCount: {
-    position: 'relative', 
-    top: -5, 
-    padding: '0 2px', 
-    color: cssVar('$red'), 
-    border: '0.5px solid', 
-    borderColor: cssVar('$red'), 
-    marginLeft: 5, 
-    lineHeight: 'normal', 
+      position: 'relative', 
+      top: -5, 
+      padding: 5,
+      marginLeft: 5, 
+      lineHeight: 'normal', 
+      borderRadius: 8,
+      backgroundColor: cssVar('$neutralQuaternary'),
     }    
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
@@ -391,27 +390,21 @@ const
           minWidth,
           maxWidth,
           onRenderHeader: (props?: Fluent.IDetailsColumnProps) => {
-            if (props) {
-              let sortIcon = undefined
-              if (c.sortable) {
-                const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort'+sortCols[props.column.key] : 'Sort'
-                sortIcon = <Fluent.Icon iconName={sortIconName} 
-                                    className={css.sortingIcon} 
-                                    style={{ visibility: `${sortIconName === 'Sort' ? 'hidden' : 'visible'}`}}
-                                  />
-              }
-              let filterCountField = undefined
-              const filterCount = selectedFilters?.[props.column.key]?.length || 0
-              if (filterCount > 0){
-                filterCountField = 
-                  <span data-test='filter-count' className={css.filterCount}>
-                    {`${filterCount > 9 ? '9+' : filterCount}`}
-                  </span>
-              }
-              return <div style={{ display: 'flex', alignItems: 'center'}}>{props.column.name}
-              {sortIcon ? sortIcon : null}
+            if (!props) return null
 
-              {c.filterable ? (
+            const filterCount = selectedFilters?.[props.column.key]?.length || 0
+            const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort'+sortCols[props.column.key] : 'Sort'
+
+            return (
+              <div style={{ display: 'flex', alignItems: 'center'}}>{props.column.name}
+                {c.sortable && (
+                  <Fluent.Icon iconName={sortIconName} 
+                    className={css.sortingIcon} 
+                    style={{ visibility: `${sortIconName === 'Sort' ? 'hidden' : 'visible'}`}}
+                  />                  
+                )}
+
+                {c.filterable && (
                     <Fluent.Icon iconName='ChevronDown' 
                                 onClick={(ev: React.MouseEvent<HTMLElement>) => {
                                     ev.stopPropagation()
@@ -419,11 +412,15 @@ const
                                 }}
                                 className={css.filterIcon}
                     />
-                ) : null
-              }
-              {filterCountField ? filterCountField : null}
-              </div> 
-            } else return null
+                )}
+                
+                {filterCount > 0 && (
+                  <span data-test='filter-count' className={css.filterCount}>
+                    {`${filterCount > 9 ? '9+' : filterCount}`}
+                  </span>
+                )}
+            </div> 
+            )
           },
           onColumnClick,
           columnActionsMode: Fluent.ColumnActionsMode.clickable,
@@ -577,10 +574,6 @@ const
     }, [m.columns, tableToWaveColumn])
     React.useImperativeHandle(ref, () => ({
       resetSortIcons: () => {
-        setColumns(columns => columns.map(col => {
-          if (col.iconName) col.iconName = undefined
-          return col
-        }))
         setSortCols(null)
       }
     }))
