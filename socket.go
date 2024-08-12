@@ -37,9 +37,9 @@ type SocketServer struct {
 
 func newSocketServer(broker *Broker, auth *Auth, conf ServerConf) *SocketServer {
 	var checkOrigin func(*http.Request) bool
-	if conf.AllowedOrigins != nil {
+	if len(conf.AllowedOrigins) != 0 {
 		checkOrigin = func(r *http.Request) bool {
-			return conf.AllowedOrigins[r.Header.Get("Origin")]
+			return conf.AllowedOrigins["*"] || conf.AllowedOrigins[r.Header.Get("Origin")]
 		}
 	}
 	upgrader := websocket.Upgrader{
