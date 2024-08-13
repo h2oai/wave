@@ -171,7 +171,7 @@ func splitDirMapping(m string) (string, string) {
 	}
 
 	if _, err := os.Stat(xs[1]); os.IsNotExist(err) {
-		panic(fmt.Sprintf("directory does not exist: %s", xs[1]))
+		echo(Log{"t": "warn", "msg": fmt.Sprintf("directory does not exist: %s", xs[1])})
 	}
 
 	// Windows prepends the drive letter to the path with a leading slash, e.g. "/foo/" => "C:/foo/".
