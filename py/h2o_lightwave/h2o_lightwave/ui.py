@@ -2938,6 +2938,7 @@ def chatbot_card(
         generating: Optional[bool] = None,
         suggestions: Optional[List[ChatSuggestion]] = None,
         disabled: Optional[bool] = None,
+        value: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatbotCard:
     """Create a chatbot card to allow getting prompts from users and providing them with LLM generated answers.
@@ -2951,6 +2952,7 @@ def chatbot_card(
         generating: True to show a button to stop the text generation. Defaults to False.
         suggestions: Clickable prompt suggestions shown below the last response.
         disabled: True if the user input should be disabled.
+        value: Value of the user input.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatbotCard` instance.
@@ -2964,6 +2966,7 @@ def chatbot_card(
         generating,
         suggestions,
         disabled,
+        value,
         commands,
     )
 

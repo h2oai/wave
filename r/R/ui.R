@@ -3417,6 +3417,7 @@ ui_chat_suggestion <- function(
 #' @param generating True to show a button to stop the text generation. Defaults to False.
 #' @param suggestions Clickable prompt suggestions shown below the last response.
 #' @param disabled True if the user input should be disabled.
+#' @param value Value of the user input.
 #' @param commands Contextual menu commands for this component.
 #' @return A ChatbotCard instance.
 #' @export
@@ -3429,6 +3430,7 @@ ui_chatbot_card <- function(
   generating = NULL,
   suggestions = NULL,
   disabled = NULL,
+  value = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
@@ -3438,6 +3440,7 @@ ui_chatbot_card <- function(
   .guard_scalar("generating", "logical", generating)
   .guard_vector("suggestions", "WaveChatSuggestion", suggestions)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("value", "character", value)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3448,6 +3451,7 @@ ui_chatbot_card <- function(
     generating=generating,
     suggestions=suggestions,
     disabled=disabled,
+    value=value,
     commands=commands,
     view='chatbot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveChatbotCard"))

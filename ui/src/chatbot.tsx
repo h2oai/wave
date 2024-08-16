@@ -151,6 +151,8 @@ export interface Chatbot {
   suggestions?: ChatSuggestion[]
   /** True if the user input should be disabled. */
   disabled?: B
+  /** Value of the user input. */
+  value?: S
 }
 
 const processData = (data: Rec) => unpack<ChatbotMessage[]>(data).map(({ content, from_user }) => ({ content, from_user }))
@@ -233,6 +235,10 @@ export const XChatbot = (props: Chatbot) => {
       ? msgContainerRef.current.scrollTo({ top: topOffset, behavior: 'smooth' })
       : msgContainerRef.current.scrollTop = topOffset
   }, [msgs])
+  React.useEffect(() => {
+    wave.args[props.name] = props.value ?? null
+    setUserInput(props.value ?? '')
+  }, [props.value, props.name])
 
   return (
     <div className={css.chatWindow}>
@@ -341,6 +347,8 @@ interface State {
   suggestions?: ChatSuggestion[]
   /** True if the user input should be disabled. */
   disabled?: B
+  /** Value of the user input. */
+  value?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
