@@ -197,25 +197,25 @@ Excludes certain files or directories from being watched for app reload. Only re
 
 Multiple values are supported. Use OS path separator (`:` for Unix and `;` for Windows) as a delimiter. E.g. `H2O_WAVE_RELOAD_EXCLUDE=tmp_dir1/*.py:tmp_dir2/*.txt`.
 
-### H2O_WAVE_CONNECT_TIMEOUT
+### H2O_WAVE_APP_CONNECT_TIMEOUT
 
 The connect timeout specifies the maximum amount of time to wait until a socket connection to the Wave server is established. If unable to connect within this time frame, a ConnectTimeout exception is raised.
 
 Defaults to `5` (seconds). Use `-1` to turn off.
 
-### H2O_WAVE_WRITE_TIMEOUT
+### H2O_WAVE_APP_WRITE_TIMEOUT
 
 The write timeout specifies the maximum duration to wait for a chunk of data to be sent (for example, a chunk of the request body). If unable to send data within this time frame, a WriteTimeout exception is raised.
 
 Defaults to `5` (seconds). Use `-1` to turn off.
 
-### H2O_WAVE_READ_TIMEOUT
+### H2O_WAVE_APP_READ_TIMEOUT
 
 The read timeout specifies the maximum duration to wait for a chunk of data to be received (for example, a chunk of the response body). If unable to receive data within this time frame, a ReadTimeout exception is raised.
 
 Defaults to `5` (seconds). Use `-1` to turn off.
 
-### H2O_WAVE_POOL_TIMEOUT
+### H2O_WAVE_APP_POOL_TIMEOUT
 
 The pool timeout specifies the maximum duration to wait for acquiring a connection from the connection pool. If unable to acquire a connection within this time frame, a PoolTimeout exception is raised.
 
