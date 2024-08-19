@@ -43,6 +43,12 @@ BROADCAST = 'broadcast'
 
 def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
+def _get_timeout(val: str) -> Optional[int]:
+    try:
+        num = int(val)
+        return num if num >= 0 else None
+    except ValueError:
+        raise ValueError(f'Timeout must be numeric, got {val}')
 
 
 _base_url = _get_env('BASE_URL', '/')
@@ -60,6 +66,10 @@ class _Config:
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
         self.app_access_key_id: str = _get_env('APP_ACCESS_KEY_ID', None) or secrets.token_urlsafe(16)
         self.app_access_key_secret: str = _get_env('APP_ACCESS_KEY_SECRET', None) or secrets.token_urlsafe(16)
+        self.app_connect_timeout: Optional[int] = _get_timeout(_get_env('APP_CONNECT_TIMEOUT', '5'))
+        self.app_read_timeout: Optional[int] = _get_timeout(_get_env('APP_READ_TIMEOUT', '5'))
+        self.app_write_timeout: Optional[int] = _get_timeout(_get_env('APP_WRITE_TIMEOUT', '5'))
+        self.app_pool_timeout: Optional[int] = _get_timeout(_get_env('APP_POOL_TIMEOUT', '5'))
 
 
 _config = _Config()
@@ -640,9 +650,16 @@ class Site:
     """
 
     def __init__(self):
+        timeout = httpx.Timeout(
+            connect=_config.app_connect_timeout,
+            read=_config.app_read_timeout,
+            write=_config.app_write_timeout,
+            pool=_config.app_pool_timeout,
+        )
         self._http = httpx.Client(
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
+            timeout=timeout,
         )
         self.cache = _ServerCache(self._http)
 
@@ -870,9 +887,16 @@ class AsyncSite:
     """
 
     def __init__(self):
+        timeout = httpx.Timeout(
+            connect=_config.app_connect_timeout,
+            read=_config.app_read_timeout,
+            write=_config.app_write_timeout,
+            pool=_config.app_pool_timeout,
+        )
         self._http = httpx.AsyncClient(
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
+            timeout=timeout,
         )
         self.cache = _AsyncServerCache(self._http)
 
