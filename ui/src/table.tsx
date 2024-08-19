@@ -21,7 +21,7 @@ import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { MarkdownTableCellType, XMarkdownTableCellType } from './markdown_table_cell_type'
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
-import { border, cssVar, important, margin, rem } from './theme'
+import { border, cssVar, important, margin, padding, rem } from './theme'
 import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 import { wave } from './ui'
 import { Z_INDEX } from './parts/styleConstants'
@@ -210,27 +210,27 @@ type PaginationProps = {
 
 const
   // TODO: Clean up into correct Fluent style slots.
-  css = stylesheet({ 
-  sortingIcon: {
+  css = stylesheet({
+    sortingIcon: {
       fontSize: rem(1.1),
       position: 'relative',
       top: -2,
     },
-  filterIcon: {
+    filterIcon: {
       color: cssVar('$neutralSecondary'),
       fontSize: 12,
       paddingLeft: 6,
       verticalAlign: 'middle',
     },
-  filterCount: {
-      position: 'relative', 
-      top: -5, 
-      padding: 5,
-      marginLeft: 5, 
-      lineHeight: 'normal', 
+    filterCount: {
+      position: 'relative',
+      top: -10,
+      padding: padding(3, 5),
+      marginLeft: 3,
+      lineHeight: 'normal',
       borderRadius: 8,
       backgroundColor: cssVar('$neutralQuaternary'),
-    }    
+    }
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
     contentWrapper: {
@@ -364,10 +364,10 @@ const
       }, [items, onRenderMenuList]),
       onColumnClick = React.useCallback((_e: React.MouseEvent<HTMLElement>, column: WaveColumn) => {
         if (column.isSortable) {
-          const sortColAsc = !sortCols || !sortCols[column.key] || sortCols[column.key].includes('Down')  
+          const sortColAsc = !sortCols || !sortCols[column.key] || sortCols[column.key].includes('Down')
           onSortChange(column, sortColAsc)
           setSortCols({
-            [column.key]: sortColAsc ? 'Up' : 'Down', 
+            [column.key]: sortColAsc ? 'Up' : 'Down',
           })
         }
       }, [onSortChange, sortCols]),
@@ -393,33 +393,33 @@ const
             if (!props) return null
 
             const filterCount = selectedFilters?.[props.column.key]?.length || 0
-            const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort'+sortCols[props.column.key] : 'Sort'
+            const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort' + sortCols[props.column.key] : 'Sort'
 
             return (
-              <div style={{ display: 'flex', alignItems: 'center'}}>{props.column.name}
+              <div style={{ display: 'flex', alignItems: 'center' }}>{props.column.name}
                 {c.sortable && (
-                  <Fluent.Icon iconName={sortIconName} 
-                    className={css.sortingIcon} 
-                    style={{ visibility: `${sortIconName === 'Sort' ? 'hidden' : 'visible'}`}}
-                  />                  
+                  <Fluent.Icon iconName={sortIconName}
+                    className={css.sortingIcon}
+                    style={{ visibility: `${sortIconName === 'Sort' ? 'hidden' : 'visible'}` }}
+                  />
                 )}
 
                 {c.filterable && (
-                    <Fluent.Icon iconName='ChevronDown' 
-                                onClick={(ev: React.MouseEvent<HTMLElement>) => {
-                                    ev.stopPropagation()
-                                    onColumnContextMenu(props.column, ev)
-                                }}
-                                className={css.filterIcon}
-                    />
+                  <Fluent.Icon iconName='ChevronDown'
+                    onClick={(ev: React.MouseEvent<HTMLElement>) => {
+                      ev.stopPropagation()
+                      onColumnContextMenu(props.column, ev)
+                    }}
+                    className={css.filterIcon}
+                  />
                 )}
-                
+
                 {filterCount > 0 && (
-                  <span data-test='filter-count' className={css.filterCount}>
+                  <span data-test='filter-count' className={`${css.filterCount} wave-s11 wave-w5`}>
                     {`${filterCount > 9 ? '9+' : filterCount}`}
                   </span>
                 )}
-            </div> 
+              </div>
             )
           },
           onColumnClick,
