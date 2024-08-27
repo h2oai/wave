@@ -294,7 +294,7 @@ const
   },
   ContextualMenu = ({ onFilterChange, col, listProps, selectedFilters, setFiltersInBulk }: ContextualMenuProps) => {
     const
-      isFilterChecked = (data: S, key: S) => !!selectedFilters && selectedFilters[data]?.includes(key),
+      isFilterChecked = (data: S, key: S) => !!selectedFilters && selectedFilters[data]?.includes(key) ? true : false,
       [menuFilters, setMenuFilters] = React.useState(col.cellType?.tag
         ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
           key.split(',').forEach(key => _filters.set(key, { key, text, data, checked: isFilterChecked(data, key) }))
