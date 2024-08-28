@@ -1012,6 +1012,39 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
 
+    it('Select All on 2nd filter selects all filter checkboxes', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'col1', searchable: true },
+          { name: 'colname2', label: 'col2', filterable: true },
+          { name: 'colname3', label: 'col3', filterable: true },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'col2-val2', 'On'] },
+          { name: 'rowname2', cells: [cell21, 'col2-val1', 'Off'] },
+          { name: 'rowname3', cells: [cell31, 'col2-val3', 'On'] },     
+        ]
+      }
+      const { container, getByLabelText, getAllByRole, queryAllByTestId, getByText } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
+
+      //Make a selection on the filter in the 2nd column
+      fireEvent.click(container.querySelectorAll(filterSelectorName)[0]!)
+      fireEvent.click(getByLabelText('col2-val3'))      
+      expect(getAllByRole('row')).toHaveLength(1 + headerRow)
+      expect(queryAllByTestId('filter-count')[0]).toHaveTextContent('1')
+      expect(getAllByRole('checkbox', {checked: true})).toHaveLength(1)
+
+      //Now select the filter on the 3rd column and then click the 'Select All' button
+      fireEvent.click(container.querySelectorAll(filterSelectorName)[1]!)
+      fireEvent.click(getByText('Select All'))
+
+      //Make sure all the checkboxes available are now checked
+      expect(getAllByRole('checkbox', {checked: true})).toHaveLength(getAllByRole('checkbox').length)
+    })    
+
     it('Fires event when pagination enabled', () => {
       const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['filter'] }} />)
       
