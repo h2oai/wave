@@ -286,4 +286,25 @@ describe('XChatbot', () => {
     expect(emitMock).toHaveBeenCalledTimes(2)
     expect(emitMock).toHaveBeenCalledWith(model.name, 'suggestion', suggestions[1].name)
   })
+
+  it('Has input with default value', () => {
+    const { getByRole } = render(<XChatbot {...{ ...model, value: 'Initial input' }} />)
+    const input = getByRole('textbox')
+
+    expect(input).toHaveValue('Initial input')
+    expect(wave.args[name]).toBe('Initial input')
+  })
+
+  it('Change user input dynamically', () => {
+    const { getByRole, rerender } = render(<XChatbot {...model} />)
+    const input = getByRole('textbox')
+
+    expect(wave.args[name]).toBe(null)
+    expect(input).toHaveValue('')
+
+    rerender(<XChatbot {...{ ...model, value: 'Hello!' }} />)
+
+    expect(input).toHaveValue('Hello!')
+    expect(wave.args[name]).toBe('Hello!')
+  })
 })

@@ -77,7 +77,13 @@ class Auth:
         if not self.refresh_token:
             return
 
-        async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
+        timeout = httpx.Timeout(
+            connect=_config.app_connect_timeout,
+            read=_config.app_read_timeout,
+            write=_config.app_write_timeout,
+            pool=_config.app_pool_timeout,
+        )
+        async with httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False, timeout=timeout) as http:
             res = await http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id})
             return self.__extract_tokens(res.headers)
 
@@ -89,7 +95,13 @@ class Auth:
         if not self.refresh_token:
             return
 
-        with httpx.Client(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False) as http:
+        timeout = httpx.Timeout(
+            connect=_config.app_connect_timeout,
+            read=_config.app_read_timeout,
+            write=_config.app_write_timeout,
+            pool=_config.app_pool_timeout,
+        )
+        with httpx.Client(auth=(_config.hub_access_key_id, _config.hub_access_key_secret), verify=False, timeout=timeout) as http:
             res = http.get(_config.hub_address + '_auth/refresh', headers={'Wave-Session-ID': self._session_id})
             return self.__extract_tokens(res.headers)
 
@@ -215,9 +227,16 @@ WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 class _Wave:
     def __init__(self):
+        timeout = httpx.Timeout(
+            connect=_config.app_connect_timeout,
+            read=_config.app_read_timeout,
+            write=_config.app_write_timeout,
+            pool=_config.app_pool_timeout,
+        )
         self._http = httpx.AsyncClient(
             auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
             verify=False,
+            timeout=timeout,
         )
 
     async def call(self, method: str, **kwargs):
@@ -378,6 +397,9 @@ class _App:
 
 
 def _is_req_authorized(req: Request) -> bool:
+    if os.environ.get('__H2O_WAVE_DEV_MODE') == '1':
+        return True
+
     basic_auth = req.headers.get("Authorization")
     if basic_auth is None:
         return False

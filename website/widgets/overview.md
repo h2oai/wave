@@ -35,6 +35,7 @@ native Wave components and use custom HTML only as a last resort solution.
 - [tabs](/docs/widgets/content/tabs)
 - [markdown](/docs/widgets/content/markdown)
 - [image](/docs/widgets/content/image)
+- [graphics](/docs/widgets/content/graphics)
 - [article](/docs/widgets/content/article)
 - [tall_article_preview](/docs/widgets/content/tall_article_preview)
 - [wide_article_preview](/docs/widgets/content/wide_article_preview)

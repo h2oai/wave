@@ -50,11 +50,11 @@ jobs:
 
       - uses: actions/setup-go@v4
         with:
-          go-version: '1.19.4'
-      
+          go-version: "1.22"
+
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Setup
         run: |
@@ -64,7 +64,7 @@ jobs:
           make setup-e2e
           make build-server
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Test
         run: |
@@ -91,17 +91,17 @@ jobs:
 
       - uses: actions/setup-go@v4
         with:
-          go-version: '1.19.4'
-      
+          go-version: "1.22"
+
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Setup
         run: .\setup.ps1
         shell: pwsh
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Test
         run: .\test.ps1
@@ -132,11 +132,11 @@ jobs:
 
       - uses: actions/setup-go@v4
         with:
-          go-version: '1.19.4'
-      
+          go-version: "1.22"
+
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Setup
         run: |
@@ -146,7 +146,7 @@ jobs:
           make setup-e2e
           make build-server
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Test
         run: |
@@ -155,7 +155,7 @@ jobs:
           make test-vsc-ci
         env:
           KC_SLEEP: 45
-    
+
   release:
     needs: [test-linux, test-win, test-macos, check-last-commit]
     name: Release Wave Nightly
@@ -170,11 +170,11 @@ jobs:
 
       - uses: actions/setup-go@v4
         with:
-          go-version: '1.19.4'
-      
+          go-version: "1.22"
+
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Setup
         run: make setup
@@ -193,7 +193,7 @@ jobs:
       - name: Build Release
         run: make release-nightly
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Update tag
         run: git tag -f ${{ env.TAG }} && git push -f --tags

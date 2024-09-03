@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -167,6 +168,10 @@ func splitDirMapping(m string) (string, string) {
 	xs := strings.SplitN(m, "@", 2)
 	if len(xs) < 2 {
 		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
+	}
+
+	if _, err := os.Stat(xs[1]); os.IsNotExist(err) {
+		echo(Log{"t": "warn", "msg": fmt.Sprintf("directory does not exist: %s", xs[1])})
 	}
 
 	// Windows prepends the drive letter to the path with a leading slash, e.g. "/foo/" => "C:/foo/".

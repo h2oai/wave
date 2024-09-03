@@ -122,3 +122,20 @@ q.page['example'] = ui.chatbot_card(
     disabled=True
 )
 ```
+
+## Set input value
+
+Pre-fill user input with `value` property. See [full example](/docs/examples/chatbot-value) to learn more.
+
+![chabot-input-template](/img/widgets/chatbot-input-template.png)
+
+```py ignore
+from h2o_wave import data
+
+q.page['example'] = ui.chatbot_card(
+    box='1 1 5 5',
+    name='chatbot', 
+    data=data(fields='content from_user', t='list'),
+    value="Write a poem about [TOPIC]."
+)
+```

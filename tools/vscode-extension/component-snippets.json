@@ -1073,14 +1073,14 @@
   "Wave Full Chatbot": {
     "prefix": "w_full_chatbot",
     "body": [
-      "ui.chatbot(name='$1', data=$2, placeholder='$3', generating=${4:False}, disabled=${5:False}, events=[\n\t\t$6\t\t\n], prev_items=[\n\t\t$7\t\t\n], suggestions=[\n\t\t$8\t\t\n]),$0"
+      "ui.chatbot(name='$1', data=$2, placeholder='$3', generating=${4:False}, disabled=${5:False}, value='$6', events=[\n\t\t$7\t\t\n], prev_items=[\n\t\t$8\t\t\n], suggestions=[\n\t\t$9\t\t\n]),$0"
     ],
     "description": "Create a full Wave Chatbot."
   },
   "Wave Full ChatbotCard": {
     "prefix": "w_full_chatbot_card",
     "body": [
-      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', generating=${5:False}, disabled=${6:False}, events=[\n\t\t$7\t\t\n], suggestions=[\n\t\t$8\t\t\n], commands=[\n\t\t$9\t\t\n])$0"
+      "ui.chatbot_card(box='$1', name='$2', data=$3, placeholder='$4', generating=${5:False}, disabled=${6:False}, value='$7', events=[\n\t\t$8\t\t\n], suggestions=[\n\t\t$9\t\t\n], commands=[\n\t\t$10\t\t\n])$0"
     ],
     "description": "Create a full Wave ChatbotCard."
   },
@@ -1234,7 +1234,7 @@
   "Wave Full GraphicsCard": {
     "prefix": "w_full_graphics_card",
     "body": [
-      "ui.graphics_card(box='$1', view_box='$2', stage=${3:None}, scene=${4:None}, width='$5', height='$6', commands=[\n\t\t$7\t\t\n])$0"
+      "ui.graphics_card(box='$1', view_box='$2', stage=${3:None}, scene=${4:None}, width='$5', height='$6', image='$7', image_path='$8', image_type='$9', commands=[\n\t\t$10\t\t\n])$0"
     ],
     "description": "Create a full Wave GraphicsCard."
   },

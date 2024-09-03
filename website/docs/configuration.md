@@ -60,9 +60,10 @@ Wave can be configured via configuration (`.env`) file, environment variables or
 | H2O_WAVE_CONF                          | -conf string                          | path to a configuration file (default ".env")                                                                                                                                                                                                                                                                        |
 | H2O_WAVE_PING_INTERVAL                 | -ping-interval string                 | how often should ping messages be sent (e.g. 60s or 1m or 0.1h) to keep the websocket connection alive (default "50s")                                                                                                                                                                                               |
 | H2O_WAVE_RECONNECT_TIMEOUT             | -reconnect-timeout string             | Time to wait for reconnect before dropping the client (default "2s")                                                                                                                                                                                                                                                 |
-| H2O_WAVE_ALLOWED_ORIGINS               | -allowed-origins string               | comma-separated list of allowed origins (e.g. http://foo.com) for websocket upgrades                                                                                                                                                                                                                                 |
+| H2O_WAVE_ALLOWED_ORIGINS               | -allowed-origins string               | comma-separated list of allowed origins (e.g. http://foo.com) for websocket upgrades, use `*` to allow all origins                                                                                                                                                                                                   |
 
 [^1]: `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
+
 [^2]: Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
 
 ### File paths
@@ -85,7 +86,7 @@ Those that do not start `waved` manually (but use `wave run` instead) and would 
 
 - Nanosecond: `ns`.
 - Microsecond: `us` (or `µs`).
-- Milisecond `ms`.
+- Millisecond `ms`.
 - Second: `s`.
 - Minute: `m`.
 - Hour: `h`.
@@ -195,6 +196,30 @@ Provides the location of the Wave server's root directory to the Wave app, if bo
 Excludes certain files or directories from being watched for app reload. Only relative paths are allowed and requires [watchfiles](https://pypi.org/project/watchfiles/) to be installed. See [Uvicorn docs](https://www.uvicorn.org/settings/#reloading-with-watchfiles).
 
 Multiple values are supported. Use OS path separator (`:` for Unix and `;` for Windows) as a delimiter. E.g. `H2O_WAVE_RELOAD_EXCLUDE=tmp_dir1/*.py:tmp_dir2/*.txt`.
+
+### H2O_WAVE_APP_CONNECT_TIMEOUT
+
+The connect timeout specifies the maximum amount of time to wait until a socket connection to the Wave server is established. If unable to connect within this time frame, a ConnectTimeout exception is raised.
+
+Defaults to `5` (seconds). Use `-1` to turn off.
+
+### H2O_WAVE_APP_WRITE_TIMEOUT
+
+The write timeout specifies the maximum duration to wait for a chunk of data to be sent (for example, a chunk of the request body). If unable to send data within this time frame, a WriteTimeout exception is raised.
+
+Defaults to `5` (seconds). Use `-1` to turn off.
+
+### H2O_WAVE_APP_READ_TIMEOUT
+
+The read timeout specifies the maximum duration to wait for a chunk of data to be received (for example, a chunk of the response body). If unable to receive data within this time frame, a ReadTimeout exception is raised.
+
+Defaults to `5` (seconds). Use `-1` to turn off.
+
+### H2O_WAVE_APP_POOL_TIMEOUT
+
+The pool timeout specifies the maximum duration to wait for acquiring a connection from the connection pool. If unable to acquire a connection within this time frame, a PoolTimeout exception is raised.
+
+Defaults to `5` (seconds). Use `-1` to turn off.
 
 ## Web Analytics
 

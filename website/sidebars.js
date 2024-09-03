@@ -60,6 +60,7 @@ module.exports = {
           "widgets/content/tabs",
           "widgets/content/markdown",
           "widgets/content/image",
+          "widgets/content/graphics",
           "widgets/content/article",
           "widgets/content/tall_article_preview",
           "widgets/content/wide_article_preview",

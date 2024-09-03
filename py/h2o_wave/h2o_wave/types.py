@@ -8477,6 +8477,7 @@ class ChatbotCard:
             generating: Optional[bool] = None,
             suggestions: Optional[List[ChatSuggestion]] = None,
             disabled: Optional[bool] = None,
+            value: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ChatbotCard.box', box, (str,), False, False, False)
@@ -8486,6 +8487,7 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.generating', generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.suggestions', suggestions, (ChatSuggestion,), False, True, False)
         _guard_scalar('ChatbotCard.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('ChatbotCard.value', value, (str,), False, True, False)
         _guard_vector('ChatbotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8503,6 +8505,8 @@ class ChatbotCard:
         """Clickable prompt suggestions shown below the last response."""
         self.disabled = disabled
         """True if the user input should be disabled."""
+        self.value = value
+        """Value of the user input."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8515,6 +8519,7 @@ class ChatbotCard:
         _guard_scalar('ChatbotCard.generating', self.generating, (bool,), False, True, False)
         _guard_vector('ChatbotCard.suggestions', self.suggestions, (ChatSuggestion,), False, True, False)
         _guard_scalar('ChatbotCard.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('ChatbotCard.value', self.value, (str,), False, True, False)
         _guard_vector('ChatbotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='chatbot',
@@ -8526,6 +8531,7 @@ class ChatbotCard:
             generating=self.generating,
             suggestions=None if self.suggestions is None else [__e.dump() for __e in self.suggestions],
             disabled=self.disabled,
+            value=self.value,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8547,6 +8553,8 @@ class ChatbotCard:
         _guard_vector('ChatbotCard.suggestions', __d_suggestions, (dict,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('ChatbotCard.disabled', __d_disabled, (bool,), False, True, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('ChatbotCard.value', __d_value, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ChatbotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -8557,6 +8565,7 @@ class ChatbotCard:
         generating: Optional[bool] = __d_generating
         suggestions: Optional[List[ChatSuggestion]] = None if __d_suggestions is None else [ChatSuggestion.load(__e) for __e in __d_suggestions]
         disabled: Optional[bool] = __d_disabled
+        value: Optional[str] = __d_value
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ChatbotCard(
             box,
@@ -8567,6 +8576,7 @@ class ChatbotCard:
             generating,
             suggestions,
             disabled,
+            value,
             commands,
         )
 
@@ -8994,12 +9004,18 @@ class GraphicsCard:
             scene: Optional[PackedData] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            image: Optional[str] = None,
+            image_path: Optional[str] = None,
+            image_type: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('GraphicsCard.box', box, (str,), False, False, False)
         _guard_scalar('GraphicsCard.view_box', view_box, (str,), False, False, False)
         _guard_scalar('GraphicsCard.width', width, (str,), False, True, False)
         _guard_scalar('GraphicsCard.height', height, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image', image, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_path', image_path, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_type', image_type, (str,), False, True, False)
         _guard_vector('GraphicsCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9013,6 +9029,12 @@ class GraphicsCard:
         """The displayed width of the rectangular viewport. (Not the width of its coordinate system.)"""
         self.height = height
         """The displayed height of the rectangular viewport. (Not the height of its coordinate system.)"""
+        self.image = image
+        """Background image data, base64-encoded."""
+        self.image_path = image_path
+        """The path or URL or data URL of the background image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+        self.image_type = image_type
+        """The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9022,6 +9044,9 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.view_box', self.view_box, (str,), False, False, False)
         _guard_scalar('GraphicsCard.width', self.width, (str,), False, True, False)
         _guard_scalar('GraphicsCard.height', self.height, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_path', self.image_path, (str,), False, True, False)
+        _guard_scalar('GraphicsCard.image_type', self.image_type, (str,), False, True, False)
         _guard_vector('GraphicsCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='graphics',
@@ -9031,6 +9056,9 @@ class GraphicsCard:
             scene=self.scene,
             width=self.width,
             height=self.height,
+            image=self.image,
+            image_path=self.image_path,
+            image_type=self.image_type,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9047,6 +9075,12 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.width', __d_width, (str,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('GraphicsCard.height', __d_height, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('GraphicsCard.image', __d_image, (str,), False, True, False)
+        __d_image_path: Any = __d.get('image_path')
+        _guard_scalar('GraphicsCard.image_path', __d_image_path, (str,), False, True, False)
+        __d_image_type: Any = __d.get('image_type')
+        _guard_scalar('GraphicsCard.image_type', __d_image_type, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('GraphicsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9055,6 +9089,9 @@ class GraphicsCard:
         scene: Optional[PackedData] = __d_scene
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
+        image: Optional[str] = __d_image
+        image_path: Optional[str] = __d_image_path
+        image_type: Optional[str] = __d_image_type
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return GraphicsCard(
             box,
@@ -9063,6 +9100,9 @@ class GraphicsCard:
             scene,
             width,
             height,
+            image,
+            image_path,
+            image_type,
             commands,
         )
 

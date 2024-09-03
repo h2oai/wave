@@ -21,7 +21,7 @@ import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { MarkdownTableCellType, XMarkdownTableCellType } from './markdown_table_cell_type'
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { TagTableCellType, XTagTableCellType } from "./tag_table_cell_type"
-import { border, cssVar, important, margin, rem } from './theme'
+import { border, cssVar, important, margin, padding, rem } from './theme'
 import useUpdateOnlyEffect from './parts/useUpdateOnlyEffectHook'
 import { wave } from './ui'
 import { Z_INDEX } from './parts/styleConstants'
@@ -214,21 +214,25 @@ type PaginationProps = {
 const
   // TODO: Clean up into correct Fluent style slots.
   css = stylesheet({
-    // HACK: Put sorting icon on right (same as filter).
-    sortableHeader: {
-      $nest: {
-        '.ms-DetailsHeader-cellName': {
-          position: 'relative',
-          paddingRight: 15
-        }
-      }
-    },
     sortingIcon: {
-      marginLeft: 10,
       fontSize: rem(1.1),
-      position: 'absolute',
+      position: 'relative',
       top: -2,
-      right: -5
+    },
+    filterIcon: {
+      color: cssVar('$neutralSecondary'),
+      fontSize: 12,
+      paddingLeft: 6,
+      verticalAlign: 'middle',
+    },
+    filterCount: {
+      position: 'relative',
+      top: -10,
+      padding: padding(3, 5),
+      marginLeft: 3,
+      lineHeight: 'normal',
+      borderRadius: 8,
+      backgroundColor: cssVar('$neutralQuaternary'),
     }
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
@@ -338,6 +342,7 @@ const
   DataTable = React.forwardRef(({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSingle, groups, expandedRefs, onSortChange, setFiltersInBulk }: DataTable, ref) => {
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
+      [sortCols, setSortCols] = React.useState<Dict<S> | null>(null),
       onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         return listProps ?
           <ContextualMenu
@@ -360,23 +365,15 @@ const
           onDismiss: () => setColContextMenuList(null),
         })
       }, [items, onRenderMenuList]),
-      onColumnClick = React.useCallback((e: React.MouseEvent<HTMLElement>, column: WaveColumn) => {
-        const isMenuClicked = (e.target as HTMLElement).closest('[data-icon-name="ChevronDown"]')
-
-        if (isMenuClicked) onColumnContextMenu(column, e)
-        else if (column.isSortable) {
-          const sortAsc = column.iconName === 'SortDown' || !column.iconName
-          onSortChange(column, sortAsc)
-          setColumns(cols => cols.map(col => {
-            if (column.key === col.key) {
-              col.iconName = sortAsc ? 'SortUp' : 'SortDown'
-            } else {
-              col.iconName = undefined
-            }
-            return col
-          }))
+      onColumnClick = React.useCallback((_e: React.MouseEvent<HTMLElement>, column: WaveColumn) => {
+        if (column.isSortable) {
+          const sortColAsc = !sortCols || !sortCols[column.key] || sortCols[column.key].includes('Down')
+          onSortChange(column, sortColAsc)
+          setSortCols({
+            [column.key]: sortColAsc ? 'Up' : 'Down',
+          })
         }
-      }, [onColumnContextMenu, onSortChange]),
+      }, [onSortChange, sortCols]),
       tableToWaveColumn = React.useCallback((c: TableColumn): WaveColumn => {
         const
           minWidth = c.min_width
@@ -395,10 +392,41 @@ const
           fieldName: c.name,
           minWidth,
           maxWidth,
-          headerClassName: c.sortable ? css.sortableHeader : undefined,
-          iconClassName: c.sortable ? css.sortingIcon : undefined,
+          onRenderHeader: (props?: Fluent.IDetailsColumnProps) => {
+            if (!props) return null
+
+            const filterCount = selectedFilters?.[props.column.key]?.length || 0
+            const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort' + sortCols[props.column.key] : 'Sort'
+
+            return (
+              <div style={{ display: 'flex', alignItems: 'center' }}>{props.column.name}
+                {c.sortable && (
+                  <Fluent.Icon iconName={sortIconName}
+                    className={css.sortingIcon}
+                    style={{ visibility: `${sortIconName === 'Sort' ? 'hidden' : 'visible'}` }}
+                  />
+                )}
+
+                {c.filterable && (
+                  <Fluent.Icon iconName='ChevronDown'
+                    onClick={(ev: React.MouseEvent<HTMLElement>) => {
+                      ev.stopPropagation()
+                      onColumnContextMenu(props.column, ev)
+                    }}
+                    className={css.filterIcon}
+                  />
+                )}
+
+                {filterCount > 0 && (
+                  <span data-test='filter-count' className={`${css.filterCount} wave-s11 wave-w5`}>
+                    {`${filterCount > 9 ? '9+' : filterCount}`}
+                  </span>
+                )}
+              </div>
+            )
+          },
           onColumnClick,
-          columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
+          columnActionsMode: Fluent.ColumnActionsMode.clickable,
           cellType: c.cell_type,
           dataType: c.data_type,
           align: c.align,
@@ -410,7 +438,7 @@ const
           filters: c.filterable ? c.filters : undefined,
           tooltip: c.tooltip ? c.tooltip : undefined,
         }
-      }, [onColumnClick]),
+      }, [onColumnClick, onColumnContextMenu, selectedFilters, sortCols]),
       [columns, setColumns] = React.useState(m.columns.map(tableToWaveColumn)),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
@@ -567,10 +595,7 @@ const
     }, [m.columns, tableToWaveColumn])
     React.useImperativeHandle(ref, () => ({
       resetSortIcons: () => {
-        setColumns(columns => columns.map(col => {
-          if (col.iconName) col.iconName = undefined
-          return col
-        }))
+        setSortCols(null)
       }
     }))
 

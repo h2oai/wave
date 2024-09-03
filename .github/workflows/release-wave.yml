@@ -16,6 +16,10 @@ env:
   VERSION: "${{ github.event.inputs.version }}"
   TAG: "v${{ github.event.inputs.version }}"
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   release:
     name: Release Wave
@@ -31,7 +35,7 @@ jobs:
 
       - uses: actions/setup-go@v1
         with:
-          go-version: "1.22.1"
+          go-version: "1.22"
 
       - uses: actions/setup-node@v3
         with:

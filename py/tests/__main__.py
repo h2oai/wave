@@ -20,6 +20,7 @@ if __name__ == '__main__':
         env = os.environ.copy()
         # Turn off excessive logging.
         env['H2O_WAVE_NO_LOG'] = 't'
+        env['GOEXPERIMENT'] = 'boringcrypto'
         args = ['go', 'run', 'cmd/wave/main.go', '-web-dir', './ui/build', '-public-dir', '/assets/@./assets', '-proxy']
         waved_p = subprocess.Popen(args, cwd='..', env=env, start_new_session=True)
 

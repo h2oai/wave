@@ -14,6 +14,9 @@ s.mount('http://', HTTPAdapter(max_retries=Retry(total=5, backoff_factor=2)))
 
 def start_waved(env: Optional[Dict[str, str]] = None):
     waved_cwd = os.path.join(os.path.dirname(__file__), '..')
+    if env is None:
+        env = os.environ.copy()
+    env['GOEXPERIMENT'] = 'boringcrypto'
     args = ['go', 'run', 'cmd/wave/main.go', '-web-dir', './ui/build', '-public-dir', '/assets/@./assets']
 
     waved_p = subprocess.Popen(args=args, cwd=waved_cwd, env=env, start_new_session=True)
