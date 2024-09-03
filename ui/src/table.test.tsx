@@ -1013,7 +1013,7 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
 
-    it('Select All on 2nd filter selects all filter checkboxes', async () => {
+    it('Select All on 2nd filter selects all filter checkboxes', () => {
       tableProps = {
         ...tableProps,
         columns: [
