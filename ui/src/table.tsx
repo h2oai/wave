@@ -416,20 +416,21 @@ const
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
         const renderColumnHeaderTooltip = (tooltipHostProps: any) => {
-          const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
-          if (!column) return null
-          return (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <>{tooltipHostProps?.children}</>
-              {
-                column.tooltip && (
-                  <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
-                    <Fluent.Icon iconName="info" />
-                  </Fluent.TooltipHost>
-                )
-              }
-            </div>
-          )
+            const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
+            if (!column) return tooltipHostProps.children
+
+            return (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {tooltipHostProps.children}
+                {
+                  column.tooltip && (
+                    <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
+                      <Fluent.Icon iconName="Info" style={{ paddingLeft: 4 }} />
+                    </Fluent.TooltipHost>
+                  )
+                }
+              </div>
+            )
         }
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
@@ -450,7 +451,7 @@ const
                   marginLeft: -8,
                 },
                 cellIsGroupExpander: {
-                  // Fixed size of expand/collapse button in column header
+                  // HACK: fixed size of expand/collapse button in column header
                   height: 48,
                 },
               }}
