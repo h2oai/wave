@@ -16,6 +16,7 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Table, XTable } from './table'
 import { wave } from './ui'
+import { KeyCodes } from '@fluentui/react'
 
 const
   name = 'table',
@@ -1012,9 +1013,40 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(2 + headerRow)
     })
 
+    it('Select All on 2nd filter selects all filter checkboxes', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'col1', searchable: true },
+          { name: 'colname2', label: 'col2', filterable: true },
+          { name: 'colname3', label: 'col3', filterable: true },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'col2-val2', 'On'] },
+          { name: 'rowname2', cells: [cell21, 'col2-val1', 'Off'] },
+          { name: 'rowname3', cells: [cell31, 'col2-val3', 'On'] },
+        ]
+      }
+      const { container, getByLabelText, getAllByRole, getByText, queryByText } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(container.querySelectorAll(filterSelectorName)[0]!)
+      fireEvent.click(getByLabelText('col2-val3'))
+      expect(getAllByRole('checkbox', { checked: true })).toHaveLength(1)
+
+      // FluentUI uses a deprecated 'which' property instead of the 'key' prop.
+      // Close the menu with escape (does not close when clicking other menu in test).
+      fireEvent.keyDown(window, { which: KeyCodes.escape })
+      expect(queryByText('Show only')).not.toBeInTheDocument()
+
+      fireEvent.click(container.querySelectorAll(filterSelectorName)[1]!)
+      fireEvent.click(getByText('Select All'))
+      expect(queryByText('Show only')).toBeInTheDocument()
+      expect(getAllByRole('checkbox', { checked: true })).toHaveLength(getAllByRole('checkbox').length)
+    })
+
     it('Fires event when pagination enabled', () => {
       const { container, getAllByText } = render(<XTable model={{ ...tableProps, pagination: { total_rows: 10, rows_per_page: 5 }, events: ['filter'] }} />)
-      
+
       fireEvent.click(container.querySelector(filterSelectorName) as HTMLDivElement)
       fireEvent.click(getAllByText('1')[3].parentElement as HTMLDivElement)
 
@@ -1054,7 +1086,7 @@ describe('Table.tsx', () => {
       fireEvent.click(getByLabelText('2'))
       expect(getAllByRole('row')).toHaveLength(2 + headerRow)
       expect(queryByTestId('filter-count')).toHaveTextContent('2')
-    })    
+    })
 
     it('Filter counts - manual deselect', () => {
       const { container, getAllByRole, getByLabelText, queryByTestId } = render(<XTable model={tableProps} />)
@@ -1076,25 +1108,25 @@ describe('Table.tsx', () => {
       fireEvent.click(getByLabelText('2'))
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toBeNull
-    })    
+    })
 
     it('Filter counts - select all', () => {
       const { container, getAllByRole, queryByTestId, getByText } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       fireEvent.click(container.querySelector(filterSelectorName)!)
-      
+
       fireEvent.click(getByText('Select All'))
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toHaveTextContent(tableProps.rows!.length.toString())
-    })  
+    })
 
     it('Filter counts - deselect all', () => {
       const { container, getAllByRole, queryByTestId, getByText } = render(<XTable model={tableProps} />)
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       fireEvent.click(container.querySelector(filterSelectorName)!)
-      
+
       fireEvent.click(getByText('Select All'))
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toHaveTextContent(tableProps.rows!.length.toString())
@@ -1126,7 +1158,7 @@ describe('Table.tsx', () => {
 
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       fireEvent.click(container.querySelector(filterSelectorName)!)
-      
+
       fireEvent.click(getByText('Select All'))
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toHaveTextContent('9+')
@@ -1134,7 +1166,7 @@ describe('Table.tsx', () => {
       fireEvent.click(getByText('Deselect All'))
       expect(getAllByRole('row')).toHaveLength(tableProps.rows!.length + headerRow)
       expect(queryByTestId('filter-count')).toBeNull
-    })     
+    })
 
     it('Filter counts - clear selection with reset', () => {
       const { container, getAllByRole, getByLabelText, queryByTestId, getByText } = render(<XTable model={{ ...tableProps, resettable: true }} />)
@@ -1300,7 +1332,7 @@ describe('Table.tsx', () => {
     })
   })
 
-  
+
   describe('Group by', () => {
     beforeEach(() => {
       tableProps = {
