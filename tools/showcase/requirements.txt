@@ -1,2 +1,4 @@
 playwright==1.17.1
 image
+pyee==11.1.0
+websockets==12.0
