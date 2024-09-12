@@ -108,6 +108,10 @@ const
       boxSizing: 'border-box',
       overflowX: 'auto'
     },
+    standaloneButton: {
+      display: 'flex',
+      alignItems: 'center',
+    }
   }),
   justifications: Dict<Fluent.Alignment> = {
     start: 'start',
@@ -201,7 +205,7 @@ export const
     )
   },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div className={css.buttons}>
+    <div className={css.standaloneButton}>
       <XButton key={m.name} model={m} />
     </div>
   ),
