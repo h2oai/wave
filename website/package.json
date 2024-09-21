@@ -11,7 +11,7 @@
     "serve": "docusaurus serve"
   },
   "dependencies": {
-    "@fluentui/react-icons-mdl2": "^1.2.13",
+    "@fluentui/react-icons-mdl2": "^1.3.75",
     "@mdx-js/react": "^1.5.8",
     "clsx": "^1.1.1",
     "docusaurus-gtm-plugin": "0.0.2",
