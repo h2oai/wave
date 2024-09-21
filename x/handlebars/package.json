@@ -29,6 +29,6 @@
   },
   "dependencies": {
     "h2o-wave": "^0.2.0",
-    "handlebars": "^4.7.7"
+    "handlebars": "^4.7.8"
   }
 }
