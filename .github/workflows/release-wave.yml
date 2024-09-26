@@ -194,14 +194,14 @@ jobs:
             --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
             --generate-dockerfile
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wave-bundle
           path: |
             ./py/tmp/tour/*.Dockerfile
             ./py/tmp/tour/*.wave
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wave-bundle-helm
           path: py/tmp/tour/helm/
