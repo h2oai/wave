@@ -493,17 +493,11 @@ const
       }, []),
       onToggleCollapseAll = (isAllCollapsed: B) => {
         if (m.events?.includes('group_change')) {
-          let changingGroups 
-          if (isAllCollapsed){
-            if (expandedRefs.current && Object.keys(expandedRefs.current).length > 0){
-              changingGroups = Object.keys(expandedRefs.current)
-            } else {
-              changingGroups = groups?.map(group => group.name)
-            }
-          } else {
-            changingGroups = groups?.map(group => group.name)
-          }
-          wave.emit(m.name, 'group_change', changingGroups)
+          const changedGroups =
+            isAllCollapsed && expandedRefs.current && Object.keys(expandedRefs.current).length > 0
+              ? Object.keys(expandedRefs.current)
+              : groups?.map(group => group.name)
+          wave.emit(m.name, 'group_change', changedGroups)
         }
         expandedRefs.current = isAllCollapsed ? {} : null       
       },
