@@ -8,7 +8,7 @@
     "@emotion/styled": "^11.10.0",
     "@fluentui/react": "^8.49.0",
     "@fluentui/react-icons-mdl2": "^1.2.12",
-    "@mui/material": "^5.9.3",
+    "@mui/material": "^5.16.7",
     "@mui/system": "^5.9.3",
     "@mui/x-date-pickers": "^5.0.0-beta.3",
     "d3": "^5.15.0",
