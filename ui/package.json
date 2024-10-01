@@ -6,7 +6,7 @@
     "@antv/g2": "^4.1.49",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@fluentui/react": "^8.49.0",
+    "@fluentui/react": "^8.120.9",
     "@fluentui/react-icons-mdl2": "^1.2.12",
     "@mui/material": "^5.9.3",
     "@mui/system": "^5.9.3",
