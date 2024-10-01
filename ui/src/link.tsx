@@ -88,6 +88,8 @@ export interface Links {
   inline?: B
   /** The width of the links, e.g. '100px'. */
   width?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 export const forceFileDownload = (path: S) => {
   const anchor = document.createElement('a')

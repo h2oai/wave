@@ -32,22 +32,22 @@ const
       objectFit: 'contain',
       maxHeight: 'calc(100% - 20px)',
     }
-  })
-
-/** Create a card that displays a base64-encoded image. */
+  })/** Create a card that displays a base64-encoded image. */
 interface State {
-  /** The card's title. */
-  title: S
-  /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. */
-  type?: S
-  /** Image data, base64-encoded. */
-  image?: S
-  /** Data for this card. */
-  data?: Rec
-  /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
-  path?: S
-  /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
-  path_popup?: S
+    /** The card's title. */
+    title: S;
+    /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. */
+    type?: S;
+    /** Image data, base64-encoded. */
+    image?: S;
+    /** Data for this card. */
+    data?: Rec;
+    /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
+    path?: S;
+    /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
+    path_popup?: S;
+    /** An optional name for this card. */
+    name?: S;
 }
 
 
@@ -67,6 +67,8 @@ export interface Image {
   visible?: B
   /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
   path_popup?: S
+  /** An optional name for this component. */
+  name?: S
 }
 
 export const

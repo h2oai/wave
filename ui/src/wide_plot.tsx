@@ -51,6 +51,8 @@ interface State {
   plot: Plot
   /** The card's plot data. */
   data: Rec
+  /** An optional name for this component. */
+  name?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {

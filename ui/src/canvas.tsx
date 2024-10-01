@@ -585,4 +585,3 @@ export const
   })
 
 cards.register('canvas', View)
-

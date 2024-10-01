@@ -43,28 +43,30 @@ const
       justifyContent: 'space-between',
       color: cssVar('$text7'),
     },
-  })
-
-/** Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value. */
+  })/** Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value. */
 interface State {
-  /** The card's title. */
-  title: S
-  /** The card's caption. */
-  caption: S
-  /** The primary value displayed. */
-  value: S
-  /** The auxiliary value, typically a target value. */
-  aux_value: S
-  /** The caption displayed below the primary value. */
-  value_caption: S
-  /** The caption displayed below the auxiliary value. */
-  aux_value_caption: S
-  /** The value of the progress bar, between 0 and 1. */
-  progress: F
-  /** The color of the progress bar. */
-  plot_color?: S
-  /** Data for this card. */
-  data?: Rec
+    /** The card's title. */
+    title: S;
+    /** The card's caption. */
+    caption: S;
+    /** The primary value displayed. */
+    value: S;
+    /** The auxiliary value, typically a target value. */
+    aux_value: S;
+    /** The caption displayed below the primary value. */
+    value_caption: S;
+    /** The caption displayed below the auxiliary value. */
+    aux_value_caption: S;
+    /** The value of the progress bar, between 0 and 1. */
+    progress: F;
+    /** The color of the progress bar. */
+    plot_color?: S;
+    /** Data for this card. */
+    data?: Rec;
+    /**
+     * An optional name for this card.
+     */
+    name?: S;
 }
 
 export const

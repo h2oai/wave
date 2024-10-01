@@ -36,20 +36,19 @@ const
         '>div>p': { margin: 0 },
       },
     },
-  })
-
-
-/**
+  })/**
  * Render a card displaying a title, a subtitle, and optional components.
- * Section cards are typically used to demarcate different sections on a page. 
+ * Section cards are typically used to demarcate different sections on a page.
  */
 interface State {
-  /** The title. */
-  title: S
-  /** The subtitle, displayed below the title. Supports Markdown. */
-  subtitle: S
-  /** The components to display in this card */
-  items?: Packed<Component[]>
+    /** The title. */
+    title: S;
+    /** The subtitle, displayed below the title. Supports Markdown. */
+    subtitle: S;
+    /** The components to display in this card */
+    items?: Packed<Component[]>;
+    /** An optional name for this card. */
+    name?: S;
 }
 
 export const

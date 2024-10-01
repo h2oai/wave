@@ -37,20 +37,22 @@ const
     caption: {
       color: cssVar('$text5'),
     }
-  })
-
-/** Create a stat card displaying a primary value, an auxiliary value and a caption. */
+  })/** Create a stat card displaying a primary value, an auxiliary value and a caption. */
 interface State {
-  /** The card's title. */
-  title: S
-  /** The primary value displayed. */
-  value: S
-  /** The auxiliary value displayed next to the primary value. */
-  aux_value: S
-  /** The caption displayed below the primary value. */
-  caption: S
-  /** Data for this card. */
-  data?: Rec
+    /** The card's title. */
+    title: S;
+    /** The primary value displayed. */
+    value: S;
+    /** The auxiliary value displayed next to the primary value. */
+    aux_value: S;
+    /** The caption displayed below the primary value. */
+    caption: S;
+    /** Data for this card. */
+    data?: Rec;
+    /**
+     * An optional name for this card.
+     */
+    name?: S;
 }
 
 export const

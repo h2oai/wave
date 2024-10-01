@@ -17,44 +17,45 @@ import { Data, Dict, F, Model, Rec, Recs, S, U, unpack } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond } from './ui'
-
-
-/** Create a card for displaying vector graphics. */
+import { bond } from './ui'/** Create a card for displaying vector graphics. */
 interface State {
-  /**
-   * The position and dimension of the SVG viewport, in user space.
-   * A space-separated list of four numbers: min-x, min-y, width and height.
-   * For example, '0 0 400 300'.
-   * See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
-   */
-  view_box: S
-  /** Background layer for rendering static SVG elements. Must be packed to conserve memory. */
-  stage?: Recs
-  /** Foreground layer for rendering dynamic SVG elements. */
-  scene?: Data
-  /**
-   * The displayed width of the rectangular viewport.
-   * (Not the width of its coordinate system.)
-   */
-  width?: S
-  /**
-   * The displayed height of the rectangular viewport.
-   * (Not the height of its coordinate system.)
-   */
-  height?: S
-  /** Background image data, base64-encoded. */
-  image?: S
-  /** 
-   * The path or URL or data URL of the background image, 
-   * e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. 
-   */
-  image_path?: S
-  /** 
-   * The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. 
-   * Required only if `image` is set. 
-   */
-  image_type?: S
+    /**
+     * The position and dimension of the SVG viewport, in user space.
+     * A space-separated list of four numbers: min-x, min-y, width and height.
+     * For example, '0 0 400 300'.
+     * See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
+     */
+    view_box: S;
+    /** Background layer for rendering static SVG elements. Must be packed to conserve memory. */
+    stage?: Recs;
+    /** Foreground layer for rendering dynamic SVG elements. */
+    scene?: Data;
+    /**
+     * The displayed width of the rectangular viewport.
+     * (Not the width of its coordinate system.)
+     */
+    width?: S;
+    /**
+     * The displayed height of the rectangular viewport.
+     * (Not the height of its coordinate system.)
+     */
+    height?: S;
+    /** Background image data, base64-encoded. */
+    image?: S;
+    /**
+     * The path or URL or data URL of the background image,
+     * e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+     */
+    image_path?: S;
+    /**
+     * The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
+     * Required only if `image` is set.
+     */
+    image_type?: S;
+    /**
+     * An optional name for this card.
+     */
+    name?: S;
 }
 
 const

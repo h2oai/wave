@@ -182,14 +182,16 @@ interface Inline {
   height?: S
   /** Container direction. Defaults to 'row'. */
   direction?: 'row' | 'column'
-}
-
-/** Create a form. */
+}/** Create a form. */
 interface State {
-  /** The components in this form. */
-  items: Packed<Component[]>
-  /** The title for this card. */
-  title?: S
+    /** The components in this form. */
+    items: Packed<Component[]>;
+    /** The title for this card. */
+    title?: S;
+    /**
+     * An optional name for this card.
+     */
+    name?: S;
 }
 
 const

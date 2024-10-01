@@ -43,17 +43,17 @@ const
         },
       }
     }
-  })
-
-/**
+  })/**
  * Render a page footer displaying a caption.
  * Footer cards are typically displayed at the bottom of a page.
  */
 interface State {
-  /** The caption. Supports markdown. **/
-  caption: S
-  /** The components displayed to the right of the caption. */
-  items?: Component[]
+    /** The caption. Supports markdown. **/
+    caption: S;
+    /** The components displayed to the right of the caption. */
+    items?: Component[];
+    /** The components displayed to the right of the caption. */
+    name?: S;
 }
 
 export const

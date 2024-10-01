@@ -16,27 +16,27 @@ import { Data, Model, Rec, S } from './core'
 import React from 'react'
 import { cards, Repeat } from './layout'
 import { alignments, directions, justifications, wrappings } from './theme'
-import { bond } from './ui'
-
-/**
+import { bond } from './ui'/**
  * EXPERIMENTAL. DO NOT USE.
  * Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
  **/
 interface State {
-  /** The child card type. */
-  item_view: S
-  /** The child card properties. */
-  item_props: Rec
-  /** Data for this card. */
-  data: Data
-  /** Layout direction. */
-  direction?: 'horizontal' | 'vertical'
-  /** Layout strategy for main axis. */
-  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
-  /** Layout strategy for cross axis. */
-  align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
-  /** Wrapping strategy. */
-  wrap?: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
+    /** The child card type. */
+    item_view: S;
+    /** The child card properties. */
+    item_props: Rec;
+    /** Data for this card. */
+    data: Data;
+    /** Layout direction. */
+    direction?: 'horizontal' | 'vertical';
+    /** Layout strategy for main axis. */
+    justify?: 'start' | 'end' | 'center' | 'between' | 'around';
+    /** Layout strategy for cross axis. */
+    align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch';
+    /** Wrapping strategy. */
+    wrap?: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch';
+    /** An optional name for this card. */
+    name?: S;
 }
 
 const

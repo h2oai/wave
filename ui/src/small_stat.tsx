@@ -29,16 +29,16 @@ const
     value: {
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     }
-  })
-
-/** Create a stat card displaying a single value. */
+  })/** Create a stat card displaying a single value. */
 interface State {
-  /** The card's title. */
-  title: S
-  /** The primary value displayed. */
-  value: S
-  /** Data for this card. */
-  data?: Rec
+    /** The card's title. */
+    title: S;
+    /** The primary value displayed. */
+    value: S;
+    /** Data for this card. */
+    data?: Rec;
+    /** An optional name for this card. */
+    name?: S;
 }
 
 export const

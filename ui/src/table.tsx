@@ -32,6 +32,8 @@ interface TablePagination {
   total_rows: U
   /** The maximum amount of rows to be displayed in a single page. */
   rows_per_page: U
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Defines cell content to be rendered instead of a simple text. */
@@ -46,6 +48,8 @@ interface TableCellType {
   menu?: MenuTableCellType
   /** Renders text using markdown. */
   markdown?: MarkdownTableCellType
+  /** An identifying name for this Component */
+  name?: Id
 }
 
 /** Create a table column. */
@@ -98,6 +102,8 @@ interface TableGroup {
   rows: TableRow[]
   /** Indicates whether the table group should be collapsed by default. Defaults to True. */
   collapsed?: B
+  /** An identifying name for this group. */
+  name?: Id
 }
 
 /**

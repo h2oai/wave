@@ -63,21 +63,21 @@ const
     items: {
       marginTop: 16
     }
-  })
-
-/** Create a profile card to display information about a user. */
+  })/** Create a profile card to display information about a user. */
 interface State {
-  /** The persona represented by this card. */
-  persona: Component
-  /** 
-   * The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
-   * or a path to an image hosted on the Wave daemon (starting with `/`).
-. */
-  image: S
-  /** Components in this card displayed below the image. */
-  items?: Component[]
-  /** The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views. */
-  height?: S
+    /** The persona represented by this card. */
+    persona: Component;
+    /**
+     * The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
+     * or a path to an image hosted on the Wave daemon (starting with `/`).
+  . */
+    image: S;
+    /** Components in this card displayed below the image. */
+    items?: Component[];
+    /** The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views. */
+    height?: S;
+    /**  An optional name for this card.  */
+    name?: S;
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {

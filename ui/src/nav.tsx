@@ -46,30 +46,32 @@ export interface NavGroup {
   items: NavItem[]
   /** Indicates whether nav groups should be rendered as collapsed initially */
   collapsed?: B
-}
-
-/** Create a card containing a navigation pane. */
+}/** Create a card containing a navigation pane. */
 export interface State {
-  /** The navigation groups contained in this pane. */
-  items: NavGroup[]
-  /** The name of the active (highlighted) navigation item. */
-  value?: S
-  /** The card's title. */
-  title?: S
-  /** The card's subtitle. */
-  subtitle?: S
-  /** The icon, displayed to the left. **/
-  icon?: S
-  /** The icon's color. **/
-  icon_color?: S
-  /** The URL of an image (usually logo) displayed at the top. **/
-  image?: S
-  /** The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. **/
-  persona?: Component
-  /** Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle. */
-  secondary_items?: Component[]
-  /** Card background color. Defaults to 'card'. */
-  color?: 'card' | 'primary'
+    /** The navigation groups contained in this pane. */
+    items: NavGroup[];
+    /** The name of the active (highlighted) navigation item. */
+    value?: S;
+    /** The card's title. */
+    title?: S;
+    /** The card's subtitle. */
+    subtitle?: S;
+    /** The icon, displayed to the left. **/
+    icon?: S;
+    /** The icon's color. **/
+    icon_color?: S;
+    /** The URL of an image (usually logo) displayed at the top. **/
+    image?: S;
+    /** The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. **/
+    persona?: Component;
+    /** Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle. */
+    secondary_items?: Component[];
+    /** Card background color. Defaults to 'card'. */
+    color?: 'card' | 'primary';
+    /**
+     * An optional name for this card.
+     */
+    name?: S;
 }
 
 const

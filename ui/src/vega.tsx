@@ -141,6 +141,8 @@ interface State {
   data?: Rec
   /** Vega grammar to use. Defaults to 'vega-lite'. */
   grammar?: 'vega-lite' | 'vega'
+  /** An optional name for this component. */
+  name?: S
 }
 
 export const
