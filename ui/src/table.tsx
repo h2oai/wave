@@ -396,7 +396,8 @@ const
             const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort' + sortCols[props.column.key] : 'Sort'
 
             return (
-              <div style={{ display: 'flex', alignItems: 'center' }}>{props.column.name}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{props.column.name}</span>
                 {c.sortable && (
                   <Fluent.Icon iconName={sortIconName}
                     className={css.sortingIcon}
