@@ -3,7 +3,7 @@
   "version": "0.26.0",
   "private": true,
   "dependencies": {
-    "@antv/g2": "^4.1.49",
+    "@antv/g2": "^4.2.11",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@fluentui/react": "^8.49.0",
