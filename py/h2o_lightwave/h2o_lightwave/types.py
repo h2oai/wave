@@ -3922,7 +3922,7 @@ class Table:
         self.pagination = pagination
         """Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`."""
         self.events = events
-        """The events to capture on this table when pagination is set. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'."""
+        """The events to capture on this table. When pagination is set, one of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'. These events are available regardless of pagination: 'select' | 'group_change'."""
         self.single = single
         """True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr."""
         self.value = value
