@@ -48,7 +48,9 @@ const
       paddingLeft: 10,
       borderLeft: border(1, cssVar('$text3')),
     }
-  })/**
+  })
+
+/**
  * WARNING: Experimental and subject to change.
  * Do not use in production sites!
  *
@@ -56,28 +58,27 @@ const
  * :icon "OfficeChat"
  */
 interface State {
-    /**
-     * The title for this card.
-     * :t "textbox"
-     * :value "Untitled Chat"
-     */
-    title: S;
-    /**
-     * The data for this card.
-     * :t "record"
-     * :value {}
-     */
-    data: Rec;
-    /**
-     * The maximum number of messages contained in this card. Defaults to 50.
-     * :t "spinbox"
-     * :value 50
-     * :min 10
-     * :max 10000
-     * :step 10
-     **/
-    capacity?: U;
-
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Untitled Chat"
+   */
+  title: S
+  /**
+   * The data for this card.
+   * :t "record"
+   * :value {}
+   */
+  data: Rec
+  /**
+   * The maximum number of messages contained in this card. Defaults to 50.
+   * :t "spinbox"
+   * :value 50
+   * :min 10
+   * :max 10000
+   * :step 10
+   **/
+  capacity?: U
 }
 
 type ChatMessage = {

@@ -44,22 +44,24 @@ const
     aux_value: {
       color: cssVar('$text7'),
     },
-  })/** Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge. */
+  })
+
+/** Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge. */
 interface State {
-    /** The card's title. */
-    title: S;
-    /** The primary value displayed. */
-    value: S;
-    /** The auxiliary value displayed next to the primary value. */
-    aux_value: S;
-    /** The value of the progress gauge, between 0 and 1. */
-    progress: F;
-    /** The color of the progress gauge. */
-    plot_color?: S;
-    /** Data for this card. */
-    data?: Rec;
-    /** An optional identifying name for this group. */
-    name?: S
+  /** The card's title. */
+  title: S
+  /** The primary value displayed. */
+  value: S
+  /** The auxiliary value displayed next to the primary value. */
+  aux_value: S
+  /** The value of the progress gauge, between 0 and 1. */
+  progress: F
+  /** The color of the progress gauge. */
+  plot_color?: S
+  /** Data for this card. */
+  data?: Rec
+  /** An optional identifying name for this card. */
+  name?: S
 }
 
 export const

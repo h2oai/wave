@@ -43,31 +43,31 @@ export interface Markup {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
-}/**
+}
+
+/**
  * Render HTML content.
  * :icon "FileHTML"
  **/
 interface State {
-    /**
-     * The title for this card.
-     * :t "textbox"
-     * :value "Untitled Content"
-     **/
-    title: S;
-    /**
-     * The HTML content.
-     * :t "textarea"
-     * :value "<div/>"
-     **/
-    content: S;
-    /**
-     * True if outer spacing should be removed. Defaults to False.
-     **/
-    compact?: B;
-    /**
-     * An optional name for this card.
-     */
-    name?: S;
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Untitled Content"
+   **/
+  title: S
+  /**
+   * The HTML content.
+   * :t "textarea"
+   * :value "<div/>"
+   **/
+  content: S
+  /** 
+   * True if outer spacing should be removed. Defaults to False.
+   **/
+  compact?: B
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const

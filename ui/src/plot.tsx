@@ -166,7 +166,7 @@ interface Mark {
   label_line_height?: F
   /** Label text alignment. */
   label_align?: 'left' | 'right' | 'center' | 'start' | 'end'
-  /** An optional name for this component.*/
+  /** An optional name */
   name?: S
   /** Reference line stroke color. */
   ref_stroke_color?: S
@@ -1179,22 +1179,24 @@ export const
         ? { flexGrow: 1 }
         : { width: formItemWidth(width), height }
     return <div data-test={name} style={style} className={css.plot} ref={container} />
-  }/** Create a card displaying a plot. */
+  }
+
+/** Create a card displaying a plot. */
 interface State {
-    /** The title for this card. */
-    title: S;
-    /** Data for this card. */
-    data: Rec;
-    /** The plot to be displayed in this card. */
-    plot: Plot;
-    /** The events to capture on this card. One of 'select_marks'. */
-    events?: S[];
-    /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
-    interactions?: S[];
-    /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
-    animate?: B;
-    /** An optional name for this card.  */
-    name?: S;
+  /** The title for this card. */
+  title: S
+  /** Data for this card. */
+  data: Rec
+  /** The plot to be displayed in this card. */
+  plot: Plot
+  /** The events to capture on this card. One of 'select_marks'. */
+  events?: S[]
+  /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
+  interactions?: S[]
+  /** An optional identifying name for this card */
+  name?: S
+  /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
+  animate?: B
 }
 
 export const View = bond(({ name, state, changed }: Model<State & { commands?: Command[] }>) => {

@@ -32,30 +32,32 @@ const
       justifyContent: 'space-between',
       padding: padding(8, grid.gap),
     },
-  })/** Create a small stat card displaying a primary value and a series plot. */
+  })
+
+/** Create a small stat card displaying a primary value and a series plot. */
 interface State {
-    /** The card's title. */
-    title: S;
-    /** The primary value displayed. */
-    value: S;
-    /** The plot's data. */
-    plot_data: Data;
-    /** The data field to use for y-axis values. */
-    plot_value: S;
-    /** The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used. */
-    plot_zero_value?: F;
-    /** The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'. */
-    plot_category?: S;
-    /** The type of plot. Defaults to `area`. */
-    plot_type?: 'area' | 'interval';
-    /** The plot's curve style. Defaults to `linear`. */
-    plot_curve?: 'linear' | 'smooth' | 'step' | 'step-after' | 'step-before';
-    /** The plot's color. */
-    plot_color?: S;
-    /** Data for this card. */
-    data?: Rec;
-    /** An optional name for this card. */
-    name?: S;
+  /** The card's title. */
+  title: S
+  /** The primary value displayed. */
+  value: S
+  /** The plot's data. */
+  plot_data: Data
+  /** The data field to use for y-axis values. */
+  plot_value: S
+  /** The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used. */
+  plot_zero_value?: F
+  /** The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'. */
+  plot_category?: S
+  /** The type of plot. Defaults to `area`. */
+  plot_type?: 'area' | 'interval'
+  /** The plot's curve style. Defaults to `linear`. */
+  plot_curve?: 'linear' | 'smooth' | 'step' | 'step-after' | 'step-before'
+  /** The plot's color. */
+  plot_color?: S
+  /** Data for this card. */
+  data?: Rec
+  /** An optional identifying name for this card. */
+  name?: S
 }
 
 export const

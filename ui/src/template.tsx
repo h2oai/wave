@@ -31,16 +31,18 @@ export interface Template {
   width?: S
   /** True if the component should be visible. Defaults to True. */
   visible?: B
-}/** Render dynamic content using an HTML template.*/
+}
+
+/** Render dynamic content using an HTML template.*/
 interface State {
-    /** The title for this card.*/
-    title: S;
-    /** The Handlebars template. https://handlebarsjs.com/guide/ */
-    content: S;
-    /** Data for the Handlebars template. */
-    data?: Rec;
-    /** An optional identifying name for this group. */
-    name?: S;
+  /** The title for this card.*/
+  title: S
+  /** The Handlebars template. https://handlebarsjs.com/guide/ */
+  content: S
+  /** Data for the Handlebars template. */
+  data?: Rec
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const

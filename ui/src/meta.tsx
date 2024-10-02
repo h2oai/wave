@@ -36,7 +36,7 @@ interface InlineStylesheet {
   content: S
   /** A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media. */
   media?: S
-  /** An identifying name for this component. */
+  /** An optional identifying name for this stylesheet. */
   name?: S
 }
 
@@ -50,7 +50,7 @@ interface Stylesheet {
   media?: S
   /** The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin */
   cross_origin?: S
-  /** An identifying name for this component. */
+  /** An optional identifying name for this stylesheet. */
   name?: S
 }
 /**
@@ -122,54 +122,54 @@ export interface Theme {
   page: S
   /** Primary color used to accent components. */
   primary: S
-}/**
+}
+
+/**
  * Represents page-global state.
  *
  * This card is invisible.
  * It is used to control attributes of the active page.
 */
 interface State {
-    /** The title of the page. */
-    title?: S;
-    /** Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use). */
-    refresh?: U;
-    /** Display a desktop notification. */
-    notification?: S;
-    /** Display an in-app notification bar. */
-    notification_bar?: NotificationBar;
-    /** Redirect the page to a new URL. */
-    redirect?: S;
-    /**
-     * Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
-     * Not supported in Safari.
-    */
-    icon?: S;
-    /** The layouts supported by this page. */
-    layouts?: Layout[];
-    /** Display a dialog on the page. */
-    dialog?: Dialog;
-    /** Display a side panel on the page. */
-    side_panel?: SidePanel;
-    /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'. */
-    theme?: S;
-    /** * Themes (color schemes) that define color used in the app. */
-    themes?: Theme[];
-    /** Configure a tracker for the page (for web analytics). */
-    tracker?: Tracker;
-    /** External Javascript files to load into the page. */
-    scripts?: Script[];
-    /** Javascript code to execute on this page. */
-    script?: InlineScript;
-    /** CSS stylesheet to be applied to this page. */
-    stylesheet?: InlineStylesheet;
-    /** External CSS files to load into the page. */
-    stylesheets?: Stylesheet[];
-    /** EXPERIMENTAL: True to turn on the card animations. Defaults to False. */
-    animate?: B;
-    /**
-     * An optional name for this card.
-     */
-    name?: S;
+  /** The title of the page. */
+  title?: S
+  /** Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use). */
+  refresh?: U
+  /** Display a desktop notification. */
+  notification?: S
+  /** Display an in-app notification bar. */
+  notification_bar?: NotificationBar
+  /** Redirect the page to a new URL. */
+  redirect?: S
+  /** 
+   * Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). 
+   * Not supported in Safari.
+  */
+  icon?: S
+  /** The layouts supported by this page. */
+  layouts?: Layout[]
+  /** Display a dialog on the page. */
+  dialog?: Dialog
+  /** Display a side panel on the page. */
+  side_panel?: SidePanel
+  /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'. */
+  theme?: S
+  /** * Themes (color schemes) that define color used in the app. */
+  themes?: Theme[]
+  /** Configure a tracker for the page (for web analytics). */
+  tracker?: Tracker
+  /** External Javascript files to load into the page. */
+  scripts?: Script[]
+  /** Javascript code to execute on this page. */
+  script?: InlineScript
+  /** CSS stylesheet to be applied to this page. */
+  stylesheet?: InlineStylesheet
+  /** External CSS files to load into the page. */
+  stylesheets?: Stylesheet[]
+  /** An Optional identifying name for this page */
+  name?: S
+  /** EXPERIMENTAL: True to turn on the card animations. Defaults to False. */
+  animate?: B
 }
 
 const

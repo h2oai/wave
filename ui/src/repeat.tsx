@@ -15,19 +15,19 @@
 import { Data, Model, Rec, S } from './core'
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { bond } from './ui'/**
+import { bond } from './ui'
+
+/**
  * EXPERIMENTAL. DO NOT USE.
  * Create a card containing other cards.
  **/
 interface State {
-    /** EXPERIMENTAL. DO NOT USE. */
-    item_view: S;
-    /** The child card properties. */
-    item_props: Rec;
-    /** Data for this card. */
-    data: Data;
-    /** An optional name for this card. */
-    name?: S;
+  /** EXPERIMENTAL. DO NOT USE. */
+  item_view: S
+  /** The child card properties. */
+  item_props: Rec
+  /** Data for this card. */
+  data: Data
 }
 
 export const

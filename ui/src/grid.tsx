@@ -37,18 +37,16 @@ const
     table: {
       width: '100%',
     }
-  })/** EXPERIMENTAL. DO NOT USE. */
+  })
+
+/** EXPERIMENTAL. DO NOT USE. */
 interface State {
-    /** EXPERIMENTAL. DO NOT USE. */
-    title: S;
-    /** EXPERIMENTAL. DO NOT USE. */
-    cells: Data;
-    /** EXPERIMENTAL. DO NOT USE. */
-    data: Data;
-    /**
-     * An optional name for this card.
-     */
-    name?: S;
+  /** EXPERIMENTAL. DO NOT USE. */
+  title: S
+  /** EXPERIMENTAL. DO NOT USE. */
+  cells: Data
+  /** EXPERIMENTAL. DO NOT USE. */
+  data: Data
 }
 
 export const

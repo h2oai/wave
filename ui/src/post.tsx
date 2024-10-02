@@ -71,20 +71,22 @@ const css = stylesheet({
   items: {
     marginTop: 12
   }
-})/** Create a postcard displaying a persona, image, caption and optional buttons. */
+})
+
+/** Create a postcard displaying a persona, image, caption and optional buttons. */
 interface State {
-    /** The card's user avatar, 'size' prop is restricted to 'xs'. */
-    persona: Component;
-    /** The card’s image. */
-    image: S;
-    /** The card's aux_value, displayed on the right hand side of the image. */
-    aux_value?: S;
-    /** The card's caption, displayed below the image. */
-    caption?: S;
-    /** The card's buttons, displayed at the bottom. */
-    items?: Component[];
-    /** An optional name for this card. */
-    name?: S;
+  /** The card's user avatar, 'size' prop is restricted to 'xs'. */
+  persona: Component
+  /** The card’s image. */
+  image: S
+  /** The card's aux_value, displayed on the right hand side of the image. */
+  aux_value?: S
+  /** The card's caption, displayed below the image. */
+  caption?: S
+  /** The card's buttons, displayed at the bottom. */
+  items?: Component[]
+  /** An optional name for this card. */
+  name?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {

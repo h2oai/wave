@@ -76,33 +76,33 @@ const css = stylesheet({
   nudgeUp: {
     marginTop: -5, // Nudge up slightly to account for padding.
   },
-})/**
+})
+
+/**
  * Render a page header displaying a title, subtitle and an optional navigation menu.
  * Header cards are typically used for top-level navigation.
  */
 interface State {
-    /** The title. **/
-    title: S;
-    /** The subtitle, displayed below the title. **/
-    subtitle: S;
-    /** The icon, displayed to the left. **/
-    icon?: S;
-    /** The icon's color. **/
-    icon_color?: S;
-    /** The URL of an image (usually logo) displayed to the left. Mutually exclusive with icon. **/
-    image?: S;
-    /** The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. **/
-    nav?: NavGroup[];
-    /** Items that should be displayed on the right side of the header. */
-    items?: Component[];
-    /** Items that should be displayed in the center of the header. */
-    secondary_items?: Component[];
-    /** Header background color. Defaults to 'primary'. */
-    color?: 'card' | 'transparent' | 'primary';
-    /**
-     * An optional name for this card.
-     */
-    name?: S;
+  /** The title. **/
+  title: S
+  /** The subtitle, displayed below the title. **/
+  subtitle: S
+  /** The icon, displayed to the left. **/
+  icon?: S
+  /** The icon's color. **/
+  icon_color?: S
+  /** The URL of an image (usually logo) displayed to the left. Mutually exclusive with icon. **/
+  image?: S
+  /** The navigation menu to display when the header's icon is clicked. Recommended for mobile screens only. **/
+  nav?: NavGroup[]
+  /** Items that should be displayed on the right side of the header. */
+  items?: Component[]
+  /** Items that should be displayed in the center of the header. */
+  secondary_items?: Component[]
+  /** Header background color. Defaults to 'primary'. */
+  color?: 'card' | 'transparent' | 'primary'
+  /** An optional name for this component. */
+  name?: S
 }
 
 const

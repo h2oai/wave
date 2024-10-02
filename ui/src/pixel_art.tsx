@@ -53,26 +53,28 @@ const
       ? odd ? '#fff' : '#ddd'
       : odd ? '#ddd' : '#fff'
 
-  }/**
+  }
+
+/**
  * WARNING: Experimental and subject to change.
  * Do not use in production sites!
  *
  * Create a card displaying a collaborative Pixel art tool.
  */
 interface State {
-    /** The title for this card.*/
-    title: S;
-    /** The data for this card.*/
-    data: Rec;
-    /** An optional name for this card. */
-    name?: S;
+  /** The title for this card.*/
+  title: S
+  /** The data for this card.*/
+  data: Rec
+  /** An optional identifying name for this card.*/
+  name?: S
 }
 
 /** A pixel. */
 interface Pixel {
   /** The pixel's color. */
   color: S
-  /** The pixel's name. */
+  /** An optional identifying name for the pixel */
   name?: S
 }
 

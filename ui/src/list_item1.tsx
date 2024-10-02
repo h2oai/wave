@@ -37,20 +37,20 @@ const
     aux_value: {
       color: cssVar('text5'),
     },
-  })/** EXPERIMENTAL. DO NOT USE. */
+  })
+
+/** EXPERIMENTAL. DO NOT USE. */
 interface State {
-    /** EXPERIMENTAL. DO NOT USE. */
-    title: S;
-    /** EXPERIMENTAL. DO NOT USE. */
-    caption: S;
-    /** EXPERIMENTAL. DO NOT USE. */
-    value: S;
-    /** EXPERIMENTAL. DO NOT USE. */
-    aux_value: S;
-    /** EXPERIMENTAL. DO NOT USE. */
-    data: Rec;
-        /** EXPERIMENTAL. DO NOT USE. */
-    name?: S;
+  /** EXPERIMENTAL. DO NOT USE. */
+  title: S
+  /** EXPERIMENTAL. DO NOT USE. */
+  caption: S
+  /** EXPERIMENTAL. DO NOT USE. */
+  value: S
+  /** EXPERIMENTAL. DO NOT USE. */
+  aux_value: S
+  /** EXPERIMENTAL. DO NOT USE. */
+  data: Rec
 }
 
 const defaults: Partial<State> = {

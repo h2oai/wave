@@ -120,7 +120,9 @@ export const Markdown = ({ source, compact = true }: { source: S, compact?: B })
       }
     }
   return <div onClick={onClick} className={`${styles["wave-markdown"]} ${compact ? '' : styles["wave-prose"]}`} dangerouslySetInnerHTML={{ __html: html }} />
-}/**
+}
+
+/**
  * Create a card that renders Markdown content.
  *
  * Github-flavored markdown is supported.
@@ -130,30 +132,28 @@ export const Markdown = ({ source, compact = true }: { source: S, compact?: B })
  * :icon "InsertTextBox"
  */
 interface State {
-    /**
-     * The title for this card.
-     * :t "textbox"
-     * :value "Untitled Content"
-     **/
-    title: S;
-    /**
-     * The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
-     * :t "textarea"
-     * :value "Hello, World!"
-     **/
-    content: S;
-    /**
-     * Additional data for the card.
-     **/
-    data?: Rec;
-    /**
-   * Make spacing tighter. Defaults to True.
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Untitled Content"
    **/
-    compact?: B;
-    /**
-     * An optional name for this card.
-     */
-    name?: S;
+  title: S
+  /**
+   * The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
+   * :t "textarea"
+   * :value "Hello, World!"
+   **/
+  content: S
+  /**
+   * Additional data for the card.
+   **/
+  data?: Rec
+  /**
+ * Make spacing tighter. Defaults to True.
+ **/
+  compact?: B
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const
