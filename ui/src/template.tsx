@@ -41,6 +41,8 @@ interface State {
   content: S
   /** Data for the Handlebars template. */
   data?: Rec
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const

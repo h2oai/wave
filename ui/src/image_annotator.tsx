@@ -14,12 +14,16 @@ export interface ImageAnnotatorPoint {
   x: F
   /** `y` coordinate of the point. */
   y: F
+  /** An optional name for this component. */
+  name?: S
 }
 
 /** Create a polygon annotation shape. */
 export interface ImageAnnotatorPolygon {
   /** List of polygon points. */
   vertices: ImageAnnotatorPoint[]
+  /** An optional name for this component. */
+  name?: S
 }
 
 /** Create a rectangular annotation shape. */
@@ -32,6 +36,8 @@ export interface ImageAnnotatorRect {
   x2: F
   /** `y` coordinate of the diagonally opposite corner. */
   y2: F
+  /** An optional name for this component. */
+  name?: S
 }
 
 /** Create a shape to be rendered as an annotation on an image annotator. */
@@ -56,6 +62,8 @@ interface ImageAnnotatorItem {
   shape: ImageAnnotatorShape
   /** The `name` of the image annotator tag to refer to for the `label` and `color` of this item. */
   tag: S
+  /** An optional name for this component. */
+  name?: S
 }
 
 /**

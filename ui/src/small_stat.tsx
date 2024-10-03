@@ -39,6 +39,8 @@ interface State {
   value: S
   /** Data for this card. */
   data?: Rec
+  /** An optional identifying name for this card. */
+  name?: S
 }
 
 export const

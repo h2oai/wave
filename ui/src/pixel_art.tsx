@@ -66,12 +66,16 @@ interface State {
   title: S
   /** The data for this card.*/
   data: Rec
+  /** An optional identifying name for this card.*/
+  name?: S
 }
 
 /** A pixel. */
 interface Pixel {
   /** The pixel's color. */
   color: S
+  /** An optional identifying name for the pixel */
+  name?: S
 }
 
 export const
