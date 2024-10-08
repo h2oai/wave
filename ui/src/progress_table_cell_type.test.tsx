@@ -26,7 +26,15 @@ const
     {input: 0.8888, output: '88.88%'},
     {input: 0.88888, output: '88.89%'},
     {input: 0.88899, output: '88.90%'},
-    {input: 0.88999, output: '89.00%'},]  
+    {input: 0.88999, output: '89.00%'},],
+  progressFloatingPointValues = [
+      {input: 0.14, output: '14%'},
+      {input: 0.148, output: '14.8%'},
+      {input: 0.1488, output: '14.88%'},
+      {input: 0.29, output: '29%'},
+      {input: 0.58, output: '58%'},
+      {input: 0.592, output: '59.2%'},
+    ]       
 
 describe('ProgressTableCellType.tsx', () => {
 
@@ -47,5 +55,14 @@ describe('ProgressTableCellType.tsx', () => {
       expect(queryByTestId(name)).toBeInTheDocument()
       expect(queryByTestId(name)).toHaveTextContent(progressValue.output)      
     })
-  })  
+  })
+  
+  it('Handle potential floating-point decimal errors', () => {
+    const { queryByTestId, rerender } = render(<XProgressTableCellType model={progressCellProps} progress={progress} />)
+    progressFloatingPointValues.map(progressValue => {
+      rerender(<XProgressTableCellType model={progressCellProps} progress={progressValue.input} />)
+      expect(queryByTestId(name)).toBeInTheDocument()
+      expect(queryByTestId(name)).toHaveTextContent(progressValue.output)      
+    })
+  })   
 })
