@@ -33,8 +33,7 @@ const
       {input: 0.1488, output: '14.88%'},
       {input: 0.29, output: '29%'},
       {input: 0.58, output: '58%'},
-      {input: 0.592, output: '59.2%'},
-    ]       
+      {input: 0.592, output: '59.2%'},]       
 
 describe('ProgressTableCellType.tsx', () => {
 
