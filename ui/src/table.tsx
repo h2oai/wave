@@ -443,15 +443,15 @@ const
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
-        const renderColumnHeaderTooltip = (tooltipHostProps: any) => {
+        const renderColumnHeaderTooltip = (tooltipHostProps?: Fluent.IDetailsColumnRenderTooltipProps) => {
             const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
-            if (!column) return tooltipHostProps.children
+            if (!tooltipHostProps?.children) return null
 
             return (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {tooltipHostProps.children}
                 {
-                  column.tooltip && (
+                  column?.tooltip && (
                     <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
                       <Fluent.Icon iconName="Info" style={{ paddingLeft: 4 }} data-icon-name="info-icon" />
                     </Fluent.TooltipHost>
