@@ -453,7 +453,7 @@ const
                 {
                   column?.tooltip && (
                     <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
-                      <Fluent.Icon iconName="Info" style={{ paddingLeft: 4 }} data-icon-name="info-icon" />
+                      <Fluent.Icon iconName="Info" data-icon-name="info-icon" />
                     </Fluent.TooltipHost>
                   )
                 }
@@ -474,6 +474,11 @@ const
                   lineHeight: '48px',
                   background: cssVar('$neutralLight'),
                   borderBottom: 'none',
+                  selectors: {
+                    '.ms-DetailsHeader-cellTitle': {
+                        paddingLeft: '0px',
+                    },
+                  }
                 },
                 cellSizerEnd: {
                   marginLeft: -8,
