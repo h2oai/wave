@@ -1707,7 +1707,7 @@ ui_table_pagination <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param groups Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
 #' @param pagination Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
-#' @param events The events to capture on this table when pagination is set. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
+#' @param events The events to capture on this table. When pagination is set, one of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'. These events are available regardless of pagination: 'select' | 'group_change'.
 #' @param single True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr.
 #' @param value The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`).
 #' @return A Table instance.

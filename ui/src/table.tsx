@@ -154,7 +154,7 @@ export interface Table {
   groups?: TableGroup[]
   /** Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`. */
   pagination?: TablePagination
-  /** The events to capture on this table when pagination is set. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'. */
+  /** The events to capture on this table. When pagination is set, one of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'. These events are available regardless of pagination: 'select' | 'group_change'. */
   events?: S[]
   /** True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr. */
   single?: B
@@ -297,7 +297,7 @@ const
   },
   ContextualMenu = ({ onFilterChange, col, listProps, selectedFilters, setFiltersInBulk }: ContextualMenuProps) => {
     const
-      isFilterChecked = (data: S, key: S) => !!selectedFilters && selectedFilters[data]?.includes(key),
+      isFilterChecked = (data: S, key: S) => !!selectedFilters && !!selectedFilters[data]?.includes(key),
       [menuFilters, setMenuFilters] = React.useState(col.cellType?.tag
         ? Array.from(listProps.items.reduce((_filters, { key, text, data }) => {
           key.split(',').forEach(key => _filters.set(key, { key, text, data, checked: isFilterChecked(data, key) }))
@@ -399,7 +399,8 @@ const
             const sortIconName = sortCols && sortCols[props.column.key] ? 'Sort' + sortCols[props.column.key] : 'Sort'
 
             return (
-              <div style={{ display: 'flex', alignItems: 'center' }}>{props.column.name}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{props.column.name}</span>
                 {c.sortable && (
                   <Fluent.Icon iconName={sortIconName}
                     className={css.sortingIcon}
@@ -517,14 +518,33 @@ const
             } />
         )
       }, []),
-      onToggleCollapseAll = (isAllCollapsed: B) => expandedRefs.current = isAllCollapsed ? {} : null,
+      onToggleCollapseAll = (isAllCollapsed: B) => {
+        if (m.events?.includes('group_change')) {
+          const changedGroups =
+            isAllCollapsed && expandedRefs.current && Object.keys(expandedRefs.current).length > 0
+              ? Object.keys(expandedRefs.current)
+              : groups?.map(group => group.name)
+          wave.emit(m.name, 'group_change', changedGroups)
+        }
+        expandedRefs.current = isAllCollapsed ? {} : null       
+      },
       onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
+        if (m.events?.includes('group_change')) {
+          wave.emit(m.name, 'group_change', [key])
+        }           
         if (expandedRefs.current) {
           isCollapsed
             ? expandedRefs.current[key] = false
             : delete expandedRefs.current[key]
         } else {
-          expandedRefs.current = { [key]: false }
+          if (groups){
+            expandedRefs.current = groups?.reduce((acc, { name }) => {
+              if (name != key){
+                acc[name] = false
+              }
+              return acc
+            }, {} as { [key: S]: B })       
+          }
         }
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => props

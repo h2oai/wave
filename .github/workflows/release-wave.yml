@@ -44,10 +44,10 @@ jobs:
       - name: Setup
         run: make setup
 
-      - uses: r-lib/actions/setup-r@v2
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          working-directory: ./r
+      # - uses: r-lib/actions/setup-r@v2
+      # - uses: r-lib/actions/setup-r-dependencies@v2
+      #   with:
+      #     working-directory: ./r
 
       - name: Build Release
         run: make release
@@ -82,7 +82,7 @@ jobs:
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
-            r/build/h2owave_${{ env.VERSION }}_R.tar.gz
+            # r/build/h2owave_${{ env.VERSION }}_R.tar.gz
           tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -194,14 +194,14 @@ jobs:
             --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
             --generate-dockerfile
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wave-bundle
           path: |
             ./py/tmp/tour/*.Dockerfile
             ./py/tmp/tour/*.wave
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wave-bundle-helm
           path: py/tmp/tour/helm/

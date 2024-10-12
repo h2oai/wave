@@ -168,7 +168,7 @@ release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
 	$(MAKE) website
 	$(MAKE) build-py
-	$(MAKE) build-r
+	# $(MAKE) build-r
 
 release-nightly: build-ui ## Prepare nightly release builds. 
 	$(MAKE) OS=linux ARCH=amd64 release-os

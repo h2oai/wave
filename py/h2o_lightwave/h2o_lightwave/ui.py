@@ -1481,7 +1481,7 @@ def table(
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         groups: Creates collapsible / expandable groups of data rows. Mutually exclusive with `rows` attr.
         pagination: Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
-        events: The events to capture on this table when pagination is set. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset' | 'select'.
+        events: The events to capture on this table. When pagination is set, one of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'. These events are available regardless of pagination: 'select' | 'group_change'.
         single: True to allow only one row to be selected at time. Mutually exclusive with `multiple` attr.
         value: The name of the selected row. If this parameter is set, single selection will be allowed (`single` is assumed to be `True`).
     Returns:
