@@ -454,8 +454,18 @@ const
                 {
                   column?.tooltip && (
                     <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
-                      <Fluent.Icon iconName="Info" data-icon-name="info-icon" />
-                    </Fluent.TooltipHost>
+                    <Fluent.Icon
+                      iconName="Info"
+                      data-icon-name="info-icon"
+                      styles={{
+                        root: {
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          paddingLeft: '4px',
+                        }
+                      }}
+                    />
+                  </Fluent.TooltipHost>
                   )
                 }
               </div>
