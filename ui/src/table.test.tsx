@@ -1974,14 +1974,18 @@ describe('Table.tsx', () => {
       const infoIcons = container.querySelectorAll("[data-icon-name='info-icon']") as NodeListOf<HTMLElement>
       expect(infoIcons).toHaveLength(1)
   
-      headers.forEach(header => {
-        const headerKey = header.getAttribute('data-item-key')
-        if (headerKey === 'colname1') {
-          expect(header).toContainElement(infoIcons[0])
-        } else {
-          expect(header).not.toContainElement(infoIcons[0])
-        }
-      })
+      const headerKey1 = headers[0].getAttribute('data-item-key')
+      if (headerKey1 === 'colname1') {
+        expect(headers[0]).toContainElement(infoIcons[0])
+      } else {
+        expect(headers[0]).not.toContainElement(infoIcons[0])
+      }
+      const headerKey2 = headers[1].getAttribute('data-item-key')
+      if (headerKey2 === 'colname1') {
+        expect(headers[1]).toContainElement(infoIcons[0])
+      } else {
+        expect(headers[1]).not.toContainElement(infoIcons[0])
+      }
     })
   })
 })
