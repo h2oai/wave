@@ -461,7 +461,7 @@ const
                         root: {
                           fontSize: '16px',
                           fontWeight: 'bold',
-                          paddingLeft: '4px',
+                          paddingLeft: '0px',
                         }
                       }}
                     />
