@@ -447,13 +447,22 @@ const
         const renderColumnHeaderTooltip = (tooltipHostProps?: Fluent.IDetailsColumnRenderTooltipProps) => {
             const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
             if (!tooltipHostProps?.children) return null
-
             return (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {tooltipHostProps.children}
                 {
                   column?.tooltip && (
-                    <Fluent.TooltipHost content={column.tooltip} calloutProps={{ gapSpace: -10 }}>
+                    <Fluent.TooltipHost
+                      content={column.tooltip}
+                      calloutProps={{
+                        gapSpace: -10,
+                        styles: {
+                          beakCurtain: { backgroundColor: cssVar('$neutralLighterAlt') },
+                          beak: { backgroundColor: cssVar('$neutralLighterAlt') },
+                          calloutMain: { backgroundColor: cssVar('$neutralLighterAlt') }
+                        }
+                      }}
+                    >
                     <Fluent.Icon
                       iconName="Info"
                       data-icon-name="info-icon"
