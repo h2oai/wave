@@ -30,7 +30,8 @@ const
   progressFloatingPointValues = [
       {input: 0.14, output: '14%'},
       {input: 0.148, output: '14.8%'},
-      {input: 0.1488, output: '14.88%'},
+      {input: 0.1414, output: '14.14%'},
+      {input: 0.141414, output: '14.14%'},
       {input: 0.29, output: '29%'},
       {input: 0.58, output: '58%'},
       {input: 0.592, output: '59.2%'},]       
