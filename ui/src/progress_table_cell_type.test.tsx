@@ -50,7 +50,7 @@ describe('ProgressTableCellType.tsx', () => {
 
   it('Renders data-test attr with decimal values', () => {
     const { queryByTestId, rerender } = render(<XProgressTableCellType model={progressCellProps} progress={progress} />)
-    progressValues.map(progressValue => {
+    progressValues.forEach(progressValue => {
       rerender(<XProgressTableCellType model={progressCellProps} progress={progressValue.input} />)
       expect(queryByTestId(name)).toBeInTheDocument()
       expect(queryByTestId(name)).toHaveTextContent(progressValue.output)      
@@ -59,7 +59,7 @@ describe('ProgressTableCellType.tsx', () => {
   
   it('Handle potential floating-point decimal errors', () => {
     const { queryByTestId, rerender } = render(<XProgressTableCellType model={progressCellProps} progress={progress} />)
-    progressFloatingPointValues.map(progressValue => {
+    progressFloatingPointValues.forEach(progressValue => {
       rerender(<XProgressTableCellType model={progressCellProps} progress={progressValue.input} />)
       expect(queryByTestId(name)).toBeInTheDocument()
       expect(queryByTestId(name)).toHaveTextContent(progressValue.output)      
