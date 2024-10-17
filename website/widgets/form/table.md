@@ -401,7 +401,7 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
 
 ### With collapsed groups
 
-Groups are shown in a collapsed state by default. With the `collapsed` attribute you can change this behavior.
+Groups are shown in a collapsed state by default. With the `collapsed` attribute you can change this behavior. You can also keep track of the collapsed states by registering a `'group_change'` [event](/docs/examples/table-events-group) (populated in `q.events`). This is useful when needing to refresh the table and persist collapsed states.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 4', items=[
@@ -421,7 +421,8 @@ q.page['example'] = ui.form_card(box='1 1 3 4', items=[
                 ui.table_row(name='row4', cells=['Task4', 'Low']),
                 ui.table_row(name='row5', cells=['Task5', 'Very High'])
             ])
-        ])
+        ],
+        events=['group_change'])
 ])
 ```
 
