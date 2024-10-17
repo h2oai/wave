@@ -90,6 +90,8 @@ export interface MiniButtons {
   items: Component[]
   /** True if the component should be visible. Defaults to True. */
   visible?: B
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create a mini button - same as regular button, but smaller in size. */

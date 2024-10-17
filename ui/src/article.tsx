@@ -83,6 +83,8 @@ interface State {
   content?: S
   /** Collection of small buttons rendered under the title. */
   items?: Component[]
+  /** An identifying name for this component */
+  name?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {

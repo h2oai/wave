@@ -55,6 +55,8 @@ interface State {
    * Required only if `image` is set. 
    */
   image_type?: S
+  /** An optional identifying name for this Card. */
+  name?: S
 }
 
 const
@@ -209,5 +211,4 @@ export const
   })
 
 cards.register('graphics', View)
-
 

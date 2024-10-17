@@ -34,6 +34,7 @@ interface Props {
   thickness: U
   color: S
   value: F
+  name?: S
 }
 
 export const ProgressBar = ({ thickness, color, value }: Props) => {

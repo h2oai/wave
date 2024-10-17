@@ -101,6 +101,8 @@ interface State {
   secondary_items?: Component[]
   /** Header background color. Defaults to 'primary'. */
   color?: 'card' | 'transparent' | 'primary'
+  /** An optional name for this component. */
+  name?: S
 }
 
 const

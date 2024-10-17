@@ -166,6 +166,8 @@ interface Mark {
   label_line_height?: F
   /** Label text alignment. */
   label_align?: 'left' | 'right' | 'center' | 'start' | 'end'
+  /** An optional name */
+  name?: S
   /** Reference line stroke color. */
   ref_stroke_color?: S
   /** Reference line stroke opacity. */
@@ -1191,6 +1193,8 @@ interface State {
   events?: S[]
   /** The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event. */
   interactions?: S[]
+  /** An optional identifying name for this card */
+  name?: S
   /** EXPERIMENTAL: True to turn on the chart animations. Defaults to False. */
   animate?: B
 }

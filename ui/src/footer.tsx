@@ -54,6 +54,8 @@ interface State {
   caption: S
   /** The components displayed to the right of the caption. */
   items?: Component[]
+  /** An optional identifying name to the card */
+  name?: S
 }
 
 export const

@@ -152,6 +152,8 @@ interface State {
  * Make spacing tighter. Defaults to True.
  **/
   compact?: B
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const
