@@ -60,5 +60,116 @@ export const cardDefs: CardDef[] = [
         "value": {}
       }
     ]
+  },
+  {
+    "view": "chat",
+    "icon": "OfficeChat",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "box",
+        "value": "{\"zone\":\"Body\"}"
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Chat"
+      },
+      {
+        "name": "data",
+        "optional": false,
+        "t": "record",
+        "value": {}
+      },
+      {
+        "name": "capacity",
+        "optional": true,
+        "t": "spinbox",
+        "value": 50,
+        "min": 10,
+        "max": 10000,
+        "step": 10
+      }
+    ]
+  },
+  {
+    "view": "frame",
+    "icon": "PageAdd",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "box",
+        "value": "{\"zone\":\"Body\"}"
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Frame"
+      },
+      {
+        "name": "path",
+        "optional": true,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "content",
+        "optional": true,
+        "t": "textarea",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "view": "markdown",
+    "icon": "InsertTextBox",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "box",
+        "value": "{\"zone\":\"Body\"}"
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Content"
+      },
+      {
+        "name": "content",
+        "optional": false,
+        "t": "textarea",
+        "value": "Hello, World!"
+      }
+    ]
+  },
+  {
+    "view": "markup",
+    "icon": "FileHTML",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "box",
+        "value": "{\"zone\":\"Body\"}"
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Content"
+      },
+      {
+        "name": "content",
+        "optional": false,
+        "t": "textarea",
+        "value": "<div/>"
+      }
+    ]
   }
 ]
