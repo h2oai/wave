@@ -1124,21 +1124,18 @@ def mini_button(
 def mini_buttons(
         items: List[Component],
         visible: Optional[bool] = None,
-        name: Optional[str] = None,
 ) -> Component:
     """Create a set of mini buttons laid out horizontally.
 
     Args:
         items: The buttons in this set.
         visible: True if the component should be visible. Defaults to True.
-        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.MiniButtons` instance.
     """
     return Component(mini_buttons=MiniButtons(
         items,
         visible,
-        name,
     ))
 
 
@@ -1233,7 +1230,6 @@ def tag(
         label: str,
         color: str,
         label_color: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> Tag:
     """Create a tag.
 
@@ -1241,7 +1237,6 @@ def tag(
         label: The text displayed within the tag.
         color: Tag's background color.
         label_color: Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
-        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Tag` instance.
     """
@@ -1249,7 +1244,6 @@ def tag(
         label,
         color,
         label_color,
-        name,
     )
 
 
@@ -1316,36 +1310,6 @@ def markdown_table_cell_type(
         name,
         target,
     ))
-
-
-def table_cell_type(
-        progress: Optional[ProgressTableCellType] = None,
-        icon: Optional[IconTableCellType] = None,
-        tag: Optional[TagTableCellType] = None,
-        menu: Optional[MenuTableCellType] = None,
-        markdown: Optional[MarkdownTableCellType] = None,
-        name: Optional[str] = None,
-) -> TableCellType:
-    """Defines cell content to be rendered instead of a simple text.
-
-    Args:
-        progress: Renders a progress arc with a percentage value in the middle.
-        icon: Renders an icon.
-        tag: Renders one or more tags.
-        menu: Renders a command menu.
-        markdown: Renders text using markdown.
-        name: An identifying name for this Component
-    Returns:
-        A `h2o_wave.types.TableCellType` instance.
-    """
-    return TableCellType(
-        progress,
-        icon,
-        tag,
-        menu,
-        markdown,
-        name,
-    )
 
 
 def table_column(
@@ -1421,7 +1385,6 @@ def table_group(
         label: str,
         rows: List[TableRow],
         collapsed: Optional[bool] = None,
-        name: Optional[str] = None,
 ) -> TableGroup:
     """Make rows within the table collapsible/expandable.
 
@@ -1431,7 +1394,6 @@ def table_group(
         label: The title of the group.
         rows: The rows in this group.
         collapsed: Indicates whether the table group should be collapsed by default. Defaults to True.
-        name: An identifying name for this group.
     Returns:
         A `h2o_wave.types.TableGroup` instance.
     """
@@ -1439,28 +1401,24 @@ def table_group(
         label,
         rows,
         collapsed,
-        name,
     )
 
 
 def table_pagination(
         total_rows: int,
         rows_per_page: int,
-        name: Optional[str] = None,
 ) -> TablePagination:
     """Configure table pagination. Use as `pagination` parameter to `ui.table()`
 
     Args:
         total_rows: Total count of all the rows in your dataset.
         rows_per_page: The maximum amount of rows to be displayed in a single page.
-        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TablePagination` instance.
     """
     return TablePagination(
         total_rows,
         rows_per_page,
-        name,
     )
 
 
@@ -1599,7 +1557,6 @@ def links(
         label: Optional[str] = None,
         inline: Optional[bool] = None,
         width: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> Component:
     """Create a collection of links.
 
@@ -1608,7 +1565,6 @@ def links(
         label: The name of the link group.
         inline: Render links horizontally. Defaults to False.
         width: The width of the links, e.g. '100px'.
-        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Links` instance.
     """
@@ -1617,7 +1573,6 @@ def links(
         label,
         inline,
         width,
-        name,
     ))
 
 
@@ -1888,7 +1843,6 @@ def step(
         label: str,
         icon: Optional[str] = None,
         done: Optional[bool] = None,
-        name: Optional[str] = None,
 ) -> Step:
     """Create a step for a stepper.
 
@@ -1896,7 +1850,6 @@ def step(
         label: Text displayed below icon.
         icon: Icon to be displayed.
         done: Indicates whether this step has already been completed.
-        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Step` instance.
     """
@@ -1904,7 +1857,6 @@ def step(
         label,
         icon,
         done,
-        name,
     )
 
 
@@ -1995,7 +1947,6 @@ def mark(
         label_font_weight: Optional[str] = None,
         label_line_height: Optional[float] = None,
         label_align: Optional[str] = None,
-        name: Optional[str] = None,
         ref_stroke_color: Optional[str] = None,
         ref_stroke_opacity: Optional[float] = None,
         ref_stroke_size: Optional[float] = None,
@@ -2064,7 +2015,6 @@ def mark(
         label_font_weight: Label font weight.
         label_line_height: Label line height.
         label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'. See enum h2o_wave.ui.MarkLabelAlign.
-        name: An optional name
         ref_stroke_color: Reference line stroke color.
         ref_stroke_opacity: Reference line stroke opacity.
         ref_stroke_size: Reference line stroke size (line width or pen thickness).
@@ -2132,7 +2082,6 @@ def mark(
         label_font_weight,
         label_line_height,
         label_align,
-        name,
         ref_stroke_color,
         ref_stroke_opacity,
         ref_stroke_size,
@@ -2326,7 +2275,6 @@ def image(
         width: Optional[str] = None,
         visible: Optional[bool] = None,
         path_popup: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> Component:
     """Create an image.
 
@@ -2338,7 +2286,6 @@ def image(
         width: The width of the image, e.g. '100px'.
         visible: True if the component should be visible. Defaults to True.
         path_popup: The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
-        name: An optional identifying name for this component.
     Returns:
         A `h2o_wave.types.Image` instance.
     """
@@ -2350,7 +2297,6 @@ def image(
         width,
         visible,
         path_popup,
-        name,
     ))
 
 
@@ -2415,21 +2361,18 @@ def text_annotator_tag(
 def text_annotator_item(
         text: str,
         tag: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> TextAnnotatorItem:
     """Create an annotator item with initial selected tags or no tag for plaintext.
 
     Args:
         text: Text to be highlighted.
         tag: The `name` of the text annotator tag to refer to for the `label` and `color` of this item.
-        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TextAnnotatorItem` instance.
     """
     return TextAnnotatorItem(
         text,
         tag,
-        name,
     )
 
 
@@ -2491,7 +2434,6 @@ def image_annotator_rect(
         y1: float,
         x2: float,
         y2: float,
-        name: Optional[str] = None,
 ) -> ImageAnnotatorShape:
     """Create a rectangular annotation shape.
 
@@ -2500,7 +2442,6 @@ def image_annotator_rect(
         y1: `y` coordinate of the rectangle's corner.
         x2: `x` coordinate of the diagonally opposite corner.
         y2: `y` coordinate of the diagonally opposite corner.
-        name: An optional name for this component.
     Returns:
         A `h2o_wave.types.ImageAnnotatorRect` instance.
     """
@@ -2509,67 +2450,57 @@ def image_annotator_rect(
         y1,
         x2,
         y2,
-        name,
     ))
 
 
 def image_annotator_point(
         x: float,
         y: float,
-        name: Optional[str] = None,
 ) -> ImageAnnotatorPoint:
     """Create a polygon annotation point with x and y coordinates..
 
     Args:
         x: `x` coordinate of the point.
         y: `y` coordinate of the point.
-        name: An optional name for this component.
     Returns:
         A `h2o_wave.types.ImageAnnotatorPoint` instance.
     """
     return ImageAnnotatorPoint(
         x,
         y,
-        name,
     )
 
 
 def image_annotator_polygon(
         vertices: List[ImageAnnotatorPoint],
-        name: Optional[str] = None,
 ) -> ImageAnnotatorShape:
     """Create a polygon annotation shape.
 
     Args:
         vertices: List of polygon points.
-        name: An optional name for this component.
     Returns:
         A `h2o_wave.types.ImageAnnotatorPolygon` instance.
     """
     return ImageAnnotatorShape(polygon=ImageAnnotatorPolygon(
         vertices,
-        name,
     ))
 
 
 def image_annotator_item(
         shape: ImageAnnotatorShape,
         tag: str,
-        name: Optional[str] = None,
 ) -> ImageAnnotatorItem:
     """Create an annotator item with initial selected tags or no tag for plaintext.
 
     Args:
         shape: The annotation shape.
         tag: The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
-        name: An optional name for this component.
     Returns:
         A `h2o_wave.types.ImageAnnotatorItem` instance.
     """
     return ImageAnnotatorItem(
         shape,
         tag,
-        name,
     )
 
 
@@ -2639,7 +2570,6 @@ def audio_annotator_item(
         start: float,
         end: float,
         tag: str,
-        name: Optional[str] = None,
 ) -> AudioAnnotatorItem:
     """Create an annotator item with initial selected tags or no tags.
 
@@ -2647,7 +2577,6 @@ def audio_annotator_item(
         start: The start of the audio annotation in seconds.
         end: The end of the audio annotation in seconds.
         tag: The `name` of the audio annotator tag to refer to for the `label` and `color` of this item.
-        name: An identifying name for this component
     Returns:
         A `h2o_wave.types.AudioAnnotatorItem` instance.
     """
@@ -2655,7 +2584,6 @@ def audio_annotator_item(
         start,
         end,
         tag,
-        name,
     )
 
 
@@ -2812,15 +2740,15 @@ def time_picker(
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
         placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-        value: The time value in hh:mm:ss format. E.g. '10:30:45', '14:25:30', '23:59:59', '00:00:00'
+        value: The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'
         disabled: True if this field is disabled.
         width: The width of the time picker, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to True.
         trigger: True if the form should be submitted when the time is selected.
         required: True if this is a required field. Defaults to False.
         hour_format: Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`.
-        min: The minimum allowed time value in hh:mm:ss format. E.g.: '08:00:00', '13:30:00'
-        max: The maximum allowed time value in hh:mm:ss format. E.g.: '15:30:00', '00:00:00'
+        min: The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
+        max: The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
         minutes_step: Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
     Returns:
         A `h2o_wave.types.TimePicker` instance.
@@ -2847,7 +2775,6 @@ def article_card(
         title: str,
         content: Optional[str] = None,
         items: Optional[List[Component]] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ArticleCard:
     """Create an article card for longer texts.
@@ -2857,7 +2784,6 @@ def article_card(
         title: The card’s title, displayed at the top.
         content: Markdown text.
         items: Collection of small buttons rendered under the title.
-        name: An identifying name for this component
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ArticleCard` instance.
@@ -2867,7 +2793,6 @@ def article_card(
         title,
         content,
         items,
-        name,
         commands,
     )
 
@@ -2893,7 +2818,6 @@ def breadcrumb(
 def breadcrumbs_card(
         box: str,
         items: List[Breadcrumb],
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> BreadcrumbsCard:
     """Create a card containing breadcrumbs.
@@ -2907,7 +2831,6 @@ def breadcrumbs_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
-        name: An optional name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.BreadcrumbsCard` instance.
@@ -2915,7 +2838,6 @@ def breadcrumbs_card(
     return BreadcrumbsCard(
         box,
         items,
-        name,
         commands,
     )
 
@@ -3118,7 +3040,6 @@ def footer_card(
         box: str,
         caption: str,
         items: Optional[List[Component]] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FooterCard:
     """Render a page footer displaying a caption.
@@ -3128,7 +3049,6 @@ def footer_card(
         box: A string indicating how to place this component on the page.
         caption: The caption. Supports markdown. *
         items: The components displayed to the right of the caption.
-        name: An optional identifying name to the card
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FooterCard` instance.
@@ -3137,7 +3057,6 @@ def footer_card(
         box,
         caption,
         items,
-        name,
         commands,
     )
 
@@ -3146,7 +3065,6 @@ def form_card(
         box: str,
         items: Union[List[Component], str],
         title: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FormCard:
     """Create a form.
@@ -3155,7 +3073,6 @@ def form_card(
         box: A string indicating how to place this component on the page.
         items: The components in this form.
         title: The title for this card.
-        name: An optional name for this form.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FormCard` instance.
@@ -3164,7 +3081,6 @@ def form_card(
         box,
         items,
         title,
-        name,
         commands,
     )
 
@@ -3175,7 +3091,6 @@ def frame_card(
         path: Optional[str] = None,
         content: Optional[str] = None,
         compact: Optional[bool] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FrameCard:
     """Render a card containing a HTML page inside an inline frame (an `iframe`).
@@ -3188,7 +3103,6 @@ def frame_card(
         path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
         content: The HTML content of the page. A string containing `<html>...</html>`.
         compact: True if title and padding should be removed. Defaults to False.
-        name: An optional identifying name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FrameCard` instance.
@@ -3199,7 +3113,6 @@ def frame_card(
         path,
         content,
         compact,
-        name,
         commands,
     )
 
@@ -3214,7 +3127,6 @@ def graphics_card(
         image: Optional[str] = None,
         image_path: Optional[str] = None,
         image_type: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> GraphicsCard:
     """Create a card for displaying vector graphics.
@@ -3229,7 +3141,6 @@ def graphics_card(
         image: Background image data, base64-encoded.
         image_path: The path or URL or data URL of the background image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         image_type: The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
-        name: An optional identifying name for this Card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.GraphicsCard` instance.
@@ -3244,7 +3155,6 @@ def graphics_card(
         image,
         image_path,
         image_type,
-        name,
         commands,
     )
 
@@ -3338,7 +3248,6 @@ def header_card(
         items: Optional[List[Component]] = None,
         secondary_items: Optional[List[Component]] = None,
         color: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
     """Render a page header displaying a title, subtitle and an optional navigation menu.
@@ -3355,7 +3264,6 @@ def header_card(
         items: Items that should be displayed on the right side of the header.
         secondary_items: Items that should be displayed in the center of the header.
         color: Header background color. Defaults to 'primary'. One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
-        name: An optional name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -3371,7 +3279,6 @@ def header_card(
         items,
         secondary_items,
         color,
-        name,
         commands,
     )
 
@@ -3384,7 +3291,6 @@ def image_card(
         data: Optional[PackedRecord] = None,
         path: Optional[str] = None,
         path_popup: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ImageCard:
     """Create a card that displays a base64-encoded image.
@@ -3397,7 +3303,6 @@ def image_card(
         data: Data for this card.
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         path_popup: The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
-        name: An optional identifying name for the image
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ImageCard` instance.
@@ -3410,7 +3315,6 @@ def image_card(
         data,
         path,
         path_popup,
-        name,
         commands,
     )
 
@@ -3426,7 +3330,6 @@ def large_bar_stat_card(
         progress: float,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> LargeBarStatCard:
     """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
@@ -3442,7 +3345,6 @@ def large_bar_stat_card(
         progress: The value of the progress bar, between 0 and 1.
         plot_color: The color of the progress bar.
         data: Data for this card.
-        name: An optional identifying name for this group.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.LargeBarStatCard` instance.
@@ -3458,7 +3360,6 @@ def large_bar_stat_card(
         progress,
         plot_color,
         data,
-        name,
         commands,
     )
 
@@ -3470,7 +3371,6 @@ def large_stat_card(
         aux_value: str,
         caption: str,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> LargeStatCard:
     """Create a stat card displaying a primary value, an auxiliary value and a caption.
@@ -3482,7 +3382,6 @@ def large_stat_card(
         aux_value: The auxiliary value displayed next to the primary value.
         caption: The caption displayed below the primary value.
         data: Data for this card.
-        name: An optional identifying name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.LargeStatCard` instance.
@@ -3494,7 +3393,6 @@ def large_stat_card(
         aux_value,
         caption,
         data,
-        name,
         commands,
     )
 
@@ -3569,7 +3467,6 @@ def markdown_card(
         content: str,
         data: Optional[PackedRecord] = None,
         compact: Optional[bool] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> MarkdownCard:
     """Create a card that renders Markdown content.
@@ -3585,7 +3482,6 @@ def markdown_card(
         content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
         data: Additional data for the card.
         compact: Make spacing tighter. Defaults to True.
-        name: An optional identifying name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkdownCard` instance.
@@ -3596,7 +3492,6 @@ def markdown_card(
         content,
         data,
         compact,
-        name,
         commands,
     )
 
@@ -3606,7 +3501,6 @@ def markup_card(
         title: str,
         content: str,
         compact: Optional[bool] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> MarkupCard:
     """Render HTML content.
@@ -3616,7 +3510,6 @@ def markup_card(
         title: The title for this card.
         content: The HTML content.
         compact: True if outer spacing should be removed. Defaults to False.
-        name: An optional identifying name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MarkupCard` instance.
@@ -3626,7 +3519,6 @@ def markup_card(
         title,
         content,
         compact,
-        name,
         commands,
     )
 
@@ -3911,21 +3803,18 @@ def inline_script(
 def inline_stylesheet(
         content: str,
         media: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> InlineStylesheet:
     """Create an inline CSS to be injected into a page.
 
     Args:
         content: The CSS to be applied to this page.
         media: A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
-        name: An optional identifying name for this stylesheet.
     Returns:
         A `h2o_wave.types.InlineStylesheet` instance.
     """
     return InlineStylesheet(
         content,
         media,
-        name,
     )
 
 
@@ -3933,7 +3822,6 @@ def stylesheet(
         path: str,
         media: Optional[str] = None,
         cross_origin: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> Stylesheet:
     """Create a reference to an external CSS file to be included on a page.
 
@@ -3941,7 +3829,6 @@ def stylesheet(
         path: The URI of an external stylesheet.
         media: A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
         cross_origin: The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
-        name: An optional identifying name for this stylesheet.
     Returns:
         A `h2o_wave.types.Stylesheet` instance.
     """
@@ -3949,7 +3836,6 @@ def stylesheet(
         path,
         media,
         cross_origin,
-        name,
     )
 
 
@@ -3971,7 +3857,6 @@ def meta_card(
         script: Optional[InlineScript] = None,
         stylesheet: Optional[InlineStylesheet] = None,
         stylesheets: Optional[List[Stylesheet]] = None,
-        name: Optional[str] = None,
         animate: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
@@ -3998,7 +3883,6 @@ def meta_card(
         script: Javascript code to execute on this page.
         stylesheet: CSS stylesheet to be applied to this page.
         stylesheets: External CSS files to load into the page.
-        name: An Optional identifying name for this page
         animate: EXPERIMENTAL: True to turn on the card animations. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
@@ -4022,7 +3906,6 @@ def meta_card(
         script,
         stylesheet,
         stylesheets,
-        name,
         animate,
         commands,
     )
@@ -4040,7 +3923,6 @@ def nav_card(
         persona: Optional[Component] = None,
         secondary_items: Optional[List[Component]] = None,
         color: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> NavCard:
     """Create a card containing a navigation pane.
@@ -4057,7 +3939,6 @@ def nav_card(
         persona: The user avatar displayed at the top. Mutually exclusive with image, title and subtitle. *
         secondary_items: Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle.
         color: Card background color. Defaults to 'card'. One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor.
-        name: An optional name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.NavCard` instance.
@@ -4074,7 +3955,6 @@ def nav_card(
         persona,
         secondary_items,
         color,
-        name,
         commands,
     )
 
@@ -4083,7 +3963,6 @@ def pixel_art_card(
         box: str,
         title: str,
         data: PackedRecord,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> PixelArtCard:
     """WARNING: Experimental and subject to change.
@@ -4095,7 +3974,6 @@ def pixel_art_card(
         box: A string indicating how to place this component on the page.
         title: The title for this card.
         data: The data for this card.
-        name: An optional identifying name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PixelArtCard` instance.
@@ -4104,7 +3982,6 @@ def pixel_art_card(
         box,
         title,
         data,
-        name,
         commands,
     )
 
@@ -4116,7 +3993,6 @@ def plot_card(
         plot: Plot,
         events: Optional[List[str]] = None,
         interactions: Optional[List[str]] = None,
-        name: Optional[str] = None,
         animate: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> PlotCard:
@@ -4129,7 +4005,6 @@ def plot_card(
         plot: The plot to be displayed in this card.
         events: The events to capture on this card. One of 'select_marks'.
         interactions: The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
-        name: An optional identifying name for this card
         animate: EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
         commands: Contextual menu commands for this component.
     Returns:
@@ -4142,7 +4017,6 @@ def plot_card(
         plot,
         events,
         interactions,
-        name,
         animate,
         commands,
     )
@@ -4155,7 +4029,6 @@ def post_card(
         aux_value: Optional[str] = None,
         caption: Optional[str] = None,
         items: Optional[List[Component]] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> PostCard:
     """Create a postcard displaying a persona, image, caption and optional buttons.
@@ -4167,7 +4040,6 @@ def post_card(
         aux_value: The card's aux_value, displayed on the right hand side of the image.
         caption: The card's caption, displayed below the image.
         items: The card's buttons, displayed at the bottom.
-        name: An optional name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.PostCard` instance.
@@ -4179,7 +4051,6 @@ def post_card(
         aux_value,
         caption,
         items,
-        name,
         commands,
     )
 
@@ -4226,7 +4097,6 @@ def profile_card(
         image: str,
         items: Optional[List[Component]] = None,
         height: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ProfileCard:
     """Create a profile card to display information about a user.
@@ -4237,7 +4107,6 @@ def profile_card(
         image: The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
         items: Components in this card displayed below the image.
         height: The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views.
-        name: The name of the card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ProfileCard` instance.
@@ -4248,7 +4117,6 @@ def profile_card(
         image,
         items,
         height,
-        name,
         commands,
     )
 
@@ -4286,7 +4154,6 @@ def section_card(
         title: str,
         subtitle: str,
         items: Optional[Union[List[Component], str]] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> SectionCard:
     """Render a card displaying a title, a subtitle, and optional components.
@@ -4297,7 +4164,6 @@ def section_card(
         title: The title.
         subtitle: The subtitle, displayed below the title. Supports Markdown.
         items: The components to display in this card
-        name: An optional identifying name for this card
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.SectionCard` instance.
@@ -4307,7 +4173,6 @@ def section_card(
         title,
         subtitle,
         items,
-        name,
         commands,
     )
 
@@ -4324,7 +4189,6 @@ def small_series_stat_card(
         plot_curve: Optional[str] = None,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
@@ -4341,7 +4205,6 @@ def small_series_stat_card(
         plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.SmallSeriesStatCardPlotCurve.
         plot_color: The plot's color.
         data: Data for this card.
-        name: An optional identifying name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.SmallSeriesStatCard` instance.
@@ -4358,7 +4221,6 @@ def small_series_stat_card(
         plot_curve,
         plot_color,
         data,
-        name,
         commands,
     )
 
@@ -4368,7 +4230,6 @@ def small_stat_card(
         title: str,
         value: str,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> SmallStatCard:
     """Create a stat card displaying a single value.
@@ -4378,7 +4239,6 @@ def small_stat_card(
         title: The card's title.
         value: The primary value displayed.
         data: Data for this card.
-        name: An optional identifying name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.SmallStatCard` instance.
@@ -4388,7 +4248,6 @@ def small_stat_card(
         title,
         value,
         data,
-        name,
         commands,
     )
 
@@ -4602,7 +4461,6 @@ def tall_gauge_stat_card(
         progress: float,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TallGaugeStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
@@ -4615,7 +4473,6 @@ def tall_gauge_stat_card(
         progress: The value of the progress gauge, between 0 and 1.
         plot_color: The color of the progress gauge.
         data: Data for this card.
-        name: An optional identifying name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.TallGaugeStatCard` instance.
@@ -4628,7 +4485,6 @@ def tall_gauge_stat_card(
         progress,
         plot_color,
         data,
-        name,
         commands,
     )
 
@@ -4688,7 +4544,6 @@ def tall_series_stat_card(
         plot_curve: Optional[str] = None,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TallSeriesStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
@@ -4706,7 +4561,6 @@ def tall_series_stat_card(
         plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.TallSeriesStatCardPlotCurve.
         plot_color: The plot's color.
         data: Data for this card.
-        name: An optional identifying name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.TallSeriesStatCard` instance.
@@ -4724,7 +4578,6 @@ def tall_series_stat_card(
         plot_curve,
         plot_color,
         data,
-        name,
         commands,
     )
 
@@ -4758,7 +4611,6 @@ def template_card(
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TemplateCard:
     """Render dynamic content using an HTML template.
@@ -4768,7 +4620,6 @@ def template_card(
         title: The title for this card.
         content: The Handlebars template. https://handlebarsjs.com/guide/
         data: Data for the Handlebars template.
-        name: An optional identifying name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.TemplateCard` instance.
@@ -4778,7 +4629,6 @@ def template_card(
         title,
         content,
         data,
-        name,
         commands,
     )
 
@@ -4788,7 +4638,6 @@ def toolbar_card(
         items: List[Command],
         secondary_items: Optional[List[Command]] = None,
         overflow_items: Optional[List[Command]] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ToolbarCard:
     """Create a card containing a toolbar.
@@ -4798,7 +4647,6 @@ def toolbar_card(
         items: Items to render.
         secondary_items: Items to render on the right side (or left, in RTL).
         overflow_items: Items to render in an overflow menu.
-        name: An optional name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ToolbarCard` instance.
@@ -4808,7 +4656,6 @@ def toolbar_card(
         items,
         secondary_items,
         overflow_items,
-        name,
         commands,
     )
 
@@ -4819,7 +4666,6 @@ def vega_card(
         specification: str,
         data: Optional[PackedRecord] = None,
         grammar: Optional[str] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> VegaCard:
     """Create a card containing a Vega-lite plot.
@@ -4830,7 +4676,6 @@ def vega_card(
         specification: The Vega-lite specification.
         data: Data for the plot, if any.
         grammar: Vega grammar to use. Defaults to 'vega-lite'. One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaCardGrammar.
-        name: An optional name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.VegaCard` instance.
@@ -4841,7 +4686,6 @@ def vega_card(
         specification,
         data,
         grammar,
-        name,
         commands,
     )
 
@@ -4893,7 +4737,6 @@ def wide_bar_stat_card(
         progress: float,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideBarStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
@@ -4906,7 +4749,6 @@ def wide_bar_stat_card(
         progress: The value of the progress bar, between 0 and 1.
         plot_color: The color of the progress bar.
         data: Data for this card.
-        name: An optional name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideBarStatCard` instance.
@@ -4919,7 +4761,6 @@ def wide_bar_stat_card(
         progress,
         plot_color,
         data,
-        name,
         commands,
     )
 
@@ -4932,7 +4773,6 @@ def wide_gauge_stat_card(
         progress: float,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideGaugeStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
@@ -4945,7 +4785,6 @@ def wide_gauge_stat_card(
         progress: The value of the progress gauge, between 0 and 1.
         plot_color: The color of the progress gauge.
         data: Data for this card.
-        name: An optional name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideGaugeStatCard` instance.
@@ -4958,7 +4797,6 @@ def wide_gauge_stat_card(
         progress,
         plot_color,
         data,
-        name,
         commands,
     )
 
@@ -5014,7 +4852,6 @@ def pie(
         fraction: float,
         color: str,
         aux_value: Optional[str] = None,
-        name: Optional[str] = None,
 ) -> Pie:
     """Card's pie chart data to be displayed.
 
@@ -5024,7 +4861,6 @@ def pie(
         fraction: A value between 0 and 1 indicating the size of the pie.
         color: The color of the pie.
         aux_value: The auxiliary value, displayed below the label.
-        name: An optional name, for this component.
     Returns:
         A `h2o_wave.types.Pie` instance.
     """
@@ -5034,7 +4870,6 @@ def pie(
         fraction,
         color,
         aux_value,
-        name,
     )
 
 
@@ -5042,7 +4877,6 @@ def wide_pie_stat_card(
         box: str,
         title: str,
         pies: List[Pie],
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WidePieStatCard:
     """Create a wide pie stat card displaying a title and pie chart with legend.
@@ -5051,7 +4885,6 @@ def wide_pie_stat_card(
         box: A string indicating how to place this component on the page.
         title: The card's title.
         pies: The pies to be included in the pie chart.
-        name: An optional name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WidePieStatCard` instance.
@@ -5060,7 +4893,6 @@ def wide_pie_stat_card(
         box,
         title,
         pies,
-        name,
         commands,
     )
 
@@ -5071,7 +4903,6 @@ def wide_plot_card(
         caption: str,
         plot: Plot,
         data: PackedRecord,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WidePlotCard:
     """Create a wide plot card displaying a title, caption and a plot.
@@ -5082,7 +4913,6 @@ def wide_plot_card(
         caption: The card's caption, displayed below the title.
         plot: The card's plot.
         data: The card's plot data.
-        name: An optional name for this component.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WidePlotCard` instance.
@@ -5093,7 +4923,6 @@ def wide_plot_card(
         caption,
         plot,
         data,
-        name,
         commands,
     )
 
@@ -5111,7 +4940,6 @@ def wide_series_stat_card(
         plot_curve: Optional[str] = None,
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
-        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideSeriesStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
@@ -5129,7 +4957,6 @@ def wide_series_stat_card(
         plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.WideSeriesStatCardPlotCurve.
         plot_color: The plot's color.
         data: Data for this card.
-        name: An optional name for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideSeriesStatCard` instance.
@@ -5147,6 +4974,5 @@ def wide_series_stat_card(
         plot_curve,
         plot_color,
         data,
-        name,
         commands,
     )
