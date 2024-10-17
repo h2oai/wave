@@ -50,6 +50,8 @@ interface State {
   subtitle: S
   /** The components to display in this card */
   items?: Packed<Component[]>
+  /** An optional identifying name for this card */
+  name?: S
 }
 
 export const
@@ -79,4 +81,3 @@ export const
   })
 
 cards.register('section', View, { effect: CardEffect.Transparent })
-

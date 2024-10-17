@@ -38,6 +38,8 @@ interface Breadcrumb {
 interface State {
   /** A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()` */
   items: Breadcrumb[]
+  /** An optional name for this card. */
+  name?: Id
 }
 
 const

@@ -50,7 +50,7 @@
     "jest-canvas-mock": "^2.2.0",
     "jest-environment-jsdom": "^29.6.4",
     "jest-resolve": "^29.6.4",
-    "jest-watch-typeahead": "0.4.2",
+    "jest-watch-typeahead": "^2.2.2",
     "react-app-polyfill": "^1.0.6",
     "react-test-renderer": "^17.0.2",
     "sass": "^1.49.7",
