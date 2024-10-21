@@ -38,7 +38,7 @@ export interface TimePicker {
   label?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. */
   placeholder?: S
-  /** The time value in hh:mm:ss format. E.g. '10:30:45', '14:25:30', '23:59:59', '00:00:00' */
+  /** The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00' */
   value?: S
   /** True if this field is disabled. */
   disabled?: B
@@ -52,9 +52,9 @@ export interface TimePicker {
   required?: B
   /** Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`. */
   hour_format?: S
-  /** The minimum allowed time value in hh:mm:ss format. E.g.: '08:00:00', '13:30:00' */
+  /** The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30' */
   min?: S
-  /** The maximum allowed time value in hh:mm:ss format. E.g.: '15:30:00', '00:00:00' */
+  /** The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00' */
   max?: S
   /** Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`. */
   minutes_step?: U
@@ -104,7 +104,7 @@ const
   LocalizationProvider = React.lazy(() => import('@mui/x-date-pickers/LocalizationProvider').then(({ LocalizationProvider }) => ({ default: LocalizationProvider }))),
   TimePicker = React.lazy(() => import('@mui/x-date-pickers/TimePicker').then(({ TimePicker }) => ({ default: TimePicker }))),
   allowedMinutesSteps: { [key: U]: U } = { 1: 1, 5: 5, 10: 10, 15: 15, 20: 20, 30: 30, 60: 60 },
-  normalize = (time: S) => `2000-01-01T${time.slice(0, 8)}`,
+  normalize = (time: S) => `2000-01-01T${time.slice(0, 5)}:00`,
   isBelowMin = (time: Date, minTime: Date) => time < minTime,
   isOverMax = (time: Date, maxTime: Date) => time > maxTime,
   isOutOfBounds = (time: Date, minTime: Date, maxTime: Date) => isBelowMin(time, minTime) || isOverMax(time, maxTime),
@@ -135,9 +135,8 @@ const
       {label && <Fluent.Label className={css.toolbarLabel}>{label}</Fluent.Label>}
       <Fluent.Text className={css.toolbarText}>
         <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('hours')}>{time?.substring(0, 2) || '--'}</Fluent.Text>:
-        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>:
-        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('seconds')}>{time?.substring(6, 8) || '--'}</Fluent.Text>{' '}
-        <Fluent.Text className={css.toolbarAmPm}>{time?.substring(9, 11) || ''}</Fluent.Text>
+        <Fluent.Text className={css.toolbarTime} onClick={() => setOpenView('minutes')}>{time?.substring(3, 5) || '--'}</Fluent.Text>{' '}
+        <Fluent.Text className={css.toolbarAmPm}>{time?.substring(6, 8) || ''}</Fluent.Text>
       </Fluent.Text>
     </div>
 
@@ -150,8 +149,8 @@ export const
       [isDialogOpen, setIsDialogOpen] = React.useState(false),
       textInputRef = React.useRef<HTMLDivElement | null>(null),
       popperRef = React.useRef<HTMLDivElement | null>(null),
-      minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00:00'), [min]),
-      maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00:00'), [max]),
+      minTime = React.useMemo(() => parseTimeStringToDate(min || '00:00'), [min]),
+      maxTime = React.useMemo(() => parseTimeStringToDate(max || '24:00'), [max]),
       onChangeTime = (time: unknown) => {
         if (!(time instanceof Date)) return
         const newValue = formatDateToTimeString(time, '24')
@@ -193,7 +192,7 @@ export const
         },
       },
       { format, AdapterDateFns, theme } = useTime(themeObj),
-      formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm:ss aa' : 'HH:mm:ss') : '', [format])
+      formatDateToTimeString = React.useCallback((date: D, hour_format: S) => format ? format(date, hour_format === '12' ? 'hh:mm aa' : 'HH:mm') : '', [format])
 
     React.useEffect(() => {
       const time = m.value ? parseTimeStringToDate(m.value) : null

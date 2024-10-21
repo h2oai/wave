@@ -3020,27 +3020,21 @@ class MiniButtons:
             self,
             items: List['Component'],
             visible: Optional[bool] = None,
-            name: Optional[str] = None,
     ):
         _guard_vector('MiniButtons.items', items, (Component,), False, False, False)
         _guard_scalar('MiniButtons.visible', visible, (bool,), False, True, False)
-        _guard_scalar('MiniButtons.name', name, (str,), False, True, False)
         self.items = items
         """The buttons in this set."""
         self.visible = visible
         """True if the component should be visible. Defaults to True."""
-        self.name = name
-        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('MiniButtons.items', self.items, (Component,), False, False, False)
         _guard_scalar('MiniButtons.visible', self.visible, (bool,), False, True, False)
-        _guard_scalar('MiniButtons.name', self.name, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             visible=self.visible,
-            name=self.name,
         )
 
     @staticmethod
@@ -3050,15 +3044,11 @@ class MiniButtons:
         _guard_vector('MiniButtons.items', __d_items, (dict,), False, False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('MiniButtons.visible', __d_visible, (bool,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('MiniButtons.name', __d_name, (str,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         visible: Optional[bool] = __d_visible
-        name: Optional[str] = __d_name
         return MiniButtons(
             items,
             visible,
-            name,
         )
 
 
@@ -3290,32 +3280,26 @@ class Tag:
             label: str,
             color: str,
             label_color: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('Tag.label', label, (str,), False, False, False)
         _guard_scalar('Tag.color', color, (str,), False, False, False)
         _guard_scalar('Tag.label_color', label_color, (str,), False, True, False)
-        _guard_scalar('Tag.name', name, (str,), False, True, False)
         self.label = label
         """The text displayed within the tag."""
         self.color = color
         """Tag's background color."""
         self.label_color = label_color
         """Tag's label color. If not specified, black or white will be picked based on correct contrast with background."""
-        self.name = name
-        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Tag.label', self.label, (str,), False, False, False)
         _guard_scalar('Tag.color', self.color, (str,), False, False, False)
         _guard_scalar('Tag.label_color', self.label_color, (str,), False, True, False)
-        _guard_scalar('Tag.name', self.name, (str,), False, True, False)
         return _dump(
             label=self.label,
             color=self.color,
             label_color=self.label_color,
-            name=self.name,
         )
 
     @staticmethod
@@ -3327,17 +3311,13 @@ class Tag:
         _guard_scalar('Tag.color', __d_color, (str,), False, False, False)
         __d_label_color: Any = __d.get('label_color')
         _guard_scalar('Tag.label_color', __d_label_color, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Tag.name', __d_name, (str,), False, True, False)
         label: str = __d_label
         color: str = __d_color
         label_color: Optional[str] = __d_label_color
-        name: Optional[str] = __d_name
         return Tag(
             label,
             color,
             label_color,
-            name,
         )
 
 
@@ -3479,14 +3459,12 @@ class TableCellType:
             tag: Optional[TagTableCellType] = None,
             menu: Optional[MenuTableCellType] = None,
             markdown: Optional[MarkdownTableCellType] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
         _guard_scalar('TableCellType.tag', tag, (TagTableCellType,), False, True, False)
         _guard_scalar('TableCellType.menu', menu, (MenuTableCellType,), False, True, False)
         _guard_scalar('TableCellType.markdown', markdown, (MarkdownTableCellType,), False, True, False)
-        _guard_scalar('TableCellType.name', name, (str,), True, True, False)
         self.progress = progress
         """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
@@ -3497,8 +3475,6 @@ class TableCellType:
         """Renders a command menu."""
         self.markdown = markdown
         """Renders text using markdown."""
-        self.name = name
-        """An identifying name for this Component"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3507,14 +3483,12 @@ class TableCellType:
         _guard_scalar('TableCellType.tag', self.tag, (TagTableCellType,), False, True, False)
         _guard_scalar('TableCellType.menu', self.menu, (MenuTableCellType,), False, True, False)
         _guard_scalar('TableCellType.markdown', self.markdown, (MarkdownTableCellType,), False, True, False)
-        _guard_scalar('TableCellType.name', self.name, (str,), True, True, False)
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
             icon=None if self.icon is None else self.icon.dump(),
             tag=None if self.tag is None else self.tag.dump(),
             menu=None if self.menu is None else self.menu.dump(),
             markdown=None if self.markdown is None else self.markdown.dump(),
-            name=self.name,
         )
 
     @staticmethod
@@ -3530,21 +3504,17 @@ class TableCellType:
         _guard_scalar('TableCellType.menu', __d_menu, (dict,), False, True, False)
         __d_markdown: Any = __d.get('markdown')
         _guard_scalar('TableCellType.markdown', __d_markdown, (dict,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TableCellType.name', __d_name, (str,), True, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
         tag: Optional[TagTableCellType] = None if __d_tag is None else TagTableCellType.load(__d_tag)
         menu: Optional[MenuTableCellType] = None if __d_menu is None else MenuTableCellType.load(__d_menu)
         markdown: Optional[MarkdownTableCellType] = None if __d_markdown is None else MarkdownTableCellType.load(__d_markdown)
-        name: Optional[str] = __d_name
         return TableCellType(
             progress,
             icon,
             tag,
             menu,
             markdown,
-            name,
         )
 
 
@@ -3772,32 +3742,26 @@ class TableGroup:
             label: str,
             rows: List[TableRow],
             collapsed: Optional[bool] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('TableGroup.label', label, (str,), False, False, False)
         _guard_vector('TableGroup.rows', rows, (TableRow,), False, False, False)
         _guard_scalar('TableGroup.collapsed', collapsed, (bool,), False, True, False)
-        _guard_scalar('TableGroup.name', name, (str,), True, True, False)
         self.label = label
         """The title of the group."""
         self.rows = rows
         """The rows in this group."""
         self.collapsed = collapsed
         """Indicates whether the table group should be collapsed by default. Defaults to True."""
-        self.name = name
-        """An identifying name for this group."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TableGroup.label', self.label, (str,), False, False, False)
         _guard_vector('TableGroup.rows', self.rows, (TableRow,), False, False, False)
         _guard_scalar('TableGroup.collapsed', self.collapsed, (bool,), False, True, False)
-        _guard_scalar('TableGroup.name', self.name, (str,), True, True, False)
         return _dump(
             label=self.label,
             rows=[__e.dump() for __e in self.rows],
             collapsed=self.collapsed,
-            name=self.name,
         )
 
     @staticmethod
@@ -3809,17 +3773,13 @@ class TableGroup:
         _guard_vector('TableGroup.rows', __d_rows, (dict,), False, False, False)
         __d_collapsed: Any = __d.get('collapsed')
         _guard_scalar('TableGroup.collapsed', __d_collapsed, (bool,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TableGroup.name', __d_name, (str,), True, True, False)
         label: str = __d_label
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         collapsed: Optional[bool] = __d_collapsed
-        name: Optional[str] = __d_name
         return TableGroup(
             label,
             rows,
             collapsed,
-            name,
         )
 
 
@@ -3830,27 +3790,21 @@ class TablePagination:
             self,
             total_rows: int,
             rows_per_page: int,
-            name: Optional[str] = None,
     ):
         _guard_scalar('TablePagination.total_rows', total_rows, (int,), False, False, False)
         _guard_scalar('TablePagination.rows_per_page', rows_per_page, (int,), False, False, False)
-        _guard_scalar('TablePagination.name', name, (str,), False, True, False)
         self.total_rows = total_rows
         """Total count of all the rows in your dataset."""
         self.rows_per_page = rows_per_page
         """The maximum amount of rows to be displayed in a single page."""
-        self.name = name
-        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TablePagination.total_rows', self.total_rows, (int,), False, False, False)
         _guard_scalar('TablePagination.rows_per_page', self.rows_per_page, (int,), False, False, False)
-        _guard_scalar('TablePagination.name', self.name, (str,), False, True, False)
         return _dump(
             total_rows=self.total_rows,
             rows_per_page=self.rows_per_page,
-            name=self.name,
         )
 
     @staticmethod
@@ -3860,15 +3814,11 @@ class TablePagination:
         _guard_scalar('TablePagination.total_rows', __d_total_rows, (int,), False, False, False)
         __d_rows_per_page: Any = __d.get('rows_per_page')
         _guard_scalar('TablePagination.rows_per_page', __d_rows_per_page, (int,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TablePagination.name', __d_name, (str,), False, True, False)
         total_rows: int = __d_total_rows
         rows_per_page: int = __d_rows_per_page
-        name: Optional[str] = __d_name
         return TablePagination(
             total_rows,
             rows_per_page,
-            name,
         )
 
 
@@ -4230,13 +4180,11 @@ class Links:
             label: Optional[str] = None,
             inline: Optional[bool] = None,
             width: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_vector('Links.items', items, (Component,), False, False, False)
         _guard_scalar('Links.label', label, (str,), False, True, False)
         _guard_scalar('Links.inline', inline, (bool,), False, True, False)
         _guard_scalar('Links.width', width, (str,), False, True, False)
-        _guard_scalar('Links.name', name, (str,), False, True, False)
         self.items = items
         """The links contained in this group."""
         self.label = label
@@ -4245,8 +4193,6 @@ class Links:
         """Render links horizontally. Defaults to False."""
         self.width = width
         """The width of the links, e.g. '100px'."""
-        self.name = name
-        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4254,13 +4200,11 @@ class Links:
         _guard_scalar('Links.label', self.label, (str,), False, True, False)
         _guard_scalar('Links.inline', self.inline, (bool,), False, True, False)
         _guard_scalar('Links.width', self.width, (str,), False, True, False)
-        _guard_scalar('Links.name', self.name, (str,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             label=self.label,
             inline=self.inline,
             width=self.width,
-            name=self.name,
         )
 
     @staticmethod
@@ -4274,19 +4218,15 @@ class Links:
         _guard_scalar('Links.inline', __d_inline, (bool,), False, True, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('Links.width', __d_width, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Links.name', __d_name, (str,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         label: Optional[str] = __d_label
         inline: Optional[bool] = __d_inline
         width: Optional[str] = __d_width
-        name: Optional[str] = __d_name
         return Links(
             items,
             label,
             inline,
             width,
-            name,
         )
 
 
@@ -4985,32 +4925,26 @@ class Step:
             label: str,
             icon: Optional[str] = None,
             done: Optional[bool] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('Step.label', label, (str,), False, False, False)
         _guard_scalar('Step.icon', icon, (str,), False, True, False)
         _guard_scalar('Step.done', done, (bool,), False, True, False)
-        _guard_scalar('Step.name', name, (str,), False, True, False)
         self.label = label
         """Text displayed below icon."""
         self.icon = icon
         """Icon to be displayed."""
         self.done = done
         """Indicates whether this step has already been completed."""
-        self.name = name
-        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Step.label', self.label, (str,), False, False, False)
         _guard_scalar('Step.icon', self.icon, (str,), False, True, False)
         _guard_scalar('Step.done', self.done, (bool,), False, True, False)
-        _guard_scalar('Step.name', self.name, (str,), False, True, False)
         return _dump(
             label=self.label,
             icon=self.icon,
             done=self.done,
-            name=self.name,
         )
 
     @staticmethod
@@ -5022,17 +4956,13 @@ class Step:
         _guard_scalar('Step.icon', __d_icon, (str,), False, True, False)
         __d_done: Any = __d.get('done')
         _guard_scalar('Step.done', __d_done, (bool,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Step.name', __d_name, (str,), False, True, False)
         label: str = __d_label
         icon: Optional[str] = __d_icon
         done: Optional[bool] = __d_done
-        name: Optional[str] = __d_name
         return Step(
             label,
             icon,
             done,
-            name,
         )
 
 
@@ -5272,7 +5202,6 @@ class Mark:
             label_font_weight: Optional[str] = None,
             label_line_height: Optional[float] = None,
             label_align: Optional[str] = None,
-            name: Optional[str] = None,
             ref_stroke_color: Optional[str] = None,
             ref_stroke_opacity: Optional[float] = None,
             ref_stroke_size: Optional[float] = None,
@@ -5322,7 +5251,6 @@ class Mark:
         _guard_scalar('Mark.label_font_weight', label_font_weight, (str,), False, True, False)
         _guard_scalar('Mark.label_line_height', label_line_height, (float, int,), False, True, False)
         _guard_enum('Mark.label_align', label_align, _MarkLabelAlign, True)
-        _guard_scalar('Mark.name', name, (str,), False, True, False)
         _guard_scalar('Mark.ref_stroke_color', ref_stroke_color, (str,), False, True, False)
         _guard_scalar('Mark.ref_stroke_opacity', ref_stroke_opacity, (float, int,), False, True, False)
         _guard_scalar('Mark.ref_stroke_size', ref_stroke_size, (float, int,), False, True, False)
@@ -5444,8 +5372,6 @@ class Mark:
         """Label line height."""
         self.label_align = label_align
         """Label text alignment. One of 'left', 'right', 'center', 'start', 'end'. See enum h2o_wave.ui.MarkLabelAlign."""
-        self.name = name
-        """An optional name"""
         self.ref_stroke_color = ref_stroke_color
         """Reference line stroke color."""
         self.ref_stroke_opacity = ref_stroke_opacity
@@ -5502,7 +5428,6 @@ class Mark:
         _guard_scalar('Mark.label_font_weight', self.label_font_weight, (str,), False, True, False)
         _guard_scalar('Mark.label_line_height', self.label_line_height, (float, int,), False, True, False)
         _guard_enum('Mark.label_align', self.label_align, _MarkLabelAlign, True)
-        _guard_scalar('Mark.name', self.name, (str,), False, True, False)
         _guard_scalar('Mark.ref_stroke_color', self.ref_stroke_color, (str,), False, True, False)
         _guard_scalar('Mark.ref_stroke_opacity', self.ref_stroke_opacity, (float, int,), False, True, False)
         _guard_scalar('Mark.ref_stroke_size', self.ref_stroke_size, (float, int,), False, True, False)
@@ -5567,7 +5492,6 @@ class Mark:
             label_font_weight=self.label_font_weight,
             label_line_height=self.label_line_height,
             label_align=self.label_align,
-            name=self.name,
             ref_stroke_color=self.ref_stroke_color,
             ref_stroke_opacity=self.ref_stroke_opacity,
             ref_stroke_size=self.ref_stroke_size,
@@ -5679,8 +5603,6 @@ class Mark:
         _guard_scalar('Mark.label_line_height', __d_label_line_height, (float, int,), False, True, False)
         __d_label_align: Any = __d.get('label_align')
         _guard_enum('Mark.label_align', __d_label_align, _MarkLabelAlign, True)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Mark.name', __d_name, (str,), False, True, False)
         __d_ref_stroke_color: Any = __d.get('ref_stroke_color')
         _guard_scalar('Mark.ref_stroke_color', __d_ref_stroke_color, (str,), False, True, False)
         __d_ref_stroke_opacity: Any = __d.get('ref_stroke_opacity')
@@ -5749,7 +5671,6 @@ class Mark:
         label_font_weight: Optional[str] = __d_label_font_weight
         label_line_height: Optional[float] = __d_label_line_height
         label_align: Optional[str] = __d_label_align
-        name: Optional[str] = __d_name
         ref_stroke_color: Optional[str] = __d_ref_stroke_color
         ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
         ref_stroke_size: Optional[float] = __d_ref_stroke_size
@@ -5814,7 +5735,6 @@ class Mark:
             label_font_weight,
             label_line_height,
             label_align,
-            name,
             ref_stroke_color,
             ref_stroke_opacity,
             ref_stroke_size,
@@ -6341,7 +6261,6 @@ class Image:
             width: Optional[str] = None,
             visible: Optional[bool] = None,
             path_popup: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('Image.title', title, (str,), False, False, False)
         _guard_scalar('Image.type', type, (str,), False, True, False)
@@ -6350,7 +6269,6 @@ class Image:
         _guard_scalar('Image.width', width, (str,), False, True, False)
         _guard_scalar('Image.visible', visible, (bool,), False, True, False)
         _guard_scalar('Image.path_popup', path_popup, (str,), False, True, False)
-        _guard_scalar('Image.name', name, (str,), False, True, False)
         self.title = title
         """The image title, typically displayed as a tooltip."""
         self.type = type
@@ -6365,8 +6283,6 @@ class Image:
         """True if the component should be visible. Defaults to True."""
         self.path_popup = path_popup
         """The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property."""
-        self.name = name
-        """An optional identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6377,7 +6293,6 @@ class Image:
         _guard_scalar('Image.width', self.width, (str,), False, True, False)
         _guard_scalar('Image.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Image.path_popup', self.path_popup, (str,), False, True, False)
-        _guard_scalar('Image.name', self.name, (str,), False, True, False)
         return _dump(
             title=self.title,
             type=self.type,
@@ -6386,7 +6301,6 @@ class Image:
             width=self.width,
             visible=self.visible,
             path_popup=self.path_popup,
-            name=self.name,
         )
 
     @staticmethod
@@ -6406,8 +6320,6 @@ class Image:
         _guard_scalar('Image.visible', __d_visible, (bool,), False, True, False)
         __d_path_popup: Any = __d.get('path_popup')
         _guard_scalar('Image.path_popup', __d_path_popup, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Image.name', __d_name, (str,), False, True, False)
         title: str = __d_title
         type: Optional[str] = __d_type
         image: Optional[str] = __d_image
@@ -6415,7 +6327,6 @@ class Image:
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         path_popup: Optional[str] = __d_path_popup
-        name: Optional[str] = __d_name
         return Image(
             title,
             type,
@@ -6424,7 +6335,6 @@ class Image:
             width,
             visible,
             path_popup,
-            name,
         )
 
 
@@ -6595,27 +6505,21 @@ class TextAnnotatorItem:
             self,
             text: str,
             tag: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('TextAnnotatorItem.text', text, (str,), False, False, False)
         _guard_scalar('TextAnnotatorItem.tag', tag, (str,), False, True, False)
-        _guard_scalar('TextAnnotatorItem.name', name, (str,), False, True, False)
         self.text = text
         """Text to be highlighted."""
         self.tag = tag
         """The `name` of the text annotator tag to refer to for the `label` and `color` of this item."""
-        self.name = name
-        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextAnnotatorItem.text', self.text, (str,), False, False, False)
         _guard_scalar('TextAnnotatorItem.tag', self.tag, (str,), False, True, False)
-        _guard_scalar('TextAnnotatorItem.name', self.name, (str,), False, True, False)
         return _dump(
             text=self.text,
             tag=self.tag,
-            name=self.name,
         )
 
     @staticmethod
@@ -6625,15 +6529,11 @@ class TextAnnotatorItem:
         _guard_scalar('TextAnnotatorItem.text', __d_text, (str,), False, False, False)
         __d_tag: Any = __d.get('tag')
         _guard_scalar('TextAnnotatorItem.tag', __d_tag, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TextAnnotatorItem.name', __d_name, (str,), False, True, False)
         text: str = __d_text
         tag: Optional[str] = __d_tag
-        name: Optional[str] = __d_name
         return TextAnnotatorItem(
             text,
             tag,
-            name,
         )
 
 
@@ -6776,13 +6676,11 @@ class ImageAnnotatorRect:
             y1: float,
             x2: float,
             y2: float,
-            name: Optional[str] = None,
     ):
         _guard_scalar('ImageAnnotatorRect.x1', x1, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y1', y1, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.x2', x2, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y2', y2, (float, int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.name', name, (str,), False, True, False)
         self.x1 = x1
         """`x` coordinate of the rectangle's corner."""
         self.y1 = y1
@@ -6791,8 +6689,6 @@ class ImageAnnotatorRect:
         """`x` coordinate of the diagonally opposite corner."""
         self.y2 = y2
         """`y` coordinate of the diagonally opposite corner."""
-        self.name = name
-        """An optional name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6800,13 +6696,11 @@ class ImageAnnotatorRect:
         _guard_scalar('ImageAnnotatorRect.y1', self.y1, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.x2', self.x2, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorRect.y2', self.y2, (float, int,), False, False, False)
-        _guard_scalar('ImageAnnotatorRect.name', self.name, (str,), False, True, False)
         return _dump(
             x1=self.x1,
             y1=self.y1,
             x2=self.x2,
             y2=self.y2,
-            name=self.name,
         )
 
     @staticmethod
@@ -6820,19 +6714,15 @@ class ImageAnnotatorRect:
         _guard_scalar('ImageAnnotatorRect.x2', __d_x2, (float, int,), False, False, False)
         __d_y2: Any = __d.get('y2')
         _guard_scalar('ImageAnnotatorRect.y2', __d_y2, (float, int,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ImageAnnotatorRect.name', __d_name, (str,), False, True, False)
         x1: float = __d_x1
         y1: float = __d_y1
         x2: float = __d_x2
         y2: float = __d_y2
-        name: Optional[str] = __d_name
         return ImageAnnotatorRect(
             x1,
             y1,
             x2,
             y2,
-            name,
         )
 
 
@@ -6843,27 +6733,21 @@ class ImageAnnotatorPoint:
             self,
             x: float,
             y: float,
-            name: Optional[str] = None,
     ):
         _guard_scalar('ImageAnnotatorPoint.x', x, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorPoint.y', y, (float, int,), False, False, False)
-        _guard_scalar('ImageAnnotatorPoint.name', name, (str,), False, True, False)
         self.x = x
         """`x` coordinate of the point."""
         self.y = y
         """`y` coordinate of the point."""
-        self.name = name
-        """An optional name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageAnnotatorPoint.x', self.x, (float, int,), False, False, False)
         _guard_scalar('ImageAnnotatorPoint.y', self.y, (float, int,), False, False, False)
-        _guard_scalar('ImageAnnotatorPoint.name', self.name, (str,), False, True, False)
         return _dump(
             x=self.x,
             y=self.y,
-            name=self.name,
         )
 
     @staticmethod
@@ -6873,15 +6757,11 @@ class ImageAnnotatorPoint:
         _guard_scalar('ImageAnnotatorPoint.x', __d_x, (float, int,), False, False, False)
         __d_y: Any = __d.get('y')
         _guard_scalar('ImageAnnotatorPoint.y', __d_y, (float, int,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ImageAnnotatorPoint.name', __d_name, (str,), False, True, False)
         x: float = __d_x
         y: float = __d_y
-        name: Optional[str] = __d_name
         return ImageAnnotatorPoint(
             x,
             y,
-            name,
         )
 
 
@@ -6891,22 +6771,16 @@ class ImageAnnotatorPolygon:
     def __init__(
             self,
             vertices: List[ImageAnnotatorPoint],
-            name: Optional[str] = None,
     ):
         _guard_vector('ImageAnnotatorPolygon.vertices', vertices, (ImageAnnotatorPoint,), False, False, False)
-        _guard_scalar('ImageAnnotatorPolygon.name', name, (str,), False, True, False)
         self.vertices = vertices
         """List of polygon points."""
-        self.name = name
-        """An optional name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('ImageAnnotatorPolygon.vertices', self.vertices, (ImageAnnotatorPoint,), False, False, False)
-        _guard_scalar('ImageAnnotatorPolygon.name', self.name, (str,), False, True, False)
         return _dump(
             vertices=[__e.dump() for __e in self.vertices],
-            name=self.name,
         )
 
     @staticmethod
@@ -6914,13 +6788,9 @@ class ImageAnnotatorPolygon:
         """Creates an instance of this class using the contents of a dict."""
         __d_vertices: Any = __d.get('vertices')
         _guard_vector('ImageAnnotatorPolygon.vertices', __d_vertices, (dict,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ImageAnnotatorPolygon.name', __d_name, (str,), False, True, False)
         vertices: List[ImageAnnotatorPoint] = [ImageAnnotatorPoint.load(__e) for __e in __d_vertices]
-        name: Optional[str] = __d_name
         return ImageAnnotatorPolygon(
             vertices,
-            name,
         )
 
 
@@ -6970,27 +6840,21 @@ class ImageAnnotatorItem:
             self,
             shape: ImageAnnotatorShape,
             tag: str,
-            name: Optional[str] = None,
     ):
         _guard_scalar('ImageAnnotatorItem.shape', shape, (ImageAnnotatorShape,), False, False, False)
         _guard_scalar('ImageAnnotatorItem.tag', tag, (str,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.name', name, (str,), False, True, False)
         self.shape = shape
         """The annotation shape."""
         self.tag = tag
         """The `name` of the image annotator tag to refer to for the `label` and `color` of this item."""
-        self.name = name
-        """An optional name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageAnnotatorItem.shape', self.shape, (ImageAnnotatorShape,), False, False, False)
         _guard_scalar('ImageAnnotatorItem.tag', self.tag, (str,), False, False, False)
-        _guard_scalar('ImageAnnotatorItem.name', self.name, (str,), False, True, False)
         return _dump(
             shape=self.shape.dump(),
             tag=self.tag,
-            name=self.name,
         )
 
     @staticmethod
@@ -7000,15 +6864,11 @@ class ImageAnnotatorItem:
         _guard_scalar('ImageAnnotatorItem.shape', __d_shape, (dict,), False, False, False)
         __d_tag: Any = __d.get('tag')
         _guard_scalar('ImageAnnotatorItem.tag', __d_tag, (str,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ImageAnnotatorItem.name', __d_name, (str,), False, True, False)
         shape: ImageAnnotatorShape = ImageAnnotatorShape.load(__d_shape)
         tag: str = __d_tag
-        name: Optional[str] = __d_name
         return ImageAnnotatorItem(
             shape,
             tag,
-            name,
         )
 
 
@@ -7180,32 +7040,26 @@ class AudioAnnotatorItem:
             start: float,
             end: float,
             tag: str,
-            name: Optional[str] = None,
     ):
         _guard_scalar('AudioAnnotatorItem.start', start, (float, int,), False, False, False)
         _guard_scalar('AudioAnnotatorItem.end', end, (float, int,), False, False, False)
         _guard_scalar('AudioAnnotatorItem.tag', tag, (str,), False, False, False)
-        _guard_scalar('AudioAnnotatorItem.name', name, (str,), False, True, False)
         self.start = start
         """The start of the audio annotation in seconds."""
         self.end = end
         """The end of the audio annotation in seconds."""
         self.tag = tag
         """The `name` of the audio annotator tag to refer to for the `label` and `color` of this item."""
-        self.name = name
-        """An identifying name for this component"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('AudioAnnotatorItem.start', self.start, (float, int,), False, False, False)
         _guard_scalar('AudioAnnotatorItem.end', self.end, (float, int,), False, False, False)
         _guard_scalar('AudioAnnotatorItem.tag', self.tag, (str,), False, False, False)
-        _guard_scalar('AudioAnnotatorItem.name', self.name, (str,), False, True, False)
         return _dump(
             start=self.start,
             end=self.end,
             tag=self.tag,
-            name=self.name,
         )
 
     @staticmethod
@@ -7217,17 +7071,13 @@ class AudioAnnotatorItem:
         _guard_scalar('AudioAnnotatorItem.end', __d_end, (float, int,), False, False, False)
         __d_tag: Any = __d.get('tag')
         _guard_scalar('AudioAnnotatorItem.tag', __d_tag, (str,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('AudioAnnotatorItem.name', __d_name, (str,), False, True, False)
         start: float = __d_start
         end: float = __d_end
         tag: str = __d_tag
-        name: Optional[str] = __d_name
         return AudioAnnotatorItem(
             start,
             end,
             tag,
-            name,
         )
 
 
@@ -7591,7 +7441,7 @@ class TimePicker:
         self.placeholder = placeholder
         """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
-        """The time value in hh:mm:ss format. E.g. '10:30:45', '14:25:30', '23:59:59', '00:00:00'"""
+        """The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'"""
         self.disabled = disabled
         """True if this field is disabled."""
         self.width = width
@@ -7605,9 +7455,9 @@ class TimePicker:
         self.hour_format = hour_format
         """Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`."""
         self.min = min
-        """The minimum allowed time value in hh:mm:ss format. E.g.: '08:00:00', '13:30:00'"""
+        """The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'"""
         self.max = max
-        """The maximum allowed time value in hh:mm:ss format. E.g.: '15:30:00', '00:00:00'"""
+        """The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'"""
         self.minutes_step = minutes_step
         """Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`."""
 
@@ -8239,14 +8089,12 @@ class ArticleCard:
             title: str,
             content: Optional[str] = None,
             items: Optional[List[Component]] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ArticleCard.box', box, (str,), False, False, False)
         _guard_scalar('ArticleCard.title', title, (str,), False, False, False)
         _guard_scalar('ArticleCard.content', content, (str,), False, True, False)
         _guard_vector('ArticleCard.items', items, (Component,), False, True, False)
-        _guard_scalar('ArticleCard.name', name, (str,), False, True, False)
         _guard_vector('ArticleCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8256,8 +8104,6 @@ class ArticleCard:
         """Markdown text."""
         self.items = items
         """Collection of small buttons rendered under the title."""
-        self.name = name
-        """An identifying name for this component"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8267,7 +8113,6 @@ class ArticleCard:
         _guard_scalar('ArticleCard.title', self.title, (str,), False, False, False)
         _guard_scalar('ArticleCard.content', self.content, (str,), False, True, False)
         _guard_vector('ArticleCard.items', self.items, (Component,), False, True, False)
-        _guard_scalar('ArticleCard.name', self.name, (str,), False, True, False)
         _guard_vector('ArticleCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='article',
@@ -8275,7 +8120,6 @@ class ArticleCard:
             title=self.title,
             content=self.content,
             items=None if self.items is None else [__e.dump() for __e in self.items],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8290,22 +8134,18 @@ class ArticleCard:
         _guard_scalar('ArticleCard.content', __d_content, (str,), False, True, False)
         __d_items: Any = __d.get('items')
         _guard_vector('ArticleCard.items', __d_items, (dict,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ArticleCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ArticleCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: Optional[str] = __d_content
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ArticleCard(
             box,
             title,
             content,
             items,
-            name,
             commands,
         )
 
@@ -8362,19 +8202,15 @@ class BreadcrumbsCard:
             self,
             box: str,
             items: List[Breadcrumb],
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('BreadcrumbsCard.box', box, (str,), False, False, False)
         _guard_vector('BreadcrumbsCard.items', items, (Breadcrumb,), False, False, False)
-        _guard_scalar('BreadcrumbsCard.name', name, (str,), True, True, False)
         _guard_vector('BreadcrumbsCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
         """A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`"""
-        self.name = name
-        """An optional name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8382,13 +8218,11 @@ class BreadcrumbsCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('BreadcrumbsCard.box', self.box, (str,), False, False, False)
         _guard_vector('BreadcrumbsCard.items', self.items, (Breadcrumb,), False, False, False)
-        _guard_scalar('BreadcrumbsCard.name', self.name, (str,), True, True, False)
         _guard_vector('BreadcrumbsCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='breadcrumbs',
             box=self.box,
             items=[__e.dump() for __e in self.items],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8399,18 +8233,14 @@ class BreadcrumbsCard:
         _guard_scalar('BreadcrumbsCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('BreadcrumbsCard.items', __d_items, (dict,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('BreadcrumbsCard.name', __d_name, (str,), True, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('BreadcrumbsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return BreadcrumbsCard(
             box,
             items,
-            name,
             commands,
         )
 
@@ -8959,13 +8789,11 @@ class FooterCard:
             box: str,
             caption: str,
             items: Optional[List[Component]] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('FooterCard.box', box, (str,), False, False, False)
         _guard_scalar('FooterCard.caption', caption, (str,), False, False, False)
         _guard_vector('FooterCard.items', items, (Component,), False, True, False)
-        _guard_scalar('FooterCard.name', name, (str,), False, True, False)
         _guard_vector('FooterCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8973,8 +8801,6 @@ class FooterCard:
         """The caption. Supports markdown. *"""
         self.items = items
         """The components displayed to the right of the caption."""
-        self.name = name
-        """An optional identifying name to the card"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8983,14 +8809,12 @@ class FooterCard:
         _guard_scalar('FooterCard.box', self.box, (str,), False, False, False)
         _guard_scalar('FooterCard.caption', self.caption, (str,), False, False, False)
         _guard_vector('FooterCard.items', self.items, (Component,), False, True, False)
-        _guard_scalar('FooterCard.name', self.name, (str,), False, True, False)
         _guard_vector('FooterCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='footer',
             box=self.box,
             caption=self.caption,
             items=None if self.items is None else [__e.dump() for __e in self.items],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9003,20 +8827,16 @@ class FooterCard:
         _guard_scalar('FooterCard.caption', __d_caption, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('FooterCard.items', __d_items, (dict,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('FooterCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FooterCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         caption: str = __d_caption
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FooterCard(
             box,
             caption,
             items,
-            name,
             commands,
         )
 
@@ -9029,13 +8849,11 @@ class FormCard:
             box: str,
             items: Union[List[Component], str],
             title: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('FormCard.box', box, (str,), False, False, False)
         _guard_vector('FormCard.items', items, (Component,), False, False, True)
         _guard_scalar('FormCard.title', title, (str,), False, True, False)
-        _guard_scalar('FormCard.name', name, (str,), False, True, False)
         _guard_vector('FormCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9043,8 +8861,6 @@ class FormCard:
         """The components in this form."""
         self.title = title
         """The title for this card."""
-        self.name = name
-        """An optional name for this form."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9053,14 +8869,12 @@ class FormCard:
         _guard_scalar('FormCard.box', self.box, (str,), False, False, False)
         _guard_vector('FormCard.items', self.items, (Component,), False, False, True)
         _guard_scalar('FormCard.title', self.title, (str,), False, True, False)
-        _guard_scalar('FormCard.name', self.name, (str,), False, True, False)
         _guard_vector('FormCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='form',
             box=self.box,
             items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
             title=self.title,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9073,20 +8887,16 @@ class FormCard:
         _guard_vector('FormCard.items', __d_items, (dict,), False, False, True)
         __d_title: Any = __d.get('title')
         _guard_scalar('FormCard.title', __d_title, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('FormCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FormCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
         title: Optional[str] = __d_title
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FormCard(
             box,
             items,
             title,
-            name,
             commands,
         )
 
@@ -9103,7 +8913,6 @@ class FrameCard:
             path: Optional[str] = None,
             content: Optional[str] = None,
             compact: Optional[bool] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('FrameCard.box', box, (str,), False, False, False)
@@ -9111,7 +8920,6 @@ class FrameCard:
         _guard_scalar('FrameCard.path', path, (str,), False, True, False)
         _guard_scalar('FrameCard.content', content, (str,), False, True, False)
         _guard_scalar('FrameCard.compact', compact, (bool,), False, True, False)
-        _guard_scalar('FrameCard.name', name, (str,), False, True, False)
         _guard_vector('FrameCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9123,8 +8931,6 @@ class FrameCard:
         """The HTML content of the page. A string containing `<html>...</html>`."""
         self.compact = compact
         """True if title and padding should be removed. Defaults to False."""
-        self.name = name
-        """An optional identifying name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9135,7 +8941,6 @@ class FrameCard:
         _guard_scalar('FrameCard.path', self.path, (str,), False, True, False)
         _guard_scalar('FrameCard.content', self.content, (str,), False, True, False)
         _guard_scalar('FrameCard.compact', self.compact, (bool,), False, True, False)
-        _guard_scalar('FrameCard.name', self.name, (str,), False, True, False)
         _guard_vector('FrameCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='frame',
@@ -9144,7 +8949,6 @@ class FrameCard:
             path=self.path,
             content=self.content,
             compact=self.compact,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9161,8 +8965,6 @@ class FrameCard:
         _guard_scalar('FrameCard.content', __d_content, (str,), False, True, False)
         __d_compact: Any = __d.get('compact')
         _guard_scalar('FrameCard.compact', __d_compact, (bool,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('FrameCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FrameCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9170,7 +8972,6 @@ class FrameCard:
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
         compact: Optional[bool] = __d_compact
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FrameCard(
             box,
@@ -9178,7 +8979,6 @@ class FrameCard:
             path,
             content,
             compact,
-            name,
             commands,
         )
 
@@ -9197,7 +8997,6 @@ class GraphicsCard:
             image: Optional[str] = None,
             image_path: Optional[str] = None,
             image_type: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('GraphicsCard.box', box, (str,), False, False, False)
@@ -9207,7 +9006,6 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.image', image, (str,), False, True, False)
         _guard_scalar('GraphicsCard.image_path', image_path, (str,), False, True, False)
         _guard_scalar('GraphicsCard.image_type', image_type, (str,), False, True, False)
-        _guard_scalar('GraphicsCard.name', name, (str,), False, True, False)
         _guard_vector('GraphicsCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9227,8 +9025,6 @@ class GraphicsCard:
         """The path or URL or data URL of the background image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
         self.image_type = image_type
         """The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set."""
-        self.name = name
-        """An optional identifying name for this Card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9241,7 +9037,6 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.image', self.image, (str,), False, True, False)
         _guard_scalar('GraphicsCard.image_path', self.image_path, (str,), False, True, False)
         _guard_scalar('GraphicsCard.image_type', self.image_type, (str,), False, True, False)
-        _guard_scalar('GraphicsCard.name', self.name, (str,), False, True, False)
         _guard_vector('GraphicsCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='graphics',
@@ -9254,7 +9049,6 @@ class GraphicsCard:
             image=self.image,
             image_path=self.image_path,
             image_type=self.image_type,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9277,8 +9071,6 @@ class GraphicsCard:
         _guard_scalar('GraphicsCard.image_path', __d_image_path, (str,), False, True, False)
         __d_image_type: Any = __d.get('image_type')
         _guard_scalar('GraphicsCard.image_type', __d_image_type, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('GraphicsCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('GraphicsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9290,7 +9082,6 @@ class GraphicsCard:
         image: Optional[str] = __d_image
         image_path: Optional[str] = __d_image_path
         image_type: Optional[str] = __d_image_type
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return GraphicsCard(
             box,
@@ -9302,7 +9093,6 @@ class GraphicsCard:
             image,
             image_path,
             image_type,
-            name,
             commands,
         )
 
@@ -9524,7 +9314,6 @@ class HeaderCard:
             items: Optional[List[Component]] = None,
             secondary_items: Optional[List[Component]] = None,
             color: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('HeaderCard.box', box, (str,), False, False, False)
@@ -9537,7 +9326,6 @@ class HeaderCard:
         _guard_vector('HeaderCard.items', items, (Component,), False, True, False)
         _guard_vector('HeaderCard.secondary_items', secondary_items, (Component,), False, True, False)
         _guard_enum('HeaderCard.color', color, _HeaderCardColor, True)
-        _guard_scalar('HeaderCard.name', name, (str,), False, True, False)
         _guard_vector('HeaderCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9559,8 +9347,6 @@ class HeaderCard:
         """Items that should be displayed in the center of the header."""
         self.color = color
         """Header background color. Defaults to 'primary'. One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor."""
-        self.name = name
-        """An optional name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9576,7 +9362,6 @@ class HeaderCard:
         _guard_vector('HeaderCard.items', self.items, (Component,), False, True, False)
         _guard_vector('HeaderCard.secondary_items', self.secondary_items, (Component,), False, True, False)
         _guard_enum('HeaderCard.color', self.color, _HeaderCardColor, True)
-        _guard_scalar('HeaderCard.name', self.name, (str,), False, True, False)
         _guard_vector('HeaderCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='header',
@@ -9590,7 +9375,6 @@ class HeaderCard:
             items=None if self.items is None else [__e.dump() for __e in self.items],
             secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
             color=self.color,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9617,8 +9401,6 @@ class HeaderCard:
         _guard_vector('HeaderCard.secondary_items', __d_secondary_items, (dict,), False, True, False)
         __d_color: Any = __d.get('color')
         _guard_enum('HeaderCard.color', __d_color, _HeaderCardColor, True)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('HeaderCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('HeaderCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9631,7 +9413,6 @@ class HeaderCard:
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         secondary_items: Optional[List[Component]] = None if __d_secondary_items is None else [Component.load(__e) for __e in __d_secondary_items]
         color: Optional[str] = __d_color
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,
@@ -9644,7 +9425,6 @@ class HeaderCard:
             items,
             secondary_items,
             color,
-            name,
             commands,
         )
 
@@ -9661,7 +9441,6 @@ class ImageCard:
             data: Optional[PackedRecord] = None,
             path: Optional[str] = None,
             path_popup: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageCard.box', box, (str,), False, False, False)
@@ -9670,7 +9449,6 @@ class ImageCard:
         _guard_scalar('ImageCard.image', image, (str,), False, True, False)
         _guard_scalar('ImageCard.path', path, (str,), False, True, False)
         _guard_scalar('ImageCard.path_popup', path_popup, (str,), False, True, False)
-        _guard_scalar('ImageCard.name', name, (str,), False, True, False)
         _guard_vector('ImageCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9686,8 +9464,6 @@ class ImageCard:
         """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
         self.path_popup = path_popup
         """The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property."""
-        self.name = name
-        """An optional identifying name for the image"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9699,7 +9475,6 @@ class ImageCard:
         _guard_scalar('ImageCard.image', self.image, (str,), False, True, False)
         _guard_scalar('ImageCard.path', self.path, (str,), False, True, False)
         _guard_scalar('ImageCard.path_popup', self.path_popup, (str,), False, True, False)
-        _guard_scalar('ImageCard.name', self.name, (str,), False, True, False)
         _guard_vector('ImageCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='image',
@@ -9710,7 +9485,6 @@ class ImageCard:
             data=self.data,
             path=self.path,
             path_popup=self.path_popup,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9730,8 +9504,6 @@ class ImageCard:
         _guard_scalar('ImageCard.path', __d_path, (str,), False, True, False)
         __d_path_popup: Any = __d.get('path_popup')
         _guard_scalar('ImageCard.path_popup', __d_path_popup, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ImageCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ImageCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9741,7 +9513,6 @@ class ImageCard:
         data: Optional[PackedRecord] = __d_data
         path: Optional[str] = __d_path
         path_popup: Optional[str] = __d_path_popup
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ImageCard(
             box,
@@ -9751,7 +9522,6 @@ class ImageCard:
             data,
             path,
             path_popup,
-            name,
             commands,
         )
 
@@ -9771,7 +9541,6 @@ class LargeBarStatCard:
             progress: float,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('LargeBarStatCard.box', box, (str,), False, False, False)
@@ -9783,7 +9552,6 @@ class LargeBarStatCard:
         _guard_scalar('LargeBarStatCard.aux_value_caption', aux_value_caption, (str,), False, False, False)
         _guard_scalar('LargeBarStatCard.progress', progress, (float, int,), False, False, False)
         _guard_scalar('LargeBarStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('LargeBarStatCard.name', name, (str,), False, True, False)
         _guard_vector('LargeBarStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9805,8 +9573,6 @@ class LargeBarStatCard:
         """The color of the progress bar."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional identifying name for this group."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9821,7 +9587,6 @@ class LargeBarStatCard:
         _guard_scalar('LargeBarStatCard.aux_value_caption', self.aux_value_caption, (str,), False, False, False)
         _guard_scalar('LargeBarStatCard.progress', self.progress, (float, int,), False, False, False)
         _guard_scalar('LargeBarStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('LargeBarStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('LargeBarStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='large_bar_stat',
@@ -9835,7 +9600,6 @@ class LargeBarStatCard:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9861,8 +9625,6 @@ class LargeBarStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('LargeBarStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('LargeBarStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('LargeBarStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9875,7 +9637,6 @@ class LargeBarStatCard:
         progress: float = __d_progress
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return LargeBarStatCard(
             box,
@@ -9888,7 +9649,6 @@ class LargeBarStatCard:
             progress,
             plot_color,
             data,
-            name,
             commands,
         )
 
@@ -9904,7 +9664,6 @@ class LargeStatCard:
             aux_value: str,
             caption: str,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('LargeStatCard.box', box, (str,), False, False, False)
@@ -9912,7 +9671,6 @@ class LargeStatCard:
         _guard_scalar('LargeStatCard.value', value, (str,), False, False, False)
         _guard_scalar('LargeStatCard.aux_value', aux_value, (str,), False, False, False)
         _guard_scalar('LargeStatCard.caption', caption, (str,), False, False, False)
-        _guard_scalar('LargeStatCard.name', name, (str,), False, True, False)
         _guard_vector('LargeStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9926,8 +9684,6 @@ class LargeStatCard:
         """The caption displayed below the primary value."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional identifying name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9938,7 +9694,6 @@ class LargeStatCard:
         _guard_scalar('LargeStatCard.value', self.value, (str,), False, False, False)
         _guard_scalar('LargeStatCard.aux_value', self.aux_value, (str,), False, False, False)
         _guard_scalar('LargeStatCard.caption', self.caption, (str,), False, False, False)
-        _guard_scalar('LargeStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('LargeStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='large_stat',
@@ -9948,7 +9703,6 @@ class LargeStatCard:
             aux_value=self.aux_value,
             caption=self.caption,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9966,8 +9720,6 @@ class LargeStatCard:
         __d_caption: Any = __d.get('caption')
         _guard_scalar('LargeStatCard.caption', __d_caption, (str,), False, False, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('LargeStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('LargeStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9976,7 +9728,6 @@ class LargeStatCard:
         aux_value: str = __d_aux_value
         caption: str = __d_caption
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return LargeStatCard(
             box,
@@ -9985,7 +9736,6 @@ class LargeStatCard:
             aux_value,
             caption,
             data,
-            name,
             commands,
         )
 
@@ -10167,14 +9917,12 @@ class MarkdownCard:
             content: str,
             data: Optional[PackedRecord] = None,
             compact: Optional[bool] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MarkdownCard.box', box, (str,), False, False, False)
         _guard_scalar('MarkdownCard.title', title, (str,), False, False, False)
         _guard_scalar('MarkdownCard.content', content, (str,), False, False, False)
         _guard_scalar('MarkdownCard.compact', compact, (bool,), False, True, False)
-        _guard_scalar('MarkdownCard.name', name, (str,), False, True, False)
         _guard_vector('MarkdownCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -10186,8 +9934,6 @@ class MarkdownCard:
         """Additional data for the card."""
         self.compact = compact
         """Make spacing tighter. Defaults to True."""
-        self.name = name
-        """An optional identifying name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -10197,7 +9943,6 @@ class MarkdownCard:
         _guard_scalar('MarkdownCard.title', self.title, (str,), False, False, False)
         _guard_scalar('MarkdownCard.content', self.content, (str,), False, False, False)
         _guard_scalar('MarkdownCard.compact', self.compact, (bool,), False, True, False)
-        _guard_scalar('MarkdownCard.name', self.name, (str,), False, True, False)
         _guard_vector('MarkdownCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='markdown',
@@ -10206,7 +9951,6 @@ class MarkdownCard:
             content=self.content,
             data=self.data,
             compact=self.compact,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -10222,8 +9966,6 @@ class MarkdownCard:
         __d_data: Any = __d.get('data')
         __d_compact: Any = __d.get('compact')
         _guard_scalar('MarkdownCard.compact', __d_compact, (bool,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('MarkdownCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MarkdownCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -10231,7 +9973,6 @@ class MarkdownCard:
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
         compact: Optional[bool] = __d_compact
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MarkdownCard(
             box,
@@ -10239,7 +9980,6 @@ class MarkdownCard:
             content,
             data,
             compact,
-            name,
             commands,
         )
 
@@ -10253,14 +9993,12 @@ class MarkupCard:
             title: str,
             content: str,
             compact: Optional[bool] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MarkupCard.box', box, (str,), False, False, False)
         _guard_scalar('MarkupCard.title', title, (str,), False, False, False)
         _guard_scalar('MarkupCard.content', content, (str,), False, False, False)
         _guard_scalar('MarkupCard.compact', compact, (bool,), False, True, False)
-        _guard_scalar('MarkupCard.name', name, (str,), False, True, False)
         _guard_vector('MarkupCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -10270,8 +10008,6 @@ class MarkupCard:
         """The HTML content."""
         self.compact = compact
         """True if outer spacing should be removed. Defaults to False."""
-        self.name = name
-        """An optional identifying name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -10281,7 +10017,6 @@ class MarkupCard:
         _guard_scalar('MarkupCard.title', self.title, (str,), False, False, False)
         _guard_scalar('MarkupCard.content', self.content, (str,), False, False, False)
         _guard_scalar('MarkupCard.compact', self.compact, (bool,), False, True, False)
-        _guard_scalar('MarkupCard.name', self.name, (str,), False, True, False)
         _guard_vector('MarkupCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='markup',
@@ -10289,7 +10024,6 @@ class MarkupCard:
             title=self.title,
             content=self.content,
             compact=self.compact,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -10304,22 +10038,18 @@ class MarkupCard:
         _guard_scalar('MarkupCard.content', __d_content, (str,), False, False, False)
         __d_compact: Any = __d.get('compact')
         _guard_scalar('MarkupCard.compact', __d_compact, (bool,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('MarkupCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MarkupCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         compact: Optional[bool] = __d_compact
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MarkupCard(
             box,
             title,
             content,
             compact,
-            name,
             commands,
         )
 
@@ -11122,27 +10852,21 @@ class InlineStylesheet:
             self,
             content: str,
             media: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('InlineStylesheet.content', content, (str,), False, False, False)
         _guard_scalar('InlineStylesheet.media', media, (str,), False, True, False)
-        _guard_scalar('InlineStylesheet.name', name, (str,), False, True, False)
         self.content = content
         """The CSS to be applied to this page."""
         self.media = media
         """A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media."""
-        self.name = name
-        """An optional identifying name for this stylesheet."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('InlineStylesheet.content', self.content, (str,), False, False, False)
         _guard_scalar('InlineStylesheet.media', self.media, (str,), False, True, False)
-        _guard_scalar('InlineStylesheet.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
             media=self.media,
-            name=self.name,
         )
 
     @staticmethod
@@ -11152,15 +10876,11 @@ class InlineStylesheet:
         _guard_scalar('InlineStylesheet.content', __d_content, (str,), False, False, False)
         __d_media: Any = __d.get('media')
         _guard_scalar('InlineStylesheet.media', __d_media, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('InlineStylesheet.name', __d_name, (str,), False, True, False)
         content: str = __d_content
         media: Optional[str] = __d_media
-        name: Optional[str] = __d_name
         return InlineStylesheet(
             content,
             media,
-            name,
         )
 
 
@@ -11172,32 +10892,26 @@ class Stylesheet:
             path: str,
             media: Optional[str] = None,
             cross_origin: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('Stylesheet.path', path, (str,), False, False, False)
         _guard_scalar('Stylesheet.media', media, (str,), False, True, False)
         _guard_scalar('Stylesheet.cross_origin', cross_origin, (str,), False, True, False)
-        _guard_scalar('Stylesheet.name', name, (str,), False, True, False)
         self.path = path
         """The URI of an external stylesheet."""
         self.media = media
         """A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media."""
         self.cross_origin = cross_origin
         """The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin"""
-        self.name = name
-        """An optional identifying name for this stylesheet."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Stylesheet.path', self.path, (str,), False, False, False)
         _guard_scalar('Stylesheet.media', self.media, (str,), False, True, False)
         _guard_scalar('Stylesheet.cross_origin', self.cross_origin, (str,), False, True, False)
-        _guard_scalar('Stylesheet.name', self.name, (str,), False, True, False)
         return _dump(
             path=self.path,
             media=self.media,
             cross_origin=self.cross_origin,
-            name=self.name,
         )
 
     @staticmethod
@@ -11209,17 +10923,13 @@ class Stylesheet:
         _guard_scalar('Stylesheet.media', __d_media, (str,), False, True, False)
         __d_cross_origin: Any = __d.get('cross_origin')
         _guard_scalar('Stylesheet.cross_origin', __d_cross_origin, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Stylesheet.name', __d_name, (str,), False, True, False)
         path: str = __d_path
         media: Optional[str] = __d_media
         cross_origin: Optional[str] = __d_cross_origin
-        name: Optional[str] = __d_name
         return Stylesheet(
             path,
             media,
             cross_origin,
-            name,
         )
 
 
@@ -11248,7 +10958,6 @@ class MetaCard:
             script: Optional[InlineScript] = None,
             stylesheet: Optional[InlineStylesheet] = None,
             stylesheets: Optional[List[Stylesheet]] = None,
-            name: Optional[str] = None,
             animate: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -11269,7 +10978,6 @@ class MetaCard:
         _guard_scalar('MetaCard.script', script, (InlineScript,), False, True, False)
         _guard_scalar('MetaCard.stylesheet', stylesheet, (InlineStylesheet,), False, True, False)
         _guard_vector('MetaCard.stylesheets', stylesheets, (Stylesheet,), False, True, False)
-        _guard_scalar('MetaCard.name', name, (str,), False, True, False)
         _guard_scalar('MetaCard.animate', animate, (bool,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
@@ -11306,8 +11014,6 @@ class MetaCard:
         """CSS stylesheet to be applied to this page."""
         self.stylesheets = stylesheets
         """External CSS files to load into the page."""
-        self.name = name
-        """An Optional identifying name for this page"""
         self.animate = animate
         """EXPERIMENTAL: True to turn on the card animations. Defaults to False."""
         self.commands = commands
@@ -11332,7 +11038,6 @@ class MetaCard:
         _guard_scalar('MetaCard.script', self.script, (InlineScript,), False, True, False)
         _guard_scalar('MetaCard.stylesheet', self.stylesheet, (InlineStylesheet,), False, True, False)
         _guard_vector('MetaCard.stylesheets', self.stylesheets, (Stylesheet,), False, True, False)
-        _guard_scalar('MetaCard.name', self.name, (str,), False, True, False)
         _guard_scalar('MetaCard.animate', self.animate, (bool,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
@@ -11354,7 +11059,6 @@ class MetaCard:
             script=None if self.script is None else self.script.dump(),
             stylesheet=None if self.stylesheet is None else self.stylesheet.dump(),
             stylesheets=None if self.stylesheets is None else [__e.dump() for __e in self.stylesheets],
-            name=self.name,
             animate=self.animate,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -11396,8 +11100,6 @@ class MetaCard:
         _guard_scalar('MetaCard.stylesheet', __d_stylesheet, (dict,), False, True, False)
         __d_stylesheets: Any = __d.get('stylesheets')
         _guard_vector('MetaCard.stylesheets', __d_stylesheets, (dict,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('MetaCard.name', __d_name, (str,), False, True, False)
         __d_animate: Any = __d.get('animate')
         _guard_scalar('MetaCard.animate', __d_animate, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
@@ -11419,7 +11121,6 @@ class MetaCard:
         script: Optional[InlineScript] = None if __d_script is None else InlineScript.load(__d_script)
         stylesheet: Optional[InlineStylesheet] = None if __d_stylesheet is None else InlineStylesheet.load(__d_stylesheet)
         stylesheets: Optional[List[Stylesheet]] = None if __d_stylesheets is None else [Stylesheet.load(__e) for __e in __d_stylesheets]
-        name: Optional[str] = __d_name
         animate: Optional[bool] = __d_animate
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
@@ -11440,7 +11141,6 @@ class MetaCard:
             script,
             stylesheet,
             stylesheets,
-            name,
             animate,
             commands,
         )
@@ -11470,7 +11170,6 @@ class NavCard:
             persona: Optional[Component] = None,
             secondary_items: Optional[List[Component]] = None,
             color: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('NavCard.box', box, (str,), False, False, False)
@@ -11484,7 +11183,6 @@ class NavCard:
         _guard_scalar('NavCard.persona', persona, (Component,), False, True, False)
         _guard_vector('NavCard.secondary_items', secondary_items, (Component,), False, True, False)
         _guard_enum('NavCard.color', color, _NavCardColor, True)
-        _guard_scalar('NavCard.name', name, (str,), False, True, False)
         _guard_vector('NavCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -11508,8 +11206,6 @@ class NavCard:
         """Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle."""
         self.color = color
         """Card background color. Defaults to 'card'. One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor."""
-        self.name = name
-        """An optional name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -11526,7 +11222,6 @@ class NavCard:
         _guard_scalar('NavCard.persona', self.persona, (Component,), False, True, False)
         _guard_vector('NavCard.secondary_items', self.secondary_items, (Component,), False, True, False)
         _guard_enum('NavCard.color', self.color, _NavCardColor, True)
-        _guard_scalar('NavCard.name', self.name, (str,), False, True, False)
         _guard_vector('NavCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='nav',
@@ -11541,7 +11236,6 @@ class NavCard:
             persona=None if self.persona is None else self.persona.dump(),
             secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
             color=self.color,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -11570,8 +11264,6 @@ class NavCard:
         _guard_vector('NavCard.secondary_items', __d_secondary_items, (dict,), False, True, False)
         __d_color: Any = __d.get('color')
         _guard_enum('NavCard.color', __d_color, _NavCardColor, True)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('NavCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('NavCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -11585,7 +11277,6 @@ class NavCard:
         persona: Optional[Component] = None if __d_persona is None else Component.load(__d_persona)
         secondary_items: Optional[List[Component]] = None if __d_secondary_items is None else [Component.load(__e) for __e in __d_secondary_items]
         color: Optional[str] = __d_color
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return NavCard(
             box,
@@ -11599,7 +11290,6 @@ class NavCard:
             persona,
             secondary_items,
             color,
-            name,
             commands,
         )
 
@@ -11615,12 +11305,10 @@ class PixelArtCard:
             box: str,
             title: str,
             data: PackedRecord,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('PixelArtCard.box', box, (str,), False, False, False)
         _guard_scalar('PixelArtCard.title', title, (str,), False, False, False)
-        _guard_scalar('PixelArtCard.name', name, (str,), False, True, False)
         _guard_vector('PixelArtCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -11628,8 +11316,6 @@ class PixelArtCard:
         """The title for this card."""
         self.data = data
         """The data for this card."""
-        self.name = name
-        """An optional identifying name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -11637,14 +11323,12 @@ class PixelArtCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('PixelArtCard.box', self.box, (str,), False, False, False)
         _guard_scalar('PixelArtCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('PixelArtCard.name', self.name, (str,), False, True, False)
         _guard_vector('PixelArtCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='pixel_art',
             box=self.box,
             title=self.title,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -11656,20 +11340,16 @@ class PixelArtCard:
         __d_title: Any = __d.get('title')
         _guard_scalar('PixelArtCard.title', __d_title, (str,), False, False, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('PixelArtCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('PixelArtCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PixelArtCard(
             box,
             title,
             data,
-            name,
             commands,
         )
 
@@ -11685,7 +11365,6 @@ class PlotCard:
             plot: Plot,
             events: Optional[List[str]] = None,
             interactions: Optional[List[str]] = None,
-            name: Optional[str] = None,
             animate: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -11694,7 +11373,6 @@ class PlotCard:
         _guard_scalar('PlotCard.plot', plot, (Plot,), False, False, False)
         _guard_vector('PlotCard.events', events, (str,), False, True, False)
         _guard_vector('PlotCard.interactions', interactions, (str,), False, True, False)
-        _guard_scalar('PlotCard.name', name, (str,), False, True, False)
         _guard_scalar('PlotCard.animate', animate, (bool,), False, True, False)
         _guard_vector('PlotCard.commands', commands, (Command,), False, True, False)
         self.box = box
@@ -11709,8 +11387,6 @@ class PlotCard:
         """The events to capture on this card. One of 'select_marks'."""
         self.interactions = interactions
         """The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event."""
-        self.name = name
-        """An optional identifying name for this card"""
         self.animate = animate
         """EXPERIMENTAL: True to turn on the chart animations. Defaults to False."""
         self.commands = commands
@@ -11723,7 +11399,6 @@ class PlotCard:
         _guard_scalar('PlotCard.plot', self.plot, (Plot,), False, False, False)
         _guard_vector('PlotCard.events', self.events, (str,), False, True, False)
         _guard_vector('PlotCard.interactions', self.interactions, (str,), False, True, False)
-        _guard_scalar('PlotCard.name', self.name, (str,), False, True, False)
         _guard_scalar('PlotCard.animate', self.animate, (bool,), False, True, False)
         _guard_vector('PlotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
@@ -11734,7 +11409,6 @@ class PlotCard:
             plot=self.plot.dump(),
             events=self.events,
             interactions=self.interactions,
-            name=self.name,
             animate=self.animate,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -11753,8 +11427,6 @@ class PlotCard:
         _guard_vector('PlotCard.events', __d_events, (str,), False, True, False)
         __d_interactions: Any = __d.get('interactions')
         _guard_vector('PlotCard.interactions', __d_interactions, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('PlotCard.name', __d_name, (str,), False, True, False)
         __d_animate: Any = __d.get('animate')
         _guard_scalar('PlotCard.animate', __d_animate, (bool,), False, True, False)
         __d_commands: Any = __d.get('commands')
@@ -11765,7 +11437,6 @@ class PlotCard:
         plot: Plot = Plot.load(__d_plot)
         events: Optional[List[str]] = __d_events
         interactions: Optional[List[str]] = __d_interactions
-        name: Optional[str] = __d_name
         animate: Optional[bool] = __d_animate
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PlotCard(
@@ -11775,7 +11446,6 @@ class PlotCard:
             plot,
             events,
             interactions,
-            name,
             animate,
             commands,
         )
@@ -11792,7 +11462,6 @@ class PostCard:
             aux_value: Optional[str] = None,
             caption: Optional[str] = None,
             items: Optional[List[Component]] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('PostCard.box', box, (str,), False, False, False)
@@ -11801,7 +11470,6 @@ class PostCard:
         _guard_scalar('PostCard.aux_value', aux_value, (str,), False, True, False)
         _guard_scalar('PostCard.caption', caption, (str,), False, True, False)
         _guard_vector('PostCard.items', items, (Component,), False, True, False)
-        _guard_scalar('PostCard.name', name, (str,), False, True, False)
         _guard_vector('PostCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -11815,8 +11483,6 @@ class PostCard:
         """The card's caption, displayed below the image."""
         self.items = items
         """The card's buttons, displayed at the bottom."""
-        self.name = name
-        """An optional name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -11828,7 +11494,6 @@ class PostCard:
         _guard_scalar('PostCard.aux_value', self.aux_value, (str,), False, True, False)
         _guard_scalar('PostCard.caption', self.caption, (str,), False, True, False)
         _guard_vector('PostCard.items', self.items, (Component,), False, True, False)
-        _guard_scalar('PostCard.name', self.name, (str,), False, True, False)
         _guard_vector('PostCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='post',
@@ -11838,7 +11503,6 @@ class PostCard:
             aux_value=self.aux_value,
             caption=self.caption,
             items=None if self.items is None else [__e.dump() for __e in self.items],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -11857,8 +11521,6 @@ class PostCard:
         _guard_scalar('PostCard.caption', __d_caption, (str,), False, True, False)
         __d_items: Any = __d.get('items')
         _guard_vector('PostCard.items', __d_items, (dict,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('PostCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('PostCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -11867,7 +11529,6 @@ class PostCard:
         aux_value: Optional[str] = __d_aux_value
         caption: Optional[str] = __d_caption
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PostCard(
             box,
@@ -11876,7 +11537,6 @@ class PostCard:
             aux_value,
             caption,
             items,
-            name,
             commands,
         )
 
@@ -11991,7 +11651,6 @@ class ProfileCard:
             image: str,
             items: Optional[List[Component]] = None,
             height: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ProfileCard.box', box, (str,), False, False, False)
@@ -11999,7 +11658,6 @@ class ProfileCard:
         _guard_scalar('ProfileCard.image', image, (str,), False, False, False)
         _guard_vector('ProfileCard.items', items, (Component,), False, True, False)
         _guard_scalar('ProfileCard.height', height, (str,), False, True, False)
-        _guard_scalar('ProfileCard.name', name, (str,), False, True, False)
         _guard_vector('ProfileCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -12011,8 +11669,6 @@ class ProfileCard:
         """Components in this card displayed below the image."""
         self.height = height
         """The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views."""
-        self.name = name
-        """The name of the card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -12023,7 +11679,6 @@ class ProfileCard:
         _guard_scalar('ProfileCard.image', self.image, (str,), False, False, False)
         _guard_vector('ProfileCard.items', self.items, (Component,), False, True, False)
         _guard_scalar('ProfileCard.height', self.height, (str,), False, True, False)
-        _guard_scalar('ProfileCard.name', self.name, (str,), False, True, False)
         _guard_vector('ProfileCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='profile',
@@ -12032,7 +11687,6 @@ class ProfileCard:
             image=self.image,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             height=self.height,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -12049,8 +11703,6 @@ class ProfileCard:
         _guard_vector('ProfileCard.items', __d_items, (dict,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('ProfileCard.height', __d_height, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ProfileCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ProfileCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -12058,7 +11710,6 @@ class ProfileCard:
         image: str = __d_image
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         height: Optional[str] = __d_height
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ProfileCard(
             box,
@@ -12066,7 +11717,6 @@ class ProfileCard:
             image,
             items,
             height,
-            name,
             commands,
         )
 
@@ -12146,14 +11796,12 @@ class SectionCard:
             title: str,
             subtitle: str,
             items: Optional[Union[List[Component], str]] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('SectionCard.box', box, (str,), False, False, False)
         _guard_scalar('SectionCard.title', title, (str,), False, False, False)
         _guard_scalar('SectionCard.subtitle', subtitle, (str,), False, False, False)
         _guard_vector('SectionCard.items', items, (Component,), False, True, True)
-        _guard_scalar('SectionCard.name', name, (str,), False, True, False)
         _guard_vector('SectionCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -12163,8 +11811,6 @@ class SectionCard:
         """The subtitle, displayed below the title. Supports Markdown."""
         self.items = items
         """The components to display in this card"""
-        self.name = name
-        """An optional identifying name for this card"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -12174,7 +11820,6 @@ class SectionCard:
         _guard_scalar('SectionCard.title', self.title, (str,), False, False, False)
         _guard_scalar('SectionCard.subtitle', self.subtitle, (str,), False, False, False)
         _guard_vector('SectionCard.items', self.items, (Component,), False, True, True)
-        _guard_scalar('SectionCard.name', self.name, (str,), False, True, False)
         _guard_vector('SectionCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='section',
@@ -12182,7 +11827,6 @@ class SectionCard:
             title=self.title,
             subtitle=self.subtitle,
             items=None if self.items is None else self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -12197,22 +11841,18 @@ class SectionCard:
         _guard_scalar('SectionCard.subtitle', __d_subtitle, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('SectionCard.items', __d_items, (dict,), False, True, True)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('SectionCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('SectionCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
         items: Optional[Union[List[Component], str]] = __d_items if isinstance(__d_items, str) else None if __d_items is None else [Component.load(__e) for __e in __d_items]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return SectionCard(
             box,
             title,
             subtitle,
             items,
-            name,
             commands,
         )
 
@@ -12252,7 +11892,6 @@ class SmallSeriesStatCard:
             plot_curve: Optional[str] = None,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('SmallSeriesStatCard.box', box, (str,), False, False, False)
@@ -12264,7 +11903,6 @@ class SmallSeriesStatCard:
         _guard_enum('SmallSeriesStatCard.plot_type', plot_type, _SmallSeriesStatCardPlotType, True)
         _guard_enum('SmallSeriesStatCard.plot_curve', plot_curve, _SmallSeriesStatCardPlotCurve, True)
         _guard_scalar('SmallSeriesStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('SmallSeriesStatCard.name', name, (str,), False, True, False)
         _guard_vector('SmallSeriesStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -12288,8 +11926,6 @@ class SmallSeriesStatCard:
         """The plot's color."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional identifying name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -12304,7 +11940,6 @@ class SmallSeriesStatCard:
         _guard_enum('SmallSeriesStatCard.plot_type', self.plot_type, _SmallSeriesStatCardPlotType, True)
         _guard_enum('SmallSeriesStatCard.plot_curve', self.plot_curve, _SmallSeriesStatCardPlotCurve, True)
         _guard_scalar('SmallSeriesStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('SmallSeriesStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('SmallSeriesStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='small_series_stat',
@@ -12319,7 +11954,6 @@ class SmallSeriesStatCard:
             plot_curve=self.plot_curve,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -12346,8 +11980,6 @@ class SmallSeriesStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('SmallSeriesStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('SmallSeriesStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('SmallSeriesStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -12361,7 +11993,6 @@ class SmallSeriesStatCard:
         plot_curve: Optional[str] = __d_plot_curve
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return SmallSeriesStatCard(
             box,
@@ -12375,7 +12006,6 @@ class SmallSeriesStatCard:
             plot_curve,
             plot_color,
             data,
-            name,
             commands,
         )
 
@@ -12389,13 +12019,11 @@ class SmallStatCard:
             title: str,
             value: str,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('SmallStatCard.box', box, (str,), False, False, False)
         _guard_scalar('SmallStatCard.title', title, (str,), False, False, False)
         _guard_scalar('SmallStatCard.value', value, (str,), False, False, False)
-        _guard_scalar('SmallStatCard.name', name, (str,), False, True, False)
         _guard_vector('SmallStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -12405,8 +12033,6 @@ class SmallStatCard:
         """The primary value displayed."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional identifying name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -12415,7 +12041,6 @@ class SmallStatCard:
         _guard_scalar('SmallStatCard.box', self.box, (str,), False, False, False)
         _guard_scalar('SmallStatCard.title', self.title, (str,), False, False, False)
         _guard_scalar('SmallStatCard.value', self.value, (str,), False, False, False)
-        _guard_scalar('SmallStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('SmallStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='small_stat',
@@ -12423,7 +12048,6 @@ class SmallStatCard:
             title=self.title,
             value=self.value,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -12437,22 +12061,18 @@ class SmallStatCard:
         __d_value: Any = __d.get('value')
         _guard_scalar('SmallStatCard.value', __d_value, (str,), False, False, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('SmallStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('SmallStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return SmallStatCard(
             box,
             title,
             value,
             data,
-            name,
             commands,
         )
 
@@ -13017,7 +12637,6 @@ class TallGaugeStatCard:
             progress: float,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('TallGaugeStatCard.box', box, (str,), False, False, False)
@@ -13026,7 +12645,6 @@ class TallGaugeStatCard:
         _guard_scalar('TallGaugeStatCard.aux_value', aux_value, (str,), False, False, False)
         _guard_scalar('TallGaugeStatCard.progress', progress, (float, int,), False, False, False)
         _guard_scalar('TallGaugeStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('TallGaugeStatCard.name', name, (str,), False, True, False)
         _guard_vector('TallGaugeStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13042,8 +12660,6 @@ class TallGaugeStatCard:
         """The color of the progress gauge."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional identifying name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13055,7 +12671,6 @@ class TallGaugeStatCard:
         _guard_scalar('TallGaugeStatCard.aux_value', self.aux_value, (str,), False, False, False)
         _guard_scalar('TallGaugeStatCard.progress', self.progress, (float, int,), False, False, False)
         _guard_scalar('TallGaugeStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('TallGaugeStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('TallGaugeStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='tall_gauge_stat',
@@ -13066,7 +12681,6 @@ class TallGaugeStatCard:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13086,8 +12700,6 @@ class TallGaugeStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('TallGaugeStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TallGaugeStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('TallGaugeStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -13097,7 +12709,6 @@ class TallGaugeStatCard:
         progress: float = __d_progress
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TallGaugeStatCard(
             box,
@@ -13107,7 +12718,6 @@ class TallGaugeStatCard:
             progress,
             plot_color,
             data,
-            name,
             commands,
         )
 
@@ -13268,7 +12878,6 @@ class TallSeriesStatCard:
             plot_curve: Optional[str] = None,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('TallSeriesStatCard.box', box, (str,), False, False, False)
@@ -13281,7 +12890,6 @@ class TallSeriesStatCard:
         _guard_enum('TallSeriesStatCard.plot_type', plot_type, _TallSeriesStatCardPlotType, True)
         _guard_enum('TallSeriesStatCard.plot_curve', plot_curve, _TallSeriesStatCardPlotCurve, True)
         _guard_scalar('TallSeriesStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('TallSeriesStatCard.name', name, (str,), False, True, False)
         _guard_vector('TallSeriesStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13307,8 +12915,6 @@ class TallSeriesStatCard:
         """The plot's color."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional identifying name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13324,7 +12930,6 @@ class TallSeriesStatCard:
         _guard_enum('TallSeriesStatCard.plot_type', self.plot_type, _TallSeriesStatCardPlotType, True)
         _guard_enum('TallSeriesStatCard.plot_curve', self.plot_curve, _TallSeriesStatCardPlotCurve, True)
         _guard_scalar('TallSeriesStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('TallSeriesStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('TallSeriesStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='tall_series_stat',
@@ -13340,7 +12945,6 @@ class TallSeriesStatCard:
             plot_curve=self.plot_curve,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13369,8 +12973,6 @@ class TallSeriesStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('TallSeriesStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TallSeriesStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('TallSeriesStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -13385,7 +12987,6 @@ class TallSeriesStatCard:
         plot_curve: Optional[str] = __d_plot_curve
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TallSeriesStatCard(
             box,
@@ -13400,7 +13001,6 @@ class TallSeriesStatCard:
             plot_curve,
             plot_color,
             data,
-            name,
             commands,
         )
 
@@ -13474,13 +13074,11 @@ class TemplateCard:
             title: str,
             content: str,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('TemplateCard.box', box, (str,), False, False, False)
         _guard_scalar('TemplateCard.title', title, (str,), False, False, False)
         _guard_scalar('TemplateCard.content', content, (str,), False, False, False)
-        _guard_scalar('TemplateCard.name', name, (str,), False, True, False)
         _guard_vector('TemplateCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13490,8 +13088,6 @@ class TemplateCard:
         """The Handlebars template. https://handlebarsjs.com/guide/"""
         self.data = data
         """Data for the Handlebars template."""
-        self.name = name
-        """An optional identifying name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13500,7 +13096,6 @@ class TemplateCard:
         _guard_scalar('TemplateCard.box', self.box, (str,), False, False, False)
         _guard_scalar('TemplateCard.title', self.title, (str,), False, False, False)
         _guard_scalar('TemplateCard.content', self.content, (str,), False, False, False)
-        _guard_scalar('TemplateCard.name', self.name, (str,), False, True, False)
         _guard_vector('TemplateCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='template',
@@ -13508,7 +13103,6 @@ class TemplateCard:
             title=self.title,
             content=self.content,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13522,22 +13116,18 @@ class TemplateCard:
         __d_content: Any = __d.get('content')
         _guard_scalar('TemplateCard.content', __d_content, (str,), False, False, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('TemplateCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('TemplateCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TemplateCard(
             box,
             title,
             content,
             data,
-            name,
             commands,
         )
 
@@ -13551,14 +13141,12 @@ class ToolbarCard:
             items: List[Command],
             secondary_items: Optional[List[Command]] = None,
             overflow_items: Optional[List[Command]] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ToolbarCard.box', box, (str,), False, False, False)
         _guard_vector('ToolbarCard.items', items, (Command,), False, False, False)
         _guard_vector('ToolbarCard.secondary_items', secondary_items, (Command,), False, True, False)
         _guard_vector('ToolbarCard.overflow_items', overflow_items, (Command,), False, True, False)
-        _guard_scalar('ToolbarCard.name', name, (str,), False, True, False)
         _guard_vector('ToolbarCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13568,8 +13156,6 @@ class ToolbarCard:
         """Items to render on the right side (or left, in RTL)."""
         self.overflow_items = overflow_items
         """Items to render in an overflow menu."""
-        self.name = name
-        """An optional name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13579,7 +13165,6 @@ class ToolbarCard:
         _guard_vector('ToolbarCard.items', self.items, (Command,), False, False, False)
         _guard_vector('ToolbarCard.secondary_items', self.secondary_items, (Command,), False, True, False)
         _guard_vector('ToolbarCard.overflow_items', self.overflow_items, (Command,), False, True, False)
-        _guard_scalar('ToolbarCard.name', self.name, (str,), False, True, False)
         _guard_vector('ToolbarCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='toolbar',
@@ -13587,7 +13172,6 @@ class ToolbarCard:
             items=[__e.dump() for __e in self.items],
             secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
             overflow_items=None if self.overflow_items is None else [__e.dump() for __e in self.overflow_items],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13602,22 +13186,18 @@ class ToolbarCard:
         _guard_vector('ToolbarCard.secondary_items', __d_secondary_items, (dict,), False, True, False)
         __d_overflow_items: Any = __d.get('overflow_items')
         _guard_vector('ToolbarCard.overflow_items', __d_overflow_items, (dict,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('ToolbarCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ToolbarCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[Command] = [Command.load(__e) for __e in __d_items]
         secondary_items: Optional[List[Command]] = None if __d_secondary_items is None else [Command.load(__e) for __e in __d_secondary_items]
         overflow_items: Optional[List[Command]] = None if __d_overflow_items is None else [Command.load(__e) for __e in __d_overflow_items]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ToolbarCard(
             box,
             items,
             secondary_items,
             overflow_items,
-            name,
             commands,
         )
 
@@ -13640,14 +13220,12 @@ class VegaCard:
             specification: str,
             data: Optional[PackedRecord] = None,
             grammar: Optional[str] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('VegaCard.box', box, (str,), False, False, False)
         _guard_scalar('VegaCard.title', title, (str,), False, False, False)
         _guard_scalar('VegaCard.specification', specification, (str,), False, False, False)
         _guard_enum('VegaCard.grammar', grammar, _VegaCardGrammar, True)
-        _guard_scalar('VegaCard.name', name, (str,), False, True, False)
         _guard_vector('VegaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13659,8 +13237,6 @@ class VegaCard:
         """Data for the plot, if any."""
         self.grammar = grammar
         """Vega grammar to use. Defaults to 'vega-lite'. One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaCardGrammar."""
-        self.name = name
-        """An optional name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13670,7 +13246,6 @@ class VegaCard:
         _guard_scalar('VegaCard.title', self.title, (str,), False, False, False)
         _guard_scalar('VegaCard.specification', self.specification, (str,), False, False, False)
         _guard_enum('VegaCard.grammar', self.grammar, _VegaCardGrammar, True)
-        _guard_scalar('VegaCard.name', self.name, (str,), False, True, False)
         _guard_vector('VegaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='vega',
@@ -13679,7 +13254,6 @@ class VegaCard:
             specification=self.specification,
             data=self.data,
             grammar=self.grammar,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13695,8 +13269,6 @@ class VegaCard:
         __d_data: Any = __d.get('data')
         __d_grammar: Any = __d.get('grammar')
         _guard_enum('VegaCard.grammar', __d_grammar, _VegaCardGrammar, True)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('VegaCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('VegaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -13704,7 +13276,6 @@ class VegaCard:
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
         grammar: Optional[str] = __d_grammar
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return VegaCard(
             box,
@@ -13712,7 +13283,6 @@ class VegaCard:
             specification,
             data,
             grammar,
-            name,
             commands,
         )
 
@@ -13839,7 +13409,6 @@ class WideBarStatCard:
             progress: float,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WideBarStatCard.box', box, (str,), False, False, False)
@@ -13848,7 +13417,6 @@ class WideBarStatCard:
         _guard_scalar('WideBarStatCard.aux_value', aux_value, (str,), False, False, False)
         _guard_scalar('WideBarStatCard.progress', progress, (float, int,), False, False, False)
         _guard_scalar('WideBarStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('WideBarStatCard.name', name, (str,), False, True, False)
         _guard_vector('WideBarStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13864,8 +13432,6 @@ class WideBarStatCard:
         """The color of the progress bar."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13877,7 +13443,6 @@ class WideBarStatCard:
         _guard_scalar('WideBarStatCard.aux_value', self.aux_value, (str,), False, False, False)
         _guard_scalar('WideBarStatCard.progress', self.progress, (float, int,), False, False, False)
         _guard_scalar('WideBarStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('WideBarStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('WideBarStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_bar_stat',
@@ -13888,7 +13453,6 @@ class WideBarStatCard:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13908,8 +13472,6 @@ class WideBarStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('WideBarStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('WideBarStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WideBarStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -13919,7 +13481,6 @@ class WideBarStatCard:
         progress: float = __d_progress
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideBarStatCard(
             box,
@@ -13929,7 +13490,6 @@ class WideBarStatCard:
             progress,
             plot_color,
             data,
-            name,
             commands,
         )
 
@@ -13946,7 +13506,6 @@ class WideGaugeStatCard:
             progress: float,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WideGaugeStatCard.box', box, (str,), False, False, False)
@@ -13955,7 +13514,6 @@ class WideGaugeStatCard:
         _guard_scalar('WideGaugeStatCard.aux_value', aux_value, (str,), False, False, False)
         _guard_scalar('WideGaugeStatCard.progress', progress, (float, int,), False, False, False)
         _guard_scalar('WideGaugeStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('WideGaugeStatCard.name', name, (str,), False, True, False)
         _guard_vector('WideGaugeStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -13971,8 +13529,6 @@ class WideGaugeStatCard:
         """The color of the progress gauge."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -13984,7 +13540,6 @@ class WideGaugeStatCard:
         _guard_scalar('WideGaugeStatCard.aux_value', self.aux_value, (str,), False, False, False)
         _guard_scalar('WideGaugeStatCard.progress', self.progress, (float, int,), False, False, False)
         _guard_scalar('WideGaugeStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('WideGaugeStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('WideGaugeStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_gauge_stat',
@@ -13995,7 +13550,6 @@ class WideGaugeStatCard:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -14015,8 +13569,6 @@ class WideGaugeStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('WideGaugeStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('WideGaugeStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WideGaugeStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -14026,7 +13578,6 @@ class WideGaugeStatCard:
         progress: float = __d_progress
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideGaugeStatCard(
             box,
@@ -14036,7 +13587,6 @@ class WideGaugeStatCard:
             progress,
             plot_color,
             data,
-            name,
             commands,
         )
 
@@ -14189,14 +13739,12 @@ class Pie:
             fraction: float,
             color: str,
             aux_value: Optional[str] = None,
-            name: Optional[str] = None,
     ):
         _guard_scalar('Pie.label', label, (str,), False, False, False)
         _guard_scalar('Pie.value', value, (str,), False, False, False)
         _guard_scalar('Pie.fraction', fraction, (float, int,), False, False, False)
         _guard_scalar('Pie.color', color, (str,), False, False, False)
         _guard_scalar('Pie.aux_value', aux_value, (str,), False, True, False)
-        _guard_scalar('Pie.name', name, (str,), False, True, False)
         self.label = label
         """The description for the pie, displayed in the legend."""
         self.value = value
@@ -14207,8 +13755,6 @@ class Pie:
         """The color of the pie."""
         self.aux_value = aux_value
         """The auxiliary value, displayed below the label."""
-        self.name = name
-        """An optional name, for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -14217,14 +13763,12 @@ class Pie:
         _guard_scalar('Pie.fraction', self.fraction, (float, int,), False, False, False)
         _guard_scalar('Pie.color', self.color, (str,), False, False, False)
         _guard_scalar('Pie.aux_value', self.aux_value, (str,), False, True, False)
-        _guard_scalar('Pie.name', self.name, (str,), False, True, False)
         return _dump(
             label=self.label,
             value=self.value,
             fraction=self.fraction,
             color=self.color,
             aux_value=self.aux_value,
-            name=self.name,
         )
 
     @staticmethod
@@ -14240,21 +13784,17 @@ class Pie:
         _guard_scalar('Pie.color', __d_color, (str,), False, False, False)
         __d_aux_value: Any = __d.get('aux_value')
         _guard_scalar('Pie.aux_value', __d_aux_value, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Pie.name', __d_name, (str,), False, True, False)
         label: str = __d_label
         value: str = __d_value
         fraction: float = __d_fraction
         color: str = __d_color
         aux_value: Optional[str] = __d_aux_value
-        name: Optional[str] = __d_name
         return Pie(
             label,
             value,
             fraction,
             color,
             aux_value,
-            name,
         )
 
 
@@ -14266,13 +13806,11 @@ class WidePieStatCard:
             box: str,
             title: str,
             pies: List[Pie],
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WidePieStatCard.box', box, (str,), False, False, False)
         _guard_scalar('WidePieStatCard.title', title, (str,), False, False, False)
         _guard_vector('WidePieStatCard.pies', pies, (Pie,), False, False, False)
-        _guard_scalar('WidePieStatCard.name', name, (str,), False, True, False)
         _guard_vector('WidePieStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -14280,8 +13818,6 @@ class WidePieStatCard:
         """The card's title."""
         self.pies = pies
         """The pies to be included in the pie chart."""
-        self.name = name
-        """An optional name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -14290,14 +13826,12 @@ class WidePieStatCard:
         _guard_scalar('WidePieStatCard.box', self.box, (str,), False, False, False)
         _guard_scalar('WidePieStatCard.title', self.title, (str,), False, False, False)
         _guard_vector('WidePieStatCard.pies', self.pies, (Pie,), False, False, False)
-        _guard_scalar('WidePieStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('WidePieStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_pie_stat',
             box=self.box,
             title=self.title,
             pies=[__e.dump() for __e in self.pies],
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -14310,20 +13844,16 @@ class WidePieStatCard:
         _guard_scalar('WidePieStatCard.title', __d_title, (str,), False, False, False)
         __d_pies: Any = __d.get('pies')
         _guard_vector('WidePieStatCard.pies', __d_pies, (dict,), False, False, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('WidePieStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WidePieStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         pies: List[Pie] = [Pie.load(__e) for __e in __d_pies]
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WidePieStatCard(
             box,
             title,
             pies,
-            name,
             commands,
         )
 
@@ -14338,14 +13868,12 @@ class WidePlotCard:
             caption: str,
             plot: Plot,
             data: PackedRecord,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WidePlotCard.box', box, (str,), False, False, False)
         _guard_scalar('WidePlotCard.title', title, (str,), False, False, False)
         _guard_scalar('WidePlotCard.caption', caption, (str,), False, False, False)
         _guard_scalar('WidePlotCard.plot', plot, (Plot,), False, False, False)
-        _guard_scalar('WidePlotCard.name', name, (str,), False, True, False)
         _guard_vector('WidePlotCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -14357,8 +13885,6 @@ class WidePlotCard:
         """The card's plot."""
         self.data = data
         """The card's plot data."""
-        self.name = name
-        """An optional name for this component."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -14368,7 +13894,6 @@ class WidePlotCard:
         _guard_scalar('WidePlotCard.title', self.title, (str,), False, False, False)
         _guard_scalar('WidePlotCard.caption', self.caption, (str,), False, False, False)
         _guard_scalar('WidePlotCard.plot', self.plot, (Plot,), False, False, False)
-        _guard_scalar('WidePlotCard.name', self.name, (str,), False, True, False)
         _guard_vector('WidePlotCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_plot',
@@ -14377,7 +13902,6 @@ class WidePlotCard:
             caption=self.caption,
             plot=self.plot.dump(),
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -14393,8 +13917,6 @@ class WidePlotCard:
         __d_plot: Any = __d.get('plot')
         _guard_scalar('WidePlotCard.plot', __d_plot, (dict,), False, False, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('WidePlotCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WidePlotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -14402,7 +13924,6 @@ class WidePlotCard:
         caption: str = __d_caption
         plot: Plot = Plot.load(__d_plot)
         data: PackedRecord = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WidePlotCard(
             box,
@@ -14410,7 +13931,6 @@ class WidePlotCard:
             caption,
             plot,
             data,
-            name,
             commands,
         )
 
@@ -14451,7 +13971,6 @@ class WideSeriesStatCard:
             plot_curve: Optional[str] = None,
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
-            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WideSeriesStatCard.box', box, (str,), False, False, False)
@@ -14464,7 +13983,6 @@ class WideSeriesStatCard:
         _guard_enum('WideSeriesStatCard.plot_type', plot_type, _WideSeriesStatCardPlotType, True)
         _guard_enum('WideSeriesStatCard.plot_curve', plot_curve, _WideSeriesStatCardPlotCurve, True)
         _guard_scalar('WideSeriesStatCard.plot_color', plot_color, (str,), False, True, False)
-        _guard_scalar('WideSeriesStatCard.name', name, (str,), False, True, False)
         _guard_vector('WideSeriesStatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -14490,8 +14008,6 @@ class WideSeriesStatCard:
         """The plot's color."""
         self.data = data
         """Data for this card."""
-        self.name = name
-        """An optional name for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -14507,7 +14023,6 @@ class WideSeriesStatCard:
         _guard_enum('WideSeriesStatCard.plot_type', self.plot_type, _WideSeriesStatCardPlotType, True)
         _guard_enum('WideSeriesStatCard.plot_curve', self.plot_curve, _WideSeriesStatCardPlotCurve, True)
         _guard_scalar('WideSeriesStatCard.plot_color', self.plot_color, (str,), False, True, False)
-        _guard_scalar('WideSeriesStatCard.name', self.name, (str,), False, True, False)
         _guard_vector('WideSeriesStatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_series_stat',
@@ -14523,7 +14038,6 @@ class WideSeriesStatCard:
             plot_curve=self.plot_curve,
             plot_color=self.plot_color,
             data=self.data,
-            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -14552,8 +14066,6 @@ class WideSeriesStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('WideSeriesStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
-        __d_name: Any = __d.get('name')
-        _guard_scalar('WideSeriesStatCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WideSeriesStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -14568,7 +14080,6 @@ class WideSeriesStatCard:
         plot_curve: Optional[str] = __d_plot_curve
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
-        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideSeriesStatCard(
             box,
@@ -14583,6 +14094,5 @@ class WideSeriesStatCard:
             plot_curve,
             plot_color,
             data,
-            name,
             commands,
         )
