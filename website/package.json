@@ -20,8 +20,8 @@
     "react-dom": "^16.8.4"
   },
   "devDependencies": {
-    "@docusaurus/core": "^2.1.0",
-    "@docusaurus/preset-classic": "^2.1.0"
+    "@docusaurus/core": "^3.5.2",
+    "@docusaurus/preset-classic": "^3.5.2"
   },
   "browserslist": {
     "production": [
