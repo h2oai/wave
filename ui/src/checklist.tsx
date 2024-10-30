@@ -79,11 +79,20 @@ export const
         wave.args[m.name] = choices.filter(({ selected }) => selected).map(({ c }) => c.name)
         if (m.trigger) wave.push()
       },
-      select = (value: B) => {
-        const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
+      select = (selectAll: B) => {
+        const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : selectAll }))
         setChoices(_choices)
         capture(_choices)
-        m.values = value ? _choices.map(({ c }) => c.name) : []
+
+        if (selectAll) {
+          m.values = _choices
+            .filter(({ c, selected }) => !c.disabled || selected) // Exclude disabled 
+            .map(({ c }) => c.name)
+        } else {
+          m.values = _choices
+            .filter(({ c, selected }) => c.disabled && selected) // Retain  selected disabled
+            .map(({ c }) => c.name)
+        }
       },
       selectAll = () => select(true),
       deselectAll = () => select(false),
@@ -127,3 +136,4 @@ export const
       </div>
     )
   }
+
