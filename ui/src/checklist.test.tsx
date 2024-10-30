@@ -161,6 +161,19 @@ describe('Checklist.tsx', () => {
     expect(wave.args[name]).toMatchObject(['Choice1', 'Choice2'])
   })
 
+  it('Selects only enabled choices when some are disabled', () => {
+    const choices = [
+      { name: 'Choice1', disabled: true },
+      { name: 'Choice2', disabled: false },
+      { name: 'Choice3', disabled: false },
+    ]
+    const { getByText } = render(<XChecklist model={{ ...checklistProps, choices }} />)
+
+    fireEvent.click(getByText('Select All'))
+
+    expect(wave.args[name]).toMatchObject(['Choice2', 'Choice3'])
+  })
+
   it('Retains unselected and disabled items after deselect all', () => {
     const disabledChoices = [
       { name: 'Choice1', disabled: true },
