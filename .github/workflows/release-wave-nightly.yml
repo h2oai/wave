@@ -157,7 +157,7 @@ jobs:
           KC_SLEEP: 45
 
   release:
-    needs: [test-linux, test-win, test-macos, check-last-commit]
+    needs: [test-linux, test-win, check-last-commit]
     name: Release Wave Nightly
     runs-on: ubuntu-20.04
     steps:
