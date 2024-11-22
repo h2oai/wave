@@ -119,7 +119,7 @@ To enable OpenID Connect, pass the following flags when starting the Wave server
 - `-oidc-skip-login`: (Optional) Don't show the built-in login form during OIDC authorization. Instead, navigate directly to the identity provider's login form.
 - `-oidc-auth-url-params`: (Optional) Additional URL parameters to pass during OIDC authorization.
 
-Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](/api/server#h2o_wave_server_Auth) class for details):
+Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](api/server#h2o_wave_server_Auth) class for details):
 
 ```py
 from h2o_wave import Q, main, app
