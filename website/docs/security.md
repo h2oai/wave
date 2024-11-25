@@ -113,13 +113,13 @@ To enable OpenID Connect, pass the following flags when starting the Wave server
 - `-oidc-provider-url`: The URL for authentication (the identity provider's URL).
 - `-oidc-redirect-url`: The URL to redirect back to after authentication. This is typically `/_auth/callback` appended to the Wave server's address. For example, if the Wave server is running at `https://192.168.42.42:80`, set this to `https://192.168.42.42:80/_auth/callback`. If you're testing your app's authorization workflow during development and the Wave server is running at `http://localhost:10101`, you can set this argument to `http://localhost:10101/_auth/callback`. If you also specified the `-base-url` argument for Wave server, then make sure the redirect URL includes the base URL. For example, if the base URL is set to `/my/app/`, set the redirect URL to `https://192.168.42.42:80/my/app/_auth/callback`.
 - `-oidc-client-id`: Client ID (refer to your identity provider's documentation).
-- `-oidc-client-secret`:  Client secret (refer to your identity provider's documentation).
+- `-oidc-client-secret`: Client secret (refer to your identity provider's documentation).
 - `-oidc-end-session-url`: (Optional) URL to log out (refer to your identity provider's documentation). This flag is optional and might not be supported by your identity provider.
 - `-oidc-scopes`: (Optional) Comma-separated scopes that will override defaults (`openid,profile`).
 - `-oidc-skip-login`: (Optional) Don't show the built-in login form during OIDC authorization. Instead, navigate directly to the identity provider's login form.
 - `-oidc-auth-url-params`: (Optional) Additional URL parameters to pass during OIDC authorization.
 
-Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](api/server#auth) class for details):
+Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](/docs/api/server#h2o_wave_server_Auth) class for details):
 
 ```py
 from h2o_wave import Q, main, app
@@ -153,7 +153,7 @@ async def serve(q: Q):
     new_access_token = await q.auth.ensure_fresh_token()
 ```
 
-Synchronous version `ensure_fresh_token_sync` is also supported if your token provider is synchronous. However, using it is heavily discouraged due to its blocking nature - will make the Wave app super slow for all users, thus only recommended for throwaway, single user PoCs. ***Async version is the preferred choice*** to mitigate this.
+Synchronous version `ensure_fresh_token_sync` is also supported if your token provider is synchronous. However, using it is heavily discouraged due to its blocking nature - will make the Wave app super slow for all users, thus only recommended for throwaway, single user PoCs. **Async version is the preferred choice** to mitigate this.
 
 ### FAQ
 
