@@ -181,7 +181,7 @@ release-nightly: build-ui ## Prepare nightly release builds.
 publish-release-s3:
 	aws s3 sync build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 	aws s3 sync py/h2o_wave/dist/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.whl"
-	aws s3 sync r/build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
+	# aws s3 sync r/build/ s3://h2o-wave/releases --acl public-read --exclude "*" --include "*.tar.gz"
 
 publish-apps-s3-mc:
 	aws s3 sync build/apps/wave-dashboard $(MC_S3_BUCKET)/wave-dashboard
