@@ -48,7 +48,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::524466471676:role/workflows-library-wave-bundling-github-actions
+          role-to-assume: arn:aws:iam::353750902984:role/GitHub-OIDC-Role
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-1
 
@@ -91,7 +91,7 @@ jobs:
           platforms: linux/amd64
           provenance: false
           tags: |
-            524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}-bundle:${{ inputs.build-version }}
+            353750902984.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}-bundle:${{ inputs.build-version }}
 
       - name: Build and Export Runtime Image
         uses: docker/build-push-action@v4
@@ -103,12 +103,12 @@ jobs:
           platforms: linux/amd64
           provenance: false
           tags: |
-            524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}:${{ inputs.build-version }}
+            353750902984.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}:${{ inputs.build-version }}
 
       - name: Published Images Summary
         run: |
           echo "#### Image Tags" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "docker image push 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}-bundle:${{ inputs.build-version }}" >> $GITHUB_STEP_SUMMARY
-          echo "docker image push 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}:${{ inputs.build-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker image push 353750902984.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}-bundle:${{ inputs.build-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker image push 353750902984.dkr.ecr.us-east-1.amazonaws.com/h2oai/${{ inputs.wave-app-name }}:${{ inputs.build-version }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
