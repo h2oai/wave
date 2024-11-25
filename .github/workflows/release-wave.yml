@@ -104,6 +104,13 @@ jobs:
       #     packages_dir: py/h2o_wave/dist
       #     password: ${{ secrets.PYPI_API_TOKEN }}
 
+      - name: Configure HAIC AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
+          role-session-name: wave-s3
+          aws-region: ${{ secrets.AWS_WEST_REGION }}
+
       - name: Publish Docs
         if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
         run: |
@@ -111,24 +118,24 @@ jobs:
           aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
         env:
           AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
-
-      - name: Publish to S3
-        run: make publish-release-s3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
+          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
 
       - name: Publish apps for Cloud
         run: make build-apps publish-apps-s3-hac
         env:
           HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
+          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
+
+      - name: Publish to S3
+        run: make publish-release-s3
+        env:
+          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
 
       - name: Configure MC AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
