@@ -116,7 +116,17 @@ jobs:
         run: |
           make publish-website
 
-      - name: Configure HAIC AWS Credentials
+      - name: Publish apps for Cloud
+        run: make build-apps publish-apps-s3-hac
+        env:
+          HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
+
+      - name: Publish to S3
+        run: make publish-release-s3
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
+
+      - name: Configure Shared Services AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
@@ -129,21 +139,6 @@ jobs:
           aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
         env:
           AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
-
-      - name: Publish apps for Cloud
-        run: make build-apps publish-apps-s3-hac
-        env:
-          HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
-          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # AWS_DEFAULT_REGION: ${{ secrets.AWS_WEST_REGION }}
-
-      - name: Publish to S3
-        run: make publish-release-s3
-        env:
-          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
 
       - name: Configure MC AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
