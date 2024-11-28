@@ -79,6 +79,10 @@ func Run(conf ServerConf) {
 
 	isTLS := conf.CertFile != "" && conf.KeyFile != ""
 
+	if conf.SkipCertVerification {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
 	printLaunchBar(conf.Listen, conf.BaseURL, isTLS)
 
 	site := newSite()
@@ -148,10 +152,6 @@ func Run(conf ServerConf) {
 	handle("", webServer)
 
 	echo(Log{"t": "listen", "address": conf.Listen, "web-dir": conf.WebDir, "base-url": conf.BaseURL})
-
-	if conf.SkipCertVerification {
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	}
 
 	if isTLS {
 		if err := http.ListenAndServeTLS(conf.Listen, conf.CertFile, conf.KeyFile, nil); err != nil {
