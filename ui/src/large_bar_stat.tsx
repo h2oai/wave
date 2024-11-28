@@ -65,6 +65,8 @@ interface State {
   plot_color?: S
   /** Data for this card. */
   data?: Rec
+  /** An optional identifying name for this group. */
+  name?: S
 }
 
 export const

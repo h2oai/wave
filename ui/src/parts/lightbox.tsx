@@ -114,7 +114,7 @@ const
     iconPressed: { color: 'rgba(255, 255, 255, 0.7)' },
   }
 
-type Image = { title: S, description?: S, type?: S, image?: S, path?: S }
+type Image = { title: S, description?: S, type?: S, image?: S, path?: S, name?: S }
 
 export interface LightboxProps {
   images: Image[],

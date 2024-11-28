@@ -36,6 +36,8 @@ interface InlineStylesheet {
   content: S
   /** A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media. */
   media?: S
+  /** An optional identifying name for this stylesheet. */
+  name?: S
 }
 
 /**
@@ -48,6 +50,8 @@ interface Stylesheet {
   media?: S
   /** The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin */
   cross_origin?: S
+  /** An optional identifying name for this stylesheet. */
+  name?: S
 }
 /**
  * Represents the layout structure for a page.
@@ -162,6 +166,8 @@ interface State {
   stylesheet?: InlineStylesheet
   /** External CSS files to load into the page. */
   stylesheets?: Stylesheet[]
+  /** An Optional identifying name for this page */
+  name?: S
   /** EXPERIMENTAL: True to turn on the card animations. Defaults to False. */
   animate?: B
 }
