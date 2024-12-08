@@ -2115,3 +2115,51 @@ describe('Table.tsx', () => {
     })
   })
 })
+
+  describe('Table with single row and pagination enabled', () => {
+    
+    beforeEach(() => {
+      tableProps = {
+        name,
+        columns: [
+          { name: 'foo', label: 'Foo', sortable: true, searchable: true },
+          { name: 'bar', label: 'Bar', sortable: true, filterable: true },
+        ],
+        rows: [
+          { name: 'rowname1', cells: ["a", 'b'] }, // Single row
+        ],
+        pagination: {
+          total_rows: 1,
+          rows_per_page: 5, // Pagination enabled
+        }
+      }
+      emitMock.mockClear()
+      wave.args[name] = null
+    })
+
+    it('renders the single row with pagination correctly', () => {
+      const { getByText } = render(<XTable model={tableProps} />)
+
+      // Verify the single row's cell content is visible
+      expect(getByText("a")).toBeInTheDocument()
+    })
+  })
+
+  it('displays no data message when there are no rows', () => {
+    tableProps = {
+      ...tableProps,
+      rows: [], // No data rows
+      pagination: { total_rows: 0, rows_per_page: 5 }
+    };
+
+    render(<XTable model={tableProps} />);
+
+    // Query rows excluding column headers
+    const dataRows = screen.queryAllByRole("row").filter(row =>
+      !row.querySelector('[role="columnheader"]') // Exclude rows with column headers
+    );
+
+    // Expect no data rows
+    expect(dataRows).toHaveLength(0);
+  });
+})
