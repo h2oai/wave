@@ -169,26 +169,26 @@ jobs:
           ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
           ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
-      # - name: Build university
-      #   run: make publish-university
-      #
-      # - name: Publish to PyPI - wave_university
-      #   uses: pypa/gh-action-pypi-publish@master
-      #   with:
-      #     packages_dir: university/dist
-      #     password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
-      #
-      # - name: Publish to PyPI - lightwave
-      #   uses: pypa/gh-action-pypi-publish@master
-      #   with:
-      #     packages_dir: py/h2o_lightwave/dist
-      #     password: ${{ secrets.PYPI_LIGTHWAVE_TOKEN }}
-      #
-      # - name: Publish to PyPI - lightwave_web
-      #   uses: pypa/gh-action-pypi-publish@master
-      #   with:
-      #     packages_dir: py/h2o_lightwave_web/dist
-      #     password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
+      - name: Build university
+        run: make publish-university
+
+      - name: Publish to PyPI - wave_university
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: university/dist
+          password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
+
+      - name: Publish to PyPI - lightwave
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_lightwave/dist
+          password: ${{ secrets.PYPI_LIGTHWAVE_TOKEN }}
+
+      - name: Publish to PyPI - lightwave_web
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_lightwave_web/dist
+          password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
 
       - name: Download H2O CLI
         working-directory: ./py/tmp/tour/
