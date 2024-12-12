@@ -21,6 +21,7 @@ import { debounce } from '../ui'
 interface Props {
   color: S
   data: F[]
+  name?: S
 }
 
 const

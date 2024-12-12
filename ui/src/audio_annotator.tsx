@@ -26,6 +26,8 @@ export interface AudioAnnotatorItem {
   end: F
   /** The `name` of the audio annotator tag to refer to for the `label` and `color` of this item. */
   tag: S
+  /** An identifying name for this component */
+  name?: S
 }
 
 /**

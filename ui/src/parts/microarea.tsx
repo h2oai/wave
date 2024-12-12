@@ -20,6 +20,7 @@ import { stylesheet } from 'typestyle'
 import { debounce } from '../ui'
 
 interface Props {
+  name?: S
   data: any[]
   zeroValue?: F
   value: S

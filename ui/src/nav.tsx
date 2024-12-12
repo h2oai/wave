@@ -70,6 +70,8 @@ export interface State {
   secondary_items?: Component[]
   /** Card background color. Defaults to 'card'. */
   color?: 'card' | 'primary'
+  /** An optional name for this card. */
+  name?: S
 }
 
 const
