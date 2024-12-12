@@ -147,18 +147,18 @@ jobs:
         env:
           AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
-      # - name: Configure MC AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v3
-      #   with:
-      #     role-to-assume: ${{ secrets.MC_IAM_ROLE }}
-      #     role-session-name: wave-apps
-      #     aws-region: ${{ secrets.MC_AWS_REGION }}
-      #
-      # - name: Publish apps for Managed Cloud
-      #   run: make publish-apps-s3-mc
-      #   env:
-      #     MC_S3_BUCKET: ${{ secrets.MC_S3_BUCKET }}
-      #     AWS_REGION: ${{ secrets.MC_AWS_REGION }}
+      - name: Configure MC AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.MC_IAM_ROLE }}
+          role-session-name: wave-apps
+          aws-region: ${{ secrets.MC_AWS_REGION }}
+
+      - name: Publish apps for Managed Cloud
+        run: make publish-apps-s3-mc
+        env:
+          MC_S3_BUCKET: ${{ secrets.MC_S3_BUCKET }}
+          AWS_REGION: ${{ secrets.MC_AWS_REGION }}
 
       # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
       - name: Reindex Algolia search
