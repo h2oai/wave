@@ -104,7 +104,6 @@ jobs:
       #     role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
       #     role-session-name: wave-s3
       #     aws-region: ${{ secrets.AWS_WEST_REGION }}
-      #
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
@@ -127,32 +126,32 @@ jobs:
       #   env:
       #     AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
 
-      - name: Configure Shared Services AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
-          role-session-name: wave-shared
-          aws-region: ${{ secrets.AWS_WEST_REGION }}
+      # - name: Configure Shared Services AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v3
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
+      #     role-session-name: wave-shared
+      #     aws-region: ${{ secrets.AWS_WEST_REGION }}
+      #
+      # - name: Invalidate CDN cache
+      #   if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
+      #   run: |
+      #     aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+      #   env:
+      #     AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
-      - name: Invalidate CDN cache
-        if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
-        run: |
-          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
-        env:
-          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
-
-      - name: Configure MC AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: ${{ secrets.MC_IAM_ROLE }}
-          role-session-name: wave-apps
-          aws-region: ${{ secrets.MC_AWS_REGION }}
-
-      - name: Publish apps for Managed Cloud
-        run: make publish-apps-s3-mc
-        env:
-          MC_S3_BUCKET: ${{ secrets.MC_S3_BUCKET }}
-          AWS_REGION: ${{ secrets.MC_AWS_REGION }}
+      # - name: Configure MC AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v3
+      #   with:
+      #     role-to-assume: ${{ secrets.MC_IAM_ROLE }}
+      #     role-session-name: wave-apps
+      #     aws-region: ${{ secrets.MC_AWS_REGION }}
+      #
+      # - name: Publish apps for Managed Cloud
+      #   run: make publish-apps-s3-mc
+      #   env:
+      #     MC_S3_BUCKET: ${{ secrets.MC_S3_BUCKET }}
+      #     AWS_REGION: ${{ secrets.MC_AWS_REGION }}
 
       # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
       - name: Reindex Algolia search
