@@ -98,6 +98,12 @@ jobs:
           # VERSION clashes with conda build. Use PKG_VERSION instead.
           PKG_VERSION: ${{ env.VERSION }}
 
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wave/dist
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
       - name: Configure HAIC AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
