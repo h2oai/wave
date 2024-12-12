@@ -14,7 +14,7 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "babel-loader": "^8.1.0",
-    "css-loader": "^4.3.0",
+    "css-loader": "^7.1.2",
     "file-loader": "^6.1.0",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^5.3.1",
@@ -29,8 +29,8 @@
     "terser-webpack-plugin": "^5.1.1",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
-    "webpack": "^5.27.2",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   }
 }
