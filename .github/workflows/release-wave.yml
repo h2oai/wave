@@ -105,6 +105,13 @@ jobs:
       #     role-session-name: wave-s3
       #     aws-region: ${{ secrets.AWS_WEST_REGION }}
       #
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          packages_dir: py/h2o_wave/dist
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
       # - name: Publish Docs
       #   if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
       #   run: |
