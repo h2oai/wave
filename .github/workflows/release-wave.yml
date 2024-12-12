@@ -133,19 +133,19 @@ jobs:
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
 
-      # - name: Configure Shared Services AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v3
-      #   with:
-      #     role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
-      #     role-session-name: wave-shared
-      #     aws-region: ${{ secrets.AWS_WEST_REGION }}
-      #
-      # - name: Invalidate CDN cache
-      #   if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
-      #   run: |
-      #     aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
-      #   env:
-      #     AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+      - name: Configure Shared Services AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
+          role-session-name: wave-shared
+          aws-region: ${{ secrets.AWS_WEST_REGION }}
+
+      - name: Invalidate CDN cache
+        if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
+        run: |
+          aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+        env:
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
       # - name: Configure MC AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v3
