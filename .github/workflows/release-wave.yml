@@ -126,7 +126,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_WAVE_IAM_ROLE  }}
           role-session-name: wave
-          aws-region: ${{ secrets.AWS_WEST_REGION }}
+          aws-region: ${{ secrets.AWS_EAST_REGION }}
 
       - name: Publish to S3
         run: make publish-release-s3
