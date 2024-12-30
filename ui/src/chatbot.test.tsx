@@ -268,9 +268,7 @@ describe('XChatbot', () => {
   })
 
   it('Preserve feedback on data change', () => {
-    const { container,
-      getByRole, getByTestId,
-      rerender } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
+    const { container, getByRole, getByTestId, rerender } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
     const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
     expect(likeButton).toBeInTheDocument()
 
