@@ -267,6 +267,31 @@ describe('XChatbot', () => {
     expect(emitMock).toHaveBeenCalledTimes(1)
   })
 
+  it('Preserve feedback on data change', () => {
+    const { container,
+      getByRole, getByTestId,
+      rerender } = render(<XChatbot {...{ ...model, data, events: ['feedback'] }} />)
+    const likeButton = container.querySelector("i[data-icon-name='Like']") as HTMLLIElement
+    expect(likeButton).toBeInTheDocument()
+
+    fireEvent.click(likeButton)
+    const likeSolidButton = container.querySelector("i[data-icon-name='LikeSolid']") as HTMLLIElement
+    expect(likeSolidButton).toBeInTheDocument()
+
+    const input = getByRole('textbox')
+    fireEvent.change(input, { target: { value: 'Woohoo' } })
+    fireEvent.click(getByTestId(`${name}-submit`))
+
+    // TODO: "rerender" does not append new message
+    rerender(<XChatbot {...{
+      ...model, data: [...data,
+      { content: 'I like it!', from_user: false }
+      ], events: ['feedback']
+    }} />)
+
+    expect(container.querySelector("i[data-icon-name='LikeSolid']") as HTMLLIElement).toBeInTheDocument()
+  })
+
   it('Renders suggestions when specified', () => {
     const { getByText } = render(<XChatbot {...{ ...model, suggestions }} />)
 
