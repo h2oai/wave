@@ -192,8 +192,7 @@ export const XChatbot = (props: Chatbot) => {
       }
     }, [props.events, props.name]),
     onDataChange = React.useCallback(() => {
-      if (props.data) setMsgs(processData(props.data))
-      // if (props.data) setMsgs(prevMsgs => processData(props.data).map((msg, idx) => ({ ...msg, positive: prevMsgs?.[idx]?.positive })))
+      if (props.data) setMsgs(prevMsgs => processData(props.data).map((msg, idx) => ({ ...msg, positive: prevMsgs?.[idx]?.positive })))
     }, [props.data]),
     handlePositive = (id: I) => {
       setMsgs(messages => {
