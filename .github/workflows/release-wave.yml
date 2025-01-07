@@ -111,11 +111,6 @@ jobs:
           role-session-name: wave-s3
           aws-region: ${{ secrets.AWS_WEST_REGION }}
 
-      - name: Publish Docs
-        if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
-        run: |
-          make publish-website
-
       - name: Publish apps for Cloud
         run: make build-apps publish-apps-s3-hac
         env:
@@ -140,6 +135,11 @@ jobs:
           role-session-name: wave-shared
           aws-region: ${{ secrets.AWS_WEST_REGION }}
 
+      - name: Publish Docs
+        if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
+        run: |
+          make publish-website
+
       - name: Invalidate CDN cache
         if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
         run: |
@@ -159,15 +159,6 @@ jobs:
         env:
           MC_S3_BUCKET: ${{ secrets.MC_S3_BUCKET }}
           AWS_REGION: ${{ secrets.MC_AWS_REGION }}
-
-      # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
-      - name: Reindex Algolia search
-        run: |
-          curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
-        env:
-          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
-          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
-          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
       - name: Build university
         run: make publish-university
@@ -189,6 +180,15 @@ jobs:
         with:
           packages_dir: py/h2o_lightwave_web/dist
           password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
+
+      # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
+      - name: Reindex Algolia search
+        run: |
+          curl -X POST -H "Content-Type: application/json" --user $ALGOLIA_CRAWLER_USER_ID:$ALGOLIA_CRAWLER_API_KEY  https://crawler.algolia.com/api/1/crawlers/$ALGOLIA_CRAWLER_ID/reindex
+        env:
+          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
+          ALGOLIA_CRAWLER_ID: ${{ secrets.ALGOLIA_CRAWLER_ID }}
+          ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
 
       - name: Download H2O CLI
         working-directory: ./py/tmp/tour/
