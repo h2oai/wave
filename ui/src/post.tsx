@@ -85,6 +85,8 @@ interface State {
   caption?: S
   /** The card's buttons, displayed at the bottom. */
   items?: Component[]
+  /** An optional name for this card. */
+  name?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {

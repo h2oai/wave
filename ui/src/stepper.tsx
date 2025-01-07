@@ -28,6 +28,8 @@ interface Step {
   icon?: S
   /** Indicates whether this step has already been completed. */
   done?: B
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /**
