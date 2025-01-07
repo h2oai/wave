@@ -44,6 +44,8 @@ jobs:
           make website
           make publish-website
           aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+        env:
+          AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
       # Needs a sleep to wait for cloudfront cache bust.
       - name: Reindex Algolia search
