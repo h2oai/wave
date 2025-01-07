@@ -17,16 +17,23 @@ jobs:
 
       - uses: actions/setup-go@v1
         with:
-          go-version: '1.19.4'
+          go-version: "1.19.4"
 
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Setup
         run: make all
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Configure Shared Services AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
+          role-session-name: wave-shared
+          aws-region: ${{ secrets.AWS_WEST_REGION }}
 
       - name: Publish Docs
         run: |
@@ -38,7 +45,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      
+
       # Needs a sleep to wait for cloudfront cache bust.
       - name: Reindex Algolia search
         run: |
