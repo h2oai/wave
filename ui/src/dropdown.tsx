@@ -17,7 +17,7 @@ import { B, Id, S, U } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { fuzzysearch } from './parts/utils'
+import { fuzzysearch, exactsearch } from './parts/utils'
 import { clas, cssVar, pc, px } from './theme'
 import { wave } from './ui'
 
@@ -61,6 +61,8 @@ export interface Dropdown {
   tooltip?: S
   /** Whether to present the choices using a pop-up dialog. By default pops up a dialog only for more than 100 choices. Defaults to 'auto'. */
   popup?: 'auto' | 'always' | 'never'
+  /**Whether the search will be exact or fuzzy */
+  exactSearch?: B
 }
 
 type DropdownItem = {
@@ -170,10 +172,19 @@ const
   getPageSpecification = () => ({ itemCount: PAGE_SIZE, height: ROW_HEIGHT * PAGE_SIZE } as Fluent.IPageSpecification),
   choicesToItems = (choices: Choice[] = [], v?: S | S[]) => choices.map(({ name, label, disabled = false }, idx) =>
     ({ name, text: label || name, idx, checked: Array.isArray(v) ? v.includes(name) : v === name, show: true, disabled })),
-  useItems = (choices?: Choice[], v?: S | S[]) => {
+  useItems = (choices?: Choice[], v?: S | S[], exactSearch?: boolean) => {
     const [items, setItems] = React.useState<DropdownItem[]>(choicesToItems(choices, v))
-    const onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => setItems(items => items.map(i => ({ ...i, show: fuzzysearch(i.text, newVal) })))
 
+    const onSearchChange = (_e?: React.ChangeEvent<HTMLInputElement>, newVal = '') => {
+      setItems((items) =>
+        items.map((i) => ({
+          ...i,
+          show: exactSearch
+            ? exactsearch(i.text, newVal) // Assuming exactsearch is a function for exact matching
+            : fuzzysearch(i.text, newVal), // Assuming fuzzysearch is a function for fuzzy matching
+        }))
+      );
+    };
     return [items, setItems, onSearchChange] as const
   },
   onRenderCell = (onChecked: any) => (item?: DropdownItem) => item
