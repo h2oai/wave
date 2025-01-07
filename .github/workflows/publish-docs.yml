@@ -6,6 +6,10 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   publish:
     name: Publish Docs
