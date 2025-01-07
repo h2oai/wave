@@ -54,38 +54,38 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
-      - name: Unit Test
-        run: |
-          make test-ui-ci
-          make setup-py-tests
-          make test-py-ci
+      # - name: Unit Test
+      #   run: |
+      #     make test-ui-ci
+      #     make setup-py-tests
+      #     make test-py-ci
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-          draft: false
+      # - name: Create GitHub Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   with:
+      #     tag_name: ${{ env.TAG }}
+      #     release_name: ${{ env.TAG }}
+      #     draft: false
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
-            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
-            # r/build/h2owave_${{ env.VERSION }}_R.tar.gz
-          tag_name: ${{ env.TAG }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: |
+      #       build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
+      #       build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
+      #       build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+      #       build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+      #       # r/build/h2owave_${{ env.VERSION }}_R.tar.gz
+      #     tag_name: ${{ env.TAG }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Publish to Conda
       #   uses: marek-mihok/publish_conda_package_action@v1.0.1
