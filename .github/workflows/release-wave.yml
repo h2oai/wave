@@ -87,22 +87,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to Conda
-        uses: marek-mihok/publish_conda_package_action@v1.0.1
-        with:
-          CondaDir: "py/h2o_wave/conda"
-          Platforms: "noarch"
-          CondaUsername: ${{ secrets.CONDA_USERNAME }}
-          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
-        env:
-          # VERSION clashes with conda build. Use PKG_VERSION instead.
-          PKG_VERSION: ${{ env.VERSION }}
+      # - name: Publish to Conda
+      #   uses: marek-mihok/publish_conda_package_action@v1.0.1
+      #   with:
+      #     CondaDir: "py/h2o_wave/conda"
+      #     Platforms: "noarch"
+      #     CondaUsername: ${{ secrets.CONDA_USERNAME }}
+      #     CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+      #   env:
+      #     # VERSION clashes with conda build. Use PKG_VERSION instead.
+      #     PKG_VERSION: ${{ env.VERSION }}
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          packages_dir: py/h2o_wave/dist
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      # - name: Publish to PyPI
+      #   uses: pypa/gh-action-pypi-publish@master
+      #   with:
+      #     packages_dir: py/h2o_wave/dist
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Configure HAIC AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
