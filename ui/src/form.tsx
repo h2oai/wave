@@ -190,6 +190,8 @@ interface State {
   items: Packed<Component[]>
   /** The title for this card. */
   title?: S
+  /** An optional name for this form. */
+  name?: S
 }
 
 const

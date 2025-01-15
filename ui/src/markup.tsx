@@ -66,6 +66,8 @@ interface State {
    * True if outer spacing should be removed. Defaults to False.
    **/
   compact?: B
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const

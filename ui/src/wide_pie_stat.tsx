@@ -96,6 +96,8 @@ interface Pie {
   color: S
   /** The auxiliary value, displayed below the label. */
   aux_value?: S
+  /** An optional name, for this component. */
+  name?: S
 }
 
 /** Create a wide pie stat card displaying a title and pie chart with legend. */
@@ -104,6 +106,8 @@ interface State {
   title: S
   /** The pies to be included in the pie chart. */
   pies: Pie[]
+  /** An optional name for this card. */
+  name?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {

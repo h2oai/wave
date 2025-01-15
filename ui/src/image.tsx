@@ -48,6 +48,8 @@ interface State {
   path?: S
   /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
   path_popup?: S
+  /** An optional identifying name for the image */
+  name?: S
 }
 
 
@@ -67,6 +69,8 @@ export interface Image {
   visible?: B
   /** The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property. */
   path_popup?: S
+  /** An optional identifying name for this component. */
+  name?: S
 }
 
 export const

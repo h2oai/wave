@@ -46,6 +46,8 @@ export interface Tag {
   color: S
   /** Tag's label color. If not specified, black or white will be picked based on correct contrast with background. */
   label_color?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 const css = stylesheet({
   tag: {

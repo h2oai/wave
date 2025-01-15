@@ -119,6 +119,8 @@ interface ChatbotMessage {
   content: S
   /* True if the message is from the user. */
   from_user: B
+  /** an optional identifying name for this component.*/
+  name?: S
 }
 
 /** Create a chat prompt suggestion displayed as button below the last response in the chatbot component. */

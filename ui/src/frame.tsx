@@ -89,6 +89,10 @@ interface State {
    * True if title and padding should be removed. Defaults to False.
    */
   compact?: B
+  /**
+   * An optional identifying name for this component.
+   */
+  name?: S
 }
 
 const

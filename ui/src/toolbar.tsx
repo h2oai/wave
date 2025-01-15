@@ -54,6 +54,8 @@ interface State {
   secondary_items?: Command[]
   /** Items to render in an overflow menu. */
   overflow_items?: Command[]
+  /** An optional name for this component. */
+  name?: S
 }
 
 const

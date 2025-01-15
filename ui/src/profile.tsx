@@ -78,6 +78,8 @@ interface State {
   items?: Component[]
   /** The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views. */
   height?: S
+  /** The name of the card. */
+  name?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
