@@ -1,6 +1,6 @@
 {
   "name": "wave-ui",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "private": true,
   "dependencies": {
     "@antv/g2": "^4.1.49",
