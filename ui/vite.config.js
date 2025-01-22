@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { defineConfig } from 'vite'
-import legacy from '@vitejs/plugin-legacy'
 import eslintPlugin from 'vite-plugin-eslint'
 import react from '@vitejs/plugin-react'
 
@@ -23,8 +22,6 @@ export default defineConfig({
   plugins: [
     react(),
     eslintPlugin({ cache: false, exclude: ['**/node_modules/**', 'package-lock.json', '**/dist/**'] }),
-    // Build legacy bundle only when version is specified (releases). Not needed for regular development.
-    process.env.VERSION ? legacy({ targets: ['Edge >= 16', 'Firefox >= 31', 'Chrome >= 49', 'Opera >= 36', 'Safari >= 10'] }) : null
   ],
   build: {
     outDir: 'build',
