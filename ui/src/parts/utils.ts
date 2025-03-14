@@ -24,6 +24,14 @@ export function fuzzysearch(haystack: S, needle: S) {
   }
   return true
 }
+// parts / utils.ts
+export const exactsearch = (searchTerm: string, itemText: string): boolean => {
+
+  // Convert both strings to lowercase for case-insensitive comparison
+  return itemText.toLowerCase() === searchTerm.toLowerCase(); // Exact match
+};
+
+
 
 // https://github.com/h2oai/wave/issues/1395.
 export const fixMenuOverflowStyles: Partial<IContextualMenuStyles> = {
