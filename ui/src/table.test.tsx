@@ -261,6 +261,27 @@ describe('Table.tsx', () => {
       expect(getByTestId(name).style.height).toBe('290px')
     })
 
+    it('Updates selection - client-change of single selection', () => {
+      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, single: true }} />)
+      const radioButtons = getAllByRole('radio')
+
+      rerender(<XTable model={{ ...tableProps, single: true, value: 'rowname1' }} />)
+
+      expect(radioButtons[0].firstChild).toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject(['rowname1'])
+    })
+
+    it('Updates selection - client-change of multiple selection', () => {
+      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, multiple: true }} />)
+      const checkboxes = getAllByRole('checkbox')
+
+      rerender(<XTable model={{ ...tableProps, multiple: true, values: ['rowname1', 'rowname2'] }} />)
+
+      expect(checkboxes[1].firstChild).toHaveClass('is-checked')
+      expect(checkboxes[2].firstChild).toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
+    })
+
   })
 
   describe('Wave calls', () => {
@@ -364,6 +385,50 @@ describe('Table.tsx', () => {
 
       fireEvent.click(radioButtons[1])
       expect(wave.args[name]).toMatchObject(['rowname2'])
+    })
+
+    it('Does not fire event - client-change of single selection', () => {
+      const { rerender } = render(<XTable model={{ ...tableProps, single: true, events: ['select'] }} />)
+
+      rerender(<XTable model={{ ...tableProps, single: true, value: 'rowname1', events: ['select'] }} />)
+
+      expect(emitMock).toHaveBeenCalledTimes(0)
+    })
+
+    it('Does not fire event - client-change of multiple selection', () => {
+      const { rerender } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+
+      rerender(<XTable model={{ ...tableProps, multiple: true, events: ['select'], values: ['rowname1', 'rowname2'] }} />)
+
+      expect(emitMock).toHaveBeenCalledTimes(0)
+    })
+
+    it('Clears args - client-remove of single selection', () => {
+      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, single: true, value: 'rowname1' }} />)
+      const radioButtons = getAllByRole('radio')
+
+      expect(radioButtons[0].firstChild).toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject(['rowname1'])
+
+      rerender(<XTable model={{ ...tableProps, single: true, value: undefined }} />)
+
+      expect(radioButtons[0].firstChild).not.toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject([])
+    })
+
+    it('Clears args - client-remove of multiple selection', () => {
+      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, multiple: true, values: ['rowname1', 'rowname2'] }} />)
+      const checkBoxes = getAllByRole('checkbox')
+
+      expect(checkBoxes[1].firstChild).toHaveClass('is-checked')
+      expect(checkBoxes[2].firstChild).toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
+
+      rerender(<XTable model={{ ...tableProps, multiple: true, values: [] }} />)
+
+      expect(checkBoxes[1].firstChild).not.toHaveClass('is-checked')
+      expect(checkBoxes[2].firstChild).not.toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject([])
     })
 
     it('Fires event - multiple selection - select single', () => {
@@ -1689,7 +1754,7 @@ describe('Table.tsx', () => {
 
       //collapse all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21, cell11, cell31])      
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21, cell11, cell31])
     })
 
     it('Expands all group by list - fire event', () => {
@@ -1700,8 +1765,8 @@ describe('Table.tsx', () => {
 
       //open all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21, cell11, cell31])      
-    })    
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21, cell11, cell31])
+    })
 
     it('Collapses group by list - fire event', () => {
       const { container, getAllByText, getByTestId } = render(<XTable model={{ ...tableProps, events: ['group_change'] }} />)
@@ -1715,9 +1780,9 @@ describe('Table.tsx', () => {
 
       //collapse 1st group
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21])      
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21])
     })
-        
+
     it('Expands group by list - fire event', () => {
       const { container, getAllByText, getByTestId } = render(<XTable model={{ ...tableProps, events: ['group_change'] }} />)
 
@@ -1726,8 +1791,8 @@ describe('Table.tsx', () => {
 
       //open 1st group
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
-      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21])       
-    })    
+      expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', [cell21])
+    })
   })
 
   describe('Groups', () => {
@@ -1836,7 +1901,7 @@ describe('Table.tsx', () => {
       //collapse all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupA', 'GroupB'])
-      expect(emitMock).toHaveBeenCalledTimes(1)      
+      expect(emitMock).toHaveBeenCalledTimes(1)
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount)
     })
 
@@ -1850,7 +1915,7 @@ describe('Table.tsx', () => {
       //open all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupA', 'GroupB'])
-      expect(emitMock).toHaveBeenCalledTimes(1)        
+      expect(emitMock).toHaveBeenCalledTimes(1)
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + items)
     })
 
@@ -1871,9 +1936,9 @@ describe('Table.tsx', () => {
 
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupA'])
-      expect(emitMock).toHaveBeenCalledTimes(1)      
+      expect(emitMock).toHaveBeenCalledTimes(1)
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + items - filteredItem)
-    })    
+    })
 
     it('Collapses all groups when some already collapsed - fire event', () => {
       const { container, getAllByRole } = render(<XTable model={{ ...tableProps, events: ['group_change'] }} />)
@@ -1881,30 +1946,30 @@ describe('Table.tsx', () => {
       //collapse all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupA', 'GroupB'])
-      expect(emitMock).toHaveBeenCalledTimes(1)  
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount)          
+      expect(emitMock).toHaveBeenCalledTimes(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount)
       emitMock.mockClear()
 
       //open all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupA', 'GroupB'])
-      expect(emitMock).toHaveBeenCalledTimes(1)  
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + items)          
+      expect(emitMock).toHaveBeenCalledTimes(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + items)
       emitMock.mockClear()
 
       //collapse GroupA
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupA'])
-      expect(emitMock).toHaveBeenCalledTimes(1)      
+      expect(emitMock).toHaveBeenCalledTimes(1)
       expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount + filteredItem)
       emitMock.mockClear()
 
       //collapse all groups
       fireEvent.click(container.querySelector('.ms-DetailsHeader-collapseButton')!)
       expect(emitMock).toHaveBeenCalledWith(tableProps.name, 'group_change', ['GroupB'])
-      expect(emitMock).toHaveBeenCalledTimes(1)  
-      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount)                
-    })   
+      expect(emitMock).toHaveBeenCalledTimes(1)
+      expect(getAllByRole('row')).toHaveLength(headerRow + groupHeaderRowsCount)
+    })
 
     it('Checks if expanded state is preserved after sort', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
