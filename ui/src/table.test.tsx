@@ -260,28 +260,6 @@ describe('Table.tsx', () => {
       const { getByTestId } = render(<XTable model={tableProps} />)
       expect(getByTestId(name).style.height).toBe('290px')
     })
-
-    it('Updates selection - client-change of single selection', () => {
-      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, single: true }} />)
-      const radioButtons = getAllByRole('radio')
-
-      rerender(<XTable model={{ ...tableProps, single: true, value: 'rowname1' }} />)
-
-      expect(radioButtons[0].firstChild).toHaveClass('is-checked')
-      expect(wave.args[name]).toMatchObject(['rowname1'])
-    })
-
-    it('Updates selection - client-change of multiple selection', () => {
-      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, multiple: true }} />)
-      const checkboxes = getAllByRole('checkbox')
-
-      rerender(<XTable model={{ ...tableProps, multiple: true, values: ['rowname1', 'rowname2'] }} />)
-
-      expect(checkboxes[1].firstChild).toHaveClass('is-checked')
-      expect(checkboxes[2].firstChild).toHaveClass('is-checked')
-      expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
-    })
-
   })
 
   describe('Wave calls', () => {
@@ -387,23 +365,28 @@ describe('Table.tsx', () => {
       expect(wave.args[name]).toMatchObject(['rowname2'])
     })
 
-    it('Does not fire event - client-change of single selection', () => {
-      const { rerender } = render(<XTable model={{ ...tableProps, single: true, events: ['select'] }} />)
+    it('Updates single selection', () => {
+      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, single: true }} />)
+      const radioButtons = getAllByRole('radio')
 
-      rerender(<XTable model={{ ...tableProps, single: true, value: 'rowname1', events: ['select'] }} />)
+      rerender(<XTable model={{ ...tableProps, single: true, value: 'rowname1' }} />)
 
-      expect(emitMock).toHaveBeenCalledTimes(0)
+      expect(radioButtons[0].firstChild).toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject(['rowname1'])
     })
 
-    it('Does not fire event - client-change of multiple selection', () => {
-      const { rerender } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+    it('Updates multiple selection', () => {
+      const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, multiple: true }} />)
+      const checkboxes = getAllByRole('checkbox')
 
-      rerender(<XTable model={{ ...tableProps, multiple: true, events: ['select'], values: ['rowname1', 'rowname2'] }} />)
+      rerender(<XTable model={{ ...tableProps, multiple: true, values: ['rowname1', 'rowname2'] }} />)
 
-      expect(emitMock).toHaveBeenCalledTimes(0)
+      expect(checkboxes[1].firstChild).toHaveClass('is-checked')
+      expect(checkboxes[2].firstChild).toHaveClass('is-checked')
+      expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
     })
 
-    it('Clears args - client-remove of single selection', () => {
+    it('Clears single selection', () => {
       const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, single: true, value: 'rowname1' }} />)
       const radioButtons = getAllByRole('radio')
 
@@ -416,7 +399,7 @@ describe('Table.tsx', () => {
       expect(wave.args[name]).toMatchObject([])
     })
 
-    it('Clears args - client-remove of multiple selection', () => {
+    it('Clears multiple selection', () => {
       const { getAllByRole, rerender } = render(<XTable model={{ ...tableProps, multiple: true, values: ['rowname1', 'rowname2'] }} />)
       const checkBoxes = getAllByRole('checkbox')
 
@@ -429,6 +412,22 @@ describe('Table.tsx', () => {
       expect(checkBoxes[1].firstChild).not.toHaveClass('is-checked')
       expect(checkBoxes[2].firstChild).not.toHaveClass('is-checked')
       expect(wave.args[name]).toMatchObject([])
+    })
+
+    it('Does not fire event on single selection update', () => {
+      const { rerender } = render(<XTable model={{ ...tableProps, single: true, events: ['select'] }} />)
+
+      rerender(<XTable model={{ ...tableProps, single: true, events: ['select'], value: 'rowname1', }} />)
+
+      expect(emitMock).toHaveBeenCalledTimes(0)
+    })
+
+    it('Does not fire event on multiple selection update', () => {
+      const { rerender } = render(<XTable model={{ ...tableProps, multiple: true, events: ['select'] }} />)
+
+      rerender(<XTable model={{ ...tableProps, multiple: true, events: ['select'], values: ['rowname1', 'rowname2'] }} />)
+
+      expect(emitMock).toHaveBeenCalledTimes(0)
     })
 
     it('Fires event - multiple selection - select single', () => {
