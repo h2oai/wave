@@ -500,24 +500,24 @@ const
               : groups?.map(group => group.name)
           wave.emit(m.name, 'group_change', changedGroups)
         }
-        expandedRefs.current = isAllCollapsed ? {} : null       
+        expandedRefs.current = isAllCollapsed ? {} : null
       },
       onToggleCollapse = ({ key, isCollapsed }: Fluent.IGroup) => {
         if (m.events?.includes('group_change')) {
           wave.emit(m.name, 'group_change', [key])
-        }           
+        }
         if (expandedRefs.current) {
           isCollapsed
             ? expandedRefs.current[key] = false
             : delete expandedRefs.current[key]
         } else {
-          if (groups){
+          if (groups) {
             expandedRefs.current = groups?.reduce((acc, { name }) => {
-              if (name != key){
+              if (name != key) {
                 acc[name] = false
               }
               return acc
-            }, {} as { [key: S]: B })       
+            }, {} as { [key: S]: B })
           }
         }
       },
@@ -1024,17 +1024,20 @@ export const
     React.useEffect(() => {
       skipNextEventEmit.current = true
       wave.args[m.name] = []
-      if (isSingle && m.value) {
-        selection.setKeySelected(m.value, true, false)
-        wave.args[m.name] = [m.value]
-      }
-      else if (isMultiple && m.values) {
-        m.values.forEach(v => selection.setKeySelected(v, true, false))
-        wave.args[m.name] = m.values
+      if (isSingle || isMultiple) {
+        selection.setAllSelected(false)
+        if (m.value) {
+          selection.setKeySelected(m.value, true, false)
+          wave.args[m.name] = [m.value]
+        }
+        if (m.values) {
+          m.values.forEach(v => selection.setKeySelected(v, true, false))
+          wave.args[m.name] = m.values
+        }
       }
       skipNextEventEmit.current = false
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [m.values, m.value])
 
     useUpdateOnlyEffect(() => {
       setFilteredItems(items)
