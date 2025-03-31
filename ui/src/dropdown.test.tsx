@@ -880,4 +880,88 @@ describe('Dropdown.tsx', () => {
       })
     })
   })
+
+  describe('Dialog dropdown exact', () => {
+    let dialogProps: Dropdown
+
+    const createChoices = (size: number) => Array.from(Array(size).keys()).map(key => ({ name: String(key), label: `Choice ${key}` }))
+    const overOneHundredChoices = createChoices(101)
+    const choices = createChoices(10)
+
+    beforeEach(() => {
+      dialogProps = {
+        ...defaultProps,
+        popup: 'always',
+        exactSearch: true,
+        choices
+      };
+    });
+    it('Sets correct args after exact filter', () => {
+      const { getByText, getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: ['1'] }} />)
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: 'Choice 9' } })
+      fireEvent.click(getAllByRole('checkbox')[0])
+      fireEvent.click(getByText('Select'))
+
+      expect(wave.args[name]).toMatchObject(['1', '9'])
+    });
+    it('Filters exact correctly', () => {
+      const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: 'Choice 9' } })
+      expect(getAllByRole('listitem')).toHaveLength(1)
+    });
+
+    it('Filters correctly - reset filter', () => {
+      const { getByTestId, getAllByRole } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: 'Choice 9' } })
+      expect(getAllByRole('listitem')).toHaveLength(1)
+
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: '' } })
+      expect(getAllByRole('listitem')).toHaveLength(10)
+    });
+
+    it('Resets filtered items on cancel', () => {
+      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: 'Choice 9' } })
+      expect(getAllByRole('listitem')).toHaveLength(1)
+      fireEvent.click(getByText('Cancel'))
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+    });
+
+    it('Resets filtered items on submit', () => {
+      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: 'Choice 9' } })
+      expect(getAllByRole('listitem')).toHaveLength(1)
+      fireEvent.click(getByText('Select'))
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+    });
+
+    it('Resets filtered items on single valued submit', () => {
+      const { getByTestId, getAllByRole } = render(<XDropdown model={dialogProps} />)
+
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: 'Choice 9' } })
+      expect(getAllByRole('listitem')).toHaveLength(1)
+      fireEvent.click(getAllByRole('checkbox')[0])
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('listitem')).toHaveLength(10)
+    });
+
+  })
 })
