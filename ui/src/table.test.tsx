@@ -2178,4 +2178,38 @@ describe('Table.tsx', () => {
       expect(emitMock).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('Tooltip', () => {
+    it('renders info icon only when tooltip prop is specified', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true, searchable: true, tooltip: 'Tooltip for Col1' },
+          { name: 'colname2', label: 'Col2', sortable: true, filterable: true },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, '2'] },
+          { name: 'rowname2', cells: [cell21, '1'] },
+        ],
+      }
+      
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+      const headers = getAllByRole('columnheader')
+      const infoIcons = container.querySelectorAll("[data-icon-name='info-icon']") as NodeListOf<HTMLElement>
+      expect(infoIcons).toHaveLength(1)
+  
+      const headerKey1 = headers[0].getAttribute('data-item-key')
+      if (headerKey1 === 'colname1') {
+        expect(headers[0]).toContainElement(infoIcons[0])
+      } else {
+        expect(headers[0]).not.toContainElement(infoIcons[0])
+      }
+      const headerKey2 = headers[1].getAttribute('data-item-key')
+      if (headerKey2 === 'colname1') {
+        expect(headers[1]).toContainElement(infoIcons[0])
+      } else {
+        expect(headers[1]).not.toContainElement(infoIcons[0])
+      }
+    })
+  })
 })
