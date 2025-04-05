@@ -10,3 +10,5 @@ LongDescription = "about.md"
 Module = "examples.tour"
 RoutingMode = "BASE_URL"
 RuntimeVersion = "deb11_py310_wlatest"
+AppMode = "container"
+Port = 10101
