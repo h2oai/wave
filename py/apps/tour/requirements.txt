@@ -1,7 +1,7 @@
 altair==4.2.0
 bokeh==2.4.2
 Faker==13.3.4
-h2o-wave[ml]==1.6.3
+h2o-wave-ml==0.8.1
 h2o_wave=={{VERSION}}
 loguru==0.6.0
 matplotlib==3.5.1
