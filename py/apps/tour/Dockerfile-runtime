@@ -1,0 +1,41 @@
+FROM cgr.dev/chainguard/wolfi-base:latest@sha256:91ed94ec4e72368a9b5113f2ffb1d8e783a91db489011a89d9fad3e3816a75ba
+RUN apk add --no-cache python3=~3.10 make
+RUN python -m ensurepip --default-pip
+ARG USER="nonroot"
+ARG GROUP="nonroot"
+
+WORKDIR /app/
+
+USER root
+RUN chown -R $USER:$GROUP /app
+USER $USER
+
+# Create a virtual environment
+RUN python3 -m venv /app/venv
+
+COPY examples ./examples/
+COPY requirements.txt .
+
+# Upgrade pip inside the virtual environment
+RUN /app/venv/bin/pip install --upgrade pip==24.0 setuptools
+
+COPY --chmod=777 . /app/
+
+# Install Python dependencies
+RUN --mount=type=cache,target=/home/.cache \
+	--mount=type=cache,target=/root/.cache \
+	--mount=type=cache,target=/.cache \
+	/app/venv/bin/pip3 install -r requirements.txt
+
+RUN /app/venv/bin/python3 -m pip uninstall pip setuptools -y
+USER root
+RUN python3 -m pip uninstall pip -y
+RUN mkdir -p /resources
+RUN chmod -R 777 /resources
+USER $USER
+
+USER nonroot
+
+EXPOSE 10101
+
+ENTRYPOINT ["./venv/bin/wave", "run", "examples.tour"]

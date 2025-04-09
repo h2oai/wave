@@ -1,0 +1,6 @@
+FROM alpine:3.18
+
+ARG VERSION=latest
+
+COPY ai.h2o.wave.tour.${VERSION}.wave /app/ai.h2o.wave.tour.${VERSION}.wave
+ENV WAVE_BUNDLE_FILE /app/ai.h2o.wave.tour.${VERSION}.wave
