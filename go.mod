@@ -1,6 +1,6 @@
 module github.com/h2oai/wave
 
-go 1.23.0
+go 1.23.8
 
 toolchain go1.23.7
 
