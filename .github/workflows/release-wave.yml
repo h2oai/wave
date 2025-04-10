@@ -104,18 +104,6 @@ jobs:
           packages_dir: py/h2o_wave/dist
           password: ${{ secrets.PYPI_API_TOKEN }}
 
-      - name: Configure HAIC AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
-          role-session-name: wave-s3
-          aws-region: ${{ secrets.AWS_WEST_REGION }}
-
-      - name: Publish apps for Cloud
-        run: make build-apps publish-apps-s3-hac
-        env:
-          HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
-
       - name: Configure Wave AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -134,6 +122,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
           role-session-name: wave-shared
           aws-region: ${{ secrets.AWS_WEST_REGION }}
+
+      - name: Publish apps for Cloud
+        run: make build-apps publish-apps-s3-hac
+        env:
+          HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
 
       - name: Publish Docs
         if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
