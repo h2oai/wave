@@ -2,7 +2,7 @@ name: Release Wave PyCharm plugin
 
 on:
   release:
-      types: [published]
+    types: [published]
   workflow_dispatch:
 
 env:
@@ -11,7 +11,7 @@ env:
 jobs:
   publish:
     name: Release Wave PyCharm plugin
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,3 +28,4 @@ jobs:
         run: make publish-pycharm
         env:
           JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
+

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release Version'
+        description: "Release Version"
         required: true
 
 env:
@@ -14,7 +14,7 @@ env:
 jobs:
   publish:
     name: Publish Lightwave
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -22,13 +22,13 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Build lightwave
-        run:  make publish-lightwave
+        run: make publish-lightwave
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
-      
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
       - name: Publish to PyPI - lightwave
         uses: pypa/gh-action-pypi-publish@master
         with:

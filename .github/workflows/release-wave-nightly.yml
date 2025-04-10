@@ -17,7 +17,7 @@ concurrency:
 jobs:
   check-last-commit:
     name: Check Last Commit
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       yesterday-commit-count: ${{ steps.get-new-commits.outputs.YESTERDAY_COMMIT_COUNT }}
       nightly-dev-version: ${{ steps.get-dev-version.outputs.NIGHTLY_DEV_VERSION }}
@@ -36,7 +36,7 @@ jobs:
     if: needs.check-last-commit.outputs.yesterday-commit-count > 0
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
+        os: [ubuntu-24.04, ubuntu-22.04]
         py: ["3.8", "3.9", "3.10", "3.11"]
     runs-on: ${{ matrix.os }}
     steps:
@@ -159,7 +159,7 @@ jobs:
   release:
     needs: [test-linux, test-win, check-last-commit]
     name: Release Wave Nightly
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Set ENV vars
         run: |

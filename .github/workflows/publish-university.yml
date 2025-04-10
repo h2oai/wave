@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release Version'
+        description: "Release Version"
         required: true
 
 env:
@@ -14,14 +14,14 @@ env:
 jobs:
   publish:
     name: Publish Wave University
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Build university
-        run:  make publish-university
+        run: make publish-university
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
