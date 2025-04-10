@@ -1,8 +1,8 @@
 # Plot / Altair
 # Use #Altair to create #plot specifications for the #Vega card.
 # ---
-import altair
-from vega_datasets import data
+import altair # type: ignore
+from vega_datasets import data # type: ignore
 from h2o_wave import site, ui
 
 spec = altair.Chart(data.cars()).mark_circle(size=60).encode(
