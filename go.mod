@@ -2,8 +2,6 @@ module github.com/h2oai/wave
 
 go 1.23.8
 
-toolchain go1.23.7
-
 require (
 	github.com/coreos/go-oidc/v3 v3.12.0
 	github.com/google/uuid v1.6.0
