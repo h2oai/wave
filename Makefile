@@ -22,6 +22,7 @@ clean: ## Clean
 	cd py && $(MAKE) clean
 	cd tools/wavegen && $(MAKE) clean
 	cd tools/showcase && $(MAKE) clean
+	cd tools/vscode-extension && $(MAKE) clean
 	rm -f waved
 
 setup-ui:
