@@ -1,7 +1,7 @@
 # Plot / App
 # Make a #plot from an app.
 # ---
-from .synth import FakeMultiCategoricalSeries as F
+from .synth import FakeMultiCategoricalSeries as F # type: ignore
 from h2o_wave import main, app, data, Q, ui
 
 n = 10
