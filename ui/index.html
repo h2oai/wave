@@ -26,6 +26,19 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+  <script>
+    // TODO: Get from BE.
+    const nonce = 'nonce-bro'
+    window.CSPSettings = { nonce }
+    const originalInsertBefore = Element.prototype.insertBefore
+    Element.prototype.insertBefore = function (newNode, referenceNode) {
+      // If the node has data-merge-styles attribute, add the nonce
+      if (newNode.nodeType === 1 && newNode.hasAttribute('data-merge-styles')) {
+        newNode.setAttribute('nonce', nonce)
+      }
+      return originalInsertBefore.call(this, newNode, referenceNode)
+    }
+  </script>
   <script type="module" src="/src/index.tsx"></script>
 </body>
 
