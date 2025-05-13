@@ -22,7 +22,7 @@
     window.CSPSettings = { nonce }
     const originalInsertBefore = Element.prototype.insertBefore
     Element.prototype.insertBefore = function (newNode, referenceNode) {
-      if (newNode.nodeType === 1 && newNode.hasAttribute("data-merge-styles")) {
+      if (nonce && newNode.nodeType === 1 && newNode.hasAttribute("data-merge-styles")) {
         newNode.setAttribute("nonce", nonce)
       }
       return originalInsertBefore.call(this, newNode, referenceNode)
