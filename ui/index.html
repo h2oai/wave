@@ -1,36 +1,34 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="favicon.ico" />
-    <link rel="apple-touch-icon" href="logo192.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="H2O Wave App" />
-    <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
-    <link href="/assets/inter.css" rel="stylesheet" />
-    <title>H2O Wave</title>
-  </head>
 
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="wave-root"></div>
-    <!-- Ensure this JS runs absolutely first to avoid race conditions. -->
-    <script>
-      const nonce = document.body.dataset.nonce;
-      window.CSPSettings = { nonce };
-      const originalInsertBefore = Element.prototype.insertBefore;
-      Element.prototype.insertBefore = function (newNode, referenceNode) {
-        if (
-          newNode.nodeType === 1 &&
-          newNode.hasAttribute("data-merge-styles")
-        ) {
-          newNode.setAttribute("nonce", nonce);
-        }
-        return originalInsertBefore.call(this, newNode, referenceNode);
-      };
-    </script>
-    <script type="module" src="/src/index.tsx"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="logo192.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="H2O Wave App" />
+  <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
+  <link href="/assets/inter.css" rel="stylesheet" />
+  <title>H2O Wave</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="wave-root"></div>
+  <!-- Ensure this JS runs absolutely first to avoid race conditions. -->
+  <script>
+    const nonce = document.body.dataset.nonce
+    window.CSPSettings = { nonce }
+    const originalInsertBefore = Element.prototype.insertBefore
+    Element.prototype.insertBefore = function (newNode, referenceNode) {
+      if (newNode.nodeType === 1 && newNode.hasAttribute("data-merge-styles")) {
+        newNode.setAttribute("nonce", nonce)
+      }
+      return originalInsertBefore.call(this, newNode, referenceNode)
+    };
+  </script>
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+
 </html>
-

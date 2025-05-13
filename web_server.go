@@ -60,9 +60,29 @@ func newWebServer(
 		return nil, fmt.Errorf("failed reading default index.html page: %v", err)
 	}
 
-	indexHTML, err := mungeIndexPage(baseURL, string(indexPage))
+	nonce, err := generateNonce()
+	if err != nil {
+		return nil, fmt.Errorf("failed generating nonce: %v", err)
+	}
+
+	indexHTML, err := mungeIndexPage(baseURL, string(indexPage), nonce)
 	if err != nil {
 		return nil, fmt.Errorf("failed munging default index.html page: %v", err)
+	}
+
+	cspHeader := header.Get("Content-Security-Policy")
+	if cspHeader != "" {
+		if strings.Contains(cspHeader, "script-src") {
+			cspHeader = strings.ReplaceAll(cspHeader, "script-src", "script-src 'nonce-"+nonce+"'")
+		} else {
+			cspHeader = cspHeader + "; script-src 'nonce-" + nonce + "'"
+		}
+		if strings.Contains(cspHeader, "style-src") {
+			cspHeader = strings.ReplaceAll(cspHeader, "style-src", "style-src 'nonce-"+nonce+"'")
+		} else {
+			cspHeader = cspHeader + "; style-src 'nonce-" + nonce + "'"
+		}
+		header.Set("Content-Security-Policy", cspHeader)
 	}
 
 	fs := handleStatic([]byte(indexHTML), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header)
@@ -81,18 +101,13 @@ func generateNonce() (string, error) {
 	return base64.StdEncoding.EncodeToString(nonce), nil
 }
 
-func mungeIndexPage(baseURL, html string) (string, error) {
-	nonce, err := generateNonce()
-	if err != nil {
-		return "", fmt.Errorf("failed generating nonce: %v", err)
-	}
-
+func mungeIndexPage(baseURL, html, nonce string) (string, error) {
 	// HACK: Set base URL as a body tag attribute, to be used by the front-end for deducing hash-routing and websocket addresses.
 	html = strings.Replace(html, "<body", `<body data-base-url="`+baseURL+`" data-nonce="`+nonce+`"`, 1)
 	// ./wave-static/a/b/c.d -> /base-url/wave-static/a/b/c.d
 	html = strings.ReplaceAll(html, `="./wave-static/`, `="`+baseURL+"wave-static/")
 	// Add a nonce to initial payload inline script.
-	html = strings.ReplaceAll(html, `<script>`, `<script nonce="`+nonce+`">`)
+	html = strings.ReplaceAll(html, "<script>", `<script nonce="`+nonce+`">`)
 	return html, nil
 }
 
