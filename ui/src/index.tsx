@@ -13,11 +13,6 @@
 // limitations under the License.
 
 
-// TODO: Get from BE.
-const nonce = 'nonce-bro'
-Stylesheet.getInstance().setConfig({ cspSettings: { nonce } })
-
-
 import { setStylesTarget } from 'typestyle'
 import { loadTheme, registerIcons, Stylesheet } from '@fluentui/react'
 import React from 'react'
@@ -30,10 +25,11 @@ import { defaultTheme } from './theme'
 import * as Icons from '@fluentui/react-icons-mdl2'
 
 const target = document.createElement('style')
+const nonce = document.body.dataset.nonce || ''
+Stylesheet.getInstance().setConfig({ cspSettings: { nonce } })
 target.setAttribute('nonce', nonce)
 document.head.appendChild(target)
 setStylesTarget(target)
-Stylesheet.getInstance().setConfig({ cspSettings: { nonce } })
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },

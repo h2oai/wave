@@ -15,6 +15,8 @@
 package wave
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -58,20 +60,40 @@ func newWebServer(
 		return nil, fmt.Errorf("failed reading default index.html page: %v", err)
 	}
 
-	fs := handleStatic([]byte(mungeIndexPage(baseURL, string(indexPage))), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header)
+	indexHTML, err := mungeIndexPage(baseURL, string(indexPage))
+	if err != nil {
+		return nil, fmt.Errorf("failed munging default index.html page: %v", err)
+	}
+
+	fs := handleStatic([]byte(indexHTML), http.StripPrefix(baseURL, http.FileServer(http.Dir(webDir))), header)
 	if auth != nil {
 		fs = auth.wrap(fs)
 	}
 	return &WebServer{site, broker, fs, keychain, maxRequestSize, baseURL}, nil
 }
 
-func mungeIndexPage(baseURL, html string) string {
-	// HACK
-	// set base URL as a body tag attribute, to be used by the front-end for deducing hash-routing and websocket addresses.
-	html = strings.Replace(html, "<body", `<body data-base-url="`+baseURL+`"`, 1)
+func generateNonce() (string, error) {
+	// Generate a random nonce for Content Security Policy (CSP).
+	nonce := make([]byte, 32)
+	if _, err := rand.Read(nonce); err != nil {
+		return "", fmt.Errorf("failed reading default index.html page: %v", err)
+	}
+	return base64.StdEncoding.EncodeToString(nonce), nil
+}
+
+func mungeIndexPage(baseURL, html string) (string, error) {
+	nonce, err := generateNonce()
+	if err != nil {
+		return "", fmt.Errorf("failed generating nonce: %v", err)
+	}
+
+	// HACK: Set base URL as a body tag attribute, to be used by the front-end for deducing hash-routing and websocket addresses.
+	html = strings.Replace(html, "<body", `<body data-base-url="`+baseURL+`" data-nonce="`+nonce+`"`, 1)
 	// ./wave-static/a/b/c.d -> /base-url/wave-static/a/b/c.d
 	html = strings.ReplaceAll(html, `="./wave-static/`, `="`+baseURL+"wave-static/")
-	return html
+	// Add a nonce to initial payload inline script.
+	html = strings.ReplaceAll(html, `<script>`, `<script nonce="`+nonce+`">`)
+	return html, nil
 }
 
 func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
