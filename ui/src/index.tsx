@@ -24,12 +24,12 @@ import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from './theme'
 import * as Icons from '@fluentui/react-icons-mdl2'
 
-const target = document.createElement('style')
-const nonce = document.body.dataset.nonce || ''
-Stylesheet.getInstance().setConfig({ cspSettings: { nonce } })
-target.setAttribute('nonce', nonce)
+const nonce = document.body.dataset.nonce
+const target = document.createElement("style")
+target.setAttribute("nonce", nonce || '')
 document.head.appendChild(target)
 setStylesTarget(target)
+Stylesheet.getInstance().setConfig({ cspSettings: { nonce } })
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },
