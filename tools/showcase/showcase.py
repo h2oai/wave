@@ -104,7 +104,11 @@ def make_screenshot(code: List[str], img_name: str, page,
         if 'ui.form_card' in code_str:
             widget_count = len(page.query_selector_all(f'{selector} > :first-child > *'))
             selector = f'{selector} > *' if widget_count > 1 else f'{selector} > :first-child > *'
-        page.wait_for_selector(selector)
+        try:
+            page.wait_for_selector(selector)
+        except Exception:
+            print(f'Selector {selector} timed out for {img_name} after 30s.')
+            return
         print(f'Generating {img_name}')
         page.query_selector(selector).screenshot(path=path)
         if is_test and not is_base:
