@@ -13,7 +13,6 @@
     "@mui/x-date-pickers": "^5.0.0-beta.3",
     "d3": "^7.8.5",
     "date-fns": "^2.29.1",
-    "handlebars": "^4.7.7",
     "highlight.js": "^11.8.0",
     "markdown-it": "^12.3.2",
     "mustache": "^4.2.0",
