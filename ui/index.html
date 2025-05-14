@@ -19,13 +19,20 @@
   <!-- Ensure this JS runs absolutely first to avoid race conditions. -->
   <script>
     const nonce = document.body.dataset.nonce
-    window.CSPSettings = { nonce }
     const originalInsertBefore = Element.prototype.insertBefore
+    const originalAppendChild = Element.prototype.appendChild
+    window.CSPSettings = { nonce }
     Element.prototype.insertBefore = function (newNode, referenceNode) {
       if (nonce && newNode.nodeType === 1 && newNode.hasAttribute("data-merge-styles")) {
         newNode.setAttribute("nonce", nonce)
       }
       return originalInsertBefore.call(this, newNode, referenceNode)
+    }
+    Element.prototype.appendChild = function (newNode) {
+      if (nonce && newNode.nodeType === 1 && newNode.nodeName === 'SCRIPT' || newNode.nodeName === 'STYLE') {
+        newNode.setAttribute("nonce", nonce)
+      }
+      return originalAppendChild.call(this, newNode)
     };
   </script>
   <script type="module" src="/src/index.tsx"></script>
