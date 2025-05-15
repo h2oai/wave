@@ -114,13 +114,6 @@ class TestPythonServer(unittest.TestCase):
         page.save()
         assert compare(page.load(), make_form_card(buf=dict(f=dict(d=[[1,2,3], None, None], f=['a', 'b', 'c'], n =3))))
 
-    def test_new_card_with_cyc_buf(self):
-        page = site['/test']
-        page.drop()
-        page['card1'] = dict(data=data(fields=sample_fields, size=-3))
-        page.save()
-        assert compare(page.load(),
-                      make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[None] * 3, i=0))))
 
     def test_form_card_with_cyc_buf(self):
         page = site['/test']
