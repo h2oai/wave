@@ -70,9 +70,9 @@ jobs:
 
       - name: Set environment variables
         env:
-          FOLDER_PATH: ${{ github.event.inputs.folder_path || './docs' }}  # For manual runs or PR body
-          SIDEBAR_PATH: ${{ github.event.inputs.sidebar_path || './sidebars.js' }}  # For manual runs or PR body
-          COMBINED_DOC_PATH: ${{ github.event.inputs.combined_md_file_path || './combined_docs.md' }}  # For manual runs or PR body
+          FOLDER_PATH: ${{ github.event.inputs.folder_path || './website/docs' }}
+          SIDEBAR_PATH: ${{ github.event.inputs.sidebar_path || './website/sidebars.js' }}
+          COMBINED_DOC_PATH: ${{ github.event.inputs.combined_md_file_path || './website/combined_docs.md' }}
           BRANCH_NAME: ${{ github.head_ref || github.ref }}
         run: |
           echo "FOLDER_PATH=${FOLDER_PATH}" >> $GITHUB_ENV
