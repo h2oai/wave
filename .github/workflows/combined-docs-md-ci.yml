@@ -121,5 +121,5 @@ jobs:
         run: |
           if [[ "${{ env.BRANCH_NAME }}" =~ ^refs/heads/pdf-documentation ]]; then
             mv documentation/documentation.pdf documentation/${{ env.REPO_NAME }}_${{ env.VERSION }}.pdf
-            aws s3 cp documentation/${{ env.REPO_NAME }}_${{ env.VERSION }}.pdf s3://pdf-documentation/docai-docs/
+            aws s3 cp documentation/${{ env.REPO_NAME }}_${{ env.VERSION }}.pdf s3://pdf-documentation/wave-docs/
           fi
