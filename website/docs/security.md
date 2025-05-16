@@ -132,7 +132,7 @@ async def serve(q: Q):
 
 ### Azure
 
-By default, Azure provides you with URL like <https://login.microsoftonline.com/$UUID/oauth2/v2.0/authorize>, resulting in an error:
+By default, Azure provides you with URL like {/*https://login.microsoftonline.com/$UUID/oauth2/v2.0/authorize*/}, resulting in an error:
 
 ```sh
 panic: failed connecting to OIDC provider: 404 Not Found:

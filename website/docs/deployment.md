@@ -44,7 +44,7 @@ More info about various configuration options can be found in the [configuration
 
 ### Beyond defaults
 
-If different than default ports are used for Wave server (<http://localhost:10101>) or Wave app (<http://localhost:8000>), it's necessary to properly set env variables:
+If different than default ports are used for Wave server (http://localhost:10101) or Wave app (http://localhost:8000), it's necessary to properly set env variables:
 
 - Wave server - `H2O_WAVE_LISTEN`.
 - Wave app - `H2O_WAVE_APP_ADDRESS` and `H2O_WAVE_ADDRESS`.

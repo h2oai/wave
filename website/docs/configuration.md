@@ -127,7 +127,7 @@ During development, you might want to test out TLS encryption, e.g. communicatio
 
 ## Configuring your app
 
-Your Wave application is an ASGI server. When you run your app during development, the app server runs at <http://127.0.0.1:8000/> by default (localhost, port 8000), and assumes that your Wave server is running at <http://127.0.0.1:10101/> (localhost, port 10101). The `wave run` command automatically picks another available port if `8000` is not available.
+Your Wave application is an ASGI server. When you run your app during development, the app server runs at http://127.0.0.1:8000/ by default (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:10101/ (localhost, port 10101). The `wave run` command automatically picks another available port if `8000` is not available.
 
 The Wave server and apps communicate with each other using RPC over persistent HTTP connections.
 

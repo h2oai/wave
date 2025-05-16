@@ -11,17 +11,20 @@
     "serve": "docusaurus serve"
   },
   "dependencies": {
-    "@fluentui/react-icons-mdl2": "^1.2.13",
-    "@mdx-js/react": "^1.5.8",
-    "clsx": "^1.1.1",
+    "@docusaurus/core": "3.7.0",
+    "@fluentui/react-icons-mdl2": "1.2.13",
+    "@mdx-js/mdx": "2.3.0",
+    "@mdx-js/react": "2.3.0",
+    "clsx": "1.1.1",
     "docusaurus-gtm-plugin": "0.0.2",
-    "prism-react-renderer": "^2.0.6",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "prism-react-renderer": "2.0.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@docusaurus/core": "^2.1.0",
-    "@docusaurus/preset-classic": "^2.1.0"
+    "@docusaurus/core": "^3.7.0",
+    "@docusaurus/preset-classic": "^3.7.0",
+    "@mdx-js/react": "^2.3.0"
   },
   "browserslist": {
     "production": [

@@ -66,7 +66,7 @@ Use `q.site.upload_dir()` to upload whole directories and preserve their structu
 
 :::warning
 If running Wave on **Windows**, you might encounter a **500 internal error** during `q.site.upload` call due to lack of permissions since Wave server needs to write to your file system. The simple solution
-is to start the Wave server (or `wave run your_app.py` for Wave > 0.20.0) within a terminal with Admin rights (open terminal as Admin).
+is to start the Wave server (or `wave run your_app.py` for Wave  0.20.0) within a terminal with Admin rights (open terminal as Admin).
 :::
 
 ## Serving images
@@ -123,25 +123,25 @@ q.page['example'] = ui.form_card(box='1 1 7 7', items=[
 
 As an alternative to using the above `upload()` or `download()` mechanisms, you can make the Wave server (`waved`) directly serve the contents of one or more existing directories. If the Wave server and your app both have access to the directories on the file system, your app can simply create or copy files to the directories to make them accessible from web browsers.
 
-Serve the contents of directory `/home/zaphod/data` at <http://localhost:10101/datasets/>
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/
 
 ```
 waved -public-dir /datasets/@/home/zaphod/data
 ```
 
-Serve the contents of directory `/home/zaphod/data` at <http://localhost:10101/datasets/>, and `/home/zaphod/models` at <http://localhost:10101/public/models>
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, and `/home/zaphod/models` at http://localhost:10101/public/models
 
 ```
 waved -public-dir /datasets/@/home/zaphod/data -public-dir /public/models/@/home/zaphod/models
 ```
 
-Serve the contents of directory `/home/zaphod/data` at <http://localhost:10101/datasets/>, but only to authenticated users.
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, but only to authenticated users.
 
 ```
 waved -private-dir /datasets/@/home/zaphod/data
 ```
 
-Serve the contents of directory `/home/zaphod/data` at <http://localhost:10101/datasets/>, and `/home/zaphod/models` at <http://localhost:10101/public/models>, but only to authenticated users.
+Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, and `/home/zaphod/models` at http://localhost:10101/public/models, but only to authenticated users.
 
 ```
 waved -private-dir /datasets/@/home/zaphod/data -private-dir /public/models/@/home/zaphod/models

@@ -30,7 +30,7 @@ go build -o wavedb cmd/wavedb/main.go
 
 ## Launch
 
-Launch WaveDB (defaults to <http://localhost:10100/>):
+Launch WaveDB (defaults to http://localhost:10100/):
 
 ```sh
 ./wavedb

@@ -54,11 +54,11 @@ Additional test coverage is appreciated.  Help us make the codebase more robust.
 
 ## Security vulnerabilities
 
-If you discover a security vulnerability within H2O Wave, please send an email to Prithvi Prabhu at <prithvi@h2o.ai>. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within H2O Wave, please send an email to Prithvi Prabhu at prithvi@h2o.ai. All security vulnerabilities will be promptly addressed.
 
 ## Code of Conduct
 
-See <https://github.com/h2oai/wave/blob/main/.github/CODE_OF_CONDUCT.md>.
+See https://github.com/h2oai/wave/blob/main/.github/CODE_OF_CONDUCT.md.
 
 ## Development Setup
 
@@ -93,7 +93,7 @@ Try running the button example to verify if your setup is functional:
 cd py && ./venv/bin/wave run examples.button
 ```
 
-You should now see the button example at <http://localhost:10101/demo>.
+You should now see the button example at http://localhost:10101/demo.
 
 For front-end development, you'll also need to start the a UI dev server:
 
@@ -101,7 +101,7 @@ For front-end development, you'll also need to start the a UI dev server:
 make run-ui
 ```
 
-You should now see the button example at <http://localhost:3000/demo>.
+You should now see the button example at http://localhost:3000/demo.
 
 Once you have the UI dev server running, you should be able to visualize any changes to `./ui` in real time.
 

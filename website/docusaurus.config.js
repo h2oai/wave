@@ -227,10 +227,11 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/h2oai/wave/edit/main/website/',
+          remarkPlugins: [],
+          rehypePlugins: [],
         },
         blog: {
           showReadingTime: true,
-          // TODO
           editUrl: 'https://github.com/facebook/docusaurus/edit/master/website/blog/',
         },
         theme: {

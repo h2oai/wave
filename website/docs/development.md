@@ -113,13 +113,13 @@ docker run \
   start-dev
 ```
 
-Keycloak should now be running at <http://localhost:8080/>.
+Keycloak should now be running at http://localhost:8080/.
 
 ### Add a client
 
 Next, create a *client* in Keycloak to represent our app:
 
-- Go to Keycloak at <http://localhost:8080/admin>.
+- Go to Keycloak at http://localhost:8080/admin.
 - Log in with username `admin`, password `admin`.
 - In the top left, click on `Clients`
   - Click the `Create client` button to create a new client.
