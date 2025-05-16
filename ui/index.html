@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -9,23 +9,32 @@
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="H2O Wave App" />
   <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
-  <link href="/assets/inter.css" rel="stylesheet">
+  <link href="/assets/inter.css" rel="stylesheet" />
   <title>H2O Wave</title>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="wave-root"></div>
-  <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+  <!-- Ensure this JS runs absolutely first to avoid race conditions. -->
+  <script>
+    const nonce = document.body.dataset.nonce
+    const originalInsertBefore = Element.prototype.insertBefore
+    const originalAppendChild = Element.prototype.appendChild
+    window.CSPSettings = { nonce }
+    Element.prototype.insertBefore = function (newNode, referenceNode) {
+      if (nonce && newNode.nodeType === 1 && newNode.hasAttribute("data-merge-styles")) {
+        newNode.setAttribute("nonce", nonce)
+      }
+      return originalInsertBefore.call(this, newNode, referenceNode)
+    }
+    Element.prototype.appendChild = function (newNode) {
+      if (nonce && newNode.nodeType === 1 && newNode.nodeName === 'SCRIPT' || newNode.nodeName === 'STYLE') {
+        newNode.setAttribute("nonce", nonce)
+      }
+      return originalAppendChild.call(this, newNode)
+    };
+  </script>
   <script type="module" src="/src/index.tsx"></script>
 </body>
 

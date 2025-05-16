@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { B, S } from './core'
-import Handlebars from 'handlebars'
+import Mustache from 'mustache'
 import { createIntl, createIntlCache } from 'react-intl'
 
 const intlCache = createIntlCache() // prevents memory leaks per docs
@@ -46,27 +46,42 @@ const
   },
   isBareExpr = (s: S): B => /^\w+$/.test(s)
 
-Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
-  opts = kvToOpts(opts)
-  const t = opts.type
+// Disable HTML escaping.
+Mustache.escape = function (text) { return text }
+
+// Create a formatter function that will be used in template rendering
+const formatValue = (v: any, opts: any) => {
+  const t = opts.type || opts.style
   return t === 'date'
     ? intl.formatDate(v, opts)
     : t === 'time'
       ? intl.formatTime(v, opts)
-      : t === 'number' || typeof v === 'number'
+      : t === 'percent' || t === 'number' || typeof v === 'number'
         ? intl.formatNumber(v, opts)
         : v
-})
+}
 
 export type Fmt = (datum: any, value?: any) => S
 
+// Helper to handle the special format in stat components
+// Converts "=${{intl foo args}}" into a format Mustache can handle
+const preprocessTemplate = (s: S): S => {
+  if (!s) return s
+
+  // Handle the "=${{intl foo args}}" pattern
+  if (s.startsWith('=${{intl ')) {
+    return '=' + s.substring(2) // Convert to "={{intl foo args}}"
+  }
+
+  return s
+}
+
 export const
   isFormatExpr = (f: any): B => typeof f === 'string' && f.length > 1 && f.charAt(0) === '=' && f.charAt(1) !== '=',
-  parseFormat = (s: S): [S, HandlebarsTemplateDelegate<any> | undefined] | null => {
+  parseFormat = (s: S): [S, ((data: any) => S) | undefined] | null => {
     if (!isFormatExpr(s)) return null
 
-    // "=foo"
-    s = s.substring(1) // lop off leading '='
+    s = preprocessTemplate(s.substring(1)) // lop off leading '='
 
     // "foo"
     if (isBareExpr(s)) return [s, undefined]
@@ -81,7 +96,53 @@ export const
 
     return null
   },
-  compile = (s: S): any => Handlebars.compile(s),
+  compile = (s: S): ((data: any) => S) => (data: any) => {
+    const intlRegex = /\{\{intl\s+([^}]+)\}\}/g
+    if (intlRegex.test(s)) {
+      s = s.replace(intlRegex, (match, content) => {
+        const parts = content.trim().split(/\s+/)
+        const varName = parts[0]
+
+        const opts: any = {}
+        for (let i = 1; i < parts.length; i++) {
+          const [k, v] = parts[i].split('=')
+          if (k && v) {
+            opts[k] = v.replace(/["']/g, '')
+          }
+        }
+
+        const value = data[varName]
+        return formatValue(value, kvToOpts(opts))
+      })
+
+      return Mustache.render(s, data)
+    }
+
+    const enhancedData = {
+      ...data,
+      intl: function () {
+        return function (text: string) {
+          const parts = text.trim().split(/\s+/)
+          const varName = parts[0]
+
+          const opts: any = {}
+          for (let i = 1; i < parts.length; i++) {
+            const [k, v] = parts[i].split('=')
+            if (k && v) {
+              opts[k] = v.replace(/["']/g, '')
+            }
+          }
+
+          const value = data[varName]
+
+          return formatValue(value, kvToOpts(opts))
+        }
+      }
+    }
+
+    return Mustache.render(s, enhancedData)
+
+  },
   format = (s: S, data: any): S => {
     if (isBareExpr(s)) s = '{{' + s + '}}'
     const t = compile(s)

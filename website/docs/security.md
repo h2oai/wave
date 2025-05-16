@@ -188,3 +188,9 @@ Since Wave is websocket-based, the headers retrieved do not come from the initia
 :::
 
 For a more fine-grained control over which HTTP headers are forwarded or not, check the `H2O_WAVE_FORWARDED_HTTP_HEADERS` [configuration option](/docs/configuration#configuring-the-server).
+
+## Content Security Policy
+
+For XSS protection, it's possible to set [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP) through [additional HTTP Response headers](/docs/security/#additional-http-response-headers).
+
+Keep in mind that while turning off inline scripts and styles is a good idea security-wise, it may negatively affect some of the components that rely on inlining. These are usually 3rd party visualization libs that render their output in an iframe, notably Altair, Vega, Bokeh etc. In fact, even Wave's native visualization lib [G2](https://github.com/antvis/G2) uses inlining for some of its features.

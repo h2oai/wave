@@ -1174,7 +1174,7 @@ export const
     const
       { width = 'auto', height = 'auto', name } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
-        ? { flexGrow: 1 }
+        ? { flexGrow: 1, position: 'relative' }
         : { width: formItemWidth(width), height }
     return <div data-test={name} style={style} className={css.plot} ref={container} />
   }
