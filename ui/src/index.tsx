@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { loadTheme, registerIcons } from '@fluentui/react'
+
+import { setStylesTarget } from 'typestyle'
+import { loadTheme, registerIcons, Stylesheet } from '@fluentui/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './cards'
@@ -21,6 +23,13 @@ import Router from './router'
 import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from './theme'
 import * as Icons from '@fluentui/react-icons-mdl2'
+
+const nonce = document.body.dataset.nonce
+const target = document.createElement("style")
+target.setAttribute("nonce", nonce || '')
+document.head.appendChild(target)
+setStylesTarget(target)
+Stylesheet.getInstance().setConfig({ cspSettings: { nonce } })
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },
