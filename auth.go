@@ -285,7 +285,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sessionID := uuid.New().String()
 
 	h.auth.set(&Session{id: sessionID, state: state, nonce: nonce, successURL: successURL, expiry: time.Now().Add(h.auth.conf.InactivityTimeout)})
-	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, Expires: time.Now().Add(h.auth.conf.SessionExpiry)}
+	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, HttpOnly: true, SameSite: http.SameSiteLaxMode, Expires: time.Now().Add(h.auth.conf.SessionExpiry)}
 	http.SetCookie(w, &cookie)
 
 	var options []oauth2.AuthCodeOption
