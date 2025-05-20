@@ -106,24 +106,17 @@ jobs:
           packages_dir: py/h2o_wave/dist
           password: ${{ secrets.PYPI_API_TOKEN }}
 
-      - name: Configure Wave AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: ${{ secrets.AWS_WAVE_IAM_ROLE  }}
-          role-session-name: wave
-          aws-region: ${{ secrets.AWS_EAST_REGION }}
-
-      - name: Publish to S3
-        run: make publish-release-s3
-        env:
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
-
       - name: Configure Shared Services AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
           role-session-name: wave-shared
           aws-region: ${{ secrets.AWS_WEST_REGION }}
+
+      - name: Publish to S3
+        run: make publish-release-s3
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
 
       - name: Publish apps for Cloud
         run: make build-apps publish-apps-s3-hac
