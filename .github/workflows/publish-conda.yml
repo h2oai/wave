@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Publish to Conda
-        uses: marek-mihok/publish_conda_package_action@v1.0.2
+        uses: marek-mihok/publish_conda_package_action@v1.0.3
         with:
           CondaDir: "py/h2o_wave/conda"
           Platforms: "noarch"
