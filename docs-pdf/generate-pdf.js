@@ -108,6 +108,16 @@ async function cleanupDom(page) {
       }
     `;
     document.head.appendChild(style);
+
+    // wrap all tables in a wrapper for horizontal scroll
+    document.querySelectorAll('table').forEach(table => {
+      if (!table.parentNode.classList.contains('table-wrapper')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
+    });
   });
 }
 
