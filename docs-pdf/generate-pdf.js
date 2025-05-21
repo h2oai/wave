@@ -31,6 +31,86 @@ async function getAllPageUrls(page, maxPages = Infinity) {
   return urls;
 }
 
+async function cleanupDom(page) {
+  await page.evaluate(() => {
+    // Remove footer along w the cookie banners
+    document.querySelector('footer')?.remove();
+    document.querySelector('section.notice')?.remove();
+
+    // to expand tabbed panels. This config works best
+    document.querySelectorAll('.tabs-container').forEach(tabsContainer => {
+      const tabButtons = tabsContainer.querySelectorAll('[role="tab"]');
+      const tabPanels = tabsContainer.querySelectorAll('[role="tabpanel"]');
+
+      tabPanels.forEach((panel, i) => {
+        panel.style.display = 'block';
+        panel.style.visibility = 'visible';
+        panel.style.position = 'static';
+        panel.style.height = 'auto';
+        panel.style.opacity = '1';
+
+        const originalTabButton = tabButtons[i];
+        if (originalTabButton) {
+          const clonedTabButton = originalTabButton.cloneNode(true);
+          clonedTabButton.style.display = 'inline-block';
+          clonedTabButton.style.padding = '6px 12px';
+          clonedTabButton.style.marginBottom = '8px';
+          clonedTabButton.style.border = '1px solid #ccc';
+          clonedTabButton.style.borderRadius = '4px';
+          clonedTabButton.style.backgroundColor = '#f0f0f0';
+          clonedTabButton.style.color = '#333';
+          clonedTabButton.style.fontWeight = 'bold';
+          panel.parentNode.insertBefore(clonedTabButton, panel);
+        }
+      });
+
+      const tabList = tabsContainer.querySelector('[role="tablist"]');
+      if (tabList) tabList.style.display = 'none';
+    });
+
+    // Converting image URLs to absolute - we need to do this because some images are relative
+    document.querySelectorAll('img').forEach((img) => {
+      const src = img.getAttribute('src');
+      if (src && !src.startsWith('http')) {
+        img.src = new URL(src, window.location.origin).href;
+      }
+    });
+
+    // Converting t relative links to absolute
+    document.querySelectorAll('a[href^="/"]').forEach((a) => {
+      a.href = new URL(a.getAttribute('href'), window.location.origin).href;
+    });
+
+    // force inject CSS to fix wide tables
+    const style = document.createElement('style');
+    style.textContent = `
+      table {
+        table-layout: fixed !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-collapse: collapse;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+      th, td {
+        word-break: break-word !important;
+        white-space: normal !important;
+        overflow-wrap: break-word !important;
+        max-width: 200px; /* Adjust max width per cell as needed */
+        padding: 8px !important;
+        border: 1px solid #ddd !important;
+      }
+      /* Optional: wrap tables in a scroll container if needed */
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 1em;
+      }
+    `;
+    document.head.appendChild(style);
+  });
+}
+
 
 async function generatePdfBuffers(page, urls) {
   const pdfBuffers = [];
