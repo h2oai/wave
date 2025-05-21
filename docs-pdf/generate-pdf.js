@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument, rgb, StandardFonts, PDFName } = require('pdf-lib');
 const path = require('path');
 
 const START_URL = 'https://wave.h2oai.com/docs/getting-started';
@@ -152,7 +152,12 @@ async function generatePdfBuffers(page, urls) {
       await cleanupDom(page);
       await autoScroll(page);
 
-      // Wait for all images to load - important as most images are lazy loaded
+      // extracting page title for TOC - need to check with a different selector
+      const pageTitle = await page.evaluate(() => {
+        return document.querySelector('h1')?.textContent || document.title;
+      });
+
+      // wait for all images to load before generating PDF 
       await page.evaluate(async () => {
         const images = Array.from(document.images);
         await Promise.all(images.map(img =>
@@ -169,53 +174,186 @@ async function generatePdfBuffers(page, urls) {
         printBackground: true,
         preferCSSPageSize: true,
         margin: {
-          top: '20mm',
-          bottom: '20mm',
-          left: '15mm',
-          right: '15mm',
+            top: '25mm',
+            bottom: '20mm',
+            left: '15mm',
+            right: '15mm',
         },
-        displayHeaderFooter: false,
+        displayHeaderFooter: true,
+        headerTemplate: `
+            <style>
+            .header {
+                font-size: 12px;
+                color: #333;
+                width: 100%;
+                text-align: center;
+                padding-bottom: 8px;
+            }
+            </style>
+            <div class="header">H2O Wave Documentation</div>
+        `,
         footerTemplate: `
-          <div style="font-size:10px; color: #999; width:100%; text-align:center; margin:0 auto;">
-            Page <span class="pageNumber"></span> of <span class="totalPages"></span>
-          </div>`,
-        headerTemplate: '<div></div>',
-      });
+            <div class="footer">
+            </div>
+        `,
+        });
 
-      pdfBuffers.push(pdfBuffer);
+
+      pdfBuffers.push({
+        buffer: pdfBuffer,
+        title: pageTitle,
+        url: url
+      });
     } catch (error) {
-      console.error(`Error ingenerating PDF for ${url}: ${error.message}`);
+      console.error(`Error generating PDF for ${url}: ${error.message}`);
     }
   }
 
   return pdfBuffers;
 }
 
-async function mergePdfs(pdfBuffers) {
-  const mergedPdf = await PDFDocument.create();
+async function createToc(pdfEntries) {
+  const tocDoc = await PDFDocument.create();
+  const page = tocDoc.addPage([595, 842]); // A4 size
 
-  for (const pdfBytes of pdfBuffers) {
-    const pdf = await PDFDocument.load(pdfBytes);
-    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-    copiedPages.forEach(page => mergedPdf.addPage(page));
+  // Add the TOC title - experiment with different fonts and sizes
+  page.drawText('Table of Contents', {
+    x: 50,
+    y: 750,
+    size: 18,
+    color: rgb(0, 0, 0)
+  });
+
+  // Add entries 
+  let yPosition = 700;
+  let currentPage = 2; // to only start after TOC and cover page
+
+  for (const entry of pdfEntries) {
+    const loadedPdf = await PDFDocument.load(entry.buffer);
+    const pageCount = loadedPdf.getPageCount();
+    
+    page.drawText(entry.title, {
+      x: 50,
+      y: yPosition,
+      size: 12
+    });
+    
+    page.drawText(currentPage.toString(), {
+      x: 500,
+      y: yPosition,
+      size: 12
+    });
+    
+    yPosition -= 20;
+    currentPage += pageCount;
   }
+
+  return await tocDoc.save();
+}
+
+
+async function mergePdfsWithToc(pdfEntries) {
+  const mergedPdf = await PDFDocument.create();
+  const tocPdf = await createToc(pdfEntries);
+
+  //loading the TOC PDF and add its pages first, otherwise it wont be formatted correctly
+  const tocDoc = await PDFDocument.load(tocPdf);
+  const tocPages = await mergedPdf.copyPages(tocDoc, tocDoc.getPageIndices());
+  tocPages.forEach(page => mergedPdf.addPage(page));
+
+
+  const sectionFirstPages = {};
+
+    // Add content pages and record first page for each section
+    for (const entry of pdfEntries) {
+        const pdf = await PDFDocument.load(entry.buffer);
+        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        pages.forEach((page, i) => {
+        mergedPdf.addPage(page);
+        if (i === 0) {
+            // Store the page ref for this sections first page
+            sectionFirstPages[entry.title] = page;
+        }
+        });
+    }
+
+  const tocPage = mergedPdf.getPage(0);
+  const tocFont = await mergedPdf.embedFont(StandardFonts.Helvetica);
+  let tocY = 700;
+
+  for (const entry of pdfEntries) {
+    const targetPage = sectionFirstPages[entry.title];
+    if (!targetPage) continue;
+
+    // should find a better way to get the page number
+    tocPage.drawText(entry.title, {
+      x: 50,
+      y: tocY,
+      size: 12,
+      font: tocFont,
+      color: rgb(0, 0, 1),
+    });
+
+
+    const annotation = mergedPdf.context.obj({
+      Type: 'Annot',
+      Subtype: 'Link',
+      Rect: [50, tocY, 300, tocY + 15],  
+      Border: [0, 0, 0],
+      A: {
+        Type: 'Action',
+        S: 'GoTo',
+        D: [targetPage.ref, 'Fit'],
+      },
+    });
+
+    const annots = tocPage.node.lookup(PDFName.of('Annots')) || mergedPdf.context.obj([]);
+    annots.push(annotation);
+    tocPage.node.set(PDFName.of('Annots'), annots);
+
+    tocY -= 20;
+  }
+
+const totalPages = mergedPdf.getPageCount();
+const font = await mergedPdf.embedFont(StandardFonts.Helvetica);
+const fontSize = 10;
+const marginBottom = 20;
+
+for (let i = 0; i < totalPages; i++) {
+  const page = mergedPdf.getPage(i);
+  const { width, height } = page.getSize();
+
+  const text = `Page ${i + 1} of ${totalPages}`;
+
+  page.drawText(text, {
+    x: width / 2 - (font.widthOfTextAtSize(text, fontSize) / 2),
+    y: marginBottom,
+    size: fontSize,
+    font: font,
+    color: rgb(0.5, 0.5, 0.5),
+  });
+}
 
   return await mergedPdf.save();
 }
 
+
 async function main() {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({ 
+    headless: 'new',
+    args: ['--font-render-hinting=none'] 
+  });
   const page = await browser.newPage();
 
   try {
-    // const MAX_PAGES = 25;  // Limit pages crawled and processed (only for testing purposes!!)
-    const urls = await getAllPageUrls(page); //, MAX_PAGES);
+    const MAX_PAGES = Infinity; // Only for testing, set to Infinity for all pages when actually generating the PDF
+    const urls = await getAllPageUrls(page, MAX_PAGES);
     console.log(`Found ${urls.length} pages.`);
 
-    const pdfBuffers = await generatePdfBuffers(page, urls);
-    const mergedPdf = await mergePdfs(pdfBuffers);
+    const pdfEntries = await generatePdfBuffers(page, urls);
+    const finalPdf = await mergePdfsWithToc(pdfEntries);
 
-    fs.writeFileSync(OUTPUT_FILENAME, mergedPdf);
+    fs.writeFileSync(OUTPUT_FILENAME, finalPdf);
     console.log(`Success. PDF saved as ${OUTPUT_FILENAME}`);
   } catch (err) {
     console.error('Failed. Error generating PDF:', err);
