@@ -2,10 +2,11 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const { PDFDocument, rgb, StandardFonts, PDFName } = require('pdf-lib');
 const path = require('path');
+let urlToPageMap = new Map();
 
-const START_URL = 'https://wave.h2oai.com/docs/getting-started';
+const START_URL = 'https://docs.h2o.ai/h2o-document-ai/get-started/what-is-h2o-document-ai';
 const PAGINATION_SELECTOR = 'a.pagination-nav__link.pagination-nav__link--next';
-const OUTPUT_FILENAME = 'wave-documentation.pdf';
+const OUTPUT_FILENAME = 'doc-ai-documentation.pdf';
 
 async function getAllPageUrls(page, maxPages = Infinity) {
   const urls = [];
@@ -157,7 +158,7 @@ async function generatePdfBuffers(page, urls) {
         return document.querySelector('h1')?.textContent || document.title;
       });
 
-      // wait for all images to load before generating PDF 
+      // wait for all images to load before generating PDF
       await page.evaluate(async () => {
         const images = Array.from(document.images);
         await Promise.all(images.map(img =>
@@ -224,26 +225,26 @@ async function createToc(pdfEntries) {
     color: rgb(0, 0, 0)
   });
 
-  // Add entries 
+  // Add entries
   let yPosition = 700;
   let currentPage = 2; // to only start after TOC and cover page
 
   for (const entry of pdfEntries) {
     const loadedPdf = await PDFDocument.load(entry.buffer);
     const pageCount = loadedPdf.getPageCount();
-    
+
     page.drawText(entry.title, {
       x: 50,
       y: yPosition,
       size: 12
     });
-    
+
     page.drawText(currentPage.toString(), {
       x: 500,
       y: yPosition,
       size: 12
     });
-    
+
     yPosition -= 20;
     currentPage += pageCount;
   }
@@ -298,7 +299,7 @@ async function mergePdfsWithToc(pdfEntries) {
     const annotation = mergedPdf.context.obj({
       Type: 'Annot',
       Subtype: 'Link',
-      Rect: [50, tocY, 300, tocY + 15],  
+      Rect: [50, tocY, 300, tocY + 15],
       Border: [0, 0, 0],
       A: {
         Type: 'Action',
@@ -339,14 +340,14 @@ for (let i = 0; i < totalPages; i++) {
 
 
 async function main() {
-  const browser = await puppeteer.launch({ 
+  const browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--font-render-hinting=none'] 
+    args: ['--font-render-hinting=none']
   });
   const page = await browser.newPage();
 
   try {
-    const MAX_PAGES = Infinity; // Only for testing, set to Infinity for all pages when actually generating the PDF
+    const MAX_PAGES = 5; // Only for testing, set to Infinity for all pages when actually generating the PDF
     const urls = await getAllPageUrls(page, MAX_PAGES);
     console.log(`Found ${urls.length} pages.`);
 
