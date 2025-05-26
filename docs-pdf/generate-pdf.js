@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const { PDFDocument, rgb, StandardFonts, PDFName } = require('pdf-lib');
 const path = require('path');
-let urlToPageMap = new Map();
 
 const START_URL = 'https://docs.h2o.ai/h2o-document-ai/get-started/what-is-h2o-document-ai';
 const PAGINATION_SELECTOR = 'a.pagination-nav__link.pagination-nav__link--next';
@@ -37,6 +36,9 @@ async function cleanupDom(page) {
     // Remove footer along w the cookie banners
     document.querySelector('footer')?.remove();
     document.querySelector('section.notice')?.remove();
+    document.querySelectorAll('.theme-admonition-note').forEach(el => el.remove());
+    document.querySelectorAll('.theme-admonition.theme-admonition-note.alert.alert--secondary').forEach(el => el.remove());
+
 
     // to expand tabbed panels. This config works best but need to explore more options
     document.querySelectorAll('.tabs-container').forEach(tabsContainer => {
@@ -191,8 +193,9 @@ async function generatePdfBuffers(page, urls) {
                 padding-bottom: 8px;
             }
             </style>
-            <div class="header">H2O Wave Documentation</div>
+            <div class="header">H2O Document AI Documentation</div>
         `,
+        // This footer is empty. Doesnt work if removed
         footerTemplate: `
             <div class="footer">
             </div>
@@ -347,7 +350,7 @@ async function main() {
   const page = await browser.newPage();
 
   try {
-    const MAX_PAGES = 5; // Only for testing, set to Infinity for all pages when actually generating the PDF
+    const MAX_PAGES = Infinity; // Only for testing, set to Infinity for all pages when actually generating the PDF
     const urls = await getAllPageUrls(page, MAX_PAGES);
     console.log(`Found ${urls.length} pages.`);
 
