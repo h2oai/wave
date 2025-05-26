@@ -15,7 +15,7 @@ async function getAllPageUrls(page, maxPages = Infinity) {
     if (urls.length >= maxPages) break;
     if (urls.includes(nextPageUrl)) break;
 
-    console.log(`Visiting: ${nextPageUrl}`);
+    console.log(`Scraping: ${nextPageUrl}`);
     await page.goto(nextPageUrl, { waitUntil: 'networkidle2' });
     urls.push(nextPageUrl);
 
@@ -37,7 +37,7 @@ async function cleanupDom(page) {
     document.querySelector('footer')?.remove();
     document.querySelector('section.notice')?.remove();
 
-    // to expand tabbed panels. This config works best
+    // to expand tabbed panels. This config works best but need to explore more options
     document.querySelectorAll('.tabs-container').forEach(tabsContainer => {
       const tabButtons = tabsContainer.querySelectorAll('[role="tab"]');
       const tabPanels = tabsContainer.querySelectorAll('[role="tabpanel"]');
@@ -76,12 +76,12 @@ async function cleanupDom(page) {
       }
     });
 
-    // Converting t relative links to absolute
+    // Converting  relative links to absolute
     document.querySelectorAll('a[href^="/"]').forEach((a) => {
       a.href = new URL(a.getAttribute('href'), window.location.origin).href;
     });
 
-    // force inject CSS to fix wide tables
+    // force inject CSS to fix wide tables - temporary fix
     const style = document.createElement('style');
     style.textContent = `
       table {
