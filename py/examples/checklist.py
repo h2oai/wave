@@ -15,7 +15,13 @@ async def serve(q: Q):
     else:
         q.page['example'] = ui.form_card(box='1 1 4 7', items=[
             ui.checklist(name='checklist', label='Choices',
-                         choices=[ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]),
+                         choices=[ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']] + [
+                             ui.choice(name="unavailable", label="unavailable", disabled=True),
+                             ui.choice(name="cannot remove", label="cannot remove", disabled=True)
+                             ],
+                         values=["cannot remove"]
+                         )
+        ,
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()

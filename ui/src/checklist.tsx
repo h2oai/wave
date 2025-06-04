@@ -83,7 +83,16 @@ export const
         const _choices = choices.map(({ c, selected }) => ({ c, selected: c.disabled ? selected : value }))
         setChoices(_choices)
         capture(_choices)
-        m.values = value ? _choices.map(({ c }) => c.name) : []
+
+        if (value) {
+          m.values = _choices
+            .filter(({ c, selected}) => !c.disabled || selected) // Exclude disabled 
+            .map(({ c }) => c.name)
+        } else {
+          m.values = _choices
+            .filter(({ c, selected }) => c.disabled && selected) // Retain  selected disabled
+            .map(({ c }) => c.name)
+        }
       },
       selectAll = () => select(true),
       deselectAll = () => select(false),
