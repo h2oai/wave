@@ -4,9 +4,9 @@ Faker==13.3.4
 loguru==0.6.0
 matplotlib==3.5.1
 numpy==1.24.4
-opencv-python==4.5.5.64
+opencv-python==4.8.1.78
 pandas==1.3.5
 plotly==5.7.0
-scikit-learn==1.2.2
+scikit-learn==1.5.1
 toml==0.10.2
 vega-datasets==0.9.0
