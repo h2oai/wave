@@ -4,10 +4,9 @@
 # ---
 
 import os
-from typing import Dict, List
+from typing import Optional, Dict, List
 from h2o_wave import main, app, Q, ui
 import pandas as pd
-
 
 all_issues_df = pd.DataFrame(
     [[i + 1, 'Closed' if i % 2 == 0 else 'Open'] for i in range(100)],
@@ -21,7 +20,8 @@ def df_to_table_rows(df: pd.DataFrame) -> List[ui.TableRow]:
     return [ui.table_row(name=str(r[0]), cells=[str(r[0]), r[1]]) for r in df.itertuples(index=False)]
 
 
-def get_df(base: pd.DataFrame, sort: Dict[str, bool] = None, search: Dict = None, filters: Dict[str, List[str]] = None) -> pd.DataFrame:
+def get_df(base: pd.DataFrame, sort: Optional[Dict[str, bool]] = None, search: Optional[Dict] = None,
+           filters: Optional[Dict[str, List[str]]] = None) -> pd.DataFrame:
     # Make a deep copy in order to not mutate the original df which serves as our baseline.
     df = base.copy()
 
@@ -32,8 +32,13 @@ def get_df(base: pd.DataFrame, sort: Dict[str, bool] = None, search: Dict = None
     # Filter out all rows that do not contain searched string in `text` cell.
     if search:
         search_val = search['value'].lower()
-        # Filter dataframe by search value case insensitive.
-        df = df[df.apply(lambda r: any(search_val in str(r[col]).lower() for col in search['cols']), axis=1)]
+
+        # Type hint for the lambda function
+        def filter_func(r: pd.Series) -> bool:
+            return any(search_val in str(r[col]).lower() for col in search['cols'])
+
+        # Filter the DataFrame
+        df = df[df.apply(filter_func, axis=1)]
     # Filter out rows that do not contain filtered column value.
     if filters:
         # We want only rows that have no filters applied or their col value matches active filters.
