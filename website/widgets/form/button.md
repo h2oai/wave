@@ -106,11 +106,6 @@ q.page['form'] = ui.form_card(box='1 1 3 1', items=[
 ])
 ```
 
-## Query arguments
-
-By default, clicking a button results in submitting `q.args.<button-name-attr>` with a value of `True`. This, however, might not suit all the cases.
-Use the `value` attribute to submit a specific value for `q.args.<button-name-attr>`.
-
 ## Disabled button
 
 Use a disabled button for cases when clicking should not be allowed, based on the current app state. A typical example might be a user who didn't fill all the form fields yet
@@ -120,6 +115,19 @@ and is not allowed to proceed. Disabled buttons have all interactions disabled (
 q.page['form'] = ui.form_card(box='1 1 1 1', items=[
     ui.button(name='button', label='Button', disabled=True)
 ])
+```
+
+## With Value
+
+By default, clicking a button results in submitting `q.args.<button-name-attr>` with a value of `True`. This, however, might not suit all the cases for example when a list is needed to be rendered and each list item button should lead to the item detail.
+
+Use the `value` attribute to submit a specific value for `q.args.<button-name-attr>`.
+
+```py
+q.page['form'] = ui.form_card(
+    box='1 1 1 2',
+    items=[ui.button(name='button', label=f'Button {i+1}', value=str(i)) for i in range(3)]
+)
 ```
 
 ## With path
@@ -142,10 +150,10 @@ The `commands` attribute can provide other relevant actions for the button that 
 ```py
 q.page['form'] = ui.form_card(box='1 1 2 1', items=[
     ui.button(name='command_button', label='Button with commands', commands=[
-            ui.command(name='first_command', label='First command'), 
+            ui.command(name='first_command', label='First command'),
             ui.command(name='other_commands', label='Other commands', items=[
                         ui.command(name='second_command', label='Second command'),
-                        ui.command(name='third_command', label='Third command'),  
+                        ui.command(name='third_command', label='Third command'),
                     ]),
     ])
 ])
