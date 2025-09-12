@@ -25,7 +25,7 @@ maiores consequatur dolores illo inventore quae obcaecati culpa totam corporis! 
 )
 ```
 
-Check the full API at [ui.wide_info](/docs/api/ui#wide_info).
+Check the full API at [ui.wide_info_card](/docs/api/ui#wide_info_card).
 
 ## Icon
 

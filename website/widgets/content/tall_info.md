@@ -19,7 +19,7 @@ q.page['example'] = ui.tall_info_card(
 )
 ```
 
-Check the full API at [ui.tall_info](/docs/api/ui#tall_info).
+Check the full API at [ui.tall_info_card](/docs/api/ui#tall_info_card).
 
 ## Icon
 
