@@ -102,7 +102,7 @@ q.page['tab_card'] = ui.tab_card(
 
 ### Setting Width and Height
 
-By default, we encourage static units like `px` or `rem` for setting widths and heights. In flex layouts, percentage heights such as `100%` only work if every ancestor has an explicit height; otherwise, the computed height can be zero and the content may not render as expected.
+By default, we encourage static units like `px` or `rem` for setting widths and heights. In flex layouts, percent values such as `100%` only work if every ancestor has an explicit size; otherwise, the computed height can be zero and the content may not render as expected.
 
 ### Responsive Layout
 
