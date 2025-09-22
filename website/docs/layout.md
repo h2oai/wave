@@ -100,9 +100,9 @@ q.page['tab_card'] = ui.tab_card(
 
 ![zone card shrink](assets/zone-card-shrink.png)
 
-### Setting Width and Height
+### Percentage Width and Height
 
-By default, we encourage static units like `px` or `rem` for setting widths and heights. In flex layouts, percent values such as `100%` only work if every ancestor has an explicit size; otherwise, the computed height can be zero and the content may not render as expected.
+By default, we encourage static units like `px` or `rem` for setting widths and heights. All units can be found [here](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Values_and_Units). In flex layouts, percent values such as `100%` only work if every ancestor has an explicit size; otherwise, the computed height can be zero and the content may not render as expected.
 
 ### Responsive Layout
 
