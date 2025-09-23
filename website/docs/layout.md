@@ -55,7 +55,7 @@ A breakpoint value of `xs` matches all viewport widths, unless other breakpoints
 
 ### Zones
 
-A _zone_ is a named area inside the layout where cards can be placed. A zone is defined using `ui.zone()`.
+A `zone` is a named area inside the layout where cards can be placed. A zone is defined using `ui.zone()`.
 
 Zones have a `direction`, either `ui.ZoneDirection.COLUMN` (with children laid out top to bottom) or `ui.ZoneDirection.ROW` (with children laid out left to right).
 
