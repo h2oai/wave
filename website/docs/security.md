@@ -138,7 +138,9 @@ By default, Azure provides you with URL like <https://login.microsoftonline.com/
 panic: failed connecting to OIDC provider: 404 Not Found:
 ```
 
-Change the URL to `https://sts.windows.net/$UUID/` instead to make OpenID work.
+Change the URL to `https://sts.windows.net/$UUID/` instead to make OpenID work. You can also try with `https://login.microsoftonline.com/$UUID/v2.0`
+
+Note: When configuring redirect URIs in Microsoft Entra ID, select the Web platform. For local development, the URI should be set to: `http://localhost:10101/_auth/callback`
 
 ### Explicit token refresh
 
