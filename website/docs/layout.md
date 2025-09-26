@@ -55,7 +55,7 @@ A breakpoint value of `xs` matches all viewport widths, unless other breakpoints
 
 ### Zones
 
-A *zone* is a named area inside the layout where cards can be placed. A zone is defined using `ui.zone()`.
+A `zone` is a named area inside the layout where cards can be placed. A zone is defined using `ui.zone()`.
 
 Zones have a `direction`, either `ui.ZoneDirection.COLUMN` (with children laid out top to bottom) or `ui.ZoneDirection.ROW` (with children laid out left to right).
 
@@ -99,6 +99,10 @@ q.page['tab_card'] = ui.tab_card(
 ```
 
 ![zone card shrink](assets/zone-card-shrink.png)
+
+### Width and Height
+
+By default, we encourage static units like `px` or `rem` for setting widths and heights (see [MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Values_and_units#lengths) for more info). In flex layouts, percent values such as `100%` only work if every ancestor has an explicit `size`, otherwise, the computed height can be zero and the content may not render as expected.
 
 ### Responsive Layout
 
@@ -210,14 +214,14 @@ q.page['meta'] = ui.meta_card(box='', layouts=[ui.layout(breakpoint='xs', zones=
         name='content',
         direction=ui.ZoneDirection.ROW,
         # Specify a zone size, otherwise will be adapted to the biggest card in the zone.
-        size='500px', 
+        size='500px',
         # Align cards on the cross-axis (vertical direction for ROW and horizontal for COLUMN).
-        align='center', 
+        align='center',
         # Align cards on the main-axis (vertical direction for COLUMN and horizontal for ROW).
-        justify='around' 
+        justify='around'
     )
 ])])
-q.page['card1'] = ui.tall_info_card(box=ui.box('content', width='200px', height='200px'), name='', 
+q.page['card1'] = ui.tall_info_card(box=ui.box('content', width='200px', height='200px'), name='',
                                     title='Card', caption='Lorem ipsum')
 q.page['card2'] = ui.tall_info_card(box=ui.box('content', width='200px', height='200px'), name='',
                                     title='Card', caption='Lorem ipsum')
@@ -246,20 +250,20 @@ page['quote'] = ui.markdown_card(
 The `column` and `row` indicate which column and row to position the top-left corner of the card. The `width` and `height` indicate the width and height of the cards, respectively. The `column` and `row` are 1-based. The `width` and `height` are in spans (units) of columns or rows.
 
 | Attribute | Value | Interpreted as |
-|---|---|---|
-| column | N | Nth column |
-| row | N | Nth row |
-| width | N | N columns wide |
-| height | N | N rows high |
+| --------- | ----- | -------------- |
+| column    | N     | Nth column     |
+| row       | N     | Nth row        |
+| width     | N     | N columns wide |
+| height    | N     | N rows high    |
 
 For example, a `box` of `1 2 3 4` is interpreted as:
 
 | Attribute | Value | Interpreted as |
-|---|---|---|
-| column | 1 | 1st column |
-| row | 2 | 2nd row |
-| width | 3 | 3 columns wide |
-| height | 4 | 4 rows high |
+| --------- | ----- | -------------- |
+| column    | 1     | 1st column     |
+| row       | 2     | 2nd row        |
+| width     | 3     | 3 columns wide |
+| height    | 4     | 4 rows high    |
 
 :::tip
 The default grid is designed to fit HD displays (1920 x 1080 pixels), so if you want your page to fit smaller displays, don't use up the entire grid. Instead, use up less columns and rows, like 8 columns x 6 rows.
