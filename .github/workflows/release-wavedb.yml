@@ -20,7 +20,7 @@ jobs:
     name: WaveDB Windows Release
     runs-on: windows-latest
     steps:
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.24.11"
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
     name: WaveDB Linux Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.24.11"
       - uses: actions/checkout@v2
@@ -58,7 +58,7 @@ jobs:
     name: WaveDB Darwin Release
     runs-on: macos-13
     steps:
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.24.11"
       - uses: actions/checkout@v2

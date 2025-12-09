@@ -33,7 +33,7 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.24.11"
 
