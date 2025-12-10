@@ -11,9 +11,9 @@
   <img alt="Contributor covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg">
 </p>
 
-### Realtime Web Apps and Dashboards for Python and R
+###
 
-**New!** *[R Language API](https://wave.h2o.ai/blog/r-api-preview) Build and control Wave dashboards using R!*
+**New!** _[R Language API](https://wave.h2o.ai/blog/r-api-preview) Build and control Wave dashboards using R!_
 
 H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python/R without using HTML, Javascript, or CSS.
 
