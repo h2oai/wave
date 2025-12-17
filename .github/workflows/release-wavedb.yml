@@ -15,6 +15,9 @@ env:
   VERSION: ${{ github.event.inputs.version }}
   TAG: "v${{ github.event.inputs.tag }}"
 
+permissions:
+  contents: write
+
 jobs:
   release-windows:
     name: WaveDB Windows Release
