@@ -77,11 +77,13 @@ jobs:
             build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
             build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
             build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-linux-arm64.tar.gz
             build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux_aarch64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
             # r/build/h2owave_${{ env.VERSION }}_R.tar.gz

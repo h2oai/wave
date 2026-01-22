@@ -35,11 +35,11 @@ class CustomBuildHook(BuildHookInterface):
         if not version:
             raise Exception('VERSION environment variable must be set.')
 
-        arch = 'arm64' if platform.endswith('arm64') else 'amd64'
+        arch = 'arm64' if platform.endswith('arm64') or platform.endswith('aarch64') else 'amd64'
         operating_system = 'darwin'
         if platform == 'win_amd64':
             operating_system = 'windows'
-        elif platform == 'manylinux1_x86_64':
+        elif platform == 'manylinux1_x86_64' or platform == 'manylinux_aarch64':
             operating_system = 'linux'
 
         binaries_path = os.path.join('..', '..', 'build', f'wave-{version}-{operating_system}-{arch}')
