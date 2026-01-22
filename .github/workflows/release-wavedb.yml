@@ -57,6 +57,25 @@ jobs:
           tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-linux-arm64:
+    name: WaveDB Linux ARM64 Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.24.11"
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: Build
+        run: make release-db-linux-arm64
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "wavedb-${{ env.VERSION }}-linux-arm64.tar.gz"
+          tag_name: ${{ env.TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-darwin:
     name: WaveDB Darwin Release
     runs-on: macos-14
