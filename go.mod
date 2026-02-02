@@ -1,6 +1,6 @@
 module github.com/h2oai/wave
 
-go 1.24.11
+go 1.24.12
 
 require (
 	github.com/coreos/go-oidc/v3 v3.12.0
