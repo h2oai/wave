@@ -116,17 +116,20 @@ build-db-micro:
 
 release-db: # Build release package for database server
 	mkdir -p build
-	GOEXPERIMENT=boringcrypto go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb$(EXE_EXT) cmd/wavedb/main.go
-	tar -czf wavedb-$(VERSION)-$(OS)-amd64.tar.gz wavedb$(EXE_EXT)
+	GOOS=$(OS) GOARCH=$(ARCH) GOEXPERIMENT=boringcrypto go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb$(EXE_EXT) cmd/wavedb/main.go
+	tar -czf wavedb-$(VERSION)-$(OS)-$(ARCH).tar.gz wavedb$(EXE_EXT)
 
-release-db-windows: # Build OSX release package for database server
-	$(MAKE) OS=windows EXE_EXT=".exe" release-db
+release-db-windows: # Build Windows release package for database server
+	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-db
 
 release-db-darwin: # Build OSX release package for database server
-	$(MAKE) OS=darwin release-db
+	$(MAKE) OS=darwin ARCH=amd64 release-db
 
 release-db-linux: # Build Linux release package for database server
-	$(MAKE) OS=linux release-db
+	$(MAKE) OS=linux ARCH=amd64 release-db
+
+release-db-linux-arm64: # Build Linux ARM64 release package for database server
+	$(MAKE) OS=linux ARCH=arm64 release-db
 
 build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
 	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
@@ -164,6 +167,7 @@ pydocs: ## Generate API docs and copy to website
 
 release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=linux ARCH=amd64 release-os
+	$(MAKE) OS=linux ARCH=arm64 release-os
 	$(MAKE) OS=darwin ARCH=amd64 release-os
 	$(MAKE) OS=darwin ARCH=arm64 release-os
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
@@ -171,8 +175,9 @@ release: build-ui ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) build-py
 	# $(MAKE) build-r
 
-release-nightly: build-ui ## Prepare nightly release builds. 
+release-nightly: build-ui ## Prepare nightly release builds.
 	$(MAKE) OS=linux ARCH=amd64 release-os
+	$(MAKE) OS=linux ARCH=arm64 release-os
 	$(MAKE) OS=darwin ARCH=amd64 release-os
 	$(MAKE) OS=darwin ARCH=arm64 release-os
 	$(MAKE) OS=windows ARCH=amd64 EXE_EXT=".exe" release-os
