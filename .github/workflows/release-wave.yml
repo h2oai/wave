@@ -216,6 +216,33 @@ jobs:
       - name: Remove files in tmp folder
         run: make remove-build-apps-directory
 
+  get-wavedb-version:
+    name: Get latest WaveDB version
+    runs-on: ubuntu-latest
+    outputs:
+      wavedb-version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - name: Get latest WaveDB version from release assets
+        id: get-version
+        run: |
+          VERSION=$(gh api repos/${{ github.repository }}/releases \
+            --paginate --jq '.[].assets[].name' \
+            | grep '^wavedb-' | head -1 \
+            | sed -E 's/wavedb-([0-9.]+)-.*/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-wavedb:
+    needs: [release, get-wavedb-version]
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release-wavedb.yml
+    with:
+      version: ${{ needs.get-wavedb-version.outputs.wavedb-version }}
+      tag: ${{ github.event.inputs.version }}
+    secrets: inherit
+
   # build-and-publish:
   #   needs: release
   #   permissions:

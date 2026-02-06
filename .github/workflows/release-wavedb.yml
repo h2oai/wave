@@ -9,11 +9,21 @@ on:
       tag:
         description: "Wave Release Version (0.0.0)"
         required: true
+  workflow_call:
+    inputs:
+      version:
+        description: "WaveDB Release Version (0.0.0)"
+        required: true
+        type: string
+      tag:
+        description: "Wave Release Version (0.0.0)"
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: ${{ github.event.inputs.version }}
-  TAG: "v${{ github.event.inputs.tag }}"
+  VERSION: ${{ inputs.version }}
+  TAG: "v${{ inputs.tag }}"
 
 permissions:
   contents: write
