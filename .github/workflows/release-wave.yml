@@ -107,6 +107,7 @@ jobs:
         with:
           packages-dir: py/h2o_wave/dist
           password: ${{ secrets.PYPI_API_TOKEN }}
+          skip-existing: true
 
       - name: Configure Shared Services AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
