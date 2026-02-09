@@ -83,7 +83,7 @@ jobs:
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux_aarch64.whl
+            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux_2_17_aarch64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
             # r/build/h2owave_${{ env.VERSION }}_R.tar.gz

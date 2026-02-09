@@ -39,7 +39,7 @@ class CustomBuildHook(BuildHookInterface):
         operating_system = 'darwin'
         if platform == 'win_amd64':
             operating_system = 'windows'
-        elif platform == 'manylinux1_x86_64' or platform == 'manylinux_aarch64':
+        elif platform == 'manylinux1_x86_64' or platform == 'manylinux_2_17_aarch64':
             operating_system = 'linux'
 
         binaries_path = os.path.join('..', '..', 'build', f'wave-{version}-{operating_system}-{arch}')
