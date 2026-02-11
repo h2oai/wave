@@ -32,6 +32,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
+          fetch-depth: 0
 
       - uses: actions/setup-go@v6
         with:
@@ -62,12 +63,20 @@ jobs:
           make setup-py-tests
           make test-py-ci
 
+      - name: Generate Changelog
+        run: |
+          node tools/changelog-generator/changelog.js
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: ${{ env.TAG }}
           release_name: ${{ env.TAG }}
+          body: ${{ env.CHANGELOG }}
           draft: false
 
       - name: Release
