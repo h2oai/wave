@@ -64,11 +64,7 @@ jobs:
           make test-py-ci
 
       - name: Generate Changelog
-        run: |
-          node tools/changelog-generator/changelog.js
-          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          cat CHANGELOG.md >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+        run: node tools/changelog-generator/changelog.js
 
       - name: Create GitHub Release
         id: create_release
@@ -76,7 +72,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           release_name: ${{ env.TAG }}
-          body: ${{ env.CHANGELOG }}
+          body_path: CHANGELOG.md
           draft: false
 
       - name: Release
