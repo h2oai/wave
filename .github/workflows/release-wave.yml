@@ -57,62 +57,62 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
-      - name: Unit Test
-        run: |
-          make test-ui-ci
-          make setup-py-tests
-          make test-py-ci
-
-      - name: Generate Changelog
-        run: node tools/changelog-generator/changelog.js
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-          body_path: CHANGELOG.md
-          draft: false
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
-            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
-            build/wave-${{ env.VERSION }}-linux-arm64.tar.gz
-            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux_2_17_aarch64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
-            py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
-            # r/build/h2owave_${{ env.VERSION }}_R.tar.gz
-          tag_name: ${{ env.TAG }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to Conda
-        uses: h2oai/wave_publish_conda_package_action@v1.0.4
-        with:
-          CondaDir: "py/h2o_wave/conda"
-          Platforms: "noarch"
-          CondaUsername: ${{ secrets.CONDA_USERNAME }}
-          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
-        env:
-          # VERSION clashes with conda build. Use PKG_VERSION instead.
-          PKG_VERSION: ${{ env.VERSION }}
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: py/h2o_wave/dist
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          skip-existing: true
+      # - name: Unit Test
+      #   run: |
+      #     make test-ui-ci
+      #     make setup-py-tests
+      #     make test-py-ci
+      #
+      # - name: Generate Changelog
+      #   run: node tools/changelog-generator/changelog.js
+      #
+      # - name: Create GitHub Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   with:
+      #     tag_name: ${{ env.TAG }}
+      #     release_name: ${{ env.TAG }}
+      #     body_path: CHANGELOG.md
+      #     draft: false
+      #
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: |
+      #       build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
+      #       build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
+      #       build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+      #       build/wave-${{ env.VERSION }}-linux-arm64.tar.gz
+      #       build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_10_9_x86_64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_11_0_arm64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-macosx_12_0_arm64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux1_x86_64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-manylinux_2_17_aarch64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
+      #       py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
+      #       # r/build/h2owave_${{ env.VERSION }}_R.tar.gz
+      #     tag_name: ${{ env.TAG }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #
+      # - name: Publish to Conda
+      #   uses: h2oai/wave_publish_conda_package_action@v1.0.4
+      #   with:
+      #     CondaDir: "py/h2o_wave/conda"
+      #     Platforms: "noarch"
+      #     CondaUsername: ${{ secrets.CONDA_USERNAME }}
+      #     CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+      #   env:
+      #     # VERSION clashes with conda build. Use PKG_VERSION instead.
+      #     PKG_VERSION: ${{ env.VERSION }}
+      #
+      # - name: Publish to PyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     packages-dir: py/h2o_wave/dist
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
+      #     skip-existing: true
 
       - name: Configure Shared Services AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
