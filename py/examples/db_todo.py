@@ -67,7 +67,11 @@ async def show_todos(q: Q):
     rows, err = await db.exec('select id, label, done from todo where user=?', q.auth.subject)
     if err:
         raise RuntimeError(f'Failed fetching todos: {err}')
-    todos = [TodoItem(id, label, done) for id, label, done in rows]
+
+    if rows is not None:
+        todos = [TodoItem(id, label, done) for id, label, done in rows]
+    else:
+        todos = []
 
     # Create done/not-done checkboxes.
     done = [ui.checkbox(name=f'todo_{todo.id}', label=todo.label, value=True, trigger=True) for todo in todos if
@@ -83,6 +87,7 @@ async def show_todos(q: Q):
         *done,
     ])
     await q.page.save()
+
 
 
 async def add_todo(q: Q):
