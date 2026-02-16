@@ -423,6 +423,18 @@ const
       genClass = (type: Type) => {
         if (classes[type.name] === Declaration.Declared || classes[type.name] === Declaration.Forward) return
 
+        // Ensure all components have a name parameter
+        if (!type.isUnion && !type.members.some(m => m.name === 'name')) {
+          type.members.push({
+            name: 'name',
+            t: MemberT.Singular,
+            typeName: 'S',
+            isOptional: true,
+            isPacked: false,
+            comments: ['An identifying name for this component.'],
+          } as Member)
+        }
+
         classes[type.name] = Declaration.Forward
 
         // generate member types first so that we don't have to forward-declare.
@@ -581,6 +593,18 @@ const
       genAPI = (type: Type) => {
         if (apis[type.name]) return
         apis[type.name] = true
+
+        // Ensure all components have a name parameter
+        if (!type.isUnion && !type.members.some(m => m.name === 'name')) {
+          type.members.push({
+            name: 'name',
+            t: MemberT.Singular,
+            typeName: 'S',
+            isOptional: true,
+            isPacked: false,
+            comments: ['An identifying name for this component.'],
+          } as Member)
+        }
 
         for (const m of type.members) {
           const memberType = getKnownTypeOf(m)
@@ -863,14 +887,14 @@ const
     p('')
 
     for (const t of protocol.types) {
-      if (!t.tags.length) continue
+      if (!t.tags?.length) continue
       const
         def: any = { view: t.file },
         attrs: any[] = []
 
       for (const { name, value } of t.tags) def[name] = value
       for (const m of t.members) {
-        if (!m.tags.length) continue
+        if (!m.tags?.length) continue
         const attr: any = { name: m.name, optional: m.isOptional }
         for (const { name, value } of m.tags) attr[name] = value
         attrs.push(attr)
