@@ -235,12 +235,23 @@ func (auth *Auth) redirectToAuth(w http.ResponseWriter, r *http.Request) {
 	// /_auth/login?next=X -> /_auth/init?next=X
 	u, _ := url.Parse(auth.initURL)
 	next := r.URL.Query().Get("next")
-	if next != "" {
+	if isRelativePath(next) {
 		q := u.Query()
 		q.Set("next", next)
 		u.RawQuery = q.Encode()
 	}
 	http.Redirect(w, r, u.String(), http.StatusFound)
+}
+
+func isRelativePath(s string) bool {
+	if s == "" {
+		return false
+	}
+	u, err := url.Parse(s)
+	if err != nil {
+		return false
+	}
+	return u.Scheme == "" && u.Host == "" && s[0] == '/'
 }
 
 func generateRandomKey(byteCount int) (string, error) {
@@ -279,7 +290,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	successURL := h.auth.baseURL
-	if nextValues, ok := r.URL.Query()["next"]; ok {
+	if nextValues, ok := r.URL.Query()["next"]; ok && isRelativePath(nextValues[0]) {
 		successURL = nextValues[0]
 	}
 
