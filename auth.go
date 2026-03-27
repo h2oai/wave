@@ -112,9 +112,10 @@ type Auth struct {
 	baseURL  string
 	initURL  string
 	loginURL string
+	secure   bool
 }
 
-func newAuth(conf *AuthConf, baseURL, initURL, loginURL string) (*Auth, error) {
+func newAuth(conf *AuthConf, baseURL, initURL, loginURL string, secure bool) (*Auth, error) {
 	oauth, err := connectToProvider(conf)
 	if err != nil {
 		return nil, err
@@ -126,6 +127,7 @@ func newAuth(conf *AuthConf, baseURL, initURL, loginURL string) (*Auth, error) {
 		baseURL:  baseURL,
 		initURL:  initURL,
 		loginURL: loginURL,
+		secure:   secure,
 	}, nil
 }
 
@@ -261,7 +263,7 @@ func newLoginHandler(auth *Auth) http.Handler {
 
 func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// `state` is to protect from CSRF (OAuth2 part).
-	state, err := generateRandomKey(4)
+	state, err := generateRandomKey(20)
 	if err != nil {
 		echo(Log{"t": "oidc_random_state_key", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -269,7 +271,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// `nonce` is to protect from replay attacks (OpenID part).
-	nonce, err := generateRandomKey(4)
+	nonce, err := generateRandomKey(20)
 	if err != nil {
 		echo(Log{"t": "oidc_random_nonce_key", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -285,7 +287,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sessionID := uuid.New().String()
 
 	h.auth.set(&Session{id: sessionID, state: state, nonce: nonce, successURL: successURL, expiry: time.Now().Add(h.auth.conf.InactivityTimeout)})
-	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, HttpOnly: true, SameSite: http.SameSiteLaxMode, Expires: time.Now().Add(h.auth.conf.SessionExpiry)}
+	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: h.auth.baseURL, HttpOnly: true, Secure: h.auth.secure, SameSite: http.SameSiteLaxMode, Expires: time.Now().Add(h.auth.conf.SessionExpiry)}
 	http.SetCookie(w, &cookie)
 
 	var options []oauth2.AuthCodeOption
@@ -380,11 +382,9 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Compare to stored nonce.
 	if session.nonce != claims.Nonce {
-		if !ok {
-			echo(Log{"t": "oauth2_nonce", "error": "failed matching nonce"})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
+		echo(Log{"t": "oauth2_nonce", "error": "failed matching nonce"})
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 
 	session.token = oauth2Token
@@ -424,6 +424,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Delete cookie.
 	cookie.MaxAge = -1
+	cookie.Secure = h.auth.secure
 	http.SetCookie(w, cookie)
 
 	// Purge session
