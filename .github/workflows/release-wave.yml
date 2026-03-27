@@ -126,10 +126,10 @@ jobs:
       #   env:
       #     AWS_DEFAULT_REGION: ${{ secrets.AWS_EAST_REGION }}
       #
-      # - name: Publish apps for Cloud
-      #   run: make build-apps publish-apps-s3-hac
-      #   env:
-      #     HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
+      - name: Publish apps for Cloud
+        run: make build-apps
+        env:
+          HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
 
       # - name: Publish Docs
       #   if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
