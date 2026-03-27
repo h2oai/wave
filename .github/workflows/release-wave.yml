@@ -131,10 +131,10 @@ jobs:
       #   env:
       #     HAC_S3_BUCKET: ${{ secrets.HAC_S3_BUCKET }}
 
-      - name: Publish Docs
-        if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
-        run: |
-          make publish-website
+      # - name: Publish Docs
+      #   if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
+      #   run: |
+      #     make publish-website
 
       - name: Invalidate CDN cache
         if: ${{ github.event.inputs.skipDocsPublish == 'false' }}
