@@ -7,8 +7,8 @@ def update_file_tree(q: Q, root: str) -> None:
 
 def open_file(q: Q, file: str) -> None:
     q.page['meta'].script = ui.inline_script(f'''
-editor.setValue(`{file_utils.read_file(file)}`)
-eventBus.emit('activeFile', '{file}')
+editor.setValue({json.dumps(file_utils.read_file(file))})
+eventBus.emit('activeFile', {json.dumps(file)})
 ''')
 
 def clean_editor(q: Q) -> None:
