@@ -15,7 +15,7 @@ require (
 
 require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
