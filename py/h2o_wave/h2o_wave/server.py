@@ -16,6 +16,7 @@ import os
 import datetime
 import asyncio
 from concurrent.futures import Executor
+from contextlib import asynccontextmanager
 
 import contextvars
 
@@ -265,21 +266,28 @@ class _App:
         logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
         logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
 
-        # ASGI app
+        # Store lifecycle callbacks for lifespan
+        self._on_startup = on_startup
+        self._on_shutdown = on_shutdown
+
+        # ASGI app with lifespan context manager (Starlette 1.0.0+ compatible)
+        @asynccontextmanager
+        async def lifespan(app):
+            await self._register()
+            if self._on_startup:
+                await self._on_startup()
+            yield
+            await self._unregister()
+            await self._shutdown()
+            if self._on_shutdown:
+                await self._on_shutdown()
+
         self.app = Router(
             routes=[
                 Route('/', endpoint=self._receive, methods=['POST']),
                 Route('/disconnect', endpoint=self._disconnect, methods=['POST']),
             ],
-            on_startup=[
-                self._register,
-                on_startup or _noop,
-            ],
-            on_shutdown=[
-                self._unregister,
-                self._shutdown,
-                on_shutdown or _noop,
-            ]
+            lifespan=lifespan,
         )
 
     async def _register(self):
