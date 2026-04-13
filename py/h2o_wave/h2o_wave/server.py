@@ -17,6 +17,7 @@ import datetime
 import asyncio
 from concurrent.futures import Executor
 from contextlib import asynccontextmanager
+from importlib.metadata import version as _get_version
 
 import contextvars
 
@@ -266,29 +267,35 @@ class _App:
         logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
         logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
 
-        # Store lifecycle callbacks for lifespan
         self._on_startup = on_startup
         self._on_shutdown = on_shutdown
 
-        # ASGI app with lifespan context manager (Starlette 1.0.0+ compatible)
-        @asynccontextmanager
-        async def lifespan(app):
-            await self._register()
-            if self._on_startup:
-                await self._on_startup()
-            yield
-            await self._unregister()
-            await self._shutdown()
-            if self._on_shutdown:
-                await self._on_shutdown()
+        routes = [
+            Route('/', endpoint=self._receive, methods=['POST']),
+            Route('/disconnect', endpoint=self._disconnect, methods=['POST']),
+        ]
 
-        self.app = Router(
-            routes=[
-                Route('/', endpoint=self._receive, methods=['POST']),
-                Route('/disconnect', endpoint=self._disconnect, methods=['POST']),
-            ],
-            lifespan=lifespan,
-        )
+        # Starlette 1.0.0 removed on_startup/on_shutdown in favor of lifespan
+        _starlette_major = int(_get_version('starlette').split('.')[0])
+        if _starlette_major >= 1:
+            @asynccontextmanager
+            async def lifespan(app):
+                await self._register()
+                if self._on_startup:
+                    await self._on_startup()
+                yield
+                await self._unregister()
+                await self._shutdown()
+                if self._on_shutdown:
+                    await self._on_shutdown()
+
+            self.app = Router(routes=routes, lifespan=lifespan)
+        else:
+            self.app = Router(
+                routes=routes,
+                on_startup=[self._register, on_startup or _noop],
+                on_shutdown=[self._unregister, self._shutdown, on_shutdown or _noop],
+            )
 
     async def _register(self):
         app_address = _get_env('APP_ADDRESS', _config.app_address)
