@@ -279,15 +279,33 @@ class _App:
         _starlette_major = int(_get_version('starlette').split('.')[0])
         if _starlette_major >= 1:
             @asynccontextmanager
-            async def lifespan(app):
-                await self._register()
-                if self._on_startup:
-                    await self._on_startup()
+            async def lifespan(_app):
+                # Startup
+                try:
+                    await self._register()
+                    if self._on_startup:
+                        if asyncio.iscoroutinefunction(self._on_startup):
+                            await self._on_startup()
+                        else:
+                            self._on_startup()
+                except Exception:
+                    # Ensure cleanup runs even if startup fails
+                    self._shutdown()
+                    if self._on_shutdown:
+                        if asyncio.iscoroutinefunction(self._on_shutdown):
+                            await self._on_shutdown()
+                        else:
+                            self._on_shutdown()
+                    raise
                 yield
+                # Shutdown — always runs after yield (guaranteed by asynccontextmanager)
                 await self._unregister()
-                await self._shutdown()
+                self._shutdown()
                 if self._on_shutdown:
-                    await self._on_shutdown()
+                    if asyncio.iscoroutinefunction(self._on_shutdown):
+                        await self._on_shutdown()
+                    else:
+                        self._on_shutdown()
 
             self.app = Router(routes=routes, lifespan=lifespan)
         else:
