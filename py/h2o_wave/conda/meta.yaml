@@ -14,7 +14,8 @@ about:
   doc_url: {{ project['urls']['Homepage'] }}
 
 requirements:
-  build: 
+  build:
+    - pip
     {% for dep in pyproject['build-system']['requires'] %}
     - {{ dep.lower() }}
     {% endfor %}
