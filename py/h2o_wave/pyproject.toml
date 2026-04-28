@@ -21,7 +21,7 @@ dependencies = [
     "Click",
     "inquirer",
     "httpx>=0.16.1",
-    "starlette>=0.13.8",
+    "starlette>=0.13.8,<1",
     "uvicorn>=0.17.6",
 ]
 classifiers=[
