@@ -33,21 +33,12 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
             | sudo sh -s -- -b /usr/local/bin v0.70.0
 
-      - name: Install browser host deps (Noble names)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libasound2t64 libatk1.0-0t64 libatk-bridge2.0-0t64 \
-            libcups2t64 libgtk-3-0t64 \
-            libnss3 libnspr4 libxkbcommon0 libxcomposite1 libxdamage1 \
-            libxfixes3 libxrandr2 libgbm1 libxshmfence1 \
-            libpango-1.0-0 libcairo2 libdbus-glib-1-2 libxt6
-
       - name: Tmp e2e test
         run: |
           make setup-ui
           make build-ui
           make setup-e2e
+          sudo ./e2e/venv/bin/playwright install-deps
           make test-e2e-ci
 
       - name: Run security bump
