@@ -39,7 +39,15 @@ jobs:
           make build-ui
           make setup-e2e
           sudo ./e2e/venv/bin/playwright install-deps
-          cd e2e && ./venv/bin/pytest -x --browser chromium
+          cd e2e && ./venv/bin/pytest -x --browser chromium --tracing=retain-on-failure --screenshot=only-on-failure --output=test-results
+
+      - name: Upload playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: e2e/test-results/
+          if-no-files-found: ignore
 
       - name: Run security bump
         env:
