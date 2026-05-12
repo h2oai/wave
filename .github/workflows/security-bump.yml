@@ -33,6 +33,13 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
             | sudo sh -s -- -b /usr/local/bin v0.70.0
 
+      - name: Tmp e2e test
+        run: |
+          make setup-ui
+          make build-ui
+          make setup-e2e
+          make test-e2e-ci
+
       - name: Run security bump
         env:
           GH_TOKEN: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
