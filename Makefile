@@ -248,10 +248,12 @@ tag: ## Bump version and tag
 	git tag v$(VERSION)
 	git push origin && git push origin --tags
 
-update-go: ## Update Go version in go.mod and GitHub Actions workflows (GO_VERSION=x.y.z)
+update-go: ## Update Go version in go.mod (workflows read it via go-version-file) (GO_VERSION=x.y.z)
 	@test -n "$(GO_VERSION)" || (echo "GO_VERSION is required, e.g. make update-go GO_VERSION=1.25.9"; exit 1)
 	$(SED) -i -E 's/^go [0-9]+\.[0-9]+(\.[0-9]+)?$$/go $(GO_VERSION)/' go.mod
-	$(SED) -i -E 's/(go-version: *)"[0-9]+\.[0-9]+(\.[0-9]+)?"/\1"$(GO_VERSION)"/' .github/workflows/*.yml
+
+security-bump: ## Scan waved for Go stdlib CVEs, bump Go to lowest fix, run e2e, open PR
+	./tools/security-bump/security-bump.sh
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

@@ -1,0 +1,41 @@
+name: Security Bump
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # Every day at 09:00 UTC.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  security-bump:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+
+      - uses: actions/setup-python@v5
+
+      - name: Install trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+            | sudo sh -s -- -b /usr/local/bin v0.70.0
+
+      - name: Run security bump
+        env:
+          GH_TOKEN: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
+          GIT_USER_NAME: wave-bot
+          GIT_USER_EMAIL: wave-bot@h2o.ai
+        run: make security-bump

@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version: "1.25.10"
+          go-version-file: "go.mod"
 
       - uses: actions/setup-node@v3
         with:
