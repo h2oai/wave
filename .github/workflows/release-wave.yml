@@ -29,7 +29,7 @@ jobs:
       build-version: ${{ env.VERSION }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
         with:
           token: ${{ secrets.GIT_TOKEN }}
           fetch-depth: 0
@@ -38,11 +38,11 @@ jobs:
         with:
           go-version-file: "go.mod"
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v5
         with:
           node-version-file: ".nvmrc"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
 
       - name: Setup
         run: make setup
