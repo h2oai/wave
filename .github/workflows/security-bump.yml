@@ -34,7 +34,11 @@ jobs:
             | sudo sh -s -- -b /usr/local/bin v0.70.0
 
       - name: Tmp e2e test
+        env:
+          LANG: en_US.UTF-8
+          LC_ALL: en_US.UTF-8
         run: |
+          sudo locale-gen en_US.UTF-8
           make setup-ui
           make build-ui
           make setup-e2e
