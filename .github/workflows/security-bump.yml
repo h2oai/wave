@@ -38,7 +38,7 @@ jobs:
           make setup-ui
           make build-ui
           make setup-e2e
-          sudo playwright install-deps
+          sudo ./e2e/venv/bin/playwright install-deps
           make test-e2e-ci
 
       - name: Run security bump
