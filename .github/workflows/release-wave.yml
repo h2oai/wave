@@ -66,18 +66,13 @@ jobs:
       - name: Generate Changelog
         run: node tools/changelog-generator/changelog.js
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
+          name: ${{ env.TAG }}
           tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
           body_path: CHANGELOG.md
           draft: false
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
           files: |
             build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
             build/wave-${{ env.VERSION }}-darwin-arm64.tar.gz
@@ -92,7 +87,6 @@ jobs:
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-win_amd64.whl
             py/h2o_wave/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
             # r/build/h2owave_${{ env.VERSION }}_R.tar.gz
-          tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -113,9 +107,10 @@ jobs:
           packages-dir: py/h2o_wave/dist
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
+          attestations: false
 
       - name: Configure Shared Services AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
           role-session-name: wave
@@ -144,7 +139,7 @@ jobs:
           AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
       - name: Configure MC AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.MC_IAM_ROLE }}
           role-session-name: wave-apps
@@ -164,18 +159,21 @@ jobs:
         with:
           packages-dir: university/dist
           password: ${{ secrets.PYPI_UNIVERSITY_TOKEN }}
+          attestations: false
 
       - name: Publish to PyPI - lightwave
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: py/h2o_lightwave/dist
           password: ${{ secrets.PYPI_LIGTHWAVE_TOKEN }}
+          attestations: false
 
       - name: Publish to PyPI - lightwave_web
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: py/h2o_lightwave_web/dist
           password: ${{ secrets.PYPI_LIGTHWAVE_WEB_TOKEN }}
+          attestations: false
 
       # Call some time after cloudfront cache bust - crawler needs to hit fresh cache.
       - name: Reindex Algolia search
@@ -207,14 +205,14 @@ jobs:
             --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
             --generate-dockerfile
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: wave-bundle
           path: |
             ./py/tmp/tour/*.Dockerfile
             ./py/tmp/tour/*.wave
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: wave-bundle-helm
           path: py/tmp/tour/helm/
