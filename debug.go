@@ -48,6 +48,10 @@ func newDebugHandler(broker *Broker) *DebugHandler {
 }
 
 func (h *DebugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !h.broker.isAdmin(r) {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	data := struct {
 		Apps  []string
 		Pages []string
