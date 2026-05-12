@@ -33,7 +33,7 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
             | sudo sh -s -- -b /usr/local/bin v0.70.0
 
-      - name: Tmp e2e test
+      - name: E2E
         env:
           LANG: en_US.UTF-8
           LC_ALL: en_US.UTF-8
@@ -43,15 +43,7 @@ jobs:
           make build-ui
           make setup-e2e
           sudo ./e2e/venv/bin/playwright install-deps
-          cd e2e && ./venv/bin/pytest -x --browser chromium --tracing=retain-on-failure --screenshot=only-on-failure --output=test-results
-
-      - name: Upload playwright artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-results
-          path: e2e/test-results/
-          if-no-files-found: ignore
+          cd e2e && ./venv/bin/pytest -x --browser chromium
 
       - name: Run security bump
         env:
