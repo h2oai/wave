@@ -39,7 +39,7 @@ jobs:
           make build-ui
           make setup-e2e
           sudo ./e2e/venv/bin/playwright install-deps
-          make test-e2e-ci
+          cd e2e && ./venv/bin/pytest -x --browser chromium
 
       - name: Run security bump
         env:
