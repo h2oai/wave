@@ -13,7 +13,7 @@ jobs:
   security-bump:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
@@ -22,11 +22,11 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v5
         with:
           node-version-file: ".nvmrc"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
 
       - name: Install trivy
         run: |
