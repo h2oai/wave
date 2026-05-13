@@ -33,17 +33,11 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
             | sudo sh -s -- -b /usr/local/bin v0.70.0
 
-      - name: Tmp e2e test
-        run: |
-          make setup-ui
-          make build-ui
-          make setup-e2e
-          sudo ./e2e/venv/bin/playwright install-deps
-          make test-e2e-ci
-
       - name: Run security bump
         env:
           GH_TOKEN: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
           GIT_USER_NAME: wave-bot
           GIT_USER_EMAIL: wave-bot@h2o.ai
+          LANG: en_US.UTF-8
+          LC_ALL: en_US.UTF-8
         run: make security-bump
