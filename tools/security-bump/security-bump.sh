@@ -122,12 +122,11 @@ log "running: make update-go GO_VERSION=$FIX_VERSION"
 make update-go GO_VERSION="$FIX_VERSION"
 
 if [[ "${SKIP_E2E:-0}" != "1" ]]; then
-  log "building UI (e2e serves from ./ui/build)"
   make setup-ui
   make build-ui
-  log "running e2e tests"
   make setup-e2e
-  make test-e2e-ci
+  sudo ./e2e/venv/bin/playwright install-deps
+  cd e2e && ./venv/bin/pytest -x --browser chromium
 else
   log "SKIP_E2E=1 — skipping e2e"
 fi
