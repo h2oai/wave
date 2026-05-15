@@ -3,6 +3,8 @@
 # ---
 
 import json
+
+from bokeh.core.types import ID
 from h2o_wave import site, ui
 from bokeh.resources import CDN
 from bokeh.plotting import figure
@@ -21,7 +23,8 @@ plot.circle(flowers["petal_length"], flowers["petal_width"], color=colors, fill_
 # Serialize the plot as JSON.
 # See https://docs.bokeh.org/en/latest/docs/user_guide/embed.html#json-items
 plot_id = 'my_plot'
-plot_data = json.dumps(json_item(plot, plot_id))
+plot_data = json.dumps(json_item(plot, ID(plot_id)))
+
 
 page = site['/demo']
 

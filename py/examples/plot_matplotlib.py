@@ -39,10 +39,12 @@ async def serve(q: Q):
 
     # Render plot
     plt.figure(figsize=(2, 2))
+    # Generate random RGB colors for each point
+    colors = [(float(r), float(g), float(b)) for r, g, b in np.random.rand(n, 3)]
     plt.scatter(
         np.random.rand(n), np.random.rand(n),
         s=(30 * np.random.rand(n)) ** 2,
-        c=np.random.rand(n),
+        c=colors,
         alpha=q.client.alpha / 100.0
     )
     image_filename = f'{str(uuid.uuid4())}.png'

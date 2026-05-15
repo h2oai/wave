@@ -4,7 +4,7 @@
 # ---
 
 import os
-from typing import Dict, List
+from typing import Optional, Dict, List
 from h2o_wave import main, app, Q, ui
 from copy import deepcopy
 import csv
@@ -17,12 +17,12 @@ class Issue:
         self.status = status
 
 
-all_rows = [Issue(text=i + 1, status=('Closed' if i % 2 == 0 else 'Open')) for i in range(100)]
+all_rows = [Issue(text=str(i + 1), status=('Closed' if i % 2 == 0 else 'Open')) for i in range(100)]
 rows_per_page = 10
 total_rows = len(all_rows)
 
 
-def get_rows(base: List, sort: Dict[str, bool] = None, search: Dict = None, filters: Dict[str, List[str]] = None) -> List:
+def get_rows(base: List, sort: Optional[Dict[str, bool]] = None, search: Optional[Dict] = None, filters: Optional[Dict[str, List[str]]] = None) -> List:
     # Make a deep copy in order to not mutate the original `all_issues` which serves as our baseline.
     rows = deepcopy(base)
 
@@ -37,7 +37,7 @@ def get_rows(base: List, sort: Dict[str, bool] = None, search: Dict = None, filt
         rows = [row for row in rows if any(search_val in str(getattr(row, col)).lower() for col in cols)]
     # Filter out rows that do not contain filtered column value.
     if filters:
-        for col, filters in filters.items():
+         for col, filters in filters.items(): # type: ignore
             rows = [row for row in rows if not filters or any(f in getattr(row, col) for f in filters)]
 
     return rows

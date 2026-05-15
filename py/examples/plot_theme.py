@@ -3,7 +3,7 @@
 # ---
 import random
 
-from .synth import FakeTimeSeries, FakeMultiTimeSeries, FakeCategoricalSeries, FakeMultiCategoricalSeries, FakeScatter
+from .synth import FakeTimeSeries, FakeMultiTimeSeries, FakeCategoricalSeries, FakeMultiCategoricalSeries, FakeScatter # type: ignore
 from h2o_wave import main, app, data, Q, ui
 
 
