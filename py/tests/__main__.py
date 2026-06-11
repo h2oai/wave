@@ -10,6 +10,7 @@ import platform
 import urllib3
 
 from .test_expando import *
+from .test_lifecycle import *
 from .test_python_server import *
 from .test_python_server_async import *
 from .test_routing import *

@@ -15,6 +15,7 @@
 import os
 import datetime
 import asyncio
+import contextlib
 from concurrent.futures import Executor
 
 import contextvars
@@ -43,6 +44,12 @@ logger = logging.getLogger(__name__)
 
 
 def _noop(): pass
+
+
+async def _maybe_await(fn: Callable):
+    res = fn()
+    if asyncio.iscoroutine(res):
+        await res
 
 
 def _session_for(sessions: dict, session_id: str):
@@ -265,21 +272,24 @@ class _App:
         logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
         logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
 
+        # Use a lifespan context manager instead of on_startup/on_shutdown so we
+        # work with both starlette < 1 (where those args exist) and >= 1 (where they were removed).
+        @contextlib.asynccontextmanager
+        async def lifespan(_app):
+            await self._register()
+            await _maybe_await(on_startup or _noop)
+            yield
+            await self._unregister()
+            self._shutdown()
+            await _maybe_await(on_shutdown or _noop)
+
         # ASGI app
         self.app = Router(
             routes=[
                 Route('/', endpoint=self._receive, methods=['POST']),
                 Route('/disconnect', endpoint=self._disconnect, methods=['POST']),
             ],
-            on_startup=[
-                self._register,
-                on_startup or _noop,
-            ],
-            on_shutdown=[
-                self._unregister,
-                self._shutdown,
-                on_shutdown or _noop,
-            ]
+            lifespan=lifespan,
         )
 
     async def _register(self):
