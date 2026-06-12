@@ -12,7 +12,7 @@ class Issue:
         self.text = text
 
 
-issues = [Issue(i + 1) for i in range(100)]
+issues = [Issue(str(i + 1)) for i in range(100)]
 rows_per_page = 10
 
 
