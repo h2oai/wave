@@ -30,6 +30,7 @@ page = site['/foo']
 To reference the current page in a Wave app, use `q.page`.
 
 ```py
+@app('/foo')
 async def serve(q: Q):
     page = q.page
 ```
