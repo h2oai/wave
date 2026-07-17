@@ -121,6 +121,8 @@ fi
 log "running: make update-go GO_VERSION=$FIX_VERSION"
 make update-go GO_VERSION="$FIX_VERSION"
 
+export GOTOOLCHAIN=auto
+
 if [[ "${SKIP_E2E:-0}" != "1" ]]; then
   make setup-ui
   make build-ui
