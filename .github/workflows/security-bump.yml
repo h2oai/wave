@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          token: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
 
       - uses: actions/setup-go@v6
         with:
@@ -35,7 +35,7 @@ jobs:
 
       - name: Run security bump
         env:
-          GH_TOKEN: ${{ secrets.GIT_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
           GIT_USER_NAME: wave-bot
           GIT_USER_EMAIL: wave-bot@h2o.ai
           LANG: en_US.UTF-8
