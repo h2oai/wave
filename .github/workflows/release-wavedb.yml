@@ -42,7 +42,7 @@ jobs:
       - name: Build
         run: make release-db-windows
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: "wavedb-${{ env.VERSION }}-windows-amd64.tar.gz"
           tag_name: ${{ env.TAG }}
@@ -61,7 +61,7 @@ jobs:
       - name: Build
         run: make release-db-linux
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: "wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
           tag_name: ${{ env.TAG }}
@@ -80,7 +80,7 @@ jobs:
       - name: Build
         run: make release-db-linux-arm64
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: "wavedb-${{ env.VERSION }}-linux-arm64.tar.gz"
           tag_name: ${{ env.TAG }}
@@ -99,7 +99,7 @@ jobs:
       - name: Build
         run: make release-db-darwin
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: "wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
           tag_name: ${{ env.TAG }}

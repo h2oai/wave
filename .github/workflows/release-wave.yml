@@ -73,7 +73,7 @@ jobs:
         run: node tools/changelog-generator/changelog.js
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ env.TAG }}
           tag_name: ${{ env.TAG }}
@@ -116,7 +116,7 @@ jobs:
           attestations: false
 
       - name: Configure Shared Services AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
           role-session-name: wave
@@ -145,7 +145,7 @@ jobs:
           AWS_CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
 
       - name: Configure MC AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.MC_IAM_ROLE }}
           role-session-name: wave-apps
@@ -211,14 +211,14 @@ jobs:
             --helm-app-runtime-image-repo 524466471676.dkr.ecr.us-east-1.amazonaws.com/h2oai/tour \
             --generate-dockerfile
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           name: wave-bundle
           path: |
             ./py/tmp/tour/*.Dockerfile
             ./py/tmp/tour/*.wave
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           name: wave-bundle-helm
           path: py/tmp/tour/helm/
