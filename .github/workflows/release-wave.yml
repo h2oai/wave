@@ -118,7 +118,7 @@ jobs:
       - name: Configure Shared Services AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
+          role-to-assume: ${{ secrets.GH_OIDC_SHARED_SERVICES_PROD  }}
           role-session-name: wave
           aws-region: ${{ secrets.AWS_EAST_REGION }}
 
