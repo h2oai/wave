@@ -219,7 +219,7 @@ jobs:
               console.log(`Release ${tag} not found`);
             }
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz

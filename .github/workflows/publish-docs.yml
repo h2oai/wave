@@ -35,7 +35,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Configure Shared Services AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_SHARED_SERVICES_IAM_ROLE  }}
           role-session-name: wave-shared
