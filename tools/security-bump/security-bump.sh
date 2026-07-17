@@ -140,10 +140,9 @@ if [[ "${SKIP_PR:-0}" == "1" ]]; then
 fi
 
 git checkout -b "$BRANCH"
-git add .
 git -c user.name="${GIT_USER_NAME:-wave-bot}" \
     -c user.email="${GIT_USER_EMAIL:-wave-bot@h2o.ai}" \
-    commit -m "security: Bump Go to $FIX_VERSION to clean up CVEs."
+    commit -am "security: Bump Go to $FIX_VERSION to clean up CVEs."
 git push -u origin "$BRANCH"
 
 CVE_LIST="$(jq -r '
