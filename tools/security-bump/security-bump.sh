@@ -129,6 +129,7 @@ if [[ "${SKIP_E2E:-0}" != "1" ]]; then
   make setup-e2e
   sudo ./e2e/venv/bin/playwright install-deps
   cd e2e && ./venv/bin/pytest -x --browser chromium
+  cd "$REPO_ROOT"
 else
   log "SKIP_E2E=1 — skipping e2e"
 fi
