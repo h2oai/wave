@@ -16,20 +16,16 @@ const typesToChangelog = {
   "!": "Breaking Changes",
 };
 
-// git show-ref --tags -d
-const tags = child_process
-  .execSync("git show-ref --tags -d")
-  .toString()
-  .split("\n");
+if (!process.env.VERSION) throw new Error("VERSION is required");
 
-const prevVersion = tags[tags.length - 4]
-  .split(" ")[1]
-  .split("/")
-  .pop()
-  .replace(/-g$/, "");
+const currentTag = `v${process.env.VERSION}`;
+const prevTag = child_process
+  .execSync(`git describe --tags --abbrev=0 --match "v[0-9]*" ${currentTag}^`)
+  .toString()
+  .trim();
 
 const categorizedCommits = child_process
-  .execSync(`git log ${prevVersion}..HEAD --oneline`)
+  .execSync(`git log ${prevTag}..${currentTag} --oneline`)
   .toString()
   .split("\n")
   .reduce(
@@ -41,8 +37,13 @@ const categorizedCommits = child_process
       if (type.endsWith("!")) type = "!";
       if (type === "feat") commit = commit.replace(/feat/i, "New");
       if (type === "docs") commit = commit.replace(/docs/i, "Docs");
-      if (type === "perf" || type === "fix" || type === "!")
-        commit = commit.split(":")[1].trim();
+      if (
+        type === "perf" ||
+        type === "fix" ||
+        type === "security" ||
+        type === "!"
+      )
+        commit = commit.substring(commit.indexOf(":") + 1).trim();
       if (categorizedCommits[type]) categorizedCommits[type].push(commit);
 
       return categorizedCommits;
