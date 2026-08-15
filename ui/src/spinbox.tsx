@@ -114,8 +114,30 @@ export const
           const [head, tail = ''] = val.split('.')
           setVal(`${head}.${tail.slice(0, precision)}`)
         }
-        else setVal(String(newValue))
-        return newValue
+        else {
+          // Check if the value is in scientific notation
+          if (isScientific) {
+              // If the value is in scientific notation, check if it's within the specified range
+              if (numericValue < 1e-4 || numericValue > 1e6) {
+                  // If it's not within the range, transform the value into decimal
+                  const decimalValue = scientificToDecimal(numericValue);
+                  setVal(decimalValue);
+                  return decimalValue;
+              }
+          } else {
+              // If the value is in decimal notation, check if it's within the specified range
+              if (numericValue < 1e-4 || numericValue > 1e6) {
+                  // If it's not within the range, transform the value into scientific notation
+                  const scientificValue = numericValue.toExponential();
+                  setVal(scientificValue);
+                  return scientificValue;
+              }
+          }
+
+          // If the value is within the specified range or not in scientific notation, keep the original value
+          setVal(val);
+      }
+      return newValue
       }, [max, min, parseValue, precision]),
       handleOnInput = React.useCallback((val: U) => {
         wave.args[name] = val
