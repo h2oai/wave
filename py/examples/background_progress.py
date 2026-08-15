@@ -34,7 +34,7 @@ async def show_cancel(q: Q):
     await q.page.save()
 
 
-async def update_ui(q: Q, value: int):
+async def update_ui(q: Q, value: float):
     q.page['form'].progress.value = value
     await q.page.save()
 
