@@ -31,6 +31,7 @@ async def serve(q: Q):
                 ui.tab(name='#menu/ham', label='Ham'),
                 ui.tab(name='#menu/eggs', label='Eggs'),
                 ui.tab(name='#about', label='About'),
+                ui.tab(name='#docs', label='Docs', path='https://wave.h2o.ai/docs/getting-started'),
             ],
             value=f'#{location}' if location else None,
         )

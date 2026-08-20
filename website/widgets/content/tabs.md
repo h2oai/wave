@@ -44,3 +44,18 @@ q.page['example'] = ui.tab_card( box='1 1 4 1', link=True, value='#about', items
     ]
 )
 ```
+
+## External link tab
+
+Use the `path` attribute to open an external URL in a new browser tab when clicked.
+
+```py
+q.page['example'] = ui.tab_card(box='1 1 4 1', items=[
+        ui.tab(name='#menu/spam', label='Spam'),
+        ui.tab(name='#menu/ham', label='Ham'),
+        ui.tab(name='#menu/eggs', label='Eggs'),
+        ui.tab(name='#about', label='About'),
+        ui.tab(name='#docs', label='Docs', path='https://wave.h2o.ai/docs/getting-started'),
+    ]
+)
+```

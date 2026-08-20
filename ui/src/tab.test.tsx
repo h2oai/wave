@@ -190,4 +190,15 @@ describe('Tab.tsx', () => {
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
   })
 
+  it('Opens link in a new tab when tab has path specified', () => {
+    const path = 'https://wave.h2o.ai/docs/getting-started'
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    const { getAllByRole } = render(<View {...{ ...getProps(), state: { items: [{ name: 'tab1' }, { name: 'docs', label: 'Docs', path }] } }} />)
+    fireEvent.click(getAllByRole('tab')[1])
+
+    expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
+    expect(pushMock).toHaveBeenCalledTimes(0)
+  })
+
 })
