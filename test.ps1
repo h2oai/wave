@@ -1,5 +1,9 @@
 # TODO: Think about how to run keycloak inside windows runner as it has only linux images.
 
+# Test server.
+go test . ./pkg/...
+if ($LastExitCode -ne 0) { exit $LastExitCode }
+
 # Test Py.
 Set-Location py
 .\venv\Scripts\python -m tests

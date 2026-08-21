@@ -51,7 +51,8 @@ func newFileServer(dir string, keychain *keychain.Keychain, auth *Auth, baseURL 
 }
 
 var (
-	errInvalidUnloadPath = errors.New("invalid file path")
+	errInvalidUnloadPath     = errors.New("invalid file path")
+	errInvalidUploadFilename = errors.New("invalid upload filename")
 )
 
 // UploadResponse represents a response to a file upload operation.
@@ -95,7 +96,11 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		files, err := fs.acceptFiles(r)
 		if err != nil {
 			echo(Log{"t": "file_upload", "error": err.Error()})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			code := http.StatusInternalServerError
+			if errors.Is(err, errInvalidUploadFilename) {
+				code = http.StatusBadRequest
+			}
+			http.Error(w, http.StatusText(code), code)
 			return
 		}
 
@@ -162,8 +167,39 @@ func (fs *FileServer) deleteFile(url, baseURL string) error {
 	return os.RemoveAll(dirpath)
 }
 
-func (fs *FileServer) storeFilesInSingleDir(files []*multipart.FileHeader) ([]string, error) {
+// Need to parse the filename from the Content-Disposition header due to HTTP standard saying FileName should be basename.
+// https://github.com/golang/go/blob/8dbf3e9393400d72d313e5616c88873e07692c70/src/mime/multipart/multipart.go#L82-L84
+func uploadFilename(file *multipart.FileHeader) string {
+	_, params, _ := mime.ParseMediaType(file.Header.Get("Content-Disposition"))
+	if filename := params["filename"]; filename != "" {
+		return filename
+	}
+	return file.Filename
+}
 
+func createUploadFile(root *os.Root, filename string) (*os.File, error) {
+	if !filepath.IsLocal(filename) {
+		return nil, fmt.Errorf("%w: %q", errInvalidUploadFilename, filename)
+	}
+	for _, segment := range strings.Split(filepath.ToSlash(filename), "/") {
+		if segment == "" || segment == "." || segment == ".." {
+			return nil, fmt.Errorf("%w: %q", errInvalidUploadFilename, filename)
+		}
+	}
+
+	dir := filepath.Dir(filename)
+	if err := root.MkdirAll(dir, 0700); err != nil {
+		return nil, fmt.Errorf("failed creating dir structure %s: %v", dir, err)
+	}
+
+	dst, err := root.Create(filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed writing uploaded file %s: %v", filename, err)
+	}
+	return dst, nil
+}
+
+func (fs *FileServer) storeFilesInSingleDir(files []*multipart.FileHeader) ([]string, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, fmt.Errorf("failed generating file id: %v", err)
@@ -176,6 +212,19 @@ func (fs *FileServer) storeFilesInSingleDir(files []*multipart.FileHeader) ([]st
 		return nil, fmt.Errorf("failed creating upload dir %s: %v", uploadDir, err)
 	}
 
+	root, err := os.OpenRoot(uploadDir)
+	if err != nil {
+		return nil, fmt.Errorf("failed opening upload dir %s: %v", uploadDir, err)
+	}
+	defer root.Close()
+
+	stored := false
+	defer func() {
+		if !stored {
+			os.RemoveAll(uploadDir)
+		}
+	}()
+
 	for _, file := range files {
 		src, err := file.Open()
 		if err != nil {
@@ -183,38 +232,35 @@ func (fs *FileServer) storeFilesInSingleDir(files []*multipart.FileHeader) ([]st
 		}
 		defer src.Close()
 
-		// Need to parse the filename from the Content-Disposition header due to HTTP standard saying FileName should be basename.
-		// https://github.com/golang/go/blob/8dbf3e9393400d72d313e5616c88873e07692c70/src/mime/multipart/multipart.go#L82-L84
-		_, params, _ := mime.ParseMediaType(file.Header.Get("Content-Disposition"))
-		filename := params["filename"]
-		if filename == "" {
-			filename = file.Filename
-		}
-
-		dir, file := filepath.Split(filename)
-		uploadPath := filepath.Join(uploadDir, dir)
-
-		if err := os.MkdirAll(uploadPath, 0700); err != nil {
-			return nil, fmt.Errorf("failed creating dir structure %s: %v", uploadDir, err)
-		}
-
-		uploadPath = filepath.Join(uploadPath, file)
-		dst, err := os.Create(uploadPath)
+		filename := uploadFilename(file)
+		dst, err := createUploadFile(root, filename)
 		if err != nil {
-			return nil, fmt.Errorf("failed writing uploaded file %s: %v", uploadPath, err)
+			return nil, err
 		}
 		defer dst.Close()
 
 		if _, err = io.Copy(dst, src); err != nil {
-			return nil, fmt.Errorf("failed copying uploaded file %s: %v", uploadPath, err)
+			return nil, fmt.Errorf("failed copying uploaded file %s: %v", filename, err)
 		}
 	}
 
+	stored = true
 	return []string{path.Join(fs.baseURL, dirID)}, nil
 }
 
 func (fs *FileServer) storeFilesInSeparateDirs(files []*multipart.FileHeader) ([]string, error) {
 	uploadPaths := make([]string, len(files))
+
+	var uploadDirs []string
+	stored := false
+	defer func() {
+		if !stored {
+			for _, uploadDir := range uploadDirs {
+				os.RemoveAll(uploadDir)
+			}
+		}
+	}()
+
 	for i, file := range files {
 
 		id, err := uuid.NewRandom()
@@ -234,21 +280,32 @@ func (fs *FileServer) storeFilesInSeparateDirs(files []*multipart.FileHeader) ([
 		if err := os.MkdirAll(uploadDir, 0700); err != nil {
 			return nil, fmt.Errorf("failed creating upload dir %s: %v", uploadDir, err)
 		}
+		uploadDirs = append(uploadDirs, uploadDir)
 
-		basename := filepath.Base(file.Filename)
-		uploadPath := filepath.Join(uploadDir, basename)
-
-		dst, err := os.Create(uploadPath)
+		root, err := os.OpenRoot(uploadDir)
 		if err != nil {
-			return nil, fmt.Errorf("failed writing uploaded file %s: %v", uploadPath, err)
+			return nil, fmt.Errorf("failed opening upload dir %s: %v", uploadDir, err)
+		}
+		defer root.Close()
+
+		filename := uploadFilename(file)
+		if strings.ContainsRune(filepath.ToSlash(filename), '/') {
+			return nil, fmt.Errorf("%w: %q", errInvalidUploadFilename, filename)
+		}
+
+		dst, err := createUploadFile(root, filename)
+		if err != nil {
+			return nil, err
 		}
 		defer dst.Close()
 
 		if _, err = io.Copy(dst, src); err != nil {
-			return nil, fmt.Errorf("failed copying uploaded file %s: %v", uploadPath, err)
+			return nil, fmt.Errorf("failed copying uploaded file %s: %v", filename, err)
 		}
 
-		uploadPaths[i] = path.Join(fs.baseURL, fileID, basename)
+		uploadPaths[i] = path.Join(fs.baseURL, fileID, filename)
 	}
+
+	stored = true
 	return uploadPaths, nil
 }

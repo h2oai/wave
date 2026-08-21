@@ -65,6 +65,7 @@ jobs:
 
       - name: Unit Test
         run: |
+          make test-server-ci
           make test-ui-ci
           make setup-py-tests
           make test-py-ci

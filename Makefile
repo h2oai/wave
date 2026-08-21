@@ -83,6 +83,9 @@ generator: ## Build driver generator
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
+test-server-ci: ## Run server unit tests in CI mode
+	go test . ./pkg/...
+
 test-ui-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-ci
 
