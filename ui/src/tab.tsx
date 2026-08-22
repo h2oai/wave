@@ -49,6 +49,11 @@ export const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name || valueB() === name) return
+        const tab = state.items.find(t => t.name === name)
+        if (tab?.path) {
+          window.open(tab.path, '_blank')
+          return
+        }
         state.value = name
         valueB(name)
 
@@ -63,8 +68,14 @@ export const
       render = () => {
         const
           linkFormat = state.link ? 'links' : 'tabs',
-          items = state.items.map(({ name, label, icon }) => (
-            <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
+          items = state.items.map(({ name, label, icon, path }) => (
+            <PivotItem
+              key={name}
+              itemKey={name}
+              headerText={label}
+              itemIcon={icon}
+              headerButtonProps={path ? { href: path, target: '_blank', rel: 'noopener noreferrer' } : undefined}
+            />
           ))
         return (
           <div data-test={name} className={css.card}>

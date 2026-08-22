@@ -176,4 +176,15 @@ describe('Tabs.tsx', () => {
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
   })
 
+  it('Opens link in a new tab when tab has path specified', () => {
+    const path = 'https://wave.h2o.ai/docs/getting-started'
+    const { getAllByRole } = render(<XTabs model={{ ...getProps(), items: [{ name: 'tab1' }, { name: 'docs', label: 'Docs', path }] }} />)
+    const link = getAllByRole('tab')[1]
+    fireEvent.click(link)
+
+    expect(link).toHaveAttribute('href', path)
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(pushMock).toHaveBeenCalledTimes(0)
+  })
+
 })

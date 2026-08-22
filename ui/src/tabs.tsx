@@ -29,6 +29,8 @@ export interface Tab {
   label?: S
   /** The icon displayed on the tab. */
   icon?: S
+  /** The path or URL to open in a new browser tab. */
+  path?: S
 }
 
 /**
@@ -67,6 +69,7 @@ export const
       onLinkClick = (item?: Fluent.PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
+        if (m.items?.some(t => t.name === name && t.path)) return
         setSelected(name)
         m.value = name
         if (name.startsWith('#')) {
@@ -83,7 +86,15 @@ export const
           wave.push()
         }
       },
-      tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />),
+      tabs = m.items?.map(t => (
+        <Fluent.PivotItem
+          key={t.name}
+          itemIcon={t.icon}
+          itemKey={t.name}
+          headerText={t.label}
+          headerButtonProps={t.path ? { href: t.path, target: '_blank', rel: 'noopener noreferrer' } : undefined}
+        />
+      )),
       [selected, setSelected] = React.useState(m.value || m.items?.[0].name)
 
     useUpdateOnlyEffect(() => setSelected(m.value), [m.value])
