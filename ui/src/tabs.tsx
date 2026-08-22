@@ -69,11 +69,7 @@ export const
       onLinkClick = (item?: Fluent.PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
-        const tab = m.items?.find(t => t.name === name)
-        if (tab?.path) {
-          window.open(tab.path, '_blank')
-          return
-        }
+        if (m.items?.some(t => t.name === name && t.path)) return
         setSelected(name)
         m.value = name
         if (name.startsWith('#')) {
