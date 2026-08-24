@@ -5,7 +5,7 @@ go 1.26.6
 require (
 	github.com/coreos/go-oidc/v3 v3.12.0
 	github.com/google/uuid v1.6.0
-	github.com/gorilla/websocket v1.5.1
+	github.com/gorilla/websocket v1.5.3
 	github.com/h2oai/goconfig v1.3.2-0.20230628122159-683a9532f8d2
 	github.com/hashicorp/golang-lru v1.0.2
 	github.com/lo5/sqlite3 v0.1.0
@@ -17,6 +17,5 @@ require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
 )
