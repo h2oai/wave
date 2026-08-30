@@ -1745,7 +1745,7 @@
   "Wave Full TableColumn": {
     "prefix": "w_full_table_column",
     "body": [
-      "ui.table_column(name='$1', label='$2', min_width='$3', max_width='$4', sortable=${5:False}, searchable=${6:False}, filterable=${7:False}, link=${8:False}, data_type='${9:string}', cell_type=${10:None}, cell_overflow='$11', align='$12', filters=[\n\t\t$13\t\t\n]),$0"
+      "ui.table_column(name='$1', label='$2', min_width='$3', max_width='$4', sortable=${5:False}, searchable=${6:False}, filterable=${7:False}, link=${8:False}, data_type='${9:string}', cell_type=${10:None}, cell_overflow='$11', align='$12', tooltip='$13', filters=[\n\t\t$14\t\t\n]),$0"
     ],
     "description": "Create a full Wave TableColumn."
   },
