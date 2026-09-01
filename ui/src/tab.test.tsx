@@ -39,6 +39,9 @@ describe('Tab.tsx', () => {
     wave.args[name] = null
     jest.clearAllMocks()
   })
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...getProps()} />)
@@ -194,12 +197,16 @@ describe('Tab.tsx', () => {
     const path = 'https://wave.h2o.ai/docs/getting-started'
     const windowOpenMock = jest.spyOn(window, 'open').mockImplementation(() => null)
     const { getAllByRole } = render(<View {...{ ...getProps(), state: { items: [{ name: 'tab1' }, { name: 'docs', label: 'Docs', path }] } }} />)
-    fireEvent.click(getAllByRole('tab')[1])
+    const link = getAllByRole('tab')[1]
 
+    expect(link.tagName).toBe('A')
+    expect(link).toHaveAttribute('href', path)
+
+    fireEvent.click(link)
+    
     expect(windowOpenMock).toHaveBeenCalledTimes(1)
     expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
     expect(pushMock).toHaveBeenCalledTimes(0)
-    windowOpenMock.mockRestore()
   })
 
 })
