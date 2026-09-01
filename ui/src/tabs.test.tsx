@@ -30,8 +30,6 @@ describe('Tabs.tsx', () => {
     wave.args = [] as any
     wave.args[name] = null
     pushMock.mockReset()
-  })
-  afterEach(() => {
     jest.restoreAllMocks()
   })
 

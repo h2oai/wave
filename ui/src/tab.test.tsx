@@ -38,8 +38,6 @@ describe('Tab.tsx', () => {
     wave.args = [] as any
     wave.args[name] = null
     jest.clearAllMocks()
-  })
-  afterEach(() => {
     jest.restoreAllMocks()
   })
 
