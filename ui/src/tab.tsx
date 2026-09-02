@@ -74,7 +74,12 @@ export const
               itemKey={name}
               headerText={label}
               itemIcon={icon}
-              headerButtonProps={path ? { href: path, target: '_blank', rel: 'noopener noreferrer' } : undefined}
+              headerButtonProps={path ? {
+                href: path,
+                target: '_blank',
+                rel: 'noopener noreferrer',
+                onMouseDown: e => e.preventDefault(),
+              } : undefined}
             />
           ))
         return (

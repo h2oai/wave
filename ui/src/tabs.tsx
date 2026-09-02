@@ -96,7 +96,12 @@ export const
           itemIcon={t.icon}
           itemKey={t.name}
           headerText={t.label}
-          headerButtonProps={t.path ? { href: t.path, target: '_blank', rel: 'noopener noreferrer' } : undefined}
+          headerButtonProps={t.path ? {
+            href: t.path,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            onMouseDown: e => e.preventDefault(),
+          } : undefined}
         />
       )),
       [selected, setSelected] = React.useState(m.value || m.items?.[0].name)
