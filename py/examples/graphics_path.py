@@ -1,7 +1,8 @@
 # Graphics / Path
 # Use the #graphics API to draw a red square.
 # ---
-from h2o_wave import site, ui, graphics as g
+from h2o_wave import site, ui
+import h2o_wave.graphics as g
 
 # Use relative coords to draw a square, sort of like Python's turtle package.
 red_square = g.p().m(25, 25).h(50).v(50).h(-50).z().path(fill='red')
