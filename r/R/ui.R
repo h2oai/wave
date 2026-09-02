@@ -1853,19 +1853,23 @@ ui_links <- function(
 #' @param name An identifying name for this component.
 #' @param label The text displayed on the tab.
 #' @param icon The icon displayed on the tab.
+#' @param path The path or URL to open in a new browser tab.
 #' @return A Tab instance.
 #' @export
 ui_tab <- function(
   name,
   label = NULL,
-  icon = NULL) {
+  icon = NULL,
+  path = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
+  .guard_scalar("path", "character", path)
   .o <- list(
     name=name,
     label=label,
-    icon=icon)
+    icon=icon,
+    path=path)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTab"))
   return(.o)
 }
