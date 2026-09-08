@@ -1344,16 +1344,20 @@ ui_mini_button <- function(
 #'
 #' @param items The buttons in this set.
 #' @param visible True if the component should be visible. Defaults to True.
+#' @param name An identifying name for this component.
 #' @return A MiniButtons instance.
 #' @export
 ui_mini_buttons <- function(
   items,
-  visible = NULL) {
+  visible = NULL,
+  name = NULL) {
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("name", "character", name)
   .o <- list(mini_buttons=list(
     items=items,
-    visible=visible))
+    visible=visible,
+    name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -1460,19 +1464,23 @@ ui_icon_table_cell_type <- function(
 #' @param label The text displayed within the tag.
 #' @param color Tag's background color.
 #' @param label_color Tag's label color. If not specified, black or white will be picked based on correct contrast with background.
+#' @param name An identifying name for this component.
 #' @return A Tag instance.
 #' @export
 ui_tag <- function(
   label,
   color,
-  label_color = NULL) {
+  label_color = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("color", "character", color)
   .guard_scalar("label_color", "character", label_color)
+  .guard_scalar("name", "character", name)
   .o <- list(
     label=label,
     color=color,
-    label_color=label_color)
+    label_color=label_color,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTag"))
   return(.o)
 }
@@ -1538,6 +1546,40 @@ ui_markdown_table_cell_type <- function(
   .o <- list(markdown=list(
     name=name,
     target=target))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
+  return(.o)
+}
+
+#' Defines cell content to be rendered instead of a simple text.
+#'
+#' @param progress Renders a progress arc with a percentage value in the middle.
+#' @param icon Renders an icon.
+#' @param tag Renders one or more tags.
+#' @param menu Renders a command menu.
+#' @param markdown Renders text using markdown.
+#' @param name An identifying name for this Component
+#' @return A TableCellType instance.
+#' @export
+ui_table_cell_type <- function(
+  progress = NULL,
+  icon = NULL,
+  tag = NULL,
+  menu = NULL,
+  markdown = NULL,
+  name = NULL) {
+  .guard_scalar("progress", "WaveProgressTableCellType", progress)
+  .guard_scalar("icon", "WaveIconTableCellType", icon)
+  .guard_scalar("tag", "WaveTagTableCellType", tag)
+  .guard_scalar("menu", "WaveMenuTableCellType", menu)
+  .guard_scalar("markdown", "WaveMarkdownTableCellType", markdown)
+  .guard_scalar("name", "character", name)
+  .o <- list(
+    progress=progress,
+    icon=icon,
+    tag=tag,
+    menu=menu,
+    markdown=markdown,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
   return(.o)
 }
@@ -1632,19 +1674,23 @@ ui_table_row <- function(
 #' @param label The title of the group.
 #' @param rows The rows in this group.
 #' @param collapsed Indicates whether the table group should be collapsed by default. Defaults to True.
+#' @param name An identifying name for this group.
 #' @return A TableGroup instance.
 #' @export
 ui_table_group <- function(
   label,
   rows,
-  collapsed = NULL) {
+  collapsed = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_vector("rows", "WaveTableRow", rows)
   .guard_scalar("collapsed", "logical", collapsed)
+  .guard_scalar("name", "character", name)
   .o <- list(
     label=label,
     rows=rows,
-    collapsed=collapsed)
+    collapsed=collapsed,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableGroup"))
   return(.o)
 }
@@ -1653,16 +1699,20 @@ ui_table_group <- function(
 #'
 #' @param total_rows Total count of all the rows in your dataset.
 #' @param rows_per_page The maximum amount of rows to be displayed in a single page.
+#' @param name An identifying name for this component.
 #' @return A TablePagination instance.
 #' @export
 ui_table_pagination <- function(
   total_rows,
-  rows_per_page) {
+  rows_per_page,
+  name = NULL) {
   .guard_scalar("total_rows", "numeric", total_rows)
   .guard_scalar("rows_per_page", "numeric", rows_per_page)
+  .guard_scalar("name", "character", name)
   .o <- list(
     total_rows=total_rows,
-    rows_per_page=rows_per_page)
+    rows_per_page=rows_per_page,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTablePagination"))
   return(.o)
 }
@@ -1828,22 +1878,26 @@ ui_link <- function(
 #' @param label The name of the link group.
 #' @param inline Render links horizontally. Defaults to False.
 #' @param width The width of the links, e.g. '100px'.
+#' @param name An identifying name for this component.
 #' @return A Links instance.
 #' @export
 ui_links <- function(
   items,
   label = NULL,
   inline = NULL,
-  width = NULL) {
+  width = NULL,
+  name = NULL) {
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("label", "character", label)
   .guard_scalar("inline", "logical", inline)
   .guard_scalar("width", "character", width)
+  .guard_scalar("name", "character", name)
   .o <- list(links=list(
     items=items,
     label=label,
     inline=inline,
-    width=width))
+    width=width,
+    name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2153,19 +2207,23 @@ ui_range_slider <- function(
 #' @param label Text displayed below icon.
 #' @param icon Icon to be displayed.
 #' @param done Indicates whether this step has already been completed.
+#' @param name An identifying name for this component.
 #' @return A Step instance.
 #' @export
 ui_step <- function(
   label,
   icon = NULL,
-  done = NULL) {
+  done = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("done", "logical", done)
+  .guard_scalar("name", "character", name)
   .o <- list(
     label=label,
     icon=icon,
-    done=done)
+    done=done,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveStep"))
   return(.o)
 }
@@ -2270,6 +2328,7 @@ ui_stepper <- function(
 #' @param label_line_height Label line height.
 #' @param label_align Label text alignment.
 #'   One of 'left', 'right', 'center', 'start', 'end'. See enum h2o_wave.ui.MarkLabelAlign.
+#' @param name An optional name
 #' @param ref_stroke_color Reference line stroke color.
 #' @param ref_stroke_opacity Reference line stroke opacity.
 #' @param ref_stroke_size Reference line stroke size (line width or pen thickness).
@@ -2336,6 +2395,7 @@ ui_mark <- function(
   label_font_weight = NULL,
   label_line_height = NULL,
   label_align = NULL,
+  name = NULL,
   ref_stroke_color = NULL,
   ref_stroke_opacity = NULL,
   ref_stroke_size = NULL,
@@ -2399,6 +2459,7 @@ ui_mark <- function(
   .guard_scalar("label_font_weight", "character", label_font_weight)
   .guard_scalar("label_line_height", "numeric", label_line_height)
   # TODO Validate label_align
+  .guard_scalar("name", "character", name)
   .guard_scalar("ref_stroke_color", "character", ref_stroke_color)
   .guard_scalar("ref_stroke_opacity", "numeric", ref_stroke_opacity)
   .guard_scalar("ref_stroke_size", "numeric", ref_stroke_size)
@@ -2463,6 +2524,7 @@ ui_mark <- function(
     label_font_weight=label_font_weight,
     label_line_height=label_line_height,
     label_align=label_align,
+    name=name,
     ref_stroke_color=ref_stroke_color,
     ref_stroke_opacity=ref_stroke_opacity,
     ref_stroke_size=ref_stroke_size,
@@ -2686,6 +2748,7 @@ ui_inline <- function(
 #' @param width The width of the image, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
+#' @param name An optional identifying name for this component.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
@@ -2695,7 +2758,8 @@ ui_image <- function(
   path = NULL,
   width = NULL,
   visible = NULL,
-  path_popup = NULL) {
+  path_popup = NULL,
+  name = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
@@ -2703,6 +2767,7 @@ ui_image <- function(
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("path_popup", "character", path_popup)
+  .guard_scalar("name", "character", name)
   .o <- list(image=list(
     title=title,
     type=type,
@@ -2710,7 +2775,8 @@ ui_image <- function(
     path=path,
     width=width,
     visible=visible,
-    path_popup=path_popup))
+    path_popup=path_popup,
+    name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2785,16 +2851,20 @@ ui_text_annotator_tag <- function(
 #'
 #' @param text Text to be highlighted.
 #' @param tag The `name` of the text annotator tag to refer to for the `label` and `color` of this item.
+#' @param name An identifying name for this component.
 #' @return A TextAnnotatorItem instance.
 #' @export
 ui_text_annotator_item <- function(
   text,
-  tag = NULL) {
+  tag = NULL,
+  name = NULL) {
   .guard_scalar("text", "character", text)
   .guard_scalar("tag", "character", tag)
+  .guard_scalar("name", "character", name)
   .o <- list(
     text=text,
-    tag=tag)
+    tag=tag,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorItem"))
   return(.o)
 }
@@ -2863,22 +2933,26 @@ ui_image_annotator_tag <- function(
 #' @param y1 `y` coordinate of the rectangle's corner.
 #' @param x2 `x` coordinate of the diagonally opposite corner.
 #' @param y2 `y` coordinate of the diagonally opposite corner.
+#' @param name An optional name for this component.
 #' @return A ImageAnnotatorRect instance.
 #' @export
 ui_image_annotator_rect <- function(
   x1,
   y1,
   x2,
-  y2) {
+  y2,
+  name = NULL) {
   .guard_scalar("x1", "numeric", x1)
   .guard_scalar("y1", "numeric", y1)
   .guard_scalar("x2", "numeric", x2)
   .guard_scalar("y2", "numeric", y2)
+  .guard_scalar("name", "character", name)
   .o <- list(rect=list(
     x1=x1,
     y1=y1,
     x2=x2,
-    y2=y2))
+    y2=y2,
+    name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
   return(.o)
 }
@@ -2887,16 +2961,20 @@ ui_image_annotator_rect <- function(
 #'
 #' @param x `x` coordinate of the point.
 #' @param y `y` coordinate of the point.
+#' @param name An optional name for this component.
 #' @return A ImageAnnotatorPoint instance.
 #' @export
 ui_image_annotator_point <- function(
   x,
-  y) {
+  y,
+  name = NULL) {
   .guard_scalar("x", "numeric", x)
   .guard_scalar("y", "numeric", y)
+  .guard_scalar("name", "character", name)
   .o <- list(
     x=x,
-    y=y)
+    y=y,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorPoint"))
   return(.o)
 }
@@ -2904,13 +2982,17 @@ ui_image_annotator_point <- function(
 #' Create a polygon annotation shape.
 #'
 #' @param vertices List of polygon points.
+#' @param name An optional name for this component.
 #' @return A ImageAnnotatorPolygon instance.
 #' @export
 ui_image_annotator_polygon <- function(
-  vertices) {
+  vertices,
+  name = NULL) {
   .guard_vector("vertices", "WaveImageAnnotatorPoint", vertices)
+  .guard_scalar("name", "character", name)
   .o <- list(polygon=list(
-    vertices=vertices))
+    vertices=vertices,
+    name=name))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorShape"))
   return(.o)
 }
@@ -2919,16 +3001,20 @@ ui_image_annotator_polygon <- function(
 #'
 #' @param shape The annotation shape.
 #' @param tag The `name` of the image annotator tag to refer to for the `label` and `color` of this item.
+#' @param name An optional name for this component.
 #' @return A ImageAnnotatorItem instance.
 #' @export
 ui_image_annotator_item <- function(
   shape,
-  tag) {
+  tag,
+  name = NULL) {
   .guard_scalar("shape", "WaveImageAnnotatorShape", shape)
   .guard_scalar("tag", "character", tag)
+  .guard_scalar("name", "character", name)
   .o <- list(
     shape=shape,
-    tag=tag)
+    tag=tag,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageAnnotatorItem"))
   return(.o)
 }
@@ -3008,19 +3094,23 @@ ui_audio_annotator_tag <- function(
 #' @param start The start of the audio annotation in seconds.
 #' @param end The end of the audio annotation in seconds.
 #' @param tag The `name` of the audio annotator tag to refer to for the `label` and `color` of this item.
+#' @param name An identifying name for this component
 #' @return A AudioAnnotatorItem instance.
 #' @export
 ui_audio_annotator_item <- function(
   start,
   end,
-  tag) {
+  tag,
+  name = NULL) {
   .guard_scalar("start", "numeric", start)
   .guard_scalar("end", "numeric", end)
   .guard_scalar("tag", "character", tag)
+  .guard_scalar("name", "character", name)
   .o <- list(
     start=start,
     end=end,
-    tag=tag)
+    tag=tag,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveAudioAnnotatorItem"))
   return(.o)
 }
@@ -3174,15 +3264,15 @@ ui_tags <- function(
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
 #' @param placeholder A string that provides a brief hint to the user as to what kind of information is expected in the field.
-#' @param value The time value in hh:mm format. E.g. '10:30', '14:25', '23:59', '00:00'
+#' @param value The time value in hh:mm:ss format. E.g. '10:30:45', '14:25:30', '23:59:59', '00:00:00'
 #' @param disabled True if this field is disabled.
 #' @param width The width of the time picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param trigger True if the form should be submitted when the time is selected.
 #' @param required True if this is a required field. Defaults to False.
 #' @param hour_format Specifies 12-hour or 24-hour time format. One of `12` or `24`. Defaults to `12`.
-#' @param min The minimum allowed time value in hh:mm format. E.g.: '08:00', '13:30'
-#' @param max The maximum allowed time value in hh:mm format. E.g.: '15:30', '00:00'
+#' @param min The minimum allowed time value in hh:mm:ss format. E.g.: '08:00:00', '13:30:00'
+#' @param max The maximum allowed time value in hh:mm:ss format. E.g.: '15:30:00', '00:00:00'
 #' @param minutes_step Limits the available minutes to select from. One of `1`, `5`, `10`, `15`, `20`, `30` or `60`. Defaults to `1`.
 #' @return A TimePicker instance.
 #' @export
@@ -3237,6 +3327,7 @@ ui_time_picker <- function(
 #' @param title The card’s title, displayed at the top.
 #' @param content Markdown text.
 #' @param items Collection of small buttons rendered under the title.
+#' @param name An identifying name for this component
 #' @param commands Contextual menu commands for this component.
 #' @return A ArticleCard instance.
 #' @export
@@ -3245,17 +3336,20 @@ ui_article_card <- function(
   title,
   content = NULL,
   items = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     items=items,
+    name=name,
     commands=commands,
     view='article')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
@@ -3290,19 +3384,23 @@ ui_breadcrumb <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
+#' @param name An optional name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A BreadcrumbsCard instance.
 #' @export
 ui_breadcrumbs_card <- function(
   box,
   items,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveBreadcrumb", items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
+    name=name,
     commands=commands,
     view='breadcrumbs')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
@@ -3544,6 +3642,7 @@ ui_flex_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param caption The caption. Supports markdown. *
 #' @param items The components displayed to the right of the caption.
+#' @param name An optional identifying name to the card
 #' @param commands Contextual menu commands for this component.
 #' @return A FooterCard instance.
 #' @export
@@ -3551,15 +3650,18 @@ ui_footer_card <- function(
   box,
   caption,
   items = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("caption", "character", caption)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     caption=caption,
     items=items,
+    name=name,
     commands=commands,
     view='footer')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
@@ -3571,6 +3673,7 @@ ui_footer_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param items The components in this form.
 #' @param title The title for this card.
+#' @param name An optional name for this form.
 #' @param commands Contextual menu commands for this component.
 #' @return A FormCard instance.
 #' @export
@@ -3578,15 +3681,18 @@ ui_form_card <- function(
   box,
   items,
   title = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("title", "character", title)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     title=title,
+    name=name,
     commands=commands,
     view='form')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFormCard"))
@@ -3602,6 +3708,7 @@ ui_form_card <- function(
 #' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
 #' @param content The HTML content of the page. A string containing `<html>...</html>`.
 #' @param compact True if title and padding should be removed. Defaults to False.
+#' @param name An optional identifying name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A FrameCard instance.
 #' @export
@@ -3611,12 +3718,14 @@ ui_frame_card <- function(
   path = NULL,
   content = NULL,
   compact = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("path", "character", path)
   .guard_scalar("content", "character", content)
   .guard_scalar("compact", "logical", compact)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3624,6 +3733,7 @@ ui_frame_card <- function(
     path=path,
     content=content,
     compact=compact,
+    name=name,
     commands=commands,
     view='frame')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveFrameCard"))
@@ -3648,6 +3758,7 @@ ui_frame_card <- function(
 #'   e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param image_type The background image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
 #'   Required only if `image` is set.
+#' @param name An optional identifying name for this Card.
 #' @param commands Contextual menu commands for this component.
 #' @return A GraphicsCard instance.
 #' @export
@@ -3661,6 +3772,7 @@ ui_graphics_card <- function(
   image = NULL,
   image_path = NULL,
   image_type = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("view_box", "character", view_box)
@@ -3671,6 +3783,7 @@ ui_graphics_card <- function(
   .guard_scalar("image", "character", image)
   .guard_scalar("image_path", "character", image_path)
   .guard_scalar("image_type", "character", image_type)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3682,6 +3795,7 @@ ui_graphics_card <- function(
     image=image,
     image_path=image_path,
     image_type=image_type,
+    name=name,
     commands=commands,
     view='graphics')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveGraphicsCard"))
@@ -3789,6 +3903,7 @@ ui_nav_group <- function(
 #' @param secondary_items Items that should be displayed in the center of the header.
 #' @param color Header background color. Defaults to 'primary'.
 #'   One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
+#' @param name An optional name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 #' @export
@@ -3803,6 +3918,7 @@ ui_header_card <- function(
   items = NULL,
   secondary_items = NULL,
   color = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3814,6 +3930,7 @@ ui_header_card <- function(
   .guard_vector("items", "WaveComponent", items)
   .guard_vector("secondary_items", "WaveComponent", secondary_items)
   # TODO Validate color
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3826,6 +3943,7 @@ ui_header_card <- function(
     items=items,
     secondary_items=secondary_items,
     color=color,
+    name=name,
     commands=commands,
     view='header')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
@@ -3841,6 +3959,7 @@ ui_header_card <- function(
 #' @param data Data for this card.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param path_popup The path or URL or data URL of the image displayed in the popup after clicking the image. Does not replace the `path` property.
+#' @param name An optional identifying name for the image
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
 #' @export
@@ -3852,6 +3971,7 @@ ui_image_card <- function(
   data = NULL,
   path = NULL,
   path_popup = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3860,6 +3980,7 @@ ui_image_card <- function(
   # TODO Validate data: Rec
   .guard_scalar("path", "character", path)
   .guard_scalar("path_popup", "character", path_popup)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3869,6 +3990,7 @@ ui_image_card <- function(
     data=data,
     path=path,
     path_popup=path_popup,
+    name=name,
     commands=commands,
     view='image')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))
@@ -3887,6 +4009,7 @@ ui_image_card <- function(
 #' @param progress The value of the progress bar, between 0 and 1.
 #' @param plot_color The color of the progress bar.
 #' @param data Data for this card.
+#' @param name An optional identifying name for this group.
 #' @param commands Contextual menu commands for this component.
 #' @return A LargeBarStatCard instance.
 #' @export
@@ -3901,6 +4024,7 @@ ui_large_bar_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3912,6 +4036,7 @@ ui_large_bar_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3924,6 +4049,7 @@ ui_large_bar_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='large_bar_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveLargeBarStatCard"))
@@ -3938,6 +4064,7 @@ ui_large_bar_stat_card <- function(
 #' @param aux_value The auxiliary value displayed next to the primary value.
 #' @param caption The caption displayed below the primary value.
 #' @param data Data for this card.
+#' @param name An optional identifying name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A LargeStatCard instance.
 #' @export
@@ -3948,6 +4075,7 @@ ui_large_stat_card <- function(
   aux_value,
   caption,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3955,6 +4083,7 @@ ui_large_stat_card <- function(
   .guard_scalar("aux_value", "character", aux_value)
   .guard_scalar("caption", "character", caption)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3963,6 +4092,7 @@ ui_large_stat_card <- function(
     aux_value=aux_value,
     caption=caption,
     data=data,
+    name=name,
     commands=commands,
     view='large_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveLargeStatCard"))
@@ -4056,6 +4186,7 @@ ui_list_item1_card <- function(
 #' @param content The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
 #' @param data Additional data for the card.
 #' @param compact Make spacing tighter. Defaults to True.
+#' @param name An optional identifying name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkdownCard instance.
 #' @export
@@ -4065,12 +4196,14 @@ ui_markdown_card <- function(
   content,
   data = NULL,
   compact = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
   .guard_scalar("compact", "logical", compact)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4078,6 +4211,7 @@ ui_markdown_card <- function(
     content=content,
     data=data,
     compact=compact,
+    name=name,
     commands=commands,
     view='markdown')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkdownCard"))
@@ -4090,6 +4224,7 @@ ui_markdown_card <- function(
 #' @param title The title for this card.
 #' @param content The HTML content.
 #' @param compact True if outer spacing should be removed. Defaults to False.
+#' @param name An optional identifying name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkupCard instance.
 #' @export
@@ -4098,17 +4233,20 @@ ui_markup_card <- function(
   title,
   content,
   compact = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   .guard_scalar("compact", "logical", compact)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     compact=compact,
+    name=name,
     commands=commands,
     view='markup')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkupCard"))
@@ -4448,16 +4586,20 @@ ui_inline_script <- function(
 #'
 #' @param content The CSS to be applied to this page.
 #' @param media A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
+#' @param name An optional identifying name for this stylesheet.
 #' @return A InlineStylesheet instance.
 #' @export
 ui_inline_stylesheet <- function(
   content,
-  media = NULL) {
+  media = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("media", "character", media)
+  .guard_scalar("name", "character", name)
   .o <- list(
     content=content,
-    media=media)
+    media=media,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveInlineStylesheet"))
   return(.o)
 }
@@ -4467,19 +4609,23 @@ ui_inline_stylesheet <- function(
 #' @param path The URI of an external stylesheet.
 #' @param media A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
 #' @param cross_origin The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
+#' @param name An optional identifying name for this stylesheet.
 #' @return A Stylesheet instance.
 #' @export
 ui_stylesheet <- function(
   path,
   media = NULL,
-  cross_origin = NULL) {
+  cross_origin = NULL,
+  name = NULL) {
   .guard_scalar("path", "character", path)
   .guard_scalar("media", "character", media)
   .guard_scalar("cross_origin", "character", cross_origin)
+  .guard_scalar("name", "character", name)
   .o <- list(
     path=path,
     media=media,
-    cross_origin=cross_origin)
+    cross_origin=cross_origin,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveStylesheet"))
   return(.o)
 }
@@ -4507,6 +4653,7 @@ ui_stylesheet <- function(
 #' @param script Javascript code to execute on this page.
 #' @param stylesheet CSS stylesheet to be applied to this page.
 #' @param stylesheets External CSS files to load into the page.
+#' @param name An Optional identifying name for this page
 #' @param animate EXPERIMENTAL: True to turn on the card animations. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
@@ -4529,6 +4676,7 @@ ui_meta_card <- function(
   script = NULL,
   stylesheet = NULL,
   stylesheets = NULL,
+  name = NULL,
   animate = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
@@ -4548,6 +4696,7 @@ ui_meta_card <- function(
   .guard_scalar("script", "WaveInlineScript", script)
   .guard_scalar("stylesheet", "WaveInlineStylesheet", stylesheet)
   .guard_vector("stylesheets", "WaveStylesheet", stylesheets)
+  .guard_scalar("name", "character", name)
   .guard_scalar("animate", "logical", animate)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
@@ -4568,6 +4717,7 @@ ui_meta_card <- function(
     script=script,
     stylesheet=stylesheet,
     stylesheets=stylesheets,
+    name=name,
     animate=animate,
     commands=commands,
     view='meta')
@@ -4589,6 +4739,7 @@ ui_meta_card <- function(
 #' @param secondary_items Items that should be displayed at the bottom of the card if items are not empty, otherwise displayed under subtitle.
 #' @param color Card background color. Defaults to 'card'.
 #'   One of 'card', 'primary'. See enum h2o_wave.ui.NavCardColor.
+#' @param name An optional name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A NavCard instance.
 #' @export
@@ -4604,6 +4755,7 @@ ui_nav_card <- function(
   persona = NULL,
   secondary_items = NULL,
   color = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveNavGroup", items)
@@ -4616,6 +4768,7 @@ ui_nav_card <- function(
   .guard_scalar("persona", "WaveComponent", persona)
   .guard_vector("secondary_items", "WaveComponent", secondary_items)
   # TODO Validate color
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4629,6 +4782,7 @@ ui_nav_card <- function(
     persona=persona,
     secondary_items=secondary_items,
     color=color,
+    name=name,
     commands=commands,
     view='nav')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveNavCard"))
@@ -4643,6 +4797,7 @@ ui_nav_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
 #' @param data The data for this card.
+#' @param name An optional identifying name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A PixelArtCard instance.
 #' @export
@@ -4650,15 +4805,18 @@ ui_pixel_art_card <- function(
   box,
   title,
   data,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     data=data,
+    name=name,
     commands=commands,
     view='pixel_art')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePixelArtCard"))
@@ -4673,6 +4831,7 @@ ui_pixel_art_card <- function(
 #' @param plot The plot to be displayed in this card.
 #' @param events The events to capture on this card. One of 'select_marks'.
 #' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
+#' @param name An optional identifying name for this card
 #' @param animate EXPERIMENTAL: True to turn on the chart animations. Defaults to False.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
@@ -4684,6 +4843,7 @@ ui_plot_card <- function(
   plot,
   events = NULL,
   interactions = NULL,
+  name = NULL,
   animate = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
@@ -4692,6 +4852,7 @@ ui_plot_card <- function(
   .guard_scalar("plot", "WavePlot", plot)
   .guard_vector("events", "character", events)
   .guard_vector("interactions", "character", interactions)
+  .guard_scalar("name", "character", name)
   .guard_scalar("animate", "logical", animate)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
@@ -4701,6 +4862,7 @@ ui_plot_card <- function(
     plot=plot,
     events=events,
     interactions=interactions,
+    name=name,
     animate=animate,
     commands=commands,
     view='plot')
@@ -4716,6 +4878,7 @@ ui_plot_card <- function(
 #' @param aux_value The card's aux_value, displayed on the right hand side of the image.
 #' @param caption The card's caption, displayed below the image.
 #' @param items The card's buttons, displayed at the bottom.
+#' @param name An optional name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A PostCard instance.
 #' @export
@@ -4726,6 +4889,7 @@ ui_post_card <- function(
   aux_value = NULL,
   caption = NULL,
   items = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("persona", "WaveComponent", persona)
@@ -4733,6 +4897,7 @@ ui_post_card <- function(
   .guard_scalar("aux_value", "character", aux_value)
   .guard_scalar("caption", "character", caption)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4741,6 +4906,7 @@ ui_post_card <- function(
     aux_value=aux_value,
     caption=caption,
     items=items,
+    name=name,
     commands=commands,
     view='post')
   class(.o) <- append(class(.o), c(.wave_obj, "WavePostCard"))
@@ -4799,6 +4965,7 @@ ui_preview_card <- function(
 #'   .
 #' @param items Components in this card displayed below the image.
 #' @param height The height of the bottom content (items), e.g. '400px'. Use sparingly, e.g. in grid views.
+#' @param name The name of the card.
 #' @param commands Contextual menu commands for this component.
 #' @return A ProfileCard instance.
 #' @export
@@ -4808,12 +4975,14 @@ ui_profile_card <- function(
   image,
   items = NULL,
   height = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("persona", "WaveComponent", persona)
   .guard_scalar("image", "character", image)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("height", "character", height)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4821,6 +4990,7 @@ ui_profile_card <- function(
     image=image,
     items=items,
     height=height,
+    name=name,
     commands=commands,
     view='profile')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
@@ -4866,6 +5036,7 @@ ui_repeat_card <- function(
 #' @param title The title.
 #' @param subtitle The subtitle, displayed below the title. Supports Markdown.
 #' @param items The components to display in this card
+#' @param name An optional identifying name for this card
 #' @param commands Contextual menu commands for this component.
 #' @return A SectionCard instance.
 #' @export
@@ -4874,17 +5045,20 @@ ui_section_card <- function(
   title,
   subtitle,
   items = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     subtitle=subtitle,
     items=items,
+    name=name,
     commands=commands,
     view='section')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSectionCard"))
@@ -4906,6 +5080,7 @@ ui_section_card <- function(
 #'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.SmallSeriesStatCardPlotCurve.
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
+#' @param name An optional identifying name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A SmallSeriesStatCard instance.
 #' @export
@@ -4921,6 +5096,7 @@ ui_small_series_stat_card <- function(
   plot_curve = NULL,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -4933,6 +5109,7 @@ ui_small_series_stat_card <- function(
   # TODO Validate plot_curve
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4946,6 +5123,7 @@ ui_small_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='small_series_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSmallSeriesStatCard"))
@@ -4958,6 +5136,7 @@ ui_small_series_stat_card <- function(
 #' @param title The card's title.
 #' @param value The primary value displayed.
 #' @param data Data for this card.
+#' @param name An optional identifying name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A SmallStatCard instance.
 #' @export
@@ -4966,17 +5145,20 @@ ui_small_stat_card <- function(
   title,
   value,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     value=value,
     data=data,
+    name=name,
     commands=commands,
     view='small_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveSmallStatCard"))
@@ -5230,6 +5412,7 @@ ui_tall_article_preview_card <- function(
 #' @param progress The value of the progress gauge, between 0 and 1.
 #' @param plot_color The color of the progress gauge.
 #' @param data Data for this card.
+#' @param name An optional identifying name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A TallGaugeStatCard instance.
 #' @export
@@ -5241,6 +5424,7 @@ ui_tall_gauge_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -5249,6 +5433,7 @@ ui_tall_gauge_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5258,6 +5443,7 @@ ui_tall_gauge_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='tall_gauge_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallGaugeStatCard"))
@@ -5331,6 +5517,7 @@ ui_tall_info_card <- function(
 #'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.TallSeriesStatCardPlotCurve.
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
+#' @param name An optional identifying name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A TallSeriesStatCard instance.
 #' @export
@@ -5347,6 +5534,7 @@ ui_tall_series_stat_card <- function(
   plot_curve = NULL,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -5360,6 +5548,7 @@ ui_tall_series_stat_card <- function(
   # TODO Validate plot_curve
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5374,6 +5563,7 @@ ui_tall_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='tall_series_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallSeriesStatCard"))
@@ -5413,6 +5603,7 @@ ui_tall_stats_card <- function(
 #' @param title The title for this card.
 #' @param content The Handlebars template. https://handlebarsjs.com/guide/
 #' @param data Data for the Handlebars template.
+#' @param name An optional identifying name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A TemplateCard instance.
 #' @export
@@ -5421,17 +5612,20 @@ ui_template_card <- function(
   title,
   content,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
+    name=name,
     commands=commands,
     view='template')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTemplateCard"))
@@ -5444,6 +5638,7 @@ ui_template_card <- function(
 #' @param items Items to render.
 #' @param secondary_items Items to render on the right side (or left, in RTL).
 #' @param overflow_items Items to render in an overflow menu.
+#' @param name An optional name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A ToolbarCard instance.
 #' @export
@@ -5452,17 +5647,20 @@ ui_toolbar_card <- function(
   items,
   secondary_items = NULL,
   overflow_items = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "WaveCommand", items)
   .guard_vector("secondary_items", "WaveCommand", secondary_items)
   .guard_vector("overflow_items", "WaveCommand", overflow_items)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     secondary_items=secondary_items,
     overflow_items=overflow_items,
+    name=name,
     commands=commands,
     view='toolbar')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveToolbarCard"))
@@ -5477,6 +5675,7 @@ ui_toolbar_card <- function(
 #' @param data Data for the plot, if any.
 #' @param grammar Vega grammar to use. Defaults to 'vega-lite'.
 #'   One of 'vega-lite', 'vega'. See enum h2o_wave.ui.VegaCardGrammar.
+#' @param name An optional name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A VegaCard instance.
 #' @export
@@ -5486,12 +5685,14 @@ ui_vega_card <- function(
   specification,
   data = NULL,
   grammar = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
   # TODO Validate grammar
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5499,6 +5700,7 @@ ui_vega_card <- function(
     specification=specification,
     data=data,
     grammar=grammar,
+    name=name,
     commands=commands,
     view='vega')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveVegaCard"))
@@ -5561,6 +5763,7 @@ ui_wide_article_preview_card <- function(
 #' @param progress The value of the progress bar, between 0 and 1.
 #' @param plot_color The color of the progress bar.
 #' @param data Data for this card.
+#' @param name An optional name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideBarStatCard instance.
 #' @export
@@ -5572,6 +5775,7 @@ ui_wide_bar_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -5580,6 +5784,7 @@ ui_wide_bar_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5589,6 +5794,7 @@ ui_wide_bar_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='wide_bar_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideBarStatCard"))
@@ -5604,6 +5810,7 @@ ui_wide_bar_stat_card <- function(
 #' @param progress The value of the progress gauge, between 0 and 1.
 #' @param plot_color The color of the progress gauge.
 #' @param data Data for this card.
+#' @param name An optional name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideGaugeStatCard instance.
 #' @export
@@ -5615,6 +5822,7 @@ ui_wide_gauge_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -5623,6 +5831,7 @@ ui_wide_gauge_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5632,6 +5841,7 @@ ui_wide_gauge_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='wide_gauge_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideGaugeStatCard"))
@@ -5701,6 +5911,7 @@ ui_wide_info_card <- function(
 #' @param fraction A value between 0 and 1 indicating the size of the pie.
 #' @param color The color of the pie.
 #' @param aux_value The auxiliary value, displayed below the label.
+#' @param name An optional name, for this component.
 #' @return A Pie instance.
 #' @export
 ui_pie <- function(
@@ -5708,18 +5919,21 @@ ui_pie <- function(
   value,
   fraction,
   color,
-  aux_value = NULL) {
+  aux_value = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
   .guard_scalar("fraction", "numeric", fraction)
   .guard_scalar("color", "character", color)
   .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("name", "character", name)
   .o <- list(
     label=label,
     value=value,
     fraction=fraction,
     color=color,
-    aux_value=aux_value)
+    aux_value=aux_value,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WavePie"))
   return(.o)
 }
@@ -5729,6 +5943,7 @@ ui_pie <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The card's title.
 #' @param pies The pies to be included in the pie chart.
+#' @param name An optional name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A WidePieStatCard instance.
 #' @export
@@ -5736,15 +5951,18 @@ ui_wide_pie_stat_card <- function(
   box,
   title,
   pies,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_vector("pies", "WavePie", pies)
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     pies=pies,
+    name=name,
     commands=commands,
     view='wide_pie_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePieStatCard"))
@@ -5758,6 +5976,7 @@ ui_wide_pie_stat_card <- function(
 #' @param caption The card's caption, displayed below the title.
 #' @param plot The card's plot.
 #' @param data The card's plot data.
+#' @param name An optional name for this component.
 #' @param commands Contextual menu commands for this component.
 #' @return A WidePlotCard instance.
 #' @export
@@ -5767,12 +5986,14 @@ ui_wide_plot_card <- function(
   caption,
   plot,
   data,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("plot", "WavePlot", plot)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5780,6 +6001,7 @@ ui_wide_plot_card <- function(
     caption=caption,
     plot=plot,
     data=data,
+    name=name,
     commands=commands,
     view='wide_plot')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePlotCard"))
@@ -5802,6 +6024,7 @@ ui_wide_plot_card <- function(
 #'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.WideSeriesStatCardPlotCurve.
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
+#' @param name An optional name for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideSeriesStatCard instance.
 #' @export
@@ -5818,6 +6041,7 @@ ui_wide_series_stat_card <- function(
   plot_curve = NULL,
   plot_color = NULL,
   data = NULL,
+  name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -5831,6 +6055,7 @@ ui_wide_series_stat_card <- function(
   # TODO Validate plot_curve
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -5845,6 +6070,7 @@ ui_wide_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
+    name=name,
     commands=commands,
     view='wide_series_stat')
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideSeriesStatCard"))
