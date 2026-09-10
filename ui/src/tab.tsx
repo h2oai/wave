@@ -78,7 +78,6 @@ export const
                 href: path,
                 target: '_blank',
                 rel: 'noopener noreferrer',
-                onMouseDown: e => e.preventDefault(),
               } : undefined}
             />
           ))

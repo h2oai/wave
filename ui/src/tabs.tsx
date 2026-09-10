@@ -100,7 +100,6 @@ export const
             href: t.path,
             target: '_blank',
             rel: 'noopener noreferrer',
-            onMouseDown: e => e.preventDefault(),
           } : undefined}
         />
       )),
