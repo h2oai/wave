@@ -19,7 +19,7 @@ import json
 import platform
 import secrets
 import subprocess
-from urllib.parse import urlparse
+from urllib.parse import quote, unquote, urlparse
 from uuid import uuid4
 import warnings
 import logging
@@ -810,9 +810,9 @@ class Site:
         """
         path = os.path.abspath(path)
         # If path is a directory, get basename from url
-        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+        filepath = os.path.join(path, os.path.basename(unquote(url))) if os.path.isdir(path) else path
 
-        with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
+        with self._http.stream('GET', f'{_config.hub_host_address}{_quote_url(url)}') as res:
             if res.status_code != 200:
                 res.read()
                 raise ServiceError(f'Download failed (code={res.status_code}): {res.text}')
@@ -829,7 +829,7 @@ class Site:
         Args:
             url: The URL of the file to delete.
         """
-        res = self._http.delete(f'{_config.hub_host_address}{url}')
+        res = self._http.delete(f'{_config.hub_host_address}{_quote_url(url)}')
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
@@ -1041,9 +1041,9 @@ class AsyncSite:
         """
         path = os.path.abspath(path)
         # If path is a directory, get basename from url
-        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+        filepath = os.path.join(path, os.path.basename(unquote(url))) if os.path.isdir(path) else path
 
-        async with self._http.stream('GET', f'{_config.hub_host_address}{url}') as res:
+        async with self._http.stream('GET', f'{_config.hub_host_address}{_quote_url(url)}') as res:
             if res.status_code != 200:
                 await res.aread()
                 raise ServiceError(f'Download failed (code={res.status_code}): {res.text}')
@@ -1060,7 +1060,7 @@ class AsyncSite:
         Args:
             url: The URL of the file to delete.
         """
-        res = await self._http.delete(f'{_config.hub_host_address}{url}')
+        res = await self._http.delete(f'{_config.hub_host_address}{_quote_url(url)}')
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
@@ -1121,6 +1121,14 @@ async def _copy_in_subprocess(args: List[str], uuid: str, f='') -> str:
         return f'{_base_url}_f/{uuid}/{os.path.basename(f)}'
     else:
         return f'{_base_url}_f/{uuid}'
+
+
+def _quote_url(url: str) -> str:
+    """
+    Percent-encode a file URL so characters like '#' or '?' in the filename are not parsed as a fragment or query.
+    Unquoting first keeps already-encoded URLs unchanged instead of double-encoding them.
+    """
+    return quote(unquote(url))
 
 
 def _get_files_in_directory(directory: str, files: List[str]) -> List[str]:

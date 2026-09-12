@@ -13,6 +13,7 @@
 # limitations under the License.
 import os
 import unittest
+from urllib.parse import quote
 
 from h2o_wave import AsyncSite
 import httpx
@@ -56,6 +57,21 @@ class TestPythonServerAsync(unittest.IsolatedAsyncioTestCase):
         assert isinstance(d2, dict)
         assert d2['foo'] == d1['foo']
         assert d2['qux'] == d1['qux']
+
+    async def test_file_server_special_chars_in_filename(self):
+        f1 = 'temp #1 file?.txt'
+        with open(f1, 'w') as f:
+            f.write('special chars')
+        upload_path, = await self.site.upload([f1])
+        f2 = await self.site.download(upload_path, 'temp_file2.txt')
+        s1 = read_file(f1)
+        s2 = read_file(f2)
+        os.remove(f1)
+        os.remove(f2)
+        assert s1 == s2
+        await self.site.unload(upload_path)
+        res = httpx.get(f'http://localhost:10101{quote(upload_path)}')
+        assert res.status_code == 404
 
     async def test_multipart_server(self):
         file_handle = open('../assets/brand/wave.svg', 'rb')

@@ -13,6 +13,7 @@
 # limitations under the License.
 import os
 import unittest
+from urllib.parse import quote
 
 from h2o_wave import Expando, data, site, ui
 import httpx
@@ -441,6 +442,21 @@ class TestPythonServer(unittest.TestCase):
         os.remove(f1)
         os.remove(f2)
         assert s1 == s2
+
+    def test_file_server_special_chars_in_filename(self):
+        f1 = 'temp #1 file?.txt'
+        with open(f1, 'w') as f:
+            f.write('special chars')
+        upload_path, = site.upload([f1])
+        f2 = site.download(upload_path, 'temp_file2.txt')
+        s1 = read_file(f1)
+        s2 = read_file(f2)
+        os.remove(f1)
+        os.remove(f2)
+        assert s1 == s2
+        site.unload(upload_path)
+        res = httpx.get(f'http://localhost:10101{quote(upload_path)}')
+        assert res.status_code == 404
 
     def test_public_dir(self):
         p = site.download(f'{base_url}assets/brand/h2o.svg', 'h2o.svg')
