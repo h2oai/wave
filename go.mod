@@ -9,7 +9,7 @@ require (
 	github.com/h2oai/goconfig v1.3.2-0.20230628122159-683a9532f8d2
 	github.com/hashicorp/golang-lru v1.0.2
 	github.com/lo5/sqlite3 v0.1.0
-	golang.org/x/crypto v0.55.0
+	golang.org/x/crypto v0.56.0
 	golang.org/x/oauth2 v0.27.0
 )
 
