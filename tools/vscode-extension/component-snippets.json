@@ -1773,7 +1773,7 @@
   "Wave Full Tab": {
     "prefix": "w_full_tab",
     "body": [
-      "ui.tab(name='$1', label='$2', icon='$3'),$0"
+      "ui.tab(name='$1', label='$2', icon='$3', path='$4'),$0"
     ],
     "description": "Create a full Wave Tab."
   },

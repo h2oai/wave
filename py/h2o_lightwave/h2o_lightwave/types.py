@@ -4238,26 +4238,32 @@ class Tab:
             name: str,
             label: Optional[str] = None,
             icon: Optional[str] = None,
+            path: Optional[str] = None,
     ):
         _guard_scalar('Tab.name', name, (str,), True, False, False)
         _guard_scalar('Tab.label', label, (str,), False, True, False)
         _guard_scalar('Tab.icon', icon, (str,), False, True, False)
+        _guard_scalar('Tab.path', path, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
         """The text displayed on the tab."""
         self.icon = icon
         """The icon displayed on the tab."""
+        self.path = path
+        """The path or URL to open in a new browser tab."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Tab.name', self.name, (str,), True, False, False)
         _guard_scalar('Tab.label', self.label, (str,), False, True, False)
         _guard_scalar('Tab.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('Tab.path', self.path, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
             icon=self.icon,
+            path=self.path,
         )
 
     @staticmethod
@@ -4269,13 +4275,17 @@ class Tab:
         _guard_scalar('Tab.label', __d_label, (str,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('Tab.icon', __d_icon, (str,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Tab.path', __d_path, (str,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         icon: Optional[str] = __d_icon
+        path: Optional[str] = __d_path
         return Tab(
             name,
             label,
             icon,
+            path,
         )
 
 

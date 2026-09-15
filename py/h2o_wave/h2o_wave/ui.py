@@ -1580,6 +1580,7 @@ def tab(
         name: str,
         label: Optional[str] = None,
         icon: Optional[str] = None,
+        path: Optional[str] = None,
 ) -> Tab:
     """Create a tab.
 
@@ -1587,6 +1588,7 @@ def tab(
         name: An identifying name for this component.
         label: The text displayed on the tab.
         icon: The icon displayed on the tab.
+        path: The path or URL to open in a new browser tab.
     Returns:
         A `h2o_wave.types.Tab` instance.
     """
@@ -1594,6 +1596,7 @@ def tab(
         name,
         label,
         icon,
+        path,
     )
 
 

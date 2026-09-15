@@ -249,6 +249,7 @@ $tracking in $fontTrackings {
 }
 
 a:link, a:visited, a:hover, a:active { color: var(--wave-themePrimary); }
+a:visited.ms-Pivot-link:hover { color: var(--wave-card) !important; }
 
 /* Default markdown syntax highlighting theme - androidstudio. */
 pre code.hljs {

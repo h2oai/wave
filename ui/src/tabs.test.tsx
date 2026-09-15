@@ -30,6 +30,7 @@ describe('Tabs.tsx', () => {
     wave.args = [] as any
     wave.args[name] = null
     pushMock.mockReset()
+    jest.restoreAllMocks()
   })
 
   it('Renders data-test attr', () => {
@@ -174,6 +175,22 @@ describe('Tabs.tsx', () => {
     const { getAllByRole } = render(<XTabs model={{ ...getProps(), items }} />)
 
     expect(getAllByRole('tab')[0]).toHaveClass('is-selected')
+  })
+
+  it('Opens link in a new tab when tab has path specified', () => {
+    const path = 'https://wave.h2o.ai/docs/getting-started'
+    const windowOpenMock = jest.spyOn(window, 'open').mockImplementation(() => null)
+    const { getAllByRole } = render(<XTabs model={{ ...getProps(), items: [{ name: 'tab1' }, { name: 'docs', label: 'Docs', path }] }} />)
+    const link = getAllByRole('tab')[1]
+
+    expect(link.tagName).toBe('A')
+    expect(link).toHaveAttribute('href', path)
+
+    fireEvent.click(link)
+
+    expect(windowOpenMock).toHaveBeenCalledTimes(1)
+    expect(windowOpenMock).toHaveBeenCalledWith(path, '_blank')
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
 })

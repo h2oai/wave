@@ -8,6 +8,7 @@ tabs = [
     ui.tab(name='email', label='Mail', icon='Mail'),
     ui.tab(name='events', label='Events', icon='Calendar'),
     ui.tab(name='spam', label='Spam'),
+    ui.tab(name='docs', label='Docs', icon='Help', path='https://wave.h2o.ai/docs/getting-started'),
 ]
 
 
