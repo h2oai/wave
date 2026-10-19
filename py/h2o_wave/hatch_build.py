@@ -48,6 +48,8 @@ class CustomBuildHook(BuildHookInterface):
 
         self.copy_files(binaries_path, 'tmp', ['demo', 'examples', 'test'])
         self.copy_files('project_templates', 'tmp', [], True)
+        # Map entries individually, "tmp" = "." yields non-normalized "./" paths that PyPI rejects.
+        build_data['shared_data'] = {os.path.join('tmp', f): f for f in os.listdir('tmp')}
 
         create_metadata_file(operating_system, arch)
 

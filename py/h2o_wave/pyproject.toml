@@ -54,5 +54,3 @@ path = "h2o_wave/version.py"
 path = "hatch_build.py"
 [tool.hatch.metadata.hooks.custom]
 path = "hatch_build.py"
-[tool.hatch.build.targets.wheel.shared-data]
-"tmp" = "."
