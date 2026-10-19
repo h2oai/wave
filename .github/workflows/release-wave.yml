@@ -34,11 +34,11 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           fetch-depth: 0
 
-      - name: Bump version and tag
-        run: |
-          git config user.name wave-bot
-          git config user.email wave-bot@h2o.ai
-          make tag VERSION=${{ env.VERSION }}
+      # - name: Bump version and tag
+      #   run: |
+      #     git config user.name wave-bot
+      #     git config user.email wave-bot@h2o.ai
+      #     make tag VERSION=${{ env.VERSION }}
 
       - uses: actions/setup-go@v6
         with:
@@ -97,16 +97,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to Conda
-        uses: h2oai/wave_publish_conda_package_action@v1.0.4
-        with:
-          CondaDir: "py/h2o_wave/conda"
-          Platforms: "noarch"
-          CondaUsername: ${{ secrets.CONDA_USERNAME }}
-          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
-        env:
-          # VERSION clashes with conda build. Use PKG_VERSION instead.
-          PKG_VERSION: ${{ env.VERSION }}
+      # - name: Publish to Conda
+      #   uses: h2oai/wave_publish_conda_package_action@v1.0.4
+      #   with:
+      #     CondaDir: "py/h2o_wave/conda"
+      #     Platforms: "noarch"
+      #     CondaUsername: ${{ secrets.CONDA_USERNAME }}
+      #     CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+      #   env:
+      #     # VERSION clashes with conda build. Use PKG_VERSION instead.
+      #     PKG_VERSION: ${{ env.VERSION }}
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
