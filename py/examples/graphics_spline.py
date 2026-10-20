@@ -3,17 +3,20 @@
 # ---
 
 import random
-from h2o_wave import site, ui, graphics as g
+from typing import Any, Dict, List, Optional
+from h2o_wave import site, ui
+import h2o_wave.graphics as g
 
-x = [i * 20 for i in range(50)]
-y = [
+_y = [
     88, 100, 116, 128, 126, 128, 118, 108, 121, 120, 99, 113, 117, 103, 98, 90, 104, 98, 82, 102, 104, 89, 87, 69,
     88, 97, 91, 105, 98, 86, 90, 107, 97, 107, 108, 128, 144, 148, 126, 106, 89, 99, 78, 70, 69, 64, 45, 29, 27, 38
 ]
-y0 = [v - random.randint(5, min(y)) for v in y]
+x: List[Optional[float]] = [i * 20.0 for i in range(50)]
+y: List[Optional[float]] = [float(v) for v in _y]
+y0: List[Optional[float]] = [float(v - random.randint(5, min(_y))) for v in _y]
 
-line_style = dict(fill='none', stroke='crimson', stroke_width=4)
-area_style = dict(fill='crimson')
+line_style: Dict[str, Any] = dict(fill='none', stroke='crimson', stroke_width=4)
+area_style: Dict[str, Any] = dict(fill='crimson')
 
 splines = [
     # Lines
