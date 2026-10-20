@@ -76,6 +76,8 @@ interface TableColumn {
   filters?: S[]
   /** Defines how to align values in a column. */
   align?: 'left' | 'center' | 'right'
+  /** Tooltip text. */
+  tooltip?: S
 }
 
 /** Create a table row. */
@@ -167,6 +169,7 @@ type WaveColumn = Fluent.IColumn & {
   cellOverflow?: 'tooltip' | 'wrap'
   filters?: S[]
   align?: 'left' | 'center' | 'right'
+  tooltip?: S
 }
 
 type DataTable = {
@@ -434,18 +437,55 @@ const
           isResizable: true,
           isMultiline: c.cell_overflow === 'wrap',
           filters: c.filterable ? c.filters : undefined,
+          tooltip: c.tooltip ? c.tooltip : undefined,
         }
       }, [onColumnClick, onColumnContextMenu, selectedFilters, sortCols]),
       [columns, setColumns] = React.useState(m.columns.map(tableToWaveColumn)),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
-
+        const renderColumnHeaderTooltip = (tooltipHostProps?: Fluent.IDetailsColumnRenderTooltipProps) => {
+            const column = props.columns.find(col => col.key === tooltipHostProps?.column?.key) as WaveColumn
+            if (!tooltipHostProps?.children) return null
+            return (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {tooltipHostProps.children}
+                {
+                  column?.tooltip && (
+                    <Fluent.TooltipHost
+                      content={column.tooltip}
+                      calloutProps={{
+                        gapSpace: -10,
+                        styles: {
+                          beakCurtain: { backgroundColor: cssVar('$neutralLighterAlt') },
+                          beak: { backgroundColor: cssVar('$neutralLighterAlt') },
+                          calloutMain: { backgroundColor: cssVar('$neutralLighterAlt') }
+                        }
+                      }}
+                    >
+                    <Fluent.Icon
+                      iconName="Info"
+                      data-icon-name="info-icon"
+                      styles={{
+                        root: {
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          paddingLeft: '0px',
+                        }
+                      }}
+                    />
+                  </Fluent.TooltipHost>
+                  )
+                }
+              </div>
+            )
+        }
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
             <Fluent.DetailsHeader
               {...props}
               isAllCollapsed={groups?.every(group => group.isCollapsed)}
+              onRenderColumnHeaderTooltip={renderColumnHeaderTooltip}
               styles={{
                 ...props.styles,
                 root: {
@@ -454,14 +494,19 @@ const
                   lineHeight: '48px',
                   background: cssVar('$neutralLight'),
                   borderBottom: 'none',
+                  selectors: {
+                    '.ms-DetailsHeader-cellTitle': {
+                        paddingLeft: '0px',
+                    },
+                  }
                 },
                 cellSizerEnd: {
                   marginLeft: -8,
                 },
                 cellIsGroupExpander: {
                   // HACK: fixed size of expand/collapse button in column header
-                  height: 48
-                }
+                  height: 48,
+                },
               }}
             />
           </Fluent.Sticky>
