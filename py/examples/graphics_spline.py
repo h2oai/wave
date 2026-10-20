@@ -1,9 +1,9 @@
-# Graphics / Spline
-# Use the #graphics module to render splines.
-# ---
-
 import random
 from h2o_wave import site, ui, graphics as g
+
+# Define a function to convert a list of values to float
+def to_float(lst): # for example, [1, 2, 3] -> [1.0, 2.0, 3.0]
+    return [float(v) for v in lst]
 
 x = [i * 20 for i in range(50)]
 y = [
@@ -17,43 +17,41 @@ area_style = dict(fill='crimson')
 
 splines = [
     # Lines
-    g.spline(x=x, y=y, **line_style),  # same as curve='linear'
-    g.spline(x=x, y=y, curve='basis', **line_style),
-    g.spline(x=x, y=y, curve='basis-closed', **line_style),
-    g.spline(x=x, y=y, curve='basis-open', **line_style),
-    g.spline(x=x, y=y, curve='cardinal', **line_style),
-    g.spline(x=x, y=y, curve='cardinal-closed', **line_style),
-    g.spline(x=x, y=y, curve='cardinal-open', **line_style),
-    g.spline(x=x, y=y, curve='smooth', **line_style),
-    g.spline(x=x, y=y, curve='smooth-closed', **line_style),
-    g.spline(x=x, y=y, curve='smooth-open', **line_style),
-    g.spline(x=x, y=y, curve='linear', **line_style),
-    g.spline(x=x, y=y, curve='linear-closed', **line_style),
-    g.spline(x=x, y=y, curve='monotone-x', **line_style),
-    g.spline(x=x, y=y, curve='monotone-y', **line_style),
-    g.spline(x=x, y=y, curve='natural', **line_style),
-    g.spline(x=x, y=y, curve='step', **line_style),
-    g.spline(x=x, y=y, curve='step-after', **line_style),
-    g.spline(x=x, y=y, curve='step-before', **line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='basis', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='basis-closed', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='basis-open', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='cardinal', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='cardinal-closed', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='cardinal-open', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='smooth', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='smooth-closed', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='smooth-open', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='linear-closed', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='monotone-x', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='monotone-y', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='natural', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='step', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='step-after', style=line_style),
+    g.spline(x=to_float(x), y=to_float(y), curve='step-before', style=line_style),
     # Areas
-    g.spline(x=x, y=y, y0=y0, **area_style),  # same as curve='linear'
-    g.spline(x=x, y=y, y0=y0, curve='basis', **area_style),
-    g.spline(x=x, y=y, y0=[], curve='basis', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='basis-open', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='cardinal', **area_style),
-    g.spline(x=x, y=y, y0=[], curve='cardinal', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='cardinal-open', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='smooth', **area_style),
-    g.spline(x=x, y=y, y0=[], curve='smooth', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='smooth-open', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='linear', **area_style),
-    g.spline(x=x, y=y, y0=[], curve='linear', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='monotone-x', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='monotone-y', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='natural', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='step', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='step-after', **area_style),
-    g.spline(x=x, y=y, y0=y0, curve='step-before', **area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='linear', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='basis', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=[], curve='basis', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='basis-open', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='cardinal', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=[], curve='cardinal', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='cardinal-open', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='smooth', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=[], curve='smooth', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='smooth-open', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='linear', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=[], curve='linear', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='monotone-x', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='monotone-y', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='natural', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='step', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='step-after', style=area_style),
+    g.spline(x=to_float(x), y=to_float(y), y0=to_float(y0), curve='step-before', style=area_style),
 ]
 
 page = site['/demo']

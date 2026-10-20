@@ -6,6 +6,8 @@
 
 import json
 from random import random
+
+from bokeh.core.types import ID
 from h2o_wave import main, app, Q, ui
 from bokeh.resources import CDN
 from bokeh.layouts import row
@@ -31,7 +33,7 @@ async def serve(q: Q):
         p2 = figure(width=250, height=300, x_range=(0, 1), y_range=(0, 1), tools="", title="Watch Here")
         p2.circle('x', 'y', source=s2, alpha=0.6)
 
-        s1.selected.js_on_change(
+        s1.selected.js_on_change( # type: ignore
             'indices',
             CustomJS(
                 args=dict(s1=s1, s2=s2),
@@ -68,7 +70,7 @@ async def serve(q: Q):
         # Serialize the plot as JSON.
         # See https://docs.bokeh.org/en/latest/docs/user_guide/embed.html#json-items
         plot_id = 'my_plot'
-        plot_data = json.dumps(json_item(layout, plot_id))
+        plot_data = json.dumps(json_item(layout, ID(plot_id)))
 
         q.page['meta'] = ui.meta_card(
             box='',
