@@ -34,6 +34,14 @@ async def serve(q: Q):
     page = q.page
 ```
 
+To reference a specific page in a Wave app, use the `@app('/foo')` decorator.
+
+```py
+@app('/foo')
+async def serve(q: Q):
+    page = q.page
+```
+
 `page` is also a dictionary-like object. To reference a card named `foo`, use `page['foo']`.
 
 ```py
