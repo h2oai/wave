@@ -4,7 +4,7 @@
 # ---
 
 import numpy as np
-from plotly import graph_objects as go
+from plotly import graph_objects as go # type: ignore
 from plotly import io as pio
 
 from h2o_wave import ui, main, app, Q

@@ -2,10 +2,10 @@
 # Handle #events on a #plot card using routing.
 # ---
 from h2o_wave import main, app, on, run_on, Q, ui, data
-
+import typing
 
 @on('pricing.select_marks')
-async def show_selected_marks(q: Q, marks: any):
+async def show_selected_marks(q: Q, marks: typing.Any):
     q.page['details'].content = f'You selected {marks}'
     await q.page.save()
 
