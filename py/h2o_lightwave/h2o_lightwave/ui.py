@@ -1326,6 +1326,7 @@ def table_column(
         cell_overflow: Optional[str] = None,
         filters: Optional[List[str]] = None,
         align: Optional[str] = None,
+        tooltip: Optional[str] = None,
 ) -> TableColumn:
     """Create a table column.
 
@@ -1343,6 +1344,7 @@ def table_column(
         cell_overflow: Defines what to do with a cell's contents in case it does not fit inside the cell. One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
         filters: Explicit list of values to allow filtering by, needed when pagination is set or custom order is needed. Only applicable to filterable columns.
         align: Defines how to align values in a column. One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign.
+        tooltip: Tooltip text.
     Returns:
         A `h2o_wave.types.TableColumn` instance.
     """
@@ -1360,6 +1362,7 @@ def table_column(
         cell_overflow,
         filters,
         align,
+        tooltip,
     )
 
 

@@ -1560,6 +1560,7 @@ ui_markdown_table_cell_type <- function(
 #' @param filters Explicit list of values to allow filtering by, needed when pagination is set or custom order is needed. Only applicable to filterable columns.
 #' @param align Defines how to align values in a column.
 #'   One of 'left', 'center', 'right'. See enum h2o_wave.ui.TableColumnAlign.
+#' @param tooltip Tooltip text.
 #' @return A TableColumn instance.
 #' @export
 ui_table_column <- function(
@@ -1575,7 +1576,8 @@ ui_table_column <- function(
   cell_type = NULL,
   cell_overflow = NULL,
   filters = NULL,
-  align = NULL) {
+  align = NULL,
+  tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("min_width", "character", min_width)
@@ -1589,6 +1591,7 @@ ui_table_column <- function(
   # TODO Validate cell_overflow
   .guard_vector("filters", "character", filters)
   # TODO Validate align
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(
     name=name,
     label=label,
@@ -1602,7 +1605,8 @@ ui_table_column <- function(
     cell_type=cell_type,
     cell_overflow=cell_overflow,
     filters=filters,
-    align=align)
+    align=align,
+    tooltip=tooltip)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTableColumn"))
   return(.o)
 }
