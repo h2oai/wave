@@ -1,9 +1,10 @@
 import datetime
 import random
+from typing import Optional
 
 
 class FakeSeries:
-    def __init__(self, min=0.0, max=100.0, variation=10.0, start: int = None):
+    def __init__(self, min=0.0, max=100.0, variation=10.0, start: Optional[int] = None):
         self.min = min
         self.max = max
         self.variation = variation
@@ -21,7 +22,7 @@ class FakeSeries:
 
 
 class FakeTimeSeries:
-    def __init__(self, min=0.0, max=100.0, variation=10.0, start: int = None, delta_days=1):
+    def __init__(self, min=0.0, max=100.0, variation=10.0, start: Optional[int] = None, delta_days=1):
         self.series = FakeSeries(min, max, variation, start)
         self.delta_days = delta_days
         self.date = datetime.datetime.utcnow() - datetime.timedelta(days=10 * 365)
@@ -33,7 +34,7 @@ class FakeTimeSeries:
 
 
 class FakeMultiTimeSeries:
-    def __init__(self, min=0.0, max=100.0, variation=10.0, start: int = None, delta_days=1, groups=5):
+    def __init__(self, min=0.0, max=100.0, variation=10.0, start: Optional[int] = None, delta_days=1, groups=5):
         self.series = [(f'G{c + 1}', FakeTimeSeries(min, max, variation, start, delta_days)) for c in range(groups)]
 
     def next(self):
@@ -45,7 +46,7 @@ class FakeMultiTimeSeries:
 
 
 class FakeCategoricalSeries:
-    def __init__(self, min=0.0, max=100.0, variation=10.0, start: int = None):
+    def __init__(self, min=0.0, max=100.0, variation=10.0, start: Optional[int] = None):
         self.series = FakeSeries(min, max, variation, start)
         self.i = 0
 
@@ -56,7 +57,7 @@ class FakeCategoricalSeries:
 
 
 class FakeMultiCategoricalSeries:
-    def __init__(self, min=0.0, max=100.0, variation=10.0, start: int = None, groups=5):
+    def __init__(self, min=0.0, max=100.0, variation=10.0, start: Optional[int] = None, groups=5):
         self.series = [(f'G{c + 1}', FakeCategoricalSeries(min, max, variation, start)) for c in range(groups)]
 
     def next(self):
@@ -68,7 +69,7 @@ class FakeMultiCategoricalSeries:
 
 
 class FakeScatter:
-    def __init__(self, min=0.0, max=100.0, variation=10.0, start: int = None):
+    def __init__(self, min=0.0, max=100.0, variation=10.0, start: Optional[int] = None):
         self.x = FakeSeries(min, max, variation, start)
         self.y = FakeSeries(min, max, variation, start)
 

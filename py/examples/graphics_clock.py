@@ -4,7 +4,8 @@
 # ---
 import time
 import datetime
-from h2o_wave import site, ui, graphics as g
+from h2o_wave import site, ui
+import h2o_wave.graphics as g
 
 page = site['/demo']
 page['example'] = ui.graphics_card(
