@@ -286,6 +286,9 @@ def init():
         return
 
     base_path = os.path.join(sys.exec_prefix, 'project_templates')
+    source_base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'project_templates'))
+    if os.path.isdir(source_base_path):
+        base_path = source_base_path
     write_file('app.py', read_file(os.path.join(base_path, project)))
     write_file('requirements.txt', f'h2o-wave=={__version__}')
     write_file('README.md', read_file(os.path.join(base_path, 'README.md')))
