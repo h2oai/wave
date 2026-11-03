@@ -774,7 +774,6 @@ const
               v = buf
             }
           }
-          if (k === 'items' || k === 'secondary_items' || k === 'buttons' || k === 'commands') fillComponentNameMap(componentCache, v)
           set([k], v)
         }
       },
@@ -787,6 +786,10 @@ const
               const p = ks[0], b = data[p]
               if (v && (p === "side_panel" || p === "dialog" || p === "notification_bar")) {
                 fillComponentNameMap(componentCache, v.items || v.buttons)
+              }
+              // Re-index named components when items are replaced so that by-name updates keep working.
+              if (Array.isArray(v) && (p === 'items' || p === 'secondary_items' || p === 'buttons' || p === 'commands')) {
+                fillComponentNameMap(componentCache, v)
               }
               if (b && isBuf(b)) {
                 b.put(v)

@@ -209,3 +209,26 @@ async def serve(q: Q):
         page.goto('http://localhost:10101')
         page.click('[data-test="form"]:nth-child(2) > div')
         expect(page.get_by_text("New text")).to_be_visible()
+
+
+def test_by_name_updates_after_items_replaced(page: Page):
+    code = '''
+from h2o_wave import main, app, Q, ui
+
+
+@app('/')
+async def serve(q: Q):
+    q.page['form1'] = ui.form_card(box='1 1 2 2', items=[ui.text(name='text1', content='Initial')])
+    q.page['form1'].items = [ui.text(name='text1', content='Replaced')]
+    q.page['form1'].text1.content = 'foo1'
+
+    q.page['form2'] = ui.form_card(box='3 1 2 2', items=[])
+    q.page['form2'].items = [ui.button(name='button1', label='Button')]
+    q.page['form2'].button1.label = 'foo2'
+
+    await q.page.save()
+'''
+    with AppRunner(code):
+        page.goto('http://localhost:10101')
+        expect(page.get_by_text("foo1")).to_be_visible()
+        expect(page.get_by_text("foo2")).to_be_visible()

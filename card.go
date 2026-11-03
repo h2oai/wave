@@ -80,12 +80,6 @@ func loadCard(ns *Namespace, c CardD) *Card {
 				}
 			}
 		}
-		if k == "items" || k == "secondary_items" || k == "buttons" || k == "commands" {
-			if card.nameComponentMap == nil {
-				card.nameComponentMap = make(map[string]any)
-			}
-			fillNameComponentMap(card.nameComponentMap, v)
-		}
 		ks[0] = k
 		card.set(ks, v)
 	}
@@ -102,6 +96,15 @@ func (c *Card) set(ks []string, v any) {
 		return
 	case 1: // .foo = bar
 		p := ks[0]
+		// Index named components so that they can be updated by name later, also when items are replaced.
+		if p == "items" || p == "secondary_items" || p == "buttons" || p == "commands" {
+			if items, ok := v.([]any); ok {
+				if c.nameComponentMap == nil {
+					c.nameComponentMap = make(map[string]any)
+				}
+				fillNameComponentMap(c.nameComponentMap, items)
+			}
+		}
 		if ib, ok := c.data[p]; ok { // TODO can optimize by duplicating all bufs in a card.bufs map
 			if b, ok := ib.(Buf); ok { // avoid clobbering buffers; overwrite instead.
 				b.put(v)
