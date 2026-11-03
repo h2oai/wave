@@ -50,7 +50,7 @@ def _guard_vector(name: str, values: Any, types, non_empty: bool, optional: bool
         _guard_scalar(f'{name} element', value, types, False, non_empty, False)
 
 
-def _guard_enum(name: str, value: str, values: List[str], optional: bool):
+def _guard_enum(name: str, value: Optional[str], values: List[str], optional: bool):
     if optional and (value is None):
         return
     if value not in values:

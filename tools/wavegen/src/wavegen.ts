@@ -568,7 +568,7 @@ const
         p("        _guard_scalar(f'{name} element', value, types, False, non_empty, False)")
         p('')
         p('')
-        p('def _guard_enum(name: str, value: str, values: List[str], optional: bool):')
+        p('def _guard_enum(name: str, value: Optional[str], values: List[str], optional: bool):')
         p('    if optional and (value is None):')
         p('        return')
         p('    if value not in values:')
