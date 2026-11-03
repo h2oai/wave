@@ -5,7 +5,7 @@ import random
 
 from faker import Faker
 
-from h2o_wave import main, app, Q, ui
+from h2o_wave import main, app, Q, ui, data
 
 fake = Faker()
 
@@ -66,16 +66,23 @@ async def serve(q: Q):
             ui.table(
                 name='issues',
                 columns=columns,
-                rows=[ui.table_row(
-                    name=issue.id,
-                    cells=[issue.text, issue.status, issue.icon, str(issue.views), str(issue.progress),
-                           issue.state, issue.created]
-                ) for issue in issues],
+                rows=data(fields='name text status done views progress tag created',
+                          size=len(issues),
+                          rows=[[
+                              issue.id,
+                              issue.text,
+                              issue.status,
+                              issue.icon,
+                              str(issue.views),
+                              str(issue.progress),
+                              issue.state,
+                              issue.created,
+                              ] for issue in issues],
+                ),
                 groupable=True,
                 downloadable=True,
                 resettable=True,
                 height='600px'
             )
         ])
-
     await q.page.save()

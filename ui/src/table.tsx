@@ -169,6 +169,17 @@ type WaveColumn = Fluent.IColumn & {
   align?: 'left' | 'center' | 'right'
 }
 
+const normalizeTableRows = (m: Table, rows: Recs): TableRow[] => {
+  const unpackedRows = unpack<unknown[]>(rows || [])
+  return unpackedRows.map((row: any, i) => {
+    if (Array.isArray(row?.cells)) return row as TableRow
+    return {
+      name: row?.name ?? String(i),
+      cells: m.columns.map(({ name }) => row?.[name] ?? ''),
+    }
+  })
+}
+
 type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S, checked?: B) => void
@@ -666,7 +677,7 @@ const
         }
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : unpack<TableRow[]>(m.rows || []))?.map(({ cells }) => cells) || [],
+          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : normalizeTableRows(m, m.rows || []))?.map(({ cells }) => cells) || [],
           data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
           // Add BOM prefix to data. This is required to export unicode characters in the table correctly
@@ -742,8 +753,8 @@ export const
             acc.push(...rows.map(r => ({ ...getItem(r), group: label, collapsed })))
             return acc
           }, [] as (Fluent.IObjectWithKey & { group?: S, collapsed?: B })[])
-          : unpack<TableRow[]>(m.rows || []).map(getItem)
-        , [m.rows, m.groups, getItem]),
+          : normalizeTableRows(m, m.rows || []).map(getItem)
+        , [m, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       isSingle = Boolean(m.value || m.single),
       isFullHeight = m.height === '1',
