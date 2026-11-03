@@ -277,6 +277,7 @@ def init():
                     ('App with header + navigation', 'header_nav.py'),
                     ('App with sidebar + navigation', 'sidebar_nav.py'),
                     ('App with header & sidebar + navigation', 'header_sidebar_nav.py'),
+                    ('Table with a data buffer', 'table_data_buffer.py'),
                 ]
             ),
         ], theme=theme)['project']
