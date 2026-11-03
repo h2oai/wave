@@ -175,7 +175,7 @@ export type Id = S
 /** Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type. */
 export type Rec = Dict<Prim | Prim[] | Rec | Rec[]> // 
 /** Several records. */
-export type Recs = Rec[]
+export type Recs = Rec[] | Data | S
 /** An object, or a serialized string representation of the object. */
 export type Packed<T> = T | S
 /** A container for records. */
