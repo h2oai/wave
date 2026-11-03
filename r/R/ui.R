@@ -1729,7 +1729,7 @@ ui_table <- function(
   value = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "WaveTableColumn", columns)
-  .guard_vector("rows", "WaveTableRow", rows)
+  # TODO Validate rows: Recs
   .guard_scalar("multiple", "logical", multiple)
   .guard_scalar("groupable", "logical", groupable)
   .guard_scalar("downloadable", "logical", downloadable)

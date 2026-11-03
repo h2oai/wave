@@ -485,7 +485,10 @@ const
               p(`            ${m.name}=${code},`)
             }
           } else {
-            p(`            ${m.name}=self.${m.name},`)
+            const packedRecords = m.t !== MemberT.Enum && m.typeName === 'Recs'
+              ? `None if self.${m.name} is None else ([__e.dump() if hasattr(__e, 'dump') else __e for __e in self.${m.name}] if isinstance(self.${m.name}, list) else self.${m.name})`
+              : `self.${m.name}`
+            p(`            ${m.name}=${packedRecords},`)
           }
         }
         p(`        )`)
@@ -536,7 +539,7 @@ const
         p('')
         p('Value = Union[str, float, int]')
         p('PackedRecord = Union[dict, str, Data]')
-        p('PackedRecords = Union[List[dict], str]')
+        p('PackedRecords = Union[List[dict], str, Data]')
         p('PackedData = Union[Data, str]') // special-cased during packing, Go allocation and unpacking.
         p('')
         p('')

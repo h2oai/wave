@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Dict, Id, S, U } from './core'
+import { B, Dict, Id, Recs, S, U, unpack } from './core'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { MenuTableCellType as MenuTableCellType, XMenuTableCellType } from './menu_table_cell_type'
@@ -127,7 +127,7 @@ export interface Table {
   /** The columns in this table. */
   columns: TableColumn[]
   /** The rows in this table. Mutually exclusive with `groups` attr. */
-  rows?: TableRow[]
+  rows?: Recs
   /** True to allow multiple rows to be selected. Mutually exclusive with `single` attr. */
   multiple?: B
   /** True to allow group by feature. */
@@ -666,7 +666,7 @@ const
         }
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : m.rows)?.map(({ cells }) => cells) || [],
+          dataRows = (m.groups ? m.groups.flatMap(({ rows }) => rows) : unpack<TableRow[]>(m.rows || []))?.map(({ cells }) => cells) || [],
           data = toCSV([m.columns.map(({ label, name }) => label || name), ...dataRows]),
           a = document.createElement('a'),
           // Add BOM prefix to data. This is required to export unicode characters in the table correctly
@@ -742,7 +742,7 @@ export const
             acc.push(...rows.map(r => ({ ...getItem(r), group: label, collapsed })))
             return acc
           }, [] as (Fluent.IObjectWithKey & { group?: S, collapsed?: B })[])
-          : (m.rows || []).map(getItem)
+          : unpack<TableRow[]>(m.rows || []).map(getItem)
         , [m.rows, m.groups, getItem]),
       isMultiple = Boolean(m.values?.length || m.multiple),
       isSingle = Boolean(m.value || m.single),

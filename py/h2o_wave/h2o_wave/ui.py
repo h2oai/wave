@@ -1425,7 +1425,7 @@ def table_pagination(
 def table(
         name: str,
         columns: List[TableColumn],
-        rows: Optional[List[TableRow]] = None,
+        rows: Optional[PackedRecords] = None,
         multiple: Optional[bool] = None,
         groupable: Optional[bool] = None,
         downloadable: Optional[bool] = None,

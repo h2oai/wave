@@ -21,7 +21,7 @@ from .core import Data
 
 Value = Union[str, float, int]
 PackedRecord = Union[dict, str, Data]
-PackedRecords = Union[List[dict], str]
+PackedRecords = Union[List[dict], str, Data]
 PackedData = Union[Data, str]
 
 
@@ -3856,7 +3856,7 @@ class Table:
             self,
             name: str,
             columns: List[TableColumn],
-            rows: Optional[List[TableRow]] = None,
+            rows: Optional[PackedRecords] = None,
             multiple: Optional[bool] = None,
             groupable: Optional[bool] = None,
             downloadable: Optional[bool] = None,
@@ -3875,7 +3875,6 @@ class Table:
     ):
         _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
-        _guard_vector('Table.rows', rows, (TableRow,), False, True, False)
         _guard_scalar('Table.multiple', multiple, (bool,), False, True, False)
         _guard_scalar('Table.groupable', groupable, (bool,), False, True, False)
         _guard_scalar('Table.downloadable', downloadable, (bool,), False, True, False)
@@ -3932,7 +3931,6 @@ class Table:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Table.name', self.name, (str,), True, False, False)
         _guard_vector('Table.columns', self.columns, (TableColumn,), False, False, False)
-        _guard_vector('Table.rows', self.rows, (TableRow,), False, True, False)
         _guard_scalar('Table.multiple', self.multiple, (bool,), False, True, False)
         _guard_scalar('Table.groupable', self.groupable, (bool,), False, True, False)
         _guard_scalar('Table.downloadable', self.downloadable, (bool,), False, True, False)
@@ -3951,7 +3949,7 @@ class Table:
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
-            rows=None if self.rows is None else [__e.dump() for __e in self.rows],
+            rows=None if self.rows is None else ([__e.dump() if hasattr(__e, 'dump') else __e for __e in self.rows] if isinstance(self.rows, list) else self.rows),
             multiple=self.multiple,
             groupable=self.groupable,
             downloadable=self.downloadable,
@@ -3977,7 +3975,6 @@ class Table:
         __d_columns: Any = __d.get('columns')
         _guard_vector('Table.columns', __d_columns, (dict,), False, False, False)
         __d_rows: Any = __d.get('rows')
-        _guard_vector('Table.rows', __d_rows, (dict,), False, True, False)
         __d_multiple: Any = __d.get('multiple')
         _guard_scalar('Table.multiple', __d_multiple, (bool,), False, True, False)
         __d_groupable: Any = __d.get('groupable')
@@ -4010,7 +4007,7 @@ class Table:
         _guard_scalar('Table.value', __d_value, (str,), False, True, False)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
-        rows: Optional[List[TableRow]] = None if __d_rows is None else [TableRow.load(__e) for __e in __d_rows]
+        rows: Optional[PackedRecords] = __d_rows
         multiple: Optional[bool] = __d_multiple
         groupable: Optional[bool] = __d_groupable
         downloadable: Optional[bool] = __d_downloadable
@@ -9052,7 +9049,7 @@ class GraphicsCard:
             view='graphics',
             box=self.box,
             view_box=self.view_box,
-            stage=self.stage,
+            stage=None if self.stage is None else ([__e.dump() if hasattr(__e, 'dump') else __e for __e in self.stage] if isinstance(self.stage, list) else self.stage),
             scene=self.scene,
             width=self.width,
             height=self.height,
